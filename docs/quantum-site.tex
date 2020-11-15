@@ -108,6 +108,11 @@
 
 \newcommand{\bra}[1]{\langle#1|}
 \newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\proj}[1]{|#1\rangle\langle#1|}
+\newcommand{\braket}[1]{\langle#1\rangle}
+\newcommand{\av}[1]{\braket{#1}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\id}{\operatorname{id}}
 
 \hypertarget{quantum-interference}{%
 \chapter{Quantum interference}\label{quantum-interference}}
@@ -291,13 +296,11 @@ It may sound like an extravagant way to compute something that can be computed a
 Indeed, your standard laptop, given enough time and memory, can simulate pretty much any physical process.
 In principle, it can also simulate any quantum interference and compute everything that quantum computers can compute.
 The snag is, this simulation, in general, is very inefficient.
-And efficiency does matter, especially if you have to wait more than the age of the Universe for your laptop to stop and deliver an answer!
-\footnote{The age of the Universe is currently estimated at 13.772 billion years.}
+And efficiency does matter, especially if you have to wait more than the age of the Universe for your laptop to stop and deliver an answer!\footnote{The age of the Universe is currently estimated at 13.772 billion years.}
 
 In order to solve a particular problem, computers (classical or quantum) follow a precise set of instructions --- an \textbf{algorithm}.
 Computer scientists quantify the efficiency of an algorithm according to how rapidly its running time, or the use of memory, increases when it is given ever larger inputs to work on.
-An algorithm is said to be \emph{efficient} if the number of elementary operations taken to execute it increases no faster than a polynomial function of the size of the input.
-\footnote{Note that the technological progress alone, such as increasing the speed of classical computers, will never turn an inefficient algorithm (exponential scaling) into an efficient one (polynomial scaling). Why?}
+An algorithm is said to be \emph{efficient} if the number of elementary operations taken to execute it increases no faster than a polynomial function of the size of the input.\footnote{Note that the technological progress alone, such as increasing the speed of classical computers, will never turn an inefficient algorithm (exponential scaling) into an efficient one (polynomial scaling). Why?}
 We take the input size to be the total number of binary digits (bits) needed to specify the input.
 For example, using the algorithm taught in elementary school, one can multiply two \(n\) digit numbers in a time that grows like the number of digits squared, \(n^2\).
 In contrast, the fastest-known method for the reverse operation --- factoring an \(n\)-digit integer into prime numbers --- takes a time that grows exponentially, roughly as \(2^n\).
@@ -311,8 +314,7 @@ Finally, the complexity class \textsf{BQP}, for \emph{bounded-error quantum poly
 Since a quantum computer can easily generate random bits and simulate a probabilistic classical computer, \textsf{BQP} certainly contains the class \textsf{BPP}.
 Here we are interested in problems that are in \textsf{BQP} but not known to be in \textsf{BPP}.
 The most popular example of such a problem is factoring.
-A quantum algorithm, discovered by Peter Shor in 1994, can factor \(n\)-digit numbers in a number of steps that grows only as \(n^2\).
-\footnote{It must be stressed that not all quantum algorithms are so efficient, in fact many are no faster than their classical counterparts. Which particular problems will lend themselves to quantum speed-ups is an open question.}
+A quantum algorithm, discovered by Peter Shor in 1994, can factor \(n\)-digit numbers in a number of steps that grows only as \(n^2\), as opposed to the \(2^n\) that we have classically.\footnote{It must be stressed that not all quantum algorithms are so efficient, in fact many are no faster than their classical counterparts. Which particular problems will lend themselves to quantum speed-ups is an open question.}
 Since the intractability of factorisation underpins the security of many methods of encryption, Shor's algorithm was soon hailed as the first `killer application' for quantum computation: something very useful that only a quantum computer could do.
 Since then, the hunt has been on for interesting things for quantum computers to do, and at the same time, for the scientific and technological advances that could allow us to build quantum computers.
 
@@ -352,6 +354,213 @@ I believe that anyone who seeks a fundamental understanding of either physics, c
 
 \hypertarget{bells-theorem}{%
 \chapter{Bell's theorem}\label{bells-theorem}}
+
+\begin{quote}
+About quantum correlations, which are stronger than any correlations allowed by classical physics, and about the \href{https://en.wikipedia.org/wiki/CHSH_inequality}{CHSH inequality} which demonstrates this fact.
+\end{quote}
+
+\hypertarget{quantum-correlations}{%
+\section{Quantum correlations}\label{quantum-correlations}}
+
+Consider two entangled qubits in the singlet state
+\[
+  |\psi\rangle
+  = \frac{1}{\sqrt 2} \left( |01\rangle-|10\rangle \right)
+\]
+and note that the projector \(|\psi\rangle\langle\psi|\) can be written as\footnote{There are other, more elementary, ways of deriving this result but here I want you to hone your skills. Now that you've learned about projectors, traces, and Pauli operators, why not put them to good use.}
+\[
+  |\psi\rangle\langle\psi|
+  = \frac{1}{4} \left(
+    \operatorname{id}\otimes\operatorname{id}- \sigma_x\otimes\sigma_x - \sigma_y\otimes\sigma_y - \sigma_z\otimes \sigma_z
+  \right).
+\]
+Any single qubit observable with values \(\pm 1\) can be represented by the operator
+\[
+  \vec{a}\cdot\vec\sigma
+  = a_x\sigma_x + a_y\sigma_y + a_z\sigma_z,
+\]
+where \(\vec{a}\) is a unit vector in the three-dimensional Euclidean space.
+Suppose Alice and Bob choose measurements defined by vectors \(\vec{a}\) and \(\vec{b}\), respectively.
+For example, if the two qubits are spin-half particles, they may measure the spin components along the directions \(\vec{a}\) and \(\vec{b}\).
+We write the corresponding observable as the tensor product
+\[
+  A\otimes B
+  = (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma).
+\]
+The eigenvalues of \(A\otimes B\) are the products of eigenvalues of \(A\) and \(B\).
+Thus \(A\otimes B\) has two eigenvalues: \(+1\), corresponding to the instances when Alice and Bob registered identical outcomes, i.e.~\((+1,+1)\) or \((-1,-1)\); and \(-1\), corresponding to the instances when Alice and Bob registered different outcomes, i.e.~\((+1,-1)\) or \((-1,-1)\).
+This means that the expected value of \(A\otimes B\), in any state, has a simple interpretation:
+\[
+    \langle A\otimes B\rangle = \Pr (\text{outcomes are the same}) - \Pr (\text{outcomes are different}).
+\]
+This expression can take any numerical value from \(-1\) (perfect anti-correlations) through \(0\) (no correlations) to \(+1\) (perfect correlations).
+We now evaluate the expectation value in the singlet state:
+\[
+\begin{aligned}
+  \langle\psi|A\otimes B|\psi\rangle
+  & = \operatorname{tr}\left[
+      (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma) |\psi\rangle\langle\psi|
+    \right]
+\\& = -\frac{1}{4} \operatorname{tr}\left[
+      (\vec{a}\cdot\vec\sigma)\sigma_x \otimes(\vec{a}\cdot\vec\sigma)\sigma_x
+      + (\vec{a}\cdot\vec\sigma)\sigma_y \otimes(\vec{a}\cdot\vec\sigma)\sigma_y
+      + (\vec{a}\cdot\vec\sigma)\sigma_z \otimes(\vec{a}\cdot\vec\sigma)\sigma_z
+    \right]
+\\& = -\frac{1}{4} \operatorname{tr}\left[
+      (a_x b_x + a_y b_y + a_z b_z) \operatorname{id}\otimes\operatorname{id}
+    \right]
+\\& = -\vec{a}\cdot\vec{b}
+\end{aligned}
+\]
+where we have used the fact that \(\operatorname{tr}(\vec{a}\cdot\vec\sigma)\sigma_k = a_k\) (\(k=x,y,z\)).
+So if Alice and Bob choose the same observable, \(\vec{a} = \vec{b}\), then their outcomes will be always opposite: whenever Alice registers \(+1\) (resp. \(-1\)) Bob is bound to register \(-1\) (resp. \(+1\)).
+
+\hypertarget{hidden-variables}{%
+\section{Hidden variables}\label{hidden-variables}}
+
+The story of ``hidden variables'' dates back to 1935 and grew out of Einstein's worries about the completeness of quantum theory.
+Consider, for example, a qubit.
+No quantum state of a qubit can be an eigenstate of two non-commuting operators, say \(\sigma_x\) and \(\sigma_z\).
+If the qubit has a definite value of \(\sigma_x\) its value of \(\sigma_z\) must be indeterminate, and vice versa.
+If we take quantum theory to be a complete description of the world, then we must accept that it is impossible for both \(\sigma_x\) and \(\sigma_z\) to have definite values for the same qubit at the same time.
+Einstein felt very uncomfortable about all this.
+He argued that quantum theory is incomplete, and that observables \(\sigma_x\) and \(\sigma_z\) may both have simultaneous definite values, although we only have knowledge of one of them at a time.
+This is the hypothesis of \textbf{hidden variables}.
+In this view, the indeterminacy found in quantum theory is merely due to our ignorance of these ``hidden variables'' that are present in nature but not accounted for in the theory.
+Einstein came up with a number of pretty good arguments for the existence of ``hidden variables''.
+Probably the most compelling one was described in his 1935 paper (known as the EPR paper), co-authored with his younger colleagues, Boris Podolsky and Nathan Rosen.
+It stood for almost three decades as the most significant challenge to the completeness of quantum theory.
+Then, in 1964, John Bell showed that the hidden variable hypothesis can be tested and refuted.
+
+\hypertarget{chsh-inequality}{%
+\section{CHSH inequality}\label{chsh-inequality}}
+
+\begin{quote}
+Upper bound on \emph{classical} correlations.
+\end{quote}
+
+I will describe the most popular version of Bell's argument, introduced in 1969 by John Clauser, Michael Horne, Abner Shimony, and Richard Holt (CHSH).
+Let us assume that the results of any measurement on any individual system are predetermined.
+Any probabilities we may use to describe the system merely reflect our ignorance of these hidden variables.
+
+Now, imagine the following scenario.
+Alice and Bob, two characters with a predilection for wacky experiments, are equipped with appropriate measuring devices and sent to two distant locations.
+Somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob.
+Let us label the two qubits in each pair as \(\mathcal{A}\) and \(\mathcal{B}\) respectively, and let us assume that both Alice and Bob have well defined values of their observables.
+We ask Alice and Bob to measure one of the two pre-agreed observables.
+For each incoming qubit, Alice and Bob choose randomly, and independently from each other, which particular observable will be measured.
+Alice chooses between \(A_1\) and \(A_2\), and Bob between \(B_1\) and \(B_2\).
+Each observable has value \(+1\) or \(-1\), and so we are allowed to think about them as random variables \(A_k\) and \(B_k\), for \(k=1,2\), which take values \(\pm 1\).
+Let us define a new random variable, the \textbf{CHSH quantity} \(S\), as
+\[
+  S = A_1(B_1 - B_2) + A_2(B_1 + B_2).
+\]
+It is easy to see that one of the terms \(B_1\pm B_2\) must be equal to zero and the other to \(\pm 2\), hence \(S=\pm2\).
+The average value of \(S\) must lie somewhere in-between, i.e.
+\[
+  -2 < \langle S\rangle < 2.
+\]
+That's it!
+Such a simple and yet profound mathematical statement about correlations, which we refer simply to as the \textbf{CHSH inequality}.
+No quantum theory is involved because the CHSH inequality is not specific to quantum theory: it does not really matter what kind of physical process is behind the appearance of binary values of \(A_1\), \(A_2\), \(B_1\), and \(B_2\); it is a statement about correlations, and for all classical correlations we must have
+\[
+  \left\vert
+    \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
+  \right\vert < 2.
+\]
+
+There are essentially two two assumptions here:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Hidden variables.} Observables have definite values
+\item
+  \textbf{Locality.} Alice's choice of measurements (\(A_1\) or \(A_2\)) does not affect the outcomes of Bob's measurement, and vice versa.
+\end{enumerate}
+
+I will not discuss the locality assumption here in detail but let me comment on it briefly.
+In the hidden variable world a, statement such as ``if Bob were to measure \(B_1\) then he would register \(+1\)'' must be either true or false \emph{prior to Bob's measurement}.
+Without the locality hypothesis, such a statement is ambiguous, since the value of \(B_1\) could depend on whether \(A_1\) or \(A_2\) will be chosen by Alice.
+We do not want this for it implies the instantaneous communication.
+It means that, say, Alice by making a choice between \(A_1\) and \(A_2\), affects Bob's results.
+Bob can immediately ``see'' what Alice ``does''.
+
+\hypertarget{quantum-correlations-revisited}{%
+\section{Quantum correlations revisited}\label{quantum-correlations-revisited}}
+
+In quantum theory the observables \(A_1\), \(A_2\), \(B_1\), \(B_2\) become \(2\times 2\) Hermitian matrices with two eigenvalues \(\pm 1\), and \(\langle S\rangle\) becomes the expected value of the \(4\times 4\) \textbf{CHSH matrix}
+\[
+  S
+  = A_1\otimes(B_1-B_2) + A_2\otimes(B_1+B_2).
+\]
+
+We can now evaluate \(\langle S\rangle\) using quantum theory.
+For example, if the two qubits are in the singlet state, then we know that
+\[
+  \langle A\otimes B\rangle = -\vec{a}\cdot\vec{b}.
+\]
+We choose vectors \(\vec{a}_1\), \(\vec{a}_2\), \(\vec{b}_1\), and \(\vec{b}_2\) as shown in \textbf{!!!TODO!!!}, and then, with these choices,
+\[
+\begin{gathered}
+  \langle A_1\otimes B_1\rangle
+  = \langle A_2\otimes B_1\rangle
+  = \langle A_2\otimes B_2\rangle
+  = \frac{1}{\sqrt 2}
+\\\langle A_1\otimes B_2\rangle
+   = -\frac{1}{\sqrt 2}.
+\end{gathered}
+\]
+Thus
+\[
+  \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
+  = -2\sqrt{2},
+\]
+which obviously violates CHSH inequality.
+And this, to be sure, has been observed in a number of painstakingly careful experiments.
+The early efforts were truly heroic, and the experiments had many layers of complexity.
+Today, however, such experiments are routine.
+
+\begin{quote}
+\textbf{Motto.} The behaviour of entangled quantum systems cannot be explained by any local hidden variables.
+\end{quote}
+
+\hypertarget{tsirelsons-inequality}{%
+\section{Tsirelson's inequality}\label{tsirelsons-inequality}}
+
+\begin{quote}
+Upper bound on \emph{quantum} correlations.
+\end{quote}
+
+One may ask (and indeed one of you did ask) if \(|\langle S\rangle|= 2\sqrt{2}\) is the maximal violation of the CHSH inequality, and yes, it is: quantum correlations cannot achieve any value of \(|\langle S\rangle|\) larger than \(2\sqrt{2}\).
+This is because, for any state \(|\psi\rangle\), the expected value \(\langle S\rangle = \langle\psi|S|\psi\rangle\) cannot exceed the largest eigenvalue of \(S\), and we can put an upper bound on the largest eigenvalues of \(S\).
+To start with, the largest eigenvalue (in absolute value) of a Hermitian matrix \(M\), denoted by \(\|M\|\), is a matrix norm, and it has the following properties:
+\[
+\begin{aligned}
+  \|M\otimes N\|
+  & = \|M\| \|N\|
+\\\|MN\|
+  & \leq \|M\| \|N\|
+\\\|M+N\|
+  & \leq \|M\| + \|N\|
+\end{aligned}
+\]
+Given that \(\|A_i\|=1\) and \(\|B_j\|=1\) (\(i,j=1,2\)), it is easy to show that \(\|S\| < 4\).
+One can, however, derive a tighter bound.
+We can show (do it) that
+\[
+  S^2
+  = 4(\operatorname{id}\otimes\operatorname{id}) + [A_1,A_2]\otimes[B_1,B_2].
+\]
+The norm of each of the commutators (\(\|[A_1, A_2]\|\) and \(\|[B_1, B_2]\|\)) cannot exceed \(2\), and \(\|S^2\|=\|S\|^2\), which all together gives
+\[
+  \|S\|
+  < 2\sqrt{2}
+  \implies
+  |\langle S\rangle| < 2\sqrt{2}.
+\]
+This result is known as the \textbf{Tsirelson inequality}.
 
 \hypertarget{decoherence-and-elements-of-quantum-error-correction}{%
 \chapter{Decoherence, and elements of quantum error correction}\label{decoherence-and-elements-of-quantum-error-correction}}

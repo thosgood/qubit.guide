@@ -1,1 +1,194 @@
 # Bell's theorem
+
+> About quantum correlations, which are stronger than any correlations allowed by classical physics, and about the [CHSH inequality](https://en.wikipedia.org/wiki/CHSH_inequality) which demonstrates this fact.
+
+
+## Quantum correlations
+
+Consider two entangled qubits in the singlet state
+$$
+  \ket{\psi}
+  = \frac{1}{\sqrt 2} \left( \ket{01}-\ket{10} \right)
+$$
+and note that the projector $\proj{\psi}$ can be written as^[There are other, more elementary, ways of deriving this result but here I want you to hone your skills. Now that you've learned about projectors, traces, and Pauli operators, why not put them to good use.]
+$$
+  \proj{\psi}
+  = \frac{1}{4} \left(
+    \id\otimes\id - \sigma_x\otimes\sigma_x - \sigma_y\otimes\sigma_y - \sigma_z\otimes \sigma_z
+  \right).
+$$
+Any single qubit observable with values $\pm 1$ can be represented by the operator
+$$
+  \vec{a}\cdot\vec\sigma
+  = a_x\sigma_x + a_y\sigma_y + a_z\sigma_z,
+$$
+where $\vec{a}$ is a unit vector in the three-dimensional Euclidean space.
+Suppose Alice and Bob choose measurements defined by vectors $\vec{a}$ and $\vec{b}$, respectively.
+For example, if the two qubits are spin-half particles, they may measure the spin components along the directions $\vec{a}$ and $\vec{b}$.
+We write the corresponding observable as the tensor product
+$$
+  A\otimes B
+  = (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma).
+$$
+The eigenvalues of $A\otimes B$ are the products of eigenvalues of $A$ and $B$.
+Thus $A\otimes B$ has two eigenvalues: $+1$, corresponding to the instances when Alice and Bob registered identical outcomes, i.e. $(+1,+1)$ or $(-1,-1)$; and $-1$, corresponding to the instances when Alice and Bob registered different outcomes, i.e. $(+1,-1)$ or $(-1,-1)$.
+This means that the expected value of $A\otimes B$, in any state, has a simple interpretation:
+$$
+    \av{A\otimes B} = \Pr (\text{outcomes are the same}) - \Pr (\text{outcomes are different}).
+$$
+This expression can take any numerical value from $-1$ (perfect anti-correlations) through $0$ (no correlations) to $+1$ (perfect correlations).
+We now evaluate the expectation value in the singlet state:
+$$
+\begin{aligned}
+  \bra{\psi}A\otimes B\ket{\psi}
+  & = \tr\left[
+      (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma) \proj{\psi}
+    \right]
+\\& = -\frac{1}{4} \tr\left[
+      (\vec{a}\cdot\vec\sigma)\sigma_x \otimes(\vec{a}\cdot\vec\sigma)\sigma_x
+      + (\vec{a}\cdot\vec\sigma)\sigma_y \otimes(\vec{a}\cdot\vec\sigma)\sigma_y
+      + (\vec{a}\cdot\vec\sigma)\sigma_z \otimes(\vec{a}\cdot\vec\sigma)\sigma_z
+    \right]
+\\& = -\frac{1}{4} \tr\left[
+      (a_x b_x + a_y b_y + a_z b_z) \id\otimes\id
+    \right]
+\\& = -\vec{a}\cdot\vec{b}
+\end{aligned}
+$$
+where we have used the fact that $\tr(\vec{a}\cdot\vec\sigma)\sigma_k = a_k$ ($k=x,y,z$).
+So if Alice and Bob choose the same observable, $\vec{a} = \vec{b}$, then their outcomes will be always opposite: whenever Alice registers $+1$ (resp. $-1$) Bob is bound to register $-1$ (resp. $+1$).
+
+
+## Hidden variables
+
+The story of "hidden variables" dates back to 1935 and grew out of Einstein's worries about the completeness of quantum theory.
+Consider, for example, a qubit.
+No quantum state of a qubit can be an eigenstate of two non-commuting operators, say $\sigma_x$ and $\sigma_z$.
+If the qubit has a definite value of $\sigma_x$ its value of $\sigma_z$ must be indeterminate, and vice versa.
+If we take quantum theory to be a complete description of the world, then we must accept that it is impossible for both $\sigma_x$ and $\sigma_z$ to have definite values for the same qubit at the same time.
+Einstein felt very uncomfortable about all this.
+He argued that quantum theory is incomplete, and that observables $\sigma_x$ and $\sigma_z$ may both have simultaneous definite values, although we only have knowledge of one of them at a time.
+This is the hypothesis of **hidden variables**.
+In this view, the indeterminacy found in quantum theory is merely due to our ignorance of these "hidden variables" that are present in nature but not accounted for in the theory.
+Einstein came up with a number of pretty good arguments for the existence of "hidden variables".
+Probably the most compelling one was described in his 1935 paper (known as the EPR paper), co-authored with his younger colleagues, Boris Podolsky and Nathan Rosen.
+It stood for almost three decades as the most significant challenge to the completeness of quantum theory.
+Then, in 1964, John Bell showed that the hidden variable hypothesis can be tested and refuted.
+
+
+## CHSH inequality
+
+> Upper bound on _classical_ correlations.
+
+I will describe the most popular version of Bell's argument, introduced in 1969 by John Clauser, Michael Horne, Abner Shimony, and Richard Holt (CHSH).
+Let us assume that the results of any measurement on any individual system are predetermined.
+Any probabilities we may use to describe the system merely reflect our ignorance of these hidden variables.
+
+Now, imagine the following scenario.
+Alice and Bob, two characters with a predilection for wacky experiments, are equipped with appropriate measuring devices and sent to two distant locations.
+Somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob.
+Let us label the two qubits in each pair as $\mathcal{A}$ and $\mathcal{B}$ respectively, and let us assume that both Alice and Bob have well defined values of their observables.
+We ask Alice and Bob to measure one of the two pre-agreed observables.
+For each incoming qubit, Alice and Bob choose randomly, and independently from each other, which particular observable will be measured.
+Alice chooses between $A_1$ and $A_2$, and Bob between $B_1$ and $B_2$.
+Each observable has value $+1$ or $-1$, and so we are allowed to think about them as random variables $A_k$ and $B_k$, for $k=1,2$, which take values $\pm 1$.
+Let us define a new random variable, the **CHSH quantity** $S$, as
+$$
+  S = A_1(B_1 - B_2) + A_2(B_1 + B_2).
+$$
+It is easy to see that one of the terms $B_1\pm B_2$ must be equal to zero and the other to $\pm 2$, hence $S=\pm2$.
+The average value of $S$ must lie somewhere in-between, i.e.
+$$
+  -2 < \av{S} < 2.
+$$
+That's it!
+Such a simple and yet profound mathematical statement about correlations, which we refer simply to as the **CHSH inequality**.
+No quantum theory is involved because the CHSH inequality is not specific to quantum theory: it does not really matter what kind of physical process is behind the appearance of binary values of $A_1$, $A_2$, $B_1$, and $B_2$; it is a statement about correlations, and for all classical correlations we must have
+$$
+  \left\vert
+    \av{A_1 B_1} - \av{A_1 B_2} + \av{A_2 B_1} + \av{A_2 B_2}
+  \right\vert < 2.
+$$
+
+There are essentially two two assumptions here:
+
+1. **Hidden variables.** Observables have definite values
+2. **Locality.** Alice's choice of measurements ($A_1$  or $A_2$) does not affect the outcomes of Bob's measurement, and vice versa.
+
+I will not discuss the locality assumption here in detail but let me comment on it briefly.
+In the hidden variable world a, statement such as  "if Bob were to measure $B_1$ then he would register $+1$" must be either true or false _prior to Bob's measurement_.
+Without the locality hypothesis, such a statement is ambiguous, since the value of $B_1$ could depend on whether $A_1$ or $A_2$ will be chosen by Alice.
+We do not want this for it implies the instantaneous communication.
+It means that, say, Alice by making a choice between $A_1$ and $A_2$, affects Bob's results.
+Bob can immediately "see" what Alice "does".
+
+
+## Quantum correlations revisited
+
+In quantum theory the observables $A_1$, $A_2$, $B_1$, $B_2$ become $2\times 2$ Hermitian matrices with two eigenvalues $\pm 1$, and $\av{S}$ becomes the expected value of the $4\times 4$ **CHSH matrix**
+$$
+  S
+  = A_1\otimes(B_1-B_2) + A_2\otimes(B_1+B_2).
+$$
+
+We can now evaluate $\av{S}$ using quantum theory.
+For example, if the two qubits are in the singlet state, then we know that
+\[
+  \av{A\otimes B} = -\vec{a}\cdot\vec{b}.
+\]
+We choose vectors $\vec{a}_1$, $\vec{a}_2$, $\vec{b}_1$, and $\vec{b}_2$ as shown in **!!!TODO!!!**, and then, with these choices,
+$$
+\begin{gathered}
+  \av{A_1\otimes B_1}
+  = \av{A_2\otimes B_1}
+  = \av{A_2\otimes B_2}
+  = \frac{1}{\sqrt 2}
+\\\av{A_1\otimes B_2}
+   = -\frac{1}{\sqrt 2}.
+\end{gathered}
+$$
+Thus
+$$
+  \av{A_1 B_1} - \av{A_1 B_2} + \av{A_2 B_1} + \av{A_2 B_2}
+  = -2\sqrt{2},
+$$
+which obviously violates CHSH inequality.
+And this, to be sure, has been observed in a number of painstakingly careful experiments.
+The early efforts were truly heroic, and the experiments had many layers of complexity.
+Today, however, such experiments are routine.
+
+> **Motto.** The behaviour of entangled quantum systems cannot be explained by any local hidden variables.
+
+
+## Tsirelson's inequality
+
+> Upper bound on _quantum_ correlations.
+
+One may ask (and indeed one of you did ask) if $|\av{S}|= 2\sqrt{2}$ is the maximal violation of the CHSH inequality, and yes, it is: quantum correlations cannot achieve any value of $|\av{S}|$ larger than $2\sqrt{2}$.
+This is because, for any state $\ket{\psi}$, the expected value $\av{S} = \braket{\psi|S|\psi}$ cannot exceed the largest eigenvalue of $S$, and we can put an upper bound on the largest eigenvalues of $S$.
+To start with, the largest eigenvalue (in absolute value) of a Hermitian matrix $M$, denoted by $\|M\|$, is a matrix norm, and it has the following properties:
+$$
+\begin{aligned}
+  \|M\otimes N\|
+  & = \|M\| \|N\|
+\\\|MN\|
+  & \leq \|M\| \|N\|
+\\\|M+N\|
+  & \leq \|M\| + \|N\|
+\end{aligned}
+$$
+Given that $\|A_i\|=1$ and $\|B_j\|=1$ ($i,j=1,2$), it is easy to show that $\|S\| < 4$.
+One can, however, derive a tighter bound.
+We can show (do it) that
+$$
+  S^2
+  = 4(\id\otimes\id) + [A_1,A_2]\otimes[B_1,B_2].
+$$
+The norm of each of the commutators ($\|[A_1, A_2]\|$ and $\|[B_1, B_2]\|$) cannot exceed $2$, and $\|S^2\|=\|S\|^2$, which all together gives
+$$
+  \|S\|
+  < 2\sqrt{2}
+  \implies
+  |\av{S}| < 2\sqrt{2}.
+$$
+This result is known as the **Tsirelson inequality**.

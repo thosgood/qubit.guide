@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.7 Computation: deterministic, probabilistic, and quantum | Lectures on Quantum Information Science</title>
+  <title>6.3 CHSH inequality | Lectures on Quantum Information Science</title>
   <meta name="description" content="The online version of an introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.7 Computation: deterministic, probabilistic, and quantum | Lectures on Quantum Information Science" />
+  <meta property="og:title" content="6.3 CHSH inequality | Lectures on Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.7 Computation: deterministic, probabilistic, and quantum | Lectures on Quantum Information Science" />
+  <meta name="twitter:title" content="6.3 CHSH inequality | Lectures on Quantum Information Science" />
   
   <meta name="twitter:description" content="The online version of an introductory series of lectures on quantum computing." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="quantum-decoherence.html"/>
-<link rel="next" href="computational-complexity.html"/>
+<link rel="prev" href="hidden-variables.html"/>
+<link rel="next" href="quantum-correlations-revisited.html"/>
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -124,16 +124,58 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="computation-deterministic-probabilistic-and-quantum" class="section level2" number="1.7">
-<h2><span class="header-section-number">1.7</span> Computation: deterministic, probabilistic, and quantum</h2>
+<div id="chsh-inequality" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> CHSH inequality</h2>
+<blockquote>
+<p>Upper bound on <em>classical</em> correlations.</p>
+</blockquote>
+<p>I will describe the most popular version of Bell’s argument, introduced in 1969 by John Clauser, Michael Horne, Abner Shimony, and Richard Holt (CHSH).
+Let us assume that the results of any measurement on any individual system are predetermined.
+Any probabilities we may use to describe the system merely reflect our ignorance of these hidden variables.</p>
+<p>Now, imagine the following scenario.
+Alice and Bob, two characters with a predilection for wacky experiments, are equipped with appropriate measuring devices and sent to two distant locations.
+Somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob.
+Let us label the two qubits in each pair as <span class="math inline">\(\mathcal{A}\)</span> and <span class="math inline">\(\mathcal{B}\)</span> respectively, and let us assume that both Alice and Bob have well defined values of their observables.
+We ask Alice and Bob to measure one of the two pre-agreed observables.
+For each incoming qubit, Alice and Bob choose randomly, and independently from each other, which particular observable will be measured.
+Alice chooses between <span class="math inline">\(A_1\)</span> and <span class="math inline">\(A_2\)</span>, and Bob between <span class="math inline">\(B_1\)</span> and <span class="math inline">\(B_2\)</span>.
+Each observable has value <span class="math inline">\(+1\)</span> or <span class="math inline">\(-1\)</span>, and so we are allowed to think about them as random variables <span class="math inline">\(A_k\)</span> and <span class="math inline">\(B_k\)</span>, for <span class="math inline">\(k=1,2\)</span>, which take values <span class="math inline">\(\pm 1\)</span>.
+Let us define a new random variable, the <strong>CHSH quantity</strong> <span class="math inline">\(S\)</span>, as
+<span class="math display">\[
+  S = A_1(B_1 - B_2) + A_2(B_1 + B_2).
+\]</span>
+It is easy to see that one of the terms <span class="math inline">\(B_1\pm B_2\)</span> must be equal to zero and the other to <span class="math inline">\(\pm 2\)</span>, hence <span class="math inline">\(S=\pm2\)</span>.
+The average value of <span class="math inline">\(S\)</span> must lie somewhere in-between, i.e.
+<span class="math display">\[
+  -2 &lt; \langle S\rangle &lt; 2.
+\]</span>
+That’s it!
+Such a simple and yet profound mathematical statement about correlations, which we refer simply to as the <strong>CHSH inequality</strong>.
+No quantum theory is involved because the CHSH inequality is not specific to quantum theory: it does not really matter what kind of physical process is behind the appearance of binary values of <span class="math inline">\(A_1\)</span>, <span class="math inline">\(A_2\)</span>, <span class="math inline">\(B_1\)</span>, and <span class="math inline">\(B_2\)</span>; it is a statement about correlations, and for all classical correlations we must have
+<span class="math display">\[
+  \left\vert
+    \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
+  \right\vert &lt; 2.
+\]</span></p>
+<p>There are essentially two two assumptions here:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Hidden variables.</strong> Observables have definite values</li>
+<li><strong>Locality.</strong> Alice’s choice of measurements (<span class="math inline">\(A_1\)</span> or <span class="math inline">\(A_2\)</span>) does not affect the outcomes of Bob’s measurement, and vice versa.</li>
+</ol>
+<p>I will not discuss the locality assumption here in detail but let me comment on it briefly.
+In the hidden variable world a, statement such as “if Bob were to measure <span class="math inline">\(B_1\)</span> then he would register <span class="math inline">\(+1\)</span>” must be either true or false <em>prior to Bob’s measurement</em>.
+Without the locality hypothesis, such a statement is ambiguous, since the value of <span class="math inline">\(B_1\)</span> could depend on whether <span class="math inline">\(A_1\)</span> or <span class="math inline">\(A_2\)</span> will be chosen by Alice.
+We do not want this for it implies the instantaneous communication.
+It means that, say, Alice by making a choice between <span class="math inline">\(A_1\)</span> and <span class="math inline">\(A_2\)</span>, affects Bob’s results.
+Bob can immediately “see” what Alice “does.”</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="quantum-decoherence.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="computational-complexity.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="hidden-variables.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="quantum-correlations-revisited.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
