@@ -1,4 +1,4 @@
-For the compiled version, see [here](book/).
+Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
 
 # To-do
 
