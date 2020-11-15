@@ -1,4 +1,4 @@
-For the compiled version, see [here](_book/index.html).
+For the compiled version, see [here](book/index.html).
 
 # To-do
 
