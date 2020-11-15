@@ -28,13 +28,34 @@ The rules for combining amplitudes are very reminiscent of the rules for combini
 
 1. Whenever something can happen in a sequence of independent steps, we multiply the amplitudes of each step.
 
-```{r,echo=FALSE,engine='tikz',fig.width=2,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=3,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{primary}{RGB}{255,153,0}
+\tikzset{blob/.style args={#1}{circle,draw,fill={#1}}}
+\tikzset{process/.style={thick,->,shorten >=0.1cm,shorten <=0.1cm}}
 \begin{tikzpicture}
-  \draw (0,0) circle (1cm);
+  \node [blob=primary] (initial) at (0,0) {};
+  \node [blob=primary] (middle) at (2,-0.3) {};
+  \node [blob=primary] (final) at (4,-0.6) {};
+  \draw [process] (initial) to [out=40,in=120] node[pos=0.5,fill=white] {$z_1$} (middle);
+  \draw [process] (middle) to [out=40,in=120] node[pos=0.5,fill=white] {$z_2$} (final);
+  \node at (2,-1) {$z = z_1 z_2$};
 \end{tikzpicture}
 ```
 
 2. Whenever something can happen in several alternative ways, we add the amplitudes for each separate way.
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=2.25,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{primary}{RGB}{255,153,0}
+\tikzset{blob/.style args={#1}{circle,draw,fill={#1}}}
+\tikzset{process/.style={thick,->,shorten >=0.1cm,shorten <=0.1cm}}
+\begin{tikzpicture}
+  \node (initial) at (0,0) [blob=primary] {};
+  \node (final) at (3,-0.5) [blob=primary] {};
+  \draw [process] (initial) to [out=40,in=120] node[pos=0.5,fill=white] {$z_1$} (final);
+  \draw [process] (initial) to [out=-60,in=-140] node[pos=0.5,fill=white] {$z_2$} (final);
+  \node at (1.5,-1.5) {$z = z_1 + z_2$};
+\end{tikzpicture}
+```
 
 That's it!
 These two rules are basically all you need to manipulate amplitudes in any physical process, no matter how complicated.^[We will, however, amend the two rules later on when we touch upon particle statistics.]
@@ -51,9 +72,8 @@ The **Kolmogorov axioms** are simple and intuitive:^[I always found it an intere
 
 1. Once you identify all elementary outcomes, or events, you may then assign probabilities to them.
 2. Probability is a number between $0$ and $1$, and an event which is certain has probability $1$.
-3. Last but not least, the probability of any event can be calculated using a deceptively simple rule --- the _additivity axiom_:
-
-  > Whenever an event can occur in several mutually exclusive ways, the probability for the event is the sum of the probabilities for each way considered separately.
+3. Last but not least, the probability of any event can be calculated using a deceptively simple rule --- the **additivity axiom**:
+  _Whenever an event can occur in several mutually exclusive ways, the probability for the event is the sum of the probabilities for each way considered separately._
 
 Obvious, isn't it?
 So obvious, in fact,  that probability theory was accepted as a mathematical framework theory, a language that can be used to describe actual physical phenomena.
@@ -81,8 +101,9 @@ Following the ``quantum rules'', first we add the amplitudes and then we square 
 Thus, the particle will reach the detector with probability
 $$
 \begin{aligned}
-  p = |z|^2 = |z_1 + z_2|^2
-  & = |z_1|^2 + |z_2|^2
+  p = |z|^2
+  & = |z_1 + z_2|^2
+\\& = |z_1|^2 + |z_2|^2
       + z_1^\star z_2 + z_1 z_2^\star
 \\& = p_1 + p_2
       + |z_1||z_2|\left(
