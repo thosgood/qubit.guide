@@ -1,3 +1,5 @@
+For the compiled version, see [here](_book/index.html).
+
 # To-do
 
 - svg output for figures
