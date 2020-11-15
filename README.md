@@ -4,8 +4,9 @@
 - `\newcommand`s to somewhere shared by tex **and** html output
 - license on index page
 - "view source" button on gitbook output
-  + i think this comes from `github-repo:` in the yaml of `index.Rmd`?
+  + this is `view`: see https://bookdown.org/yihui/bookdown/configuration.html
 - tufte (html) output too
+- **tufte html output in one folder, and gitbook in another!**
 
 
 # Useful links
