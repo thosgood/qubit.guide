@@ -99,7 +99,7 @@ But this is not what happens experimentally!
 
 Following the ``quantum rules'', first we add the amplitudes and then we square the absolute value of the sum to get the probability.
 Thus, the particle will reach the detector with probability
-$$
+\begin{equation}
 \begin{aligned}
   p = |z|^2
   & = |z_1 + z_2|^2
@@ -114,7 +114,8 @@ $$
       + 2 \sqrt{p_1 p_2} \cos(\varphi_2-\varphi_1)
 \\& = p_1 + p_2 + \mbox{interference terms}
 \end{aligned}
-$$
+(\#eq:interference)
+\end{equation}
 where we have expressed the amplitudes in their polar forms
 $$
 \begin{aligned}
@@ -166,13 +167,13 @@ meaning the particle at the upper slit with amplitude $\alpha$ and at the lower 
 
 ## Interferometers
 
-Many modern interference experiments are performed using internal degrees of freedom of atoms and ions. For example, **Ramsey interferometry**, named after American physicist Norman Ramsay, is a generic name for an interference experiment in which atoms are sent through two separate resonant interaction zones, known as **Ramsay zones**, separated by an intermediate dispersive interaction zone.
+Many modern interference experiments are performed using internal degrees of freedom of atoms and ions. For example, **Ramsey interferometry**, named after American physicist Norman Ramsey, is a generic name for an interference experiment in which atoms are sent through two separate resonant interaction zones, known as **Ramsey zones**, separated by an intermediate dispersive interaction zone.
 
 Many beautiful experiments of this type were carried out in the 1990s in Serge Haroche's lab at the Ecole Normale Supérieure in Paris. Rubidium atoms were sent through two separate interaction zones (resonant interaction in the first and the third cavity) separated by a phase inducing dispersive interaction zone (the central  cavity). The atoms were subsequently measured, via a selective ionisation, and found to be in one of the two preselected energy states, here labeled as $|0\rangle$ and $|1\rangle$. The fraction of atoms found in states $|0\rangle$ or $|1\rangle$ showed a clear dependence on the phase shifts induced by the dispersive interaction in the central cavity. In 2012 Serge Haroche and Dave Wineland shared the Nobel Prize in physics for "ground-breaking experimental methods that enable measuring and manipulation of individual quantum systems."
 
-(ref:ramsayfigurecaption) A schematic diagram of a Ramsay interference experiment.
+(ref:ramseyfigurecaption) A schematic diagram of a Ramsey interference experiment.
 
-```{r ramsayfigure,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='(ref:ramsayfigurecaption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+```{r ramseyfigure,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='(ref:ramseyfigurecaption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
 \definecolor{primary}{RGB}{255,153,0}
 \definecolor{secondary}{RGB}{51,102,136}
 \tikzset{blob/.style args={#1}{circle,draw,fill={#1}}}
@@ -211,7 +212,7 @@ Many beautiful experiments of this type were carried out in the 1990s in Serge H
 \end{tikzpicture}
 ```
 
-The three rectangular boxes in Figure \@ref(fig:ramsayfigure) represent three cavities, each cavity being an arrangement of mirrors which traps electromagnetic field (think about standing waves in between two mirrors).
+The three rectangular boxes in Figure \@ref(fig:ramseyfigure) represent three cavities, each cavity being an arrangement of mirrors which traps electromagnetic field (think about standing waves in between two mirrors).
 The oval shapes represent rubidium atoms with two preselected energy states labelled as $\ket{0}$ and $\ket{1}$.
 Each atom is initially prepared in a highly excited internal energy state $\ket{0}$ and zips through the three cavities, from the left to the right.
 In each cavity the atom interacts with the cavity field.
@@ -223,9 +224,9 @@ The fraction of atoms that is found in state $\ket{0}$ or $\ket{1}$ shows a clea
 
 We can understand this interference better if we follow the two internal states of the atom as it moves through the three cavities.
 
-(ref:ramsayfigure2caption) The Ramsey interferometer represented as an abstract diagram. It should be read from left to right. The line segments represent transitions between the two states, $\ket{0}$ and $\ket{1}$,  and the numbers are the corresponding probability amplitudes.
+(ref:ramseyfigure2caption) The Ramsey interferometer represented as an abstract diagram. It should be read from left to right. The line segments represent transitions between the two states, $\ket{0}$ and $\ket{1}$,  and the numbers are the corresponding probability amplitudes.
 
-```{r ramsayfigure2,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='(ref:ramsayfigure2caption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+```{r ramseyfigure2,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='(ref:ramseyfigure2caption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
 \definecolor{primary}{RGB}{255,153,0}
 \definecolor{secondary}{RGB}{51,102,136}
 \definecolor{highlight}{RGB}{0,0,0}
@@ -265,7 +266,7 @@ We can understand this interference better if we follow the two internal states 
 ```
 
 Suppose we are interested in the probability that the atom, initially in state $\ket{0}$, will be found, after completing its journey through the three cavities, in state $\ket{1}$.
-As you can see in Figure \@ref(fig:ramsayfigure2), this can happen in two ways, as indicated by the two red paths connecting the input state $\ket{0}$ on the left with the output state $\ket{1}$ on the right.
+As you can see in Figure \@ref(fig:ramseyfigure2), this can happen in two ways, as indicated by the two red paths connecting the input state $\ket{0}$ on the left with the output state $\ket{1}$ on the right.
 Again, let $U_{ij}$ denote the probability amplitude that input $\ket{j}$ generates output $\ket{i}$ (for $i,j=0,1$).
 We can see from the diagram that
 $$
@@ -373,15 +374,109 @@ As you can see, the matrix approach is a wonderful bookkeeping tool for in one s
 
 
 
+
 ## Qubits, gates, and circuits
+
+Atoms, trapped ions, molecules, nuclear spins and many other quantum objects with two pre-selected basis states labeled as $\ket{0}$ and $\ket{1}$ (from now on we will call such objects quantum bits or **qubits**) can be used to implement simple quantum interference.
+There is no need to learn about physics behind these diverse technologies if all you want is to understand the basics of quantum theory.
+We may now conveniently forget about any specific experimental realisation of a qubit and represent a generic **single qubit interference** graphically as a **circuit diagram**:^[Do not confuse the interference diagrams of Figure \@ref(fig:ramseyfigure) and Figure \@ref(fig:interferencematrix) with the circuit diagram. In the circuit diagrams, which we will use a lot from now on, a single qubit is represented by a single line.]
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\newcommand{\ket}[1]{|#1\rangle}
+  \begin{tikzpicture}[xscale=1.5]
+    \node [label=left:{$\ket{0}$}] (input) at (-2,0) {};
+    \node [label=right:{$\cos\frac{\varphi}{2}\ket{0} - i\sin\frac{\varphi}{2}\ket{1}$}] (output) at (2,0) {};
+    \draw (input) to node [draw,fill=white] {$H$} (0,0);
+    \node [dot,label=above:{$\varphi$}] at (0,0) {};
+    \draw (0,0) to node [draw,fill=white] {$H$} (output);
+  \end{tikzpicture}
+```
+
+This diagram should be read from left to right.
+The horizontal line represents a qubit that is inertly carried from one quantum operation to another. We often call this line a **quantum wire**.
+The wire may describe translation in space (e.g. atoms travelling through cavities) or translation in time (e.g.~ a sequence of operations performed on a trapped ion).
+The boxes or circles on the wire represent elementary quantum operations, called **quantum logic gates**.
+Here we have two types of gates: two Hadamard gates $H$ (think about resonant interactions) and one phase gate $P_\varphi$ (think about dispersive interaction), where^[Global phase factors are irrelevant, it is the relative phase $\varphi =\varphi_1-\varphi_0$ that matters. In a single qubit phase gate we usually factor out $e^{i\varphi_0}$, which leaves us with the two diagonal entries: $1$ and $e^{i\varphi}$.]
+$$
+H=\begin{bmatrix}
+    \frac{1}{\sqrt2} & \frac{1}{\sqrt2}
+  \\\frac{1}{\sqrt2} & \frac{-1}{\sqrt2}
+  \end{bmatrix}
+  \quad\text{and}\quad 
+P_\varphi  = \begin{bmatrix}
+    1 & 0
+  \\0 & e^{i\varphi}
+  \end{bmatrix}.
+$$
+
+The input qubits appear as state vectors on the left side of circuit diagrams, and the output qubits as state vectors on the right.
+The product of the three matrices $HP_\varphi H$ (see Figure \@ref(fig:interferencematrix)) describes the action of the whole circuit: it maps input state vectors to output state vectors,^[$HP_\varphi H =\begin{bmatrix}\cos\frac{\varphi}{2} & -i\sin\frac{\varphi}{2}\\\ -i\sin\frac{\varphi}{2}& \cos\frac{\varphi}{2}\end{bmatrix}$.]
+$$
+  \begin{array}{lcr}
+    \ket{0} & \mapsto & \cos\frac{\varphi}{2}\ket{0} - i\sin\frac{\varphi}{2}\ket{1},
+  \\\ket{1}
+    & \mapsto
+    &- i\sin\frac{\varphi}{2}\ket{0} + \cos\frac{\varphi}{2}\ket{1}.
+  \end{array}
+$$
+
+
 
 
 
 ## Quantum decoherence
 
+We do need quantum theory to describe many physical phenomena, but, at the same time, there are many other  phenomena where the classical theory of probability works pretty well.
+We hardly see quantum interference on a daily basis.
+Why?
+The answer is **decoherence**.
+The addition of probability amplitudes, rather than probabilities, applies to physical systems which are completely isolated.
+However, it is almost impossible to isolate a complex quantum system, such as a quantum computer, from the rest of the world.
+There will always be spurious interactions with the environment, and when we add amplitudes, we have to take into account not only different configurations of the physical system at hand, but also different configurations of the environment.
+
+For example, consider an isolated system composed of a quantum computer and its environment.
+The computer is prepared in some input state $I$ and generates output $O$.
+Let us look at the following two scenarios:
+
+1. _The computer is isolated and quantum computation does not affect the environment._
+  The computer and the environment evolve independently from each other and, as a result, the environment does not hold any physical record of how the computer reached output $O$.
+  In this case we add the amplitudes for each of the two alternative computational paths.
+  **!!! TODO FIGURE !!!**
+2. _Quantum computation affects the environment._
+  The environment now holds a physical record of how the computer reached output $O$, which results in two final states of the composed system (computer + environment) which we denote $O_1$ and $O_2$.
+  We add the probabilities for each of the two alternative computational paths.
+  **!!! TODO FIGURE !!!**
+
+When quantum computation affects the environment, we have to include the environment in our analysis for it now takes part in the computation.
+Depending on which computational path was taken, the environment may end up in two distinct states.
+The computer itself may show output $O$, but when we include the environment we have not one, but two outputs, $O_1$ and $O_2$, denoting, respectively, "computer shows output $O$ and the environment knows that path $1$ was taken" and "computer shows output $O$ and the environment knows that path $2$ was taken".
+There are no alternative ways of reaching $O_1$ or $O_2$, hence there is no interference, and the corresponding probabilities read $p_1=|z_1|^2$ for $O_1$, and $p_2=|z_2|^2$ for $O_2$.
+The probability that the computer shows output $O$, regardless the state of the environment, is the sum of of the two probabilities: $p=p_1+p_2$.
+We have lost the interference term and any advantages of quantum computation along with it.
+In the presence of decoherence the interference formula \@ref(eq:interference) is modified and reads
+$$
+p
+= p_1 + p_2 + 2 v \sqrt{p_1 p_2}\cos (\varphi_2-\varphi_1),
+$$
+where the parameter $v$, called the **visibility** of the interference pattern, ranges from $0$ (the environment can perfectly distinguish between the two paths, total decoherence, no interference) to $1$ (the environment cannot distinguish between the two paths, no decoherence, full interference), with the values in between corresponding to partial decoherence.
+We shall derive this formula later on, and you will see that $v$ quantifies the degree of distinguishability between $O_1$ and $O_2$.
+The more environment knows about which path was taken the less interference we see.
+
+**!!! TODO FIGURE !!!**
+
+:::{.idea}
+  Decoherence suppresses quantum interference.
+:::
+
+Decoherence is chiefly responsible for our classical description of the world --- without interference terms we may as well add probabilities instead of amplitudes. While decoherence is a serious impediment to building quantum computers, depriving us of the power of quantum interference, it is not all doom and gloom: there are clever ways around decoherence, such as quantum error correction and fault-tolerant methods we will meet later.
+
+
 
 
 ## Computation: deterministic, probabilistic, and quantum
+
+
 
 
 
