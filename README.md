@@ -13,7 +13,6 @@ Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
 - switch to katex
 - some sort of CSS customisation for the gitbook output
   + especially fonts... use the fonts from tufte?
-- tufte TOC CSS
 - `idea` environment (cf. e.g. the "Quantum decoherence" subsection)
 
 
