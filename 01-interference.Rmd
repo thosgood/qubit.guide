@@ -168,9 +168,11 @@ meaning the particle at the upper slit with amplitude $\alpha$ and at the lower 
 
 Many modern interference experiments are performed using internal degrees of freedom of atoms and ions. For example, **Ramsey interferometry**, named after American physicist Norman Ramsay, is a generic name for an interference experiment in which atoms are sent through two separate resonant interaction zones, known as **Ramsay zones**, separated by an intermediate dispersive interaction zone.
 
-(ref:ramsayfigurecaption) A schematic diagram of a Ramsay interference experiment. Many beautiful experiments of this type were carried out in the 1990s in Serge Haroche's lab at the Ecole Normale Supérieure in Paris. Rubidium atoms were sent through two separate interaction zones (resonant interaction in the first and the third cavity) separated by a phase inducing dispersive interaction zone (the central  cavity). The atoms were subsequently measured, via a selective ionisation, and found to be in one of the two preselected energy states, here labeled as $|0\rangle$ and $|1\rangle$. The fraction of atoms found in states $|0\rangle$ or $|1\rangle$ showed a clear dependence on the phase shifts induced by the dispersive interaction in the central cavity. In 2012 Serge Haroche and Dave Wineland shared the Nobel Prize in physics for "ground-breaking experimental methods that enable measuring and manipulation of individual quantum systems."
+Many beautiful experiments of this type were carried out in the 1990s in Serge Haroche's lab at the Ecole Normale Supérieure in Paris. Rubidium atoms were sent through two separate interaction zones (resonant interaction in the first and the third cavity) separated by a phase inducing dispersive interaction zone (the central  cavity). The atoms were subsequently measured, via a selective ionisation, and found to be in one of the two preselected energy states, here labeled as $|0\rangle$ and $|1\rangle$. The fraction of atoms found in states $|0\rangle$ or $|1\rangle$ showed a clear dependence on the phase shifts induced by the dispersive interaction in the central cavity. In 2012 Serge Haroche and Dave Wineland shared the Nobel Prize in physics for "ground-breaking experimental methods that enable measuring and manipulation of individual quantum systems."
 
-```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='(ref:ramsayfigurecaption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+(ref:ramsayfigurecaption) A schematic diagram of a Ramsay interference experiment.
+
+```{r ramsayfigure,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='(ref:ramsayfigurecaption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
 \definecolor{primary}{RGB}{255,153,0}
 \definecolor{secondary}{RGB}{51,102,136}
 \tikzset{blob/.style args={#1}{circle,draw,fill={#1}}}
@@ -209,6 +211,165 @@ Many modern interference experiments are performed using internal degrees of fre
 \end{tikzpicture}
 ```
 
+The three rectangular boxes in Figure \@ref(fig:ramsayfigure) represent three cavities, each cavity being an arrangement of mirrors which traps electromagnetic field (think about standing waves in between two mirrors).
+The oval shapes represent rubidium atoms with two preselected energy states labelled as $\ket{0}$ and $\ket{1}$.
+Each atom is initially prepared in a highly excited internal energy state $\ket{0}$ and zips through the three cavities, from the left to the right.
+In each cavity the atom interacts with the cavity field.
+The first and the third cavities are, for all theoretical purposes, identical.
+Their frequencies are tuned to the resonant frequency of the atom, and the atom exchanges energy with the cavity, going back and forth between its energy states $\ket{0}$ and $\ket{1}$.
+In contrast, in the second (central) cavity, the atom undergoes the so-called dispersive interaction: it is too off resonance to exchange energy with the field but its energy states ``feel'' the field and acquire phase shifts.
+After experiencing this well timed sequence of resonant--dispersive--resonant interactions, the energy of the atom is measured and the atom is found to be either in state $\ket{0}$ or state $\ket{1}$.
+The fraction of atoms that is found in state $\ket{0}$ or $\ket{1}$ shows a clear dependence on the phase shifts induced by the dispersive interaction in the central cavity.
+
+We can understand this interference better if we follow the two internal states of the atom as it moves through the three cavities.
+
+(ref:ramsayfigure2caption) The Ramsey interferometer represented as an abstract diagram. It should be read from left to right. The line segments represent transitions between the two states, $\ket{0}$ and $\ket{1}$,  and the numbers are the corresponding probability amplitudes.
+
+```{r ramsayfigure2,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='(ref:ramsayfigure2caption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{primary}{RGB}{255,153,0}
+\definecolor{secondary}{RGB}{51,102,136}
+\definecolor{highlight}{RGB}{0,0,0}
+\definecolor{lowlight}{RGB}{184,177,162}
+\tikzset{blob/.style args={#1}{circle,draw,fill={#1}}}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[scale=1.7]
+  \draw [ultra thick,dashed,primary] (0.6,2.5) rectangle (2.3,-0.5);
+  \draw [ultra thick,dashed,secondary] (2.5,2.5) rectangle (3.4,-0.5);
+  \draw [ultra thick,dashed,primary] (3.6,2.5) rectangle (5.3,-0.5);
+  \node at (1.5,-1) {resonant};
+  \node at (3,-1) {dispersive};
+  \node at (4.5,-1) {resonant};
+  \node [label=left:{$\ket{0}$}] (input0) at (0.2,2) {};
+  \node [label=left:{$\ket{1}$}] (input1) at (0.2,0) {};
+  \node [label=right:{$\ket{0}$}] (output0) at (5.7,2) {};
+  \node [label=right:{$\ket{1}$}] (output1) at (5.7,0) {};
+  \foreach \x in {1,2,4,5}
+    \foreach \y in {0,2}
+      \node [dot] (n\x\y) at (\x,\y) {};
+  \draw [ultra thick,highlight] (input0) to (n12) to (n22);
+  \draw [thick,lowlight] (input1) to (n10) to (n20);
+  \draw [thick,lowlight] (n42) to (n52) to (output0);
+  \draw [ultra thick,highlight] (n40) to (n50) to (output1);
+  \draw [ultra thick,highlight] (n22) to node [pos=0.5,fill=white] {$e^{i\varphi_0}$} (n42);
+  \draw [ultra thick,highlight] (n20) to node [pos=0.5,fill=white] {$e^{i\varphi_1}$} (n40);
+  \draw [thick,lowlight] (n10) to node [pos=0.25,fill=white] {\small$\frac1{\sqrt{2}}$} (n22);
+  \draw [thick,lowlight] (n40) to node [pos=0.25,fill=white] {\small$\frac1{\sqrt{2}}$} (n52);
+  \draw [ultra thick,highlight] (n12) to node [pos=0.25,fill=white] {\small$\frac1{\sqrt{2}}$} (n20);
+  \draw [ultra thick,highlight] (n42) to node [pos=0.25,fill=white] {\small$\frac1{\sqrt{2}}$} (n50);
+  \node [highlight,fill=white] at (1.6,2) {\small$\frac1{\sqrt{2}}$};
+  \node [lowlight,fill=white] at (4.6,2) {\small$\frac1{\sqrt{2}}$};
+  \node [lowlight,fill=white] at (1.6,0) {\small$\frac{-1}{\sqrt{2}}$};
+  \node [highlight,fill=white] at (4.6,0) {\small$\frac{-1}{\sqrt{2}}$};
+\end{tikzpicture}
+```
+
+Suppose we are interested in the probability that the atom, initially in state $\ket{0}$, will be found, after completing its journey through the three cavities, in state $\ket{1}$.
+As you can see in Figure \@ref(fig:ramsayfigure2), this can happen in two ways, as indicated by the two red paths connecting the input state $\ket{0}$ on the left with the output state $\ket{1}$ on the right.
+Again, let $U_{ij}$ denote the probability amplitude that input $\ket{j}$ generates output $\ket{i}$ (for $i,j=0,1$).
+We can see from the diagram that
+$$
+  \begin{aligned}
+    U_{10}
+    &= \frac{1}{\sqrt2} e^{i\varphi_0}\frac{1}{\sqrt2} + \frac{1}{\sqrt2} e^{i\varphi_1}\frac{-1}{\sqrt2}
+  \\&= \frac12 e^{i\varphi_0} - \frac12 e^{i\varphi_1}
+  \\&= -ie^{i\varphi/2}\sin\frac{\varphi}{2},
+  \end{aligned}
+$$
+where $\varphi = \varphi_0-\varphi_1$ is the relative phase.
+The corresponding probability reads^[From the classical probability theory perspective the resonant interaction induces a random switch between $\ket{0}$ and $\ket{1}$ (why ?) and the dispersive interaction has no effect on these two states (why ?). Hence, one random switch followed by another random switch gives a random switch, right,  which gives  $\half$ for the probability that input $\ket{0}$ becomes output $\ket{1}$.]
+$$
+  \begin{aligned}
+    P_{10}
+    &= \vert U_{10}\vert^2
+  \\&= \left\vert \frac12 e^{i\varphi_0} - \frac12 e^{i\varphi_1}\right\vert^2
+  \\&= \frac12 - \frac12\cos\varphi.
+  \end{aligned}
+$$
+You should recognise the first term, $\half$, as the ``classical'' probability and the second one, $-\half\cos\varphi$, as the interference term.
+We can repeat such calculations for any other pair of input--output states.
+This approach works fine here but, in general, tracking all possible paths in evolving quantum systems can become messy when the number of input and output states increases.
+There is, however, a neat way of doing it via matrix multiplication.
+
+The effect of each interaction on atomic states can be described by a matrix of transition amplitudes, as illustrated in Figure \@ref(fig:interferencematrix).
+Then a sequence of independent interactions is described by the product of these matrices.
+$$
+  \begin{aligned}
+    U &=
+    \begin{bmatrix}
+      \frac{1}{\sqrt2} & \frac{1}{\sqrt2}
+    \\\frac{1}{\sqrt2} & \frac{-1}{\sqrt2}
+    \end{bmatrix}
+    \begin{bmatrix}
+      e^{i\varphi_0} & 0
+    \\0 & e^{i\varphi_1}
+    \end{bmatrix}
+    \begin{bmatrix}
+      \frac{1}{\sqrt2} & \frac{1}{\sqrt2}
+    \\\frac{1}{\sqrt2} & \frac{-1}{\sqrt2}
+    \end{bmatrix}
+  \\&= e^{i\frac{\varphi_0+\varphi_1}{2}}
+    \begin{bmatrix}
+      \cos\frac{\varphi}{2} & -i\sin\frac{\varphi}{2}
+    \\\ -i\sin\frac{\varphi}{2}& \cos\frac{\varphi}{2}
+    \end{bmatrix},
+  \end{aligned}
+$$
+where $\varphi = \varphi_0-\varphi_1$.
+
+(ref:interferencematrixcaption) The Ramsey interferometer represented as an abstract diagram (matrix approach). Here we have omitted the $\ket{0}$ and $\ket{1}$ labels, just to simply the diagram.
+
+```{r interferencematrix,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.fullwidth=TRUE,fig.cap='(ref:interferencematrixcaption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{primary}{RGB}{255,153,0}
+\definecolor{secondary}{RGB}{51,102,136}
+\tikzset{blob/.style args={#1}{circle,draw,fill={#1}}}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[xscale=1.35]
+  \draw [ultra thick,dashed,primary] (0.6,2.5) rectangle (2.3,-0.5);
+  \draw [ultra thick,dashed,secondary] (2.5,2.5) rectangle (3.4,-0.5);
+  \draw [ultra thick,dashed,primary] (3.6,2.5) rectangle (5.3,-0.5);
+  \node at (1.5,-1.2) {$\begin{bmatrix}\frac{1}{\sqrt2}&\frac{1}{\sqrt2}\\\frac{1}{\sqrt2}&\frac{-1}{\sqrt2}\end{bmatrix}$};
+  \node at (3,-1.2) {$\begin{bmatrix}e^{i\varphi_0}&0\\0&e^{i\varphi_1}\end{bmatrix}$};
+  \node at (4.5,-1.2) {$\begin{bmatrix}\frac{1}{\sqrt2}&\frac{1}{\sqrt2}\\\frac{1}{\sqrt2}&\frac{-1}{\sqrt2}\end{bmatrix}$};
+  \node at (6.25,-1.2) {$=$};
+  \node at (8,-1.2) {$\begin{bmatrix}\cos\frac\varphi2&-i\sin\frac\varphi2\\-i\sin\frac\varphi2&\cos\frac\varphi2\end{bmatrix}$};
+  \node (input1) at (0.2,2) [] {};
+  \node (input2) at (0.2,0) [] {};
+  \node (output1) at (5.7,2) {};
+  \node (output2) at (5.7,0) {};
+  \draw (input1)--(1,2)--(2,2)--(4,2);
+  \draw (4,2)--(5,2)--(output1);
+  \draw (input2)--(1,0)--(2,0);
+  \draw (2,0)--(4,0)--(5,0)--(output2);
+  \node at (6.25,1) {$=$};
+  \foreach \x in {1,2,4,5,7,9}
+    \foreach \y in {0,2}
+      \node [dot] (n\x\y) at (\x,\y) {};
+  \draw [-,thick] (n12) to node [pos=0.25,fill=white] {\small$\frac{1}{\sqrt2}$} (n20);
+  \draw [-,thick] (n10) to node [pos=0.25,fill=white] {\small$\frac{1}{\sqrt2}$} (n22);
+  \draw [-,thick] (n42) to node [pos=0.25,fill=white] {\small$\frac{1}{\sqrt2}$} (n50);
+  \draw [-,thick] (n40) to node [pos=0.25,fill=white] {\small$\frac{1}{\sqrt2}$} (n52);
+  \draw [-,thick] (n70) to node [pos=0.25,fill=white] {\small$-i\sin\frac{\varphi}{2}$} (n92);
+  \draw [-,thick] (n70) to node [pos=0.5,fill=white] {\small$\cos\frac{\varphi}{2}$} (n90);
+  \draw [-,thick] (n72) to node [pos=0.25,fill=white] {\small$-i\sin\frac{\varphi}{2}$} (n90);
+  \draw [-,thick] (n72) to node [pos=0.5,fill=white] {\small$\cos\frac{\varphi}{2}$} (n92);
+  \draw [-,thick] (9,0)--(9.3,0);
+  \draw [-,thick] (9,2)--(9.3,2);
+  \draw [-,thick] (6.7,0)--(7,0);
+  \draw [-,thick] (6.7,2)--(7,2);
+  \node [fill=white] at (4.6,2) {\small$\frac{1}{\sqrt2}$};
+  \node [fill=white] at (1.6,2) {\small$\frac{1}{\sqrt2}$};
+  \node [fill=white] at (3,2) {\small$e^{i\varphi_0}$};
+  \node [fill=white] at (3,0) {\small$e^{i\varphi_1}$};
+  \node [fill=white] at (1.6,0) {\small$\frac{1}{\sqrt2}$};
+  \node [fill=white] at (4.6,0) {\small$\frac{-1}{\sqrt2}$};
+\end{tikzpicture}
+```
+
+In general, quantum operation $A$ followed by another quantum operation $B$ is a quantum operation described by the matrix product $BA$ (watch the order of matrices).
+Indeed, the expression $(BA)_{ij}=\sum_k B_{ik}A_{kj}$ is the sum over amplitudes that input $\ket{j}$ generates output $\ket{i}$ via a specific intermediate state $\ket{k}$.
+As you can see, the matrix approach is a wonderful bookkeeping tool for in one swap it takes care of both multiplying and adding probability amplitudes corresponding to all the contributing paths.
 
 
 
