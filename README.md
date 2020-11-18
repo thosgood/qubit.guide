@@ -14,6 +14,7 @@ Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
 - some sort of CSS customisation for the gitbook output
   + especially fonts... use the fonts from tufte?
 - `idea` environment (cf. e.g. the "Quantum decoherence" subsection)
+- link prefixed to gitbook TOC
 
 
 # Useful links
