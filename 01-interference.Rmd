@@ -464,21 +464,75 @@ p
 $$
 where the parameter $v$, called the **visibility** of the interference pattern, ranges from $0$ (the environment can perfectly distinguish between the two paths, total decoherence, no interference) to $1$ (the environment cannot distinguish between the two paths, no decoherence, full interference), with the values in between corresponding to partial decoherence.
 We shall derive this formula later on, and you will see that $v$ quantifies the degree of distinguishability between $O_1$ and $O_2$.
-The more environment knows about which path was taken the less interference we see.
+The more the environment knows about which path was taken the less interference we see.
 
-**!!! TODO FIGURE !!!**
+**!!! TODO pgfplots !!!**
+<!-- ```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.margin=TRUE,fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\begin{tikzpicture}[scale=0.5]
+  \begin{axis}[
+    xmin=0,xmax=5,
+    xlabel=relative phase,
+    ylabel=$p\,\text{(probability)}$,
+    ymin=0,ymax=1.1,
+    axis lines=middle,
+    xtick={0},
+    xticklabels={$0$},
+    ytick={0.5,1},
+    yticklabels={$p_1+p_2$,1},
+    xlabel style={font=\Large, anchor=south,at={(axis description cs:0.8,0)}},
+    ylabel style={font=\Large, anchor=south}, very thick,
+    yticklabel style={font=\Large},
+  ]
+    \addplot[domain=0:1.6*pi,samples=200,secondary,line width=2pt]{0.5+0.05*cos(deg(3*x))};
+    \addplot[domain=0:1.6*pi,samples=200,gray,very thick]{0.5};
+  \end{axis}
+\end{tikzpicture}
+``` -->
 
 :::{.idea}
   Decoherence suppresses quantum interference.
 :::
 
-Decoherence is chiefly responsible for our classical description of the world --- without interference terms we may as well add probabilities instead of amplitudes. While decoherence is a serious impediment to building quantum computers, depriving us of the power of quantum interference, it is not all doom and gloom: there are clever ways around decoherence, such as quantum error correction and fault-tolerant methods we will meet later.
+Decoherence is chiefly responsible for our classical description of the world --- without interference terms we may as well add probabilities instead of amplitudes.
+While decoherence is a serious impediment to building quantum computers, depriving us of the power of quantum interference, it is not all doom and gloom: there are clever ways around decoherence, such as quantum error correction and fault-tolerant methods we will meet later.
 
 
 
 
 ## Computation: deterministic, probabilistic, and quantum
 
+Take one physical bit or a qubit.
+It has two logical states: $\ket{0}$ and $\ket{1}$.
+Bring another qubit and the combined systems has four logical states $\ket{00}, \ket{01},\ket{10}$ and $\ket{11}$.
+In general $n$ qubits will give us $2^n$ states representing all possible binary strings of length $n$.
+It is important to use subsystems --- here qubits --- rather than one chunk of matter, for operating on at most $n$ qubits we can reach any of the $2^n$ states of the composed system.
+Now, let the qubits interact in a controllable fashion.
+We are computing.
+Think about computation as a physical process that evolves a prescribed initial configuration of a computing machine, called <span style="font-variant:small-caps;">input</span>, into some final configuration, called <span style="font-variant:small-caps;">output</span>.
+We shall refer to the configurations as **states**.
+Figure \@ref(fig:deterministiccomputation) shows five consecutive computational steps performed on four distinct states.
+
+```{r deterministiccomputation,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='Deterministic computation',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\usetikzlibrary{arrows.meta}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\tikzset{process/.style={thick,-{Latex},shorten >=0.1cm,shorten <=0.1cm}}
+\begin{tikzpicture}[xscale=2.5,yscale=0.8]
+    \foreach \x in {0,1,2,3,4,5}
+      \foreach \y in {0,1,2,3}
+        \node [dot] (n\x\y) at (\x,\y) {};
+    \node at (-0.3,3) {\sc input};
+    \node at (5.3,1) {\sc output};
+    \draw [process] (n03) to (n11);
+    \draw [process] (n11) to (n22);
+    \draw [process] (n22) to (n30);
+    \draw [process] (n30) to (n42);
+    \draw [process] (n42) to (n51);
+  \end{tikzpicture}
+```
+
+That computation was **deterministic**: every time you run it with the same input, you get the same output.
+But a computation does not have to be deterministic --- we can augment a computing machine by allowing it ``to toss an unbiased coin'' and to choose its steps randomly.
+It can then be viewed as a directed^[So we read left to right, and omit the arrowheads.] tree-like graph where each node corresponds to a state of the machine, and each edge represents one step of the computation.
 
 
 
