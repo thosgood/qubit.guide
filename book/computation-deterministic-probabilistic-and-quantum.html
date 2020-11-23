@@ -24,7 +24,7 @@
 <meta name="author" content="Artur Ekert" />
 
 
-<meta name="date" content="2020-11-22" />
+<meta name="date" content="2020-11-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -133,7 +133,7 @@ In general <span class="math inline">\(n\)</span> qubits will give us <span clas
 It is important to use subsystems — here qubits — rather than one chunk of matter, for operating on at most <span class="math inline">\(n\)</span> qubits we can reach any of the <span class="math inline">\(2^n\)</span> states of the composed system.
 Now, let the qubits interact in a controllable fashion.
 We are computing.
-Think about computation as a physical process that evolves a prescribed initial configuration of a computing machine, called <span class="smallcaps">input</span>, into some final configuration, called <span class="smallcaps">output</span>.
+Think about computation as a physical process that evolves a prescribed initial configuration of a computing machine, called <strong><code>INPUT</code></strong>, into some final configuration, called <strong><code>OUTPUT</code></strong>.
 We shall refer to the configurations as <strong>states</strong>.
 Figure <a href="computation-deterministic-probabilistic-and-quantum.html#fig:deterministiccomputation">1.4</a> shows five consecutive computational steps performed on four distinct states.</p>
 <div class="figure" style="text-align: center"><span id="fig:deterministiccomputation"></span>
@@ -144,7 +144,41 @@ Figure 1.4: Deterministic computation
 </div>
 <p>That computation was <strong>deterministic</strong>: every time you run it with the same input, you get the same output.
 But a computation does not have to be deterministic — we can augment a computing machine by allowing it ``to toss an unbiased coin’’ and to choose its steps randomly.
-It can then be viewed as a directed<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a> tree-like graph where each node corresponds to a state of the machine, and each edge represents one step of the computation.</p>
+It can then be viewed as a directed<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a> tree-like graph where each node corresponds to a state of the machine, and each edge represents one step of the computation, as shown in Figure <a href="computation-deterministic-probabilistic-and-quantum.html#fig:probabilisticcomputation">1.5</a></p>
+<div class="figure" style="text-align: center"><span id="fig:probabilisticcomputation"></span>
+<img src="quantum-site_files/figure-html/probabilisticcomputation-1.png" alt="Probabilistic computation" width="672" />
+<p class="caption">
+Figure 1.5: Probabilistic computation
+</p>
+</div>
+<p>The computation starts from some initial state (<code>INPUT</code>) and it subsequently branches into other nodes representing states reachable with non-zero probability from the initial state.
+The probability of a particular final state (<code>OUTPUT</code>) being reached is equal to the sum of the probabilities along all mutually exclusive paths which connect the initial state with that particular state.
+Figure <a href="computation-deterministic-probabilistic-and-quantum.html#fig:probabilisticcomputation">1.5</a> shows only two computational paths, but, in general, there could be many more paths (here, up to 256) contributing to the final probability.
+Quantum computation can be represented by a similar graph, as in <a href="computation-deterministic-probabilistic-and-quantum.html#fig:quantumcomputation">1.6</a>.</p>
+<div class="figure" style="text-align: center"><span id="fig:quantumcomputation"></span>
+<img src="quantum-site_files/figure-html/quantumcomputation-1.png" alt="Quantum computation" width="672" />
+<p class="caption">
+Figure 1.6: Quantum computation
+</p>
+</div>
+<p>For quantum computations, we associate with each edge in the graph the probability <em>amplitude</em> that the computation follows that edge.
+The probability amplitude of a particular path to be followed is the product of amplitudes pertaining to transitions in each step.
+The probability amplitude of a particular final state being reached is equal to the sum of the amplitudes along all mutually exclusive paths which connect the initial state with that particular state:
+<span class="math display">\[
+  z = \sum_{\mbox{\scriptsize all paths $k$}} z_k.
+\]</span>
+The resulting probability, as we have just seen, is the sum of the probabilities pertaining to each computational path <span class="math inline">\(p_k\)</span> modified by the interference terms:
+<span class="math display">\[
+  p
+  = |z|^2
+  = \sum_{k,j} z_j^\star z_k
+  = \sum_k p_k
+    + \sum_{k\ne j} \sqrt{p_k p_j}\cos(\varphi_k-\varphi_j).
+\]</span></p>
+<div class="idea">
+<p>Quantum computation can be viewed as a complex multi-particle quantum interference involving many computational paths through a computing device.
+The art of quantum computation is to shape quantum interference, through a sequence of computational steps, enhancing probabilities of correct outputs and suppressing probabilities of the wrong ones.</p>
+</div>
 </div>
 <div class="footnotes">
 <hr />

@@ -445,11 +445,37 @@ Let us look at the following two scenarios:
 1. _The computer is isolated and quantum computation does not affect the environment._
   The computer and the environment evolve independently from each other and, as a result, the environment does not hold any physical record of how the computer reached output $O$.
   In this case we add the amplitudes for each of the two alternative computational paths.
-  **!!! TODO FIGURE !!!**
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=2.25,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{primary}{RGB}{255,153,0}
+\tikzset{blob/.style args={#1}{circle,draw,fill={#1}}}
+\tikzset{process/.style={thick,->,shorten >=0.1cm,shorten <=0.1cm}}
+\begin{tikzpicture}[scale=0.5]
+  \node (initial) at (0,0) [blob=primary] {\small $I$};
+  \node (final) at (4,-1) [blob=primary] {\small $O$};
+  \draw [process] (initial) to [out=40,in=120] node[pos=0.5,fill=white] {$z_1$} (final);
+  \draw [process] (initial) to [out=-60,in=-140] node[pos=0.5,fill=white] {$z_2$} (final);
+  \node at (2,-3) {$p = |z_1 + z_2|^2$};
+\end{tikzpicture}
+```
+
 2. _Quantum computation affects the environment._
   The environment now holds a physical record of how the computer reached output $O$, which results in two final states of the composed system (computer + environment) which we denote $O_1$ and $O_2$.
   We add the probabilities for each of the two alternative computational paths.
-  **!!! TODO FIGURE !!!**
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=2.25,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{primary}{RGB}{255,153,0}
+\tikzset{blob/.style args={#1}{circle,draw,fill={#1}}}
+\tikzset{process/.style={thick,->,shorten >=0.1cm,shorten <=0.1cm}}
+\begin{tikzpicture}[scale=0.5]
+  \node (initial) at (0,0) [blob=primary] {\small I};
+  \node (final1) at (4.2,-0.5) [blob=primary,inner sep=2pt] {\small $O_1$};
+  \node (final2) at (3.8,-1.5) [blob=primary,inner sep=2pt] {\small $O_2$};
+  \draw [process] (initial) to [out=50,in=120] node[pos=0.5,fill=white] {$z_1$} (final1);
+  \draw [process] (initial) to [out=-70,in=-150] node[pos=0.5,fill=white] {$z_2$} (final2);
+  \node at (2,-3.2) {$p = |z_1|^2 + |z_2|^2$};
+\end{tikzpicture}
+```
 
 When quantum computation affects the environment, we have to include the environment in our analysis for it now takes part in the computation.
 Depending on which computational path was taken, the environment may end up in two distinct states.
@@ -508,7 +534,7 @@ In general $n$ qubits will give us $2^n$ states representing all possible binary
 It is important to use subsystems --- here qubits --- rather than one chunk of matter, for operating on at most $n$ qubits we can reach any of the $2^n$ states of the composed system.
 Now, let the qubits interact in a controllable fashion.
 We are computing.
-Think about computation as a physical process that evolves a prescribed initial configuration of a computing machine, called <span style="font-variant:small-caps;">input</span>, into some final configuration, called <span style="font-variant:small-caps;">output</span>.
+Think about computation as a physical process that evolves a prescribed initial configuration of a computing machine, called **`INPUT`**, into some final configuration, called **`OUTPUT`**.
 We shall refer to the configurations as **states**.
 Figure \@ref(fig:deterministiccomputation) shows five consecutive computational steps performed on four distinct states.
 
@@ -532,7 +558,73 @@ Figure \@ref(fig:deterministiccomputation) shows five consecutive computational 
 
 That computation was **deterministic**: every time you run it with the same input, you get the same output.
 But a computation does not have to be deterministic --- we can augment a computing machine by allowing it ``to toss an unbiased coin'' and to choose its steps randomly.
-It can then be viewed as a directed^[So we read left to right, and omit the arrowheads.] tree-like graph where each node corresponds to a state of the machine, and each edge represents one step of the computation.
+It can then be viewed as a directed^[So we read left to right, and omit the arrowheads.] tree-like graph where each node corresponds to a state of the machine, and each edge represents one step of the computation, as shown in Figure \@ref(fig:probabilisticcomputation)
+
+```{r probabilisticcomputation,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='Probabilistic computation',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\begin{tikzpicture}[xscale=2.5,yscale=0.8]
+  \foreach \x in {0,...,5}
+    \foreach \y in {0,1,2,3}
+      \node [dot] (n\x\y) at (\x,\y) {};
+  \foreach \x in {1,2,3,4}
+    \foreach \y in {0,1,2,3}
+      \foreach \z in {0,1,2,3}
+        \pgfmathtruncatemacro{\a}{\x+1}
+        \draw [lightgray] (n\x\y) to (n\a\z);
+  \foreach \y in {0,1,2,3}
+    \draw [lightgray] (n03) to (n1\y);
+  \draw [thick,black] (n03) to (n12) to (n20) to (n31) to (n40) to (n51);
+  \draw [thick,black] (n03) to (n11) to (n22) to (n30) to (n42) to (n51);
+  \node at (-0.3,3) {\sc input};
+  \node at (5.5,1) {$p=p_1+p_2$};
+\end{tikzpicture}
+```
+
+The computation starts from some initial state (`INPUT`) and it subsequently branches into other nodes representing states reachable with non-zero probability from the initial state.
+The probability of a particular final state (`OUTPUT`)  being reached is equal to the sum of the probabilities along all mutually exclusive paths which connect the initial state with that particular state.
+Figure \@ref(fig:probabilisticcomputation) shows only two computational paths, but, in general, there could be many more paths (here, up to 256) contributing to the final probability.
+Quantum computation can be represented by a similar graph, as in \@ref(fig:quantumcomputation).
+
+```{r quantumcomputation,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='Quantum computation',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\begin{tikzpicture}[xscale=2.5,yscale=0.8]
+  \foreach \x in {0,...,5}
+    \foreach \y in {0,1,2,3}
+      \node [dot] (n\x\y) at (\x,\y) {};
+  \foreach \x in {1,2,3,4}
+    \foreach \y in {0,1,2,3}
+      \foreach \z in {0,1,2,3}
+        \pgfmathtruncatemacro{\a}{\x+1}
+        \draw [lightgray] (n\x\y) to (n\a\z);
+  \foreach \y in {0,1,2,3}
+    \draw [lightgray] (n03) to (n1\y);
+  \draw [thick,black] (n03) to (n12) to (n20) to (n31) to (n40) to (n51);
+  \draw [thick,black] (n03) to (n11) to (n22) to (n30) to (n42) to (n51);
+  \node at (-0.3,3) {\sc input};
+  \node at (5.5,1) {$p=p_1+p_2$};
+  \node at (5.8,0.4) {$+2\sqrt{p_1p_2}\cos(\varphi_2-\varphi_1)$};
+\end{tikzpicture}
+```
+
+For quantum computations, we associate with each edge in the graph the probability _amplitude_ that the computation follows that edge.
+The probability amplitude of a particular path to be followed is the product of amplitudes pertaining to transitions in each step.
+The probability amplitude of a particular final state being reached is equal to the sum of the amplitudes along all mutually exclusive paths which connect the initial state with that particular state:
+$$
+  z = \sum_{\mbox{\scriptsize all paths $k$}} z_k.
+$$
+The resulting probability, as we have just seen, is the sum of the probabilities pertaining to each computational path $p_k$ modified by the interference terms:
+$$
+  p
+  = |z|^2
+  = \sum_{k,j} z_j^\star z_k
+  = \sum_k p_k
+    + \sum_{k\ne j} \sqrt{p_k p_j}\cos(\varphi_k-\varphi_j).
+$$
+
+:::{.idea}
+  Quantum computation can be viewed as a complex multi-particle quantum interference involving many computational paths through a computing device.
+  The art of quantum computation is to shape quantum interference, through a sequence of computational steps, enhancing probabilities of correct outputs and suppressing probabilities of the wrong ones.
+:::
 
 
 
@@ -554,14 +646,29 @@ For example, using the algorithm taught in elementary school, one can multiply t
 In contrast, the fastest-known method for the reverse operation --- factoring an $n$-digit integer into prime numbers --- takes a time that grows exponentially, roughly as $2^n$.
 That is considered inefficient.
 
-The class of problems that can be solved by a deterministic computer in polynomial time is represented by the capital letter \textsf{P}, for \emph{polynomial} time.
-The class of problems that can be solved in polynomial time by a probabilistic computer is called \textsf{BPP}, for \emph{bounded-error probabilistic polynomial} time.
-It is clear that \textsf{BPP} contains \textsf{P}, since a deterministic computation is a special case of a probabilistic computation in which we never consult the source of randomness.
+**!!! TODO pgfplot !!!**
+
+The class of problems that can be solved by a deterministic computer in polynomial time is represented by the capital letter `P`, for _polynomial_ time.
+The class of problems that can be solved in polynomial time by a probabilistic computer is called `BPP`, for _bounded-error probabilistic polynomial_ time.
+It is clear that `BPP` contains `P`, since a deterministic computation is a special case of a probabilistic computation in which we never consult the source of randomness.
 When we run a probabilistic (a.k.a. randomised) computation many times on the same input, we will not get the same answer every time, but the computation is useful if the probability of getting the right answer is high enough.
-Finally, the complexity class \textsf{BQP}, for \emph{bounded-error quantum polynomial}, is the class of problems that can be solved in polynomial time by a quantum computer.
-Since a quantum computer can easily generate random bits and simulate a probabilistic classical computer, \textsf{BQP} certainly contains the class \textsf{BPP}.
-Here we are interested in problems that are in \textsf{BQP} but not known to be in \textsf{BPP}.
+Finally, the complexity class `BQP`, for _bounded-error quantum polynomial_, is the class of problems that can be solved in polynomial time by a quantum computer.
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.margin=TRUE,fig.width=2,fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\begin{tikzpicture}
+  \node at (0,0) {{\footnotesize\textsf{P}}};
+  \node at (0,0.7) {{\footnotesize\textsf{BPP}}};
+  \node at (0,1.2) {{\footnotesize\textsf{BQP}}};
+  \draw (0,0) circle (0.5cm);
+  \draw (0,0) circle (1cm);
+  \draw (0,0) circle (1.5cm);
+\end{tikzpicture}
+```
+
+Since a quantum computer can easily generate random bits and simulate a probabilistic classical computer, `BQP` certainly contains the class `BPP`.
+Here we are interested in problems that are in `BQP` but not known to be in `BPP`.
 The most popular example of such a problem is factoring.
+
 A quantum algorithm, discovered by Peter Shor in 1994, can factor $n$-digit numbers in a number of steps that grows only as $n^2$, as opposed to the $2^n$ that we have classically.^[It must be stressed that not all quantum algorithms are so efficient, in fact many are no faster than their classical counterparts. Which particular problems will lend themselves to quantum speed-ups is an open question.]
 Since the intractability of factorisation underpins the security of many methods of encryption, Shor's algorithm was soon hailed as the first `killer application' for quantum computation: something very useful that only a quantum computer could do.
 Since then, the hunt has been on for interesting things for quantum computers to do, and at the same time, for the scientific and technological advances that could allow us to build quantum computers.

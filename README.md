@@ -17,6 +17,7 @@ Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
   + especially fonts... use the fonts from tufte?
 - `idea` environment (cf. e.g. the "Quantum decoherence" subsection)
 - change the link prefixed to gitbook TOC
+- do something for if `margin.fig=TRUE` but the output is gitbook
 
 
 ## Useful links
