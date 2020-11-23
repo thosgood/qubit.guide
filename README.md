@@ -6,6 +6,7 @@ Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
 1. `\newcommand`s to somewhere shared by tex **and** html output
 1. svg output for figures
   + **or even just transparent backgrounds!**
+1. is [bs4](https://stackoverflow.com/questions/64778429/how-can-i-use-the-new-bs4-theme-in-bookdown) "better" than gitbook?
 1. license on index page
 1. "view source" button on gitbook output
   + this is `view`: see <https://bookdown.org/yihui/bookdown/configuration.html>
