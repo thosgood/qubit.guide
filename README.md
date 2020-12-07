@@ -4,6 +4,7 @@ Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
 
 1. write overview!
 1. why are some captions above figures and some below?
+1. tufte toc should be in flex columns at the very top
 1. **all those tikz things should go in `tikz2pdf.tex`, along with adding `engine.opts=list(template="tikz2pdf.tex")`**
 1. `\newcommand`s to somewhere shared by tex **and** html output
 1. svg output for figures
