@@ -492,9 +492,9 @@ where the parameter $v$, called the **visibility** of the interference pattern, 
 We shall derive this formula later on, and you will see that $v$ quantifies the degree of distinguishability between $O_1$ and $O_2$.
 The more the environment knows about which path was taken the less interference we see.
 
-**!!! TODO pgfplots !!!**
-<!-- ```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.margin=TRUE,fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
-\begin{tikzpicture}[scale=0.5]
+```{r,engine.opts=list(template="tikz2pdf.tex"),echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.width=4,fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{secondary}{RGB}{51,102,136}
+\begin{tikzpicture}
   \begin{axis}[
     xmin=0,xmax=5,
     xlabel=relative phase,
@@ -513,7 +513,7 @@ The more the environment knows about which path was taken the less interference 
     \addplot[domain=0:1.6*pi,samples=200,gray,very thick]{0.5};
   \end{axis}
 \end{tikzpicture}
-``` -->
+```
 
 :::{.idea}
   Decoherence suppresses quantum interference.
@@ -646,7 +646,34 @@ For example, using the algorithm taught in elementary school, one can multiply t
 In contrast, the fastest-known method for the reverse operation --- factoring an $n$-digit integer into prime numbers --- takes a time that grows exponentially, roughly as $2^n$.
 That is considered inefficient.
 
-**!!! TODO pgfplot !!!**
+```{r,engine.opts=list(template="tikz2pdf.tex"),echo=FALSE,cache=TRUE,engine='tikz',fig.margin=TRUE,fig.width=4,fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{primary}{RGB}{255,153,0}
+\definecolor{secondary}{RGB}{51,102,136}
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin=0,xmax=10,
+    xlabel=input size $n$,
+    ylabel=execution time,
+    ymin=0,ymax=100,
+    axis lines=middle,
+    xtick={0},
+    xticklabels={$0$},
+    ytick={0},
+    yticklabels={$0$},
+    xlabel style={font=\Large, anchor=north,at={(axis description cs:0.8,0)}},
+    ylabel style={font=\Large, anchor=south,at={(axis description cs:0.15,1.05)}},
+  ]
+    \addplot[domain=0:10,samples=200,primary,line width=2pt]{x^2};
+    \addplot[domain=0:10,samples=200,secondary,line width=2pt]{2^x};
+  \end{axis}
+  \node at (4.1,5.5) {$2^n$};
+  \node at (6.2,5.5) {$n^2$};
+  \node at (6.2,2.3) {\footnotesize polynomial};
+  \node at (6.2,2) {\footnotesize is good};
+  \node at (2.5,3.8) {\footnotesize exponential};
+  \node at (2.5,3.5) {\footnotesize is bad};
+\end{tikzpicture}
+```
 
 The class of problems that can be solved by a deterministic computer in polynomial time is represented by the capital letter `P`, for _polynomial_ time.
 The class of problems that can be solved in polynomial time by a probabilistic computer is called `BPP`, for _bounded-error probabilistic polynomial_ time.
@@ -997,6 +1024,29 @@ Suppose a randomised algorithm solves a decision problem, returning $\texttt{yes
 It gets the answer wrong with a probability not greater than $\frac12-\delta$, where $\delta>0$ is a constant.^[This result is known as the **Chernoff bound**].
 If we are willing to accept a probability of error no larger than $\epsilon$, then it suffices to run the computation $r$ times, where $r=O(\log 1/\epsilon)$.}
 
+```{r,engine.opts=list(template="tikz2pdf.tex"),echo=FALSE,cache=TRUE,engine='tikz',fig.margin=TRUE,fig.width=4,fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{primary}{RGB}{255,153,0}
+\definecolor{secondary}{RGB}{51,102,136}
+\begin{tikzpicture}
+    \begin{axis}[
+        xmin=-3,xmax=3,
+        xlabel=$x$,
+        ymin=-4,ymax=7,
+        axis lines=middle,
+        xtick={0},
+        xticklabels={$0$},
+        ytick={0},
+        yticklabels={$0$},
+        xlabel style={font=\Large,anchor=north,at={(axis description cs:0.95,0.35)}},
+      ]
+      \addplot[domain=-3:3,samples=200,line width=2pt,primary]{1+x};
+      \addplot[domain=-3:3,samples=200,line width=2pt,secondary]{e^x};
+    \end{axis}
+    \node at (6.5,3.3) {$1+x$};
+    \node at (5,5) {$e^x$};
+\end{tikzpicture}
+```
+
 1. If we perform this computation $r$ times, how many possible sequences of outcomes are there?
 2. Give a bound on the probability of any particular sequence with $w$ wrong answers.
 3. If we look at the set of $r$ outcomes, we will determine the final outcome by performing a majority vote.
@@ -1004,7 +1054,7 @@ If we are willing to accept a probability of error no larger than $\epsilon$, th
   Give an upper bound on the probability of any single sequence that would lead us to the wrong conclusion.
 4. Using the bound $1-x\leq e^{-x}$, conclude that the probability of our coming to the wrong conclusion is upper bounded by $e^{-2r\delta^2}$.
 
-**!!! TODO pgfplots !!!**
+
 
 
 
@@ -1265,12 +1315,35 @@ $$
   \end{aligned}
 $$
 
+```{r,engine.opts=list(template="tikz2pdf.tex"),echo=FALSE,cache=TRUE,engine='tikz',fig.margin=TRUE,fig.width=4,fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{secondary}{RGB}{51,102,136}
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin=0,xmax=5,
+    xlabel=relative phase,
+    ylabel=$\Pr(\mbox{detector 0 clicks})$,
+    ymin=0,ymax=1.1,
+    axis lines=middle,
+    xtick={0},
+    xticklabels={$0$},
+    ytick={0.16,0.58,1},
+    yticklabels={$(T-R)^2$,$T^2+R^2$,1},very thick,
+    xlabel style={font=\Large, anchor=north,at={(axis description cs:0.8,0)}},
+    ylabel style={font=\Large, anchor=south,at={(axis description cs:0.15,1.05)}},
+    yticklabel style={font=\Large}
+  ]
+    \addplot[domain=0:1.6*pi,samples=200,secondary,line width=2pt]{0.58-0.42*cos(deg(3*x))};
+    \addplot[domain=0:1.6*pi,samples=200,gray,dashed]{0.16};
+    \addplot[domain=0:1.6*pi,samples=200,gray,dashed]{1};
+    \addplot[domain=0:1.6*pi,samples=200,gray,dashed]{0.58};
+  \end{axis}
+\end{tikzpicture}
+```
+
 The "classical" part of this expression, $T^2+R^2$, basically says that the photon undergoes either two consecutive transmissions with probability $T^2$, or two consecutive reflections with probability $R^2$.
 The probability of being transmitted through any phase shifter is always $1$, hence the phase shifters play no role in the classical description of this process.
 But the classical description is not correct, as the experiments show, whence the interference term $2TR\cos(\varphi_1-\varphi_0)$ in which the phase shifters play the essential role.
 Depending on the _relative_ phase $\varphi=\varphi_1-\varphi_0$ the probability that the detector $0$ "clicks" can vary from $(T-R)^2$, for $\varphi=0$, to $1$, for $\varphi=\pi$.
-
-**!!! TODO pgfplots !!!**
 
 If we do not care about the experimental details, we can represent the action of the Mach-Zehnder interferometer in terms of a diagram: see \@ref(fig:mach-zehnder-diagram).
 
