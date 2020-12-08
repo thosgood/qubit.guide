@@ -1012,6 +1012,188 @@ If we are willing to accept a probability of error no larger than $\epsilon$, th
 
 ## Supplement: Physics against logic, via beamsplitters
 
+> The square root of $\texttt{NOT}$, and showing that it can be as simple as a symmetric beam-splitter. In fact, playing with mirrors and beam-splitters can give you lots of insights into the quantum world.
+
+A symmetric beam-splitter is a cube of glass which reflects half the light that impinges upon it, while allowing the remaining half to pass through unaffected.
+For our purposes it can be viewed as a device which has two input and two output ports which we label as $\ket{0}$ and $\ket{1}$, as in \@ref(fig:beam-splitter).
+
+```{r beam-splitter,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.width=2,fig.cap='A beam-splitter.',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\usetikzlibrary{arrows.meta}
+\tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
+\tikzset{process/.style={thick,-{Latex},shorten >=0.1cm,shorten <=0.1cm}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \path (0,0) pic {beamsplitter};
+  \draw [process] (-1,0) to (1,0);
+  \draw [process] (0,-1) to (0,1);
+  \node at (-1.2,0) {$\ket{0}$};
+  \node at (0,-1.2) {$\ket{1}$};
+  \node at (1.2,0) {$\ket{0}$};
+  \node at (0,1.2) {$\ket{1}$};
+\end{tikzpicture}
+```
+
+When we aim a single photon at such a beam-splitter using one of the input ports, we notice that the photon doesn't split in two: we can place photo-detectors wherever we like in the apparatus, fire in a photon, and verify that if any of the photo-detectors registers a hit, none of the others do.
+In particular, if we place a photo-detector behind the beam-splitter in each of the two possible exit beams, the photon is detected with equal probability at either detector, no matter whether the photon was initially fired from input port $\ket{0}$ or $\ket{1}$.
+
+It may seem obvious that, at the very least, the photon is _either_ in the transmitted beam $\ket{0}$ _or_ in the reflected beam $\ket{1}$ during any one run of this experiment.
+Thus we may be tempted to think of the beam-splitter as a random binary switch which, with equal probability, transforms any binary input into one of the two possible outputs.
+However, that is not necessarily the case.
+Let us introduce a second beam-splitter and place two normal mirrors so that both paths intersect at the second beam-splitter, resulting in something resembling the Mach-Zehnder interferometer (see \@ref(fig:two-beam-splitters)).
+
+```{r two-beam-splitters,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.width=5,fig.cap='Two beam-splitters with mirrors, so that a photon travels through both.',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
+\tikzset{process/.style={thick,-{Latex},shorten >=0.1cm,shorten <=0.1cm}}
+\tikzset{mirror/.pic={\draw [line width=2pt] (-0.3,-0.3) -- (0.3,0.3);}}
+\tikzset{middlearrow/.style 2 args={decoration={markings,mark=at position #2 with {\arrow{#1}}},postaction=decorate}}
+\tikzset{pics/measure left/.style args={#1}{code={\draw [fill=gray!15] (0,-0.5) arc (-90:90:0.5cm) -- cycle;\node [anchor=mid] at (0.22,0) {#1};}}}
+\tikzset{pics/measure top/.style args={#1}{code={\draw [fill=gray!15] (0.5,0) arc (0:180:0.5cm) -- cycle;\node [anchor=mid] at (0,0.22) {#1};}}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \draw (0,0) pic {beamsplitter};
+  \draw (4,3) pic {beamsplitter};
+  \draw (0,3) pic {mirror};
+  \draw (4,0) pic {mirror};
+  \draw (5.2,3) pic {measure left={1}};
+  \draw (4,4.2) pic {measure top={0}};
+  \draw [thick,middlearrow={Latex}{0.6}] (0,-1.1) to (0,3);
+  \draw [thick,-Latex,shorten >=0.1cm] (0,3) to (5.2,3);
+  \draw [thick,middlearrow={Latex}{0.5}] (-1.1,0) to (4,0);
+  \draw [thick,-Latex,shorten >=0.1cm] (4,0) to (4,4.2);
+  \node at (-1.5,0) {$\ket{0}$};
+  \node at (0,-1.5) {$\ket{1}$};
+\end{tikzpicture}
+```
+
+Now, the axiom of additivity in probability theory says that whenever something can happen in several alternative ways we add probabilities for each way considered separately.
+We might argue that a photon fired into the input port $\ket{0}$ can reach the detector $0$ in two _mutually exclusive_ ways: either by two consecutive reflections or by two consecutive transmissions.
+Each reflection happens with probability $1/2$ and each transmission happens with probability $1/2$ thus the total probability of reaching detector 0 is a sum of the probability of the two consecutive reflections ($1/2\times 1/2 = 1/4$) and the probability of the two consecutive transmissions ($1/2\times 1/2 = 1/4$) which gives probability $1/2$.
+This is summarised in \@ref(fig:classical-guess-double-beam-splitter), and makes perfect sense --- a random switch followed by a random switch should give nothing else but a random switch.
+However, if we set up such an experiment, that is not what happens!
+
+:::{.idea}
+  There is no reason why probability theory or any other a priori mathematical construct should make any meaningful statements about outcomes of physical experiments.
+:::
+
+```{r classical-guess-double-beam-splitter,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.fullwidth=TRUE,fig.cap='The two possible classical scenarios. Note that this is **not** what actually happens in the real physical world!',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
+\tikzset{process/.style={thick,-{Latex},shorten >=0.1cm,shorten <=0.1cm}}
+\tikzset{mirror/.pic={\draw [line width=2pt] (-0.3,-0.3) -- (0.3,0.3);}}
+\tikzset{middlearrow/.style 2 args={decoration={markings,mark=at position #2 with {\arrow{#1}}},postaction=decorate}}
+\tikzset{pics/measure left/.style args={#1}{code={\draw [fill=gray!15] (0,-0.5) arc (-90:90:0.5cm) -- cycle;\node [anchor=mid] at (0.22,0) {#1};}}}
+\tikzset{pics/measure top/.style args={#1}{code={\draw [fill=gray!15] (0.5,0) arc (0:180:0.5cm) -- cycle;\node [anchor=mid] at (0,0.22) {#1};}}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[yscale=0.7]
+  \begin{scope}
+    \draw (0,0) pic {beamsplitter};
+    \draw (4,3) pic {beamsplitter};
+    \draw (0,3) pic {mirror};
+    \draw (4,0) pic {mirror};
+    \draw (5.2,3) pic {measure left={1}};
+    \draw (4,4.2) pic {measure top={0}};
+    \draw [thick,middlearrow={Latex}{0.5}] (-1.1,0) to (4,0);
+    \draw [thick,-Latex,shorten >=0.1cm] (4,0) to (4,4.2);
+    \draw [thick,gray!70,dashed] (0,0) to (0,3) to (5,3);
+    \node at (-1.5,0) {$\ket{0}$};
+    \node at (2.5,-1.5) {two consecutive transmissions:};
+    \node at (2.5,-2.5) {probability amplitude = $\frac{i}{\sqrt2}\frac{i}{\sqrt2}=-\frac12$};
+  \end{scope}
+  \begin{scope}[shift={(8,0)}]
+    \draw (0,0) pic {beamsplitter};
+    \draw (4,3) pic {beamsplitter};
+    \draw (0,3) pic {mirror};
+    \draw (4,0) pic {mirror};
+    \draw (5.2,3) pic {measure left={1}};
+    \draw (4,4.2) pic {measure top={0}};
+    \draw [thick,middlearrow={Latex}{0.5}] (-1.1,0) to (0,0);
+    \draw [thick,middlearrow={Latex}{0.5}] (0,0) to (0,3);
+    \draw [thick,middlearrow={Latex}{0.5}] (0,3) to (4,3);
+    \draw [thick,-Latex,shorten >=0.1cm] (4,3) to (4,4.2);
+    \draw [thick,gray!70,dashed] (0,0) to (0,0) to (4,0) to (4,3) to (5,3);
+    \node at (-1.5,0) {$\ket{0}$};
+    \node at (2.5,-1.5) {two consecutive reflections:};
+    \node at (2.5,-2.5) {probability amplitude = $\frac{1}{\sqrt2}\frac{1}{\sqrt2}=\frac12$};
+  \end{scope}
+\end{tikzpicture}
+```
+
+In experimental reality, when the optical paths between the two beam-splitters are the same, the photon fired from input port $\ket{0}$ _always_ strikes detector 1 and _never_ detector 0 (and the photon fired from input port $\ket{1}$ _always_ strikes detector 0 and _never_ detector 1).
+Thus a beam-splitter acts as the square root of $\texttt{NOT}$ gate.
+
+The action of the beam-splitter --- in fact, the action of any quantum device --- can be described by tabulating the amplitudes of transitions between its input and output ports.^[Note that gate $B$ is not the same square root of $\texttt{NOT}$ as the one described in the first diagram in this section. There are infinitely many ways of implementing this ``impossible'' logical operation.]
+\begin{equation}
+  B = 
+  \begin{bmatrix}
+  B_{00} & B_{01}\\
+  B_{10} & B_{11}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  \frac{1}{\sqrt 2} & \frac{i}{\sqrt 2}\\
+  \frac{i}{\sqrt 2} & \frac{1}{\sqrt 2}
+  \end{bmatrix}.
+(\#eq:beam-splitter)
+\end{equation}
+The matrix element $B_{lk}$, where $k,l=0,1$, represents the amplitude of transition from input  $\ket{k}$ to output  $\ket{l}$ (watch the order of indices).
+Each reflection (entries $B_{01}$ and $B_{10}$) happens with amplitude $i/\sqrt{2}$ and each transmission  (entries $B_{00}$ and $B_{11}$) happens with amplitude $1/\sqrt{2}$.
+Thus the total amplitude that a photon fired from input port $\ket{0}$ will reach detector $0$ is the sum of the amplitude of the two consecutive reflections ($i/\sqrt{2}\times i/{\sqrt 2} = -1/2$) and the amplitude of the two consecutive transmissions ($1/{\sqrt 2}\times 1/{\sqrt 2} = 1/2$) which gives the total amplitude $0$.
+The resulting probability is then zero.
+Unlike probabilities, amplitudes can cancel out each other out.
+We can now go on and calculate the amplitude that the photon will reach detector $1$.
+In this case we will get $i$, which gives probability $1$.
+We can then switch to input $\ket{1}$ and repeat our calculations.
+All possible paths and associated amplitudes are shown in \@ref(fig:paths-and-amplitudes-two-beam-splitters).
+
+```{r paths-and-amplitudes-two-beam-splitters,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='All possible transitions and their amplitudes when we compose two beam-splitters $B$.',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{centrelabel/.style={pos=0.5,fill=white}}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[xscale=3,yscale=2]
+  \node [dot,label=left:{$\ket{0}$}] (i0) at (0,1) {};
+  \node [dot,label=left:{$\ket{1}$}] (i1) at (0,0) {};
+  \node [dot] (m0) at (1,1) {};
+  \node [dot] (m1) at (1,0) {};
+  \node [dot,label=right:{$\ket{0}$}] (o0) at (2,1) {};
+  \node [dot,label=right:{$\ket{1}$}] (o1) at (2,0) {};
+  \draw [thick] (i0) to node [centrelabel] {$\frac{1}{\sqrt2}$} (1,1);
+  \draw [thick] (i0) to node [pos=0.25,fill=white] {$\frac{i}{\sqrt2}$} (1,0);
+  \draw [thick] (i1) to node [pos=0.25,fill=white] {$\frac{i}{\sqrt2}$} (1,1);
+  \draw [thick] (i1) to node [centrelabel] {$\frac{1}{\sqrt2}$} (1,0);
+  \draw [thick] (m0) to node [centrelabel] {$\frac{1}{\sqrt2}$} (o0);
+  \draw [thick] (m0) to node [pos=0.25,fill=white] {$\frac{i}{\sqrt2}$} (o1);
+  \draw [thick] (m1) to node [pos=0.25,fill=white] {$\frac{i}{\sqrt2}$} (o0);
+  \draw [thick] (m1) to node [centrelabel] {$\frac{1}{\sqrt2}$} (o1);
+  %
+  \node at (0.5,-0.45) {$B$};
+  \node at (1.5,-0.45) {$B$};
+\end{tikzpicture}
+```
+
+However, instead of going through all the paths in this diagram and linking specific inputs to specific outputs, we can simply multiply the transition matrices:
+$$
+  BB =
+  \begin{bmatrix}
+    \frac{1}{\sqrt 2} & \frac{i}{\sqrt 2}\\
+    \frac{i}{\sqrt 2} & \frac{1}{\sqrt 2}
+  \end{bmatrix}
+  \begin{bmatrix}
+    \frac{1}{\sqrt 2} & \frac{i}{\sqrt 2}\\
+    \frac{i}{\sqrt 2} & \frac{1}{\sqrt 2}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  0 & i\\
+  i & 0
+  \end{bmatrix}
+  = iX.
+$$
+You can now inform your logician colleagues that they are entitled to propose a new logical operation $\sqrt{\texttt{NOT}}$, since it _does_ indeed exist. 
+
+
 
 
 ## Supplement: Quantum interference revisited (still about beamsplitters)
