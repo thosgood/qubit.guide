@@ -9,6 +9,7 @@ Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
 1. svg output for figures
 1. fix `fig.fullwidth` --- it doesn't seem to do anything?
 1. license on index page
+1. **sort out `pgfplots`**
 1. "view source" button on gitbook output
   + this is `view`: see <https://bookdown.org/yihui/bookdown/configuration.html>
 1. **pdf output**
