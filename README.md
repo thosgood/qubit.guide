@@ -18,7 +18,6 @@ Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
 1. why are some captions above figures and some below?
 1. `\newcommand`s to somewhere shared by tex **and** html output
 1. svg output for figures
-1. fix `fig.fullwidth` --- it doesn't seem to do anything?
 1. license on index page
 1. "view source" button on gitbook output
   + this is `view`: see <https://bookdown.org/yihui/bookdown/configuration.html>
@@ -26,5 +25,4 @@ Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
 1. switch to katex
   + gitbook _and_ tufte
 1. change the link prefixed to gitbook TOC
-1. **do something for if `margin.fig=TRUE` but the output is gitbook**
 1. search for "TODO"
