@@ -15,7 +15,6 @@ Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
 
 ## To-do
 
-1. write overview!
 1. why are some captions above figures and some below?
 1. `\newcommand`s to somewhere shared by tex **and** html output
 1. svg output for figures
@@ -26,12 +25,6 @@ Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
 1. **pdf output**
 1. switch to katex
   + gitbook _and_ tufte
-1. `idea` environment (cf. e.g. the "Quantum decoherence" subsection)
 1. change the link prefixed to gitbook TOC
 1. **do something for if `margin.fig=TRUE` but the output is gitbook**
 1. search for "TODO"
-
-
-## Useful links
-
-- <https://bookdown.org/yihui/rmarkdown-cookbook/custom-blocks.html>
