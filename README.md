@@ -15,6 +15,8 @@ Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
 
 ## To-do
 
+1. **much more customisation of gitbook**
+    + have a look at how nice <https://smltar.com/tokenization.html> looks!
 1. why are some captions above figures and some below?
 1. `\newcommand`s to somewhere shared by tex **and** html output
 1. svg output for figures
