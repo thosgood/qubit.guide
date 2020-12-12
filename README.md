@@ -2,7 +2,7 @@ This website contains the lecture notes ... etc. etc.
 
 The individual lectures are available [here](tufte/), or you can read the [online book version](book/):
 
-[<img src="book-screenshot.png" alt="A screenshot of the online book" style="border:1px solid #5b84b1;">](book/)
+[<img src="book-screenshot.png" alt="A screenshot of the online book" style="border:1px solid black;">](book/)
 
 ## Further reading
 
@@ -19,7 +19,9 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
 
 ## To-do
 
-1. why are some captions above figures and some below?
+1. idea blocks in dark mode
+1. sort out captions for margin figures in gitbook
+  + they're currently just formatted as usual text?
 1. `\newcommand`s to somewhere shared by tex **and** html output
 1. svg output for figures
 1. license and funding information along with bookdown link in `_includes/footer.html`
