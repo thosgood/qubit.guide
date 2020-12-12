@@ -2,7 +2,7 @@ This website contains the lecture notes ... etc. etc.
 
 The individual lectures are available [here](tufte/), or you can read the [online book version](book/):
 
-[![A screenshot of the "book" version of the lecture notes](_includes/book-screenshot.png)](book/)
+[![A screenshot of the "book" version of the lecture notes](book-screenshot.png)](book/)
 
 ## Further reading
 
