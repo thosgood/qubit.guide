@@ -20,8 +20,6 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
 ## To-do
 
 1. idea blocks in dark mode
-1. sort out captions for margin figures in gitbook
-  + they're currently just formatted as usual text?
 1. `\newcommand`s to somewhere shared by tex **and** html output
 1. svg output for figures
 1. license and funding information along with bookdown link in `_includes/footer.html`
