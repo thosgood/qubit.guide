@@ -23,8 +23,6 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
 1. `\newcommand`s to somewhere shared by tex **and** html output
 1. svg output for figures
 1. license and funding information along with bookdown link in `_includes/footer.html`
-1. "view source" button on gitbook output
-  + this is `view`: see <https://bookdown.org/yihui/bookdown/configuration.html>
 1. **pdf output**
 1. switch to katex
   + gitbook _and_ tufte
