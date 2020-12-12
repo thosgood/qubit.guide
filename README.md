@@ -1,4 +1,8 @@
-Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
+This website contains the lecture notes ... etc. etc.
+
+The individual lectures are available [here](tufte/), or you can read the [online book version](book/):
+
+[![A screenshot of the "book" version of the lecture notes](_includes/book-screenshot.png)](book/)
 
 ## Further reading
 
@@ -18,12 +22,11 @@ Have a look at the [book version](book/) or at the [Tufte-style pages](tufte/).
 1. why are some captions above figures and some below?
 1. `\newcommand`s to somewhere shared by tex **and** html output
 1. svg output for figures
-1. license on index page
-1. mention bookdown package too
+1. license and funding information along with bookdown link in `_includes/footer.html`
 1. "view source" button on gitbook output
   + this is `view`: see <https://bookdown.org/yihui/bookdown/configuration.html>
 1. **pdf output**
 1. switch to katex
   + gitbook _and_ tufte
-1. change the link prefixed to gitbook TOC
+1. change the link prefixed to gitbook TOC when you have a domain
 1. search for "TODO"
