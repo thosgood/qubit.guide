@@ -194,7 +194,7 @@ implies
 |\psi\rangle\langle\psi|\longmapsto \operatorname{id}|\psi\rangle\langle\psi| \operatorname{id}\langle e_1|e_1\rangle +Z|\psi\rangle\langle\psi| Z\langle e_z|e_z\rangle,
 \]</span>
 <em>only</em> when <span class="math inline">\(\langle e_1|e_z\rangle=0\)</span> (otherwise you would have additional cross terms <span class="math inline">\(\operatorname{id}|\psi\rangle\langle\psi| Z\)</span> and <span class="math inline">\(Z|\psi\rangle\langle\psi| \operatorname{id}\)</span>).
-In this case we can indeed say that, with probability <span class="math inline">\(\langle e_1|e_1\rangle\)</span>, nothing happens, and, with probability <span class="math inline">\(\langle e_z|e_z\rangle\)</span>, the qubit undergoes the phase flip <span class="math inline">\(Z\)</span>.</p>
+In this case we can indeed say that, with probability <span class="math inline">\(\langle e_1|e_1\rangle\)</span>, nothing happens, and, with probability <span class="math inline">\(\langle e_z|e_z\rangle\)</span>, the qubit undergoes the phase-flip <span class="math inline">\(Z\)</span>.</p>
 </div>
 <div id="quantum-errors" class="section level2" number="7.4">
 <h2><span class="header-section-number">7.4</span> Quantum errors</h2>
@@ -228,7 +228,7 @@ The intuition behind this expression is that four things can happen to the qubit
 </ol>
 <p>This is certainly the case when the states <span class="math inline">\(|e_1\rangle, |e_x\rangle, |e_y\rangle\)</span> and <span class="math inline">\(|e_z\rangle\)</span> are mutually orthogonal, otherwise we cannot perfectly distinguish between the four alternatives.</p>
 <div class="idea">
-<p>What is important here is the discretisation of errors, and the fact that we can reduce quantum errors to <em>two types</em>: bit flip errors <span class="math inline">\(X\)</span>, and phase flip errors <span class="math inline">\(Z\)</span>.</p>
+<p>What is important here is the discretisation of errors, and the fact that we can reduce quantum errors to <em>two types</em>: bit-flip errors <span class="math inline">\(X\)</span>, and phase-flip errors <span class="math inline">\(Z\)</span>.</p>
 </div>
 <p>In general, given <span class="math inline">\(n\)</span> qubits in state <span class="math inline">\(|\psi\rangle\)</span> and the environment in state <span class="math inline">\(|e\rangle\)</span> the joint evolution can be expanded as
 <span class="math display">\[
@@ -279,6 +279,92 @@ The new “errors” satisfy <span class="math inline">\(\sum_k N_k^\dagger N_k 
 </div>
 <div id="some-errors-can-be-corrected-on-some-states" class="section level2" number="7.6">
 <h2><span class="header-section-number">7.6</span> Some errors can be corrected on some states</h2>
+<p>Alice prepares a quantum object in some state <span class="math inline">\(|\psi\rangle\)</span> and sends it to Bob.
+The object is intercepted by a malicious Eve who changes its state by applying one of the prescribed unitary operations <span class="math inline">\(U_1,\ldots, U_n\)</span>, with probabilities <span class="math inline">\(p_1,\ldots, p_n\)</span>, respectively.
+Alice and Bob know the set of possible unitaries (errors), and the associated probabilities, but they do not know which particular unitary operation was chosen by Eve.
+Can Bob reconstruct the state <span class="math inline">\(|\psi\rangle\)</span>?
+The answer is affirmative, at least for <em>some states</em> <span class="math inline">\(|\psi\rangle\)</span>.</p>
+<p>Let <span class="math inline">\(\mathcal{H}\)</span> be the Hilbert space pertaining to the object, and let <span class="math inline">\(\mathcal{C}\)</span> be a subspace of <span class="math inline">\(\mathcal{H}\)</span>.
+Suppose <span class="math inline">\(|\psi\rangle\in\mathcal{C}\)</span>, and that, for each vector in <span class="math inline">\(\mathcal{C}\)</span>, we have
+<span class="math display">\[
+  \langle\psi|U^\dagger_i U_j|\psi\rangle = \delta_{ij}
+\]</span>
+Any error <span class="math inline">\(U_k\)</span> transforms the subspace <span class="math inline">\(\mathcal{C}\)</span> into the subspace <span class="math inline">\(\mathcal{C}_k\)</span>, which is orthogonal to <span class="math inline">\(\mathcal{C}\)</span> and also to any other subspace <span class="math inline">\(\mathcal{C}_j\)</span> for <span class="math inline">\(j\neq k\)</span>.
+All Bob has to do is
+- perform a measurement, defined by projectors on the subspaces <span class="math inline">\(\mathcal{C}_j\)</span> for <span class="math inline">\(j=1,\ldots n\)</span>,
+- identify <span class="math inline">\(k\)</span>, and
+- apply <span class="math inline">\(U_k^\dagger\)</span>.</p>
+<p>As an example, consider an object composed of three qubits and the subspace <span class="math inline">\(\mathcal{C}\)</span> spanned by the two basis vectors <span class="math inline">\(|000\rangle\)</span> and <span class="math inline">\(|111\rangle\)</span>.
+Suppose Eve applies one of the following four unitary operations: <span class="math inline">\(U_0=\operatorname{id}\otimes\operatorname{id}\otimes \operatorname{id}\)</span>, <span class="math inline">\(U_1 =X\otimes\operatorname{id}\otimes \operatorname{id}\)</span>, <span class="math inline">\(U_2 =\operatorname{id}\otimes X\otimes \operatorname{id}\)</span>, and <span class="math inline">\(U_3=\operatorname{id}\otimes\operatorname{id}\otimes X\)</span>.
+That is, the identity, or bit-flip on the first, second, or third qubit.
+Each operation is chosen randomly with the same probability of <span class="math inline">\(1/4\)</span>.
+It is easy to see that the four operations generate four subspaces:
+<span class="math display">\[
+  \begin{aligned}
+    \mathcal{C} = \Big\langle|000\rangle,|111\rangle\Big\rangle &amp;\qquad \mathcal{C}_1 = \Big\langle|100\rangle,|011\rangle\Big\rangle
+  \\\mathcal{C}_2 = \Big\langle|010\rangle,|101\rangle\Big\rangle&amp; \qquad \mathcal{C}_3 = \Big\langle|001\rangle,|110\rangle\Big\rangle.
+  \end{aligned}
+\]</span>
+The eight dimensional Hilbert space of the three qubits is then decomposed into the sum of orthogonal subspaces
+<span class="math display">\[
+\mathcal{C} \oplus \mathcal{C}_1 \oplus\mathcal{C}_2 \oplus \mathcal{C}_3
+\]</span>
+So suppose Alice prepares <span class="math inline">\(|\psi\rangle=\alpha|000\rangle+\beta|111\rangle\)</span> and Eve applies the bit-flip to the third qubit.
+This generates the state <span class="math inline">\(\operatorname{id}\otimes\operatorname{id}\otimes X|\psi\rangle=\alpha|001\rangle+\beta|110\rangle\in \mathcal{C}_3\)</span>.
+The projective measurement on these subspaces tells Bob that the new state is in the subspace <span class="math inline">\(\mathcal{C}_3\)</span>, and hence the original state can be recovered by the operation <span class="math inline">\(\operatorname{id}\otimes\operatorname{id}\otimes X\)</span>.</p>
+</div>
+<div id="repetition-codes" class="section level2" number="7.7">
+<h2><span class="header-section-number">7.7</span> Repetition codes</h2>
+<p>In order to give a sense of how quantum error correction actually works, let us begin with a <em>classical</em> example of a repetition code.
+Suppose a transmission channel flips each bit in transit with probability <span class="math inline">\(p\)</span>.
+If this error rate is considered too high then it can be decreased by encoding each bit into, say, three bits:
+<span class="math display">\[
+  \begin{aligned}
+    0 &amp;\mapsto 000
+  \\1 &amp;\mapsto 111.
+  \end{aligned}
+\]</span>
+That is, each time we want to send logical <span class="math inline">\(0\)</span>, we send three physical bits, all in state <span class="math inline">\(0\)</span>; each time we want to send logical <span class="math inline">\(1\)</span>, we send three physical bits, all in state <span class="math inline">\(1\)</span>.
+The receiver decodes the bit value by a “majority vote” of the three bits.
+If only one error occurs, then this error correction procedure is foolproof.
+In general, the net probability of error is just the likelihood that two or three errors occur, which is <span class="math inline">\(3p^2(1-p) + p^3 &lt; p\)</span>.
+Thus the three bit code improves the reliability of the information transfer.
+The <em>quantum</em> case, however, is more complicated, because we have both bit-flip <em>and</em> phase-flip errors.</p>
+</div>
+<div id="quantum-error-correction" class="section level2" number="7.8">
+<h2><span class="header-section-number">7.8</span> Quantum error correction</h2>
+<p>In order to protect a qubit against bit-flips (incoherent <span class="math inline">\(X\)</span> rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
+We take a qubit in some unknown pure state <span class="math inline">\(\alpha|0\rangle + \beta|1\rangle\)</span>, introduce two auxiliary qubits, and encode it into three qubits as</p>
+<p><img src="quantum-site_files/figure-html/unnamed-chunk-11-1.png" width="768"  style="display: block; margin: auto;" /></p>
+<p>Suppose that at most one qubit is then flipped (say, the second one).
+The encoded state then becomes <span class="math inline">\(\alpha|010\rangle + \beta|101\rangle\)</span>.
+Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
+Instead we introduce another two additional qubits, both in state <span class="math inline">\(|0\rangle\)</span>, and apply the following network:</p>
+<p><img src="quantum-site_files/figure-html/unnamed-chunk-12-1.png" width="768"  style="display: block; margin: auto;" /></p>
+<p>We measure the two auxiliary qubits, also known as <strong>ancilla bits</strong>, and the result of the measurement, known as the <strong>error syndrome</strong>, tells us how to reset the three qubits of the code.
+The theory behind this network runs as follows.</p>
+<p>If qubits one and two (counting from the top) are the same, then the first ancilla is in the <span class="math inline">\(|0\rangle\)</span> state.
+Similarly, if qubits two and three are the same, then the second ancilla is in the <span class="math inline">\(|0\rangle\)</span> state.
+However, if they are different, then the corresponding ancilla is in the <span class="math inline">\(|1\rangle\)</span> state.
+Hence, the four possible error syndromes — <span class="math inline">\(|00\rangle\)</span>, <span class="math inline">\(|01\rangle\)</span>, <span class="math inline">\(|10\rangle\)</span>, and <span class="math inline">\(|11\rangle\)</span> — each indicate a different possibility: no errors, an error in the third, first, or second qubits (respectively).
+In our example, we would measure <span class="math inline">\(|11\rangle\)</span>, revealing that both qubits 1 and 2, and qubits 2 and 3, are different.
+Thus it is qubit 2 that has an error.
+Knowing the error, we can go back and fix it, simply by applying <span class="math inline">\(X\)</span> to qubit 2.
+The net result is the state <span class="math inline">\(\alpha|000\rangle + \beta|111\rangle\)</span>, which is then turned into <span class="math inline">\((\alpha|0\rangle + \beta|1\rangle)|0\rangle|0\rangle\)</span> by running the mirror image of the encoding network.</p>
+</div>
+<div id="turning-bit-flips-into-phase-flips" class="section level2" number="7.9">
+<h2><span class="header-section-number">7.9</span> Turning bit-flips into phase-flips</h2>
+<p>The three-qubit code that we have just demonstrated is sufficient to protect a qubit against single bit-flips, but not phase-flips.
+But this is good enough.
+Recall that <span class="math inline">\(HZH=X\)</span>, and so it is enough to sandwich the decoherence area in between the Hadamard gates: they will turn phase flips into bit flips, and we already know hot to protect our qubits against <span class="math inline">\(Z\)</span>-errors.
+The encoded state <span class="math inline">\(\alpha|0\rangle + \beta|1\rangle\)</span> now reads <span class="math inline">\(\alpha|+++\rangle+\beta|---\rangle\)</span>, where <span class="math inline">\(|\pm\rangle=|0\rangle\pm|1\rangle\)</span>.</p>
+</div>
+<div id="dealing-with-bit-flip-and-phase-flip-errors" class="section level2" number="7.10">
+<h2><span class="header-section-number">7.10</span> Dealing with bit-flip and phase-flip errors</h2>
+<p>We can now put the bit-flip and phase-flip codes together: first we encode the qubit using the phase-flip code, and then we encode each of the three qubits of the code using the bit-flip code.
+This gives an error correction scheme that allows us to protect against both types of error, thus yielding a code that encodes a single logical qubit across nine physical qubits, protecting against a single quantum error on any of the nine qubits.</p>
+<p>If we want to preserve a quantum state for a long time without doing any computations, or if we want to send it through a noisy communications channel, we can just encode the state using a quantum code and decode it when we are done.
+Computation on encoded states using noisy gates requires few more tricks (to be completed).</p>
 
 </div>
 </div>

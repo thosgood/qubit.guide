@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="same-evolution-different-errors.html"/>
-<link rel="next" href="density-matrices.html"/>
+<link rel="next" href="repetition-codes.html"/>
 <script src="libs/header-attrs-2.5.3/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -129,6 +129,10 @@
 <li class="chapter" data-level="7.4" data-path="quantum-errors.html"><a href="quantum-errors.html"><i class="fa fa-check"></i><b>7.4</b> Quantum errors</a></li>
 <li class="chapter" data-level="7.5" data-path="same-evolution-different-errors.html"><a href="same-evolution-different-errors.html"><i class="fa fa-check"></i><b>7.5</b> Same evolution, different errors</a></li>
 <li class="chapter" data-level="7.6" data-path="some-errors-can-be-corrected-on-some-states.html"><a href="some-errors-can-be-corrected-on-some-states.html"><i class="fa fa-check"></i><b>7.6</b> Some errors can be corrected on some states</a></li>
+<li class="chapter" data-level="7.7" data-path="repetition-codes.html"><a href="repetition-codes.html"><i class="fa fa-check"></i><b>7.7</b> Repetition codes</a></li>
+<li class="chapter" data-level="7.8" data-path="quantum-error-correction.html"><a href="quantum-error-correction.html"><i class="fa fa-check"></i><b>7.8</b> Quantum error correction</a></li>
+<li class="chapter" data-level="7.9" data-path="turning-bit-flips-into-phase-flips.html"><a href="turning-bit-flips-into-phase-flips.html"><i class="fa fa-check"></i><b>7.9</b> Turning bit-flips into phase-flips</a></li>
+<li class="chapter" data-level="7.10" data-path="dealing-with-bit-flip-and-phase-flip-errors.html"><a href="dealing-with-bit-flip-and-phase-flip-errors.html"><i class="fa fa-check"></i><b>7.10</b> Dealing with bit-flip and phase-flip errors</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="density-matrices.html"><a href="density-matrices.html"><i class="fa fa-check"></i><b>8</b> Density matrices</a>
 <ul>
@@ -163,16 +167,47 @@
             <section class="normal" id="section-">
 <div id="some-errors-can-be-corrected-on-some-states" class="section level2" number="7.6">
 <h2><span class="header-section-number">7.6</span> Some errors can be corrected on some states</h2>
-
+<p>Alice prepares a quantum object in some state <span class="math inline">\(|\psi\rangle\)</span> and sends it to Bob.
+The object is intercepted by a malicious Eve who changes its state by applying one of the prescribed unitary operations <span class="math inline">\(U_1,\ldots, U_n\)</span>, with probabilities <span class="math inline">\(p_1,\ldots, p_n\)</span>, respectively.
+Alice and Bob know the set of possible unitaries (errors), and the associated probabilities, but they do not know which particular unitary operation was chosen by Eve.
+Can Bob reconstruct the state <span class="math inline">\(|\psi\rangle\)</span>?
+The answer is affirmative, at least for <em>some states</em> <span class="math inline">\(|\psi\rangle\)</span>.</p>
+<p>Let <span class="math inline">\(\mathcal{H}\)</span> be the Hilbert space pertaining to the object, and let <span class="math inline">\(\mathcal{C}\)</span> be a subspace of <span class="math inline">\(\mathcal{H}\)</span>.
+Suppose <span class="math inline">\(|\psi\rangle\in\mathcal{C}\)</span>, and that, for each vector in <span class="math inline">\(\mathcal{C}\)</span>, we have
+<span class="math display">\[
+  \langle\psi|U^\dagger_i U_j|\psi\rangle = \delta_{ij}
+\]</span>
+Any error <span class="math inline">\(U_k\)</span> transforms the subspace <span class="math inline">\(\mathcal{C}\)</span> into the subspace <span class="math inline">\(\mathcal{C}_k\)</span>, which is orthogonal to <span class="math inline">\(\mathcal{C}\)</span> and also to any other subspace <span class="math inline">\(\mathcal{C}_j\)</span> for <span class="math inline">\(j\neq k\)</span>.
+All Bob has to do is
+- perform a measurement, defined by projectors on the subspaces <span class="math inline">\(\mathcal{C}_j\)</span> for <span class="math inline">\(j=1,\ldots n\)</span>,
+- identify <span class="math inline">\(k\)</span>, and
+- apply <span class="math inline">\(U_k^\dagger\)</span>.</p>
+<p>As an example, consider an object composed of three qubits and the subspace <span class="math inline">\(\mathcal{C}\)</span> spanned by the two basis vectors <span class="math inline">\(|000\rangle\)</span> and <span class="math inline">\(|111\rangle\)</span>.
+Suppose Eve applies one of the following four unitary operations: <span class="math inline">\(U_0=\operatorname{id}\otimes\operatorname{id}\otimes \operatorname{id}\)</span>, <span class="math inline">\(U_1 =X\otimes\operatorname{id}\otimes \operatorname{id}\)</span>, <span class="math inline">\(U_2 =\operatorname{id}\otimes X\otimes \operatorname{id}\)</span>, and <span class="math inline">\(U_3=\operatorname{id}\otimes\operatorname{id}\otimes X\)</span>.
+That is, the identity, or bit-flip on the first, second, or third qubit.
+Each operation is chosen randomly with the same probability of <span class="math inline">\(1/4\)</span>.
+It is easy to see that the four operations generate four subspaces:
+<span class="math display">\[
+  \begin{aligned}
+    \mathcal{C} = \Big\langle|000\rangle,|111\rangle\Big\rangle &amp;\qquad \mathcal{C}_1 = \Big\langle|100\rangle,|011\rangle\Big\rangle
+  \\\mathcal{C}_2 = \Big\langle|010\rangle,|101\rangle\Big\rangle&amp; \qquad \mathcal{C}_3 = \Big\langle|001\rangle,|110\rangle\Big\rangle.
+  \end{aligned}
+\]</span>
+The eight dimensional Hilbert space of the three qubits is then decomposed into the sum of orthogonal subspaces
+<span class="math display">\[
+\mathcal{C} \oplus \mathcal{C}_1 \oplus\mathcal{C}_2 \oplus \mathcal{C}_3
+\]</span>
+So suppose Alice prepares <span class="math inline">\(|\psi\rangle=\alpha|000\rangle+\beta|111\rangle\)</span> and Eve applies the bit-flip to the third qubit.
+This generates the state <span class="math inline">\(\operatorname{id}\otimes\operatorname{id}\otimes X|\psi\rangle=\alpha|001\rangle+\beta|110\rangle\in \mathcal{C}_3\)</span>.
+The projective measurement on these subspaces tells Bob that the new state is in the subspace <span class="math inline">\(\mathcal{C}_3\)</span>, and hence the original state can be recovered by the operation <span class="math inline">\(\operatorname{id}\otimes\operatorname{id}\otimes X\)</span>.</p>
 </div>
-<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
 <a href="same-evolution-different-errors.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="density-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="repetition-codes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
