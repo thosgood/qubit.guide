@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 7 Decoherence; elements of quantum error correction | Lectures on Quantum Information Science</title>
+  <title>8.7 Partial trace, yet again | Lectures on Quantum Information Science</title>
   <meta name="description" content="The online book version of an introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 7 Decoherence; elements of quantum error correction | Lectures on Quantum Information Science" />
+  <meta property="og:title" content="8.7 Partial trace, yet again | Lectures on Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 7 Decoherence; elements of quantum error correction | Lectures on Quantum Information Science" />
+  <meta name="twitter:title" content="8.7 Partial trace, yet again | Lectures on Quantum Information Science" />
   
   <meta name="twitter:description" content="The online book version of an introductory series of lectures on quantum computing." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="tsirelsons-inequality.html"/>
-<link rel="next" href="density-matrices.html"/>
+<link rel="prev" href="mixtures-and-subsystems.html"/>
+<link rel="next" href="notes-and-exercises-1.html"/>
 <script src="libs/header-attrs-2.5.3/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -152,17 +152,51 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="decoherence-elements-of-quantum-error-correction" class="section level1" number="7">
-<h1><span class="header-section-number">Chapter 7</span> Decoherence; elements of quantum error correction</h1>
-
+<div id="partial-trace-yet-again" class="section level2" number="8.7">
+<h2><span class="header-section-number">8.7</span> Partial trace, yet again</h2>
+<p>The partial trace is the only map <span class="math inline">\(\rho^{AB}\mapsto\rho^A\)</span> such that<a href="#fn39" class="footnote-ref" id="fnref39"><sup>39</sup></a>
+<span class="math display">\[
+  \operatorname{tr}X \rho^A = \operatorname{tr}(X\otimes\operatorname{id})\rho^{AB}
+\]</span>
+holds for any observable <span class="math inline">\(X\)</span> acting on <span class="math inline">\(\mathcal{A}\)</span>.
+This condition concerns the consistency of statistical predictions.
+Any observable <span class="math inline">\(X\)</span> on <span class="math inline">\(\mathcal{A}\)</span> can be viewed as an observable <span class="math inline">\(X\otimes\operatorname{id}\)</span> on the composite system <span class="math inline">\(\mathcal{AB}\)</span>, where <span class="math inline">\(\operatorname{id}\)</span> is the identity operator acting on <span class="math inline">\(\mathcal{B}\)</span>.
+When constructing <span class="math inline">\(\rho^A\)</span> we had better make sure that for any observable <span class="math inline">\(X\)</span> the average value of <span class="math inline">\(X\)</span> in the state <span class="math inline">\(\rho_A\)</span> is the same as the average value of <span class="math inline">\(X\otimes\operatorname{id}\)</span> in the state <span class="math inline">\(\rho^{AB}\)</span>.
+This is indeed the case for the partial trace.</p>
+<p>For example, let us go back to the state in <a href="mixtures-and-subsystems.html#eq:bipartite">(8.1)</a> and assume that Alice measures some observable <span class="math inline">\(X\)</span> on her part of the system.
+Technically, such an observable can be expressed as <span class="math inline">\(X\otimes \operatorname{id}\)</span>, where <span class="math inline">\(\operatorname{id}\)</span> is the identity operator acting on the subsystem <span class="math inline">\(\mathcal{B}\)</span>.
+The expected value of this observable in the state <span class="math inline">\(|\psi_{AB}\rangle\)</span> is <span class="math inline">\(\operatorname{tr}(X\otimes\operatorname{id})|\psi_{AB}\rangle\langle\psi_{AB}|\)</span>, i.e.
+<span class="math display">\[
+  \begin{aligned}
+    \operatorname{tr}(X\otimes \operatorname{id}) \rho^{AB}
+    &amp;= \operatorname{tr}(X\otimes\operatorname{id}) \left(
+        \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| \otimes |b_i\rangle\langle b_j|
+      \right)
+  \\&amp;= \sum_{ij} \left[
+        \operatorname{tr}\left(X |\widetilde\psi_i\rangle\langle\widetilde\psi_j|\right)
+      \right]
+      \underbrace{\left[\operatorname{tr}\left(|b_i\rangle\langle b_j|\right)\right]}_{\delta_{ij}}
+  \\&amp;= \sum_i \operatorname{tr}X |\widetilde\psi_i\rangle\langle\widetilde\psi_i|
+  \\&amp;= \operatorname{tr}X \underbrace{\sum_i p_i|\psi_i\rangle\langle\psi_i|}_{\rho^A = \operatorname{tr}_B\rho^{AB}}
+  \\&amp;= \operatorname{tr}X\rho^A,
+  \end{aligned}
+\]</span>
+as required.</p>
+<p><strong>!!!TODO!!! The uniqueness of the partial trace, for now see Nielsen &amp; Chuang Box 2.6.</strong></p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="39">
+<li id="fn39"><p>One can repeat the same argument for <span class="math inline">\(\rho^{AB}\mapsto\rho^B\)</span>: the partial trace is the unique map <span class="math inline">\(\rho^{AB}\mapsto\rho^B\)</span> such that <span class="math inline">\(\rho^B\)</span> satisfies <span class="math inline">\(\operatorname{tr}Y\rho^B = \operatorname{tr}(1\otimes Y)\rho^{AB}\)</span> for any observable <span class="math inline">\(Y\)</span> on <span class="math inline">\(\mathcal{B}\)</span>.<a href="partial-trace-yet-again.html#fnref39" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="tsirelsons-inequality.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="density-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="mixtures-and-subsystems.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="notes-and-exercises-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

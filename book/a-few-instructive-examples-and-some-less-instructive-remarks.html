@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 7 Decoherence; elements of quantum error correction | Lectures on Quantum Information Science</title>
+  <title>8.2 A few instructive examples, and some less instructive remarks | Lectures on Quantum Information Science</title>
   <meta name="description" content="The online book version of an introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 7 Decoherence; elements of quantum error correction | Lectures on Quantum Information Science" />
+  <meta property="og:title" content="8.2 A few instructive examples, and some less instructive remarks | Lectures on Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 7 Decoherence; elements of quantum error correction | Lectures on Quantum Information Science" />
+  <meta name="twitter:title" content="8.2 A few instructive examples, and some less instructive remarks | Lectures on Quantum Information Science" />
   
   <meta name="twitter:description" content="The online book version of an introductory series of lectures on quantum computing." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="tsirelsons-inequality.html"/>
-<link rel="next" href="density-matrices.html"/>
+<link rel="prev" href="mixtures.html"/>
+<link rel="next" href="mixed-states-of-a-qubit-and-the-bloch-sphere.html"/>
 <script src="libs/header-attrs-2.5.3/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -152,17 +152,103 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="decoherence-elements-of-quantum-error-correction" class="section level1" number="7">
-<h1><span class="header-section-number">Chapter 7</span> Decoherence; elements of quantum error correction</h1>
-
+<div id="a-few-instructive-examples-and-some-less-instructive-remarks" class="section level2" number="8.2">
+<h2><span class="header-section-number">8.2</span> A few instructive examples, and some less instructive remarks</h2>
+<ol style="list-style-type: decimal">
+<li><p>The density matrix corresponding to the state vector <span class="math inline">\(|\psi\rangle\)</span> is the rank one projector <span class="math inline">\(|\psi\rangle\langle\psi|\)</span>.
+Observe that there is no phase ambiguity, since <span class="math inline">\(|\psi\rangle\mapsto e^{i\phi}|\psi\rangle\)</span> leaves the density matrix unchanged, and each <span class="math inline">\(|\psi\rangle\)</span> gives rise to a distinct density matrix.</p></li>
+<li><p>If Alice prepares a qubit in the state <span class="math inline">\(|\psi\rangle = \alpha|0\rangle + \beta|1\rangle\)</span> then the corresponding density matrix is the projector
+<span class="math display">\[
+   |\psi\rangle\langle\psi|
+   =
+   \begin{bmatrix}
+     |\alpha|^2 &amp; \alpha\beta^\star
+   \\\alpha^\star\beta &amp; |\beta|^2
+   \end{bmatrix}.
+ \]</span></p></li>
+<li><p>You are given a qubit and you are told that it was prepared either in state <span class="math inline">\(|0\rangle\)</span> with probability <span class="math inline">\(|\alpha|^2\)</span> or in state <span class="math inline">\(|1\rangle\)</span> with probability <span class="math inline">\(|\beta|^2\)</span>.
+In this case all you can say is that your qubit is in a mixed state described by the density matrix
+<span class="math display">\[
+   |\alpha|^2|0\rangle\langle 0| + |\beta|^2|1\rangle\langle 1|
+   =
+   \begin{bmatrix}
+     |\alpha|^2 &amp; 0
+   \\0 &amp; |\beta|^2
+   \end{bmatrix}.
+ \]</span>
+Diagonal density matrices correspond to classical probability distributions on the set of basis vectors.</p></li>
+<li><p>Suppose you want to distinguish between preparations described by the density matrices in examples 2 and 3.
+Assume that you are given sufficiently many identically prepared qubits described either by the density matrix in example 2 or by the density matrix in example 3.
+Which of the two measurements would you choose: the measurement in the standard basis <span class="math inline">\(\{|0\rangle,|1\rangle\}\)</span>, or the measurement in the basis <span class="math inline">\(\{|\psi\rangle,|\psi_\perp\rangle\}\)</span>?
+One of the two measurements is completely useless.
+Which one, and why?</p></li>
+<li><p>In general, the diagonal entries of a density matrix describe the probability distributions on the set of basis vectors.
+They must add up to one, which is why the trace of any density matrix is one.
+The off-diagonal elements, often called <strong>coherences</strong>, signal departure from the classical probability distribution and quantify the degree to which a quantum system can interfere (we will discuss this in detail later on).
+The process in which off-diagonal entries (the parameter <span class="math inline">\(\epsilon\)</span> in the matrices below) go to zero is called <strong>decoherence</strong>.
+<span class="math display">\[
+   \begin{bmatrix}
+     |\alpha|^2 &amp; \alpha\beta^\star
+   \\\alpha^\star\beta &amp; |\beta|^2
+   \end{bmatrix}
+   \mapsto
+   \begin{bmatrix}
+     |\alpha|^2 &amp; \epsilon
+   \\\epsilon^\star &amp; |\beta|^2
+   \end{bmatrix}
+   \mapsto
+   \begin{bmatrix}
+     |\alpha|^2 &amp; 0
+   \\0 &amp; |\beta|^2
+   \end{bmatrix}
+ \]</span>
+For <span class="math inline">\(\epsilon = \alpha\beta^\star\)</span> we have a pure quantum state (“full interference capability”) and for <span class="math inline">\(\epsilon=0\)</span> we have a classical probability distribution over the standard basis (“no interference capability”).</p></li>
+<li><p>Suppose it is equally likely that your qubit was prepared either in state <span class="math inline">\(\alpha|0\rangle + \beta|1\rangle\)</span> or in state <span class="math inline">\(\alpha|0\rangle - \beta|1\rangle\)</span>.
+This means that your qubit is in a mixed state described by the density matrix
+<span class="math display">\[
+   \frac12
+   \begin{bmatrix}
+     |\alpha|^2 &amp; \alpha\beta^\star
+   \\\alpha^\star\beta &amp; |\beta|^2
+   \end{bmatrix}
+   +
+   \frac12
+   \begin{bmatrix}
+     |\alpha|^2 &amp; -\alpha\beta^\star
+   \\-\alpha^\star\beta &amp; |\beta|^2
+   \end{bmatrix}
+   =
+   \begin{bmatrix}
+     |\alpha|^2 &amp; 0
+   \\0 &amp; |\beta|^2
+   \end{bmatrix}.
+ \]</span>
+You cannot tell the difference between the equally weighted mixture of <span class="math inline">\(\alpha|0\rangle\pm\beta|1\rangle\)</span> and a mixture of <span class="math inline">\(|0\rangle\)</span> and <span class="math inline">\(|1\rangle\)</span> with (respective) probabilities <span class="math inline">\(|\alpha|^2\)</span> and <span class="math inline">\(|\beta|^2\)</span>.</p></li>
+<li><p>For any density matrix <span class="math inline">\(\rho\)</span>, the most natural mixture that yields <span class="math inline">\(\rho\)</span> is its spectral decomposition: <span class="math inline">\(\rho=\sum_i p_i|u_i\rangle\langle u_i|\)</span>, with eigenvectors <span class="math inline">\(|u_i\rangle\)</span> and eigenvalues <span class="math inline">\(p_i\)</span>.</p></li>
+<li><p>If the states <span class="math inline">\(|u_1\rangle,\ldots,|u_m\rangle\)</span> form an orthonormal basis, and each occurs with equal probability <span class="math inline">\(1/m\)</span>, then the resulting density matrix is proportional to the identity:
+<span class="math display">\[
+   \frac{1}{m}\sum_{i=1}^m |\psi_i\rangle\langle\psi_i|
+   = \frac{1}{m}\operatorname{id}.
+ \]</span>
+This is called the <strong>maximally mixed state</strong>.
+For qubits, any pair of orthogonal states taken with equal probabilities gives the maximally mixed state <span class="math inline">\(\frac12\operatorname{id}\)</span>.
+In maximally mixed states, outcomes of <em>any</em> measurement are completely random.</p></li>
+<li><p>It is often convenient to write density operators in terms of projectors on states which are not normalised, incorporating the probabilities into the length of the state vector:
+<span class="math display">\[
+   \rho = \sum_i|\widetilde\psi_i\rangle\langle\widetilde\psi_i|
+ \]</span>
+where <span class="math inline">\(|\widetilde\psi_i\rangle = \sqrt{p_i}|\psi_i\rangle\)</span>, i.e. <span class="math inline">\(p_i=\langle\widetilde\psi_i\rangle{\widetilde\psi_i}\)</span>.
+This form is more compact, but you have to remember that the state vectors are <em>not</em> normalised.
+I tend to mark such states with the tilde, e.g. <span class="math inline">\(|\widetilde\psi\rangle\)</span>, but you may have your own way to remember.</p></li>
+</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="tsirelsons-inequality.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="density-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="mixtures.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="mixed-states-of-a-qubit-and-the-bloch-sphere.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

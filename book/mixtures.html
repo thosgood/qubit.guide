@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 7 Decoherence; elements of quantum error correction | Lectures on Quantum Information Science</title>
+  <title>8.1 Mixtures | Lectures on Quantum Information Science</title>
   <meta name="description" content="The online book version of an introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 7 Decoherence; elements of quantum error correction | Lectures on Quantum Information Science" />
+  <meta property="og:title" content="8.1 Mixtures | Lectures on Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 7 Decoherence; elements of quantum error correction | Lectures on Quantum Information Science" />
+  <meta name="twitter:title" content="8.1 Mixtures | Lectures on Quantum Information Science" />
   
   <meta name="twitter:description" content="The online book version of an introductory series of lectures on quantum computing." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="tsirelsons-inequality.html"/>
-<link rel="next" href="density-matrices.html"/>
+<link rel="prev" href="density-matrices.html"/>
+<link rel="next" href="a-few-instructive-examples-and-some-less-instructive-remarks.html"/>
 <script src="libs/header-attrs-2.5.3/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -152,17 +152,103 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="decoherence-elements-of-quantum-error-correction" class="section level1" number="7">
-<h1><span class="header-section-number">Chapter 7</span> Decoherence; elements of quantum error correction</h1>
-
+<div id="mixtures" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> Mixtures</h2>
+<p>Let us start with probability distributions over state vectors.
+Suppose Alice prepares a quantum system and hands it over to Bob who subsequently measures observable <span class="math inline">\(M\)</span>.
+If Alice’s preparation is described by a state vector <span class="math inline">\(|\psi\rangle\)</span>, then, quantum theory declares, the average value of any observable <span class="math inline">\(M\)</span> is given by <span class="math inline">\(\langle\psi|M|\psi\rangle\)</span>, which can be also written as<a href="#fn32" class="footnote-ref" id="fnref32"><sup>32</sup></a>
+<span class="math display">\[
+  \langle M\rangle = \operatorname{tr}M|\psi\rangle\langle\psi|.
+\]</span>
+This way of expressing the average value makes a clear separation between the contributions from the state preparation and from the choice of the measurement.
+We have two operators under the trace: one of them, <span class="math inline">\(|\psi\rangle\langle\psi|\)</span>, describes the state preparation, and the other one, <span class="math inline">\(M\)</span>, the measurement.
+Now, suppose Alice prepares the quantum system in one of the states <span class="math inline">\(|\psi_1\rangle,\ldots,|\psi_m\rangle\)</span>, choosing state <span class="math inline">\(|\psi_i\rangle\)</span> with probability <span class="math inline">\(p_i\)</span>, and hands the system to Bob without telling him which state was chosen.
+The possible states <span class="math inline">\(|\psi_i\rangle\)</span> are normalised but need not be orthogonal.
+We call this situation a <strong>mixture of the states</strong> <span class="math inline">\(|\psi_i\rangle\)</span>, or a <strong>mixed state</strong> for short.</p>
+<div class="idea">
+<p>Remember, a mixture of states is very different from a superposition of states: a superposition <em>always</em> yields a definite state vector, whereas a mixture does <em>not</em>, and so must be described by a density operator.</p>
+</div>
+<p>Bob knows the ensemble of states <span class="math inline">\(|\psi_1\rangle,\ldots,|\psi_m\rangle\)</span> and the corresponding probability distribution <span class="math inline">\(p_1,\ldots,p_m\)</span>, and can hence calculate <span class="math inline">\(\langle M\rangle\)</span> as<a href="#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a>
+<span class="math display">\[
+  \begin{aligned}
+    \langle M\rangle
+    &amp;= \sum_i p_i\left( \operatorname{tr}M|\psi_i\rangle\langle\psi_i| \right)
+  \\&amp;= \operatorname{tr}M \underbrace{\left( \sum_i p_i|\psi_i\rangle\langle\psi_i| \right)}_{\rho}
+  \\&amp;=\operatorname{tr}M\rho.
+  \end{aligned}
+\]</span>
+Again, we have two operators under the trace: <span class="math inline">\(\rho=\sum_i p_i|\psi_i\rangle\langle\psi_i|\)</span>, which pertains to the state preparation, and <span class="math inline">\(M\)</span>, which describes the measurement.
+We shall call the operator
+<span class="math display">\[
+  \rho = \sum_i p_i |\psi_i\rangle\langle\psi_i|
+\]</span>
+the <strong>density operator</strong>, since it has all the defining properties of the density operator (the convex sum of rank one projectors).
+It depends on the constituent states <span class="math inline">\(|\psi_i\rangle\)</span> and their probabilities, and it describes our ignorance about the state preparation.
+Once we have <span class="math inline">\(\rho\)</span> we can make statistical predictions: for any observable <span class="math inline">\(M\)</span> we have
+<span class="math display">\[
+  \langle M\rangle = \operatorname{tr}M\rho.
+\]</span>
+We see that the exact composition of the mixture does not enter this formula: for computing the statistics associated with any observable property of a system, all that matters is the density operator itself, and not its decomposition into the mixture of states.
+This is important because any given density operator, with the remarkable exception of a pure state, can arise from many different mixtures of pure states.
+Consider, for example, the following three scenarios:</p>
+<ol style="list-style-type: decimal">
+<li><p>Alice flips a fair coin.
+If the result is <span class="math inline">\(\texttt{Heads}\)</span> then she prepares the qubit in the state <span class="math inline">\(|0\rangle\)</span>, and if the result is <span class="math inline">\(\texttt{Tails}\)</span> then she prepares the qubit in the state <span class="math inline">\(|1\rangle\)</span>.
+She gives Bob the qubit without revealing the result of the coin-flip.
+Bob’s knowledge of the qubit is described by the density matrix
+<span class="math display">\[
+   \frac12|0\rangle\langle 0| + \frac12|1\rangle\langle 1|
+   =
+   \begin{bmatrix}
+     \frac12 &amp; 0
+   \\0 &amp; \frac12
+   \end{bmatrix}.
+ \]</span></p></li>
+<li><p>Suppose Alice flips a fair coin, as before, but now if the result is <span class="math inline">\(\texttt{Heads}\)</span> then she prepares the qubit in the state <span class="math inline">\(|\bar{0}\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)\)</span>, and if the result is <span class="math inline">\(\texttt{Tails}\)</span> then she prepares the qubit in the state <span class="math inline">\(|\bar{1}\rangle = \frac{1}{\sqrt{2}}(|0\rangle - |1\rangle)\)</span>.
+Bob’s knowledge of the qubit is now described by the density matrix
+<span class="math display">\[
+   \begin{aligned}
+     \frac12|\bar{0}\rangle\langle\bar{0}| + \frac12|\bar{1}\rangle\langle\bar{1}|
+     &amp;=
+     \frac12
+     \begin{bmatrix}
+     \frac12 &amp; \frac12
+     \\\frac12 &amp; \frac12
+     \end{bmatrix}
+     +
+     \frac12
+     \begin{bmatrix}
+     \frac12 &amp; -\frac12
+     \\-\frac12 &amp; \frac12
+     \end{bmatrix}
+   \\&amp;=
+     \begin{bmatrix}
+     \frac12 &amp; 0
+     \\0 &amp; \frac12
+     \end{bmatrix}.
+   \end{aligned}
+ \]</span></p></li>
+<li><p>Suppose Alice picks up any pair of orthogonal states of a qubit and then flips the coin to chose one of them.
+Any two orthonormal states of a qubit, <span class="math inline">\(|u_1\rangle\)</span>, <span class="math inline">\(|u_2\rangle\)</span>, form a complete basis, so the mixture <span class="math inline">\(\frac12|u_1\rangle\langle u_1|+\frac12|u_2\rangle\langle u_2|\)</span> gives <span class="math inline">\(\frac12\operatorname{id}\)</span>.</p></li>
+</ol>
+<p>As you can see, these three different preparations yield precisely the same density matrix and are hence statistically indistinguishable.
+In general, two different mixtures can be distinguished (in a statistical sense) if and only if they yield different density matrices.
+In fact, the optimal way of distinguishing quantum states with different density operators is still an active area of research.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="32">
+<li id="fn32"><p>If <span class="math inline">\(M\)</span> is one of the orthogonal projectors <span class="math inline">\(P_k\)</span> describing the measurement, then the average <span class="math inline">\(\langle P_k\rangle\)</span> is the probability of the outcome <span class="math inline">\(k\)</span> associated with this projector.<a href="mixtures.html#fnref32" class="footnote-back">↩︎</a></p></li>
+<li id="fn33"><p>A pure state can be seen as a special case of a mixed state, where all but one the probabilities <span class="math inline">\(p_i\)</span> equal zero.<a href="mixtures.html#fnref33" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="tsirelsons-inequality.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="density-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="density-matrices.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="a-few-instructive-examples-and-some-less-instructive-remarks.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
