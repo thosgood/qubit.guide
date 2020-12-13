@@ -1,7 +1,506 @@
 # Qubits
 
-> About quantum bits and quantum circuits, single-qubit unitaries and rotations of the Bloch sphere (via the omnipresent Pauli matrices), as well as a brief introduction to quantum dynamics.
+> About quantum bits and quantum circuits, including the "impossible" square root of $\texttt{NOT}$, as well as an introduction to single-qubit unitaries and rotations of the Bloch sphere, and the implications concerning universal gates.
 
-**!!!TODO!!! check overlap with lecture 1**
+In order to understand something in its full complexity it is always good to start with the simplest case.
+Let us take a closer look at quantum interference in the simplest possible computing machine: the one that has only two distinguishable configurations  --- two quantum states --- which we label as $\ket{0}$ and $\ket{1}$.
+We prepare the machine in some input state, usually $\ket{0}$, and let it evolve.
+The machine undergoes a prescribed sequence of computational steps, each of which induces transitions between the two "computational states", $\ket{0}$ and $\ket{1}$.
+The machine then ends in the output state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$, meaning the two outputs, $\ket{0}$ and $\ket{1}$, are reached with probability amplitudes $\alpha_0$ and $\alpha_1$, respectively.
+In the process of computation each computational step $U$ sends state $\ket{k}$ to state $\ket{l}$, where $k,l=0,1$, but only with some **amplitude** $U_{lk}$.
+We write this as
+\begin{equation}
+  \ket{k} \mapsto \sum_l U_{lk} \ket{l}.
+(\#eq:pulsemap)
+\end{equation}
+(watch out for the order of the indices).
+
+Thus any computational step $U$ of this machine can be described by a matrix which tabulates all the transition amplitudes:
+$$
+  U =
+  \begin{bmatrix}
+    U_{00} & U_{01}
+  \\U_{10} & U_{11}
+  \end{bmatrix}.
+$$
+The matrix element $U_{lk}$ represents the amplitude of transition from state $\ket{k}$ to state $\ket{l}$ (again, watch the order of indices).
+To be clear, the entries in this matrix are not any random complex numbers: their moduli squared represent transition probabilities, which in turn implies that such matrices must be **unitary**.^[Recall that matrix $U$ is called **unitary** if $$U^\dagger U = UU^\dagger = \id$$ where the **adjoint** or **Hermitian conjugate** $U^\dagger$ of any matrix $U$ with complex entries $U_{ij}$ is obtained by taking the complex conjugate of every element in the matrix and then interchanging rows and columns ($U^\dagger_{kl}= U^\star_{lk}$).]
+
+We can also describe $U$ by drawing a diagram, which contains exactly the same information as the matrix representation, but just in a different form:
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=3.5,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[xscale=0.8,yscale=1.6]
+\node (input0) at (0,1) {$\ket{0}$};
+\node (input1) at (0,0) {$\ket{1}$};
+\node (output0) at (5,1) {$\ket{0}$};
+\node (output1) at (5,0) {$\ket{1}$};
+\foreach \x in {1,4}
+  \foreach \y in {0,1}
+    \node [dot] (n\x\y) at (\x,\y) {};
+\draw [thick] (input0) to node [fill=white,pos=0.5] {$U_{00}$} (output0);
+\draw [thick] (input1) to node [fill=white,pos=0.5] {$U_{11}$} (output1);
+\draw [thick] (n11) to node [fill=white,pos=0.25] {$U_{10}$} (n40);
+\draw [thick] (n10) to node [fill=white,pos=0.25] {$U_{01}$} (n41);
+\end{tikzpicture}
+```
+
+Now how can we find some quantum interference to study?
+Consider two computational steps, $U$ and $V$.
+What is the amplitude that input $\ket{k}$ will generate output $\ket{m}$?
+We have to check all computational paths leading from input $\ket{k}$ to output $\ket{m}$ and add the corresponding amplitudes.
+For example, as you can see in Figure \@ref(fig:composition-of-two-computation-steps), input $\ket{0}$ and output $\ket{1}$ are connected by the two computational paths: $\ket{0}\mapsto\ket{0}\mapsto\ket{1}$ (amplitude $V_{10}U_{00}$) and $\ket{0}\mapsto\ket{1}\mapsto\ket{1}$ (amplitude $V_{11}U_{10}$).
+Thus the total amplitude that input $\ket{0}$ gives output $\ket{1}$ is the sum $V_{10}U_{00}+V_{11}U_{10}$, and when we take the modulus squared of this expression we will see the interference term.
+
+(ref:composition-of-two-computation-steps-caption) The composition of two computational steps, $U$ and $V$, with the possible paths from $\ket{0}$ to $\ket{1}$ highlighted.
+
+```{r composition-of-two-computation-steps,echo=FALSE,cache=TRUE,engine='tikz',fig.fullwidth=TRUE,fig.cap='(ref:composition-of-two-computation-steps-caption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{primary}{RGB}{177,98,78}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[yscale=1.8]
+  \node (input0) at (0,1) {$\ket{0}$};
+  \node (input1) at (0,0) {$\ket{1}$};
+  \node (middle0) at (5,1) {$\ket{0}$};
+  \node (middle1) at (5,0) {$\ket{1}$};
+  \node (output0) at (10,1) {$\ket{0}$};
+  \node (output1) at (10,0) {$\ket{1}$};
+  \foreach \x in {1,4,6,9}
+    \foreach \y in {0,1}
+      \node [dot] (n\x\y) at (\x,\y) {};
+  \draw [thick] (input1) to (n10) to node [fill=white,pos=0.5] {$U_{11}$} (n40);
+  \draw [thick] (n60) to node [fill=white,pos=0.25] {$V_{01}$} (n91);
+  \draw [thick] (n10) to node [fill=white,pos=0.25] {$U_{01}$} (n41);
+  \draw [thick] (n61) to node [fill=white,pos=0.5] {$V_{00}$} (n91) to (output0);
+  \draw [ultra thick,primary] (input0) to node [fill=white,pos=0.5] {$U_{00}$} (middle0);
+  \draw [ultra thick,primary] (n40) to (middle1);
+  \draw [ultra thick,primary] (n11) to node [fill=white,pos=0.25] {$U_{10}$} (n40);
+  \draw [ultra thick,primary] (middle0) to (n61);
+  \draw [ultra thick,primary] (middle1) to node [fill=white,pos=0.5] {$V_{11}$} (output1);
+  \draw [ultra thick,primary] (n61) to node [fill=white,pos=0.25] {$V_{10}$} (n90);
+  \node [dot] at (n11) {};
+  \node [dot] at (n41) {};
+  \node [dot] at (n60) {};
+  \node [dot] at (n90) {};
+\end{tikzpicture}
+```
+
+In general, given $U$ and $V$
+$$
+  \begin{aligned}
+    \ket{k}
+    &\mapsto
+    \sum_l U_{lk}\ket{l}
+  \\\ket{l}
+    &\mapsto
+    \sum_m V_{ml}\ket{m}
+  \end{aligned}
+$$
+we can compose the two operations: we first apply $U$, and then $V$, to obtain
+$$
+  \begin{aligned}
+    \ket{k}
+    &\mapsto
+    \sum_l U_{lk} \left(
+      \sum_m V_{ml}\ket{m}
+    \right)
+  \\&=
+    \sum_m \left(
+      \sum_l V_{ml}U_{lk}
+    \right) \ket{m}
+  \\&=
+    \sum_m (VU)_{mk} \ket{m}.
+  \end{aligned}
+$$
+If you want to hone your quantum intuition think about it the following way.
+The amplitude that input $\ket{k}$ evolves to $\ket{m}$ via a specific intermediate state $\ket{l}$ is given by $V_{ml}U_{lk}$ (evolutions are independent so the amplitudes are multiplied).
+This done, we have to sum over all possible values of $l$ (the transition can occur in several mutually exclusive ways so the amplitudes are added) to obtain $\sum_l V_{ml}U_{lk}$.
+Thus the matrix multiplication $VU$ (watch the order of matrices) in one swoop takes care of multiplication and addition of amplitudes corresponding to different computational paths.
 
 
+
+
+
+## Quantum bits, called "qubits"
+
+
+
+
+
+
+
+
+**!!!TODO!!! rest of `L2-qubits.tex`**
+
+
+
+
+
+## Appendix: Physics against logic, via beamsplitters
+
+> The square root of $\texttt{NOT}$, and showing that it can be as simple as a symmetric beam-splitter.
+> In fact, playing with mirrors and beam-splitters can give you lots of insights into the quantum world.
+
+A symmetric beam-splitter is a cube of glass which reflects half the light that impinges upon it, while allowing the remaining half to pass through unaffected.
+For our purposes it can be viewed as a device which has two input and two output ports which we label as $\ket{0}$ and $\ket{1}$, as in Figure \@ref(fig:beam-splitter).
+
+```{r beam-splitter,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.width=2,fig.cap='A beam-splitter.',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\usetikzlibrary{arrows.meta}
+\tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
+\tikzset{process/.style={thick,-{Latex},shorten >=0.1cm,shorten <=0.1cm}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \path (0,0) pic {beamsplitter};
+  \draw [process] (-1,0) to (1,0);
+  \draw [process] (0,-1) to (0,1);
+  \node at (-1.2,0) {$\ket{0}$};
+  \node at (0,-1.2) {$\ket{1}$};
+  \node at (1.2,0) {$\ket{0}$};
+  \node at (0,1.2) {$\ket{1}$};
+\end{tikzpicture}
+```
+
+When we aim a single photon at such a beam-splitter using one of the input ports, we notice that the photon doesn't split in two: we can place photo-detectors wherever we like in the apparatus, fire in a photon, and verify that if any of the photo-detectors registers a hit, none of the others do.
+In particular, if we place a photo-detector behind the beam-splitter in each of the two possible exit beams, the photon is detected with equal probability at either detector, no matter whether the photon was initially fired from input port $\ket{0}$ or $\ket{1}$.
+
+It may seem obvious that, at the very least, the photon is _either_ in the transmitted beam $\ket{0}$ _or_ in the reflected beam $\ket{1}$ during any one run of this experiment.
+Thus we may be tempted to think of the beam-splitter as a random binary switch which, with equal probability, transforms any binary input into one of the two possible outputs.
+However, that is not necessarily the case.
+Let us introduce a second beam-splitter and place two normal mirrors so that both paths intersect at the second beam-splitter, resulting in something resembling the Mach-Zehnder interferometer (see \@ref(fig:two-beam-splitters)).
+
+```{r two-beam-splitters,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.width=5,fig.cap='Two beam-splitters with mirrors, so that a photon travels through both.',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
+\tikzset{process/.style={thick,-{Latex},shorten >=0.1cm,shorten <=0.1cm}}
+\tikzset{mirror/.pic={\draw [line width=2pt] (-0.3,-0.3) -- (0.3,0.3);}}
+\tikzset{middlearrow/.style 2 args={decoration={markings,mark=at position #2 with {\arrow{#1}}},postaction=decorate}}
+\tikzset{pics/measure left/.style args={#1}{code={\draw [fill=gray!15] (0,-0.5) arc (-90:90:0.5cm) -- cycle;\node [anchor=mid] at (0.22,0) {#1};}}}
+\tikzset{pics/measure top/.style args={#1}{code={\draw [fill=gray!15] (0.5,0) arc (0:180:0.5cm) -- cycle;\node [anchor=mid] at (0,0.22) {#1};}}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \draw (0,0) pic {beamsplitter};
+  \draw (4,3) pic {beamsplitter};
+  \draw (0,3) pic {mirror};
+  \draw (4,0) pic {mirror};
+  \draw (5.2,3) pic {measure left={1}};
+  \draw (4,4.2) pic {measure top={0}};
+  \draw [thick,middlearrow={Latex}{0.6}] (0,-1.1) to (0,3);
+  \draw [thick,-Latex,shorten >=0.1cm] (0,3) to (5.2,3);
+  \draw [thick,middlearrow={Latex}{0.5}] (-1.1,0) to (4,0);
+  \draw [thick,-Latex,shorten >=0.1cm] (4,0) to (4,4.2);
+  \node at (-1.5,0) {$\ket{0}$};
+  \node at (0,-1.5) {$\ket{1}$};
+\end{tikzpicture}
+```
+
+Now, the axiom of additivity in probability theory says that whenever something can happen in several alternative ways we add probabilities for each way considered separately.
+We might argue that a photon fired into the input port $\ket{0}$ can reach the detector $0$ in two _mutually exclusive_ ways: either by two consecutive reflections or by two consecutive transmissions.
+Each reflection happens with probability $1/2$ and each transmission happens with probability $1/2$ thus the total probability of reaching detector 0 is a sum of the probability of the two consecutive reflections ($1/2\times 1/2 = 1/4$) and the probability of the two consecutive transmissions ($1/2\times 1/2 = 1/4$) which gives probability $1/2$.
+This is summarised in \@ref(fig:classical-guess-double-beam-splitter), and makes perfect sense --- a random switch followed by a random switch should give nothing else but a random switch.
+However, if we set up such an experiment, that is not what happens!
+
+::: {.idea}
+  There is no reason why probability theory or any other a priori mathematical construct should make any meaningful statements about outcomes of physical experiments.
+:::
+
+```{r classical-guess-double-beam-splitter,echo=FALSE,cache=TRUE,engine='tikz',fig.fullwidth=TRUE,fig.cap='The two possible classical scenarios. Note that this is **not** what actually happens in the real physical world!',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
+\tikzset{process/.style={thick,-{Latex},shorten >=0.1cm,shorten <=0.1cm}}
+\tikzset{mirror/.pic={\draw [line width=2pt] (-0.3,-0.3) -- (0.3,0.3);}}
+\tikzset{middlearrow/.style 2 args={decoration={markings,mark=at position #2 with {\arrow{#1}}},postaction=decorate}}
+\tikzset{pics/measure left/.style args={#1}{code={\draw [fill=gray!15] (0,-0.5) arc (-90:90:0.5cm) -- cycle;\node [anchor=mid] at (0.22,0) {#1};}}}
+\tikzset{pics/measure top/.style args={#1}{code={\draw [fill=gray!15] (0.5,0) arc (0:180:0.5cm) -- cycle;\node [anchor=mid] at (0,0.22) {#1};}}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[yscale=0.7]
+  \begin{scope}
+    \draw (0,0) pic {beamsplitter};
+    \draw (4,3) pic {beamsplitter};
+    \draw (0,3) pic {mirror};
+    \draw (4,0) pic {mirror};
+    \draw (5.2,3) pic {measure left={1}};
+    \draw (4,4.2) pic {measure top={0}};
+    \draw [thick,middlearrow={Latex}{0.5}] (-1.1,0) to (4,0);
+    \draw [thick,-Latex,shorten >=0.1cm] (4,0) to (4,4.2);
+    \draw [thick,gray!70,dashed] (0,0) to (0,3) to (5,3);
+    \node at (-1.5,0) {$\ket{0}$};
+    \node at (2.5,-1.5) {two consecutive transmissions:};
+    \node at (2.5,-2.5) {probability amplitude = $\frac{i}{\sqrt2}\frac{i}{\sqrt2}=-\frac12$};
+  \end{scope}
+  \begin{scope}[shift={(8,0)}]
+    \draw (0,0) pic {beamsplitter};
+    \draw (4,3) pic {beamsplitter};
+    \draw (0,3) pic {mirror};
+    \draw (4,0) pic {mirror};
+    \draw (5.2,3) pic {measure left={1}};
+    \draw (4,4.2) pic {measure top={0}};
+    \draw [thick,middlearrow={Latex}{0.5}] (-1.1,0) to (0,0);
+    \draw [thick,middlearrow={Latex}{0.5}] (0,0) to (0,3);
+    \draw [thick,middlearrow={Latex}{0.5}] (0,3) to (4,3);
+    \draw [thick,-Latex,shorten >=0.1cm] (4,3) to (4,4.2);
+    \draw [thick,gray!70,dashed] (0,0) to (0,0) to (4,0) to (4,3) to (5,3);
+    \node at (-1.5,0) {$\ket{0}$};
+    \node at (2.5,-1.5) {two consecutive reflections:};
+    \node at (2.5,-2.5) {probability amplitude = $\frac{1}{\sqrt2}\frac{1}{\sqrt2}=\frac12$};
+  \end{scope}
+\end{tikzpicture}
+```
+
+In experimental reality, when the optical paths between the two beam-splitters are the same, the photon fired from input port $\ket{0}$ _always_ strikes detector 1 and _never_ detector 0 (and the photon fired from input port $\ket{1}$ _always_ strikes detector 0 and _never_ detector 1).
+Thus a beam-splitter acts as the square root of $\texttt{NOT}$ gate.
+
+The action of the beam-splitter --- in fact, the action of any quantum device --- can be described by tabulating the amplitudes of transitions between its input and output ports.^[Note that gate $B$ is not the same square root of $\texttt{NOT}$ as the one described in the first diagram in this section. There are infinitely many ways of implementing this "impossible" logical operation.]
+\begin{equation}
+  B = 
+  \begin{bmatrix}
+  B_{00} & B_{01}\\
+  B_{10} & B_{11}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  \frac{1}{\sqrt 2} & \frac{i}{\sqrt 2}\\
+  \frac{i}{\sqrt 2} & \frac{1}{\sqrt 2}
+  \end{bmatrix}.
+(\#eq:beam-splitter)
+\end{equation}
+The matrix element $B_{lk}$, where $k,l=0,1$, represents the amplitude of transition from input  $\ket{k}$ to output  $\ket{l}$ (watch the order of indices).
+Each reflection (entries $B_{01}$ and $B_{10}$) happens with amplitude $i/\sqrt{2}$ and each transmission  (entries $B_{00}$ and $B_{11}$) happens with amplitude $1/\sqrt{2}$.
+Thus the total amplitude that a photon fired from input port $\ket{0}$ will reach detector $0$ is the sum of the amplitude of the two consecutive reflections ($i/\sqrt{2}\times i/{\sqrt 2} = -1/2$) and the amplitude of the two consecutive transmissions ($1/{\sqrt 2}\times 1/{\sqrt 2} = 1/2$) which gives the total amplitude $0$.
+The resulting probability is then zero.
+Unlike probabilities, amplitudes can cancel out each other out.
+We can now go on and calculate the amplitude that the photon will reach detector $1$.
+In this case we will get $i$, which gives probability $1$.
+We can then switch to input $\ket{1}$ and repeat our calculations.
+All possible paths and associated amplitudes are shown in \@ref(fig:paths-and-amplitudes-two-beam-splitters).
+
+```{r paths-and-amplitudes-two-beam-splitters,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='All possible transitions and their amplitudes when we compose two beam-splitters $B$.',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{centrelabel/.style={pos=0.5,fill=white}}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[xscale=3,yscale=2]
+  \node [dot,label=left:{$\ket{0}$}] (i0) at (0,1) {};
+  \node [dot,label=left:{$\ket{1}$}] (i1) at (0,0) {};
+  \node [dot] (m0) at (1,1) {};
+  \node [dot] (m1) at (1,0) {};
+  \node [dot,label=right:{$\ket{0}$}] (o0) at (2,1) {};
+  \node [dot,label=right:{$\ket{1}$}] (o1) at (2,0) {};
+  \draw [thick] (i0) to node [centrelabel] {$\frac{1}{\sqrt2}$} (1,1);
+  \draw [thick] (i0) to node [pos=0.25,fill=white] {$\frac{i}{\sqrt2}$} (1,0);
+  \draw [thick] (i1) to node [pos=0.25,fill=white] {$\frac{i}{\sqrt2}$} (1,1);
+  \draw [thick] (i1) to node [centrelabel] {$\frac{1}{\sqrt2}$} (1,0);
+  \draw [thick] (m0) to node [centrelabel] {$\frac{1}{\sqrt2}$} (o0);
+  \draw [thick] (m0) to node [pos=0.25,fill=white] {$\frac{i}{\sqrt2}$} (o1);
+  \draw [thick] (m1) to node [pos=0.25,fill=white] {$\frac{i}{\sqrt2}$} (o0);
+  \draw [thick] (m1) to node [centrelabel] {$\frac{1}{\sqrt2}$} (o1);
+  %
+  \node at (0.5,-0.45) {$B$};
+  \node at (1.5,-0.45) {$B$};
+\end{tikzpicture}
+```
+
+However, instead of going through all the paths in this diagram and linking specific inputs to specific outputs, we can simply multiply the transition matrices:
+$$
+  BB =
+  \begin{bmatrix}
+    \frac{1}{\sqrt 2} & \frac{i}{\sqrt 2}\\
+    \frac{i}{\sqrt 2} & \frac{1}{\sqrt 2}
+  \end{bmatrix}
+  \begin{bmatrix}
+    \frac{1}{\sqrt 2} & \frac{i}{\sqrt 2}\\
+    \frac{i}{\sqrt 2} & \frac{1}{\sqrt 2}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  0 & i\\
+  i & 0
+  \end{bmatrix}
+  = iX
+$$
+where $X=\begin{bmatrix}0&1\\1&0\end{bmatrix}$ is the $\texttt{NOT}$ operator.
+
+You can now inform your logician colleagues that they are entitled to propose a new logical operation $\sqrt{\texttt{NOT}}$, since it _does_ indeed exist. 
+
+::: {.idea}
+  | $\texttt{NOT}$ | $\sqrt{\texttt{NOT}}$ |
+  | :------------: | :-------------------: |
+  | $X = \begin{bmatrix}0&1\\1&0\end{bmatrix}$ | $B = \frac{1}{\sqrt2}\begin{bmatrix}1&i\\i&1\end{bmatrix}$ |
+  | bit flip | beam-splitter |
+:::
+
+
+
+
+
+## Appendix: Quantum interference revisited (still about beam-splitters)
+
+One of the simplest quantum devices in which quantum interference can be controlled is a **Mach-Zehnder interferometer** --- see Figure \@ref(fig:mach-zehnder).
+
+(ref:mach-zehnder-caption) The [Mach-Zehnder interferometer](https://en.wikipedia.org/wiki/Mach-Zehnder_interferometer), with the input photon represented by the coloured dot. This experimental set-up is named after the physicists Ludwig Mach and Ludwig Zehnder, who proposed it back in 1890s.
+
+```{r mach-zehnder,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='(ref:mach-zehnder-caption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\tikzset{smallblob/.style args={#1}{circle,draw,fill={#1},minimum size=6pt,inner sep=0pt,thin}}
+\tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
+\tikzset{mirror/.pic={\draw [line width=2pt] (-0.3,-0.3) -- (0.3,0.3);}}
+\tikzset{pics/measure left/.style args={#1}{code={\draw [fill=gray!15] (0,-0.5) arc (-90:90:0.5cm) -- cycle;\node [anchor=mid] at (0.22,0) {#1};}}}
+\tikzset{pics/measure top/.style args={#1}{code={\draw [fill=gray!15] (0.5,0) arc (0:180:0.5cm) -- cycle;\node [anchor=mid] at (0,0.22) {#1};}}}
+\tikzset{middlearrow/.style 2 args={decoration={markings,mark=at position #2 with {\arrow{#1}}},postaction=decorate}}
+\tikzset{pics/phase shift/.style args={#1}{code={\draw [thick,fill=gray=40] (-0.1,-0.5) rectangle (0.1,0.5);\node [anchor=north] at (0,-0.5) {#1};}}}
+\newcommand{\ket}[1]{|#1\rangle}
+\definecolor{primary}{RGB}{177,98,78}
+\begin{tikzpicture}
+  \path (0,0) pic {beamsplitter};
+  \path (4,3) pic {beamsplitter};
+  \draw [thick,middlearrow={Latex}{0.6}] (0,-1.1) to (0,3) pic {mirror};
+  \draw [thick,-Latex,shorten >=0.1cm] (0,3) to (5.1,3) pic {measure left={1}};
+  \draw [thick,middlearrow={Latex}{0.5}] (-1.1,0) to (4,0) pic {mirror};
+  \draw [thick,-Latex,shorten >=0.1cm] (4,0) to (4,4.1) pic {measure top={0}};
+  \draw (2,0) pic {phase shift={$\varphi_0$}};
+  \draw (2,3) pic {phase shift={$\varphi_1$}};
+  \node [smallblob=primary] at (-1.4,0) {};
+  \node at (-2.3,0) {Input $\ket{0}$};
+  \node at (0,-1.5) {Input $\ket{1}$};
+  \node [fill=white] at (0,2) {Beam 1};
+  \node [fill=white] at (4,1) {Beam 0};
+\end{tikzpicture}
+```
+
+It consists of two beam-splitters (the square boxes, bottom left and top right) and two slivers of glass of different thickness which are inserted into each of the optical paths connecting the two beam-splitters.
+The slivers are usually referred to as "phase shifters" and their thicknesses, $\varphi_0$ and $\varphi_1$, are measured in units of the photon's wavelength multiplied by $2\pi$.
+The two inputs ports of the interferometer are labelled as $\ket{0}$ and $\ket{1}$, and each of the two output ports, also labelled as $0$ and $1$, terminates in a photodetector.^[The two diagonal objects in the top-left and bottom-right corners of \@ref(fig:mach-zehnder) are simply mirrors to make the two possible paths meet at the second beam-splitter.]
+
+A photon (the coloured dot in the figure) impinges on the first beam-splitter from one of the two input ports (here input 1) and begins its journey towards one of the two photodetectors.
+Let^[We will often use $i$ as an index even though it is also used for the imaginary unit. Hopefully, no confusion will arise for it should be clear from the context which one is which.] $U_{ij}$ denote the probability amplitude that the photon initially in input port $j=0,1$ ends up in detector $i=0,1$.
+At each of the two beam-splitters the photon is transmitted with the probability amplitude $\sqrt{T}$ and reflected with the probability amplitude $i\sqrt{R}$, with $R+T=1$, and the two phase shifters modify the amplitudes by phase factors $e^{i\varphi_0}$ and $e^{i\varphi_1}$, respectively.
+In quantum theory we almost always start with the amplitudes, and once we have a full expression for the amplitude of a given outcome we square its absolute value to get the corresponding probability.
+For example, let us calculate  $U_{00}$.
+
+We notice that there are two alternative ways for the photon in the input port $0$ to end up in the output port $0$.
+It can take the lower path, through the phase shifter $\varphi_0$, or the upper path, through the phase shifter $\varphi_1$.
+The lower path implies two consecutive transmissions at the beam-splitters and the phase factor $e^{i\varphi_0}$, whereas the upper path implies two consecutive reflections and the phase factor $e^{i\varphi_1}$.
+Once the photon ends in the output port $0$ there is no way of knowing which path was taken, thus we add the amplitudes pertaining to each path.
+The resulting amplitude is
+$$
+  U_{00}
+  = \sqrt{T} e^{i\varphi_0} \sqrt{T}
+  + i\sqrt{R} e^{i\varphi_1} i \sqrt{R},
+$$
+and the corresponding probability $P_{00}=|U_{00}|^2$ reads
+$$
+  \begin{aligned}
+    P_{00}
+    & = \left\vert
+          \sqrt{T}e^{i\varphi_0}\sqrt{T} + i\sqrt{R}e^{i\varphi_1}i\sqrt{R}
+        \right\vert^2
+      = \left\vert
+          Te^{i\varphi_0} - Re^{i\varphi_1}
+        \right\vert^2
+  \\& = T^2 + R^2
+        - 2TR\cos(\varphi_1-\varphi_0).
+  \end{aligned}
+$$
+
+```{r,engine.opts=list(template="tikz2pdf.tex"),echo=FALSE,cache=TRUE,engine='tikz',fig.margin=TRUE,fig.width=4,fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin=0,xmax=5,
+    xlabel=relative phase,
+    ylabel=$\Pr(\mbox{detector 0 clicks})$,
+    ymin=0,ymax=1.1,
+    axis lines=middle,
+    xtick={0},
+    xticklabels={$0$},
+    ytick={0.16,0.58,1},
+    yticklabels={$(T-R)^2$,$T^2+R^2$,1},very thick,
+    xlabel style={font=\Large, anchor=north,at={(axis description cs:0.8,0)}},
+    ylabel style={font=\Large, anchor=south,at={(axis description cs:0.15,1.05)}},
+    yticklabel style={font=\Large}
+  ]
+    \addplot[domain=0:1.6*pi,samples=200,secondary,line width=2pt]{0.58-0.42*cos(deg(3*x))};
+    \addplot[domain=0:1.6*pi,samples=200,gray,dashed]{0.16};
+    \addplot[domain=0:1.6*pi,samples=200,gray,dashed]{1};
+    \addplot[domain=0:1.6*pi,samples=200,gray,dashed]{0.58};
+  \end{axis}
+\end{tikzpicture}
+```
+
+The "classical" part of this expression, $T^2+R^2$, basically says that the photon undergoes either two consecutive transmissions with probability $T^2$, or two consecutive reflections with probability $R^2$.
+The probability of being transmitted through any phase shifter is always $1$, hence the phase shifters play no role in the classical description of this process.
+But the classical description is not correct, as the experiments show, whence the interference term $2TR\cos(\varphi_1-\varphi_0)$ in which the phase shifters play the essential role.
+Depending on the _relative_ phase $\varphi=\varphi_1-\varphi_0$ the probability that the detector $0$ "clicks" can vary from $(T-R)^2$, for $\varphi=0$, to $1$, for $\varphi=\pi$.
+
+If we do not care about the experimental details, we can represent the action of the Mach-Zehnder interferometer in terms of a diagram: see \@ref(fig:mach-zehnder-diagram).
+
+```{r mach-zehnder-diagram,echo=FALSE,cache=TRUE,engine='tikz',fig.align='center',fig.cap='The Mach-Zehnder interferometer represented as an abstract diagram.',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[xscale=1.8]
+  \draw [ultra thick,dashed,primary] (0.6,2.5) rectangle (2.3,-0.5);
+  \draw [ultra thick,dashed,secondary] (2.5,2.5) rectangle (3.4,-0.5);
+  \draw [ultra thick,dashed,primary] (3.6,2.5) rectangle (5.3,-0.5);
+  \node at (1.5,-1) {first beamsplitter};
+  \node at (3,-1) {phase};
+  \node at (4.5,-1) {second beamsplitter};
+  \node [label=left:{$\ket{0}$}] (input1) at (0.2,2) {};
+  \node [label=left:{$\ket{1}$}] (input2) at (0.2,0) {};
+  \node [label=right:{$\ket{0}$}] (output1) at (5.7,2) {};
+  \node [label=right:{$\ket{1}$}] (output2) at (5.7,0) {};
+  \draw [thick] (input1) to node [pos=0.5,fill=white] {$e^{i\varphi_0}$} (output1);
+  \draw [thick] (input2) to node [pos=0.5,fill=white] {$e^{i\varphi_1}$} (output2);
+  \foreach \x in {1,2,4,5}
+    \foreach \y in {0,2}
+      \node [dot] (n\x\y) at (\x,\y) {};
+  \draw [thick] (n12) to node [pos=0.25,fill=white] {\small$i\sqrt{R}$} (n20);
+  \draw [thick] (n10) to node [pos=0.25,fill=white] {\small$i\sqrt{R}$} (n22);
+  \draw [thick] (n42) to node [pos=0.25,fill=white] {\small$i\sqrt{R}$} (n50);
+  \draw [thick] (n40) to node [pos=0.25,fill=white] {\small$i\sqrt{R}$} (n52);
+  \node [fill=white] at (1.6,2) {\small$\sqrt{T}$};
+  \node [fill=white] at (4.6,2) {\small$\sqrt{T}$};
+  \node [fill=white] at (1.6,0) {\small$\sqrt{T}$};
+  \node [fill=white] at (4.6,0) {\small$\sqrt{T}$};
+\end{tikzpicture}
+```
+
+Here we can follow, from left to right, the multiple different paths that a photon can take in between specific input and output ports.
+The amplitude along any given path is just the product of the amplitudes pertaining to the path segments (Rule 1), while the overall amplitude is the sum of the amplitudes for the many different paths (Rule 2). You can, for example, see that the probability amplitude $U_{10}$ is given by
+$$
+  U_{10}
+  = \sqrt{T}e^{i\varphi_0}i\sqrt{R} + i\sqrt{R}e^{i\varphi_1}\sqrt{T}
+$$
+and the corresponding probability is
+$$
+  \begin{aligned}
+    P_{10}
+    & = \left\vert
+        \sqrt{T}e^{i\varphi_0}i\sqrt{R} + i\sqrt{R}e^{i\varphi_1}\sqrt{T}
+      \right\vert^2
+  \\& = 2RT + 2RT\cos(\varphi_1-\varphi_0).
+  \end{aligned}
+$$
+Again, the first term is of "classical" origin and represents probabilities corresponding to each path: one reflection followed by one transmission plus one transmission followed by one reflection, that is, $RT+TR=2RT$.
+The second term is the interference term.
+Clearly, the photon entering port $1$ will end up in one of the two detectors, hence,
+$$
+  P_{00} + P_{10}
+  = R^2 + 2RT + T^2
+  = (T+R)^2
+  = 1.
+$$
+The action of the interferometer is thus fully described^[In general, any isolated quantum device, including a quantum computer, can be described by a matrix of probability amplitudes $U_{ij}$ that input $j$ generates output $i$. Watch the order of indices.] by the four probability amplitudes $U_{ij}$ ($i,j=0,1$).
+The most popular instance of a Mach-Zehnder interferometer involves only symmetric beam-splitters $(R=T=\frac12)$ and is fully described by the matrix
+$$
+  U =
+  \begin{bmatrix}
+    -\sin\varphi/2 & \cos\varphi/2
+  \\\cos\varphi/2 & \sin\varphi/2
+  \end{bmatrix}
+$$
+where $\varphi=\varphi_1-\varphi_0$.
+In fact, when you do all the calculations you obtain $ie^{\,i\frac{\varphi_0+\varphi_1}{2}}U$ rather than $U$, but the global phase factor $ie^{\,i\frac{\varphi_0+\varphi_1}{2}}$ is common to all the amplitudes in the matrix and as such it does not contribute to the resulting probabilities (why?).

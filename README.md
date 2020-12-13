@@ -19,6 +19,7 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
 
 ## To-do
 
+1. **where will this section on quantum dynamics go?**
 1. idea blocks in dark mode
 1. `\newcommand`s to somewhere shared by tex **and** html output
 1. svg output for figures

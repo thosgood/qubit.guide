@@ -5,7 +5,7 @@
 <meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Chapter 7 Decoherence, and elements of quantum error correction | Lectures on Quantum Information Science" />
+<meta property="og:title" content="Chapter 8 Decoherence, and elements of quantum error correction | Lectures on Quantum Information Science" />
 <meta property="og:type" content="book" />
 
 
@@ -24,7 +24,7 @@ MathJax.Hub.Config({
 
 <meta name="description" content="The online book version of an introductory series of lectures on quantum computing.">
 
-<title>Chapter 7 Decoherence, and elements of quantum error correction | Lectures on Quantum Information Science</title>
+<title>Chapter 8 Decoherence, and elements of quantum error correction | Lectures on Quantum Information Science</title>
 
 <script src="libs/header-attrs-2.5.3/header-attrs.js"></script>
 <link href="libs/tufte-css-2015.12.29/tufte-fonts.css" rel="stylesheet" />
@@ -53,30 +53,31 @@ MathJax.Hub.Config({
 <li><a href="index.html#overview">Overview</a></li>
 <li><a href="quantum-interference.html#quantum-interference"><span class="toc-section-number">1</span> Quantum interference</a></li>
 <li><a href="qubits.html#qubits"><span class="toc-section-number">2</span> Qubits</a></li>
-<li><a href="measurements.html#measurements"><span class="toc-section-number">3</span> Measurements</a></li>
-<li><a href="quantum-entanglement.html#quantum-entanglement"><span class="toc-section-number">4</span> Quantum entanglement</a></li>
-<li><a href="quantum-algorithms.html#quantum-algorithms"><span class="toc-section-number">5</span> Quantum algorithms</a></li>
-<li><a href="bells-theorem.html#bells-theorem"><span class="toc-section-number">6</span> Bell’s theorem</a></li>
-<li><a href="decoherence-and-elements-of-quantum-error-correction.html#decoherence-and-elements-of-quantum-error-correction"><span class="toc-section-number">7</span> Decoherence, and elements of quantum error correction</a></li>
-<li><a href="density-matrices.html#density-matrices"><span class="toc-section-number">8</span> Density matrices</a></li>
-<li><a href="quantum-channels-or-cp-maps.html#quantum-channels-or-cp-maps"><span class="toc-section-number">9</span> Quantum channels (or CP maps)</a></li>
-<li><a href="quantum-error-correction-and-fault-tolerance.html#quantum-error-correction-and-fault-tolerance"><span class="toc-section-number">10</span> Quantum error correction and fault tolerance</a></li>
+<li><a href="pauli-matrices-and-the-bloch-sphere.html#pauli-matrices-and-the-bloch-sphere"><span class="toc-section-number">3</span> Pauli matrices and the Bloch sphere</a></li>
+<li><a href="measurements.html#measurements"><span class="toc-section-number">4</span> Measurements</a></li>
+<li><a href="quantum-entanglement.html#quantum-entanglement"><span class="toc-section-number">5</span> Quantum entanglement</a></li>
+<li><a href="quantum-algorithms.html#quantum-algorithms"><span class="toc-section-number">6</span> Quantum algorithms</a></li>
+<li><a href="bells-theorem.html#bells-theorem"><span class="toc-section-number">7</span> Bell’s theorem</a></li>
+<li><a href="decoherence-and-elements-of-quantum-error-correction.html#decoherence-and-elements-of-quantum-error-correction"><span class="toc-section-number">8</span> Decoherence, and elements of quantum error correction</a></li>
+<li><a href="density-matrices.html#density-matrices"><span class="toc-section-number">9</span> Density matrices</a></li>
+<li><a href="quantum-channels-or-cp-maps.html#quantum-channels-or-cp-maps"><span class="toc-section-number">10</span> Quantum channels (or CP maps)</a></li>
+<li><a href="quantum-error-correction-and-fault-tolerance.html#quantum-error-correction-and-fault-tolerance"><span class="toc-section-number">11</span> Quantum error correction and fault tolerance</a></li>
 </ul>
 </div>
 </div>
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="decoherence-and-elements-of-quantum-error-correction" class="section level1" number="7">
-<h1><span class="header-section-number">Chapter 7</span> Decoherence, and elements of quantum error correction</h1>
+<div id="decoherence-and-elements-of-quantum-error-correction" class="section level1" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Decoherence, and elements of quantum error correction</h1>
 <blockquote>
 <p>In principle we know how to build a quantum computer: we can start with simple quantum logic gates and try to integrate them together into quantum networks.
 However, if we keep on putting quantum gates together into networks we will quickly run into some serious practical problems.
 The more interacting qubits involved, the harder it is to prevent them from getting entangled with the environment.
 This unwelcome entanglement, also known as <strong>decoherence</strong>, destroys the interference, and thus the power, of quantum computing.</p>
 </blockquote>
-<div id="decoherence-simplified" class="section level2" number="7.1">
-<h2><span class="header-section-number">7.1</span> Decoherence simplified</h2>
+<div id="decoherence-simplified" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> Decoherence simplified</h2>
 <p>Consider the following qubit-environment interaction:
 <span class="math display">\[
   \begin{aligned}
@@ -84,7 +85,7 @@ This unwelcome entanglement, also known as <strong>decoherence</strong>, destroy
   \\|1\rangle|e\rangle &amp;\longmapsto |1\rangle|e_{11}\rangle
   \end{aligned}
 \]</span>
-where <span class="math inline">\(|e\rangle\)</span>, <span class="math inline">\(|e_{00}\rangle\)</span>, and <span class="math inline">\(|e_{11}\rangle\)</span> are the states of the environment, which not need to be orthogonal.<label for="tufte-sn-27" class="margin-toggle sidenote-number">27</label><input type="checkbox" id="tufte-sn-27" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">27</span> The reason we use two indices in <span class="math inline">\(|e_{00}\rangle\)</span> and <span class="math inline">\(|e_{11}\rangle\)</span> will become clear in a moment, when we consider more general interaction with the environment.</span>
+where <span class="math inline">\(|e\rangle\)</span>, <span class="math inline">\(|e_{00}\rangle\)</span>, and <span class="math inline">\(|e_{11}\rangle\)</span> are the states of the environment, which not need to be orthogonal.<label for="tufte-sn-28" class="margin-toggle sidenote-number">28</label><input type="checkbox" id="tufte-sn-28" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">28</span> The reason we use two indices in <span class="math inline">\(|e_{00}\rangle\)</span> and <span class="math inline">\(|e_{11}\rangle\)</span> will become clear in a moment, when we consider more general interaction with the environment.</span>
 Let <span class="math inline">\(|\psi\rangle = \alpha|0\rangle + \beta|1\rangle\)</span> be the initial state of the qubit.
 The environment is essentially trying to <em>measure</em> the qubit and, as the result, the two get entangled:
 <span class="math display">\[
@@ -109,18 +110,18 @@ or as
 \]</span>
 where <span class="math inline">\(|e_1\rangle = \frac12(|e_{00}\rangle + |e_{11}\rangle)\)</span> and <span class="math inline">\(|e_z\rangle = \frac12(|e_{00}\rangle - |e_{11}\rangle)\)</span>.
 We may interpret this expression by saying that two things can happen to the qubit: nothing <span class="math inline">\(\operatorname{id}\)</span> (first term), or phase-flip <span class="math inline">\(Z\)</span> (second term).
-This, however, should not be taken literally unless the states of the environment, <span class="math inline">\(|e_1\rangle\)</span> and <span class="math inline">\(|e_z\rangle\)</span>, are orthogonal.<label for="tufte-sn-28" class="margin-toggle sidenote-number">28</label><input type="checkbox" id="tufte-sn-28" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">28</span> Why not?</span></p>
+This, however, should not be taken literally unless the states of the environment, <span class="math inline">\(|e_1\rangle\)</span> and <span class="math inline">\(|e_z\rangle\)</span>, are orthogonal.<label for="tufte-sn-29" class="margin-toggle sidenote-number">29</label><input type="checkbox" id="tufte-sn-29" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">29</span> Why not?</span></p>
 </div>
-<div id="decoherence-and-interference" class="section level2" number="7.2">
-<h2><span class="header-section-number">7.2</span> Decoherence and interference</h2>
+<div id="decoherence-and-interference" class="section level2" number="8.2">
+<h2><span class="header-section-number">8.2</span> Decoherence and interference</h2>
 <p>Suppose the qubit undergoes the usual interference experiment but in between the two Hadamard gates it is affected by decoherence (denoted by <span class="math inline">\(\times\)</span>).</p>
 <div class="figure" style="text-align: center"><span id="fig:decoherence-interference"></span>
 <p class="caption marginnote shownote">
-Figure 7.1: The usual interference experiment, but with decoherence.
+Figure 8.1: The usual interference experiment, but with decoherence.
 </p>
 <img src="quantum-site_files/figure-html/decoherence-interference-1.png" alt="The usual interference experiment, but with decoherence." width="384"  />
 </div>
-<p>Let us step through the circuit in Figure <a href="decoherence-and-elements-of-quantum-error-correction.html#fig:decoherence-interference">7.1</a>, keeping track of the state of the environment:
+<p>Let us step through the circuit in Figure <a href="decoherence-and-elements-of-quantum-error-correction.html#fig:decoherence-interference">8.1</a>, keeping track of the state of the environment:
 <span class="math display">\[
   \begin{aligned}
     |0\rangle|e\rangle
@@ -143,10 +144,10 @@ If we write <span class="math inline">\(\langle e_0|e_1\rangle = ve^{i\alpha}\)<
 <div class="figure">--><span id="fig:visibility-suppression"></span>
 <img src="quantum-site_files/figure-html/visibility-suppression-1.png" alt="Visibility suppression." width="384"  />
 <!--
-<p class="caption marginnote">-->Figure 7.2: Visibility suppression.<!--</p>-->
+<p class="caption marginnote">-->Figure 8.2: Visibility suppression.<!--</p>-->
 <!--</div>--></span>
 </p>
-<p>As we can see in Figure <a href="decoherence-and-elements-of-quantum-error-correction.html#fig:visibility-suppression">7.2</a>, the interference pattern is suppressed by a factor <span class="math inline">\(v\)</span>, which we call the <strong>visibility</strong>.
+<p>As we can see in Figure <a href="decoherence-and-elements-of-quantum-error-correction.html#fig:visibility-suppression">8.2</a>, the interference pattern is suppressed by a factor <span class="math inline">\(v\)</span>, which we call the <strong>visibility</strong>.
 As <span class="math inline">\(v=|\!\langle e_0|e_1\rangle\!|\)</span> decreases, we lose all the advantages of quantum interference.
 For example, in Deutsch’s algorithm we obtain the correct answer with probability at most <span class="math inline">\((1+v)/2\)</span>.
 For <span class="math inline">\(\langle e_0|e_1\rangle = 0\)</span>, the perfect decoherence case, the network outputs <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span> with equal probabilities, i.e. it is <em>useless</em> as a computing device.</p>
@@ -155,8 +156,8 @@ For <span class="math inline">\(\langle e_0|e_1\rangle = 0\)</span>, the perfect
 For this we need <strong>quantum error correction</strong>: we encode the state of a single (logical) qubit across several (physical) qubits.</p>
 </div>
 </div>
-<div id="evolution-of-density-operators-under-decoherence" class="section level2" number="7.3">
-<h2><span class="header-section-number">7.3</span> Evolution of density operators under decoherence</h2>
+<div id="evolution-of-density-operators-under-decoherence" class="section level2" number="8.3">
+<h2><span class="header-section-number">8.3</span> Evolution of density operators under decoherence</h2>
 <p>In terms of density operators, the qubit alone evolves from the pure state <span class="math inline">\(|\psi\rangle\langle\psi|\)</span> to a mixed state, which can be obtained by tracing over the environment.
 We start with the evolution of the state vector <span class="math inline">\(|\psi\rangle=\alpha|0\rangle+\beta|1\rangle\)</span>, which is given by
 <span class="math display">\[
@@ -195,8 +196,8 @@ implies
 <em>only</em> when <span class="math inline">\(\langle e_1|e_z\rangle=0\)</span> (otherwise you would have additional cross terms <span class="math inline">\(\operatorname{id}|\psi\rangle\langle\psi| Z\)</span> and <span class="math inline">\(Z|\psi\rangle\langle\psi| \operatorname{id}\)</span>).
 In this case we can indeed say that, with probability <span class="math inline">\(\langle e_1|e_1\rangle\)</span>, nothing happens, and, with probability <span class="math inline">\(\langle e_z|e_z\rangle\)</span>, the qubit undergoes the phase-flip <span class="math inline">\(Z\)</span>.</p>
 </div>
-<div id="quantum-errors" class="section level2" number="7.4">
-<h2><span class="header-section-number">7.4</span> Quantum errors</h2>
+<div id="quantum-errors" class="section level2" number="8.4">
+<h2><span class="header-section-number">8.4</span> Quantum errors</h2>
 <p>The most general qubit-environment interaction
 <span class="math display">\[
   \begin{aligned}
@@ -243,8 +244,8 @@ We can say that <span class="math inline">\(E_i\)</span> represents an error con
 Again, <em>this is not quite accurate if the corresponding states of the environment are not mutually orthogonal</em>, but it gives the right kind of intuition nonetheless.
 Here the index <span class="math inline">\(i\)</span> in <span class="math inline">\(E_i\)</span> ranges from <span class="math inline">\(1\)</span> to <span class="math inline">\(4^5=1024\)</span>, because there are <span class="math inline">\(4^5\)</span> different Pauli operators acting on <span class="math inline">\(5\)</span> qubits.</p>
 </div>
-<div id="same-evolution-different-errors" class="section level2" number="7.5">
-<h2><span class="header-section-number">7.5</span> Same evolution, different errors</h2>
+<div id="same-evolution-different-errors" class="section level2" number="8.5">
+<h2><span class="header-section-number">8.5</span> Same evolution, different errors</h2>
 <p>We can always pick up an orthonormal basis <span class="math inline">\(|u_i\rangle\)</span> in the environment and express the system–environment evolution as
 <span class="math display">\[
   \begin{aligned}
@@ -276,8 +277,8 @@ and, consequently,
 \]</span>
 The new “errors” satisfy <span class="math inline">\(\sum_k N_k^\dagger N_k = \operatorname{id}\)</span>, and the error operators <span class="math inline">\(N_k\)</span> and <span class="math inline">\(M_j\)</span> are related by the unitary matrix <span class="math inline">\(U_{kj}=\langle v_k|u_j\rangle\)</span>.</p>
 </div>
-<div id="some-errors-can-be-corrected-on-some-states" class="section level2" number="7.6">
-<h2><span class="header-section-number">7.6</span> Some errors can be corrected on some states</h2>
+<div id="some-errors-can-be-corrected-on-some-states" class="section level2" number="8.6">
+<h2><span class="header-section-number">8.6</span> Some errors can be corrected on some states</h2>
 <p>Alice prepares a quantum object in some state <span class="math inline">\(|\psi\rangle\)</span> and sends it to Bob.
 The object is intercepted by a malicious Eve who changes its state by applying one of the prescribed unitary operations <span class="math inline">\(U_1,\ldots, U_n\)</span>, with probabilities <span class="math inline">\(p_1,\ldots, p_n\)</span>, respectively.
 Alice and Bob know the set of possible unitaries (errors), and the associated probabilities, but they do not know which particular unitary operation was chosen by Eve.
@@ -312,8 +313,8 @@ So suppose Alice prepares <span class="math inline">\(|\psi\rangle=\alpha|000\ra
 This generates the state <span class="math inline">\(\operatorname{id}\otimes\operatorname{id}\otimes X|\psi\rangle=\alpha|001\rangle+\beta|110\rangle\in \mathcal{C}_3\)</span>.
 The projective measurement on these subspaces tells Bob that the new state is in the subspace <span class="math inline">\(\mathcal{C}_3\)</span>, and hence the original state can be recovered by the operation <span class="math inline">\(\operatorname{id}\otimes\operatorname{id}\otimes X\)</span>.</p>
 </div>
-<div id="repetition-codes" class="section level2" number="7.7">
-<h2><span class="header-section-number">7.7</span> Repetition codes</h2>
+<div id="repetition-codes" class="section level2" number="8.7">
+<h2><span class="header-section-number">8.7</span> Repetition codes</h2>
 <p>In order to give a sense of how quantum error correction actually works, let us begin with a <em>classical</em> example of a repetition code.
 Suppose a transmission channel flips each bit in transit with probability <span class="math inline">\(p\)</span>.
 If this error rate is considered too high then it can be decreased by encoding each bit into, say, three bits:
@@ -330,16 +331,16 @@ In general, the net probability of error is just the likelihood that two or thre
 Thus the three bit code improves the reliability of the information transfer.
 The <em>quantum</em> case, however, is more complicated, because we have both bit-flip <em>and</em> phase-flip errors.</p>
 </div>
-<div id="quantum-error-correction" class="section level2" number="7.8">
-<h2><span class="header-section-number">7.8</span> Quantum error correction</h2>
+<div id="quantum-error-correction" class="section level2" number="8.8">
+<h2><span class="header-section-number">8.8</span> Quantum error correction</h2>
 <p>In order to protect a qubit against bit-flips (incoherent <span class="math inline">\(X\)</span> rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
 We take a qubit in some unknown pure state <span class="math inline">\(\alpha|0\rangle + \beta|1\rangle\)</span>, introduce two auxiliary qubits, and encode it into three qubits as</p>
-<p><img src="quantum-site_files/figure-html/unnamed-chunk-11-1.png" width="768"  style="display: block; margin: auto;" /></p>
+<p><img src="quantum-site_files/figure-html/unnamed-chunk-12-1.png" width="768"  style="display: block; margin: auto;" /></p>
 <p>Suppose that at most one qubit is then flipped (say, the second one).
 The encoded state then becomes <span class="math inline">\(\alpha|010\rangle + \beta|101\rangle\)</span>.
 Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 Instead we introduce another two additional qubits, both in state <span class="math inline">\(|0\rangle\)</span>, and apply the following network:</p>
-<p><img src="quantum-site_files/figure-html/unnamed-chunk-12-1.png" width="768"  style="display: block; margin: auto;" /></p>
+<p><img src="quantum-site_files/figure-html/unnamed-chunk-13-1.png" width="768"  style="display: block; margin: auto;" /></p>
 <p>We measure the two auxiliary qubits, also known as <strong>ancilla bits</strong>, and the result of the measurement, known as the <strong>error syndrome</strong>, tells us how to reset the three qubits of the code.
 The theory behind this network runs as follows.</p>
 <p>If qubits one and two (counting from the top) are the same, then the first ancilla is in the <span class="math inline">\(|0\rangle\)</span> state.
@@ -351,15 +352,15 @@ Thus it is qubit 2 that has an error.
 Knowing the error, we can go back and fix it, simply by applying <span class="math inline">\(X\)</span> to qubit 2.
 The net result is the state <span class="math inline">\(\alpha|000\rangle + \beta|111\rangle\)</span>, which is then turned into <span class="math inline">\((\alpha|0\rangle + \beta|1\rangle)|0\rangle|0\rangle\)</span> by running the mirror image of the encoding network.</p>
 </div>
-<div id="turning-bit-flips-into-phase-flips" class="section level2" number="7.9">
-<h2><span class="header-section-number">7.9</span> Turning bit-flips into phase-flips</h2>
+<div id="turning-bit-flips-into-phase-flips" class="section level2" number="8.9">
+<h2><span class="header-section-number">8.9</span> Turning bit-flips into phase-flips</h2>
 <p>The three-qubit code that we have just demonstrated is sufficient to protect a qubit against single bit-flips, but not phase-flips.
 But this is good enough.
 Recall that <span class="math inline">\(HZH=X\)</span>, and so it is enough to sandwich the decoherence area in between the Hadamard gates: they will turn phase flips into bit flips, and we already know hot to protect our qubits against <span class="math inline">\(Z\)</span>-errors.
 The encoded state <span class="math inline">\(\alpha|0\rangle + \beta|1\rangle\)</span> now reads <span class="math inline">\(\alpha|+++\rangle+\beta|---\rangle\)</span>, where <span class="math inline">\(|\pm\rangle=|0\rangle\pm|1\rangle\)</span>.</p>
 </div>
-<div id="dealing-with-bit-flip-and-phase-flip-errors" class="section level2" number="7.10">
-<h2><span class="header-section-number">7.10</span> Dealing with bit-flip and phase-flip errors</h2>
+<div id="dealing-with-bit-flip-and-phase-flip-errors" class="section level2" number="8.10">
+<h2><span class="header-section-number">8.10</span> Dealing with bit-flip and phase-flip errors</h2>
 <p>We can now put the bit-flip and phase-flip codes together: first we encode the qubit using the phase-flip code, and then we encode each of the three qubits of the code using the bit-flip code.
 This gives an error correction scheme that allows us to protect against both types of error, thus yielding a code that encodes a single logical qubit across nine physical qubits, protecting against a single quantum error on any of the nine qubits.</p>
 <p>If we want to preserve a quantum state for a long time without doing any computations, or if we want to send it through a noisy communications channel, we can just encode the state using a quantum code and decode it when we are done.

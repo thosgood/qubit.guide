@@ -5,6 +5,10 @@
 > The more interacting qubits involved, the harder it is to prevent them from getting entangled with the environment.
 > This unwelcome entanglement, also known as **decoherence**, destroys the interference, and thus the power, of quantum computing.
 
+
+
+
+
 ## Decoherence simplified
 
 Consider the following qubit-environment interaction:
@@ -40,6 +44,10 @@ $$
 where $\ket{e_1} = \frac12(\ket{e_{00}} + \ket{e_{11}})$ and $\ket{e_z} = \frac12(\ket{e_{00}} - \ket{e_{11}})$.
 We may interpret this expression by saying that two things can happen to the qubit: nothing $\id$ (first term), or phase-flip $Z$ (second term).
 This, however, should not be taken literally unless the states of the environment, $\ket{e_1}$ and $\ket{e_z}$, are orthogonal.^[Why not?]
+
+
+
+
 
 ## Decoherence and interference
 
@@ -121,6 +129,9 @@ For $\braket{e_0|e_1} = 0$, the perfect decoherence case, the network outputs $0
 :::
 
 
+
+
+
 ## Evolution of density operators under decoherence
 
 In terms of density operators, the qubit alone evolves from the pure state $\proj{\psi}$ to a mixed state, which can be obtained by tracing over the environment.
@@ -161,6 +172,9 @@ $$
 $$
 _only_ when $\braket{e_1|e_z}=0$ (otherwise you would have additional cross terms $\id\proj{\psi} Z$  and $Z\proj{\psi} \id$).
 In this case we can indeed say that, with probability $\braket{e_1|e_1}$, nothing happens, and, with probability $\braket{e_z|e_z}$, the qubit undergoes the phase-flip $Z$.
+
+
+
 
 
 ## Quantum errors
@@ -214,6 +228,9 @@ Again, _this is not quite accurate if the corresponding states of the environmen
 Here the index $i$ in $E_i$ ranges from $1$ to $4^5=1024$, because there are $4^5$ different Pauli operators acting on $5$ qubits.
 
 
+
+
+
 ## Same evolution, different errors
 
 We can always pick up an orthonormal basis $\ket{u_i}$ in the environment and express the system--environment evolution as
@@ -246,6 +263,9 @@ $$
   \proj{\psi}\longmapsto \sum_k N_k\proj{\psi} N_k^\dagger.
 $$
 The new "errors" satisfy $\sum_k N_k^\dagger N_k = \id$, and the error operators $N_k$ and $M_j$ are related by the unitary matrix $U_{kj}=\braket{v_k|u_j}$. 
+
+
+
 
 
 ## Some errors can be corrected on some states
@@ -287,6 +307,9 @@ This generates the state $\id\otimes\id\otimes X\ket{\psi}=\alpha\ket{001}+\beta
 The projective measurement on these subspaces tells Bob that the new state is in the subspace $\mathcal{C}_3$, and hence the original state can be recovered by the operation $\id\otimes\id\otimes X$.
 
 
+
+
+
 ## Repetition codes
 
 In order to give a sense of how quantum error correction actually works, let us begin with a _classical_ example of a repetition code.
@@ -304,6 +327,9 @@ If only one error occurs, then this error correction procedure is foolproof.
 In general, the net probability of error is just the likelihood that two or three errors occur, which is $3p^2(1-p) + p^3 < p$.
 Thus the three bit code improves the reliability of the information transfer.
 The _quantum_ case, however, is more complicated, because we have both bit-flip _and_ phase-flip errors.
+
+
+
 
 
 ## Quantum error correction
@@ -396,12 +422,18 @@ Knowing the error, we can go back and fix it, simply by applying $X$ to qubit 2.
 The net result is the state $\alpha\ket{000} + \beta\ket{111}$, which is then turned into $(\alpha\ket{0} + \beta\ket{1})\ket{0}\ket{0}$ by running the mirror image of the encoding network.
 
 
+
+
+
 ## Turning bit-flips into phase-flips
 
 The three-qubit code that we have just demonstrated is sufficient to protect a qubit against single bit-flips, but not phase-flips.
 But this is good enough.
 Recall that $HZH=X$, and so it is enough to sandwich the decoherence area in between the Hadamard gates: they will turn phase flips into bit flips, and we already know hot to protect our qubits against $Z$-errors.
 The encoded state $\alpha\ket{0} + \beta\ket{1}$ now reads $\alpha\ket{+++}+\beta\ket{---}$, where $\ket{\pm}=\ket{0}\pm\ket{1}$.
+
+
+
 
 
 ## Dealing with bit-flip and phase-flip errors
