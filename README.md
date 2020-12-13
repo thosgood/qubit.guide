@@ -4,6 +4,8 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
 
 [<img src="book-screenshot.png" alt="A screenshot of the online book" style="border:1px solid black;">](book/)
 
+**!!!TODO!!! how to "use" the online book**
+
 ## Further reading
 
 - P. Kaye, R. Laflamme, and M. Mosca. _An Introduction to Quantum Computing_. Oxford University Press, 2007.
@@ -21,7 +23,7 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
 
 1. be more consistent with the start of chapters
     + blockquote which says "About ..." and **uses words from the syllabus**
-        * make sure that everything is covered!!
+        * and make sure that _everything_ in the syllabus is covered!!
     + followed by a paragraph with a bit more of a detailed overview
 1. make sure that you use **only** _either_ "chapter" _or_ "lecture"
 1. **where will this section on quantum dynamics go?**

@@ -50,8 +50,8 @@ MathJax.Hub.Config({
 <div class="col-sm-12">
 <div id="TOC">
 <ul>
-<li><a href="index.html#overview">Overview</a></li>
-<li><a href="quantum-interference.html#quantum-interference"><span class="toc-section-number">1</span> Quantum interference</a></li>
+<li><a href="index.html#introduction">Introduction</a></li>
+<li><a href="quantum-interference-and-things-to-come.html#quantum-interference-and-things-to-come"><span class="toc-section-number">1</span> Quantum interference, and things to come</a></li>
 <li><a href="qubits.html#qubits"><span class="toc-section-number">2</span> Qubits</a></li>
 <li><a href="pauli-matrices-and-the-bloch-sphere.html#pauli-matrices-and-the-bloch-sphere"><span class="toc-section-number">3</span> Pauli matrices and the Bloch sphere</a></li>
 <li><a href="measurements.html#measurements"><span class="toc-section-number">4</span> Measurements</a></li>
@@ -145,10 +145,100 @@ Thus the matrix multiplication <span class="math inline">\(VU\)</span> (watch th
 </div>
 <div id="quantum-bits-called-qubits" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Quantum bits, called “qubits”</h2>
+<p>A two-state machine that we have just described in abstract terms is usually realised as a controlled evolution of a two state system, called a quantum bit or a qubit.
+For example, state <span class="math inline">\(|0\rangle\)</span> may be chosen to be the lowest energy state of an atom, the <strong>ground state</strong>, and state <span class="math inline">\(|1\rangle\)</span> a higher energy state, the <strong>excited state</strong>.
+Pulses of light of appropriate frequency, duration and intensity can take the atom back and forth between the basis states <span class="math inline">\(|0\rangle\)</span> and <span class="math inline">\(|1\rangle\)</span> (implementing logical <span class="math inline">\(\texttt{NOT}\)</span>).</p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">-->
+<img src="quantum-site_files/figure-html/unnamed-chunk-11-1.png" alt=" " width="288"  />
+<!--
+<p class="caption marginnote">--> <!--</p>-->
+<!--</div>--></span>
+</p>
+<p>Some other pulses, say, half the duration or intensity will take the atom into states that have no classical analogue.
+Such states are called <strong>coherent superpositions</strong> of <span class="math inline">\(|0\rangle\)</span> and <span class="math inline">\(|1\rangle\)</span>, and represent a qubit in state <span class="math inline">\(|0\rangle\)</span> with some amplitude <span class="math inline">\(\alpha_0\)</span> and in state <span class="math inline">\(|1\rangle\)</span> with some other amplitude <span class="math inline">\(\alpha_1\)</span>.
+This is conveniently represented by a state vector
+<span class="math display">\[
+    |\psi\rangle =
+    \alpha_0|0\rangle + \alpha_1|1\rangle
+    \leftrightarrow
+    \begin{bmatrix}
+      \alpha_0
+    \\\alpha_1
+    \end{bmatrix}
+\]</span></p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">-->
+<img src="quantum-site_files/figure-html/unnamed-chunk-12-1.png" alt=" " width="288"  />
+<!--
+<p class="caption marginnote">--> <!--</p>-->
+<!--</div>--></span>
+</p>
+<div class="idea">
+<p>A <strong>qubit</strong> is a quantum system in which the Boolean states <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span> are represented by a prescribed pair of normalised and mutually orthogonal quantum states labelled as <span class="math inline">\(\{|0\rangle,|1\rangle\}\)</span>.
+The two states form a so-called <strong>computational</strong> (or <strong>standard</strong>) basis, and so any other state of an isolated qubit can be written as a coherent superposition
+<span class="math display">\[
+    |\psi\rangle = \alpha_0|0\rangle + \alpha_1|1\rangle
+  \]</span>
+for some <span class="math inline">\(\alpha_0\)</span> and <span class="math inline">\(\alpha_1\)</span> such that <span class="math inline">\(|\alpha_0|^2 + |\alpha_1|^2 = 1\)</span>.</p>
+<p>In practice, a qubit is typically a microscopic system, such as an atom, a nuclear spin, or a polarised photon.</p>
+</div>
+<p>As we have already mentioned, any<label for="tufte-sn-23" class="margin-toggle sidenote-number">23</label><input type="checkbox" id="tufte-sn-23" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">23</span>  Here we are talking about <em>isolated</em> systems. As you will soon learn, a larger class of physically admissible operations is described by completely positive maps. It may sound awfully complicated but, as you will soon see, it is actually very simple.</span> computational step, that is, any physically admissible operation <span class="math inline">\(U\)</span> on a qubit, is described by a <span class="math inline">\((2\times 2)\)</span> unitary matrix <span class="math inline">\(U\)</span>.
+It modifies the state of the qubit as
+<span class="math display">\[
+  |\psi\rangle
+  \mapsto
+  |\psi&#39;\rangle
+  =
+  U|\psi\rangle
+\]</span>
+which we can write explicitly as
+<span class="math display">\[
+  \begin{bmatrix}
+    \alpha&#39;_0
+  \\\alpha&#39;_1
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    U_{00} &amp; U_{01}
+  \\U_{10} &amp; U_{11}
+  \end{bmatrix}
+  \begin{bmatrix}
+    \alpha_0
+  \\\alpha_1
+  \end{bmatrix}
+\]</span>
+That is, operation <span class="math inline">\(U\)</span> sends state <span class="math inline">\(|\psi\rangle\)</span>, with components <span class="math inline">\(\alpha_k\)</span>, into state <span class="math inline">\(|\psi&#39;\rangle=U|\psi\rangle\)</span>, with components <span class="math inline">\(\alpha&#39;_l= \sum_k U_{lk}\alpha_k\)</span>.</p>
+</div>
+<div id="quantum-gates-and-circuits" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Quantum gates and circuits</h2>
+<p>Atoms, trapped ions, molecules, nuclear spins and many other quantum objects, which we call qubits, can be used to implement simple quantum interference, and hence simple quantum computation.
+There is no need to learn about physics behind these diverse technologies if all you want is to understand the basics of quantum computation.
+We may now conveniently forget about any specific experimental realisation of a qubit and just remember that any manipulations on qubits have to be performed by physically admissible operations, and that such operations are represented by unitary transformations.</p>
+<div class="idea">
+<p>A <strong>quantum (logic) gate</strong> is a device which performs a fixed unitary operation on selected qubits in a fixed period of time, and a <strong>quantum circuit</strong> is a device consisting of quantum logic gates whose computational steps are synchronised in time.
+The <strong>sizes</strong> of the circuit is the number of gates it contains.</p>
+</div>
+<p>Some unitary <span class="math inline">\(U\)</span> acting on a single qubit is represented diagrammatically as</p>
+<p><img src="quantum-site_files/figure-html/unnamed-chunk-13-1.png" width="240"  style="display: block; margin: auto;" /></p>
+<p>This diagram should be read from left to right.
+The horizontal line represents a qubit that is inertly carried from one quantum operation to another.
+We often call this line a <strong>quantum wire</strong>.
+The wire may describe translation in space (e.g. atoms travelling through cavities) or translation in time (e.g. a sequence of operations performed on a trapped ion).
+A sequence of two gates acting on the same qubit, say <span class="math inline">\(U\)</span> followed by <span class="math inline">\(V\)</span>, is represented by</p>
+<p><img src="quantum-site_files/figure-html/unnamed-chunk-14-1.png" width="240"  style="display: block; margin: auto;" /></p>
+<p>and is described by the matrix product <span class="math inline">\(VU\)</span> (note the order in which we multiply the matrices).</p>
+</div>
+<div id="single-qubit-interference" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Single qubit interference</h2>
 <p><strong>!!!TODO!!! rest of <code>L2-qubits.tex</code></strong></p>
 </div>
-<div id="appendix-physics-against-logic-via-beamsplitters" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> Appendix: Physics against logic, via beamsplitters</h2>
+<div id="appendix-physics-against-logic-via-beamsplitters" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Appendix: Physics against logic, via beamsplitters</h2>
 <blockquote>
 <p>The square root of <span class="math inline">\(\texttt{NOT}\)</span>, and showing that it can be as simple as a symmetric beam-splitter.
 In fact, playing with mirrors and beam-splitters can give you lots of insights into the quantum world.</p>
@@ -189,7 +279,7 @@ Figure 2.4: The two possible classical scenarios. Note that this is <strong>not<
 </div>
 <p>In experimental reality, when the optical paths between the two beam-splitters are the same, the photon fired from input port <span class="math inline">\(|0\rangle\)</span> <em>always</em> strikes detector 1 and <em>never</em> detector 0 (and the photon fired from input port <span class="math inline">\(|1\rangle\)</span> <em>always</em> strikes detector 0 and <em>never</em> detector 1).
 Thus a beam-splitter acts as the square root of <span class="math inline">\(\texttt{NOT}\)</span> gate.</p>
-<p>The action of the beam-splitter — in fact, the action of any quantum device — can be described by tabulating the amplitudes of transitions between its input and output ports.<label for="tufte-sn-23" class="margin-toggle sidenote-number">23</label><input type="checkbox" id="tufte-sn-23" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">23</span> Note that gate <span class="math inline">\(B\)</span> is not the same square root of <span class="math inline">\(\texttt{NOT}\)</span> as the one described in the first diagram in this section. There are infinitely many ways of implementing this “impossible” logical operation.</span>
+<p>The action of the beam-splitter — in fact, the action of any quantum device — can be described by tabulating the amplitudes of transitions between its input and output ports.<label for="tufte-sn-24" class="margin-toggle sidenote-number">24</label><input type="checkbox" id="tufte-sn-24" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">24</span> Note that gate <span class="math inline">\(B\)</span> is not the same square root of <span class="math inline">\(\texttt{NOT}\)</span> as the one described in the first diagram in this section. There are infinitely many ways of implementing this “impossible” logical operation.</span>
 <span class="math display" id="eq:beam-splitter">\[\begin{equation}
   B = 
   \begin{bmatrix}
@@ -263,8 +353,8 @@ where <span class="math inline">\(X=\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}
 </table>
 </div>
 </div>
-<div id="appendix-quantum-interference-revisited-still-about-beam-splitters" class="section level2" number="2.4">
-<h2><span class="header-section-number">2.4</span> Appendix: Quantum interference revisited (still about beam-splitters)</h2>
+<div id="appendix-quantum-interference-revisited-still-about-beam-splitters" class="section level2" number="2.6">
+<h2><span class="header-section-number">2.6</span> Appendix: Quantum interference revisited (still about beam-splitters)</h2>
 <p>One of the simplest quantum devices in which quantum interference can be controlled is a <strong>Mach-Zehnder interferometer</strong> — see Figure <a href="qubits.html#fig:mach-zehnder">2.6</a>.</p>
 
 <div class="figure" style="text-align: center"><span id="fig:mach-zehnder"></span>
@@ -275,9 +365,9 @@ Figure 2.6: The <a href="https://en.wikipedia.org/wiki/Mach-Zehnder_interferomet
 </div>
 <p>It consists of two beam-splitters (the square boxes, bottom left and top right) and two slivers of glass of different thickness which are inserted into each of the optical paths connecting the two beam-splitters.
 The slivers are usually referred to as “phase shifters” and their thicknesses, <span class="math inline">\(\varphi_0\)</span> and <span class="math inline">\(\varphi_1\)</span>, are measured in units of the photon’s wavelength multiplied by <span class="math inline">\(2\pi\)</span>.
-The two inputs ports of the interferometer are labelled as <span class="math inline">\(|0\rangle\)</span> and <span class="math inline">\(|1\rangle\)</span>, and each of the two output ports, also labelled as <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, terminates in a photodetector.<label for="tufte-sn-24" class="margin-toggle sidenote-number">24</label><input type="checkbox" id="tufte-sn-24" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">24</span> The two diagonal objects in the top-left and bottom-right corners of <a href="qubits.html#fig:mach-zehnder">2.6</a> are simply mirrors to make the two possible paths meet at the second beam-splitter.</span></p>
+The two inputs ports of the interferometer are labelled as <span class="math inline">\(|0\rangle\)</span> and <span class="math inline">\(|1\rangle\)</span>, and each of the two output ports, also labelled as <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, terminates in a photodetector.<label for="tufte-sn-25" class="margin-toggle sidenote-number">25</label><input type="checkbox" id="tufte-sn-25" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">25</span> The two diagonal objects in the top-left and bottom-right corners of <a href="qubits.html#fig:mach-zehnder">2.6</a> are simply mirrors to make the two possible paths meet at the second beam-splitter.</span></p>
 <p>A photon (the coloured dot in the figure) impinges on the first beam-splitter from one of the two input ports (here input 1) and begins its journey towards one of the two photodetectors.
-Let<label for="tufte-sn-25" class="margin-toggle sidenote-number">25</label><input type="checkbox" id="tufte-sn-25" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">25</span> We will often use <span class="math inline">\(i\)</span> as an index even though it is also used for the imaginary unit. Hopefully, no confusion will arise for it should be clear from the context which one is which.</span> <span class="math inline">\(U_{ij}\)</span> denote the probability amplitude that the photon initially in input port <span class="math inline">\(j=0,1\)</span> ends up in detector <span class="math inline">\(i=0,1\)</span>.
+Let<label for="tufte-sn-26" class="margin-toggle sidenote-number">26</label><input type="checkbox" id="tufte-sn-26" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">26</span> We will often use <span class="math inline">\(i\)</span> as an index even though it is also used for the imaginary unit. Hopefully, no confusion will arise for it should be clear from the context which one is which.</span> <span class="math inline">\(U_{ij}\)</span> denote the probability amplitude that the photon initially in input port <span class="math inline">\(j=0,1\)</span> ends up in detector <span class="math inline">\(i=0,1\)</span>.
 At each of the two beam-splitters the photon is transmitted with the probability amplitude <span class="math inline">\(\sqrt{T}\)</span> and reflected with the probability amplitude <span class="math inline">\(i\sqrt{R}\)</span>, with <span class="math inline">\(R+T=1\)</span>, and the two phase shifters modify the amplitudes by phase factors <span class="math inline">\(e^{i\varphi_0}\)</span> and <span class="math inline">\(e^{i\varphi_1}\)</span>, respectively.
 In quantum theory we almost always start with the amplitudes, and once we have a full expression for the amplitude of a given outcome we square its absolute value to get the corresponding probability.
 For example, let us calculate <span class="math inline">\(U_{00}\)</span>.</p>
@@ -309,7 +399,7 @@ and the corresponding probability <span class="math inline">\(P_{00}=|U_{00}|^2\
 <span class="marginnote shownote">
 <!--
 <div class="figure">-->
-<img src="quantum-site_files/figure-html/unnamed-chunk-11-1.png" alt=" " width="384"  />
+<img src="quantum-site_files/figure-html/unnamed-chunk-15-1.png" alt=" " width="384"  />
 <!--
 <p class="caption marginnote">--> <!--</p>-->
 <!--</div>--></span>
@@ -350,7 +440,7 @@ Clearly, the photon entering port <span class="math inline">\(1\)</span> will en
   = (T+R)^2
   = 1.
 \]</span>
-The action of the interferometer is thus fully described<label for="tufte-sn-26" class="margin-toggle sidenote-number">26</label><input type="checkbox" id="tufte-sn-26" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">26</span> In general, any isolated quantum device, including a quantum computer, can be described by a matrix of probability amplitudes <span class="math inline">\(U_{ij}\)</span> that input <span class="math inline">\(j\)</span> generates output <span class="math inline">\(i\)</span>. Watch the order of indices.</span> by the four probability amplitudes <span class="math inline">\(U_{ij}\)</span> (<span class="math inline">\(i,j=0,1\)</span>).
+The action of the interferometer is thus fully described<label for="tufte-sn-27" class="margin-toggle sidenote-number">27</label><input type="checkbox" id="tufte-sn-27" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">27</span> In general, any isolated quantum device, including a quantum computer, can be described by a matrix of probability amplitudes <span class="math inline">\(U_{ij}\)</span> that input <span class="math inline">\(j\)</span> generates output <span class="math inline">\(i\)</span>. Watch the order of indices.</span> by the four probability amplitudes <span class="math inline">\(U_{ij}\)</span> (<span class="math inline">\(i,j=0,1\)</span>).
 The most popular instance of a Mach-Zehnder interferometer involves only symmetric beam-splitters <span class="math inline">\((R=T=\frac12)\)</span> and is fully described by the matrix
 <span class="math display">\[
   U =
@@ -365,7 +455,7 @@ In fact, when you do all the calculations you obtain <span class="math inline">\
 </div>
 </div>
 <p style="text-align: center;">
-<a href="quantum-interference.html"><button class="btn btn-default">Previous</button></a>
+<a href="quantum-interference-and-things-to-come.html"><button class="btn btn-default">Previous</button></a>
 <a href="pauli-matrices-and-the-bloch-sphere.html"><button class="btn btn-default">Next</button></a>
 </p>
 </div>

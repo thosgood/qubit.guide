@@ -130,6 +130,146 @@ Thus the matrix multiplication $VU$ (watch the order of matrices) in one swoop t
 
 ## Quantum bits, called "qubits"
 
+A two-state machine that we have just described in abstract terms is usually realised as a controlled evolution of a two state system, called a quantum bit or a qubit.
+For example, state $\ket{0}$ may be chosen to be the lowest energy state of an atom, the **ground state**, and state $\ket{1}$ a higher energy state, the **excited state**.
+Pulses of light of appropriate frequency, duration and intensity can take the atom back and forth between the basis states $\ket{0}$ and $\ket{1}$ (implementing logical $\texttt{NOT}$).
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=3,fig.margin=TRUE,fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{primary}{RGB}{177,98,78}
+\tikzset{blob/.style args={#1}{circle,draw,fill={#1}}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[scale=0.7]
+  \foreach \x in {0,2,4}
+    \draw[thick] (0+\x,0) ellipse (20pt and 28pt);
+  \foreach \x in {0,2,4}
+    \draw (-0.4+\x,-0.4) to (0.4+\x,-0.4);
+  \foreach \x in {0,2,4}
+    \draw (-0.4+\x,0.4) to (0.4+\x,0.4);
+  \node [blob=primary] at (0,0.4) {};
+  \node [blob=primary] at (2,-0.4) {};
+  \draw [fill=primary] (4,0) ellipse (3pt and 16pt);
+  \node at (0,-1.4) {$\ket{0}$};
+  \node at (2,-1.4) {$\ket{1}$};
+  \node at (4,-1.4) {$\ket{\psi}$};
+\end{tikzpicture}
+```
+
+Some other pulses, say, half the duration or intensity will take the atom into states that have no classical analogue.
+Such states are called **coherent superpositions** of $\ket{0}$ and $\ket{1}$, and represent a qubit in state $\ket{0}$ with some amplitude $\alpha_0$ and in state $\ket{1}$ with some other amplitude $\alpha_1$.
+This is conveniently represented by a state vector
+$$
+    \ket{\psi} =
+    \alpha_0\ket{0} + \alpha_1\ket{1}
+    \leftrightarrow
+    \begin{bmatrix}
+      \alpha_0
+    \\\alpha_1
+    \end{bmatrix}
+$$
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=3,fig.margin=TRUE,fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\usetikzlibrary{arrows.meta}
+\tikzset{blob/.style args={#1}{circle,draw,fill={#1}}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[scale=1.1]
+  \draw [->] (-1.3,0) to (1.3,0) node [label=right:{$\ket{0}$}] {};
+  \draw [->] (0,-1.3) to (0,1.3) node [label=above:{$\ket{1}$}] {};
+  \draw (0,0) circle (1cm);
+  \draw [-,ultra thick,primary] (0,0) to (0.51,0);
+  \draw [-,ultra thick,primary] (0,0) to (0,0.85);
+  \draw [thick,primary,dashed] (0.51,0) to (0.51,0.85);
+  \draw [thick,primary,dashed] (0,0.85) to (0.51,0.85);
+  \draw [-{Latex},thick,rotate=59,secondary] (0,0) to (1,0);
+  \node at (0.7,1.05) {$\ket{\psi}$};
+  \node at (0.4,-0.15) {$\alpha_0$};
+  \node at (-0.15,0.65) {$\alpha_1$};
+\end{tikzpicture}
+```
+
+::: {.idea}
+  A **qubit** is a quantum system in which the Boolean states $0$ and $1$ are represented by a prescribed pair of normalised and mutually orthogonal quantum states labelled as $\{\ket{0},\ket{1}\}$.
+  The two states form a so-called **computational** (or **standard**) basis, and so any other state of an isolated qubit can be written as a coherent superposition
+  $$
+    \ket{\psi} = \alpha_0\ket{0} + \alpha_1\ket{1}
+  $$
+  for some $\alpha_0$ and $\alpha_1$ such that $|\alpha_0|^2 + |\alpha_1|^2 = 1$.
+
+  In practice, a qubit is typically a microscopic system, such as an atom, a nuclear spin, or a polarised photon.
+:::
+
+As we have already mentioned, any^[ Here we are talking about _isolated_ systems. As you will soon learn, a larger class of physically admissible operations is described by completely positive maps. It may sound awfully complicated but, as you will soon see, it is actually very simple.] computational step, that is, any physically admissible operation $U$ on a qubit, is described by a $(2\times 2)$ unitary matrix $U$.
+It modifies the state of the qubit as
+$$
+  \ket{\psi}
+  \mapsto
+  \ket{\psi'}
+  =
+  U\ket{\psi}
+$$
+which we can write explicitly as
+$$
+  \begin{bmatrix}
+    \alpha'_0
+  \\\alpha'_1
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    U_{00} & U_{01}
+  \\U_{10} & U_{11}
+  \end{bmatrix}
+  \begin{bmatrix}
+    \alpha_0
+  \\\alpha_1
+  \end{bmatrix}
+$$
+That is, operation $U$ sends state $\ket{\psi}$, with components $\alpha_k$, into state $\ket{\psi'}=U\ket{\psi}$, with components $\alpha'_l= \sum_k U_{lk}\alpha_k$.
+
+
+
+
+
+## Quantum gates and circuits
+
+Atoms, trapped ions, molecules, nuclear spins and many other quantum objects, which we call qubits, can be used to implement simple quantum interference, and hence simple quantum computation.
+There is no need to learn about physics behind these diverse technologies if all you want is to understand the basics of quantum computation.
+We may now conveniently forget about any specific experimental realisation of a qubit and just remember that any manipulations on qubits have to be performed by physically admissible operations, and that such operations are represented by unitary transformations.
+
+::: {.idea}
+  A **quantum (logic) gate** is a device which performs a fixed unitary operation on selected qubits in a fixed period of time, and a **quantum circuit** is a device consisting of quantum logic gates whose computational steps are synchronised in time.
+  The **sizes** of the circuit is the number of gates it contains.
+:::
+
+Some unitary $U$ acting on a single qubit is represented diagrammatically as
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=2.5,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{operator/.style={draw,fill=white}}
+\begin{tikzpicture}
+  \draw (-1.5,0) to node [operator] {$U$} (1.5,0);
+\end{tikzpicture}
+```
+
+This diagram should be read from left to right.
+The horizontal line represents a qubit that is inertly carried from one quantum operation to another.
+We often call this line a **quantum wire**.
+The wire may describe translation in space (e.g. atoms travelling through cavities) or translation in time (e.g. a sequence of operations performed on a trapped ion).
+A sequence of two gates acting on the same qubit, say $U$ followed by $V$, is represented by
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=2.5,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{operator/.style={draw,fill=white}}
+\begin{tikzpicture}
+  \draw (-1.5,0) to (-1,0) to node [operator] {$U$} (0,0) to node [operator] {$V$} (1,0) to (1.5,0);
+\end{tikzpicture}
+```
+
+and is described by the matrix product $VU$ (note the order in which we multiply the matrices).
+
+
+
+
+
+## Single qubit interference
 
 
 
