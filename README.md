@@ -19,6 +19,11 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
 
 ## To-do
 
+1. be more consistent with the start of chapters
+    + blockquote which says "About ..." and **uses words from the syllabus**
+        * make sure that everything is covered!!
+    + followed by a paragraph with a bit more of a detailed overview
+1. make sure that you use **only** _either_ "chapter" _or_ "lecture"
 1. **where will this section on quantum dynamics go?**
 1. idea blocks in dark mode
 1. `\newcommand`s to somewhere shared by tex **and** html output
