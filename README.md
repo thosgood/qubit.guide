@@ -1,4 +1,4 @@
-This website contains the lecture notes ... etc. etc.
+This website contains the lecture notes ... written by Artur, edited by Tim ... etc. etc.
 
 The individual lectures are available [here](tufte/), or you can read the [online book version](book/):
 
