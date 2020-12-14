@@ -53,7 +53,7 @@ MathJax.Hub.Config({
 <li><a href="index.html#introduction">Introduction</a></li>
 <li><a href="quantum-interference-and-things-to-come.html#quantum-interference-and-things-to-come"><span class="toc-section-number">1</span> Quantum interference, and things to come</a></li>
 <li><a href="qubits.html#qubits"><span class="toc-section-number">2</span> Qubits</a></li>
-<li><a href="pauli-matrices-and-the-bloch-sphere.html#pauli-matrices-and-the-bloch-sphere"><span class="toc-section-number">3</span> Pauli matrices and the Bloch sphere</a></li>
+<li><a href="linking-pauli-matrices-and-the-bloch-sphere.html#linking-pauli-matrices-and-the-bloch-sphere"><span class="toc-section-number">3</span> Linking Pauli matrices and the Bloch sphere</a></li>
 <li><a href="measurements.html#measurements"><span class="toc-section-number">4</span> Measurements</a></li>
 <li><a href="quantum-entanglement.html#quantum-entanglement"><span class="toc-section-number">5</span> Quantum entanglement</a></li>
 <li><a href="quantum-algorithms.html#quantum-algorithms"><span class="toc-section-number">6</span> Quantum algorithms</a></li>
@@ -235,10 +235,217 @@ A sequence of two gates acting on the same qubit, say <span class="math inline">
 </div>
 <div id="single-qubit-interference" class="section level2" number="2.4">
 <h2><span class="header-section-number">2.4</span> Single qubit interference</h2>
+<p>Let me now describe what is probably the most important sequence of operations performed on a single qubit, namely a generic <strong>single qubit interference</strong>.
+It is typically constructed as a sequence of three elementary operations:</p>
+<ol style="list-style-type: decimal">
+<li>the Hadamard gate</li>
+<li>a phase shift gate</li>
+<li>the Hadamard gate again.</li>
+</ol>
+<p>We represent it graphically as</p>
+<p><img src="quantum-site_files/figure-html/unnamed-chunk-15-1.png" width="240"  style="display: block; margin: auto;" /></p>
+<div class="idea">
+<table>
+<colgroup>
+<col width="61%" />
+<col width="38%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Hadamard</th>
+<th align="center">Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><span class="math inline">\(H=\frac{1}{\sqrt2}\begin{bmatrix}1&amp;1\\1&amp;-1\end{bmatrix}\)</span></td>
+<td align="center"><span class="math inline">\(P_\varphi=\begin{bmatrix}1&amp;0\\0&amp;e^{i\varphi}\end{bmatrix}\)</span></td>
+</tr>
+<tr class="even">
+<td align="center"><span class="math inline">\(\begin{array}{lcr}|0\rangle&amp;\mapsto&amp;\frac1{\sqrt{2}}(|0\rangle+|1\rangle)\\|1\rangle&amp;\mapsto&amp;\frac1{\sqrt{2}}(|0\rangle-|1\rangle)\end{array}\)</span></td>
+<td align="center"><span class="math inline">\(\begin{array}{lcr}|0\rangle&amp;\mapsto&amp;|0\rangle\\|1\rangle&amp;\mapsto&amp;e^{i\varphi}|1\rangle\end{array}\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>You will see it over and over again, for it is quantum interference that gives quantum computation additional capabilities.
+The product of the three matrices <span class="math inline">\(HP_\varphi H\)</span> describes the action of the whole circuit: it gives the transition amplitudes between states <span class="math inline">\(|0\rangle\)</span> and <span class="math inline">\(|1\rangle\)</span> at the input and the output as
+<span class="math display">\[
+  e^{i\frac{\varphi}{2}}
+  \begin{bmatrix}
+    \cos\varphi/2 &amp; -i\sin\varphi/2
+  \\-i\sin\varphi/2 &amp; \cos\varphi/2
+  \end{bmatrix}
+  =
+  \frac{1}{\sqrt 2}
+  \begin{bmatrix}
+    1 &amp; 1
+  \\1 &amp; -1
+  \end{bmatrix}
+  \begin{bmatrix}
+    1 &amp; 0
+  \\0 &amp; e^{i\varphi}
+  \end{bmatrix}
+  \frac{1}{\sqrt 2}
+  \begin{bmatrix}
+    1 &amp; 1
+  \\1 &amp; -1
+  \end{bmatrix}
+\]</span></p>
+<p>Given that our input state is almost always <span class="math inline">\(|0\rangle\)</span>, it is sometimes much easier and more instructive to step through the execution of this circuit and follow the evolving state.
+The interference circuit effects the following sequence of transformations:<label for="tufte-sn-24" class="margin-toggle sidenote-number">24</label><input type="checkbox" id="tufte-sn-24" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">24</span> We ignore the global phase factor <span class="math inline">\(e^{i\frac{\varphi}{2}}\)</span>.</span>
+<span class="math display">\[
+  |0\rangle
+  \overset{H}{\longmapsto}
+  \frac{1}{\sqrt2} \left(
+    |0\rangle+|1\rangle
+  \right)
+  \overset{P_\phi}{\longmapsto}
+  \frac{1}{\sqrt2} \left(
+    |0\rangle+e^{i\phi}|1\rangle
+  \right)
+  \overset{H}{\longmapsto}
+  \cos\frac{\phi}{2}|0\rangle - i\sin\frac{\phi}{2}|1\rangle.
+\]</span>
+The first Hadamard gate prepares an equally weighted superposition of <span class="math inline">\(|0\rangle\)</span> and <span class="math inline">\(|1\rangle\)</span> and the second one closes the interference by bringing the interfering paths together.
+The phase shift <span class="math inline">\(\varphi\)</span> effectively controls the evolution and determines the output.
+The probabilities of finding the qubit in state <span class="math inline">\(|0\rangle\)</span> or <span class="math inline">\(|1\rangle\)</span> at the output are, respectively,
+<span class="math display">\[
+  \begin{aligned}
+    \mathop{\mathrm{Pr}}(0) &amp;= \cos^2\frac{\phi}{2}
+  \\\mathop{\mathrm{Pr}}(1) &amp;= \sin^2\frac{\phi}{2}.
+  \end{aligned}
+\]</span>
+This simple quantum process contains, in a nutshell, the essential ingredients of quantum computation.
+This sequence (Hadamard – phase shift – Hadamard) will appear over and over again.
+It reflects a natural progression of quantum computation: first we prepare different computational paths, then we evaluate a function which effectively introduces phase shifts into different computational paths, then we bring the computational paths together at the output.</p>
+</div>
+<div id="the-square-root-of-not" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> The square root of NOT</h2>
+<p>Now that we have poked our heads into the quantum world, let us see how quantum interference challenges conventional logic.
+Consider a following task: design a logic gate that operates on a single bit and such that when it is followed by another, identical, logic gate the output is always the negation of the input.
+Let us call this logic gate <strong>the square root of <span class="math inline">\(\texttt{NOT}\)</span></strong>, or <span class="math inline">\(\sqrt{\texttt{NOT}}\)</span>.</p>
+<p>
+<span class="marginnote shownote">
+<!--
+<div class="figure">-->
+<img src="quantum-site_files/figure-html/unnamed-chunk-16-1.png" alt=" " width="288"  />
+<!--
+<p class="caption marginnote">--> <!--</p>-->
+<!--</div>--></span>
+</p>
+<p>A simple check, such as an attempt to construct a truth table, should persuade you that there is no such operation in logic.
+It may seem reasonable to argue that since there is no such operation in logic, <span class="math inline">\(\sqrt{\texttt{NOT}}\)</span> is impossible.
+But it does exist!
+Experimental physicists routinely construct such ``impossible’’ gates in their laboratories.
+It is a physically admissible operation described by the unitary matrix<label for="tufte-sn-25" class="margin-toggle sidenote-number">25</label><input type="checkbox" id="tufte-sn-25" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">25</span> There are infinitely many unitary operations that act as the square root of <span class="math inline">\(\texttt{NOT}\)</span>.</span>
+<span class="math display">\[
+  \sqrt{\texttt{NOT}}
+  =
+  \frac12
+  \begin{bmatrix}
+    1+i &amp; 1-i
+  \\1-i&amp;1+i
+  \end{bmatrix}
+  =
+  \frac1{\sqrt2}
+  \begin{bmatrix}
+    e^{i\frac{\pi}{4}} &amp; e^{-i\frac{\pi}{4}}
+  \\e^{-i\frac{\pi}{4}} &amp; e^{i\frac{\pi}{4}}
+  \end{bmatrix}.
+\]</span>
+Indeed,
+<span class="math display">\[
+  \frac12
+  \begin{bmatrix}
+    1+i &amp; 1-i
+  \\1-i &amp; 1+i
+  \end{bmatrix}
+  \frac12
+  \begin{bmatrix}
+    1+i &amp; 1-i
+  \\1-i &amp; 1+i
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    0&amp;1
+  \\1&amp;0
+  \end{bmatrix}.
+\]</span></p>
+<p>We could also step through the circuit diagram and follow the evolution of the state vector:</p>
+<p><img src="quantum-site_files/figure-html/unnamed-chunk-17-1.png" width="480"  style="display: block; margin: auto;" /></p>
+<p>Or, if you prefer to work with column vectors and matrices, you can write the two consecutive application of <span class="math inline">\(\sqrt{\texttt{NOT}}\)</span> to state <span class="math inline">\(|0\rangle\)</span> as
+<span class="math display">\[
+  \begin{bmatrix}0\\1\end{bmatrix}
+  \longleftarrow\!\!\!\vert
+  \frac{1}{\sqrt 2}
+  \begin{bmatrix}
+    e^{i\frac{\pi}{4}}
+  \\e^{-i\frac{\pi}{4}}
+  \end{bmatrix}
+  \longleftarrow\!\!\!\vert
+  \begin{bmatrix}1\\0\end{bmatrix}
+\]</span>
+(following a well established convention, the formulae above should be read from <em>right to left</em>)<label for="tufte-sn-26" class="margin-toggle sidenote-number">26</label><input type="checkbox" id="tufte-sn-26" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">26</span> Just remember that circuits diagrams are read from <em>left to right</em>, and vector and matrix operations go from <em>right to left</em>.</span>, where each <span class="math inline">\(\longleftarrow\!\!\!\vert\)</span> denotes multiplication by <span class="math inline">\(\frac1{\sqrt2}\begin{bmatrix}e^{i\frac{\pi}{4}} &amp; e^{-i\frac{\pi}{4}}\\e^{-i\frac{\pi}{4}} &amp; e^{i\frac{\pi}{4}}\end{bmatrix}\)</span>.</p>
+<p>One way or another, quantum theory explains the behaviour of <span class="math inline">\(\sqrt{\texttt{NOT}}\)</span>, and so, reassured by the physical experiments<label for="tufte-sn-27" class="margin-toggle sidenote-number">27</label><input type="checkbox" id="tufte-sn-27" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">27</span> We discuss this in more detail in <a href="qubits.html#appendix-physics-against-logic-via-beamsplitters">Appendix: Physics against logic, via beamsplitters</a>.</span> that corroborate this theory, logicians are now entitled to propose a new logical operation <span class="math inline">\(\sqrt{\texttt{NOT}}\)</span>.
+Why?
+Because a faithful physical model for it exists in nature!</p>
+</div>
+<div id="phase-gates-galore" class="section level2" number="2.6">
+<h2><span class="header-section-number">2.6</span> Phase gates galore</h2>
+<p>As well as the generic phase gate <span class="math inline">\(P_\varphi\)</span>, let us mention three specific phase gates that will frequently pop up (two of which have rather confusing names, at first glance!).</p>
+<div class="idea">
+<table>
+<colgroup>
+<col width="26%" />
+<col width="20%" />
+<col width="26%" />
+<col width="26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Generic phase</th>
+<th align="center">Phase-flip</th>
+<th align="center"><span class="math inline">\(\pi/4\)</span>-phase</th>
+<th align="center"><span class="math inline">\(\pi/8\)</span>-phase</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><span class="math inline">\(P_\varphi=\begin{bmatrix}1&amp;0\\0&amp;e^{i\varphi}\end{bmatrix}\)</span></td>
+<td align="center"><span class="math inline">\(Z=\begin{bmatrix}1&amp;0\\0&amp;-1\end{bmatrix}\)</span></td>
+<td align="center"><span class="math inline">\(S=\begin{bmatrix}1&amp;0\\0&amp;i\end{bmatrix}\)</span></td>
+<td align="center"><span class="math inline">\(T=\begin{bmatrix}1&amp;0\\0&amp;e^{i\frac{\pi}{4}}\end{bmatrix}\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Note that the phase gate <span class="math inline">\(P_\varphi\)</span> is only defined up to a global phase factor,<label for="tufte-sn-28" class="margin-toggle sidenote-number">28</label><input type="checkbox" id="tufte-sn-28" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">28</span> In general, states differing only by a global phase are physically indistinguishable, and so it is physical experimentation that leads us to this mathematical choice of only defining things up to a global phase.</span> and so we can write its matrix either as
+<span class="math display">\[
+  P_\varphi =
+  \begin{bmatrix}
+    1 &amp; 0
+  \\0 &amp; e^{i\varphi}
+  \end{bmatrix}
+\]</span>
+or as
+<span class="math display">\[
+  P_\varphi =
+  \begin{bmatrix}
+    e^{-i\frac{\varphi}{2}} &amp; 0
+  \\0 &amp; e^{i\frac{\varphi}{2}}
+  \end{bmatrix}
+\]</span>
+The first version is more common in the quantum information science community, but the second one is sometimes more convenient to use, as it has determinant <span class="math inline">\(1\)</span>, and hence belongs to the group <span class="math inline">\(\mathrm{SU}(2)\)</span>.
+We will occasionally switch to the <span class="math inline">\(\mathrm{SU}(2)\)</span> version of a phase gates, and this is where the <span class="math inline">\(\pi/4\)</span>-phase and <span class="math inline">\(\pi/8\)</span>-phase gates get their names, since their <span class="math inline">\(\mathrm{SU}(2)\)</span> versions have <span class="math inline">\(e^{\mp i\pi/4}\)</span> and <span class="math inline">\(e^{\mp i\pi/8}\)</span> (respectively) on the diagonal.</p>
+<p>The remaining gate (<span class="math inline">\(Z\)</span>) is arguably the most important specific phase gate, since it is one of the <strong>Pauli operators</strong>, which we will now discuss.</p>
+</div>
+<div id="pauli-operators" class="section level2" number="2.7">
+<h2><span class="header-section-number">2.7</span> Pauli operators</h2>
 <p><strong>!!!TODO!!! rest of <code>L2-qubits.tex</code></strong></p>
 </div>
-<div id="appendix-physics-against-logic-via-beamsplitters" class="section level2" number="2.5">
-<h2><span class="header-section-number">2.5</span> Appendix: Physics against logic, via beamsplitters</h2>
+<div id="appendix-physics-against-logic-via-beamsplitters" class="section level2" number="2.8">
+<h2><span class="header-section-number">2.8</span> Appendix: Physics against logic, via beamsplitters</h2>
 <blockquote>
 <p>The square root of <span class="math inline">\(\texttt{NOT}\)</span>, and showing that it can be as simple as a symmetric beam-splitter.
 In fact, playing with mirrors and beam-splitters can give you lots of insights into the quantum world.</p>
@@ -279,7 +486,7 @@ Figure 2.4: The two possible classical scenarios. Note that this is <strong>not<
 </div>
 <p>In experimental reality, when the optical paths between the two beam-splitters are the same, the photon fired from input port <span class="math inline">\(|0\rangle\)</span> <em>always</em> strikes detector 1 and <em>never</em> detector 0 (and the photon fired from input port <span class="math inline">\(|1\rangle\)</span> <em>always</em> strikes detector 0 and <em>never</em> detector 1).
 Thus a beam-splitter acts as the square root of <span class="math inline">\(\texttt{NOT}\)</span> gate.</p>
-<p>The action of the beam-splitter — in fact, the action of any quantum device — can be described by tabulating the amplitudes of transitions between its input and output ports.<label for="tufte-sn-24" class="margin-toggle sidenote-number">24</label><input type="checkbox" id="tufte-sn-24" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">24</span> Note that gate <span class="math inline">\(B\)</span> is not the same square root of <span class="math inline">\(\texttt{NOT}\)</span> as the one described in the first diagram in this section. There are infinitely many ways of implementing this “impossible” logical operation.</span>
+<p>The action of the beam-splitter — in fact, the action of any quantum device — can be described by tabulating the amplitudes of transitions between its input and output ports.<label for="tufte-sn-29" class="margin-toggle sidenote-number">29</label><input type="checkbox" id="tufte-sn-29" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">29</span> Note that gate <span class="math inline">\(B\)</span> is not the same square root of <span class="math inline">\(\texttt{NOT}\)</span> as the one described in the first diagram in this section. There are infinitely many ways of implementing this “impossible” logical operation.</span>
 <span class="math display" id="eq:beam-splitter">\[\begin{equation}
   B = 
   \begin{bmatrix}
@@ -327,7 +534,7 @@ Figure 2.5: All possible transitions and their amplitudes when we compose two be
   = iX
 \]</span>
 where <span class="math inline">\(X=\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}\)</span> is the <span class="math inline">\(\texttt{NOT}\)</span> operator.</p>
-<p>You can now inform your logician colleagues that they are entitled to propose a new logical operation <span class="math inline">\(\sqrt{\texttt{NOT}}\)</span>, since it <em>does</em> indeed exist.</p>
+<p>Recalling <a href="qubits.html#the-square-root-of-not">The square root of NOT</a>, we see that beam-splitters give a physical way of constructing the square root of <span class="math inline">\(\texttt{NOT}\)</span>.</p>
 <div class="idea">
 <table>
 <colgroup>
@@ -353,8 +560,8 @@ where <span class="math inline">\(X=\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}
 </table>
 </div>
 </div>
-<div id="appendix-quantum-interference-revisited-still-about-beam-splitters" class="section level2" number="2.6">
-<h2><span class="header-section-number">2.6</span> Appendix: Quantum interference revisited (still about beam-splitters)</h2>
+<div id="appendix-quantum-interference-revisited-still-about-beam-splitters" class="section level2" number="2.9">
+<h2><span class="header-section-number">2.9</span> Appendix: Quantum interference revisited (still about beam-splitters)</h2>
 <p>One of the simplest quantum devices in which quantum interference can be controlled is a <strong>Mach-Zehnder interferometer</strong> — see Figure <a href="qubits.html#fig:mach-zehnder">2.6</a>.</p>
 
 <div class="figure" style="text-align: center"><span id="fig:mach-zehnder"></span>
@@ -365,9 +572,9 @@ Figure 2.6: The <a href="https://en.wikipedia.org/wiki/Mach-Zehnder_interferomet
 </div>
 <p>It consists of two beam-splitters (the square boxes, bottom left and top right) and two slivers of glass of different thickness which are inserted into each of the optical paths connecting the two beam-splitters.
 The slivers are usually referred to as “phase shifters” and their thicknesses, <span class="math inline">\(\varphi_0\)</span> and <span class="math inline">\(\varphi_1\)</span>, are measured in units of the photon’s wavelength multiplied by <span class="math inline">\(2\pi\)</span>.
-The two inputs ports of the interferometer are labelled as <span class="math inline">\(|0\rangle\)</span> and <span class="math inline">\(|1\rangle\)</span>, and each of the two output ports, also labelled as <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, terminates in a photodetector.<label for="tufte-sn-25" class="margin-toggle sidenote-number">25</label><input type="checkbox" id="tufte-sn-25" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">25</span> The two diagonal objects in the top-left and bottom-right corners of <a href="qubits.html#fig:mach-zehnder">2.6</a> are simply mirrors to make the two possible paths meet at the second beam-splitter.</span></p>
+The two inputs ports of the interferometer are labelled as <span class="math inline">\(|0\rangle\)</span> and <span class="math inline">\(|1\rangle\)</span>, and each of the two output ports, also labelled as <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, terminates in a photodetector.<label for="tufte-sn-30" class="margin-toggle sidenote-number">30</label><input type="checkbox" id="tufte-sn-30" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">30</span> The two diagonal objects in the top-left and bottom-right corners of <a href="qubits.html#fig:mach-zehnder">2.6</a> are simply mirrors to make the two possible paths meet at the second beam-splitter.</span></p>
 <p>A photon (the coloured dot in the figure) impinges on the first beam-splitter from one of the two input ports (here input 1) and begins its journey towards one of the two photodetectors.
-Let<label for="tufte-sn-26" class="margin-toggle sidenote-number">26</label><input type="checkbox" id="tufte-sn-26" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">26</span> We will often use <span class="math inline">\(i\)</span> as an index even though it is also used for the imaginary unit. Hopefully, no confusion will arise for it should be clear from the context which one is which.</span> <span class="math inline">\(U_{ij}\)</span> denote the probability amplitude that the photon initially in input port <span class="math inline">\(j=0,1\)</span> ends up in detector <span class="math inline">\(i=0,1\)</span>.
+Let<label for="tufte-sn-31" class="margin-toggle sidenote-number">31</label><input type="checkbox" id="tufte-sn-31" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">31</span> We will often use <span class="math inline">\(i\)</span> as an index even though it is also used for the imaginary unit. Hopefully, no confusion will arise for it should be clear from the context which one is which.</span> <span class="math inline">\(U_{ij}\)</span> denote the probability amplitude that the photon initially in input port <span class="math inline">\(j=0,1\)</span> ends up in detector <span class="math inline">\(i=0,1\)</span>.
 At each of the two beam-splitters the photon is transmitted with the probability amplitude <span class="math inline">\(\sqrt{T}\)</span> and reflected with the probability amplitude <span class="math inline">\(i\sqrt{R}\)</span>, with <span class="math inline">\(R+T=1\)</span>, and the two phase shifters modify the amplitudes by phase factors <span class="math inline">\(e^{i\varphi_0}\)</span> and <span class="math inline">\(e^{i\varphi_1}\)</span>, respectively.
 In quantum theory we almost always start with the amplitudes, and once we have a full expression for the amplitude of a given outcome we square its absolute value to get the corresponding probability.
 For example, let us calculate <span class="math inline">\(U_{00}\)</span>.</p>
@@ -399,7 +606,7 @@ and the corresponding probability <span class="math inline">\(P_{00}=|U_{00}|^2\
 <span class="marginnote shownote">
 <!--
 <div class="figure">-->
-<img src="quantum-site_files/figure-html/unnamed-chunk-15-1.png" alt=" " width="384"  />
+<img src="quantum-site_files/figure-html/unnamed-chunk-18-1.png" alt=" " width="384"  />
 <!--
 <p class="caption marginnote">--> <!--</p>-->
 <!--</div>--></span>
@@ -440,7 +647,7 @@ Clearly, the photon entering port <span class="math inline">\(1\)</span> will en
   = (T+R)^2
   = 1.
 \]</span>
-The action of the interferometer is thus fully described<label for="tufte-sn-27" class="margin-toggle sidenote-number">27</label><input type="checkbox" id="tufte-sn-27" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">27</span> In general, any isolated quantum device, including a quantum computer, can be described by a matrix of probability amplitudes <span class="math inline">\(U_{ij}\)</span> that input <span class="math inline">\(j\)</span> generates output <span class="math inline">\(i\)</span>. Watch the order of indices.</span> by the four probability amplitudes <span class="math inline">\(U_{ij}\)</span> (<span class="math inline">\(i,j=0,1\)</span>).
+The action of the interferometer is thus fully described<label for="tufte-sn-32" class="margin-toggle sidenote-number">32</label><input type="checkbox" id="tufte-sn-32" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">32</span> In general, any isolated quantum device, including a quantum computer, can be described by a matrix of probability amplitudes <span class="math inline">\(U_{ij}\)</span> that input <span class="math inline">\(j\)</span> generates output <span class="math inline">\(i\)</span>. Watch the order of indices.</span> by the four probability amplitudes <span class="math inline">\(U_{ij}\)</span> (<span class="math inline">\(i,j=0,1\)</span>).
 The most popular instance of a Mach-Zehnder interferometer involves only symmetric beam-splitters <span class="math inline">\((R=T=\frac12)\)</span> and is fully described by the matrix
 <span class="math display">\[
   U =
@@ -450,13 +657,13 @@ The most popular instance of a Mach-Zehnder interferometer involves only symmetr
   \end{bmatrix}
 \]</span>
 where <span class="math inline">\(\varphi=\varphi_1-\varphi_0\)</span>.
-In fact, when you do all the calculations you obtain <span class="math inline">\(ie^{\,i\frac{\varphi_0+\varphi_1}{2}}U\)</span> rather than <span class="math inline">\(U\)</span>, but the global phase factor <span class="math inline">\(ie^{\,i\frac{\varphi_0+\varphi_1}{2}}\)</span> is common to all the amplitudes in the matrix and as such it does not contribute to the resulting probabilities (why?).</p>
+In fact, when you do all the calculations you obtain <span class="math inline">\(ie^{i\frac{\varphi_0+\varphi_1}{2}}U\)</span> rather than <span class="math inline">\(U\)</span>, but the global phase factor <span class="math inline">\(ie^{i\frac{\varphi_0+\varphi_1}{2}}\)</span> is common to all the amplitudes in the matrix and as such it does not contribute to the resulting probabilities (why?).</p>
 
 </div>
 </div>
 <p style="text-align: center;">
 <a href="quantum-interference-and-things-to-come.html"><button class="btn btn-default">Previous</button></a>
-<a href="pauli-matrices-and-the-bloch-sphere.html"><button class="btn btn-default">Next</button></a>
+<a href="linking-pauli-matrices-and-the-bloch-sphere.html"><button class="btn btn-default">Next</button></a>
 </p>
 </div>
 </div>

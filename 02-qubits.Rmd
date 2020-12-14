@@ -271,6 +271,226 @@ and is described by the matrix product $VU$ (note the order in which we multiply
 
 ## Single qubit interference
 
+Let me now describe what is probably the most important sequence of operations performed on a single qubit, namely a generic **single qubit interference**.
+It is typically constructed as a sequence of three elementary operations:
+
+1. the Hadamard gate
+2. a phase shift gate
+3. the Hadamard gate again.
+
+We represent it graphically as
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=2.5,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{operator/.style={draw,fill=white}}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\begin{tikzpicture}
+  \draw (-1.5,0) to node [operator] {$H$} (0,0);
+  \draw (0,0) to node [operator] {$H$} (1.5,0);
+  \node [label=above:{$\varphi$},dot] at (0,0) {};
+\end{tikzpicture}
+```
+
+::: {.idea}
+  | Hadamard | Phase |
+  | :------: | :---: |
+  | $H=\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}$ | $P_\varphi=\begin{bmatrix}1&0\\0&e^{i\varphi}\end{bmatrix}$ |
+  | $\begin{array}{lcr}\ket{0}&\mapsto&\frac1{\sqrt{2}}(\ket{0}+\ket{1})\\\ket{1}&\mapsto&\frac1{\sqrt{2}}(\ket{0}-\ket{1})\end{array}$ | $\begin{array}{lcr}\ket{0}&\mapsto&\ket{0}\\\ket{1}&\mapsto&e^{i\varphi}\ket{1}\end{array}$ |
+:::
+
+You will see it over and over again, for it is quantum interference that gives quantum computation additional capabilities.
+The product of the three matrices $HP_\varphi H$ describes the action of the whole circuit: it gives the transition amplitudes between states $\ket{0}$ and $\ket{1}$ at the input and the output as
+$$
+  e^{i\frac{\varphi}{2}}
+  \begin{bmatrix}
+    \cos\varphi/2 & -i\sin\varphi/2
+  \\-i\sin\varphi/2 & \cos\varphi/2
+  \end{bmatrix}
+  =
+  \frac{1}{\sqrt 2}
+  \begin{bmatrix}
+    1 & 1
+  \\1 & -1
+  \end{bmatrix}
+  \begin{bmatrix}
+    1 & 0
+  \\0 & e^{i\varphi}
+  \end{bmatrix}
+  \frac{1}{\sqrt 2}
+  \begin{bmatrix}
+    1 & 1
+  \\1 & -1
+  \end{bmatrix}
+$$
+
+Given that our input state is almost always $\ket{0}$, it is sometimes much easier and more instructive to step through the execution of this circuit and follow the evolving state.
+The interference circuit effects the following sequence of transformations:^[We ignore the global phase factor $e^{i\frac{\varphi}{2}}$.]
+$$
+  \ket{0}
+  \xmapsto{H}
+  \frac{1}{\sqrt2} \left(
+    \ket{0}+\ket{1}
+  \right)
+  \xmapsto{P_\phi}
+  \frac{1}{\sqrt2} \left(
+    \ket{0}+e^{i\phi}\ket{1}
+  \right)
+  \xmapsto{H}
+  \cos\frac{\phi}{2}\ket{0} - i\sin\frac{\phi}{2}\ket{1}.
+$$
+The first Hadamard gate prepares an equally weighted superposition of $\ket{0}$ and $\ket{1}$ and the second one closes the interference by bringing the interfering paths together.
+The phase shift $\varphi$ effectively controls the evolution and determines the output.
+The probabilities of finding the qubit in state $\ket{0}$ or $\ket{1}$ at the output are, respectively,
+$$
+  \begin{aligned}
+    \Pr(0) &= \cos^2\frac{\phi}{2}
+  \\\Pr(1) &= \sin^2\frac{\phi}{2}.
+  \end{aligned}
+$$
+This simple quantum process contains, in a nutshell, the essential ingredients of quantum computation.
+This sequence (Hadamard -- phase shift -- Hadamard) will appear over and over again.
+It reflects a natural progression of quantum computation: first we prepare different computational paths, then we evaluate a function which effectively introduces phase shifts into different computational paths, then we bring the computational paths together at the output.
+
+
+
+
+
+## The square root of NOT
+
+Now that we have poked our heads into the quantum world, let us see how quantum interference challenges conventional logic.
+Consider a following task: design a logic gate that operates on a single bit and such that when it is followed by another, identical, logic gate the output is always the negation of the input.
+Let us call this logic gate **the square root of $\texttt{NOT}$**, or $\sqrt{\texttt{NOT}}$.
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=3,fig.margin=TRUE,fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{operator/.style={draw,fill=white}}
+  \begin{tikzpicture}[scale=1.3]
+    \draw [fill=gray!40,rounded corners=2mm] (-1.2,-0.4) rectangle (1.2,0.4);
+    \draw (-1.5,0) to (-1,0) to node [operator] {$\sqrt{\texttt{NOT}}$} (0,0) to node [operator] {$\sqrt{\texttt{NOT}}$} (1,0) to (1.5,0);
+    \node at (0,-0.65) {$\texttt{NOT}$};
+  \end{tikzpicture}
+```
+
+A simple check, such as an attempt to construct a truth table, should persuade you that there is no such operation in logic.
+It may seem reasonable to argue that since there is no such operation in logic, $\sqrt{\texttt{NOT}}$ is impossible.
+But it does exist!
+Experimental physicists routinely construct such ``impossible'' gates in their laboratories.
+It is a physically admissible operation described by the unitary matrix^[There are infinitely many unitary operations that act as the square root of $\texttt{NOT}$.]
+$$
+  \sqrt{\texttt{NOT}}
+  =
+  \frac12
+  \begin{bmatrix}
+    1+i & 1-i
+  \\1-i&1+i
+  \end{bmatrix}
+  =
+  \frac1{\sqrt2}
+  \begin{bmatrix}
+    e^{i\frac{\pi}{4}} & e^{-i\frac{\pi}{4}}
+  \\e^{-i\frac{\pi}{4}} & e^{i\frac{\pi}{4}}
+  \end{bmatrix}.
+$$
+Indeed,
+$$
+  \frac12
+  \begin{bmatrix}
+    1+i & 1-i
+  \\1-i & 1+i
+  \end{bmatrix}
+  \frac12
+  \begin{bmatrix}
+    1+i & 1-i
+  \\1-i & 1+i
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    0&1
+  \\1&0
+  \end{bmatrix}.
+$$
+
+We could also step through the circuit diagram and follow the evolution of the state vector:
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=5,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{operator/.style={draw,fill=white}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \begin{scope}[xscale=3]
+    \node (input) at (-1.5,0) {$\ket{0}$};
+    \node (output) at (1.5,0) {$\ket{1}$};
+    \draw (input) to node [operator] {$\sqrt{\texttt{NOT}}$} (0,0);
+    \draw (0,0) to node [operator] {$\sqrt{\texttt{NOT}}$} (output);
+  \end{scope}
+  \begin{scope}[xscale=3,shift={(0,-1.5)}]
+    \node (input) at (-1.5,0) {$\ket{0}$};
+    \node (inter) at (0,0) {$\frac{1}{\sqrt 2}\left[e^{i\frac{\pi}{4}}\ket{0}+e^{-i\frac{\pi}{4}}\ket{1}\right]$};
+    \node (output) at (1.5,0) {$\ket{1}$};
+    \draw[|->] (input) to node[label=above:{$\sqrt{\texttt{NOT}}$}]{} (inter);
+    \draw[|->] (inter) to node[label=above:{$\sqrt{\texttt{NOT}}$}]{} (output);
+  \end{scope}
+\end{tikzpicture}
+```
+
+Or, if you prefer to work with column vectors and matrices, you can write the two consecutive application of $\sqrt{\texttt{NOT}}$ to state $\ket{0}$ as
+$$
+  \begin{bmatrix}0\\1\end{bmatrix}
+  \longleftarrow\!\!\!\vert
+  \frac{1}{\sqrt 2}
+  \begin{bmatrix}
+    e^{i\frac{\pi}{4}}
+  \\e^{-i\frac{\pi}{4}}
+  \end{bmatrix}
+  \longleftarrow\!\!\!\vert
+  \begin{bmatrix}1\\0\end{bmatrix}
+$$
+(following a well established convention, the formulae above should be read from _right to left_)^[Just remember that circuits diagrams are read from _left to right_, and vector and matrix operations go from _right to left_.], where each $\longleftarrow\!\!\!\vert$ denotes multiplication by $\frac1{\sqrt2}\begin{bmatrix}e^{i\frac{\pi}{4}} & e^{-i\frac{\pi}{4}}\\e^{-i\frac{\pi}{4}} & e^{i\frac{\pi}{4}}\end{bmatrix}$.
+
+
+One way or another, quantum theory explains the behaviour of $\sqrt{\texttt{NOT}}$, and so, reassured by the physical experiments^[We discuss this in more detail in [Appendix: Physics against logic, via beamsplitters].] that corroborate this theory, logicians are now entitled to propose a new logical operation $\sqrt{\texttt{NOT}}$.
+Why?
+Because a faithful physical model for it exists in nature!
+
+
+
+
+
+## Phase gates galore
+
+As well as the generic phase gate $P_\varphi$, let us mention three specific phase gates that will frequently pop up (two of which have rather confusing names, at first glance!).
+
+::: {.idea}
+  | Generic phase | Phase-flip | $\pi/4$-phase | $\pi/8$-phase |
+  | :-----------: | :--------: | :-----------: | :-----------: |
+  | $P_\varphi=\begin{bmatrix}1&0\\0&e^{i\varphi}\end{bmatrix}$ | $Z=\begin{bmatrix}1&0\\0&-1\end{bmatrix}$ | $S=\begin{bmatrix}1&0\\0&i\end{bmatrix}$ | $T=\begin{bmatrix}1&0\\0&e^{i\frac{\pi}{4}}\end{bmatrix}$ |
+:::
+
+Note that the phase gate $P_\varphi$ is only defined up to a global phase factor,^[In general, states differing only by a global phase are physically indistinguishable, and so it is physical experimentation that leads us to this mathematical choice of only defining things up to a global phase.] and so we can write its matrix either as
+$$
+  P_\varphi =
+  \begin{bmatrix}
+    1 & 0
+  \\0 & e^{i\varphi}
+  \end{bmatrix}
+$$
+or as
+$$
+  P_\varphi =
+  \begin{bmatrix}
+    e^{-i\frac{\varphi}{2}} & 0
+  \\0 & e^{i\frac{\varphi}{2}}
+  \end{bmatrix}
+$$
+The first version is more common in the quantum information science community, but the second one is sometimes more convenient to use, as it has determinant $1$, and hence belongs to the group $\mathrm{SU}(2)$.
+We will occasionally switch to the $\mathrm{SU}(2)$ version of a phase gates, and this is where the $\pi/4$-phase and $\pi/8$-phase gates get their names, since their $\mathrm{SU}(2)$ versions have $e^{\mp i\pi/4}$ and $e^{\mp i\pi/8}$ (respectively) on the diagonal.
+
+The remaining gate ($Z$) is arguably the most important specific phase gate, since it is one of the **Pauli operators**, which we will now discuss.
+
+
+
+
+
+## Pauli operators
+
+
 
 
 
@@ -465,7 +685,7 @@ $$
 $$
 where $X=\begin{bmatrix}0&1\\1&0\end{bmatrix}$ is the $\texttt{NOT}$ operator.
 
-You can now inform your logician colleagues that they are entitled to propose a new logical operation $\sqrt{\texttt{NOT}}$, since it _does_ indeed exist. 
+Recalling [The square root of NOT], we see that beam-splitters give a physical way of constructing the square root of $\texttt{NOT}$.
 
 ::: {.idea}
   | $\texttt{NOT}$ | $\sqrt{\texttt{NOT}}$ |
@@ -647,4 +867,4 @@ $$
   \end{bmatrix}
 $$
 where $\varphi=\varphi_1-\varphi_0$.
-In fact, when you do all the calculations you obtain $ie^{\,i\frac{\varphi_0+\varphi_1}{2}}U$ rather than $U$, but the global phase factor $ie^{\,i\frac{\varphi_0+\varphi_1}{2}}$ is common to all the amplitudes in the matrix and as such it does not contribute to the resulting probabilities (why?).
+In fact, when you do all the calculations you obtain $ie^{i\frac{\varphi_0+\varphi_1}{2}}U$ rather than $U$, but the global phase factor $ie^{i\frac{\varphi_0+\varphi_1}{2}}$ is common to all the amplitudes in the matrix and as such it does not contribute to the resulting probabilities (why?).
