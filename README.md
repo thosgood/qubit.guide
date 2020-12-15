@@ -37,6 +37,7 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
     + check for overlapping `\en`s
     + overlapping in the header (section/subsection names)
     + make `quote` environment italic
+    + new page for each section
     + marginfigures
     + idea environment (and, later on, scenario and circuits too)
         * tables in ideas look... bad
