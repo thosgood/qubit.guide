@@ -490,12 +490,298 @@ The remaining gate ($Z$) is arguably the most important specific phase gate, sin
 
 ## Pauli operators
 
+Adding to our collection of common single-qubit gates, we now look at the three **Pauli operators**^[We use the standard basis $\{\ket{0},\ket{1}\}$ most of the time, and so often refer to operators as matrices.] $\sigma_x$, $\sigma_y$, and $\sigma_z$, also denoted by $X$, $Y$, and $Z$ (respectively).
+These three operators, combined with the identity, satisfy a lot of nice formal properties, which we shall examine briefly here, and the return to in more detail in [Linking Pauli matrices and the Bloch sphere].
+
+::: {.idea}
+  | Identity | Bit-flip | Bit-phase-flip | Phase-flip |
+  | :------: | :------: | :------------: | :--------: |
+  | $\id=\begin{bmatrix}1&0\\0&1\end{bmatrix}$ | $X=\begin{bmatrix}0&1\\1&0\end{bmatrix}$ | $Y=\begin{bmatrix}0&-i\\i&0\end{bmatrix}$ | $Z=\begin{bmatrix}1&0\\1&-1\end{bmatrix}$ |
+:::
+
+The identity is just a quantum wire, and we have already seen the $X$ and $Z$ gates in [Phase gates galore], as the bit-flip and phase-flip (respectively).
+Note that, of these latter two, only the $X$ gate has a classical analogue (as the logical $\texttt{NOT}$ operator).
+The remaining gate, the $Y$ operator, describes the combined effect of both the bit- and the phase-flip: $ZX=iY$.
+
+In fact, this is just one of the equations that the Pauli matrices satisfy.
+The Pauli matrices are both unitary and Hermitian, they square to the identity, and they anti-commute.
+By this last point, we mean that
+$$
+  \begin{aligned}
+    XY+YX&=0,
+  \\XZ+ZX&=0,
+  \\YZ+ZY&=0.
+  \end{aligned}
+$$
+As already mentioned, they satisfy $ZX=iY$, but also any cyclic permutation of this equation.
+
+These operators are also called **sigma matrices**, or **Pauli spin matrices**.
+They are so ubiquitous in quantum physics that they should certainly be memorised.
 
 
 
 
 
-**!!!TODO!!! rest of `L2-qubits.tex`**
+## From bit-flips to phase-flips, and back again
+
+The Pauli $Z$ gate is a special case of a phase gate $P_\varphi$ with $\varphi=\pi$.
+When we insert it into the interference circuit we obtain
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=5,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{operator/.style={draw,fill=white}}
+\begin{tikzpicture}
+  \draw (-2,0) to (-1.5,0) to node [operator] {$H$} (-0.5,0) to node [operator] {$Z$} (0.5,0) to node [operator] {$H$} (1.5,0) to (2,0);
+  \node at (2.5,0) {=};
+  \draw (3,0) to node [operator] {$X$} (4.5,0);
+\end{tikzpicture}
+```
+
+If you wish to verify this, write the Hadamard gate as $H = (X+Z)/\sqrt{2}$ and use the properties of the Pauli operators.^[$\begin{aligned}HXH &= Z\\HZH &= X\\HYH &= -Y\end{aligned}$]
+So the Hadamard gate turns phase-flips into bit-flips, but it also turns bit-flips into phase-flips:
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=5,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{operator/.style={draw,fill=white}}
+\begin{tikzpicture}
+  \draw (-2,0) to (-1.5,0) to node [operator] {$H$} (-0.5,0) to node [operator] {$Z$} (0.5,0) to node [operator] {$H$} (1.5,0) to (2,0);
+  \node at (2.5,0) {=};
+  \draw (3,0) to node [operator] {$X$} (4.5,0);
+\end{tikzpicture}
+```
+
+Let us also add, for completeness, that $HYH=-Y$.
+You will see these identities again and again, especially when we discuss quantum error corrections.^[Unitaries, such as $H$, that take the three Pauli operators to the Pauli operators via conjugation form the so-called **Clifford group**, which we will meet later on. Which phase gate is in the Clifford group of a single qubit?]
+
+
+
+
+
+## Any unitary operation on a single qubit
+
+There are infinitely many unitary operations that can be performed on a single qubit.
+In general, any complex $(n\times n)$ matrix has $n^2$ complex entries, and can thus be specified by $2n^2$ real independent parameters.
+The unitarity constraint removes $n^2$ of these, and so any unitary $(n\times n)$ matrix has $n^2$ real independent parameters.
+In particular, we need _four_ real parameters to specify a $(2\times 2)$ unitary matrix.
+If we are prepared to ignore global phase factors (which we are) then there are only three real parameters left.
+So, with this in mind, can we construct and implement any unitary on a single qubit in some simple way?
+
+_Yes, we can._
+
+Any unitary operation on a qubit (up to an overall multiplicative phase factor) can be implemented by a circuit containing just two Hadamards and three phase gates, with adjustable phase settings, as in Figure \@ref(fig:universal-circuit-for-2-by-2).
+
+(ref:universal-circuit-for-2-by-2-caption) The universal circuit for unitary $(2\times2)$ matrices.
+
+```{r universal-circuit-for-2-by-2,echo=FALSE,cache=TRUE,engine='tikz',fig.width=5,fig.align='center',fig.cap='(ref:universal-circuit-for-2-by-2-caption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{operator/.style={draw,fill=white}}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\begin{tikzpicture}[xscale=2]
+  \node [dot,label=above:{$\alpha$}] (phase1) at (-1,0) {};
+  \node [dot,label=above:{$\varphi$}] (phase2) at (0,0) {};
+  \node [dot,label=above:{$\beta$}] (phase3) at (1,0) {};
+  \draw (-1.5,0) to (-1,0);
+  \draw (1,0) to (1.5,0);
+  \draw (phase1) to node [operator] {$H$} (phase2);
+  \draw (phase2) to node [operator] {$H$} (phase3);
+\end{tikzpicture}
+```
+
+If we multiply the matrices corresponding to each gate in the network (remember that the order of matrix multiplication is reversed) we obtain
+$$
+  U(\alpha,\beta,\gamma)
+  =\begin{bmatrix}
+    e^{-i\left(\frac{\alpha+\beta}{2}\right)}\cos\varphi/2
+    & -ie^{i\left(\frac{\alpha-\beta}{2}\right)}\sin\varphi/2
+  \\-ie^{-i\left(\frac{\alpha-\beta}{2}\right)}\sin\varphi/2
+    & e^{i\left(\frac{\alpha+\beta}{2}\right)}\cos\varphi/2
+  \end{bmatrix}.
+$$
+Any $(2\times 2)$ unitary matrix (up to global phase) can be expressed in this form using the three independent real parameters, $\alpha$, $\beta,$ and $\varphi$, which take values in $[0,2\pi]$.
+In order to see that this construction does what it claims, let us explore an intriguing mathematical connection between single qubit unitaries and rotations in three dimensions.
+
+
+
+
+
+## The Bloch sphere
+
+Unitary operations on a single qubit form a group.
+More precisely, the set of all $(2\times 2)$ unitary matrices forms a non-abelian group under the matrix multiplication, denoted by $\mathrm{U}(2)$.
+It turns out that compositions of single qubit unitaries behave pretty much the same as compositions of rotations in three dimensions.
+Technically speaking, $\mathrm{U}(2)/\mathrm{U}(1)\cong \mathrm{SO}(3)$.^[Note that $\mathrm{U}(1)\cong\mathbb{C}^\times$, where $\mathbb{C}^\times$ is the multiplicative group of unit elements of the complex numbers, i.e. the set $\mathbb{C}\setminus\{0\}$ with the group operation given by multiplication.]
+That is, $(2\times 2)$ unitaries, up to global phase, form a group which is isomorphic to the group of rotations in three dimensions, denoted by $\mathrm{SO}(3)$.
+This isomorphism helps to visualise the actions of single qubit gates.
+
+There are many ways to introduce this isomorphism.
+Here we will first show how to represent single-qubit state vectors in terms of Euclidean vectors in three dimensions, and then relate unitary operations on state vectors to rotations in this Euclidean space.
+
+Any single qubit state can be written as $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, constrained by the relation $|\alpha|^2+|\beta|^2=1$.
+This suggests a more natural parametrisation as^[There is a good reason to use $\theta/2$ instead of $\theta$, which we will explain later on.]
+$$
+  \ket{\psi} =
+  \cos\frac{\theta}{2}e^{i\varphi_0}\ket{0}
+  + \sin\frac{\theta}{2}e^{i\varphi_1}\ket{1}.
+$$
+We can then factor out a global phase:
+$$
+  \ket{\psi} =
+  e^{i\varphi_0}\left(
+    \cos\frac{\theta}{2}\ket{0} + \sin\frac{\theta}{2}e^{i\varphi}\ket{1}
+  \right),
+$$
+and even remove it completely, since states that are identical up to a global phase are physically indistinguishable.
+
+The parametrisation in terms of $\theta$ and $\varphi$ should remind you of spherical polar coordinates for the surface of a sphere.
+
+(ref:bloch-sphere-caption) The Bloch sphere, with the point $\vec{s}$ corresponding to $\ket{\psi}$ marked.
+
+```{r bloch-sphere,echo=FALSE,cache=TRUE,engine='tikz',fig.width=4.5,fig.align='center',fig.cap='(ref:bloch-sphere-caption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\usetikzlibrary{arrows.meta}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \shade [ball color=gray!40,opacity=0.4] (0,0) circle (2cm);
+  \draw (0,0) circle (2cm);
+  \draw (-2,0) arc (180:360:2 and 0.9);
+  \draw [dashed,thin] (2,0) arc (0:180:2 and 0.9);
+  %
+  \node [label=above:{$\ket{0}$}] (top) at (0,2) {};
+  \node [label=right:{$y$}] (right) at (2,0) {};
+  \node [label=below:{$\ket{1}$}] (bottom) at (0,-2) {};
+  \node (front) at (225:1.2) {};
+  \node at (225:1.4) {$x$};
+  \draw [<->] (bottom) to (top);
+  \draw [->] (0,0) to (right);
+  \draw [->] (0,0) to (front);
+  %
+  \draw [thin,fill=primary!80] (0,0) to (0,0.72) to [bend left] (0.35,0.525) to cycle;
+  \draw [thin,fill=primary!80] (0,0) to (0.48,-0.3) to [bend left] (225:0.5) to cycle;
+  \node at (0.15,0.45) {$\theta$};
+  \node [fill=primary!80,inner sep=0] at (0.05,-0.25) {$\varphi$};
+  %
+  \node [fill,shape=circle,minimum size=3pt,inner sep=0pt] (origin) at (0,0) {};
+  \node [dot,secondary,label=right:{$\vec{s}$}] (vector) at (0.8,1.2) {};
+  \draw [-Latex,secondary] (origin) to (vector);
+  \draw [dashed,ultra thick] (vector) to (0.8,-0.5) to (origin);
+\end{tikzpicture}
+```
+
+We call this sphere the **Bloch sphere**, and the unit vector ${\vec s}$ defined by $\theta$ and $\varphi$ the **Bloch vector**.^[We will revisit this construction again in more detail, and from a slightly different point of view, in [Linking Pauli matrices and the Bloch sphere].]
+This is a very useful way to visualise quantum states of a single qubit and unitary operations that we perform on it.
+Any unitary action on the state vector will induce a rotation of the corresponding Bloch vector.
+But what kind of rotation?
+
+Note that any two orthogonal state vectors appear on the Bloch sphere as two Bloch vectors pointing in opposite directions.
+Now, the two eigenvectors of a single-qubit unitary $U$ must be orthogonal, and thus define an axis running through the centre of the Bloch sphere.
+This is the axis about which the Bloch vector is rotated when $U$ acts on the corresponding state vector.
+The rotation angle $\alpha$ is given by the eigenvalues of $U$, which, up to a global phase factor, are of the form $e^{\mp i\alpha/2}$.
+
+It is instructive to work out few simple cases and get a feel for the rotations corresponding to the most common unitaries.
+For example, it is easy to check that a phase gate $P_\alpha$ acts by
+$$
+  \cos\frac{\theta}{2}\ket{0} + e^{i\varphi}\sin\frac{\theta}{2}\ket{1}
+  \longmapsto
+  \cos\frac{\theta}{2}\ket{0} + e^{i(\varphi+\alpha)}\sin\frac{\theta}{2}\ket{1}.
+$$
+The azimuthal angle changes from $\varphi$ to $\varphi+\alpha$, and so the Bloch sphere is rotated anticlockwise by $\alpha$ about the $z$-axis.
+The Bloch vectors corresponding to the two eigenvectors of $P_\alpha$, namely $\ket{0}$ and $\ket{1}$, define the axis of the rotation.
+
+(ref:bloch-sphere-rotation-caption) Phase gates $P_\alpha$ represent rotations of the Bloch sphere around the $z$-axis.
+
+```{r bloch-sphere-rotation,echo=FALSE,cache=TRUE,engine='tikz',fig.width=5,fig.align='center',fig.cap='(ref:bloch-sphere-rotation-caption)',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\usetikzlibrary{arrows.meta}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+  \shade [ball color=gray!40,opacity=0.4] (0,0) circle (2cm);
+  \draw (0,0) circle (2cm);
+  \draw (-2,0) arc (180:360:2 and 0.9);
+  \draw [dashed,thin] (2,0) arc (0:180:2 and 0.9);
+  %
+  \draw [<->,secondary] (0,-3) to (0,3);
+  \draw [->,thin] (0,0) to (1,0);
+  \draw [->,thin] (0,0) to (225:0.7);
+  %
+  \node [fill,shape=circle,minimum size=3pt,inner sep=0pt,label=above:{$\vec s$}] at (-1.15,0.85) {};
+  \draw [-Latex,primary] (-1,0.7) arc (200:320:1 and 0.4);
+  \node [fill,shape=circle,minimum size=3pt,inner sep=0pt,label=above:{$P_\alpha\vec s$}] at (0.85,0.65) {};
+  %
+  \draw [-Latex,ultra thick,primary] (-2.5,0.2) arc (160:400:2.75 and 1.2);
+\end{tikzpicture}
+```
+
+As previously mentioned, the Pauli operator  $Z=\sigma_z$ is a special case of a phase gate, and represents rotation by ${180}^{\circ}$ (that is, $\pi$ radians), about the $z$-axis.
+You can also verify that $X=\sigma_x$, with eigenvectors ${(\ket{0}\pm\ket{1})/\sqrt{2}}$, represents rotation by ${180}^{\circ}$ about the $x$-axis, and $Y=\sigma_y$, with eigenvectors ${(\ket{0}\pm i\ket{1})/\sqrt{2}}$, represents rotation by ${180}^{\circ}$ about the $y$-axis.
+
+How about the Hadamard gate?
+Like the Pauli operators, it squares to the identity ($H^2=\id$), which implies that its eigenvalues are $\pm 1$.
+Thus it will correspond to a rotation by ${180}^{\circ}$.
+But about which axis?
+This time, rather than finding eigenvectors of $H$, we notice that $HXH=Z$ and $HZH=X$, thus $H$ must swap $x$- and $z$-axes, turning rotations about the $z$-axis into rotations about the $x$-axis, and vice versa.
+The Hadamard gate must then represent rotation by ${180}^{\circ}$ about the diagonal $(x+z)$-axis.
+You may also notice that, after this rotation, the $y$-axis points in the opposite direction, which seems to be related to another identity: $HYH=-Y$.
+This is not a coincidence.
+
+One can show^[Again, see [Linking Pauli matrices and the Bloch sphere].] that the effect of the rotation represented by unitary $U$ on the Bloch vector with components $s_x$, $s_y$, $s_z$ is summarised in the formula
+$$
+  U (s_x X + s_y Y + s_z Z) U^\dagger
+  = s'_x X+ s'_y Y + s'_z Z,
+$$
+where $s'_x$, $s'_y$, and $s'_z$ are the components of the rotated Bloch vector.
+
+
+
+
+
+## Composition of rotations
+
+We are now in a position understand the circuit in Figure \@ref(fig:universal-circuit-for-2-by-2) in geometric terms.
+Recall that _any_ rotation in the Euclidean space can be performed as a sequence of three rotations: one about the $z$-axis, one about the $x$-axis, and one more about $z$-axis.
+The circuit does exactly this:
+
+```{r,echo=FALSE,cache=TRUE,engine='tikz',fig.width=5,fig.align='center',fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png'}
+\tikzset{operator/.style={draw,fill=white}}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\begin{tikzpicture}[xscale=2]
+  \draw [fill=gray!40,rounded corners=2mm] (-0.75,-0.75) rectangle (0.75,0.75);
+  \node [dot,label=above:{$\alpha$}] (phase1) at (-1,0) {};
+  \node [dot,label=above:{$\varphi$}] (phase2) at (0,0) {};
+  \node [dot,label=above:{$\beta$}] (phase3) at (1,0) {};
+  \draw (-1.5,0) to (-1,0);
+  \draw (1,0) to (1.5,0);
+  \draw (phase1) to node [operator] {$H$} (phase2);
+  \draw (phase2) to node [operator] {$H$} (phase3);
+\end{tikzpicture}
+```
+
+The first phase gate effects rotation by $\alpha$ about the $z$-axis, the second phase gate is sandwiched between the two Hadamard gates, and these three gates together effect rotation by $\varphi$ about the $x$-axis, and, finally, the third phase gates effects rotation by $\beta$ about the $z$-axis.
+So we can implement any unitary $U$ by choosing the three phase shifts, $\alpha$, $\varphi$, and $\beta$, which are known as the three **Euler's angles**.
+
+
+
+
+
+
+## A finite set of universal gates
+
+The Hadamard gate and the phase gates, with adjustable phases, allow us to implement an arbitrary single-qubit unitary _exactly_.
+The tacit assumption here is that we have here _infinitely many_ phase gates: one gate for each phase.
+In fact, we can pick just one phase gate, namely any phase gate $P_\alpha$ with the phase $\alpha$ that is incommensurate^[That is, there do _not_ exist any $m,n\in\mathbb{Z}$ such that $m\alpha=n\pi$. For example, it suffices to take $\alpha$ to be rational.] with $\pi$.
+It is clear that repeated iteration of $P_\alpha$ can be used to approximate any other phase gate to arbitrary accuracy: indeed, rotate the Bloch sphere by $\alpha$ about the $z$-axis sufficiently many times and you end up as close as you please to any other rotation about the $z$-axis.
+
+If you want to be $\epsilon$-close to the desired angle of rotation, then you may need to repeat the rotation by $\alpha$ roughly $1/\epsilon$ times.
+Indeed, within $n$ applications (for $n\alpha\gg 2\pi$) of $P_\alpha$, we expect the accessible angles to be approximately evenly distributed within the range $[0,2\pi]$, i.e. any angle of rotation can be achieved to an accuracy of $\epsilon=2\pi/n$ by using up to $n\approx 1/\epsilon$ applications of $P_\alpha$.
+So we can use _just one_ phase gate to _approximate_ the _three_ phase gates in the circuit in Figure \@ref(fig:universal-circuit-for-2-by-2).
+
+There are other ways of implementing irrational rotations of the Bloch sphere.
+For example, take the Hadamard gate and the $T$ gate.
+You can check that the compositions $THTH$ and $HTHT$ represent rotations by angles which are irrational multiples of $\pi$, about two different axes.
+We can then compose a sequence of these two rotations to approximate any other rotation of the sphere.
+This may look very nice in theory, but there are issues with the actual physical implementation of this approach.
+All the gates in the circuit will operate with finite precision, and the phase gates will deviate from implementing the required irrational rotations.
+It turns out, however, that we can tolerate minor imperfections; the final result will not be that far off.
+
+For more details on all the above, see [Linking Pauli matrices and the Bloch sphere].
 
 
 

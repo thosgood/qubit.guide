@@ -1,4 +1,4 @@
-This website contains the lecture notes ... written by Artur, edited by Tim ... etc. etc.
+This website contains the lecture notes ... **!!!TODO!!!** written by Artur, edited by Tim ... etc. etc.
 
 The individual lectures are available [here](tufte/), or you can read the [online book version](book/):
 
@@ -26,7 +26,6 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
         * and make sure that _everything_ in the syllabus is covered!!
     + followed by a paragraph with a bit more of a detailed overview
 1. make sure that you use **only** _either_ "chapter" _or_ "lecture"
-1. **where will this section on quantum dynamics go?**
 1. idea blocks in dark mode
 1. `\newcommand`s to somewhere shared by tex **and** html output
 1. svg output for figures
