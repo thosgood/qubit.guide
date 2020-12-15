@@ -27,10 +27,12 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
     + followed by a paragraph with a bit more of a detailed overview
 1. make sure that you use **only** _either_ "chapter" _or_ "lecture"
 1. idea blocks in dark mode
-1. `\newcommand`s to somewhere shared by tex **and** html output
 1. svg output for figures
 1. license and funding information along with bookdown link in `_includes/footer.html`
 1. **pdf output**
+    + switch to the documenttype used for old pdfs
+    + marginfigures
+    + idea environment (and, later on, scenario and circuits too)
 1. switch to katex
   + gitbook _and_ tufte
 1. change the link prefixed to gitbook TOC when you have a domain
