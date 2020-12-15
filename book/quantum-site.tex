@@ -1,103 +1,87 @@
-% Options for packages loaded elsewhere
-\PassOptionsToPackage{unicode}{hyperref}
-\PassOptionsToPackage{hyphens}{url}
-%
-\documentclass[
-]{article}
-\usepackage{lmodern}
-\usepackage{amsmath}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[T1]{fontenc}
-  \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provide euro and other symbols
-  \usepackage{amssymb}
-\else % if luatex or xetex
-  \usepackage{unicode-math}
-  \defaultfontfeatures{Scale=MatchLowercase}
-  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-% Use upquote if available, for straight quotes in verbatim environments
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-\IfFileExists{microtype.sty}{% use microtype if available
-  \usepackage[]{microtype}
-  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-}{}
-\makeatletter
-\@ifundefined{KOMAClassName}{% if non-KOMA class
-  \IfFileExists{parskip.sty}{%
-    \usepackage{parskip}
-  }{% else
-    \setlength{\parindent}{0pt}
-    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
-}{% if KOMA class
-  \KOMAoptions{parskip=half}}
-\makeatother
-\usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={Lectures on Quantum Information Science},
-  pdfauthor={Artur Ekert, ed.~Tim Hosgood},
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
-\usepackage[margin=1in]{geometry}
-\usepackage{longtable,booktabs}
-\usepackage{calc} % for calculating minipage widths
-% Correct order of tables after \paragraph or \subparagraph
-\usepackage{etoolbox}
-\makeatletter
-\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
-\makeatother
-% Allow footnotes in longtable head/foot
-\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
-\makesavenoteenv{longtable}
-\usepackage{graphicx}
-\makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-% Set default figure placement to htbp
-\makeatletter
-\def\fps@figure{htbp}
-\makeatother
-\setlength{\emergencystretch}{3em} % prevent overfull lines
+\documentclass{article}
+\usepackage{NotesTeX}
+
+\renewcommand{\footnote}[1]{\en{#1}}
+
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{tikz-cd}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\usepackage{colortbl}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{float}
+
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
-\usepackage{booktabs}
+
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.17}
-\ifluatex
-  \usepackage{selnolig}  % disable illegal ligatures
-\fi
-\usepackage[]{natbib}
-\bibliographystyle{plainnat}
+
+\definecolor{primary}{RGB}{255,153,0}
+\definecolor{secondary}{RGB}{51,102,136}
+
+\usepackage{hyperref}
+\hypersetup{linkcolor={secondary}}
+\usepackage[noabbrev,capitalise,nameinlink]{cleveref}
+\crefformat{equation}{(#2#1#3)}
+
+
+\newenvironment{idea}%
+{\bigskip\noindent\begin{minipage}{\textwidth}\smallskip\begin{tcolorbox}[colback=gray!10,boxrule=0.01mm]}%
+{\end{tcolorbox}\end{minipage}\bigskip}
+
+\newtheorem*{scenario}{Scenario}
+
+\tcolorboxenvironment{scenario}{
+  boxrule=0pt,
+  boxsep=0pt,
+  colback={secondary!20},
+  enhanced jigsaw,
+  borderline west={2pt}{0pt}{secondary},
+  sharp corners,
+  before skip=10pt,
+  after skip=10pt,
+  breakable,
+}
+
+\newtheorem{innercircuit}{Circuit}
+\newenvironment{circuit}[1]
+  {\renewcommand\theinnercircuit{#1}\innercircuit}
+  {\endinnercircuit}
+
+\tcolorboxenvironment{circuit}{
+  boxrule=0pt,
+  boxsep=0pt,
+  colback={primary!20},
+  enhanced jigsaw,
+  borderline west={2pt}{0pt}{primary},
+  sharp corners,
+  before skip=10pt,
+  after skip=10pt,
+  breakable,
+}
+
+
 
 \title{Lectures on Quantum Information Science}
 \author{Artur Ekert, ed.~Tim Hosgood}
 \date{Last updated: December 15, 2020}
 
-\begin{document}
-\maketitle
 
-{
-\setcounter{tocdepth}{2}
-\tableofcontents
-}
-\newcommand{\xmapsto}[1]{\overset{#1}{\longmapsto}}
-\newcommand{\bra}[1]{\langle#1|}
-\newcommand{\ket}[1]{|#1\rangle}
-\newcommand{\proj}[1]{|#1\rangle\langle#1|}
-\newcommand{\braket}[1]{\langle#1\rangle}
-\newcommand{\av}[1]{\braket{#1}}
-\newcommand{\tr}{\operatorname{tr}}
-\newcommand{\id}{\operatorname{id}}
+
+\begin{document}
+\providecommand{\xmapsto}[1]{\overset{#1}{\longmapsto}}
+\providecommand{\bra}[1]{\langle#1|}
+\providecommand{\ket}[1]{|#1\rangle}
+\providecommand{\braket}[1]{\langle#1\rangle}
+\providecommand{\proj}[1]{|#1\rangle\langle#1|}
+\providecommand{\av}[1]{\braket{#1}}
+\providecommand{\tr}{\operatorname{tr}}
+\providecommand{\id}{\operatorname{id}}
 
 \hypertarget{introduction}{%
 \section*{Introduction}\label{introduction}}
@@ -246,7 +230,11 @@ Feel free to think of this chapter as a sort of ``aeroplane tour'' of the rudime
 Quantum theory, at least at some instrumental level, can be viewed as a modification of probability theory.
 We replace positive numbers (probabilities) with complex numbers \(z\) (called \textbf{probability amplitudes}) such that the squares of their absolute values, \(|z|^2\), are interpreted as probabilities.
 
+\begin{idea}
+
 The correspondence between probability amplitude \(z\) and probability \(p=|z|^2\) is known as \textbf{Born's Rule}.
+
+\end{idea}
 
 The rules for combining amplitudes are very reminiscent of the rules for combining probabilities:
 
@@ -257,7 +245,7 @@ The rules for combining amplitudes are very reminiscent of the rules for combini
   Whenever something can happen in a sequence of independent steps, we multiply the amplitudes of each step.
 \end{enumerate}
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-1-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-2-1} \end{center}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -267,7 +255,7 @@ The rules for combining amplitudes are very reminiscent of the rules for combini
   Whenever something can happen in several alternative ways, we add the amplitudes for each separate way.
 \end{enumerate}
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-2-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-3-1} \end{center}
 
 That's it!
 These two rules are basically all you need to manipulate amplitudes in any physical process, no matter how complicated.\footnote{We will, however, amend the two rules later on when we touch upon particle statistics.}
@@ -389,7 +377,7 @@ Many beautiful experiments of this type were carried out in the 1990s in Serge H
 
 
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/ramsey-figure-1} 
 
@@ -412,7 +400,7 @@ We can understand this interference better if we follow the two internal states 
 
 
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/ramsey-figure-2-1} 
 
@@ -493,7 +481,7 @@ Atoms, trapped ions, molecules, nuclear spins and many other quantum objects wit
 There is no need to learn about physics behind these diverse technologies if all you want is to understand the basics of quantum theory.
 We may now conveniently forget about any specific experimental realisation of a qubit and represent a generic \textbf{single qubit interference} graphically as a \textbf{circuit diagram}:\footnote{Do not confuse the interference diagrams of Figure \ref{fig:ramsey-figure} and Figure \ref{fig:interference-matrix} with the circuit diagram. In the circuit diagrams, which we will use a lot from now on, a single qubit is represented by a single line.}
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-3-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-4-1} \end{center}
 
 This diagram should be read from left to right.
 The horizontal line represents a qubit that is inertly carried from one quantum operation to another. We often call this line a \textbf{quantum wire}.
@@ -547,7 +535,7 @@ Let us look at the following two scenarios:
   In this case we add the amplitudes for each of the two alternative computational paths.
 \end{enumerate}
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-4-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-5-1} \end{center}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -559,7 +547,7 @@ Let us look at the following two scenarios:
   We add the probabilities for each of the two alternative computational paths.
 \end{enumerate}
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-5-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-6-1} \end{center}
 
 When quantum computation affects the environment, we have to include the environment in our analysis for it now takes part in the computation.
 Depending on which computational path was taken, the environment may end up in two distinct states.
@@ -574,12 +562,16 @@ p
 \]
 where the parameter \(v\), called the \textbf{visibility} of the interference pattern, ranges from \(0\) (the environment can perfectly distinguish between the two paths, total decoherence, no interference) to \(1\) (the environment cannot distinguish between the two paths, no decoherence, full interference), with the values in between corresponding to partial decoherence.
 
-\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-6-1.pdf}
+\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-7-1.pdf}
 
 We shall derive this formula later on, and you will see that \(v\) quantifies the degree of distinguishability between \(O_1\) and \(O_2\).
 The more the environment knows about which path was taken the less interference we see.
 
+\begin{idea}
+
 Decoherence suppresses quantum interference.
+
+\end{idea}
 
 Decoherence is chiefly responsible for our classical description of the world --- without interference terms we may as well add probabilities instead of amplitudes.
 While decoherence is a serious impediment to building quantum computers, depriving us of the power of quantum interference, it is not all doom and gloom: there are clever ways around decoherence, such as quantum error correction and fault-tolerant methods we will meet later.
@@ -598,7 +590,7 @@ Think about computation as a physical process that evolves a prescribed initial 
 We shall refer to the configurations as \textbf{states}.
 Figure \ref{fig:deterministic-computation} shows five consecutive computational steps performed on four distinct states.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/deterministic-computation-1} 
 
@@ -611,7 +603,7 @@ That computation was \textbf{deterministic}: every time you run it with the same
 But a computation does not have to be deterministic --- we can augment a computing machine by allowing it to ``toss an unbiased coin'' and to choose its steps randomly.
 It can then be viewed as a directed\footnote{So we read left to right, and omit the arrowheads.} tree-like graph where each node corresponds to a state of the machine, and each edge represents one step of the computation, as shown in Figure \ref{fig:probabilistic-computation}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/probabilistic-computation-1} 
 
@@ -625,7 +617,7 @@ The probability of a particular final state (\(\texttt{OUTPUT}\)) being reached 
 Figure \ref{fig:probabilistic-computation} shows only two computational paths, but, in general, there could be many more paths (here, up to 256) contributing to the final probability.
 Quantum computation can be represented by a similar graph, as in \ref{fig:quantum-computation}.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/quantum-computation-1} 
 
@@ -649,8 +641,12 @@ The resulting probability, as we have just seen, is the sum of the probabilities
     + \sum_{k\ne j} \sqrt{p_k p_j}\cos(\varphi_k-\varphi_j).
 \]
 
+\begin{idea}
+
 Quantum computation can be viewed as a complex multi-particle quantum interference involving many computational paths through a computing device.
 The art of quantum computation is to shape quantum interference, through a sequence of computational steps, enhancing probabilities of correct outputs and suppressing probabilities of the wrong ones.
+
+\end{idea}
 
 \hypertarget{computational-complexity}{%
 \subsection{Computational complexity}\label{computational-complexity}}
@@ -670,7 +666,7 @@ For example, using the algorithm taught in elementary school, one can multiply t
 In contrast, the fastest-known method for the reverse operation --- factoring an \(n\)-digit integer into prime numbers --- takes a time that grows exponentially, roughly as \(2^n\).
 That is considered inefficient.
 
-\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-7-1.pdf}
+\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-8-1.pdf}
 
 The class of problems that can be solved by a deterministic computer in polynomial time is represented by the capital letter \texttt{P}, for \emph{polynomial} time.
 The class of problems that can be solved in polynomial time by a probabilistic computer is called \texttt{BPP}, for \emph{bounded-error probabilistic polynomial} time.
@@ -678,7 +674,7 @@ It is clear that \texttt{BPP} contains \texttt{P}, since a deterministic computa
 When we run a probabilistic (a.k.a. randomised) computation many times on the same input, we will not get the same answer every time, but the computation is useful if the probability of getting the right answer is high enough.
 Finally, the complexity class \texttt{BQP}, for \emph{bounded-error quantum polynomial}, is the class of problems that can be solved in polynomial time by a quantum computer.
 
-\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-8-1.pdf}
+\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-9-1.pdf}
 
 Since a quantum computer can easily generate random bits and simulate a probabilistic classical computer, \texttt{BQP} certainly contains the class \texttt{BPP}.
 Here we are interested in problems that are in \texttt{BQP} but not known to be in \texttt{BPP}.
@@ -786,7 +782,7 @@ Every now and then you will register a coincidence: the two detectors will fire.
   Now, assume that \(z\approx \frac{1}{r}e^{i\frac{2r\pi}{\lambda}}\), where \(r\) is the distance between detectors and the stars. How can we use this to measure \(r\)?
 \end{enumerate}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/photons-from-stars-1} 
 
@@ -822,7 +818,7 @@ How would you construct the \(\sqrt{\texttt{NOT}}\) gate?
 
 
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/sqrt-not-1} 
 
@@ -842,7 +838,7 @@ An empty room will let light go from the input to the output ports unaffected, w
 
 
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/bomb-detecting-scenario-1} 
 
@@ -877,7 +873,7 @@ You would like to know with certainty whether a particular room had a bomb in it
   \end{enumerate}
 \end{enumerate}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/mach-zehnder-bomb-tester-1} 
 
@@ -980,7 +976,7 @@ Suppose a randomised algorithm solves a decision problem, returning \(\texttt{ye
 It gets the answer wrong with a probability not greater than \(\frac12-\delta\), where \(\delta>0\) is a constant.\footnote{This result is known as the \textbf{Chernoff bound}.}.
 If we are willing to accept a probability of error no larger than \(\epsilon\), then it suffices to run the computation \(r\) times, where \(r=O(\log 1/\epsilon)\).\}
 
-\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-9-1.pdf}
+\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-10-1.pdf}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1032,7 +1028,7 @@ To be clear, the entries in this matrix are not any random complex numbers: thei
 
 We can also describe \(U\) by drawing a diagram, which contains exactly the same information as the matrix representation, but just in a different form:
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-10-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-11-1} \end{center}
 
 Now how can we find some quantum interference to study?
 Consider two computational steps, \(U\) and \(V\).
@@ -1089,7 +1085,7 @@ A two-state machine that we have just described in abstract terms is usually rea
 For example, state \(|0\rangle\) may be chosen to be the lowest energy state of an atom, the \textbf{ground state}, and state \(|1\rangle\) a higher energy state, the \textbf{excited state}.
 Pulses of light of appropriate frequency, duration and intensity can take the atom back and forth between the basis states \(|0\rangle\) and \(|1\rangle\) (implementing logical \(\texttt{NOT}\)).
 
-\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-11-1.pdf}
+\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-12-1.pdf}
 
 Some other pulses, say, half the duration or intensity will take the atom into states that have no classical analogue.
 Such states are called \textbf{coherent superpositions} of \(|0\rangle\) and \(|1\rangle\), and represent a qubit in state \(|0\rangle\) with some amplitude \(\alpha_0\) and in state \(|1\rangle\) with some other amplitude \(\alpha_1\).
@@ -1104,7 +1100,9 @@ This is conveniently represented by a state vector
     \end{bmatrix}
 \]
 
-\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-12-1.pdf}
+\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+\begin{idea}
 
 A \textbf{qubit} is a quantum system in which the Boolean states \(0\) and \(1\) are represented by a prescribed pair of normalised and mutually orthogonal quantum states labelled as \(\{|0\rangle,|1\rangle\}\).
 The two states form a so-called \textbf{computational} (or \textbf{standard}) basis, and so any other state of an isolated qubit can be written as a coherent superposition
@@ -1114,6 +1112,8 @@ The two states form a so-called \textbf{computational} (or \textbf{standard}) ba
 for some \(\alpha_0\) and \(\alpha_1\) such that \(|\alpha_0|^2 + |\alpha_1|^2 = 1\).
 
 In practice, a qubit is typically a microscopic system, such as an atom, a nuclear spin, or a polarised photon.
+
+\end{idea}
 
 As we have already mentioned, any\footnote{ Here we are talking about \emph{isolated} systems. As you will soon learn, a larger class of physically admissible operations is described by completely positive maps. It may sound awfully complicated but, as you will soon see, it is actually very simple.} computational step, that is, any physically admissible operation \(U\) on a qubit, is described by a \((2\times 2)\) unitary matrix \(U\).
 It modifies the state of the qubit as
@@ -1149,12 +1149,16 @@ Atoms, trapped ions, molecules, nuclear spins and many other quantum objects, wh
 There is no need to learn about physics behind these diverse technologies if all you want is to understand the basics of quantum computation.
 We may now conveniently forget about any specific experimental realisation of a qubit and just remember that any manipulations on qubits have to be performed by physically admissible operations, and that such operations are represented by unitary transformations.
 
+\begin{idea}
+
 A \textbf{quantum (logic) gate} is a device which performs a fixed unitary operation on selected qubits in a fixed period of time, and a \textbf{quantum circuit} is a device consisting of quantum logic gates whose computational steps are synchronised in time.
 The \textbf{sizes} of the circuit is the number of gates it contains.
 
+\end{idea}
+
 Some unitary \(U\) acting on a single qubit is represented diagrammatically as
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-13-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-14-1} \end{center}
 
 This diagram should be read from left to right.
 The horizontal line represents a qubit that is inertly carried from one quantum operation to another.
@@ -1162,7 +1166,7 @@ We often call this line a \textbf{quantum wire}.
 The wire may describe translation in space (e.g.~atoms travelling through cavities) or translation in time (e.g.~a sequence of operations performed on a trapped ion).
 A sequence of two gates acting on the same qubit, say \(U\) followed by \(V\), is represented by
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-14-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-15-1} \end{center}
 
 and is described by the matrix product \(VU\) (note the order in which we multiply the matrices).
 
@@ -1185,7 +1189,9 @@ It is typically constructed as a sequence of three elementary operations:
 
 We represent it graphically as
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-15-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-16-1} \end{center}
+
+\begin{idea}
 
 \begin{longtable}[]{@{}cc@{}}
 \toprule
@@ -1208,6 +1214,8 @@ Phase\strut
 \end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
+\end{idea}
 
 You will see it over and over again, for it is quantum interference that gives quantum computation additional capabilities.
 The product of the three matrices \(HP_\varphi H\) describes the action of the whole circuit: it gives the transition amplitudes between states \(|0\rangle\) and \(|1\rangle\) at the input and the output as
@@ -1269,7 +1277,7 @@ Now that we have poked our heads into the quantum world, let us see how quantum 
 Consider a following task: design a logic gate that operates on a single bit and such that when it is followed by another, identical, logic gate the output is always the negation of the input.
 Let us call this logic gate \textbf{the square root of \(\texttt{NOT}\)}, or \(\sqrt{\texttt{NOT}}\).
 
-\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-16-1.pdf}
+\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-17-1.pdf}
 
 A simple check, such as an attempt to construct a truth table, should persuade you that there is no such operation in logic.
 It may seem reasonable to argue that since there is no such operation in logic, \(\sqrt{\texttt{NOT}}\) is impossible.
@@ -1312,7 +1320,7 @@ Indeed,
 
 We could also step through the circuit diagram and follow the evolution of the state vector:
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-17-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-18-1} \end{center}
 
 Or, if you prefer to work with column vectors and matrices, you can write the two consecutive application of \(\sqrt{\texttt{NOT}}\) to state \(|0\rangle\) as
 \[
@@ -1336,6 +1344,8 @@ Because a faithful physical model for it exists in nature!
 \subsection{Phase gates galore}\label{phase-gates-galore}}
 
 As well as the generic phase gate \(P_\varphi\), let us mention three specific phase gates that will frequently pop up (two of which have rather confusing names, at first glance!).
+
+\begin{idea}
 
 \begin{longtable}[]{@{}cccc@{}}
 \toprule
@@ -1361,6 +1371,8 @@ Phase-flip\strut
 \end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
+\end{idea}
 
 Note that the phase gate \(P_\varphi\) is only defined up to a global phase factor,\footnote{In general, states differing only by a global phase are physically indistinguishable, and so it is physical experimentation that leads us to this mathematical choice of only defining things up to a global phase.} and so we can write its matrix either as
 \[
@@ -1389,6 +1401,8 @@ The remaining gate (\(Z\)) is arguably the most important specific phase gate, s
 Adding to our collection of common single-qubit gates, we now look at the three \textbf{Pauli operators}\footnote{We use the standard basis \(\{|0\rangle,|1\rangle\}\) most of the time, and so often refer to operators as matrices.} \(\sigma_x\), \(\sigma_y\), and \(\sigma_z\), also denoted by \(X\), \(Y\), and \(Z\) (respectively).
 These three operators, combined with the identity, satisfy a lot of nice formal properties, which we shall examine briefly here, and the return to in more detail in \protect\hyperlink{linking-pauli-matrices-and-the-bloch-sphere}{Linking Pauli matrices and the Bloch sphere}.
 
+\begin{idea}
+
 \begin{longtable}[]{@{}cccc@{}}
 \toprule
 \begin{minipage}[b]{(\columnwidth - 3\tabcolsep) * \real{0.20}}\centering
@@ -1413,6 +1427,8 @@ Phase-flip\strut
 \end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
+\end{idea}
 
 The identity is just a quantum wire, and we have already seen the \(X\) and \(Z\) gates in \protect\hyperlink{phase-gates-galore}{Phase gates galore}, as the bit-flip and phase-flip (respectively).
 Note that, of these latter two, only the \(X\) gate has a classical analogue (as the logical \(\texttt{NOT}\) operator).
@@ -1439,12 +1455,12 @@ They are so ubiquitous in quantum physics that they should certainly be memorise
 The Pauli \(Z\) gate is a special case of a phase gate \(P_\varphi\) with \(\varphi=\pi\).
 When we insert it into the interference circuit we obtain
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-18-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-19-1} \end{center}
 
 If you wish to verify this, write the Hadamard gate as \(H = (X+Z)/\sqrt{2}\) and use the properties of the Pauli operators.\footnote{\(\begin{aligned}HXH &= Z\\HZH &= X\\HYH &= -Y\end{aligned}\)}
 So the Hadamard gate turns phase-flips into bit-flips, but it also turns bit-flips into phase-flips:
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-19-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-20-1} \end{center}
 
 Let us also add, for completeness, that \(HYH=-Y\).
 You will see these identities again and again, especially when we discuss quantum error corrections.\footnote{Unitaries, such as \(H\), that take the three Pauli operators to the Pauli operators via conjugation form the so-called \textbf{Clifford group}, which we will meet later on. Which phase gate is in the Clifford group of a single qubit?}
@@ -1465,7 +1481,7 @@ Any unitary operation on a qubit (up to an overall multiplicative phase factor) 
 
 
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/universal-circuit-for-2-by-2-1} 
 
@@ -1520,7 +1536,7 @@ The parametrisation in terms of \(\theta\) and \(\varphi\) should remind you of 
 
 
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/bloch-sphere-1} 
 
@@ -1551,7 +1567,7 @@ The Bloch vectors corresponding to the two eigenvectors of \(P_\alpha\), namely 
 
 
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/bloch-sphere-rotation-1} 
 
@@ -1586,7 +1602,7 @@ We are now in a position understand the circuit in Figure \ref{fig:universal-cir
 Recall that \emph{any} rotation in the Euclidean space can be performed as a sequence of three rotations: one about the \(z\)-axis, one about the \(x\)-axis, and one more about \(z\)-axis.
 The circuit does exactly this:
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-20-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-21-1} \end{center}
 
 The first phase gate effects rotation by \(\alpha\) about the \(z\)-axis, the second phase gate is sandwiched between the two Hadamard gates, and these three gates together effect rotation by \(\varphi\) about the \(x\)-axis, and, finally, the third phase gates effects rotation by \(\beta\) about the \(z\)-axis.
 So we can implement any unitary \(U\) by choosing the three phase shifts, \(\alpha\), \(\varphi\), and \(\beta\), which are known as the three \textbf{Euler's angles}.
@@ -1624,7 +1640,7 @@ In fact, playing with mirrors and beam-splitters can give you lots of insights i
 A symmetric beam-splitter is a cube of glass which reflects half the light that impinges upon it, while allowing the remaining half to pass through unaffected.
 For our purposes it can be viewed as a device which has two input and two output ports which we label as \(|0\rangle\) and \(|1\rangle\), as in Figure \ref{fig:beam-splitter}.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/beam-splitter-1} 
 
@@ -1641,7 +1657,7 @@ Thus we may be tempted to think of the beam-splitter as a random binary switch w
 However, that is not necessarily the case.
 Let us introduce a second beam-splitter and place two normal mirrors so that both paths intersect at the second beam-splitter, resulting in something resembling the Mach-Zehnder interferometer (see \ref{fig:two-beam-splitters}).
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/two-beam-splitters-1} 
 
@@ -1656,7 +1672,11 @@ Each reflection happens with probability \(1/2\) and each transmission happens w
 This is summarised in \ref{fig:classical-guess-double-beam-splitter}, and makes perfect sense --- a random switch followed by a random switch should give nothing else but a random switch.
 However, if we set up such an experiment, that is not what happens!
 
+\begin{idea}
+
 There is no reason why probability theory or any other a priori mathematical construct should make any meaningful statements about outcomes of physical experiments.
+
+\end{idea}
 
 \begin{figure}
 \centering
@@ -1691,7 +1711,7 @@ In this case we will get \(i\), which gives probability \(1\).
 We can then switch to input \(|1\rangle\) and repeat our calculations.
 All possible paths and associated amplitudes are shown in \ref{fig:paths-and-amplitudes-two-beam-splitters}.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/paths-and-amplitudes-two-beam-splitters-1} 
 
@@ -1722,6 +1742,8 @@ where \(X=\begin{bmatrix}0&1\\1&0\end{bmatrix}\) is the \(\texttt{NOT}\) operato
 
 Recalling \protect\hyperlink{the-square-root-of-not}{The square root of NOT}, we see that beam-splitters give a physical way of constructing the square root of \(\texttt{NOT}\).
 
+\begin{idea}
+
 \begin{longtable}[]{@{}cc@{}}
 \toprule
 \begin{minipage}[b]{(\columnwidth - 1\tabcolsep) * \real{0.40}}\centering
@@ -1744,6 +1766,8 @@ beam-splitter\strut
 \bottomrule
 \end{longtable}
 
+\end{idea}
+
 \hypertarget{appendix-quantum-interference-revisited-still-about-beam-splitters}{%
 \subsection{Appendix: Quantum interference revisited (still about beam-splitters)}\label{appendix-quantum-interference-revisited-still-about-beam-splitters}}
 
@@ -1751,7 +1775,7 @@ One of the simplest quantum devices in which quantum interference can be control
 
 
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/mach-zehnder-1} 
 
@@ -1795,7 +1819,7 @@ and the corresponding probability \(P_{00}=|U_{00}|^2\) reads
   \end{aligned}
 \]
 
-\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-21-1.pdf}
+\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-22-1.pdf}
 
 The ``classical'' part of this expression, \(T^2+R^2\), basically says that the photon undergoes either two consecutive transmissions with probability \(T^2\), or two consecutive reflections with probability \(R^2\).
 The probability of being transmitted through any phase shifter is always \(1\), hence the phase shifters play no role in the classical description of this process.
@@ -1804,7 +1828,7 @@ Depending on the \emph{relative} phase \(\varphi=\varphi_1-\varphi_0\) the proba
 
 If we do not care about the experimental details, we can represent the action of the Mach--Zehnder interferometer in terms of a diagram: see \ref{fig:mach-zehnder-diagram}.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/mach-zehnder-diagram-1} 
 
@@ -1857,7 +1881,7 @@ In fact, when you do all the calculations you obtain \(ie^{i\frac{\varphi_0+\var
 More about the Bloch sphere, via the omnipresent Pauli matrices, which can be described in a more algebraic way.
 \end{quote}
 
-Let me elaborate here on relations among single qubit unitary transformations, Pauli matrices and rotations of regular three dimensional vectors.
+Let me elaborate here on relations amongst single qubit unitary transformations, Pauli matrices and rotations of regular three dimensional vectors.
 I want you to be able to visualise sequences of unitary operations on a qubit as sequences of rotations, and to see the action of some quantum circuits without getting engaged in lengthy calculations.
 Matrices form a vector space: you can add them, and you can multiply them by a scalar.
 One possible choice of a basis in this vector space is a set of matrices with a single entry equal to \(1\) and all other entries \(0\).
@@ -2064,7 +2088,11 @@ To be clear, this violation has been observed in a number of painstakingly caref
 The early efforts were truly heroic, and the experiments had many layers of complexity.
 Today, however, such experiments are routine.
 
+\begin{idea}
+
 \textbf{Motto.} The behaviour of entangled quantum systems cannot be explained by any local hidden variables.
+
+\end{idea}
 
 \hypertarget{tsirelsons-inequality}{%
 \subsection{Tsirelson's inequality}\label{tsirelsons-inequality}}
@@ -2156,7 +2184,7 @@ This, however, should not be taken literally unless the states of the environmen
 
 Suppose the qubit undergoes the usual interference experiment but in between the two Hadamard gates it is affected by decoherence (denoted by \(\times\)).
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics{quantum-site_files/figure-latex/decoherence-interference-1} 
 
@@ -2194,8 +2222,12 @@ As \(v=|\!\langle e_0|e_1\rangle\!|\) decreases, we lose all the advantages of q
 For example, in Deutsch's algorithm we obtain the correct answer with probability at most \((1+v)/2\).
 For \(\langle e_0|e_1\rangle = 0\), the perfect decoherence case, the network outputs \(0\) or \(1\) with equal probabilities, i.e.~it is \emph{useless} as a computing device.
 
+\begin{idea}
+
 It is clear that we want to avoid decoherence, or at least diminish its impact on our computing device.
 For this we need \textbf{quantum error correction}: we encode the state of a single (logical) qubit across several (physical) qubits.
+
+\end{idea}
 
 \hypertarget{evolution-of-density-operators-under-decoherence}{%
 \subsection{Evolution of density operators under decoherence}\label{evolution-of-density-operators-under-decoherence}}
@@ -2280,7 +2312,11 @@ The intuition behind this expression is that four things can happen to the qubit
 
 This is certainly the case when the states \(|e_1\rangle, |e_x\rangle, |e_y\rangle\) and \(|e_z\rangle\) are mutually orthogonal, otherwise we cannot perfectly distinguish between the four alternatives.
 
+\begin{idea}
+
 What is important here is the discretisation of errors, and the fact that we can reduce quantum errors to \emph{two types}: bit-flip errors \(X\), and phase-flip errors \(Z\).
+
+\end{idea}
 
 In general, given \(n\) qubits in state \(|\psi\rangle\) and the environment in state \(|e\rangle\) the joint evolution can be expanded as
 \[
@@ -2394,14 +2430,14 @@ The \emph{quantum} case, however, is more complicated, because we have both bit-
 In order to protect a qubit against bit-flips (incoherent \(X\) rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
 We take a qubit in some unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), introduce two auxiliary qubits, and encode it into three qubits as
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-22-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-23-1} \end{center}
 
 Suppose that at most one qubit is then flipped (say, the second one).
 The encoded state then becomes \(\alpha|010\rangle + \beta|101\rangle\).
 Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 Instead we introduce another two additional qubits, both in state \(|0\rangle\), and apply the following network:
 
-\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-23-1} \end{center}
+\begin{center}\includegraphics{quantum-site_files/figure-latex/unnamed-chunk-24-1} \end{center}
 
 We measure the two auxiliary qubits, also known as \textbf{ancilla bits}, and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code.
 The theory behind this network runs as follows.
@@ -2453,7 +2489,11 @@ We will start with the density operator as a description of the mixture of quant
 
 If you are an impatient mathematically minded person, who feels more comfortable when things are properly defined right from the beginning, here is your definition:\footnote{A self-adjoint matrix \(M\) is said to be \textbf{non-negative}, or \textbf{positive semi-definite}, if \(\langle v|M|v\rangle\geq 0\) for any vector \(|v\rangle\), or if all of its eigenvalues are non-negative, or if here exists a matrix \(A\) such that \(M=A^\dagger A\). (This is called a \textbf{Cholesky factorization}.)}
 
+\begin{idea}
+
 A \textbf{density operator} \(\rho\) on a finite dimensional Hilbert space \(\mathcal{H}\) is any non-negative self-adjoint operator with trace equal to one.
+
+\end{idea}
 
 It follows that any such \(\rho\) can always be diagonalised, that the eigenvalues are all real and non-negative, and that the eigenvalues sum to one.
 Moreover, given two density operators \(\rho_1\) and \(\rho_2\), we can always construct another density operator as a convex sum of the two:
@@ -2487,7 +2527,11 @@ Now, suppose Alice prepares the quantum system in one of the states \(|\psi_1\ra
 The possible states \(|\psi_i\rangle\) are normalised but need not be orthogonal.
 We call this situation a \textbf{mixture of the states} \(|\psi_i\rangle\), or a \textbf{mixed state} for short.
 
+\begin{idea}
+
 Remember, a mixture of states is very different from a superposition of states: a superposition \emph{always} yields a definite state vector, whereas a mixture does \emph{not}, and so must be described by a density operator.
+
+\end{idea}
 
 Bob knows the ensemble of states \(|\psi_1\rangle,\ldots,|\psi_m\rangle\) and the corresponding probability distribution \(p_1,\ldots,p_m\), and can hence calculate \(\langle M\rangle\) as\footnote{A pure state can be seen as a special case of a mixed state, where all but one the probabilities \(p_i\) equal zero.}
 \[
@@ -2963,5 +3007,4 @@ as required.
 \end{quote}
 
 \textbf{!!!TODO!!! graphical calculus stuff, the philosophical problem of measurement, some history of experimental results}
-
 \end{document}

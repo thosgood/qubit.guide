@@ -34,9 +34,12 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
 1. svg output for figures
 1. license and funding information along with bookdown link in `_includes/footer.html`
 1. **pdf output**
-    + switch to the documenttype used for old pdfs
+    + check for overlapping `\en`s
+    + overlapping in the header (section/subsection names)
+    + make `quote` environment italic
     + marginfigures
     + idea environment (and, later on, scenario and circuits too)
+        * tables in ideas look... bad
 1. switch to katex
   + gitbook _and_ tufte
 1. change the link prefixed to gitbook TOC when you have a domain
