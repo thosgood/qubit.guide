@@ -21,6 +21,10 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
 
 ## To-do
 
+1. links at the start of every chapter
+    + "whole chapter in one page" (links to `tufte/`)
+    + "whole chapter as pdf" (... need to make these pdfs be built)
+        * if this, then remove the pdf link in the toolbar
 1. be more consistent with the start of chapters
     + blockquote which says "About ..." and **uses words from the syllabus**
         * and make sure that _everything_ in the syllabus is covered!!
