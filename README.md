@@ -4,16 +4,18 @@ This website contains the lecture notes ... **!!!TODO!!!** written by Artur, edi
 
 **!!!TODO!!! how to "use" the online book**
 
-<img src="gitbook-toolbar.png" alt="The book toolbar" width="400" style:"border: 1px solid black;">
+<img src="gitbook-toolbar.png" alt="The book toolbar" title="The book toolbar" width="400" style:"border: 1px solid black;">
 
 <div style="text-align: center;margin: 1em"><a href="book/" style="padding: 1em;border: 1px solid black;">Read the book</a></div>
 
 ## Further reading
 
-- P. Kaye, R. Laflamme, and M. Mosca. _An Introduction to Quantum Computing_. Oxford University Press, 2007.
-    + This is probably the best textbook for this particular course.
-- M. Nielsen and I. Chuang. _Quantum Computation and Quantum Information_. Cambridge University Press, 2000.
-    + This is considered the standard textbook in the field. The book was published around 2000, so its treatment of some topics is dated, but there is still no better overview of the whole field.
+The best textbook for this particular course is probably
+> P. Kaye, R. Laflamme, and M. Mosca. _An Introduction to Quantum Computing_. Oxford University Press, 2007.
+
+Although it was published in 2000, and thus has a slightly dated treatment of some topics, the standard textbook in the field is
+> M. Nielsen and I. Chuang. _Quantum Computation and Quantum Information_. Cambridge University Press, 2000.
+
 - J. Preskill. _Ph219/CS219 Lecture Notes_. Available [here](http://theory.caltech.edu/~preskill/ph219/index.html#lecture).
     + Some excellent lecture notes on quantum information theory.
 - S. Aaronson. _Quantum Computing since Democritus_. Cambridge University Press, 2013. Complementary lecture notes also available [here](https://www.scottaaronson.com/democritus/).
