@@ -4,7 +4,9 @@ This website contains the lecture notes ... **!!!TODO!!!** written by Artur, edi
 
 **!!!TODO!!! how to "use" the online book**
 
-<div style="text-align:center;"><a href="book/" style="padding: 1em;border: 1px solid black;">Read the book</a><div>
+<img src="gitbook-toolbar.png" style:"border:1px solid black;">
+
+<div style="text-align:center;"><a href="book/" style="padding: 1em;margin: 0.5em;border: 1px solid black;">Read the book</a></div>
 
 ## Further reading
 
@@ -40,6 +42,7 @@ This website contains the lecture notes ... **!!!TODO!!!** written by Artur, edi
     + marginfigures
     + idea environment (and, later on, scenario and circuits too)
         * tables in ideas look... bad
+1. add github link in `README`
 1. switch to katex
   + gitbook _and_ tufte
 1. change the link prefixed to gitbook TOC when you have a domain
