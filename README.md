@@ -4,9 +4,9 @@ This website contains the lecture notes ... **!!!TODO!!!** written by Artur, edi
 
 **!!!TODO!!! how to "use" the online book**
 
-<img src="gitbook-toolbar.png" style:"border:1px solid black;">
+<img src="gitbook-toolbar.png" alt="The book toolbar" width="400" style:"border: 1px solid black;">
 
-<div style="text-align:center;"><a href="book/" style="padding: 1em;margin: 0.5em;border: 1px solid black;">Read the book</a></div>
+<div style="text-align: center;margin: 1em"><a href="book/" style="padding: 1em;border: 1px solid black;">Read the book</a></div>
 
 ## Further reading
 
