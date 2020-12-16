@@ -1,8 +1,9 @@
 This website contains the lecture notes ... **!!!TODO!!!** written by Artur, edited by Tim ... etc. etc.
 
-## Online book
+<div style="text-align: center;margin-bottom: 2em"><a href="book/" style="padding: 1em;border: 1px solid black;border-radius: 5px;">Read the book</a></div>
 
-**!!!TODO!!! how to "use" the online book**
+The lecture notes are available as an online book (built using the Bookdown fork of Gitbook).
+This means that it has some nice functionality to make reading more comfortable, with most options being accessed through the toolbar at the top, which is explained below.
 
 <img src="gitbook-toolbar.png" alt="The book toolbar" width="350" style="border: 1px solid black;">
 
@@ -11,8 +12,6 @@ This website contains the lecture notes ... **!!!TODO!!!** written by Artur, edi
 3. Change display settings (e.g. font size, dark mode).
 4. View the page source on GitHub.
 5. Open the PDF version of the book.
-
-<div style="text-align: center;margin: 1em"><a href="book/" style="padding: 1em;border: 1px solid black;">Read the book</a></div>
 
 ## Further reading
 
