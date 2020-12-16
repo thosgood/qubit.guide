@@ -1,9 +1,9 @@
 This website contains the lecture notes ... **!!!TODO!!!** written by Artur, edited by Tim ... etc. etc.
 
-<div style="text-align: center;margin-bottom: 2em"><a href="book/" style="padding: 1em;border: 1px solid black;border-radius: 5px;">Read the book</a></div>
+<div style="text-align: center;margin: 2em"><a href="book/" style="padding: 1em;border: 1px solid black;border-radius: 5px;">Read the book</a></div>
 
 The lecture notes are available as an online book (built using the Bookdown fork of Gitbook).
-This means that it has some nice functionality to make reading more comfortable, with most options being accessed through the toolbar at the top, which is explained below.
+This means that it has some nice functionality to make reading more comfortable, with most options being accessed through the toolbar at the top, which is annotated below.
 
 <img src="gitbook-toolbar.png" alt="The book toolbar" width="350" style="border: 1px solid black;">
 
@@ -12,6 +12,7 @@ This means that it has some nice functionality to make reading more comfortable,
 3. Change display settings (e.g. font size, dark mode).
 4. View the page source on GitHub.
 5. Open the PDF version of the book.
+
 
 ## Further reading
 
@@ -25,6 +26,12 @@ Although it was published in 2000, and thus has a slightly dated treatment of so
     + Some excellent lecture notes on quantum information theory.
 - S. Aaronson. _Quantum Computing since Democritus_. Cambridge University Press, 2013. Complementary lecture notes also available [here](https://www.scottaaronson.com/democritus/).
     + A bit more idiosyncratic and fun to read, but still very informative.
+
+
+## Contact
+
+For any problems or queries regarding this site or its contents, please get in touch with [Tim Hosgood](https://thosgood.com).
+
 
 ---
 
