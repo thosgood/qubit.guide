@@ -2,9 +2,9 @@ This website contains the lecture notes ... **!!!TODO!!!** written by Artur, edi
 
 ## Online book
 
-<a href="book/" style="padding: 1em;border: 1px solid black;">Read the book</a>
-
 **!!!TODO!!! how to "use" the online book**
+
+<div style="text-align:center;"><a href="book/" style="padding: 1em;border: 1px solid black;">Read the book</a><div>
 
 ## Further reading
 
