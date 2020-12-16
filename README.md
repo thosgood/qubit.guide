@@ -1,8 +1,8 @@
 This website contains the lecture notes ... **!!!TODO!!!** written by Artur, edited by Tim ... etc. etc.
 
-The individual lectures are available [here](tufte/), or you can read the [online book version](book/):
+## Online book
 
-[<img src="book-screenshot.png" alt="A screenshot of the online book" style="border:1px solid black;">](book/)
+<a href="book/" style="padding: 1em;border: 1px solid black;">Read the book</a>
 
 **!!!TODO!!! how to "use" the online book**
 
@@ -23,8 +23,7 @@ The individual lectures are available [here](tufte/), or you can read the [onlin
 
 1. links at the start of every chapter
     + "whole chapter in one page" (links to `tufte/`)
-    + "whole chapter as pdf" (... need to make these pdfs be built)
-        * if this, then remove the pdf link in the toolbar
+    + css styling
 1. be more consistent with the start of chapters
     + blockquote which says "About ..." and **uses words from the syllabus**
         * and make sure that _everything_ in the syllabus is covered!!
