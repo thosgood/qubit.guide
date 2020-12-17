@@ -4,8 +4,8 @@ The version that you will find on this website has been carefully edited into a 
 
 <div style="text-align: center;margin: 2em"><a href="book/" style="padding: 1em;border: 1px solid black;border-radius: 5px;">Read the book</a></div>
 
-The lecture notes are available as an online book (built using the Bookdown fork of Gitbook).
-This means that it has some nice functionality to make reading more comfortable, with most options being accessed through the toolbar at the top (which we explain below).
+The online book is built using (the Bookdown fork of) Gitbook.
+This means that it has some nice functionality to make reading more comfortable, with most options being accessed through the toolbar at the top (as explained below).
 
 <img src="gitbook-toolbar.png" alt="The book toolbar" width="350" style="border: 1px solid black;">
 
@@ -49,7 +49,6 @@ For any problems or queries regarding this site or its contents, please get in t
     + followed by a paragraph with a bit more of a detailed overview
 1. make sure that you use **only** _either_ "chapter" _or_ "lecture"
 1. idea blocks in dark mode
-1. svg output for figures
 1. license and funding information along with bookdown link in `_includes/footer.html`
 1. **pdf output**
     + check for overlapping `\en`s
