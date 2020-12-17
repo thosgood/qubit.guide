@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Lectures on Quantum Information Science</title>
+  <title>Chapter 7 Bell’s theorem | Lectures on Quantum Information Science</title>
   <meta name="description" content="The online book version of an introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Lectures on Quantum Information Science" />
+  <meta property="og:title" content="Chapter 7 Bell’s theorem | Lectures on Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Lectures on Quantum Information Science" />
+  <meta name="twitter:title" content="Chapter 7 Bell’s theorem | Lectures on Quantum Information Science" />
   
   <meta name="twitter:description" content="The online book version of an introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="chapter1.html"/>
+<link rel="prev" href="chapter6.html"/>
+<link rel="next" href="chapter8.html"/>
 <script src="libs/header-attrs-2.5.3/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -202,85 +202,220 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Lectures on Quantum Information Science</h1>
-<p class="author"><em>Artur Ekert, ed. Tim Hosgood</em></p>
-<p class="date"><em>Last updated: December 17, 2020</em></p>
+<div id="chapter7" class="section level1" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Bell’s theorem</h1>
+<blockquote>
+<p>About quantum correlations, which are stronger than any correlations allowed by classical physics, and about the <a href="https://en.wikipedia.org/wiki/CHSH_inequality">CHSH inequality</a> which demonstrates this fact.</p>
+</blockquote>
+<p><strong>!!!TODO!!!</strong> maybe also link to that minutephysics video about the polarisation “corollary”?</p>
+<div id="quantum-correlations" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> Quantum correlations</h2>
+<p>Consider two entangled qubits in the singlet state
+<span class="math display">\[
+  |\psi\rangle
+  = \frac{1}{\sqrt 2} \left( |01\rangle-|10\rangle \right)
+\]</span>
+and note that the projector <span class="math inline">\(|\psi\rangle\langle\psi|\)</span> can be written as<a href="#fn47" class="footnote-ref" id="fnref47"><sup>47</sup></a>
+<span class="math display">\[
+  |\psi\rangle\langle\psi|
+  = \frac{1}{4} \left(
+    \operatorname{id}\otimes\operatorname{id}- \sigma_x\otimes\sigma_x - \sigma_y\otimes\sigma_y - \sigma_z\otimes \sigma_z
+  \right).
+\]</span>
+Any single qubit observable with values <span class="math inline">\(\pm 1\)</span> can be represented by the operator
+<span class="math display">\[
+  \vec{a}\cdot\vec\sigma
+  = a_x\sigma_x + a_y\sigma_y + a_z\sigma_z,
+\]</span>
+where <span class="math inline">\(\vec{a}\)</span> is a unit vector in the three-dimensional Euclidean space.
+Suppose Alice and Bob choose measurements defined by vectors <span class="math inline">\(\vec{a}\)</span> and <span class="math inline">\(\vec{b}\)</span>, respectively.
+For example, if the two qubits are spin-half particles, they may measure the spin components along the directions <span class="math inline">\(\vec{a}\)</span> and <span class="math inline">\(\vec{b}\)</span>.
+We write the corresponding observable as the tensor product
+<span class="math display">\[
+  A\otimes B
+  = (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma).
+\]</span>
+The eigenvalues of <span class="math inline">\(A\otimes B\)</span> are the products of eigenvalues of <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>.
+Thus <span class="math inline">\(A\otimes B\)</span> has two eigenvalues: <span class="math inline">\(+1\)</span>, corresponding to the instances when Alice and Bob registered identical outcomes, i.e. <span class="math inline">\((+1,+1)\)</span> or <span class="math inline">\((-1,-1)\)</span>; and <span class="math inline">\(-1\)</span>, corresponding to the instances when Alice and Bob registered different outcomes, i.e. <span class="math inline">\((+1,-1)\)</span> or <span class="math inline">\((-1,-1)\)</span>.
+This means that the expected value of <span class="math inline">\(A\otimes B\)</span>, in any state, has a simple interpretation:
+<span class="math display">\[
+    \langle A\otimes B\rangle = \Pr (\text{outcomes are the same}) - \Pr (\text{outcomes are different}).
+\]</span>
+This expression can take any numerical value from <span class="math inline">\(-1\)</span> (perfect anti-correlations) through <span class="math inline">\(0\)</span> (no correlations) to <span class="math inline">\(+1\)</span> (perfect correlations).
+We now evaluate the expectation value in the singlet state:
+<span class="math display">\[
+\begin{aligned}
+  \langle\psi|A\otimes B|\psi\rangle
+  &amp; = \operatorname{tr}\left[
+      (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma) |\psi\rangle\langle\psi|
+    \right]
+\\&amp; = -\frac{1}{4} \operatorname{tr}\left[
+      (\vec{a}\cdot\vec\sigma)\sigma_x \otimes(\vec{a}\cdot\vec\sigma)\sigma_x
+      + (\vec{a}\cdot\vec\sigma)\sigma_y \otimes(\vec{a}\cdot\vec\sigma)\sigma_y
+      + (\vec{a}\cdot\vec\sigma)\sigma_z \otimes(\vec{a}\cdot\vec\sigma)\sigma_z
+    \right]
+\\&amp; = -\frac{1}{4} \operatorname{tr}\left[
+      (a_x b_x + a_y b_y + a_z b_z) \operatorname{id}\otimes\operatorname{id}
+    \right]
+\\&amp; = -\vec{a}\cdot\vec{b}
+\end{aligned}
+\]</span>
+where we have used the fact that <span class="math inline">\(\operatorname{tr}(\vec{a}\cdot\vec\sigma)\sigma_k = a_k\)</span> (<span class="math inline">\(k=x,y,z\)</span>).
+So if Alice and Bob choose the same observable, <span class="math inline">\(\vec{a} = \vec{b}\)</span>, then their outcomes will be always opposite: whenever Alice registers <span class="math inline">\(+1\)</span> (resp. <span class="math inline">\(-1\)</span>) Bob is bound to register <span class="math inline">\(-1\)</span> (resp. <span class="math inline">\(+1\)</span>).</p>
 </div>
-<div id="introduction" class="section level1 unnumbered">
-<h1>Introduction</h1>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.</p>
-<div id="topics" class="section level2 unnumbered">
-<h2>Topics</h2>
-<ul>
-<li>Fundamentals of quantum theory
-<ul>
-<li>addition of probability amplitudes</li>
-<li>quantum interference</li>
-<li>mathematical description of states and evolution of closed quantum systems (Hilbert space, unitary evolution)</li>
-<li>measurements (projectors, Born rule)</li>
-<li>Pauli matrices</li>
-</ul></li>
-<li>Distinguishability of quantum states</li>
-<li>The Bloch sphere
-<ul>
-<li>parametrisation</li>
-<li>action of quantum gates on the Bloch vector</li>
-</ul></li>
-<li>The definition of quantum entanglement (tensor product structure)</li>
-<li>The no-cloning theorem and quantum teleportation</li>
-<li>Quantum gates
-<ul>
-<li>phase gate</li>
-<li>Hadamard</li>
-<li>controlled-not</li>
-<li>SWAP</li>
-<li>the Hadamard-phase-Hadamard network</li>
-<li>phase “kick-back” induced by controlled-U</li>
-<li>phase “kick-back” induced by quantum Boolean function evaluation</li>
-</ul></li>
-<li>Quantum algorithms
-<ul>
-<li>Deutsch</li>
-<li>Bernstein-Vazirani</li>
-<li>Simon</li>
-</ul></li>
-<li>Bell’s theorem
-<ul>
-<li>Quantum correlations</li>
-<li>CHSH inequality</li>
-<li>density matrices</li>
-<li>partial trace</li>
-<li>statistical mixture of pure states,</li>
-</ul></li>
-<li>Born rule for density matrices</li>
-<li>Quantum entanglement in terms of density matrices</li>
-<li>Completely positive maps
-<ul>
-<li>Kraus operators</li>
-<li>the Choi matrix</li>
-<li>positive versus completely positive maps</li>
-<li>partial-transpose</li>
-</ul></li>
-<li>The simple model of decoherence</li>
-<li>Quantum error correction of bit-flip and phase-flip errors</li>
-</ul>
+<div id="hidden-variables" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> Hidden variables</h2>
+<p>The story of “hidden variables” dates back to 1935 and grew out of Einstein’s worries about the completeness of quantum theory.
+Consider, for example, a qubit.
+No quantum state of a qubit can be an eigenstate of two non-commuting operators, say <span class="math inline">\(\sigma_x\)</span> and <span class="math inline">\(\sigma_z\)</span>.
+If the qubit has a definite value of <span class="math inline">\(\sigma_x\)</span> its value of <span class="math inline">\(\sigma_z\)</span> must be indeterminate, and vice versa.
+If we take quantum theory to be a complete description of the world, then we must accept that it is impossible for both <span class="math inline">\(\sigma_x\)</span> and <span class="math inline">\(\sigma_z\)</span> to have definite values for the same qubit at the same time.
+Einstein felt very uncomfortable about all this.
+He argued that quantum theory is incomplete, and that observables <span class="math inline">\(\sigma_x\)</span> and <span class="math inline">\(\sigma_z\)</span> may both have simultaneous definite values, although we only have knowledge of one of them at a time.
+This is the hypothesis of <strong>hidden variables</strong>.
+In this view, the indeterminacy found in quantum theory is merely due to our ignorance of these “hidden variables” that are present in nature but not accounted for in the theory.
+Einstein came up with a number of pretty good arguments for the existence of “hidden variables”.
+Probably the most compelling one was described in his 1935 paper (known as the EPR paper), co-authored with his younger colleagues, Boris Podolsky and Nathan Rosen.
+It stood for almost three decades as the most significant challenge to the completeness of quantum theory.
+Then, in 1964, John Bell showed that the hidden variable hypothesis can be tested and refuted.</p>
+</div>
+<div id="chsh-inequality" class="section level2" number="7.3">
+<h2><span class="header-section-number">7.3</span> CHSH inequality</h2>
+<blockquote>
+<p>Upper bound on <strong>classical</strong> correlations.</p>
+</blockquote>
+<p>I will describe the most popular version of Bell’s argument, introduced in 1969 by John Clauser, Michael Horne, Abner Shimony, and Richard Holt (CHSH).
+Let us assume that the results of any measurement on any individual system are predetermined.
+Any probabilities we may use to describe the system merely reflect our ignorance of these hidden variables.</p>
+<p>Now, imagine the following scenario.
+Alice and Bob, two characters with a predilection for wacky experiments, are equipped with appropriate measuring devices and sent to two distant locations.
+Somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob.
+Let us label the two qubits in each pair as <span class="math inline">\(\mathcal{A}\)</span> and <span class="math inline">\(\mathcal{B}\)</span> respectively, and let us assume that both Alice and Bob have well defined values of their observables.
+We ask Alice and Bob to measure one of the two pre-agreed observables.
+For each incoming qubit, Alice and Bob choose randomly, and independently from each other, which particular observable will be measured.
+Alice chooses between <span class="math inline">\(A_1\)</span> and <span class="math inline">\(A_2\)</span>, and Bob between <span class="math inline">\(B_1\)</span> and <span class="math inline">\(B_2\)</span>.
+Each observable has value <span class="math inline">\(+1\)</span> or <span class="math inline">\(-1\)</span>, and so we are allowed to think about them as random variables <span class="math inline">\(A_k\)</span> and <span class="math inline">\(B_k\)</span>, for <span class="math inline">\(k=1,2\)</span>, which take values <span class="math inline">\(\pm 1\)</span>.
+Let us define a new random variable, the <strong>CHSH quantity</strong> <span class="math inline">\(S\)</span>, as
+<span class="math display">\[
+  S = A_1(B_1 - B_2) + A_2(B_1 + B_2).
+\]</span>
+It is easy to see that one of the terms <span class="math inline">\(B_1\pm B_2\)</span> must be equal to zero and the other to <span class="math inline">\(\pm 2\)</span>, hence <span class="math inline">\(S=\pm2\)</span>.
+The average value of <span class="math inline">\(S\)</span> must lie somewhere in-between, i.e.
+<span class="math display">\[
+  -2 &lt; \langle S\rangle &lt; 2.
+\]</span>
+That’s it!
+Such a simple and yet profound mathematical statement about correlations, which we refer simply to as the <strong>CHSH inequality</strong>.
+No quantum theory is involved because the CHSH inequality is not specific to quantum theory: it does not really matter what kind of physical process is behind the appearance of binary values of <span class="math inline">\(A_1\)</span>, <span class="math inline">\(A_2\)</span>, <span class="math inline">\(B_1\)</span>, and <span class="math inline">\(B_2\)</span>; it is a statement about correlations, and for all classical correlations we must have
+<span class="math display">\[
+  |
+    \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
+  | &lt; 2.
+\]</span></p>
+<p>There are essentially two two assumptions here:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Hidden variables.</strong> Observables have definite values</li>
+<li><strong>Locality.</strong> Alice’s choice of measurements (<span class="math inline">\(A_1\)</span> or <span class="math inline">\(A_2\)</span>) does not affect the outcomes of Bob’s measurement, and vice versa.</li>
+</ol>
+<p>I will not discuss the locality assumption here in detail but let me comment on it briefly.
+In the hidden variable world a, statement such as “if Bob were to measure <span class="math inline">\(B_1\)</span> then he would register <span class="math inline">\(+1\)</span>” must be either true or false <em>prior to Bob’s measurement</em>.
+Without the locality hypothesis, such a statement is ambiguous, since the value of <span class="math inline">\(B_1\)</span> could depend on whether <span class="math inline">\(A_1\)</span> or <span class="math inline">\(A_2\)</span> will be chosen by Alice.
+We do not want this for it implies the instantaneous communication.
+It means that, say, Alice by making a choice between <span class="math inline">\(A_1\)</span> and <span class="math inline">\(A_2\)</span>, affects Bob’s results.
+Bob can immediately “see” what Alice “does”.</p>
+</div>
+<div id="quantum-correlations-revisited" class="section level2" number="7.4">
+<h2><span class="header-section-number">7.4</span> Quantum correlations revisited</h2>
+<p>In quantum theory the observables <span class="math inline">\(A_1\)</span>, <span class="math inline">\(A_2\)</span>, <span class="math inline">\(B_1\)</span>, <span class="math inline">\(B_2\)</span> become <span class="math inline">\(2\times 2\)</span> Hermitian matrices with two eigenvalues <span class="math inline">\(\pm 1\)</span>, and <span class="math inline">\(\langle S\rangle\)</span> becomes the expected value of the <span class="math inline">\((4\times 4)\)</span> <strong>CHSH matrix</strong>
+<span class="math display">\[
+  S
+  = A_1\otimes(B_1-B_2) + A_2\otimes(B_1+B_2).
+\]</span></p>
+<p>We can now evaluate <span class="math inline">\(\langle S\rangle\)</span> using quantum theory.
+For example, if the two qubits are in the singlet state, then we know that
+<span class="math display">\[
+  \langle A\otimes B\rangle = -\vec{a}\cdot\vec{b}.
+\]</span>
+We choose vectors <span class="math inline">\(\vec{a}_1\)</span>, <span class="math inline">\(\vec{a}_2\)</span>, <span class="math inline">\(\vec{b}_1\)</span>, and <span class="math inline">\(\vec{b}_2\)</span> as shown in Figure <a href="chapter7.html#fig:choice-of-as-and-bs">7.1</a>, and then, with these choices,
+<span class="math display">\[
+\begin{gathered}
+  \langle A_1\otimes B_1\rangle
+  = \langle A_2\otimes B_1\rangle
+  = \langle A_2\otimes B_2\rangle
+  = \frac{1}{\sqrt 2}
+\\\langle A_1\otimes B_2\rangle
+   = -\frac{1}{\sqrt 2}.
+\end{gathered}
+\]</span></p>
+
+<div class="figure" style="text-align: center"><span id="fig:choice-of-as-and-bs"></span>
+<img src="quantum-info_files/figure-html/choice-of-as-and-bs-1.png" alt="The relative angle between the two perpendicular pairs is \(45^\circ\)." width="144" />
+<p class="caption">
+Figure 7.1: The relative angle between the two perpendicular pairs is <span class="math inline">\(45^\circ\)</span>.
+</p>
+</div>
+<p>Thus
+<span class="math display">\[
+  \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
+  = -2\sqrt{2},
+\]</span>
+which obviously violates CHSH inequality.</p>
+<p>To be clear, this violation has been observed in a number of painstakingly careful experiments.
+The early efforts were truly heroic, and the experiments had many layers of complexity.
+Today, however, such experiments are routine.</p>
+<div class="idea">
+<p><strong>Motto.</strong> The behaviour of entangled quantum systems cannot be explained by any local hidden variables.</p>
+</div>
+</div>
+<div id="tsirelsons-inequality" class="section level2" number="7.5">
+<h2><span class="header-section-number">7.5</span> Tsirelson’s inequality</h2>
+<blockquote>
+<p>Upper bound on <strong>quantum</strong> correlations.</p>
+</blockquote>
+<p>One may ask (and indeed one of you did ask) if <span class="math inline">\(|\langle S\rangle|= 2\sqrt{2}\)</span> is the maximal violation of the CHSH inequality, and yes, it is: quantum correlations cannot achieve any value of <span class="math inline">\(|\langle S\rangle|\)</span> larger than <span class="math inline">\(2\sqrt{2}\)</span>.
+This is because, for any state <span class="math inline">\(|\psi\rangle\)</span>, the expected value <span class="math inline">\(\langle S\rangle = \langle\psi|S|\psi\rangle\)</span> cannot exceed the largest eigenvalue of <span class="math inline">\(S\)</span>, and we can put an upper bound on the largest eigenvalues of <span class="math inline">\(S\)</span>.
+To start with, the largest eigenvalue (in absolute value) of a Hermitian matrix <span class="math inline">\(M\)</span>, denoted by <span class="math inline">\(\|M\|\)</span>, is a matrix norm, and it has the following properties:
+<span class="math display">\[
+\begin{aligned}
+  \|M\otimes N\|
+  &amp; = \|M\| \|N\|
+\\\|MN\|
+  &amp; \leq \|M\| \|N\|
+\\\|M+N\|
+  &amp; \leq \|M\| + \|N\|
+\end{aligned}
+\]</span>
+Given that <span class="math inline">\(\|A_i\|=1\)</span> and <span class="math inline">\(\|B_j\|=1\)</span> (<span class="math inline">\(i,j=1,2\)</span>), it is easy to show that <span class="math inline">\(\|S\| &lt; 4\)</span>.
+One can, however, derive a tighter bound.
+We can show (do it) that
+<span class="math display">\[
+  S^2
+  = 4(\operatorname{id}\otimes\operatorname{id}) + [A_1,A_2]\otimes[B_1,B_2].
+\]</span>
+The norm of each of the commutators (<span class="math inline">\(\|[A_1, A_2]\|\)</span> and <span class="math inline">\(\|[B_1, B_2]\|\)</span>) cannot exceed <span class="math inline">\(2\)</span>, and <span class="math inline">\(\|S^2\|=\|S\|^2\)</span>, which all together gives
+<span class="math display">\[
+  \|S\|
+  &lt; 2\sqrt{2}
+  \implies
+  |\langle S\rangle| &lt; 2\sqrt{2}.
+\]</span>
+This result is known as the <strong>Tsirelson inequality</strong>.</p>
 
 </div>
 </div>
-
-
-
+<div class="footnotes">
+<hr />
+<ol start="47">
+<li id="fn47"><p>There are other, more elementary, ways of deriving this result but here I want you to hone your skills. Now that you’ve learned about projectors, traces, and Pauli operators, why not put them to good use.<a href="chapter7.html#fnref47" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="chapter1.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="chapter6.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chapter8.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -319,7 +454,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/quantum-info/blob/master/index.Rmd",
+"link": "https://github.com/thosgood/quantum-info/blob/master/07-EPR-bell.Rmd",
 "text": null
 },
 "download": ["quantum-info.pdf"],

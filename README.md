@@ -40,6 +40,7 @@ For any problems or queries regarding this site or its contents, please get in t
 
 ## To-do
 
+1. replace links to sections with links named "Chapter 3", etc.
 1. links at the start of every chapter
     + "whole chapter in one page" (links to `tufte/`)
     + css styling
@@ -50,6 +51,7 @@ For any problems or queries regarding this site or its contents, please get in t
 1. make sure that you use **only** _either_ "chapter" _or_ "lecture"
 1. idea blocks in dark mode
 1. license and funding information along with bookdown link in `_includes/footer.html`
+1. check everything on mobile (mainly for overly wide maths/tables)
 1. **pdf output**
     + check for overlapping `\en`s
     + overlapping in the header (section/subsection names)
@@ -59,6 +61,5 @@ For any problems or queries regarding this site or its contents, please get in t
     + idea environment (and, later on, scenario and circuits too)
         * tables in ideas look... bad
 1. switch to katex
-  + gitbook _and_ tufte
 1. change the link prefixed to gitbook TOC when you have a domain
 1. search for "TODO"

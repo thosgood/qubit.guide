@@ -1,29 +1,392 @@
-# Linking Pauli matrices and the Bloch sphere
+# Logic and geometry with quantum gates {#chapter3}
 
-:::: {.comment data-latex=""}
-::: {.book-only}
-[Click here to view this entire chapter on one page.](../tufte/linking-pauli-matrices-and-the-bloch-sphere.html#linking-pauli-matrices-and-the-bloch-sphere)
-:::
-
-::: {.tufte-only}
-[Click here to view this chapter in the book.](../book/linking-pauli-matrices-and-the-bloch-sphere.html#linking-pauli-matrices-and-the-bloch-sphere)
-:::
-::::
-
+> Understanding the square root of $\texttt{NOT}$ via a physical implementation using symmetric beam-splitters.
 > More about the Bloch sphere, via the omnipresent Pauli matrices, which can be described in a more algebraic way.
 
-Let us further investigate the relations between single qubit unitary transformations, Pauli matrices, and rotations of regular three-dimensional vectors.
-The goal is to be able to visualise sequences of unitary operations on a qubit as sequences of rotations, and to see the action of some quantum circuits without getting engaged in lengthy calculations.
+Before moving on, we first study two of the subjects from [Chapter 2](#chapter2) in more depth: the square root of $\texttt{NOT}$, and the Bloch sphere.
 
-Matrices form a vector space: you can add them, and you can multiply them by a scalar.
-One possible choice of a basis in the vector space of $(2\times 2)$ matrices is the set of matrices $\{M_{00},M_{01},M_{10},M_{11}\}$, where the entries of $M_{ij}$ are all $0$ except for the $ij$-th entry, which is $1$.
-However, it turns out that there is a different basis which offers lots of insights into the structure of the general single-qubit unitary transformations, namely $\{\id,X,Y,Z\}$, i.e. the identity matrix and the three Pauli matrices.
+The goal for the latter is to be able to visualise sequences of unitary operations on a qubit as sequences of rotations, and to see the action of some quantum circuits without getting engaged in lengthy calculations.
+The goal for the former is to study a way of implementing this gate using physical experiments, and then studying a related construction (the so-called **Mach--Zehnder interferometer**).
+
+
+
+
+
+## Physics against logic, via beamsplitters
+
+A symmetric beam-splitter is a cube of glass which reflects half the light that impinges upon it, while allowing the remaining half to pass through unaffected.
+For our purposes it can be viewed as a device which has two input and two output ports which we label as $\ket{0}$ and $\ket{1}$, as in Figure \@ref(fig:beam-splitter).
+
+```{r beam-splitter,engine='tikz',fig.align='center',fig.width=2,fig.cap='A beam-splitter.'}
+\usetikzlibrary{arrows.meta}
+\tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
+\tikzset{process/.style={thick,-{Latex},shorten >=0.1cm,shorten <=0.1cm}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \path (0,0) pic {beamsplitter};
+  \draw [process] (-1,0) to (1,0);
+  \draw [process] (0,-1) to (0,1);
+  \node at (-1.2,0) {$\ket{0}$};
+  \node at (0,-1.2) {$\ket{1}$};
+  \node at (1.2,0) {$\ket{0}$};
+  \node at (0,1.2) {$\ket{1}$};
+\end{tikzpicture}
+```
+
+When we aim a single photon at such a beam-splitter using one of the input ports, we notice that the photon doesn't split in two: we can place photo-detectors wherever we like in the apparatus, fire in a photon, and verify that if any of the photo-detectors registers a hit, none of the others do.
+In particular, if we place a photo-detector behind the beam-splitter in each of the two possible exit beams, the photon is detected with equal probability at either detector, no matter whether the photon was initially fired from input port $\ket{0}$ or $\ket{1}$.
+
+It may seem obvious that, at the very least, the photon is _either_ in the transmitted beam $\ket{0}$ _or_ in the reflected beam $\ket{1}$ during any one run of this experiment.
+Thus we may be tempted to think of the beam-splitter as a random binary switch which, with equal probability, transforms any binary input into one of the two possible outputs.
+However, that is not necessarily the case.
+Let us introduce a second beam-splitter and place two normal mirrors so that both paths intersect at the second beam-splitter, resulting in something resembling the Mach-Zehnder interferometer (see \@ref(fig:two-beam-splitters)).
+
+```{r two-beam-splitters,engine='tikz',fig.align='center',fig.width=5,fig.cap='Two beam-splitters with mirrors, so that a photon travels through both.'}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
+\tikzset{process/.style={thick,-{Latex},shorten >=0.1cm,shorten <=0.1cm}}
+\tikzset{mirror/.pic={\draw [line width=2pt] (-0.3,-0.3) -- (0.3,0.3);}}
+\tikzset{middlearrow/.style 2 args={decoration={markings,mark=at position #2 with {\arrow{#1}}},postaction=decorate}}
+\tikzset{pics/measure left/.style args={#1}{code={\draw [fill=gray!15] (0,-0.5) arc (-90:90:0.5cm) -- cycle;\node [anchor=mid] at (0.22,0) {#1};}}}
+\tikzset{pics/measure top/.style args={#1}{code={\draw [fill=gray!15] (0.5,0) arc (0:180:0.5cm) -- cycle;\node [anchor=mid] at (0,0.22) {#1};}}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \draw (0,0) pic {beamsplitter};
+  \draw (4,3) pic {beamsplitter};
+  \draw (0,3) pic {mirror};
+  \draw (4,0) pic {mirror};
+  \draw (5.2,3) pic {measure left={1}};
+  \draw (4,4.2) pic {measure top={0}};
+  \draw [thick,middlearrow={Latex}{0.6}] (0,-1.1) to (0,3);
+  \draw [thick,-Latex,shorten >=0.1cm] (0,3) to (5.2,3);
+  \draw [thick,middlearrow={Latex}{0.5}] (-1.1,0) to (4,0);
+  \draw [thick,-Latex,shorten >=0.1cm] (4,0) to (4,4.2);
+  \node at (-1.5,0) {$\ket{0}$};
+  \node at (0,-1.5) {$\ket{1}$};
+\end{tikzpicture}
+```
+
+Now, the axiom of additivity in probability theory says that whenever something can happen in several alternative ways we add probabilities for each way considered separately.
+We might argue that a photon fired into the input port $\ket{0}$ can reach the detector $0$ in two _mutually exclusive_ ways: either by two consecutive reflections or by two consecutive transmissions.
+Each reflection happens with probability $1/2$ and each transmission happens with probability $1/2$ thus the total probability of reaching detector 0 is a sum of the probability of the two consecutive reflections ($1/2\times 1/2 = 1/4$) and the probability of the two consecutive transmissions ($1/2\times 1/2 = 1/4$) which gives probability $1/2$.
+This is summarised in \@ref(fig:classical-guess-double-beam-splitter), and makes perfect sense --- a random switch followed by a random switch should give nothing else but a random switch.
+However, if we set up such an experiment, that is not what happens!
+
+::: {.idea data-latex=""}
+  There is no reason why probability theory or any other a priori mathematical construct should make any meaningful statements about outcomes of physical experiments.
+:::
+
+```{r classical-guess-double-beam-splitter,engine='tikz',fig.cap='The two possible classical scenarios. Note that this is **not** what actually happens in the real physical world!'}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
+\tikzset{process/.style={thick,-{Latex},shorten >=0.1cm,shorten <=0.1cm}}
+\tikzset{mirror/.pic={\draw [line width=2pt] (-0.3,-0.3) -- (0.3,0.3);}}
+\tikzset{middlearrow/.style 2 args={decoration={markings,mark=at position #2 with {\arrow{#1}}},postaction=decorate}}
+\tikzset{pics/measure left/.style args={#1}{code={\draw [fill=gray!15] (0,-0.5) arc (-90:90:0.5cm) -- cycle;\node [anchor=mid] at (0.22,0) {#1};}}}
+\tikzset{pics/measure top/.style args={#1}{code={\draw [fill=gray!15] (0.5,0) arc (0:180:0.5cm) -- cycle;\node [anchor=mid] at (0,0.22) {#1};}}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[yscale=0.7]
+  \begin{scope}
+    \draw (0,0) pic {beamsplitter};
+    \draw (4,3) pic {beamsplitter};
+    \draw (0,3) pic {mirror};
+    \draw (4,0) pic {mirror};
+    \draw (5.2,3) pic {measure left={1}};
+    \draw (4,4.2) pic {measure top={0}};
+    \draw [thick,middlearrow={Latex}{0.5}] (-1.1,0) to (4,0);
+    \draw [thick,-Latex,shorten >=0.1cm] (4,0) to (4,4.2);
+    \draw [thick,gray!70,dashed] (0,0) to (0,3) to (5,3);
+    \node at (-1.5,0) {$\ket{0}$};
+    \node at (2.5,-1.5) {two consecutive transmissions:};
+    \node at (2.5,-2.5) {probability amplitude = $\frac{i}{\sqrt2}\frac{i}{\sqrt2}=-\frac12$};
+  \end{scope}
+  \begin{scope}[shift={(8,0)}]
+    \draw (0,0) pic {beamsplitter};
+    \draw (4,3) pic {beamsplitter};
+    \draw (0,3) pic {mirror};
+    \draw (4,0) pic {mirror};
+    \draw (5.2,3) pic {measure left={1}};
+    \draw (4,4.2) pic {measure top={0}};
+    \draw [thick,middlearrow={Latex}{0.5}] (-1.1,0) to (0,0);
+    \draw [thick,middlearrow={Latex}{0.5}] (0,0) to (0,3);
+    \draw [thick,middlearrow={Latex}{0.5}] (0,3) to (4,3);
+    \draw [thick,-Latex,shorten >=0.1cm] (4,3) to (4,4.2);
+    \draw [thick,gray!70,dashed] (0,0) to (0,0) to (4,0) to (4,3) to (5,3);
+    \node at (-1.5,0) {$\ket{0}$};
+    \node at (2.5,-1.5) {two consecutive reflections:};
+    \node at (2.5,-2.5) {probability amplitude = $\frac{1}{\sqrt2}\frac{1}{\sqrt2}=\frac12$};
+  \end{scope}
+\end{tikzpicture}
+```
+
+In experimental reality, when the optical paths between the two beam-splitters are the same, the photon fired from input port $\ket{0}$ _always_ strikes detector 1 and _never_ detector 0 (and the photon fired from input port $\ket{1}$ _always_ strikes detector 0 and _never_ detector 1).
+Thus a beam-splitter acts as the square root of $\texttt{NOT}$ gate.
+
+The action of the beam-splitter --- in fact, the action of any quantum device --- can be described by tabulating the amplitudes of transitions between its input and output ports.^[Note that gate $B$ is not the same square root of $\texttt{NOT}$ as the one described in the first diagram in this section. There are infinitely many ways of implementing this "impossible" logical operation.]
+\begin{equation}
+  B = 
+  \begin{bmatrix}
+  B_{00} & B_{01}\\
+  B_{10} & B_{11}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  \frac{1}{\sqrt 2} & \frac{i}{\sqrt 2}\\
+  \frac{i}{\sqrt 2} & \frac{1}{\sqrt 2}
+  \end{bmatrix}.
+(\#eq:beam-splitter)
+\end{equation}
+The matrix element $B_{lk}$, where $k,l=0,1$, represents the amplitude of transition from input  $\ket{k}$ to output  $\ket{l}$ (watch the order of indices).
+Each reflection (entries $B_{01}$ and $B_{10}$) happens with amplitude $i/\sqrt{2}$ and each transmission  (entries $B_{00}$ and $B_{11}$) happens with amplitude $1/\sqrt{2}$.
+Thus the total amplitude that a photon fired from input port $\ket{0}$ will reach detector $0$ is the sum of the amplitude of the two consecutive reflections ($i/\sqrt{2}\times i/{\sqrt 2} = -1/2$) and the amplitude of the two consecutive transmissions ($1/{\sqrt 2}\times 1/{\sqrt 2} = 1/2$) which gives the total amplitude $0$.
+The resulting probability is then zero.
+Unlike probabilities, amplitudes can cancel out each other out.
+We can now go on and calculate the amplitude that the photon will reach detector $1$.
+In this case we will get $i$, which gives probability $1$.
+We can then switch to input $\ket{1}$ and repeat our calculations.
+All possible paths and associated amplitudes are shown in \@ref(fig:paths-and-amplitudes-two-beam-splitters).
+
+```{r paths-and-amplitudes-two-beam-splitters,engine='tikz',fig.align='center',fig.cap='All possible transitions and their amplitudes when we compose two beam-splitters $B$.'}
+\tikzset{centrelabel/.style={pos=0.5,fill=white}}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[xscale=3,yscale=2]
+  \node [dot,label=left:{$\ket{0}$}] (i0) at (0,1) {};
+  \node [dot,label=left:{$\ket{1}$}] (i1) at (0,0) {};
+  \node [dot] (m0) at (1,1) {};
+  \node [dot] (m1) at (1,0) {};
+  \node [dot,label=right:{$\ket{0}$}] (o0) at (2,1) {};
+  \node [dot,label=right:{$\ket{1}$}] (o1) at (2,0) {};
+  \draw [thick] (i0) to node [centrelabel] {$\frac{1}{\sqrt2}$} (1,1);
+  \draw [thick] (i0) to node [pos=0.25,fill=white] {$\frac{i}{\sqrt2}$} (1,0);
+  \draw [thick] (i1) to node [pos=0.25,fill=white] {$\frac{i}{\sqrt2}$} (1,1);
+  \draw [thick] (i1) to node [centrelabel] {$\frac{1}{\sqrt2}$} (1,0);
+  \draw [thick] (m0) to node [centrelabel] {$\frac{1}{\sqrt2}$} (o0);
+  \draw [thick] (m0) to node [pos=0.25,fill=white] {$\frac{i}{\sqrt2}$} (o1);
+  \draw [thick] (m1) to node [pos=0.25,fill=white] {$\frac{i}{\sqrt2}$} (o0);
+  \draw [thick] (m1) to node [centrelabel] {$\frac{1}{\sqrt2}$} (o1);
+  %
+  \node at (0.5,-0.45) {$B$};
+  \node at (1.5,-0.45) {$B$};
+\end{tikzpicture}
+```
+
+However, instead of going through all the paths in this diagram and linking specific inputs to specific outputs, we can simply multiply the transition matrices:
+$$
+  BB =
+  \begin{bmatrix}
+    \frac{1}{\sqrt 2} & \frac{i}{\sqrt 2}\\
+    \frac{i}{\sqrt 2} & \frac{1}{\sqrt 2}
+  \end{bmatrix}
+  \begin{bmatrix}
+    \frac{1}{\sqrt 2} & \frac{i}{\sqrt 2}\\
+    \frac{i}{\sqrt 2} & \frac{1}{\sqrt 2}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  0 & i\\
+  i & 0
+  \end{bmatrix}
+  = iX
+$$
+where $X=\begin{bmatrix}0&1\\1&0\end{bmatrix}$ is the $\texttt{NOT}$ operator.
+
+Recalling [The square root of NOT], we see that beam-splitters give a physical way of constructing the square root of $\texttt{NOT}$.
+
+::: {.idea data-latex=""}
+  | $\texttt{NOT}$ | $\sqrt{\texttt{NOT}}$ |
+  | :------------: | :-------------------: |
+  | $X = \begin{bmatrix}0&1\\1&0\end{bmatrix}$ | $B = \frac{1}{\sqrt2}\begin{bmatrix}1&i\\i&1\end{bmatrix}$ |
+  | bit flip | beam-splitter |
+:::
+
+
+
+
+
+## Quantum interference revisited (still about beam-splitters)
+
+One of the simplest quantum devices in which quantum interference can be controlled is a **Mach--Zehnder interferometer** --- see Figure \@ref(fig:mach-zehnder).
+
+(ref:mach-zehnder-caption) The [Mach-Zehnder interferometer](https://en.wikipedia.org/wiki/Mach-Zehnder_interferometer), with the input photon represented by the coloured dot. This experimental set-up is named after the physicists Ludwig Mach and Ludwig Zehnder, who proposed it back in 1890s.
+
+```{r mach-zehnder,engine='tikz',fig.align='center',fig.cap='(ref:mach-zehnder-caption)'}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\tikzset{smallblob/.style args={#1}{circle,draw,fill={#1},minimum size=6pt,inner sep=0pt,thin}}
+\tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
+\tikzset{mirror/.pic={\draw [line width=2pt] (-0.3,-0.3) -- (0.3,0.3);}}
+\tikzset{pics/measure left/.style args={#1}{code={\draw [fill=gray!15] (0,-0.5) arc (-90:90:0.5cm) -- cycle;\node [anchor=mid] at (0.22,0) {#1};}}}
+\tikzset{pics/measure top/.style args={#1}{code={\draw [fill=gray!15] (0.5,0) arc (0:180:0.5cm) -- cycle;\node [anchor=mid] at (0,0.22) {#1};}}}
+\tikzset{middlearrow/.style 2 args={decoration={markings,mark=at position #2 with {\arrow{#1}}},postaction=decorate}}
+\tikzset{pics/phase shift/.style args={#1}{code={\draw [thick,fill=gray=40] (-0.1,-0.5) rectangle (0.1,0.5);\node [anchor=north] at (0,-0.5) {#1};}}}
+\newcommand{\ket}[1]{|#1\rangle}
+\definecolor{primary}{RGB}{177,98,78}
+\begin{tikzpicture}
+  \path (0,0) pic {beamsplitter};
+  \path (4,3) pic {beamsplitter};
+  \draw [thick,middlearrow={Latex}{0.6}] (0,-1.1) to (0,3) pic {mirror};
+  \draw [thick,-Latex,shorten >=0.1cm] (0,3) to (5.1,3) pic {measure left={1}};
+  \draw [thick,middlearrow={Latex}{0.5}] (-1.1,0) to (4,0) pic {mirror};
+  \draw [thick,-Latex,shorten >=0.1cm] (4,0) to (4,4.1) pic {measure top={0}};
+  \draw (2,0) pic {phase shift={$\varphi_0$}};
+  \draw (2,3) pic {phase shift={$\varphi_1$}};
+  \node [smallblob=primary] at (-1.4,0) {};
+  \node at (-2.3,0) {Input $\ket{0}$};
+  \node at (0,-1.5) {Input $\ket{1}$};
+  \node [fill=white] at (0,2) {Beam 1};
+  \node [fill=white] at (4,1) {Beam 0};
+\end{tikzpicture}
+```
+
+It consists of two beam-splitters (the square boxes, bottom left and top right) and two slivers of glass of different thickness which are inserted into each of the optical paths connecting the two beam-splitters.
+The slivers are usually referred to as "phase shifters" and their thicknesses, $\varphi_0$ and $\varphi_1$, are measured in units of the photon's wavelength multiplied by $2\pi$.
+The two inputs ports of the interferometer are labelled as $\ket{0}$ and $\ket{1}$, and each of the two output ports, also labelled as $0$ and $1$, terminates in a photodetector.^[The two diagonal objects in the top-left and bottom-right corners of \@ref(fig:mach-zehnder) are simply mirrors to make the two possible paths meet at the second beam-splitter.]
+
+A photon (the coloured dot in the figure) impinges on the first beam-splitter from one of the two input ports (here input 1) and begins its journey towards one of the two photodetectors.
+Let^[We will often use $i$ as an index even though it is also used for the imaginary unit. Hopefully, no confusion will arise for it should be clear from the context which one is which.] $U_{ij}$ denote the probability amplitude that the photon initially in input port $j=0,1$ ends up in detector $i=0,1$.
+At each of the two beam-splitters the photon is transmitted with the probability amplitude $\sqrt{T}$ and reflected with the probability amplitude $i\sqrt{R}$, with $R+T=1$, and the two phase shifters modify the amplitudes by phase factors $e^{i\varphi_0}$ and $e^{i\varphi_1}$, respectively.
+In quantum theory we almost always start with the amplitudes, and once we have a full expression for the amplitude of a given outcome we square its absolute value to get the corresponding probability.
+For example, let us calculate  $U_{00}$.
+
+We notice that there are two alternative ways for the photon in the input port $0$ to end up in the output port $0$.
+It can take the lower path, through the phase shifter $\varphi_0$, or the upper path, through the phase shifter $\varphi_1$.
+The lower path implies two consecutive transmissions at the beam-splitters and the phase factor $e^{i\varphi_0}$, whereas the upper path implies two consecutive reflections and the phase factor $e^{i\varphi_1}$.
+Once the photon ends in the output port $0$ there is no way of knowing which path was taken, thus we add the amplitudes pertaining to each path.
+The resulting amplitude is
+$$
+  U_{00}
+  = \sqrt{T} e^{i\varphi_0} \sqrt{T}
+  + i\sqrt{R} e^{i\varphi_1} i \sqrt{R},
+$$
+and the corresponding probability $P_{00}=|U_{00}|^2$ reads
+$$
+  \begin{aligned}
+    P_{00}
+    & = \left\vert
+          \sqrt{T}e^{i\varphi_0}\sqrt{T} + i\sqrt{R}e^{i\varphi_1}i\sqrt{R}
+        \right\vert^2
+      = \left\vert
+          Te^{i\varphi_0} - Re^{i\varphi_1}
+        \right\vert^2
+  \\& = T^2 + R^2
+        - 2TR\cos(\varphi_1-\varphi_0).
+  \end{aligned}
+$$
+
+The "classical" part of this expression, $T^2+R^2$, basically says that the photon undergoes either two consecutive transmissions with probability $T^2$, or two consecutive reflections with probability $R^2$.
+The probability of being transmitted through any phase shifter is always $1$, hence the phase shifters play no role in the classical description of this process.
+But the classical description is not correct, as the experiments show, whence the interference term $2TR\cos(\varphi_1-\varphi_0)$ in which the phase shifters play the essential role.
+Depending on the _relative_ phase $\varphi=\varphi_1-\varphi_0$ the probability that the detector $0$ "clicks" can vary from $(T-R)^2$, for $\varphi=0$, to $1$, for $\varphi=\pi$.
+
+```{r,engine.opts=list(template="tikz2pdf.tex"),engine='tikz',fig.width=4}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin=0,xmax=5,
+    xlabel=relative phase,
+    ylabel=$\Pr(\mbox{detector 0 clicks})$,
+    ymin=0,ymax=1.1,
+    axis lines=middle,
+    xtick={0},
+    xticklabels={$0$},
+    ytick={0.16,0.58,1},
+    yticklabels={$(T-R)^2$,$T^2+R^2$,1},very thick,
+    xlabel style={font=\Large, anchor=north,at={(axis description cs:0.8,0)}},
+    ylabel style={font=\Large, anchor=south,at={(axis description cs:0.15,1.05)}},
+    yticklabel style={font=\Large}
+  ]
+    \addplot[domain=0:1.6*pi,samples=200,secondary,line width=2pt]{0.58-0.42*cos(deg(3*x))};
+    \addplot[domain=0:1.6*pi,samples=200,gray,dashed]{0.16};
+    \addplot[domain=0:1.6*pi,samples=200,gray,dashed]{1};
+    \addplot[domain=0:1.6*pi,samples=200,gray,dashed]{0.58};
+  \end{axis}
+\end{tikzpicture}
+```
+
+If we do not care about the experimental details, we can represent the action of the Mach--Zehnder interferometer in terms of a diagram: see \@ref(fig:mach-zehnder-diagram).
+
+```{r mach-zehnder-diagram,engine='tikz',fig.align='center',fig.cap='The Mach-Zehnder interferometer represented as an abstract diagram.'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[xscale=1.8]
+  \draw [ultra thick,dashed,primary] (0.6,2.5) rectangle (2.3,-0.5);
+  \draw [ultra thick,dashed,secondary] (2.5,2.5) rectangle (3.4,-0.5);
+  \draw [ultra thick,dashed,primary] (3.6,2.5) rectangle (5.3,-0.5);
+  \node at (1.5,-1) {first beamsplitter};
+  \node at (3,-1) {phase};
+  \node at (4.5,-1) {second beamsplitter};
+  \node [label=left:{$\ket{0}$}] (input1) at (0.2,2) {};
+  \node [label=left:{$\ket{1}$}] (input2) at (0.2,0) {};
+  \node [label=right:{$\ket{0}$}] (output1) at (5.7,2) {};
+  \node [label=right:{$\ket{1}$}] (output2) at (5.7,0) {};
+  \draw [thick] (input1) to node [pos=0.5,fill=white] {$e^{i\varphi_0}$} (output1);
+  \draw [thick] (input2) to node [pos=0.5,fill=white] {$e^{i\varphi_1}$} (output2);
+  \foreach \x in {1,2,4,5}
+    \foreach \y in {0,2}
+      \node [dot] (n\x\y) at (\x,\y) {};
+  \draw [thick] (n12) to node [pos=0.25,fill=white] {\small$i\sqrt{R}$} (n20);
+  \draw [thick] (n10) to node [pos=0.25,fill=white] {\small$i\sqrt{R}$} (n22);
+  \draw [thick] (n42) to node [pos=0.25,fill=white] {\small$i\sqrt{R}$} (n50);
+  \draw [thick] (n40) to node [pos=0.25,fill=white] {\small$i\sqrt{R}$} (n52);
+  \node [fill=white] at (1.6,2) {\small$\sqrt{T}$};
+  \node [fill=white] at (4.6,2) {\small$\sqrt{T}$};
+  \node [fill=white] at (1.6,0) {\small$\sqrt{T}$};
+  \node [fill=white] at (4.6,0) {\small$\sqrt{T}$};
+\end{tikzpicture}
+```
+
+Here we can follow, from left to right, the multiple different paths that a photon can take in between specific input and output ports.
+The amplitude along any given path is just the product of the amplitudes pertaining to the path segments (Rule 1), while the overall amplitude is the sum of the amplitudes for the many different paths (Rule 2). You can, for example, see that the probability amplitude $U_{10}$ is given by
+$$
+  U_{10}
+  = \sqrt{T}e^{i\varphi_0}i\sqrt{R} + i\sqrt{R}e^{i\varphi_1}\sqrt{T}
+$$
+and the corresponding probability is
+$$
+  \begin{aligned}
+    P_{10}
+    & = \left\vert
+        \sqrt{T}e^{i\varphi_0}i\sqrt{R} + i\sqrt{R}e^{i\varphi_1}\sqrt{T}
+      \right\vert^2
+  \\& = 2RT + 2RT\cos(\varphi_1-\varphi_0).
+  \end{aligned}
+$$
+Again, the first term is of "classical" origin and represents probabilities corresponding to each path: one reflection followed by one transmission plus one transmission followed by one reflection, that is, $RT+TR=2RT$.
+The second term is the interference term.
+Clearly, the photon entering port $1$ will end up in one of the two detectors, hence,
+$$
+  P_{00} + P_{10}
+  = R^2 + 2RT + T^2
+  = (T+R)^2
+  = 1.
+$$
+The action of the interferometer is thus fully described^[In general, any isolated quantum device, including a quantum computer, can be described by a matrix of probability amplitudes $U_{ij}$ that input $j$ generates output $i$. Watch the order of indices.] by the four probability amplitudes $U_{ij}$ ($i,j=0,1$).
+The most popular instance of a Mach--Zehnder interferometer involves only symmetric beam-splitters $(R=T=\frac12)$ and is fully described by the matrix
+$$
+  U =
+  \begin{bmatrix}
+    -\sin\varphi/2 & \cos\varphi/2
+  \\\cos\varphi/2 & \sin\varphi/2
+  \end{bmatrix}
+$$
+where $\varphi=\varphi_1-\varphi_0$.
+In fact, when you do all the calculations you obtain $ie^{i\frac{\varphi_0+\varphi_1}{2}}U$ rather than $U$, but the global phase factor $ie^{i\frac{\varphi_0+\varphi_1}{2}}$ is common to all the amplitudes in the matrix and as such it does not contribute to the resulting probabilities.^[Why is this? Hint: think about the eigenvalues of a matrix $A$ and of the matrix $\mu A$, where $\mu$ is a complex number with $|\mu|=1$.]
+
 
 
 
 
 
 ## The Pauli matrices, algebraically
+
+Matrices form a vector space: you can add them, and you can multiply them by a scalar.
+One possible choice of a basis in the vector space of $(2\times 2)$ matrices is the set of matrices $\{M_{00},M_{01},M_{10},M_{11}\}$, where the entries of $M_{ij}$ are all $0$ except for the $ij$-th entry, which is $1$ (e.g. $M_{01}=\begin{bmatrix}0&1\\0&0\end{bmatrix}$).
+However, it turns out that there is a different basis which offers lots of insights into the structure of the general single-qubit unitary transformations, namely $\{\id,X,Y,Z\}$, i.e. the identity matrix and the three Pauli matrices.
 
 ::: {.idea data-latex=""}
   | $\id$ | $X=\sigma_x$ | $Y=\sigma_y$ | $Z=\sigma_z$ |
@@ -183,7 +546,7 @@ Writing unitary matrices in the form $e^{iA}$ is analogous to writing complex nu
 
 
 
-## Putting the pieces together
+## Unitaries as rotations
 
 Here comes a remarkable connection between two-dimensional unitary matrices and ordinary three-dimensional rotations.
 
@@ -195,23 +558,22 @@ The unitary $U = e^{i\theta \vec{n}\cdot\vec{\sigma}}$ represents a clockwise ro
 
 For example,
 $$
-  \begin{gathered}
+  \begin{aligned}
     e^{i\theta\sigma_x}
-    =
+    &=
     \begin{bmatrix}
       \cos\theta & i\sin\theta
     \\i\sin\theta & \cos\theta
     \end{bmatrix}
-    \qquad
-    e^{i\theta\sigma_y}
-    =
+  \\e^{i\theta\sigma_y}
+    &=
     \begin{bmatrix}
       \cos\theta & \sin\theta
     \\-\sin\theta & \cos\theta
     \end{bmatrix}
   \\e^{i\theta\sigma_z}
-    = \diag{e^{i\theta}}{e^{-i\theta}}
-  \end{gathered}
+    &= \diag{e^{i\theta}}{e^{-i\theta}}
+  \end{aligned}
 $$
 represent rotations by $2\theta$ about the $x$-, $y$- and $z$-axis, respectively.
 
@@ -313,24 +675,88 @@ $$
 $$
 To the first order in $\alpha$, this gives
 $$
-  \begin{gathered}
-    \vec{s'} \cdot\vec{\sigma}
-    = \Big(
-      \vec{s} + 2\alpha (\vec{n}\times\vec{s})
-    \Big)
-    \cdot \vec{\sigma}
-  \\\mbox{i.e.}
-    \quad
-    \vec{s'} =
-    \vec{s} + 2\alpha(\vec{n}\times\vec{s})
-  \end{gathered}
+  \vec{s'} \cdot\vec{\sigma}
+  = \Big(
+    \vec{s} + 2\alpha (\vec{n}\times\vec{s})
+  \Big)
+  \cdot \vec{\sigma}
+$$
+that is,
+$$
+  \vec{s'} =
+  \vec{s} + 2\alpha(\vec{n}\times\vec{s})
 $$
 which we recognise as a good old textbook formula for an infinitesimal clockwise rotation of $\vec{s}$ about the axis $\vec{n}$ through the angle $2\alpha$.
 
 
 ### Exercises
 
+_In some of these exercises, we continue to study the $(3\times 3)$ real-valued matrix $R$ described above._
+
 1. Show that $\tr \sigma_x\sigma_y\sigma_z = 2i$.
+2. Consider
+    $$
+      U(\vec e_k\cdot\sigma_k)U^\dagger=U\sigma_kU^\dagger={\vec f_k}\cdot\vec\sigma.
+    $$
+    So $U$ maps the unit vectors $\vec e_x$, $\vec e_y$, and $\vec z_z$, (along the $x$-, $y$-, and $z$-axis, respectively), to new unit vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$.
+    We already know that, in Euclidean space, this transformation is described by a $(3\times 3)$ orthogonal matrix $R$.
+    How are the three vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$ related to the entries in matrix $R$?
+3. Show that
+    $$
+      \begin{aligned}
+        \tr \sigma_x\sigma_y\sigma_z
+        &= \tr({\vec f_x}\cdot\vec\sigma)( {\vec f_y}\cdot\vec\sigma)({\vec f_z}\cdot\vec\sigma)
+      \\&= 2i\det R
+      \end{aligned}
+    $$
+    (which implies that $\det R=1$).
+4. Make use of the orthonormality of the Pauli basis and Equation \@ref(eq:u2so3map) to show that the elements of the matrix $R$ can be expressed in terms of those of the matrix $U$, in the form
+    $$
+      R_{ij}=\frac12\tr\left(\sigma_i U\sigma_j U^\dagger\right).
+    $$
+    Here, $i$ and $j$ take values in $\{1,2,3\}$, and $\sigma_1\equiv\sigma_x$, $\sigma_2\equiv\sigma_y$, $\sigma_3\equiv\sigma_z$.
+5. Show that the phase gate $P_\varphi =\diag{1}{e^{i\varphi}}$ represents an anticlockwise rotation about the $z$-axis through the angle $\varphi$.
+    Note that it might be helpful to start with the $\mathrm{SU}(2)$ version of the phase gate:
+    $$
+      \begin{aligned}
+        P_\varphi
+        &= e^{-i\frac{\varphi}{2}\sigma_z}
+      \\&= \begin{bmatrix}
+          e^{-i \frac{\varphi}{2}}& 0
+        \\0 & e^{i \frac{\varphi}{2}}
+        \end{bmatrix}
+        \quad\longrightarrow\quad
+        R
+      \\&= \begin{bmatrix}
+          \cos \varphi & -\sin \varphi & 0
+        \\\sin \varphi & \cos \varphi & 0
+        \\0 & 0 & 1
+        \end{bmatrix}
+      \end{aligned}
+    $$
+6. Express the Hadamard gate $H$ in terms of $\vec{n}\cdot\vec{\sigma}$, and demonstrate that
+    $$
+      \begin{aligned}
+        HZH&=X
+      \\HXH&=Z
+      \\HYH&=-Y.
+      \end{aligned}
+    $$
+7. Show that the Hadamard gate $H$ turns rotations about the $x$-axis into rotations about the $z$-axis, and vice versa.
+    That is,
+    $$
+      \begin{aligned}
+        H \left(
+          e^{-i\frac{\varphi}{2}Z}
+        \right) H
+        &= e^{-i\frac{\varphi}{2}X}
+        \qquad \mbox{and} \qquad
+        H \left(
+          e^{-i\frac{\varphi}{2}X}
+        \right) H
+      \\&= e^{-i\frac{\varphi}{2}Z}.
+      \end{aligned}
+    $$
 
 
 
@@ -338,8 +764,166 @@ which we recognise as a good old textbook formula for an infinitesimal clockwise
 
 ## Universality, again
 
+Although this may all seem tediously abstract, it is surprisingly useful.
+Take another look at the single qubit interference circuit
+
+```{r,engine='tikz',fig.width=3,fig.align='center'}
+\tikzset{operator/.style={draw,fill=white}}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\begin{tikzpicture}[xscale=2]
+  \draw (-1,0) to node [operator] {$H$} (0,0) to node [operator] {$H$} (1,0);
+  \node [dot,label=above:{$\varphi$}] at (0,0) {};
+\end{tikzpicture}
+```
+
+and the corresponding sequence of unitary operations
+$$
+  \begin{aligned}
+    H \left(
+      e^{-i\frac{\varphi}{2}Z}
+    \right) H
+    &= e^{-i\frac{\varphi}{2}X}
+  \\&= \begin{bmatrix}
+      \cos\varphi/2 & -i\sin\varphi/2
+    \\-i\sin\varphi/2 & \cos\varphi/2
+    \end{bmatrix}
+  \end{aligned}
+$$
+
+::: {.idea}
+  The single qubit interference circuit has a simple geometrical meaning: it shows how a rotation about the $z$-axis, induced by the phase gate $P_\varphi$, is turned, by the two Hadamard gates, into a rotation about the $x$-axis.
+:::
+
+Now, take a look at this circuit:
+
+```{r,engine='tikz',fig.width=4,fig.align='center'}
+\tikzset{operator/.style={draw,fill=white}}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\begin{tikzpicture}[xscale=2]
+  \draw [fill=gray!40,rounded corners=2mm] (-0.75,-0.75) rectangle (0.75,0.75);
+  \node [dot,label=above:{$\alpha$}] (phase1) at (-1,0) {};
+  \node [dot,label=above:{$\varphi$}] (phase2) at (0,0) {};
+  \node [dot,label=above:{$\beta$}] (phase3) at (1,0) {};
+  \draw (-1.5,0) to (-1,0);
+  \draw (1,0) to (1.5,0);
+  \draw (phase1) to node [operator] {$H$} (phase2);
+  \draw (phase2) to node [operator] {$H$} (phase3);
+\end{tikzpicture}
+```
+
+What does it represent?
+The central part is a rotation by $\varphi$ about the $x$-axis, but is it is sandwiched between two rotations about the $z$-axis.
+Now I have to appeal to your knowledge of classical mechanics.
+You may recall that any rotation in the Euclidean space can be performed as a sequence of three rotations: one about $z$-axis, one about $x$-axis, and one more about the $z$-axis.
+In this context, this implies that any unitary $U$, up to a global phase factor, can be written as
+$$
+  \begin{aligned}
+    U(\alpha, \beta, \varphi)
+    &= e^{-i\frac{\beta}{2}Z} e^{-i\frac{\varphi}{2}X} e^{-i\frac{\alpha}{2}Z}
+  \\&= \begin{bmatrix}
+      e^{-i\left(\frac{\alpha+\beta}{2}\right)}\cos\frac{\varphi}{2}
+      & ie^{i\left(\frac{\alpha-\beta}{2}\right)}\sin\frac\varphi{2}
+    \\ie^{-i\left(\frac{\alpha-\beta}{2}\right)}\sin\frac\varphi{2}
+      & e^{i\left(\frac{\alpha+\beta}{2}\right)}\cos\frac\varphi{2}
+    \end{bmatrix}.
+  \end{aligned}
+$$
+
+Thus once you are given a couple of Hadamard gates and an infinite supply of phase gates, so that you can choose the three phases you need, you can construct an arbitrary unitary operation on a single qubit. Needless to say, the two axes in question, $z$ and $x$, do not have any special status, geometrically speaking --- if we have rotations about any two orthogonal^[In fact, even this condition isn't necessary! See Figure \@ref(fig:two-families-of-circles)] axes then we can create any one-qubit unitary that we want.
+
+(ref:two-families-of-circles-caption) If we can move along the two families of circles, then from any point on the sphere we can reach any other point. The two axes do not even have to be orthogonal: any two different axes will do. Can you see why?
+
+```{r two-families-of-circles,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4,fig.cap='(ref:two-families-of-circles-caption)'}
+\tdplotsetmaincoords{60}{125}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}[tdplot_main_coords,scale=0.8]
+  \shade [ball color=gray!40,opacity=0.4] (0,0) circle (2cm);
+  %
+  \begin{scope}[primary,rotate=-10]
+    \draw [tdplot_screen_coords,ultra thick] (0,-2.7) to (0,-2);
+    \draw [tdplot_screen_coords,ultra thick,dashed] (0,-2) to (0,1.75);
+    \foreach \h in {-42.5,-21.25,0,21.25,42.5,63.75,85}
+      \tdplotCsDrawLatCircle[tdplotCsBack/.style={opacity=0}]{2}{\h};
+  \end{scope}
+  %
+  \begin{scope}[secondary,rotate=-78]
+    \draw [tdplot_screen_coords,ultra thick] (0,-2.7) to (0,-2);
+    \draw [tdplot_screen_coords,ultra thick,dashed] (0,-2) to (0,1.75);
+    \foreach \h in {-42.5,-21.25,0,21.25,42.5,63.75,85}
+      \tdplotCsDrawLatCircle[tdplotCsBack/.style={opacity=0}]{2}{\h};
+  \end{scope}
+  %
+  \draw [tdplot_screen_coords] (0,0) circle (2cm);
+  \draw [tdplot_screen_coords,ultra thick,primary,rotate=-10,->] (0,1.75) to (0,3);
+  \draw [tdplot_screen_coords,ultra thick,secondary,rotate=-78,->] (0,1.75) to (0,3);
+\end{tikzpicture}
+```
+
+Consider the following circuit:
+
+```{r,engine='tikz',fig.width=4,fig.align='center'}
+\tikzset{operator/.style={draw,fill=white}}
+\begin{tikzpicture}
+  \draw (-3.5,0) to (-3,0);
+  \draw (-3,0) to node [operator,minimum size=18pt] {$A$} (-2,0);
+  \draw (-2,0) to node [operator,minimum size=18pt] {$Z$} (-1,0);
+  \draw (-1,0) to node [operator,minimum size=18pt] {$A^\dagger$} (0,0);
+  \draw (0,0) to node [operator,minimum size=18pt] {$B$} (1,0);
+  \draw (1,0) to node [operator,minimum size=18pt] {$Z$} (2,0);
+  \draw (2,0) to node [operator,minimum size=18pt] {$B^\dagger$} (3,0);
+  \draw (3,0) to (3.5,0);
+\end{tikzpicture}
+```
+
+where both $A$ and $B$ are unitary operations.
+We claim that _any_ unitary $U$ can be represented in this form.
+
+Again, we can prove this geometrically.
+The circuit represents two rotations by $180^\circ$ about two axes obtained by rotating the $z$-axis with unitaries $A$ and $B$, respectively.
+Any rotation in the three-dimensional space is the composition of two rotations by $180^\circ$, as shown in Figure \@ref(fig:two-rotations-by-180).
+The resulting axis of rotation is perpendicular to the two axes about which rotations by $180^\circ$ are performed, and the angle of the composed rotation is twice the angle between the two axes.
+
+(ref:two-rotations-by-180-caption) Rotating by $\alpha$ around the $z$-axis is the same as the composition of two rotations by $180^\circ$ around axes which both lie in the $xy$-plane, with angle $\alpha/2$ between them.
+
+```{r two-rotations-by-180,engine='tikz',fig.width=4,fig.cap='(ref:two-rotations-by-180-caption)'}
+\usetikzlibrary{arrows.meta}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+  \draw [->] (-2,0) to (2,0);
+  \node at (2.2,0) {$x$};
+  \draw [->] (0,-2) to (0,2);
+  \node at (0,2.2) {$z$};
+  \draw [->] (215:1.65) to (35:1.65);
+  \node at (35:1.85) {$y$};
+  %
+  \draw [ultra thick,primary] (0,-1.5) to (0,1.5);
+  \draw [primary,-Latex] (-0.4,1) arc (140:440:0.5 and 0.1);
+  \node [primary] at (-0.2,1.1) {$\alpha$};
+  %
+  \draw [ultra thick,secondary] (205:1.5) to (25:1.5);
+  \draw [ultra thick,secondary] (190:1.5) to (10:1.5);
+  \draw [fill=secondary!40] (0,0) to (10:1.3) to [bend right] (25:1.3) to cycle;
+  \node [secondary] at (17.5:1.7) {$\alpha/2$};
+\end{tikzpicture}
+```
+
+
+### Exercises
+
+1. In the Singapore Botanic Gardens, there is a sculpture by Ueli Fausch called "Swiss Granite Fountain".
+    It is a spherical granite ball which measures 80cm in diameter and weighs 700kg, and is kept afloat by strong water pressure directed through the basal block.
+    It is easy to set the ball in motion, and it keeps rotating in whatever way you start for a long time.
+    Suppose you are given access to this ball only near the top, so that you can push it to make it rotate around any horizontal axis, but you don't have enough of a grip to make it turn around the vertical axis.
+    Can you make it rotate around the vertical axis anyway?
+
 
 
 
 
 ## Some quantum dynamics
+
+**!!!TODO!!!**
+
+**!!!TODO!!! the $4\pi$ world of qubits**
