@@ -51,12 +51,14 @@ MathJax.Hub.Config({
 <div id="TOC">
 <ul>
 <li><a href="index.html#introduction">Introduction</a></li>
+<li class="part"><span><b>I Part I</b></span></li>
 <li><a href="quantum-interference-and-things-to-come.html#quantum-interference-and-things-to-come"><span class="toc-section-number">1</span> Quantum interference, and things to come</a></li>
 <li><a href="qubits.html#qubits"><span class="toc-section-number">2</span> Qubits</a></li>
 <li><a href="linking-pauli-matrices-and-the-bloch-sphere.html#linking-pauli-matrices-and-the-bloch-sphere"><span class="toc-section-number">3</span> Linking Pauli matrices and the Bloch sphere</a></li>
 <li><a href="measurements.html#measurements"><span class="toc-section-number">4</span> Measurements</a></li>
 <li><a href="quantum-entanglement.html#quantum-entanglement"><span class="toc-section-number">5</span> Quantum entanglement</a></li>
 <li><a href="quantum-algorithms.html#quantum-algorithms"><span class="toc-section-number">6</span> Quantum algorithms</a></li>
+<li class="part"><span><b>II Part 2</b></span></li>
 <li><a href="bells-theorem.html#bells-theorem"><span class="toc-section-number">7</span> Bell’s theorem</a></li>
 <li><a href="decoherence-and-elements-of-quantum-error-correction.html#decoherence-and-elements-of-quantum-error-correction"><span class="toc-section-number">8</span> Decoherence, and elements of quantum error correction</a></li>
 <li><a href="density-matrices.html#density-matrices"><span class="toc-section-number">9</span> Density matrices</a></li>
@@ -82,22 +84,294 @@ MathJax.Hub.Config({
 <blockquote>
 <p>More about the Bloch sphere, via the omnipresent Pauli matrices, which can be described in a more algebraic way.</p>
 </blockquote>
-<p>Let me elaborate here on relations amongst single qubit unitary transformations, Pauli matrices and rotations of regular three dimensional vectors.
-I want you to be able to visualise sequences of unitary operations on a qubit as sequences of rotations, and to see the action of some quantum circuits without getting engaged in lengthy calculations.
-Matrices form a vector space: you can add them, and you can multiply them by a scalar.
-One possible choice of a basis in this vector space is a set of matrices with a single entry equal to <span class="math inline">\(1\)</span> and all other entries <span class="math inline">\(0\)</span>.
-However, it turns out that for <span class="math inline">\((2\times 2)\)</span> matrices there is another basis — the three Pauli matrices along with the identity — which offers lots of insights into the structure of the general single qubit unitary transformations.</p>
+<p>Let us further investigate the relations between single qubit unitary transformations, Pauli matrices, and rotations of regular three-dimensional vectors.
+The goal is to be able to visualise sequences of unitary operations on a qubit as sequences of rotations, and to see the action of some quantum circuits without getting engaged in lengthy calculations.</p>
+<p>Matrices form a vector space: you can add them, and you can multiply them by a scalar.
+One possible choice of a basis in the vector space of <span class="math inline">\((2\times 2)\)</span> matrices is the set of matrices <span class="math inline">\(\{M_{00},M_{01},M_{10},M_{11}\}\)</span>, where the entries of <span class="math inline">\(M_{ij}\)</span> are all <span class="math inline">\(0\)</span> except for the <span class="math inline">\(ij\)</span>-th entry, which is <span class="math inline">\(1\)</span>.
+However, it turns out that there is a different basis which offers lots of insights into the structure of the general single-qubit unitary transformations, namely <span class="math inline">\(\{\operatorname{id},X,Y,Z\}\)</span>, i.e. the identity matrix and the three Pauli matrices.</p>
 <div id="the-pauli-matrices-algebraically" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span> The Pauli matrices, algebraically</h2>
+<div class="idea">
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"><span class="math inline">\(\operatorname{id}\)</span></th>
+<th align="center"><span class="math inline">\(X=\sigma_x\)</span></th>
+<th align="center"><span class="math inline">\(Y=\sigma_y\)</span></th>
+<th align="center"><span class="math inline">\(Z=\sigma_z\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><span class="math inline">\(\begin{bmatrix}1&amp;0\\0&amp;1\end{bmatrix}\)</span></td>
+<td align="center"><span class="math inline">\(\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}\)</span></td>
+<td align="center"><span class="math inline">\(\begin{bmatrix}0&amp;-i\\i&amp;0\end{bmatrix}\)</span></td>
+<td align="center"><span class="math inline">\(\begin{bmatrix}1&amp;0\\1&amp;-1\end{bmatrix}\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Recalling <a href="qubits.html#pauli-operators">Pauli operators</a>, we know that the Pauli operators (as well as the identity operator) are unitary and Hermitian, square to the identity, and anti-commute.</p>
+<p>Any <span class="math inline">\((2\times 2)\)</span> complex matrix <span class="math inline">\(A\)</span> has a unique expansion in the form
+<span class="math display" id="eq:pauli">\[\begin{equation}
+  \begin{aligned}
+    A &amp;=
+    \begin{bmatrix}
+      a_0 + a_z &amp; a_x - i a_y
+    \\a_x +i a_y &amp;  a_0 - a_z
+    \end{bmatrix}
+  \\&amp;= a_0\operatorname{id}+ a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
+  \\&amp;= a_0\operatorname{id}+ \vec{a}\cdot\vec{\sigma}.
+  \end{aligned}
+\tag{3.1}
+\end{equation}\]</span>
+for some complex numbers <span class="math inline">\(a_0\)</span>, <span class="math inline">\(a_x\)</span>, <span class="math inline">\(a_y\)</span>, and <span class="math inline">\(a_z\)</span>.
+Here, <span class="math inline">\(\vec{a}\)</span> is a vector with three complex components <span class="math inline">\((a_x, a_y, a_z)\)</span>, and <span class="math inline">\(\vec{\sigma}\)</span> represents the “vector” of Pauli matrices <span class="math inline">\((\sigma_x,\sigma_y,\sigma_z)\)</span>.
+The algebraic properties of the Pauli matrices can be neatly compacted (see the exercises) into a single expression:</p>
+<div class="idea">
+<p>The <strong>multiplication rule</strong>:
+<span class="math display">\[
+    (\vec{a}\cdot\vec{\sigma})\,(\vec{b}\cdot\vec{\sigma})
+    = (\vec{a}\cdot\vec{b})\,\operatorname{id}+ i(\vec{a}\times \vec{b})\cdot\vec{\sigma}.
+  \]</span></p>
+</div>
+<p>We also introduce the inner product of two matrices:</p>
+<div class="idea">
+<p>The <strong>Hilbert–Schmidt product</strong>:
+<span class="math display">\[
+    (A|B) = \frac12 \operatorname{tr}A^\dagger B.
+  \]</span></p>
+</div>
+<p>Recall that the trace of a square matrix <span class="math inline">\(A\)</span>, denoted by <span class="math inline">\(\operatorname{tr}A\)</span>, is defined to be the sum of the elements on the main diagonal of <span class="math inline">\(A\)</span>, and defines a linear mapping: for any scalars <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>,
+<span class="math display">\[
+  \operatorname{tr}(\alpha A+\beta B) = \alpha\operatorname{tr}A +\beta\operatorname{tr}B.
+\]</span>
+Moreover, the trace is invariant under <em>cyclic</em> permutations: e.g.
+<span class="math display">\[
+  \operatorname{tr}(ABC) = \operatorname{tr}(BCA) = \operatorname{tr}(CAB).
+\]</span>
+Note, however, that this does <em>not</em> imply that e.g. <span class="math inline">\(\operatorname{tr}(ABC)=\operatorname{tr}(ACB)\)</span>.</p>
+<div id="exercises" class="section level3" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li><p>Show that <span class="math inline">\(\{\operatorname{id},\sigma_x,\sigma_y,\sigma_z\}\)</span> is an orthonormal basis with respect to the Hilbert-Schmidt product in the space of complex <span class="math inline">\((2\times 2)\)</span> matrices.</p></li>
+<li><p>Show that the coefficients <span class="math inline">\(a_k\)</span> (for <span class="math inline">\(k=x,y,z\)</span>) in Equation <a href="linking-pauli-matrices-and-the-bloch-sphere.html#eq:pauli">(3.1)</a> are given by the inner product <span class="math inline">\(a_k = (\sigma_k|A) = \frac12\operatorname{tr}\sigma_k A\)</span>.</p></li>
+<li><p>Show that <span class="math inline">\(\frac12\operatorname{tr}(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}\)</span>.</p></li>
+<li><p>Show that any <span class="math inline">\(\vec{n}\cdot\vec{\sigma}\)</span> has eigenvalues are <span class="math inline">\(\pm|\vec{n}|\)</span>.</p></li>
+<li><p>Show that, if <span class="math inline">\(\vec{n}\cdot\vec{m}=0\)</span>, then the operators <span class="math inline">\(\vec{n}\cdot\vec{\sigma}\)</span> and <span class="math inline">\(\vec{m}\cdot\vec{\sigma}\)</span> anticommute.</p></li>
+<li><p>In these notes, we usually deal with matrices that are Hermitian (<span class="math inline">\(A=A^\dagger\)</span>) or unitary (<span class="math inline">\(AA^\dagger=\operatorname{id}\)</span>).
+It is easy to see that, if <span class="math inline">\(A\)</span> is Hermitian, then <span class="math inline">\(a_0\)</span> and the three components of <span class="math inline">\(\vec{a}\)</span> are all real.
+The <span class="math inline">\((2\times 2)\)</span> unitaries are usually parametrised as
+<span class="math display">\[
+   U = e^{i\gamma}\Big(u_0\operatorname{id}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
+ \]</span>
+where <span class="math inline">\(e^{i\gamma}\)</span> is an overall multiplicative phase factor, with <span class="math inline">\(\gamma\)</span> real, and <span class="math inline">\(u_0\)</span> and the three components <span class="math inline">\(u_x\)</span>, <span class="math inline">\(u_y\)</span>, <span class="math inline">\(u_z\)</span> are all real numbers.</p>
+<p>Show that the unitarity condition implies that
+<span class="math display">\[
+   u_0^2 + u_x^2 + u_y^2 + u_z^2 = 1,
+ \]</span>
+and show that the determinant of <span class="math inline">\(U\)</span> is <span class="math inline">\(e^{i2\gamma}\)</span> using this parametrisation.</p></li>
+</ol>
+</div>
 </div>
 <div id="the-pauli-matrices-geometrically" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> The Pauli matrices, geometrically</h2>
+<p>Geometrically speaking, the group of unitaries <span class="math inline">\(\mathrm{U}(2)\)</span> is a three-dimensional sphere <span class="math inline">\(S^3\)</span> in <span class="math inline">\(\mathbb{R}^4\)</span>.
+We often fix the determinant to be <span class="math inline">\(+1\)</span> and express <span class="math inline">\((2\times 2)\)</span> unitaries as
+<span class="math display">\[
+  U = u_0\operatorname{id}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z).
+\]</span>
+Such matrices form a popular subgroup of <span class="math inline">\(\mathrm{U}(2)\)</span>; it is called the <strong>special</strong> (meaning the determinant is equal to <span class="math inline">\(1\)</span>) unitary group, and denoted by <span class="math inline">\(\mathrm{SU}(2)\)</span>.
+In quantum theory, any two unitary matrices that differ by some global multiplicative phase factor represent the same physical operation, so we are “allowed to” fix the determinant to be <span class="math inline">\(+1\)</span>, and thus restrict ourselves to considering matrices in <span class="math inline">\(\mathrm{SU}(2)\)</span>.
+This is a sensible approach, practised by many theoretical physicists, but again, for some historical reasons, the convention in quantum information science does not follow this approach.
+For example, phase gates are usually written as
+<span class="math display">\[
+  P_\alpha = \begin{bmatrix}1&amp;0\\0&amp;e^{i\alpha}\end{bmatrix}
+\]</span>
+rather than
+<span class="math display">\[
+  P_\alpha = \begin{bmatrix}e^{-i\frac{\alpha}{2}}&amp;0\\0&amp;e^{\,i\frac{\alpha}{2}}\end{bmatrix}
+\]</span>
+Still, sometimes the <span class="math inline">\(T\)</span> gate
+<span class="math display">\[
+  T
+  = \begin{bmatrix}1&amp;0\\0&amp;e^{i\pi/4}\end{bmatrix}
+  = \begin{bmatrix}e^{-i\pi/8}&amp;0\\0&amp;e^{i\pi/8}\end{bmatrix}
+\]</span>
+is called the <span class="math inline">\(\pi/8\)</span> gate, because of its <span class="math inline">\(\mathrm{SU}(2)\)</span> form.</p>
+<p>Let us write any <span class="math inline">\((2\times 2)\)</span> unitary, up to an overall phase factor, as
+<span class="math display">\[
+  U
+  = u_0\operatorname{id}+ i(u_x \sigma_x + u_y \sigma_y + u_z \sigma_z)
+  = u_0\operatorname{id}+ i{\vec{u}}\cdot{\vec{\sigma}}
+\]</span>
+where <span class="math inline">\(u_0^2+|\vec{u}|^2=1\)</span>.
+This additional unitarity restriction allows us to parametrise <span class="math inline">\(u_0\)</span> and <span class="math inline">\(\vec{u}\)</span> in terms of a real unit vector <span class="math inline">\(\vec{n}\)</span>, parallel to <span class="math inline">\(\vec{u}\)</span>, and a real angle <span class="math inline">\(\theta\)</span> so that<label for="tufte-sn-42" class="margin-toggle sidenote-number">42</label><input type="checkbox" id="tufte-sn-42" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">42</span> As you can see, we often make progress and gain insights simply by choosing a convenient parametrisation.</span>
+<span class="math display">\[
+  U
+  = (\cos\theta)\operatorname{id}+ (i\sin\theta){\vec{n}}\cdot{\vec{\sigma}}.
+\]</span>
+An alternative way of writing this expression is
+<span class="math display">\[
+  U
+  = e^{i\theta {\vec{n}}\cdot{\vec{\sigma}}},
+\]</span>
+as follows from the power-series expansion of the exponential.
+Indeed, any unitary matrix can always be written in the exponential form as
+<span class="math display">\[
+  \begin{aligned}
+    e^{iA}
+    &amp;\equiv \operatorname{id}+ iA + \frac{(i A)^2}{1\cdot 2} + \frac{(i A)^3}{1\cdot 2\cdot 3} \ldots
+  \\&amp;= \sum_{n=0}^\infty \frac{(i A)^n}{n!}
+  \end{aligned}
+\]</span>
+where <span class="math inline">\(A\)</span> is a Hermitian matrix.</p>
+<div class="idea">
+<p>Writing unitary matrices in the form <span class="math inline">\(e^{iA}\)</span> is analogous to writing complex numbers of unit modulus as <span class="math inline">\(e^{i\alpha}\)</span> (the so-called polar form).</p>
+</div>
+<div id="exercises-1" class="section level3" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li>Show that, if <span class="math inline">\(A^2=\operatorname{id}\)</span>, then we can turn the power series expansion into a simple expression: for any real <span class="math inline">\(\alpha\)</span>,
+<span class="math display">\[
+   e^{i\alpha A}
+   = (\cos\alpha)\operatorname{id}+ (i\sin\alpha)A.
+ \]</span></li>
+<li>Using the previous exercise, or otherwise, show that any <span class="math inline">\((2\times 2)\)</span> unitary matrix <span class="math inline">\(U\)</span> can be written, up to an overall multiplicative phase factor, as
+<span class="math display">\[
+   U
+   = e^{i \theta \vec{n}\cdot\vec{\sigma}}
+   = (\cos\theta)\operatorname{id}+ (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
+ \]</span>
+(The argument here is the same as the argument that <span class="math inline">\(e^{i\theta}=\cos\theta +i\sin\theta\)</span>).</li>
+</ol>
+</div>
 </div>
 <div id="putting-the-pieces-together" class="section level2" number="3.3">
 <h2><span class="header-section-number">3.3</span> Putting the pieces together</h2>
+<p>Here comes a remarkable connection between two-dimensional unitary matrices and ordinary three-dimensional rotations.</p>
+<div class="idea">
+<p>The unitary <span class="math inline">\(U = e^{i\theta \vec{n}\cdot\vec{\sigma}}\)</span> represents a clockwise rotation through the angle <span class="math inline">\(2\theta\)</span> about the axis defined by <span class="math inline">\(\vec{n}\)</span>.</p>
+<p>(N.B. <span class="math inline">\(2\theta\)</span>, not <span class="math inline">\(\theta\)</span>).</p>
 </div>
-<div id="some-quantum-dynamics" class="section level2" number="3.4">
-<h2><span class="header-section-number">3.4</span> Some quantum dynamics</h2>
+<p>For example,
+<span class="math display">\[
+  \begin{gathered}
+    e^{i\theta\sigma_x}
+    =
+    \begin{bmatrix}
+      \cos\theta &amp; i\sin\theta
+    \\i\sin\theta &amp; \cos\theta
+    \end{bmatrix}
+    \qquad
+    e^{i\theta\sigma_y}
+    =
+    \begin{bmatrix}
+      \cos\theta &amp; \sin\theta
+    \\-\sin\theta &amp; \cos\theta
+    \end{bmatrix}
+  \\e^{i\theta\sigma_z}
+    = \begin{bmatrix}e^{i\theta}&amp;0\\0&amp;e^{-i\theta}\end{bmatrix}
+  \end{gathered}
+\]</span>
+represent rotations by <span class="math inline">\(2\theta\)</span> about the <span class="math inline">\(x\)</span>-, <span class="math inline">\(y\)</span>- and <span class="math inline">\(z\)</span>-axis, respectively.</p>
+
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-23"></span>
+<p class="caption marginnote shownote">
+Figure 3.1: <span class="math inline">\(e^{i\theta\vec{n}\cdot\vec{\sigma}}\)</span> rotates the vector <span class="math inline">\(\vec{s}\)</span> about <span class="math inline">\(\vec{n}\)</span> by angle <span class="math inline">\(2\theta\)</span>, sending it to a point on the blue circle, whose centre is passed through by <span class="math inline">\(\vec{n}\)</span>.
+</p>
+<img src="quantum-info_files/figure-html/unnamed-chunk-23-1.png" alt="\(e^{i\theta\vec{n}\cdot\vec{\sigma}}\) rotates the vector \(\vec{s}\) about \(\vec{n}\) by angle \(2\theta\), sending it to a point on the blue circle, whose centre is passed through by \(\vec{n}\)." width="384"  />
+</div>
+<p>The Hadamard gate
+<span class="math display">\[
+  \begin{aligned}
+    H
+    &amp;= \frac{1}{\sqrt 2}
+    \begin{bmatrix}
+      1&amp; 1
+    \\1 &amp; -1
+    \end{bmatrix}
+  \\&amp;= \frac{1}{\sqrt 2}(\sigma_x + \sigma_z)
+  \\&amp;= (-i)e^{i \frac{\pi}{2} \frac{1}{\sqrt 2}(\sigma_x+\sigma_z)}
+  \end{aligned}
+\]</span>
+(which, up to the overall multiplicative phase factor of <span class="math inline">\(-i\)</span>, is equal to <span class="math inline">\(e^{i \frac{\pi}{2} \frac{1}{\sqrt 2}(\sigma_x+\sigma_z)}\)</span>) represents rotation about the diagonal <span class="math inline">\((x+z)\)</span>-axis through the angle <span class="math inline">\(\pi\)</span>.</p>
+<p>In somewhat abstract terms, we make the connection between unitaries and rotations by looking how the unitary group <span class="math inline">\(\mathrm{U}(2)\)</span> acts on the three-dimensional Euclidian space of <span class="math inline">\((2\times 2)\)</span> Hermitian matrices <em>with zero trace</em>.
+All such matrices <span class="math inline">\(S\)</span> can be written as <span class="math inline">\(S=\vec{s}\cdot\vec{\sigma}\)</span> for some real <span class="math inline">\(\vec{s}\)</span>, i.e. each matrix is represented by a Euclidean vector <span class="math inline">\(\vec{s}\)</span> in <span class="math inline">\(\mathbb{R}^3\)</span>.
+Now, <span class="math inline">\(U\in \mathrm{U}(2)\)</span> acts on the Euclidean space of such matrices by <span class="math inline">\(S\mapsto S&#39; = USU^\dagger\)</span>, i.e.
+<span class="math display" id="eq:u2so3map">\[\begin{equation}
+  \vec{s}\cdot\vec{\sigma}
+  \mapsto
+  \vec{s&#39;}\cdot\vec{\sigma}
+  = U(\vec{s}\cdot\vec{\sigma})U^\dagger
+\tag{3.2}
+\end{equation}\]</span>
+This is a linear map <span class="math inline">\(\mathbb{R}^3\to\mathbb{R}^3\)</span>, and is thus given by some <span class="math inline">\((3\times 3)\)</span> real-valued matrix <span class="math inline">\(R\)</span>.
+We note that this map is an isometry (a distance preserving operation), since it preserves the scalar product in the Euclidean space: for any two vectors <span class="math inline">\(\vec{s}\)</span> and <span class="math inline">\(\vec{v}\)</span>,
+<span class="math display">\[
+  \begin{aligned}
+    \vec{s&#39;}\cdot\vec{v&#39;}
+    &amp;= \frac12\operatorname{tr}[S&#39;V&#39;]
+  \\&amp;= \frac12\operatorname{tr}[(USU^\dagger)(UVU^\dagger)]
+  \\&amp;= \frac12\operatorname{tr}[SV]
+  \\&amp;= \vec{s}\cdot\vec{v}
+  \end{aligned}
+\]</span>
+(where <span class="math inline">\(S=\vec{s}\cdot\vec{\sigma}\)</span> and <span class="math inline">\(V=\vec{v}\cdot\vec{\sigma}\)</span>), using the cyclic property of the trace.
+This means that matrix <span class="math inline">\(R\)</span> is <em>orthogonal</em>.<label for="tufte-sn-43" class="margin-toggle sidenote-number">43</label><input type="checkbox" id="tufte-sn-43" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">43</span> Orthogonal transformations preserve the length of vectors as well as the angles between them.</span>
+Furthermore, we can show<label for="tufte-sn-44" class="margin-toggle sidenote-number">44</label><input type="checkbox" id="tufte-sn-44" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">44</span> One can also infer that <span class="math inline">\(\det R=1\)</span> from the fact that any matrix in <span class="math inline">\(\mathrm{U}(2)\)</span> can be smoothly connected to the identity.</span> that <span class="math inline">\(\det R=1\)</span>.
+The only isometries in three dimensional Euclidian space, which are described by orthogonal matrices <span class="math inline">\(R\)</span> with <span class="math inline">\(\det R=1\)</span>, are rotations.
+Thus, in the mathematical lingo, we have established a homomorphism<label for="tufte-sn-45" class="margin-toggle sidenote-number">45</label><input type="checkbox" id="tufte-sn-45" class="margin-toggle"><span class="sidenote"><span class="sidenote-number">45</span> Recall that a homomorphism is a structure-preserving map between two algebraic structures of the same type, in our case two groups. An isomorphism between algebraic structures of the same type is one-to-one homomorphism.</span> between <span class="math inline">\(\mathrm{U}(2)\)</span> and <span class="math inline">\(\mathrm{SO}(3)\)</span>, where <span class="math inline">\(\mathrm{SO}(3)\)</span> stands for the special orthogonal group in three dimensions (the group of all rotations about the origin of three-dimensional Euclidean space <span class="math inline">\(\mathbb{R}^3\)</span> under the operation of composition).
+It is quite clear from Equation <a href="linking-pauli-matrices-and-the-bloch-sphere.html#eq:u2so3map">(3.2)</a> that unitary matrices differing only by a global multiplicative phase factor (e.g. <span class="math inline">\(U\)</span> and <span class="math inline">\(e^{i\gamma}U\)</span>) represent the same rotation.</p>
+<p>Physicists, however, usually prefer a more direct demonstration, which goes roughly like this.
+Consider the map <span class="math inline">\(\vec{s} \mapsto \vec{s&#39;}\)</span> induced by <span class="math inline">\(U=e^{i \alpha \vec{n}\cdot\vec{\sigma}}\)</span>.
+For small values of <span class="math inline">\(\alpha\)</span>, we can write
+<span class="math display">\[
+  \begin{aligned}
+    \vec{s&#39;}\cdot\vec{\sigma}
+    &amp;= U(\vec{s}\cdot\vec{\sigma}) U^\dagger
+  \\&amp;= \Big(
+      \operatorname{id}+i\alpha (\vec{n}\cdot\vec{\sigma})+\ldots
+    \Big)
+    (\vec{s}\cdot\vec{\sigma}) 
+    \Big(
+      \operatorname{id}- i\alpha(\vec{n}\cdot\vec{\sigma})+\ldots
+    \Big).
+  \end{aligned}
+\]</span>
+To the first order in <span class="math inline">\(\alpha\)</span>, this gives
+<span class="math display">\[
+  \begin{gathered}
+    \vec{s&#39;} \cdot\vec{\sigma}
+    = \Big(
+      \vec{s} + 2\alpha (\vec{n}\times\vec{s})
+    \Big)
+    \cdot \vec{\sigma}
+  \\\mbox{i.e.}
+    \quad
+    \vec{s&#39;} =
+    \vec{s} + 2\alpha(\vec{n}\times\vec{s})
+  \end{gathered}
+\]</span>
+which we recognise as a good old textbook formula for an infinitesimal clockwise rotation of <span class="math inline">\(\vec{s}\)</span> about the axis <span class="math inline">\(\vec{n}\)</span> through the angle <span class="math inline">\(2\alpha\)</span>.</p>
+<div id="exercises-2" class="section level3" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li>Show that <span class="math inline">\(\operatorname{tr}\sigma_x\sigma_y\sigma_z = 2i\)</span>.</li>
+</ol>
+</div>
+</div>
+<div id="universality-again" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> Universality, again</h2>
+</div>
+<div id="some-quantum-dynamics" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> Some quantum dynamics</h2>
 
 </div>
 </div>
