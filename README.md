@@ -1,9 +1,11 @@
-This website contains the lecture notes ... **!!!TODO!!!** written by Artur, edited by Tim ... etc. etc.
+For the past however-many years, Artur Ekert has been teaching the masters course "Introduction to Quantum Information" at the University of Oxford.
+During this time, many versions of accompanying lecture notes have come and gone, with constant improvements and changes being made.
+The version that you will find on this website has been carefully edited into a cohesive "book", containing additional exercises and topics.
 
 <div style="text-align: center;margin: 2em"><a href="book/" style="padding: 1em;border: 1px solid black;border-radius: 5px;">Read the book</a></div>
 
 The lecture notes are available as an online book (built using the Bookdown fork of Gitbook).
-This means that it has some nice functionality to make reading more comfortable, with most options being accessed through the toolbar at the top, which is annotated below.
+This means that it has some nice functionality to make reading more comfortable, with most options being accessed through the toolbar at the top (which we explain below).
 
 <img src="gitbook-toolbar.png" alt="The book toolbar" width="350" style="border: 1px solid black;">
 
@@ -16,7 +18,7 @@ This means that it has some nice functionality to make reading more comfortable,
 
 ## Further reading
 
-The best textbook for this particular course is probably
+The best textbook to pair with the lecture notes on this site is probably
 > P. Kaye, R. Laflamme, and M. Mosca. _An Introduction to Quantum Computing_. Oxford University Press, 2007.
 
 Although it was published in 2000, and thus has a slightly dated treatment of some topics, the standard textbook in the field is
