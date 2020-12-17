@@ -18,7 +18,7 @@ This means that it has some nice functionality to make reading more comfortable,
 
 ## Further reading
 
-The best textbook to pair with the lecture notes on this site is probably
+The best textbook to pair with these lecture notes is probably
 > P. Kaye, R. Laflamme, and M. Mosca. _An Introduction to Quantum Computing_. Oxford University Press, 2007.
 
 Although it was published in 2000, and thus has a slightly dated treatment of some topics, the standard textbook in the field is
@@ -28,7 +28,7 @@ Some excellent lecture notes on quantum information theory are
 > J. Preskill. _Ph219/CS219 Lecture Notes_. Available [here](http://theory.caltech.edu/~preskill/ph219/index.html#lecture).
 
 A bit more idiosyncratic and fun to read, but still very informative, is
-> S. Aaronson. _Quantum Computing since Democritus_. Cambridge University Press, 2013. Complementary lecture notes also available [here](https://www.scottaaronson.com/democritus/).
+> S. Aaronson. _Quantum Computing since Democritus_. Cambridge University Press, 2013. (Complementary lecture notes also available [here](https://www.scottaaronson.com/democritus/)).
 
 
 ## Contact
