@@ -1,1 +1,202 @@
 # Measurements {#chapter4}
+
+> On the Hilbert-space formalism of quantum theory, and the role of **measurements** in quantum information theory, as well as introducing the quantum dramas of Alice and Bob.
+
+Eventually, we have to talk about quantum measurements, since, at some point, someone has to look at a measuring device and register the outcome of whatever quantum circuits we've been designing.
+It turns out that this is a bit more tricky than one might think.
+Quantum measurement is not a passive acquisition of information: if you measure, you disturb.
+Even though it is a physical process, like any other quantum evolution, it is traditionally described by a different set of mathematical tools.
+
+
+
+
+
+## Hilbert spaces, briefly
+
+A formal mathematical setting for a quantum system is that of a **Hilbert space** $\mathcal{H}$, i.e. a vector space with an inner product.
+The result of any preparation of a system is represented by some unit vector $\ket{\psi}\in \mathcal{H}$, and any test is represented by some other unit vector $\ket{e}\in \mathcal{H}$.^[The term "Hilbert space" used to be reserved for an infinite-dimensional inner product space that is **complete**, i.e. such that every Cauchy sequence in the space converges to an element in the space. Nowadays, as in these notes, the term includes finite-dimensional spaces, which automatically satisfy the condition of completeness.]
+The inner product of these two vectors, $\braket{e|\psi}$, gives the probability amplitude that an object prepared in state $\ket{\psi}$ will pass a test for being in state $\ket{e}$.
+Probabilities are obtained by squaring absolute values of probability amplitudes:
+$$
+  |\braket{e|\psi}|^2
+  = \braket{\psi|e}\braket{e|\psi}.
+$$
+After the test, in which the object was found to be in state $\ket{e}$, say, the object forgets about its previous state $\ket{\psi}$ and is, indeed, actually now in state $\ket{e}$.
+This is the mysterious **quantum collapse** which we will briefly discuss later on.
+
+A more complete test involves multiple states $e_k$ that form an orthonormal basis $\{\ket{e_1},\ldots,\ket{e_n}\}$.
+These states are perfectly distinguishable from each other: the condition $\braket{e_k|e_l} = \delta_{kl}$ implies that a quantum system prepared in state $\ket{e_l}$ will never be found in state $\ket{e_k}$ (unless $k=l$).
+The probability amplitude that the system in state $\ket{\psi}$ will be found in state $\ket{e_k}$ is $\braket{e_k|\psi}$ and, given that the vectors $\ket{e_k}$ span the whole vector space, the system will be always found in one of the basis states, whence
+$$
+  \sum_k |\braket{e_k|\psi}|^2 = 1.
+$$
+As a result:
+
+::: {.idea}
+  A **complete** measurement in quantum theory is determined by the choice of an orthonormal basis $\{\ket{e_i}\}$ in $\mathcal{H}$, and every such basis (in principle) represents a possible complete measurement.
+:::
+
+
+
+
+
+## Back to qubits; complete measurements
+
+::: {.idea}
+  A **projector** is any Hermitian operator $P=P^\dagger$ which is idempotent ($P^2=P$).
+  The rank of $P$ is evaluated using $\tr(P)$.
+  In the Dirac notation, $\proj{e}$ is a rank one projector on the subspace spanned by the unit vector $\ket{e}$, and it acts on any vector $\ket{v}$ as $(\proj{e})\ket{v} = \ket{e}\braket{e|v}$.
+:::
+
+The most common measurement in quantum information science is the standard measurement on a qubit, also referred to as the measurement in the **standard** (or **computational**) basis $\{\ket{0},\ket{1}\}$.
+When we draw circuit diagrams it is tacitly assumed that such a measurement is performed on each qubit at the end of quantum evolution.
+
+```{r standard-basis-measurement,engine='tikz',fig.width=3,fig.cap='The standard (computational) basis defines the standard measurements.'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\usetikzlibrary{arrows.meta}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[scale=1.3]
+  \draw [->] (-1.3,0) to (1.3,0) node [right] {$\ket{0}$};
+  \draw [->] (0,-1.3) to (0,1.3) node [above] {$\ket{1}$};
+  \draw (0,0) circle (1cm);
+  \draw [-,ultra thick,primary] (0,0) to (0.51,0);
+  \draw [-,ultra thick,primary] (0,0) to (0,0.85);
+  \draw [thick,primary,dashed] (0.51,0) to (0.51,0.85);
+  \draw [thick,primary,dashed] (0,0.85) to (0.51,0.85);
+  \draw [-{Latex},thick,rotate=59,secondary] (0,0) to (1,0);
+  \node at (0.7,1.05) {$\ket{\psi}$};
+  \node at (0.4,-0.15) {$\alpha_0$};
+  \node at (-0.15,0.65) {$\alpha_1$};
+\end{tikzpicture}
+```
+
+However, if we want to emphasise the role of the measurement, then we can include it explicitly in the diagram as a special quantum gate, e.g. as
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
+\begin{equation*}
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi} = \alpha_0\ket{0} + \alpha_1\ket{1}$}
+    \&\qw
+    \&\meter{}
+    \&\qw
+    \&\qw\rstick{$
+      \begin{cases}
+        \ket{0} &\text{with probability } |\alpha_0|^2
+      \\\ket{1} &\text{with probability } |\alpha_1|^2
+      \end{cases}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+or, in an alternative notation, as
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{\psi} = \alpha_0\ket{0} + \alpha_1\ket{1}$}
+    &\qw
+    &\meterD{k}
+    &\qw
+    &\qw\rstick{$\ket{k}\quad$ with probability $|\alpha_k|^2$ \quad ($k=0,1$).}
+  \end{quantikz}
+\end{equation*}
+```
+
+As we can see, if the qubit is prepared in state $\ket{\psi} = \alpha_0\ket{0} + \alpha_1\ket{1}$ and subsequently measured in the standard basis state, then the outcome is $\ket{k}$ (for $k=0,1$) with probability^[This slick argument is a good example of how nice the bra-ket notation can be.]
+$$
+  \begin{aligned}
+    |\alpha_k|^2
+    &= |\braket{k|\psi}|^2
+  \\&= \underbrace{\braket{\psi|k}}_{\alpha_k^\star}
+    \underbrace{\braket{k|\psi}}_{\alpha_k}
+  \\&= \bra{\psi} \underbrace{\proj{k}}_{\text{projector}} \ket{\psi}
+  \\&= \braket{\psi|P_k|\psi}
+  \end{aligned}
+$$
+where $P_k=\proj{k}$ is the projector on $\ket{k}$.
+If the outcome of the measurement is $k$, then the output state of the measurement gate is $\ket{k}$.
+The original state $\ket{\psi}$ is _irretrievably lost_.
+This sudden change of the state, from the pre-measurement state $\ket{\psi}$ to the post-measurement state, either $\ket{0}$ or $\ket{1}$, is often called a **collapse** or a **reduction** of the state.
+
+So it looks like there are two distinct ways for a quantum state to change: on the one hand we have unitary evolutions, and on the other hand we have an abrupt change during the measurement process.
+Surely, the measurement process is not governed by any different laws of physics?
+
+No, it is not!
+
+A measurement is a physical process and can be explained without any "collapse", but it is usually a complicated process in which one complex system (a measuring apparatus or an observer) interacts and gets correlated with a physical system being measured.
+We will discuss this more later on, but for now let us accept a "collapse" as a _convenient mathematical shortcut_, and describe it in terms of projectors rather than unitary operators.
+
+
+
+
+
+## The projection rule; incomplete measurements
+
+So far we have identified measurements with orthonormal bases, or, if you wish, with a set of orthonormal projectors on the basis vectors.
+
+::: {.idea}
+  - The **orthonormality** condition:
+      $$
+        \braket{e_k|e_l} = \delta_{kl}
+      $$
+      i.e. the basis consists of unit vectors that are pairwise orthogonal.
+  - The **completeness** condition:
+      $$
+        \sum_k\proj{e_k} = \id
+      $$
+      i.e. _any_ vector in $\mathcal{H}$ can be expressed as the sum of orthogonal projections on $\ket{e_k}$.
+:::
+
+Given a quantum system in state $\ket{\psi}$ such that $\ket{\psi} = \sum_k \alpha_k\ket{e_k}$, we can write
+$$
+  \begin{aligned}
+    \ket{\psi}
+    &= \id \ket{\psi}
+  \\&= \sum_k \proj{e_k} \ket{\psi}
+  \\&= \sum_k \ket{e_k}\braket{e_k|\psi}
+  \\&= \sum_k \ket{e_k}\alpha_k
+  \\&= \sum_k \alpha_k\ket{e_k}.
+  \end{aligned}
+$$
+This says that the measurement in the basis $\{\ket{e_i}\}$ gives the outcome labelled by $e_k$ with probability
+$$
+  |\braket{e_k|\psi}|^2 = \braket{\psi|e_k}\braket{e_k|\psi}
+$$
+and leaves the system in state $\ket{e_k}$.
+This is a _complete_ measurement, which represents the best we can do in terms of resolving state vectors in the basis states.
+But sometimes we do not want our measurement to distinguish all the elements of an orthonormal basis.
+
+For example, a complete measurement in a four-dimensional Hilbert space will have four distinct outcomes: $\ket{e_1}$, $\ket{e_2}$, $\ket{e_3}$, and $\ket{e_4}$, but we may want to lump together some of the outcomes and distinguish, say, only between $\{\ket{e_1}$, $\ket{e_2}\}$, and $\{\ket{e_3},\ket{e_4}\}$.
+In other words, we might be trying to distinguish one _subspace_ from another, without separating vectors that lie in the same subspace.
+Such measurements (said to be **incomplete**) are indeed possible, and they can be less disruptive than the complete measurements.
+
+::: {.idea}
+  Intuitively, an incomplete measurement has fewer outcomes and is hence less informative, but the state after such a measurement is usually less disturbed.
+:::
+
+In general, instead of projecting on one dimensional subspaces spanned by vectors from an orthonormal basis, we can decompose our Hilbert space into mutually orthogonal subspaces of various dimensions and project on them.
+
+::: {.idea}
+  - The orthogonality conditions for projectors:
+      $$
+        P_k P_l = P_k\delta_{kl}
+      $$
+  - The projector decomposition of the identity:
+      $$
+        \sum_k P_k = \id
+      $$
+:::
+
+For any decomposition of the identity into orthogonal projectors $P_k$, there exists a measurement that takes a quantum system in state $\ket{\psi}$, outputs label $k$ with probability $\braket{\psi|P_k|\psi}$, and leaves the system in the state $P_k\ket{\psi}$ (multiplied by the normalisation factor, i.e. divided by the length of $P_k\ket{\psi}$):
+$$
+  \ket{\psi}
+  \mapsto
+  \frac{P_k\ket{\psi}}{\sqrt{\braket{\psi|P_k|\psi}}}.
+$$
+
+
+
+
+
+## Example of an incomplete measurement

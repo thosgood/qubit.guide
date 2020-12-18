@@ -41,9 +41,7 @@ For any problems or queries regarding this site or its contents, please get in t
 ## To-do
 
 1. replace links to sections with links named "Chapter 3", etc.
-1. links at the start of every chapter
-    + "whole chapter in one page" (links to `tufte/`)
-    + css styling
+1. better names for Part I and Part II
 1. be more consistent with the start of chapters
     + blockquote which says "About ..." and **uses words from the syllabus**
         * and make sure that _everything_ in the syllabus is covered!!
@@ -58,6 +56,7 @@ For any problems or queries regarding this site or its contents, please get in t
     + make `quote` environment italic
     + new page for each section
     + marginfigures
+        * just wrap them in a custom block that css ignores but latex puts in the margin?
     + sizes of all images
     + idea environment (and, later on, scenario and circuits too)
         * tables in ideas look... bad

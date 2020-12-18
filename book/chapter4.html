@@ -21,7 +21,7 @@
   <meta name="twitter:description" content="The online book version of an introductory series of lectures on quantum computing." />
   
 
-<meta name="author" content="Artur Ekert, ed. Tim Hosgood" />
+<meta name="author" content="Artur Ekert and Tim Hosgood" />
 
 
 
@@ -56,7 +56,6 @@
 
 
 <link rel="stylesheet" href="gitbook-custom.css" type="text/css" />
-<link rel="stylesheet" href="global.css" type="text/css" />
 </head>
 
 <body>
@@ -144,9 +143,18 @@
 <ul>
 <li class="chapter" data-level="3.6.1" data-path="chapter3.html"><a href="chapter3.html#exercises-4"><i class="fa fa-check"></i><b>3.6.1</b> Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="3.7" data-path="chapter3.html"><a href="chapter3.html#some-quantum-dynamics"><i class="fa fa-check"></i><b>3.7</b> Some quantum dynamics</a></li>
+<li class="chapter" data-level="3.7" data-path="chapter3.html"><a href="chapter3.html#some-quantum-dynamics"><i class="fa fa-check"></i><b>3.7</b> Some quantum dynamics</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="chapter3.html"><a href="chapter3.html#exercises-5"><i class="fa fa-check"></i><b>3.7.1</b> Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="chapter4.html"><a href="chapter4.html"><i class="fa fa-check"></i><b>4</b> Measurements</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chapter4.html"><a href="chapter4.html"><i class="fa fa-check"></i><b>4</b> Measurements</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="chapter4.html"><a href="chapter4.html#hilbert-spaces-briefly"><i class="fa fa-check"></i><b>4.1</b> Hilbert spaces, briefly</a></li>
+<li class="chapter" data-level="4.2" data-path="chapter4.html"><a href="chapter4.html#back-to-qubits-complete-measurements"><i class="fa fa-check"></i><b>4.2</b> Back to qubits; complete measurements</a></li>
+<li class="chapter" data-level="4.3" data-path="chapter4.html"><a href="chapter4.html#the-projection-rule-incomplete-measurements"><i class="fa fa-check"></i><b>4.3</b> The projection rule; incomplete measurements</a></li>
+<li class="chapter" data-level="4.4" data-path="chapter4.html"><a href="chapter4.html#example-of-an-incomplete-measurement"><i class="fa fa-check"></i><b>4.4</b> Example of an incomplete measurement</a></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="chapter5.html"><a href="chapter5.html"><i class="fa fa-check"></i><b>5</b> Quantum entanglement</a></li>
 <li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a></li>
 <li class="part"><span><b>II Part II</b></span></li>
@@ -185,7 +193,7 @@
 </ul></li>
 <li class="chapter" data-level="10" data-path="chapter10.html"><a href="chapter10.html"><i class="fa fa-check"></i><b>10</b> Quantum channels (or CP maps)</a></li>
 <li class="chapter" data-level="11" data-path="chapter11.html"><a href="chapter11.html"><i class="fa fa-check"></i><b>11</b> Quantum error correction and fault tolerance</a></li>
-<li class="chapter" data-level="12" data-path="chapter12.html"><a href="chapter12.html"><i class="fa fa-check"></i><b>12</b> Bonus things</a></li>
+<li class="chapter" data-level="12" data-path="chapter12.html"><a href="chapter12.html"><i class="fa fa-check"></i><b>12</b> Bonus material</a></li>
 </ul>
 
       </nav>
@@ -205,7 +213,147 @@
             <section class="normal" id="section-">
 <div id="chapter4" class="section level1" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Measurements</h1>
+<blockquote>
+<p>On the Hilbert-space formalism of quantum theory, and the role of <strong>measurements</strong> in quantum information theory, as well as introducing the quantum dramas of Alice and Bob.</p>
+</blockquote>
+<p>Eventually, we have to talk about quantum measurements, since, at some point, someone has to look at a measuring device and register the outcome of whatever quantum circuits we’ve been designing.
+It turns out that this is a bit more tricky than one might think.
+Quantum measurement is not a passive acquisition of information: if you measure, you disturb.
+Even though it is a physical process, like any other quantum evolution, it is traditionally described by a different set of mathematical tools.</p>
+<div id="hilbert-spaces-briefly" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Hilbert spaces, briefly</h2>
+<p>A formal mathematical setting for a quantum system is that of a <strong>Hilbert space</strong> <span class="math inline">\(\mathcal{H}\)</span>, i.e. a vector space with an inner product.
+The result of any preparation of a system is represented by some unit vector <span class="math inline">\(|\psi\rangle\in \mathcal{H}\)</span>, and any test is represented by some other unit vector <span class="math inline">\(|e\rangle\in \mathcal{H}\)</span>.<a href="#fn51" class="footnote-ref" id="fnref51"><sup>51</sup></a>
+The inner product of these two vectors, <span class="math inline">\(\langle e|\psi\rangle\)</span>, gives the probability amplitude that an object prepared in state <span class="math inline">\(|\psi\rangle\)</span> will pass a test for being in state <span class="math inline">\(|e\rangle\)</span>.
+Probabilities are obtained by squaring absolute values of probability amplitudes:
+<span class="math display">\[
+  |\langle e|\psi\rangle|^2
+  = \langle\psi|e\rangle\langle e|\psi\rangle.
+\]</span>
+After the test, in which the object was found to be in state <span class="math inline">\(|e\rangle\)</span>, say, the object forgets about its previous state <span class="math inline">\(|\psi\rangle\)</span> and is, indeed, actually now in state <span class="math inline">\(|e\rangle\)</span>.
+This is the mysterious <strong>quantum collapse</strong> which we will briefly discuss later on.</p>
+<p>A more complete test involves multiple states <span class="math inline">\(e_k\)</span> that form an orthonormal basis <span class="math inline">\(\{|e_1\rangle,\ldots,|e_n\rangle\}\)</span>.
+These states are perfectly distinguishable from each other: the condition <span class="math inline">\(\langle e_k|e_l\rangle = \delta_{kl}\)</span> implies that a quantum system prepared in state <span class="math inline">\(|e_l\rangle\)</span> will never be found in state <span class="math inline">\(|e_k\rangle\)</span> (unless <span class="math inline">\(k=l\)</span>).
+The probability amplitude that the system in state <span class="math inline">\(|\psi\rangle\)</span> will be found in state <span class="math inline">\(|e_k\rangle\)</span> is <span class="math inline">\(\langle e_k|\psi\rangle\)</span> and, given that the vectors <span class="math inline">\(|e_k\rangle\)</span> span the whole vector space, the system will be always found in one of the basis states, whence
+<span class="math display">\[
+  \sum_k |\langle e_k|\psi\rangle|^2 = 1.
+\]</span>
+As a result:</p>
+<div class="idea">
+<p>A <strong>complete</strong> measurement in quantum theory is determined by the choice of an orthonormal basis <span class="math inline">\(\{|e_i\rangle\}\)</span> in <span class="math inline">\(\mathcal{H}\)</span>, and every such basis (in principle) represents a possible complete measurement.</p>
+</div>
+</div>
+<div id="back-to-qubits-complete-measurements" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Back to qubits; complete measurements</h2>
+<div class="idea">
+<p>A <strong>projector</strong> is any Hermitian operator <span class="math inline">\(P=P^\dagger\)</span> which is idempotent (<span class="math inline">\(P^2=P\)</span>).
+The rank of <span class="math inline">\(P\)</span> is evaluated using <span class="math inline">\(\operatorname{tr}(P)\)</span>.
+In the Dirac notation, <span class="math inline">\(|e\rangle\langle e|\)</span> is a rank one projector on the subspace spanned by the unit vector <span class="math inline">\(|e\rangle\)</span>, and it acts on any vector <span class="math inline">\(|v\rangle\)</span> as <span class="math inline">\((|e\rangle\langle e|)|v\rangle = |e\rangle\langle e|v\rangle\)</span>.</p>
+</div>
+<p>The most common measurement in quantum information science is the standard measurement on a qubit, also referred to as the measurement in the <strong>standard</strong> (or <strong>computational</strong>) basis <span class="math inline">\(\{|0\rangle,|1\rangle\}\)</span>.
+When we draw circuit diagrams it is tacitly assumed that such a measurement is performed on each qubit at the end of quantum evolution.</p>
+<div class="figure" style="text-align: center"><span id="fig:standard-basis-measurement"></span>
+<img src="quantum-info_files/figure-html/standard-basis-measurement-1.png" alt="The standard (computational) basis defines the standard measurements." width="288" />
+<p class="caption">
+Figure 4.1: The standard (computational) basis defines the standard measurements.
+</p>
+</div>
+<p>However, if we want to emphasise the role of the measurement, then we can include it explicitly in the diagram as a special quantum gate, e.g. as</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-28-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>or, in an alternative notation, as</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-29-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>As we can see, if the qubit is prepared in state <span class="math inline">\(|\psi\rangle = \alpha_0|0\rangle + \alpha_1|1\rangle\)</span> and subsequently measured in the standard basis state, then the outcome is <span class="math inline">\(|k\rangle\)</span> (for <span class="math inline">\(k=0,1\)</span>) with probability
+<span class="math display">\[
+  \begin{aligned}
+    |\alpha_k|^2
+    &amp;= |\langle k|\psi\rangle|^2
+  \\&amp;= \underbrace{\langle\psi|k\rangle}_{\alpha_k^\star}
+    \underbrace{\langle k|\psi\rangle}_{\alpha_k}
+  \\&amp;= \langle\psi| \underbrace{|k\rangle\langle k|}_{\text{projector}} |\psi\rangle
+  \\&amp;= \langle\psi|P_k|\psi\rangle
+  \end{aligned}
+\]</span>
+where <span class="math inline">\(P_k=|k\rangle\langle k|\)</span> is the projector on <span class="math inline">\(|k\rangle\)</span>.
+If the outcome of the measurement is <span class="math inline">\(k\)</span>, then the output state of the measurement gate is <span class="math inline">\(|k\rangle\)</span>.
+The original state <span class="math inline">\(|\psi\rangle\)</span> is <em>irretrievably lost</em>.
+This sudden change of the state, from the pre-measurement state <span class="math inline">\(|\psi\rangle\)</span> to the post-measurement state, either <span class="math inline">\(|0\rangle\)</span> or <span class="math inline">\(|1\rangle\)</span>, is often called a <strong>collapse</strong> or a <strong>reduction</strong> of the state.</p>
+<p>So it looks like there are two distinct ways for a quantum state to change: on the one hand we have unitary evolutions, and on the other hand we have an abrupt change during the measurement process.
+Surely, the measurement process is not governed by any different laws of physics?</p>
+<p>No, it is not!</p>
+<p>A measurement is a physical process and can be explained without any “collapse”, but it is usually a complicated process in which one complex system (a measuring apparatus or an observer) interacts and gets correlated with a physical system being measured.
+We will discuss this more later on, but for now let us accept a “collapse” as a <em>convenient mathematical shortcut</em>, and describe it in terms of projectors rather than unitary operators.</p>
+</div>
+<div id="the-projection-rule-incomplete-measurements" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> The projection rule; incomplete measurements</h2>
+<p>So far we have identified measurements with orthonormal bases, or, if you wish, with a set of orthonormal projectors on the basis vectors.</p>
+<div class="idea">
+<ul>
+<li>The <strong>orthonormality</strong> condition:
+<span class="math display">\[
+    \langle e_k|e_l\rangle = \delta_{kl}
+  \]</span>
+i.e. the basis consists of unit vectors that are pairwise orthogonal.</li>
+<li>The <strong>completeness</strong> condition:
+<span class="math display">\[
+    \sum_k|e_k\rangle\langle e_k| = \operatorname{id}
+  \]</span>
+i.e. <em>any</em> vector in <span class="math inline">\(\mathcal{H}\)</span> can be expressed as the sum of orthogonal projections on <span class="math inline">\(|e_k\rangle\)</span>.</li>
+</ul>
+</div>
+<p>Given a quantum system in state <span class="math inline">\(|\psi\rangle\)</span> such that <span class="math inline">\(|\psi\rangle = \sum_k \alpha_k|e_k\rangle\)</span>, we can write
+<span class="math display">\[
+  \begin{aligned}
+    |\psi\rangle
+    &amp;= \operatorname{id}|\psi\rangle
+  \\&amp;= \sum_k |e_k\rangle\langle e_k| |\psi\rangle
+  \\&amp;= \sum_k |e_k\rangle\langle e_k|\psi\rangle
+  \\&amp;= \sum_k |e_k\rangle\alpha_k
+  \\&amp;= \sum_k \alpha_k|e_k\rangle.
+  \end{aligned}
+\]</span>
+This says that the measurement in the basis <span class="math inline">\(\{|e_i\rangle\}\)</span> gives the outcome labelled by <span class="math inline">\(e_k\)</span> with probability
+<span class="math display">\[
+  |\langle e_k|\psi\rangle|^2 = \langle\psi|e_k\rangle\langle e_k|\psi\rangle
+\]</span>
+and leaves the system in state <span class="math inline">\(|e_k\rangle\)</span>.
+This is a <em>complete</em> measurement, which represents the best we can do in terms of resolving state vectors in the basis states.
+But sometimes we do not want our measurement to distinguish all the elements of an orthonormal basis.</p>
+<p>For example, a complete measurement in a four-dimensional Hilbert space will have four distinct outcomes: <span class="math inline">\(|e_1\rangle\)</span>, <span class="math inline">\(|e_2\rangle\)</span>, <span class="math inline">\(|e_3\rangle\)</span>, and <span class="math inline">\(|e_4\rangle\)</span>, but we may want to lump together some of the outcomes and distinguish, say, only between <span class="math inline">\(\{|e_1\rangle\)</span>, <span class="math inline">\(|e_2\rangle\}\)</span>, and <span class="math inline">\(\{|e_3\rangle,|e_4\rangle\}\)</span>.
+In other words, we might be trying to distinguish one <em>subspace</em> from another, without separating vectors that lie in the same subspace.
+Such measurements (said to be <strong>incomplete</strong>) are indeed possible, and they can be less disruptive than the complete measurements.</p>
+<div class="idea">
+<p>Intuitively, an incomplete measurement has fewer outcomes and is hence less informative, but the state after such a measurement is usually less disturbed.</p>
+</div>
+<p>In general, instead of projecting on one dimensional subspaces spanned by vectors from an orthonormal basis, we can decompose our Hilbert space into mutually orthogonal subspaces of various dimensions and project on them.</p>
+<div class="idea">
+<ul>
+<li>The orthogonality conditions for projectors:
+<span class="math display">\[
+    P_k P_l = P_k\delta_{kl}
+  \]</span></li>
+<li>The projector decomposition of the identity:
+<span class="math display">\[
+    \sum_k P_k = \operatorname{id}
+  \]</span></li>
+</ul>
+</div>
+<p>For any decomposition of the identity into orthogonal projectors <span class="math inline">\(P_k\)</span>, there exists a measurement that takes a quantum system in state <span class="math inline">\(|\psi\rangle\)</span>, outputs label <span class="math inline">\(k\)</span> with probability <span class="math inline">\(\langle\psi|P_k|\psi\rangle\)</span>, and leaves the system in the state <span class="math inline">\(P_k|\psi\rangle\)</span> (multiplied by the normalisation factor, i.e. divided by the length of <span class="math inline">\(P_k|\psi\rangle\)</span>):
+<span class="math display">\[
+  |\psi\rangle
+  \mapsto
+  \frac{P_k|\psi\rangle}{\sqrt{\langle\psi|P_k|\psi\rangle}}.
+\]</span></p>
+</div>
+<div id="example-of-an-incomplete-measurement" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Example of an incomplete measurement</h2>
 
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="51">
+<li id="fn51"><p>The term “Hilbert space” used to be reserved for an infinite-dimensional inner product space that is <strong>complete</strong>, i.e. such that every Cauchy sequence in the space converges to an element in the space. Nowadays, as in these notes, the term includes finite-dimensional spaces, which automatically satisfy the condition of completeness.<a href="chapter4.html#fnref51" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
             </section>
 
