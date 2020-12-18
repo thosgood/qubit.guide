@@ -32,7 +32,7 @@ $$
 $$
 As a result:
 
-::: {.idea}
+::: {.idea data-latex=""}
   A **complete** measurement in quantum theory is determined by the choice of an orthonormal basis $\{\ket{e_i}\}$ in $\mathcal{H}$, and every such basis (in principle) represents a possible complete measurement.
 :::
 
@@ -42,7 +42,7 @@ As a result:
 
 ## Back to qubits; complete measurements
 
-::: {.idea}
+::: {.idea data-latex=""}
   A **projector** is any Hermitian operator $P=P^\dagger$ which is idempotent ($P^2=P$).
   The rank of $P$ is evaluated using $\tr(P)$.
   In the Dirac notation, $\proj{e}$ is a rank one projector on the subspace spanned by the unit vector $\ket{e}$, and it acts on any vector $\ket{v}$ as $(\proj{e})\ket{v} = \ket{e}\braket{e|v}$.
@@ -135,7 +135,7 @@ We will discuss this more later on, but for now let us accept a "collapse" as a 
 
 So far we have identified measurements with orthonormal bases, or, if you wish, with a set of orthonormal projectors on the basis vectors.
 
-::: {.idea}
+::: {.idea data-latex=""}
   - The **orthonormality** condition:
       $$
         \braket{e_k|e_l} = \delta_{kl}
@@ -171,13 +171,13 @@ For example, a complete measurement in a four-dimensional Hilbert space will hav
 In other words, we might be trying to distinguish one _subspace_ from another, without separating vectors that lie in the same subspace.
 Such measurements (said to be **incomplete**) are indeed possible, and they can be less disruptive than the complete measurements.
 
-::: {.idea}
+::: {.idea data-latex=""}
   Intuitively, an incomplete measurement has fewer outcomes and is hence less informative, but the state after such a measurement is usually less disturbed.
 :::
 
 In general, instead of projecting on one dimensional subspaces spanned by vectors from an orthonormal basis, we can decompose our Hilbert space into mutually orthogonal subspaces of various dimensions and project on them.
 
-::: {.idea}
+::: {.idea data-latex=""}
   - The orthogonality conditions for projectors:
       $$
         P_k P_l = P_k\delta_{kl}
@@ -200,3 +200,234 @@ $$
 
 
 ## Example of an incomplete measurement
+
+Consider a three-dimensional Hilbert space $\mathcal{H}$, and the two orthogonal projectors
+$$
+  \begin{aligned}
+    P &= \ket{e_1}\bra{e_1} + \ket{e_2}\bra{e_2}
+  \\Q &= \ket{e_3}\bra{e_3}
+  \end{aligned}
+$$
+that form the decomposition of the identity: $P+Q=\id$.
+Suppose that a physical system is prepared in state $\ket{\psi} = \alpha_1\ket{e_1} + \alpha_2\ket{e_2} + \alpha_3\ket{e_3}$.
+Ideally, we would like to perform a complete measurement that would resolve the state $\ket{v}$ into the three basis states, but suppose our experimental apparatus is not good enough, and lumps together $\ket{e_1}$ and $\ket{e_2}$.
+In other words, it can only differentiate between the two subspaces associated with projectors $P$ and $Q$.
+
+The apparatus, in this incomplete measurement, may find the system in the subspace associated with $P$.
+This happens with probability
+$$
+  \begin{aligned}
+    \braket{\psi|P|\psi}
+    &= \braket{\psi|e_1} \braket{e_1|\psi} + \braket{\psi|e_2} \braket{e_2|\psi}
+  \\&= |\alpha_1|^2 + |\alpha_2|^2,
+  \end{aligned}
+$$
+and the state right after the measurement is the normalised vector $P\ket{\psi}$, i.e.
+$$
+  \frac{\alpha_1\ket{e_1}+\alpha_2\ket{e_2}}{\sqrt{|\alpha_1|^2 + |\alpha_2|^2}}.
+$$
+
+The measurement may also find the system in the subspace associated with $Q$ with the probability $\braket{\psi|Q|\psi} = |\alpha_3|^2$, resulting in the post-measurement state $\ket{e_3}$.
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=3.5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\definecolor{lowlight}{RGB}{184,177,162}
+\usetikzlibrary{arrows.meta}
+\tdplotsetmaincoords{60}{120}
+\begin{tikzpicture}[scale=2, tdplot_main_coords, 
+    axis/.style={->},
+    vector/.style={-Latex,ultra thick,primary},
+    vector guide/.style={dashed,lowlight},
+    projection/.style={-Latex,secondary}]
+  %standard tikz coordinate definition using x, y, z coords
+  \coordinate (O) at (0,0,0);
+  %tikz-3dplot coordinate definition using x, y, z coords
+  \pgfmathsetmacro{\ax}{0.7}
+  \pgfmathsetmacro{\ay}{1}
+  \pgfmathsetmacro{\az}{1}
+  \coordinate (P) at (\ax,\ay,\az);
+  %draw axes
+  \draw[axis] (0,0,0) to (1.2,0,0) node [anchor=north east,lowlight] {$\ket{e_1}$};
+  \draw[axis] (0,0,0) to (0,1.2,0) node [anchor=north west,lowlight] {$\ket{e_2}$};
+  \draw[axis] (0,0,0) to (0,0,1.2) node [anchor=south,lowlight] {$\ket{e_3}$};
+  %draw a vector from O to P
+  \draw[vector] (O) to (P) node [anchor=west] {$\ket{\psi}$};
+  %draw guide lines to components
+  \draw[projection] (O) to (\ax,\ay,0) node [anchor=north] {$P\ket{\psi}$};
+  \draw[projection] (0,0,0) to (0,0,\az) node [anchor=east] {$Q\ket{\psi}$};
+  \draw[vector guide] (\ax,\ay,0) to (P);
+  \draw[vector guide] (P) to (0,0,\az);
+  \draw[vector guide] (\ax,\ay,0) to (0,\ay,0);
+  \draw[vector guide] (\ax,\ay,0) to (0,\ay,0);
+  \draw[vector guide] (\ax,\ay,0) to (\ax,0,0);
+\end{tikzpicture}
+```
+
+
+
+
+
+## Observables
+
+An **observable** $A$ is a measurable physical property which has a numerical value, for example, spin or momentum or energy.
+The term "observable" also extends to any basic measurement in which each outcome is associated with a numerical value.
+If $\lambda_k$ is the numerical value associated with outcome $\ket{e_k}$ then we say that the observable $A$ is **represented** by the operator
+$$
+  \begin{aligned}
+    A
+    &= \sum_k \lambda_k \proj{e_k}
+  \\&= \sum_k \lambda_k P_k,
+  \end{aligned}
+$$
+where $\lambda_k$ is now the eigenvalue corresponding to the eigenvector $\ket{e_k}$, or the projector $P_k$.
+
+::: {.idea data-latex=""}
+  Recall the following types of operator:
+
+  | | |
+  | :- | :- |
+  | **normal** | $AA^\dagger = A^\dagger A$ |
+  | **unitary** | $AA^\dagger = A^\dagger A = \id$ |
+  | **Hermitian**, or **self-adjoint** | $A^\dagger = A$ |
+  | **positive semi-definite** | $\braket{v|A|v}\geq0$ for all $\ket{v}$ |
+
+  Note that an operator $A$ is normal if and only if it is unitarily diagonalisable, and that both unitary and Hermitian operators are normal.
+:::
+
+Conversely, to any normal operator $A$ we can associate a measurement defined by the eigenvectors of $A$, which form an orthonormal basis, and use the eigenvalues of $A$ to label the outcomes of this measurement.
+If we choose the eigenvalues to be real numbers then $A$ becomes a Hermitian operator.
+For example, the standard measurement on a single qubit is often called the **$Z$-measurement**, because the Pauli $Z$ operator can be diagonalised in the standard basis and written as $Z = (+1)\proj{0} + (-1)\proj{1}$.
+The two outcomes, $\ket{0}$ and $\ket{1}$, are now labelled as $+1$ and $-1$, respectively.
+Using the same association we also have the $X$- and the $Y$-measurements, defined by the Pauli $X$ and $Y$ operators, respectively.
+
+Let us mention in passing that many textbooks describe observables in terms of Hermitian operators and claim that the corresponding operators have to be Hermitian "because the outcomes are real numbers".
+This is misleading, since:
+
+::: {.idea data-latex=""}
+  The outcomes can be labelled by any symbols of your choice; it is the _decomposition_ of the Hilbert space into _mutually orthogonal subspaces_ that defines a measurement, not the labels.
+:::
+
+
+This said, labelling outcomes with real numbers is very useful.
+For example, the expected value $\av{A}$, which is the average of the numerical values $\lambda_k$ weighted by their probabilities, is a very useful quantity and can be easily expressed in terms of the operator $A$ as $\braket{\psi|A|\psi}$, as follows:
+$$
+  \begin{aligned}
+    \sum_k \lambda_k \Pr (\text{outcome k})
+    &= \sum_k \lambda_k |\braket{e_k|\psi}|^2
+  \\&= \sum_k\lambda_k \braket{\psi|e_k}\braket{e_k|\psi}
+  \\&= \bra{\psi} \left( \sum_k\lambda_k\proj{e_k} \right)\ket{\psi}
+  \\&= \braket{\psi|A|\psi}.
+  \end{aligned}
+$$
+To be clear, this is not a value we expect to see in any particular experiment.
+Instead, imagine a huge number of quantum objects, all prepared in the state $\ket{\psi}$ and think about the observable $A$ being measured on each of the objects.
+Statistically we then expect the average of our measurement results to be roughly $\av{A}$.
+Note that when $A$ is a projector then $\braket{\psi|A|\psi}$ is the probability of the outcome associated with $A$.
+
+
+
+
+
+## Compatible observables and the uncertainty relation
+
+**!!!TODO!!!**
+
+
+
+
+
+## Quantum communication
+
+Now is a good moment to introduce Alice and Bob (not their real names): our two protagonists who always need to communicate with each other.
+These two play the major role in many communication dramas, though they remain rather lacking in character development.
+
+This time Alice is sending quantum states to Bob, and Bob does his best to identify them correctly by choosing appropriate measurements.
+Let us start we a simple observation: if a quantum state of the carrier of information is described by a state vector in a $2^n$-dimensional Hilbert space, then the carrier can carry at most $n$ bits of information.
+For example, Alice can choose one of the $2^n$ states from a pre-agreed orthonormal basis $\{\ket{e_k}\}$, and Bob will be able to distinguish them reliably by choosing the $\{\ket{e_k}\}$ basis for his measurement.
+
+But can Alice and Bob do better than that?
+Can Alice send more than $n$ bits of information per carrier by encoding them in states $\ket{s_1},\ldots,\ket{s_N}$ where $N \geq 2^n$?
+Can Bob choose a clever measurement and reliably distinguish between all such states?
+
+The answer is _no_.
+
+
+
+
+
+## Basic quantum coding and decoding
+
+Suppose Alice randomly chooses one of the pre-agreed $N$ signal states $\ket{s_k}$ and sends it to Bob, who tries to identify the signal states by performing a measurement defined by the projectors $P_l$.
+Let $P$ be a projector on a subspace spanned by the signal states $\ket{e_k}$, i.e. $P\ket{s_k} = \ket{s_k}$.
+The dimension $d$ of this subspace is given by $d = \tr P$.
+We shall assume, without any loss of generality, that Bob designed his measurement in such a way that, whenever he gets outcome $P_k$, he concludes that Alice sent state $\ket{s_k}$.
+His probability of success is given by
+$$
+  \Pr(\mbox{success})
+  = \frac{1}{N} \sum_k \braket{s_k|P_k|s_k}
+$$
+which is the probability that signal state $\ket{s_k}$ is selected (here equal to $1/N$, since all the signal states are equally likely) times the probability that the selected signal state is correctly identified by Bob (which is $\braket{s_k|P_k|s_k}$), and we sum over all signal states.
+
+::: {.idea data-latex=""}
+  We have the following **trace identities**:
+
+  - $\tr(ABC) = \tr(BCA) = \tr(CAB)$
+  - $\tr\ket{a}\bra{b} = \braket{b|a}$
+  - $\tr\ket{a}\bra{b} = \braket{b|A|a}$
+  - $\tr BP \leq \tr B$ for any positive semi-definite $B$ and projector $P$.
+
+  To prove this last identity, consider the projector $Q=\id-P$, and note that
+  $$
+    \begin{aligned}
+      \tr B
+      &= \tr B(P+Q)
+    \\&= \tr BP + \tr BQ
+    \end{aligned}
+  $$
+  and that $\tr BQ$ is non-negative.
+:::
+
+Let us use this case to practice some of the trace identities.
+It is often convenient to write expressions such as $\braket{\psi|A|\psi}$ in terms of the trace: for any vector $\ket{\psi}$ and operator $A$ we have
+$$
+  \begin{aligned}
+    \braket{\psi|A|\psi}
+    &= \tr(A\proj{\psi})
+  \\&= \tr(\proj{\psi} A).
+  \end{aligned}
+$$
+In our case,
+$$
+  \begin{aligned}
+    \Pr(\mbox{success})
+    &= \frac{1}{N} \sum_k \braket{s_k|P_k|s_k}
+  \\&= \frac{1}{N} \sum_k \braket{s_k|PP_kP|s_k}
+  \\&= \frac{1}{N} \sum_k \tr(PP_kP) \proj{s_k}
+  \end{aligned}
+$$
+where we have also used that $P\ket{s_k}=\ket{s_k}$.
+Let us bound this expression above by using the trace identities:
+$$
+  \begin{aligned}
+    \frac{1}{N} \sum_k \tr(PP_kP) \proj{s_k}
+    &\leq \frac{1}{N} \sum_k \tr(PP_kP)
+  \\&= \frac{1}{N} \sum_k \tr\left( P\left( \sum_k P_k \right) P \right)
+  \\&= \frac{1}{N} \sum_k \tr(P\id P)
+  \\&= \frac{d}{N}
+  \end{aligned}
+$$
+
+So if Alice encodes $N$ equally likely messages as states in a quantum system that, mathematically speaking, lives in the Hilbert space of dimension $d$, and if Bob decodes by performing a measurement and inferring the message from the result, then Bob's probability of success is bounded by $\frac{d}{N}$.
+If the number $N$ of possible signals exceeds the dimension $d$, then Bob will not be able to reliably distinguish between the signals by any measurement.
+In particular:
+
+::: {.idea data-latex=""}
+  One qubit can store and carry _at most_ one bit of information that can _reliably_ be read by a measurement.
+:::
+
+
+
+
+
+## Distinguishability of non-orthogonal states

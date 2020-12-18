@@ -19,6 +19,9 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.17}
 \usepackage{tikz-3dplot-circleofsphere}
@@ -74,7 +77,6 @@
 \date{Last updated: December 18, 2020}
 
 
-
 \begin{document}
 
 \setcounter{tocdepth}{2}
@@ -89,6 +91,8 @@
 \providecommand{\tr}{\operatorname{tr}}
 \providecommand{\id}{\operatorname{id}}
 \providecommand{\diag}[2]{\begin{bmatrix}#1&0\\0&#2\end{bmatrix}}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
 
 \hypertarget{introduction}{%
 \section*{Introduction}\label{introduction}}
@@ -1035,7 +1039,7 @@ If we are willing to accept a probability of error no larger than \(\epsilon\), 
   This can only go wrong if \(w>r/2\).
   Give an upper bound on the probability of any single sequence that would lead us to the wrong conclusion.
 \item
-  Using the bound \(1-x\leq e^{-x}\), conclude that the probability of our coming to the wrong conclusion is upper bounded by \(e^{-2r\delta^2}\).
+  Using the bound \(1-x\leqslant e^{-x}\), conclude that the probability of our coming to the wrong conclusion is upper bounded by \(e^{-2r\delta^2}\).
 \end{enumerate}
 
 \hypertarget{chapter2}{%
@@ -2561,14 +2565,22 @@ The probability amplitude that the system in state \(|\psi\rangle\) will be foun
 \]
 As a result:
 
+\begin{idea}
+
 A \textbf{complete} measurement in quantum theory is determined by the choice of an orthonormal basis \(\{|e_i\rangle\}\) in \(\mathcal{H}\), and every such basis (in principle) represents a possible complete measurement.
+
+\end{idea}
 
 \hypertarget{back-to-qubits-complete-measurements}{%
 \subsection{Back to qubits; complete measurements}\label{back-to-qubits-complete-measurements}}
 
+\begin{idea}
+
 A \textbf{projector} is any Hermitian operator \(P=P^\dagger\) which is idempotent (\(P^2=P\)).
 The rank of \(P\) is evaluated using \(\operatorname{tr}(P)\).
 In the Dirac notation, \(|e\rangle\langle e|\) is a rank one projector on the subspace spanned by the unit vector \(|e\rangle\), and it acts on any vector \(|v\rangle\) as \((|e\rangle\langle e|)|v\rangle = |e\rangle\langle e|v\rangle\).
+
+\end{idea}
 
 The most common measurement in quantum information science is the standard measurement on a qubit, also referred to as the measurement in the \textbf{standard} (or \textbf{computational}) basis \(\{|0\rangle,|1\rangle\}\).
 When we draw circuit diagrams it is tacitly assumed that such a measurement is performed on each qubit at the end of quantum evolution.
@@ -2590,7 +2602,7 @@ or, in an alternative notation, as
 
 \begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-29-1} \end{center}
 
-As we can see, if the qubit is prepared in state \(|\psi\rangle = \alpha_0|0\rangle + \alpha_1|1\rangle\) and subsequently measured in the standard basis state, then the outcome is \(|k\rangle\) (for \(k=0,1\)) with probability
+As we can see, if the qubit is prepared in state \(|\psi\rangle = \alpha_0|0\rangle + \alpha_1|1\rangle\) and subsequently measured in the standard basis state, then the outcome is \(|k\rangle\) (for \(k=0,1\)) with probability\footnote{This slick argument is a good example of how nice the bra-ket notation can be.}
 \[
   \begin{aligned}
     |\alpha_k|^2
@@ -2619,6 +2631,8 @@ We will discuss this more later on, but for now let us accept a ``collapse'' as 
 
 So far we have identified measurements with orthonormal bases, or, if you wish, with a set of orthonormal projectors on the basis vectors.
 
+\begin{idea}
+
 \begin{itemize}
 \tightlist
 \item
@@ -2634,6 +2648,8 @@ So far we have identified measurements with orthonormal bases, or, if you wish, 
     \]
   i.e.~\emph{any} vector in \(\mathcal{H}\) can be expressed as the sum of orthogonal projections on \(|e_k\rangle\).
 \end{itemize}
+
+\end{idea}
 
 Given a quantum system in state \(|\psi\rangle\) such that \(|\psi\rangle = \sum_k \alpha_k|e_k\rangle\), we can write
 \[
@@ -2658,9 +2674,15 @@ For example, a complete measurement in a four-dimensional Hilbert space will hav
 In other words, we might be trying to distinguish one \emph{subspace} from another, without separating vectors that lie in the same subspace.
 Such measurements (said to be \textbf{incomplete}) are indeed possible, and they can be less disruptive than the complete measurements.
 
+\begin{idea}
+
 Intuitively, an incomplete measurement has fewer outcomes and is hence less informative, but the state after such a measurement is usually less disturbed.
 
+\end{idea}
+
 In general, instead of projecting on one dimensional subspaces spanned by vectors from an orthonormal basis, we can decompose our Hilbert space into mutually orthogonal subspaces of various dimensions and project on them.
+
+\begin{idea}
 
 \begin{itemize}
 \tightlist
@@ -2676,6 +2698,8 @@ In general, instead of projecting on one dimensional subspaces spanned by vector
     \]
 \end{itemize}
 
+\end{idea}
+
 For any decomposition of the identity into orthogonal projectors \(P_k\), there exists a measurement that takes a quantum system in state \(|\psi\rangle\), outputs label \(k\) with probability \(\langle\psi|P_k|\psi\rangle\), and leaves the system in the state \(P_k|\psi\rangle\) (multiplied by the normalisation factor, i.e.~divided by the length of \(P_k|\psi\rangle\)):
 \[
   |\psi\rangle
@@ -2685,6 +2709,206 @@ For any decomposition of the identity into orthogonal projectors \(P_k\), there 
 
 \hypertarget{example-of-an-incomplete-measurement}{%
 \subsection{Example of an incomplete measurement}\label{example-of-an-incomplete-measurement}}
+
+Consider a three-dimensional Hilbert space \(\mathcal{H}\), and the two orthogonal projectors
+\[
+  \begin{aligned}
+    P &= |e_1\rangle\langle e_1| + |e_2\rangle\langle e_2|
+  \\Q &= |e_3\rangle\langle e_3|
+  \end{aligned}
+\]
+that form the decomposition of the identity: \(P+Q=\operatorname{id}\).
+Suppose that a physical system is prepared in state \(|\psi\rangle = \alpha_1|e_1\rangle + \alpha_2|e_2\rangle + \alpha_3|e_3\rangle\).
+Ideally, we would like to perform a complete measurement that would resolve the state \(|v\rangle\) into the three basis states, but suppose our experimental apparatus is not good enough, and lumps together \(|e_1\rangle\) and \(|e_2\rangle\).
+In other words, it can only differentiate between the two subspaces associated with projectors \(P\) and \(Q\).
+
+The apparatus, in this incomplete measurement, may find the system in the subspace associated with \(P\).
+This happens with probability
+\[
+  \begin{aligned}
+    \langle\psi|P|\psi\rangle
+    &= \langle\psi|e_1\rangle \langle e_1|\psi\rangle + \langle\psi|e_2\rangle \langle e_2|\psi\rangle
+  \\&= |\alpha_1|^2 + |\alpha_2|^2,
+  \end{aligned}
+\]
+and the state right after the measurement is the normalised vector \(P|\psi\rangle\), i.e.
+\[
+  \frac{\alpha_1|e_1\rangle+\alpha_2|e_2\rangle}{\sqrt{|\alpha_1|^2 + |\alpha_2|^2}}.
+\]
+
+The measurement may also find the system in the subspace associated with \(Q\) with the probability \(\langle\psi|Q|\psi\rangle = |\alpha_3|^2\), resulting in the post-measurement state \(|e_3\rangle\).
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-30-1} \end{center}
+
+\hypertarget{observables}{%
+\subsection{Observables}\label{observables}}
+
+An \textbf{observable} \(A\) is a measurable physical property which has a numerical value, for example, spin or momentum or energy.
+The term ``observable'' also extends to any basic measurement in which each outcome is associated with a numerical value.
+If \(\lambda_k\) is the numerical value associated with outcome \(|e_k\rangle\) then we say that the observable \(A\) is \textbf{represented} by the operator
+\[
+  \begin{aligned}
+    A
+    &= \sum_k \lambda_k |e_k\rangle\langle e_k|
+  \\&= \sum_k \lambda_k P_k,
+  \end{aligned}
+\]
+where \(\lambda_k\) is now the eigenvalue corresponding to the eigenvector \(|e_k\rangle\), or the projector \(P_k\).
+
+\begin{idea}
+
+Recall the following types of operator:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\endhead
+\textbf{normal} & \(AA^\dagger = A^\dagger A\)\tabularnewline
+\textbf{unitary} & \(AA^\dagger = A^\dagger A = \operatorname{id}\)\tabularnewline
+\textbf{Hermitian}, or \textbf{self-adjoint} & \(A^\dagger = A\)\tabularnewline
+\textbf{positive semi-definite} & \(\langle v|A|v\rangle\geqslant 0\) for all \(|v\rangle\)\tabularnewline
+\bottomrule
+\end{longtable}
+
+Note that an operator \(A\) is normal if and only if it is unitarily diagonalisable, and that both unitary and Hermitian operators are normal.
+
+\end{idea}
+
+Conversely, to any normal operator \(A\) we can associate a measurement defined by the eigenvectors of \(A\), which form an orthonormal basis, and use the eigenvalues of \(A\) to label the outcomes of this measurement.
+If we choose the eigenvalues to be real numbers then \(A\) becomes a Hermitian operator.
+For example, the standard measurement on a single qubit is often called the \textbf{\(Z\)-measurement}, because the Pauli \(Z\) operator can be diagonalised in the standard basis and written as \(Z = (+1)|0\rangle\langle 0| + (-1)|1\rangle\langle 1|\).
+The two outcomes, \(|0\rangle\) and \(|1\rangle\), are now labelled as \(+1\) and \(-1\), respectively.
+Using the same association we also have the \(X\)- and the \(Y\)-measurements, defined by the Pauli \(X\) and \(Y\) operators, respectively.
+
+Let us mention in passing that many textbooks describe observables in terms of Hermitian operators and claim that the corresponding operators have to be Hermitian ``because the outcomes are real numbers''.
+This is misleading, since:
+
+\begin{idea}
+
+The outcomes can be labelled by any symbols of your choice; it is the \emph{decomposition} of the Hilbert space into \emph{mutually orthogonal subspaces} that defines a measurement, not the labels.
+
+\end{idea}
+
+This said, labelling outcomes with real numbers is very useful.
+For example, the expected value \(\langle A\rangle\), which is the average of the numerical values \(\lambda_k\) weighted by their probabilities, is a very useful quantity and can be easily expressed in terms of the operator \(A\) as \(\langle\psi|A|\psi\rangle\), as follows:
+\[
+  \begin{aligned}
+    \sum_k \lambda_k \Pr (\text{outcome k})
+    &= \sum_k \lambda_k |\langle e_k|\psi\rangle|^2
+  \\&= \sum_k\lambda_k \langle\psi|e_k\rangle\langle e_k|\psi\rangle
+  \\&= \langle\psi| \left( \sum_k\lambda_k|e_k\rangle\langle e_k| \right)|\psi\rangle
+  \\&= \langle\psi|A|\psi\rangle.
+  \end{aligned}
+\]
+To be clear, this is not a value we expect to see in any particular experiment.
+Instead, imagine a huge number of quantum objects, all prepared in the state \(|\psi\rangle\) and think about the observable \(A\) being measured on each of the objects.
+Statistically we then expect the average of our measurement results to be roughly \(\langle A\rangle\).
+Note that when \(A\) is a projector then \(\langle\psi|A|\psi\rangle\) is the probability of the outcome associated with \(A\).
+
+\hypertarget{compatible-observables-and-the-uncertainty-relation}{%
+\subsection{Compatible observables and the uncertainty relation}\label{compatible-observables-and-the-uncertainty-relation}}
+
+\textbf{!!!TODO!!!}
+
+\hypertarget{quantum-communication}{%
+\subsection{Quantum communication}\label{quantum-communication}}
+
+Now is a good moment to introduce Alice and Bob (not their real names): our two protagonists who always need to communicate with each other.
+These two play the major role in many communication dramas, though they remain rather lacking in character development.
+
+This time Alice is sending quantum states to Bob, and Bob does his best to identify them correctly by choosing appropriate measurements.
+Let us start we a simple observation: if a quantum state of the carrier of information is described by a state vector in a \(2^n\)-dimensional Hilbert space, then the carrier can carry at most \(n\) bits of information.
+For example, Alice can choose one of the \(2^n\) states from a pre-agreed orthonormal basis \(\{|e_k\rangle\}\), and Bob will be able to distinguish them reliably by choosing the \(\{|e_k\rangle\}\) basis for his measurement.
+
+But can Alice and Bob do better than that?
+Can Alice send more than \(n\) bits of information per carrier by encoding them in states \(|s_1\rangle,\ldots,|s_N\rangle\) where \(N \geqslant 2^n\)?
+Can Bob choose a clever measurement and reliably distinguish between all such states?
+
+The answer is \emph{no}.
+
+\hypertarget{basic-quantum-coding-and-decoding}{%
+\subsection{Basic quantum coding and decoding}\label{basic-quantum-coding-and-decoding}}
+
+Suppose Alice randomly chooses one of the pre-agreed \(N\) signal states \(|s_k\rangle\) and sends it to Bob, who tries to identify the signal states by performing a measurement defined by the projectors \(P_l\).
+Let \(P\) be a projector on a subspace spanned by the signal states \(|e_k\rangle\), i.e.~\(P|s_k\rangle = |s_k\rangle\).
+The dimension \(d\) of this subspace is given by \(d = \operatorname{tr}P\).
+We shall assume, without any loss of generality, that Bob designed his measurement in such a way that, whenever he gets outcome \(P_k\), he concludes that Alice sent state \(|s_k\rangle\).
+His probability of success is given by
+\[
+  \Pr(\mbox{success})
+  = \frac{1}{N} \sum_k \langle s_k|P_k|s_k\rangle
+\]
+which is the probability that signal state \(|s_k\rangle\) is selected (here equal to \(1/N\), since all the signal states are equally likely) times the probability that the selected signal state is correctly identified by Bob (which is \(\langle s_k|P_k|s_k\rangle\)), and we sum over all signal states.
+
+\begin{idea}
+
+We have the following \textbf{trace identities}:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\operatorname{tr}(ABC) = \operatorname{tr}(BCA) = \operatorname{tr}(CAB)\)
+\item
+  \(\operatorname{tr}|a\rangle\langle b| = \langle b|a\rangle\)
+\item
+  \(\operatorname{tr}|a\rangle\langle b| = \langle b|A|a\rangle\)
+\item
+  \(\operatorname{tr}BP \leqslant\operatorname{tr}B\) for any positive semi-definite \(B\) and projector \(P\).
+\end{itemize}
+
+To prove this last identity, consider the projector \(Q=\operatorname{id}-P\), and note that
+\[
+    \begin{aligned}
+      \operatorname{tr}B
+      &= \operatorname{tr}B(P+Q)
+    \\&= \operatorname{tr}BP + \operatorname{tr}BQ
+    \end{aligned}
+  \]
+and that \(\operatorname{tr}BQ\) is non-negative.
+
+\end{idea}
+
+Let us use this case to practice some of the trace identities.
+It is often convenient to write expressions such as \(\langle\psi|A|\psi\rangle\) in terms of the trace: for any vector \(|\psi\rangle\) and operator \(A\) we have
+\[
+  \begin{aligned}
+    \langle\psi|A|\psi\rangle
+    &= \operatorname{tr}(A|\psi\rangle\langle\psi|)
+  \\&= \operatorname{tr}(|\psi\rangle\langle\psi| A).
+  \end{aligned}
+\]
+In our case,
+\[
+  \begin{aligned}
+    \Pr(\mbox{success})
+    &= \frac{1}{N} \sum_k \langle s_k|P_k|s_k\rangle
+  \\&= \frac{1}{N} \sum_k \langle s_k|PP_kP|s_k\rangle
+  \\&= \frac{1}{N} \sum_k \operatorname{tr}(PP_kP) |s_k\rangle\langle s_k|
+  \end{aligned}
+\]
+where we have also used that \(P|s_k\rangle=|s_k\rangle\).
+Let us bound this expression above by using the trace identities:
+\[
+  \begin{aligned}
+    \frac{1}{N} \sum_k \operatorname{tr}(PP_kP) |s_k\rangle\langle s_k|
+    &\leqslant\frac{1}{N} \sum_k \operatorname{tr}(PP_kP)
+  \\&= \frac{1}{N} \sum_k \operatorname{tr}\left( P\left( \sum_k P_k \right) P \right)
+  \\&= \frac{1}{N} \sum_k \operatorname{tr}(P\operatorname{id}P)
+  \\&= \frac{d}{N}
+  \end{aligned}
+\]
+
+So if Alice encodes \(N\) equally likely messages as states in a quantum system that, mathematically speaking, lives in the Hilbert space of dimension \(d\), and if Bob decodes by performing a measurement and inferring the message from the result, then Bob's probability of success is bounded by \(\frac{d}{N}\).
+If the number \(N\) of possible signals exceeds the dimension \(d\), then Bob will not be able to reliably distinguish between the signals by any measurement.
+In particular:
+
+\begin{idea}
+
+One qubit can store and carry \emph{at most} one bit of information that can \emph{reliably} be read by a measurement.
+
+\end{idea}
+
+\hypertarget{distinguishability-of-non-orthogonal-states}{%
+\subsection{Distinguishability of non-orthogonal states}\label{distinguishability-of-non-orthogonal-states}}
 
 \hypertarget{chapter5}{%
 \section{Quantum entanglement}\label{chapter5}}
@@ -2901,9 +3125,9 @@ To start with, the largest eigenvalue (in absolute value) of a Hermitian matrix 
   \|M\otimes N\|
   & = \|M\| \|N\|
 \\\|MN\|
-  & \leq \|M\| \|N\|
+  & \leqslant\|M\| \|N\|
 \\\|M+N\|
-  & \leq \|M\| + \|N\|
+  & \leqslant\|M\| + \|N\|
 \end{aligned}
 \]
 Given that \(\|A_i\|=1\) and \(\|B_j\|=1\) (\(i,j=1,2\)), it is easy to show that \(\|S\| < 4\).
@@ -3225,14 +3449,14 @@ The \emph{quantum} case, however, is more complicated, because we have both bit-
 In order to protect a qubit against bit-flips (incoherent \(X\) rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
 We take a qubit in some unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), introduce two auxiliary qubits, and encode it into three qubits as
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-30-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-31-1} \end{center}
 
 Suppose that at most one qubit is then flipped (say, the second one).
 The encoded state then becomes \(\alpha|010\rangle + \beta|101\rangle\).
 Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 Instead we introduce another two additional qubits, both in state \(|0\rangle\), and apply the following network:
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-31-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-32-1} \end{center}
 
 We measure the two auxiliary qubits, also known as \textbf{ancilla bits}, and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code.
 The theory behind this network runs as follows.
@@ -3282,7 +3506,7 @@ We will start with the density operator as a description of the mixture of quant
 \hypertarget{definitions}{%
 \subsection{Definitions}\label{definitions}}
 
-If you are an impatient mathematically minded person, who feels more comfortable when things are properly defined right from the beginning, here is your definition:\footnote{A self-adjoint matrix \(M\) is said to be \textbf{non-negative}, or \textbf{positive semi-definite}, if \(\langle v|M|v\rangle\geq 0\) for any vector \(|v\rangle\), or if all of its eigenvalues are non-negative, or if here exists a matrix \(A\) such that \(M=A^\dagger A\). (This is called a \textbf{Cholesky factorization}.)}
+If you are an impatient mathematically minded person, who feels more comfortable when things are properly defined right from the beginning, here is your definition:\footnote{A self-adjoint matrix \(M\) is said to be \textbf{non-negative}, or \textbf{positive semi-definite}, if \(\langle v|M|v\rangle\geqslant 0\) for any vector \(|v\rangle\), or if all of its eigenvalues are non-negative, or if here exists a matrix \(A\) such that \(M=A^\dagger A\). (This is called a \textbf{Cholesky factorization}.)}
 
 \begin{idea}
 
@@ -3295,7 +3519,7 @@ Moreover, given two density operators \(\rho_1\) and \(\rho_2\), we can always c
 \[
   \rho = p_1\rho_1 + p_2\rho_2
   \qquad\text{where}\quad
-  p_1, p_2 \geq 0
+  p_1, p_2 \geqslant 0
   \text{ and }
   p_1+p_2 = 1.
 \]
@@ -3304,7 +3528,7 @@ This means that density operators form a convex set.\footnote{A subset of a vect
 An important example of a density operator is a rank one projector.\footnote{The \textbf{rank} of a matrix is the number of its non-zero eigenvalues.}
 Any quantum state that can be described by the state vector \(|\psi\rangle\), called a \textbf{pure state}, can be also described by the density operator \(\rho=|\psi\rangle\langle\psi|\).
 Pure states are the extremal points in the convex set of density operators: they cannot be expressed as a convex sum of other elements in the set.
-In contrast, all other states, called \textbf{mixed states}, can be always written as the convex sum of pure states: \(\sum_i p_i |\psi_i\rangle\langle\psi_i|\) (\(p_i\geq 0\) and \(\sum_i p_i=1\)).
+In contrast, all other states, called \textbf{mixed states}, can be always written as the convex sum of pure states: \(\sum_i p_i |\psi_i\rangle\langle\psi_i|\) (\(p_i\geqslant 0\) and \(\sum_i p_i=1\)).
 Now that we have cleared the mathematical essentials, we will turn to physical applications.
 
 \hypertarget{mixtures}{%

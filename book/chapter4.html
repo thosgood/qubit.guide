@@ -154,6 +154,11 @@
 <li class="chapter" data-level="4.2" data-path="chapter4.html"><a href="chapter4.html#back-to-qubits-complete-measurements"><i class="fa fa-check"></i><b>4.2</b> Back to qubits; complete measurements</a></li>
 <li class="chapter" data-level="4.3" data-path="chapter4.html"><a href="chapter4.html#the-projection-rule-incomplete-measurements"><i class="fa fa-check"></i><b>4.3</b> The projection rule; incomplete measurements</a></li>
 <li class="chapter" data-level="4.4" data-path="chapter4.html"><a href="chapter4.html#example-of-an-incomplete-measurement"><i class="fa fa-check"></i><b>4.4</b> Example of an incomplete measurement</a></li>
+<li class="chapter" data-level="4.5" data-path="chapter4.html"><a href="chapter4.html#observables"><i class="fa fa-check"></i><b>4.5</b> Observables</a></li>
+<li class="chapter" data-level="4.6" data-path="chapter4.html"><a href="chapter4.html#compatible-observables-and-the-uncertainty-relation"><i class="fa fa-check"></i><b>4.6</b> Compatible observables and the uncertainty relation</a></li>
+<li class="chapter" data-level="4.7" data-path="chapter4.html"><a href="chapter4.html#quantum-communication"><i class="fa fa-check"></i><b>4.7</b> Quantum communication</a></li>
+<li class="chapter" data-level="4.8" data-path="chapter4.html"><a href="chapter4.html#basic-quantum-coding-and-decoding"><i class="fa fa-check"></i><b>4.8</b> Basic quantum coding and decoding</a></li>
+<li class="chapter" data-level="4.9" data-path="chapter4.html"><a href="chapter4.html#distinguishability-of-non-orthogonal-states"><i class="fa fa-check"></i><b>4.9</b> Distinguishability of non-orthogonal states</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="chapter5.html"><a href="chapter5.html"><i class="fa fa-check"></i><b>5</b> Quantum entanglement</a></li>
 <li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a></li>
@@ -262,7 +267,7 @@ Figure 4.1: The standard (computational) basis defines the standard measurements
 <p><img src="quantum-info_files/figure-html/unnamed-chunk-28-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>or, in an alternative notation, as</p>
 <p><img src="quantum-info_files/figure-html/unnamed-chunk-29-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>As we can see, if the qubit is prepared in state <span class="math inline">\(|\psi\rangle = \alpha_0|0\rangle + \alpha_1|1\rangle\)</span> and subsequently measured in the standard basis state, then the outcome is <span class="math inline">\(|k\rangle\)</span> (for <span class="math inline">\(k=0,1\)</span>) with probability
+<p>As we can see, if the qubit is prepared in state <span class="math inline">\(|\psi\rangle = \alpha_0|0\rangle + \alpha_1|1\rangle\)</span> and subsequently measured in the standard basis state, then the outcome is <span class="math inline">\(|k\rangle\)</span> (for <span class="math inline">\(k=0,1\)</span>) with probability<a href="#fn52" class="footnote-ref" id="fnref52"><sup>52</sup></a>
 <span class="math display">\[
   \begin{aligned}
     |\alpha_k|^2
@@ -346,6 +351,180 @@ Such measurements (said to be <strong>incomplete</strong>) are indeed possible, 
 </div>
 <div id="example-of-an-incomplete-measurement" class="section level2" number="4.4">
 <h2><span class="header-section-number">4.4</span> Example of an incomplete measurement</h2>
+<p>Consider a three-dimensional Hilbert space <span class="math inline">\(\mathcal{H}\)</span>, and the two orthogonal projectors
+<span class="math display">\[
+  \begin{aligned}
+    P &amp;= |e_1\rangle\langle e_1| + |e_2\rangle\langle e_2|
+  \\Q &amp;= |e_3\rangle\langle e_3|
+  \end{aligned}
+\]</span>
+that form the decomposition of the identity: <span class="math inline">\(P+Q=\operatorname{id}\)</span>.
+Suppose that a physical system is prepared in state <span class="math inline">\(|\psi\rangle = \alpha_1|e_1\rangle + \alpha_2|e_2\rangle + \alpha_3|e_3\rangle\)</span>.
+Ideally, we would like to perform a complete measurement that would resolve the state <span class="math inline">\(|v\rangle\)</span> into the three basis states, but suppose our experimental apparatus is not good enough, and lumps together <span class="math inline">\(|e_1\rangle\)</span> and <span class="math inline">\(|e_2\rangle\)</span>.
+In other words, it can only differentiate between the two subspaces associated with projectors <span class="math inline">\(P\)</span> and <span class="math inline">\(Q\)</span>.</p>
+<p>The apparatus, in this incomplete measurement, may find the system in the subspace associated with <span class="math inline">\(P\)</span>.
+This happens with probability
+<span class="math display">\[
+  \begin{aligned}
+    \langle\psi|P|\psi\rangle
+    &amp;= \langle\psi|e_1\rangle \langle e_1|\psi\rangle + \langle\psi|e_2\rangle \langle e_2|\psi\rangle
+  \\&amp;= |\alpha_1|^2 + |\alpha_2|^2,
+  \end{aligned}
+\]</span>
+and the state right after the measurement is the normalised vector <span class="math inline">\(P|\psi\rangle\)</span>, i.e.
+<span class="math display">\[
+  \frac{\alpha_1|e_1\rangle+\alpha_2|e_2\rangle}{\sqrt{|\alpha_1|^2 + |\alpha_2|^2}}.
+\]</span></p>
+<p>The measurement may also find the system in the subspace associated with <span class="math inline">\(Q\)</span> with the probability <span class="math inline">\(\langle\psi|Q|\psi\rangle = |\alpha_3|^2\)</span>, resulting in the post-measurement state <span class="math inline">\(|e_3\rangle\)</span>.</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-30-1.png" width="336" style="display: block; margin: auto;" /></p>
+</div>
+<div id="observables" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> Observables</h2>
+<p>An <strong>observable</strong> <span class="math inline">\(A\)</span> is a measurable physical property which has a numerical value, for example, spin or momentum or energy.
+The term “observable” also extends to any basic measurement in which each outcome is associated with a numerical value.
+If <span class="math inline">\(\lambda_k\)</span> is the numerical value associated with outcome <span class="math inline">\(|e_k\rangle\)</span> then we say that the observable <span class="math inline">\(A\)</span> is <strong>represented</strong> by the operator
+<span class="math display">\[
+  \begin{aligned}
+    A
+    &amp;= \sum_k \lambda_k |e_k\rangle\langle e_k|
+  \\&amp;= \sum_k \lambda_k P_k,
+  \end{aligned}
+\]</span>
+where <span class="math inline">\(\lambda_k\)</span> is now the eigenvalue corresponding to the eigenvector <span class="math inline">\(|e_k\rangle\)</span>, or the projector <span class="math inline">\(P_k\)</span>.</p>
+<div class="idea">
+<p>Recall the following types of operator:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>normal</strong></td>
+<td align="left"><span class="math inline">\(AA^\dagger = A^\dagger A\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>unitary</strong></td>
+<td align="left"><span class="math inline">\(AA^\dagger = A^\dagger A = \operatorname{id}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Hermitian</strong>, or <strong>self-adjoint</strong></td>
+<td align="left"><span class="math inline">\(A^\dagger = A\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>positive semi-definite</strong></td>
+<td align="left"><span class="math inline">\(\langle v|A|v\rangle\geqslant 0\)</span> for all <span class="math inline">\(|v\rangle\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Note that an operator <span class="math inline">\(A\)</span> is normal if and only if it is unitarily diagonalisable, and that both unitary and Hermitian operators are normal.</p>
+</div>
+<p>Conversely, to any normal operator <span class="math inline">\(A\)</span> we can associate a measurement defined by the eigenvectors of <span class="math inline">\(A\)</span>, which form an orthonormal basis, and use the eigenvalues of <span class="math inline">\(A\)</span> to label the outcomes of this measurement.
+If we choose the eigenvalues to be real numbers then <span class="math inline">\(A\)</span> becomes a Hermitian operator.
+For example, the standard measurement on a single qubit is often called the <strong><span class="math inline">\(Z\)</span>-measurement</strong>, because the Pauli <span class="math inline">\(Z\)</span> operator can be diagonalised in the standard basis and written as <span class="math inline">\(Z = (+1)|0\rangle\langle 0| + (-1)|1\rangle\langle 1|\)</span>.
+The two outcomes, <span class="math inline">\(|0\rangle\)</span> and <span class="math inline">\(|1\rangle\)</span>, are now labelled as <span class="math inline">\(+1\)</span> and <span class="math inline">\(-1\)</span>, respectively.
+Using the same association we also have the <span class="math inline">\(X\)</span>- and the <span class="math inline">\(Y\)</span>-measurements, defined by the Pauli <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> operators, respectively.</p>
+<p>Let us mention in passing that many textbooks describe observables in terms of Hermitian operators and claim that the corresponding operators have to be Hermitian “because the outcomes are real numbers”.
+This is misleading, since:</p>
+<div class="idea">
+<p>The outcomes can be labelled by any symbols of your choice; it is the <em>decomposition</em> of the Hilbert space into <em>mutually orthogonal subspaces</em> that defines a measurement, not the labels.</p>
+</div>
+<p>This said, labelling outcomes with real numbers is very useful.
+For example, the expected value <span class="math inline">\(\langle A\rangle\)</span>, which is the average of the numerical values <span class="math inline">\(\lambda_k\)</span> weighted by their probabilities, is a very useful quantity and can be easily expressed in terms of the operator <span class="math inline">\(A\)</span> as <span class="math inline">\(\langle\psi|A|\psi\rangle\)</span>, as follows:
+<span class="math display">\[
+  \begin{aligned}
+    \sum_k \lambda_k \Pr (\text{outcome k})
+    &amp;= \sum_k \lambda_k |\langle e_k|\psi\rangle|^2
+  \\&amp;= \sum_k\lambda_k \langle\psi|e_k\rangle\langle e_k|\psi\rangle
+  \\&amp;= \langle\psi| \left( \sum_k\lambda_k|e_k\rangle\langle e_k| \right)|\psi\rangle
+  \\&amp;= \langle\psi|A|\psi\rangle.
+  \end{aligned}
+\]</span>
+To be clear, this is not a value we expect to see in any particular experiment.
+Instead, imagine a huge number of quantum objects, all prepared in the state <span class="math inline">\(|\psi\rangle\)</span> and think about the observable <span class="math inline">\(A\)</span> being measured on each of the objects.
+Statistically we then expect the average of our measurement results to be roughly <span class="math inline">\(\langle A\rangle\)</span>.
+Note that when <span class="math inline">\(A\)</span> is a projector then <span class="math inline">\(\langle\psi|A|\psi\rangle\)</span> is the probability of the outcome associated with <span class="math inline">\(A\)</span>.</p>
+</div>
+<div id="compatible-observables-and-the-uncertainty-relation" class="section level2" number="4.6">
+<h2><span class="header-section-number">4.6</span> Compatible observables and the uncertainty relation</h2>
+<p><strong>!!!TODO!!!</strong></p>
+</div>
+<div id="quantum-communication" class="section level2" number="4.7">
+<h2><span class="header-section-number">4.7</span> Quantum communication</h2>
+<p>Now is a good moment to introduce Alice and Bob (not their real names): our two protagonists who always need to communicate with each other.
+These two play the major role in many communication dramas, though they remain rather lacking in character development.</p>
+<p>This time Alice is sending quantum states to Bob, and Bob does his best to identify them correctly by choosing appropriate measurements.
+Let us start we a simple observation: if a quantum state of the carrier of information is described by a state vector in a <span class="math inline">\(2^n\)</span>-dimensional Hilbert space, then the carrier can carry at most <span class="math inline">\(n\)</span> bits of information.
+For example, Alice can choose one of the <span class="math inline">\(2^n\)</span> states from a pre-agreed orthonormal basis <span class="math inline">\(\{|e_k\rangle\}\)</span>, and Bob will be able to distinguish them reliably by choosing the <span class="math inline">\(\{|e_k\rangle\}\)</span> basis for his measurement.</p>
+<p>But can Alice and Bob do better than that?
+Can Alice send more than <span class="math inline">\(n\)</span> bits of information per carrier by encoding them in states <span class="math inline">\(|s_1\rangle,\ldots,|s_N\rangle\)</span> where <span class="math inline">\(N \geqslant 2^n\)</span>?
+Can Bob choose a clever measurement and reliably distinguish between all such states?</p>
+<p>The answer is <em>no</em>.</p>
+</div>
+<div id="basic-quantum-coding-and-decoding" class="section level2" number="4.8">
+<h2><span class="header-section-number">4.8</span> Basic quantum coding and decoding</h2>
+<p>Suppose Alice randomly chooses one of the pre-agreed <span class="math inline">\(N\)</span> signal states <span class="math inline">\(|s_k\rangle\)</span> and sends it to Bob, who tries to identify the signal states by performing a measurement defined by the projectors <span class="math inline">\(P_l\)</span>.
+Let <span class="math inline">\(P\)</span> be a projector on a subspace spanned by the signal states <span class="math inline">\(|e_k\rangle\)</span>, i.e. <span class="math inline">\(P|s_k\rangle = |s_k\rangle\)</span>.
+The dimension <span class="math inline">\(d\)</span> of this subspace is given by <span class="math inline">\(d = \operatorname{tr}P\)</span>.
+We shall assume, without any loss of generality, that Bob designed his measurement in such a way that, whenever he gets outcome <span class="math inline">\(P_k\)</span>, he concludes that Alice sent state <span class="math inline">\(|s_k\rangle\)</span>.
+His probability of success is given by
+<span class="math display">\[
+  \Pr(\mbox{success})
+  = \frac{1}{N} \sum_k \langle s_k|P_k|s_k\rangle
+\]</span>
+which is the probability that signal state <span class="math inline">\(|s_k\rangle\)</span> is selected (here equal to <span class="math inline">\(1/N\)</span>, since all the signal states are equally likely) times the probability that the selected signal state is correctly identified by Bob (which is <span class="math inline">\(\langle s_k|P_k|s_k\rangle\)</span>), and we sum over all signal states.</p>
+<div class="idea">
+<p>We have the following <strong>trace identities</strong>:</p>
+<ul>
+<li><span class="math inline">\(\operatorname{tr}(ABC) = \operatorname{tr}(BCA) = \operatorname{tr}(CAB)\)</span></li>
+<li><span class="math inline">\(\operatorname{tr}|a\rangle\langle b| = \langle b|a\rangle\)</span></li>
+<li><span class="math inline">\(\operatorname{tr}|a\rangle\langle b| = \langle b|A|a\rangle\)</span></li>
+<li><span class="math inline">\(\operatorname{tr}BP \leqslant\operatorname{tr}B\)</span> for any positive semi-definite <span class="math inline">\(B\)</span> and projector <span class="math inline">\(P\)</span>.</li>
+</ul>
+<p>To prove this last identity, consider the projector <span class="math inline">\(Q=\operatorname{id}-P\)</span>, and note that
+<span class="math display">\[
+    \begin{aligned}
+      \operatorname{tr}B
+      &amp;= \operatorname{tr}B(P+Q)
+    \\&amp;= \operatorname{tr}BP + \operatorname{tr}BQ
+    \end{aligned}
+  \]</span>
+and that <span class="math inline">\(\operatorname{tr}BQ\)</span> is non-negative.</p>
+</div>
+<p>Let us use this case to practice some of the trace identities.
+It is often convenient to write expressions such as <span class="math inline">\(\langle\psi|A|\psi\rangle\)</span> in terms of the trace: for any vector <span class="math inline">\(|\psi\rangle\)</span> and operator <span class="math inline">\(A\)</span> we have
+<span class="math display">\[
+  \begin{aligned}
+    \langle\psi|A|\psi\rangle
+    &amp;= \operatorname{tr}(A|\psi\rangle\langle\psi|)
+  \\&amp;= \operatorname{tr}(|\psi\rangle\langle\psi| A).
+  \end{aligned}
+\]</span>
+In our case,
+<span class="math display">\[
+  \begin{aligned}
+    \Pr(\mbox{success})
+    &amp;= \frac{1}{N} \sum_k \langle s_k|P_k|s_k\rangle
+  \\&amp;= \frac{1}{N} \sum_k \langle s_k|PP_kP|s_k\rangle
+  \\&amp;= \frac{1}{N} \sum_k \operatorname{tr}(PP_kP) |s_k\rangle\langle s_k|
+  \end{aligned}
+\]</span>
+where we have also used that <span class="math inline">\(P|s_k\rangle=|s_k\rangle\)</span>.
+Let us bound this expression above by using the trace identities:
+<span class="math display">\[
+  \begin{aligned}
+    \frac{1}{N} \sum_k \operatorname{tr}(PP_kP) |s_k\rangle\langle s_k|
+    &amp;\leqslant\frac{1}{N} \sum_k \operatorname{tr}(PP_kP)
+  \\&amp;= \frac{1}{N} \sum_k \operatorname{tr}\left( P\left( \sum_k P_k \right) P \right)
+  \\&amp;= \frac{1}{N} \sum_k \operatorname{tr}(P\operatorname{id}P)
+  \\&amp;= \frac{d}{N}
+  \end{aligned}
+\]</span></p>
+<p>So if Alice encodes <span class="math inline">\(N\)</span> equally likely messages as states in a quantum system that, mathematically speaking, lives in the Hilbert space of dimension <span class="math inline">\(d\)</span>, and if Bob decodes by performing a measurement and inferring the message from the result, then Bob’s probability of success is bounded by <span class="math inline">\(\frac{d}{N}\)</span>.
+If the number <span class="math inline">\(N\)</span> of possible signals exceeds the dimension <span class="math inline">\(d\)</span>, then Bob will not be able to reliably distinguish between the signals by any measurement.
+In particular:</p>
+<div class="idea">
+<p>One qubit can store and carry <em>at most</em> one bit of information that can <em>reliably</em> be read by a measurement.</p>
+</div>
+</div>
+<div id="distinguishability-of-non-orthogonal-states" class="section level2" number="4.9">
+<h2><span class="header-section-number">4.9</span> Distinguishability of non-orthogonal states</h2>
 
 </div>
 </div>
@@ -353,6 +532,7 @@ Such measurements (said to be <strong>incomplete</strong>) are indeed possible, 
 <hr />
 <ol start="51">
 <li id="fn51"><p>The term “Hilbert space” used to be reserved for an infinite-dimensional inner product space that is <strong>complete</strong>, i.e. such that every Cauchy sequence in the space converges to an element in the space. Nowadays, as in these notes, the term includes finite-dimensional spaces, which automatically satisfy the condition of completeness.<a href="chapter4.html#fnref51" class="footnote-back">↩︎</a></p></li>
+<li id="fn52"><p>This slick argument is a good example of how nice the bra-ket notation can be.<a href="chapter4.html#fnref52" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
