@@ -41,7 +41,6 @@ For any problems or queries regarding this site or its contents, please get in t
 ## To-do
 
 1. replace links to sections with links named "Chapter 3", etc.
-1. better names for Part I and Part II
 1. be more consistent with the start of chapters
     + blockquote which says "About ..." and **uses words from the syllabus**
         * and make sure that _everything_ in the syllabus is covered!!
@@ -62,4 +61,4 @@ For any problems or queries regarding this site or its contents, please get in t
         * tables in ideas look... bad
 1. switch to katex
 1. change the link prefixed to gitbook TOC when you have a domain
-1. search for "TODO"
+1. **search for "TODO"**
