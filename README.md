@@ -61,4 +61,6 @@ For any problems or queries regarding this site or its contents, please get in t
         * tables in ideas look... bad
 1. switch to katex
 1. change the link prefixed to gitbook TOC when you have a domain
+1. check that all `{.idea}`s are actually `{.idea latex-data=""}` (or whatever it is)
+    + same for circuit and scenario blocks!
 1. **search for "TODO"**
