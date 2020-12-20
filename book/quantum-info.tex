@@ -74,7 +74,7 @@
 
 \title{Lectures on Quantum Information Science}
 \author{Artur Ekert and Tim Hosgood}
-\date{Last updated: December 19, 2020}
+\date{Last updated: December 20, 2020}
 
 
 \begin{document}
@@ -3091,6 +3091,9 @@ Here is how we represent preparations, evolutions and measurements in mathematic
 
 Note that we have already said much of the below, but we are summarising it again now in a more precise way, formally defining the mathematical framework of quantum theory that we use.
 
+We also need to point out that a vital part of the formalism of quantum theory is missing from the following description, namely the idea of \textbf{tensor products}.
+To talk about this, we need to introduce the notion of \textbf{entanglement}, and this will be the subject of \protect\hyperlink{chapter5}{Chapter 5}.
+
 \hypertarget{quantum-states}{%
 \subsubsection{Quantum states}\label{quantum-states}}
 
@@ -3169,18 +3172,22 @@ In general, for any decomposition of the identity \(\sum_k P_k=\operatorname{id}
 The projector formalism covers both complete and incomplete measurements.
 The complete measurements are defined by rank one projectors, \(P_k=|e_k\rangle\langle e_k|\), projecting on vectors from some orthonormal basis \(\{|e_k\rangle\}\).
 
-\hypertarget{physical-representation-of-data}{%
-\subsection{Physical representation of data}\label{physical-representation-of-data}}
+\hypertarget{chapter5}{%
+\section{Quantum entanglement}\label{chapter5}}
 
-A vital part of the formalism of quantum theory that is missing from our above description is that of \textbf{tensor products}.
-To talk about this, we need to introduce the notion of \textbf{entanglement}, and this is the subject of \protect\hyperlink{chapter5}{Chapter 5}, but we briefly discuss some theory, as well as physical aspects, here.
+\hypertarget{why-qubits-subsystems-and-entanglement}{%
+\subsection{Why qubits, subsystems, and entanglement?}\label{why-qubits-subsystems-and-entanglement}}
 
-Efficiency of computation requires that we divide data into separate pieces, say physical bits.
-However, a quantum description of a physical system made out of several subsystems requires a new mathematical structure called the \textbf{tensor product}.
-The system as the whole can be prepared in a quantum state which does not allow
-to attribute separate state vectors to its parts.
-Such states are said to be \textbf{entangled}.
-A quantum state of an individual subsystem must be then described by an operator called a \textbf{density operator}.
+One question that is rather natural to ask at this point is the following:
+
+\begin{quote}
+If entanglement is so fragile and difficult to control, then why bother?
+Why not perform the whole computation in one physical system that has as many quantum states as we normally have labels for the states of qubits, so that we can label these quantum states in the same way as we normally label the qubits, and give \emph{them} computational meaning?
+\end{quote}
+
+This suggestion, although possible, gives a very inefficient way of representing data (it is describing the \textbf{unary encoding}).
+For serious computations \emph{we need subsystems}.
+Here is why.
 
 Suppose you have \(n\) physical objects, and each object has \(k\) distinguishable states.
 If you can access each object \emph{separately} and put it into any of the \(k\) states, then, with only \(n\) operations, you can prepare any of the \(k^{n}\) different configurations of the combined systems.
@@ -3193,7 +3200,7 @@ Suppose the two states in the physical bit are separated by the energy differenc
 Then a preparation of any particular configuration will cost no more than \(E=n \Delta E=(\log_2 N)\Delta E\) units of energy.
 
 In contrast, if we choose to encode \(N\) configurations into one chunk of matter, say, into the first \(N\) energy states of a single harmonic oscillator with the interstate energy separation \(\Delta E\) then, in the worst case, one has to use \(E=N\Delta E\) units of energy, e.g.~to go from the ground state (labelled as \(0\)) to the most excited state (labelled as \(N\)).
-For large \(N\) this gives an exponential gap in the energy expenditure between the binary encoding using physical bits and the so-called \textbf{unary encoding}, using energy levels of harmonic oscillators.
+For large \(N\) this gives an exponential gap in the energy expenditure between the binary encoding using physical bits and unary encoding, using energy levels of harmonic oscillators.
 
 One can, of course, try to switch from harmonic oscillators to quantum systems which have a finite spread in the energy spectrum.
 For example, by operating on the energy states of the hydrogen atom one can encode any number from \(0\) to \(N-1\), and one is guaranteed not to spend more than \(E_{\mathrm{max}}=\) \(13.6\,\mathrm{eV}\) (otherwise the atom is ionised).
@@ -3203,10 +3210,7 @@ interaction time is of order \(N(\hbar/E_{\mathrm{max}})\).
 That is, we have to trade energy for time.
 
 It turns out that whichever way we try to represent the number \(N\) using the unary encoding (i.e.~using \(N\) different states of a single chunk of matter), we end up depleting our physical resources (such as energy, time, space) at a much greater rate than in the case when we use subsystems.
-This plausibility argument indicates that, for efficient processing of information, the system must be divided into subsystems (for example, into physical bits).
-
-\hypertarget{chapter5}{%
-\section{Quantum entanglement}\label{chapter5}}
+This plausibility argument indicates that, for efficient processing of information, the system must be divided into subsystems --- for example, into physical bits.
 
 \hypertarget{chapter6}{%
 \section{Quantum algorithms}\label{chapter6}}
