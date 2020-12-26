@@ -4,7 +4,7 @@ The version that you will find on this website has been carefully edited into a 
 
 <div style="text-align: center;margin: 2em"><a href="book/" style="padding: 1em;border: 1px solid black;border-radius: 5px;">Read the book</a></div>
 
-The online book is built using (the Bookdown fork of) Gitbook.
+The online book is built using (the [Bookdown](https://github.com/rstudio/bookdown/) fork of) Gitbook.
 This means that it has some nice functionality to make reading more comfortable, with most options being accessed through the toolbar at the top (as explained below).
 
 <img src="gitbook-toolbar.png" alt="The book toolbar" width="350" style="border: 1px solid black;float: right;">
