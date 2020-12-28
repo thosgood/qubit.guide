@@ -41,7 +41,7 @@ Indeed, such a state is certainly possible, but there are other states that _can
 In order to write down the most general state of two qubits we first focus on the basis states.
 
 For a single qubit we have been using the standard basis $\{\ket{0},\ket{1}\}$.
-For two qubits we may choose the following as our standard basis states:
+For two qubits we may choose the following as our standard basis states:^[It looks like we are defining some sort of "multiplication rule" for kets here, saying that $\ket{a}\ket{b}:=\ket{ab}$. This is indeed the case, but to talk about this properly we need to introduce the idea of **tensor products** (which we do very soon).]
 $$
   \begin{array}{cc}
     \ket{00} \equiv \ket{0}\ket{0}
@@ -64,11 +64,11 @@ So it cannot be the case that every state of two qubits can be expressed as a pa
 
 For example, compare the two states of two qubits,
 $$
-  \begin{aligned}
+  \begin{gathered}
     \frac{1}{\sqrt 2}\ket{00} + \frac{1}{\sqrt 2}\ket{01}
   \\\mbox{and}
   \\\frac{1}{\sqrt 2}\ket{00} + \frac{1}{\sqrt 2}\ket{11}.
-  \end{aligned}
+  \end{gathered}
 $$
 The first one is **separable**, i.e. we can view it as a pair of state vectors where each one pertains to one of the two qubits:
 $$
@@ -92,10 +92,137 @@ With this discussion in our minds, we can now give more formal account of the st
 
 
 
-## Quantum theory, formally, continued
+## Quantum theory, formally (continued)
 
 Recalling [Chapter 4](#chapter4), where we said that we were missing a key part of the formalism of quantum theory, we can now fill in this hole.
 Our mathematical formalism of choice behind the quantum theory of composite systems is based on the **tensor product** of Hilbert spaces.
+
+### Tensor products
+
+Let the states of some system $\mathcal{A}$ be described by vectors in an $n$-dimensional Hilbert space $\mathcal H_A$, and the states of some system $\mathcal{B}$ by vectors in an $m$-dimensional Hilbert space $\mathcal H_B$.
+The combined system of $\mathcal{A}$ and $\mathcal{B}$ is then described by vectors in the $(nm)$-dimensional **tensor product space** $\mathcal{H}_A\otimes\mathcal{H}_B$.
+Given bases $\{\ket{a_1},\ldots,\ket{a_n}\}$ of $\mathcal H_A$ and $\{\ket{b_1},\ldots,\ket{b_m}\}$ of $\mathcal H_B$, we form a basis of the tensor product by taking the ordered pairs $\ket{a_i}\otimes\ket{b_j}$, for $i=1,\ldots,n$ and $j=1,\ldots,m$.
+The tensor product space $\mathcal{H}_A\otimes\mathcal{H}_B$ then consists of all linear combination of such tensor product basis vectors:^[If the bases $\{\ket{a_i}\}$ and $\{\ket{b_j}\}$ are orthonormal then so too is the tensor product basis $\{\ket{a_i}\otimes\ket{b_j}\}$.]
+\begin{equation}
+  \ket{\psi}
+  = \sum_{ij} c_{ij}\ket{a_i}\otimes\ket{b_j}.
+(\#eq:bipartite)
+\end{equation}
+
+The tensor product operation $\otimes$ is distributive:
+$$
+  \begin{gathered}
+    \ket{a} \otimes \left( \beta_1\ket{b_1} + \beta_2\ket{b_2} \right)
+    = \beta_1\ket{a}\otimes\ket{b_1} + \beta_2\ket{a}\otimes\ket{b_2}
+  \\\left( \alpha_1\ket{a_1} + \alpha_2\ket{a_2} \right) \otimes \ket{b}
+    = \alpha_1\ket{a_1}\otimes\ket{b} + \alpha_2\ket{a_2}\otimes\ket{b}.
+  \end{gathered}
+$$
+The tensor product of Hilbert spaces is again a Hilbert space: the inner products on $\mathcal{H}_A$ and $\mathcal{H}_B$ give a natural inner product on $\mathcal{H}_A\otimes\mathcal{H}_B$, defined for any two product vectors by^[The bra corresponding to the tensor product state $\ket{a}\otimes\ket{b}$ is written as $(\ket{a}\otimes\ket{b})^\dagger = \bra{a}\otimes\bra{b}$, where the order of the factors on either side of $\otimes$ does not change when the dagger operation is applied.]
+$$
+  \left( \bra{a'}\otimes\bra{b'} \right) \left( \ket{a}\otimes\ket{b} \right)
+  = \braket{a'|a}\braket{b'|b}
+$$
+and extended by linearity to sums of tensor products of vectors, and by associativity^[$({\mathcal{H}}_a \otimes {\mathcal{H}}_b)\otimes {\mathcal{H}}_c = {\mathcal{H}}_a \otimes ({\mathcal{H}}_b\otimes {\mathcal{H}}_c)$.] to any number of subsystems.
+
+Some joint states of $\mathcal{A}$ and $\mathcal{B}$ can be expressed as a single tensor product, say $\ket{\psi}=\ket{a}\otimes\ket{b}$ (often written as $\ket{a}\ket{b}$, or $\ket{a, b}$, or even $\ket{ab}$), meaning that the subsystem $\mathcal{A}$ is in state $\ket{a}$, and the subsystem $\mathcal{B}$ in state $\ket{b}$.
+If we expand $\ket{a}=\sum_i\alpha_i\ket{a_i}$ and $\ket{b}=\sum_i\beta_j\ket{b_j}$, then $\ket{\psi}=\sum_{ij}\alpha_i\beta_j\ket{a_i}\otimes\ket{b_j}$ and we see that, for all such states, the coefficients $c_{ij}$ in Equation \@ref(eq:bipartite) are of a rather special form:
+$$
+  c_{ij} = \alpha_i\beta_j.
+$$
+We call such states **separable** (or just **product states**).
+States that are not separable are said to be **entangled**.
+
+A useful fact about tensor products is that $\lambda a\otimes b = a\otimes\lambda b$ (where $a$ and $b$ are vectors, and $\lambda$ is a scalar).
+This means that we don't need to worry about brackets and write something like $\lambda(a\otimes b)$.
+
+We will also need the concept of the tensor product of two operators.
+If $A$ is an operator on $\mathcal{H}_A$ and $B$ an operator on $\mathcal{H}_B$, then the tensor product operator $A\otimes B$ is an operator on $\mathcal{H}_A\otimes\mathcal{H}_B$ defined by its action on product vectors via
+$$
+  (A\otimes B)(\ket{a}\otimes\ket{b}) = (A\ket{a})\otimes (B\ket{b})
+$$
+and with its action on all other vectors determined by linearity:
+$$
+  A\otimes B \left( \sum_{ij} c_{ij}\ket{a_i}\otimes\ket{b_j} \right)
+  = \sum_{ij}c_{ij} A\ket{a_i}\otimes B\ket{b_j}.
+$$
+
+
+
+
+
+
+## Back to qubits
+
+Let's see how this formalism works for qubits.
+The $n$-fold tensor product of vectors from the standard basis $\{\ket{0},\ket{1}\}$ represent binary strings of length $n$.
+For example, for $n=3$,^[We often drop the $\otimes$ symbol, especially when we deal with the standard tensor product basis. For example, a state of a quantum register composed of four qubits holding the binary string $1001$ may be written as $\ket{1}\otimes\ket{0}\otimes\ket{0}\otimes\ket{1}$, as $\ket{1}\ket{0}\ket{0}\ket{1}$, or even simply as $\ket{1001}$.]
+$$
+  \begin{aligned}
+    \ket{0}\otimes\ket{1}\otimes\ket{1}
+    & \equiv \ket{011}
+  \\\ket{1}\otimes\ket{1}\otimes\ket{1}
+    & \equiv \ket{111}.
+  \end{aligned}
+$$
+A _classical_ register composed of three bits can store _only one_ of these two binary strings at any time; a _quantum_ register composed of three qubits can store _both of them_ in a superposition.
+
+Indeed, if we start with the state $\ket{011}$ and apply the Hadamard gate to the first qubit (which is the same as applying $H\otimes\id\otimes\id$), then, given that linear combinations distribute over tensor products, we obtain^[We often simply write $H\otimes H\otimes H$ as $H^{\otimes 3}$.]
+$$
+  \begin{aligned}
+    \ket{011}
+    \longmapsto
+    &\frac{1}{\sqrt2} \big(\ket{0} + \ket{1}\big) \otimes\ket{1}\otimes\ket{1}
+  \\\equiv
+    &\frac{1}{\sqrt2} \big(\ket{011} + \ket{111}\big).
+  \end{aligned}
+$$
+In fact, we can even prepare this register in a superposition of all eight possible binary strings: if we apply the tensor product operation $H\otimes H\otimes H$ to the state $\ket{0}\otimes\ket{0}\otimes\ket{0} = \ket{000}$ then we get
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
+\begin{equation*}
+  \left.
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \qw \rstick{$\frac{\ket{0}+\ket{1}}{\sqrt2}$}
+  \\\lstick{$\ket{0}$}
+    & \gate{H}
+    & \qw \rstick{$\frac{\ket{0}+\ket{1}}{\sqrt2}$}
+  \\\lstick{$\ket{0}$}
+    & \gate{H}
+    & \qw \rstick{$\frac{\ket{0}+\ket{1}}{\sqrt2}$}
+  \end{quantikz}
+  \right\}
+  =
+  \frac{1}{2^{3/2}}
+  \left\{
+    \begin{array}{r}
+      \ket{000} + \ket{001} + \ket{010} + \ket{011}
+    \\ + \ket{100} + \ket{101} + \ket{110} + \ket{111}
+    \end{array}
+  \right\}.
+\end{equation*}
+```
+
+The resulting state is exactly a superposition of all binary string of length 3, and can also be written as
+$$
+  \frac{1}{\sqrt2} \big(\ket{0} + \ket{1}\big)
+  \otimes
+  \frac{1}{\sqrt2} \big(\ket{0} + \ket{1}\big)
+  \otimes
+  \frac{1}{\sqrt2} \big(\ket{0} + \ket{1}\big).
+$$
+
+In general, the tensor product operation $H^{\otimes n}$, which means "apply the Hadamard gate to each of your $n$ qubits", is known as the **Hadamard transform**, and it maps product states to product states.
+Like the Hadamard gate in the typical quantum interference circuit, the Hadamard transform opens and closes a multi-qubit interference.
+
+
+
+
+
+
+## Separable or entangled?
 
 
 

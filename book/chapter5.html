@@ -173,7 +173,13 @@
 <ul>
 <li class="chapter" data-level="5.1" data-path="chapter5.html"><a href="chapter5.html#a-small-history"><i class="fa fa-check"></i><b>5.1</b> A small history</a></li>
 <li class="chapter" data-level="5.2" data-path="chapter5.html"><a href="chapter5.html#one-two-many"><i class="fa fa-check"></i><b>5.2</b> One, two, many…</a></li>
-<li class="chapter" data-level="5.3" data-path="chapter5.html"><a href="chapter5.html#why-qubits-subsystems-and-entanglement"><i class="fa fa-check"></i><b>5.3</b> Why qubits, subsystems, and entanglement?</a></li>
+<li class="chapter" data-level="5.3" data-path="chapter5.html"><a href="chapter5.html#quantum-theory-formally-continued"><i class="fa fa-check"></i><b>5.3</b> Quantum theory, formally (continued)</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter5.html"><a href="chapter5.html#tensor-products"><i class="fa fa-check"></i><b>5.3.1</b> Tensor products</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="chapter5.html"><a href="chapter5.html#back-to-qubits"><i class="fa fa-check"></i><b>5.4</b> Back to qubits</a></li>
+<li class="chapter" data-level="5.5" data-path="chapter5.html"><a href="chapter5.html#separable-or-entangled"><i class="fa fa-check"></i><b>5.5</b> Separable or entangled?</a></li>
+<li class="chapter" data-level="5.6" data-path="chapter5.html"><a href="chapter5.html#why-qubits-subsystems-and-entanglement"><i class="fa fa-check"></i><b>5.6</b> Why qubits, subsystems, and entanglement?</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a></li>
 <li class="part"><span><b>II Flowering</b></span></li>
@@ -253,11 +259,153 @@ But what exactly is quantum entanglement?</p>
 <h2><span class="header-section-number">5.2</span> One, two, many…</h2>
 <p>In classical physics, the transition from a single object to a composite system of many objects is trivial: in order to describe the state of, say, 42 objects at any given moment of time, it is sufficient to describe the state of each of the objects separately.
 Indeed, the classical state of 42 point-like particles is described by specifying the position and the momentum of each particle.</p>
-<p>That is, in the <em>classical</em> world, “the whole is the sum of its parts”.
-But the <em>quantum</em> world is quite different.</p>
+<div class="idea">
+<p>In the <em>classical</em> world, “the whole is the sum of its parts”, but the <em>quantum</em> world is very different.</p>
 </div>
-<div id="why-qubits-subsystems-and-entanglement" class="section level2" number="5.3">
-<h2><span class="header-section-number">5.3</span> Why qubits, subsystems, and entanglement?</h2>
+<p>Consider, for example, a pair of qubits.
+Suppose that each one is described by a state vector: the first one by <span class="math inline">\(|a\rangle\)</span>, and the second one by <span class="math inline">\(|b\rangle\)</span>.
+One might therefore think that the most general state of the two qubits should be represented by a pair of state vectors, <span class="math inline">\(|a\rangle|b\rangle\)</span>, with one for each qubit.
+Indeed, such a state is certainly possible, but there are other states that <em>cannot</em> be expressed in this form.
+In order to write down the most general state of two qubits we first focus on the basis states.</p>
+<p>For a single qubit we have been using the standard basis <span class="math inline">\(\{|0\rangle,|1\rangle\}\)</span>.
+For two qubits we may choose the following as our standard basis states:<a href="#fn57" class="footnote-ref" id="fnref57"><sup>57</sup></a>
+<span class="math display">\[
+  \begin{array}{cc}
+    |00\rangle \equiv |0\rangle|0\rangle
+    &amp; |01\rangle \equiv |0\rangle|1\rangle
+  \\|10\rangle \equiv |1\rangle|0\rangle
+    &amp;|11\rangle \equiv |1\rangle|1\rangle.
+  \end{array}
+\]</span>
+Within each ket, the first symbol refers to the first qubit, and the second to the second, and we have tacitly assumed that we can distinguish the two qubits by their location, or some other means.
+Now, the most general state of the two qubits is a normalised linear combination of these four basis states, i.e. a vector of the form
+<span class="math display">\[
+  |\psi\rangle
+  = c_{00}|00\rangle + c_{01}|01\rangle + c_{10}|10\rangle + c_{11}|11\rangle.
+\]</span>
+Physical interpretation aside, let us count how many real parameters are needed to specify this state.
+Six, right?
+We have four complex numbers (eight real parameters) restricted by the normalisation condition, along with the fact that states differing only by a global phase factor are equivalent, which leaves us with six real parameters.
+Now, by the same line of argument, we need only two real parameters to specify the state of a single qubit, and hence need four real parameters to specify any state of two qubits of the form <span class="math inline">\(|a\rangle|b\rangle\)</span>.
+So it cannot be the case that every state of two qubits can be expressed as a pair of states <span class="math inline">\(|a\rangle|b\rangle\)</span>, simply for “dimension reasons”.</p>
+<p>For example, compare the two states of two qubits,
+<span class="math display">\[
+  \begin{gathered}
+    \frac{1}{\sqrt 2}|00\rangle + \frac{1}{\sqrt 2}|01\rangle
+  \\\mbox{and}
+  \\\frac{1}{\sqrt 2}|00\rangle + \frac{1}{\sqrt 2}|11\rangle.
+  \end{gathered}
+\]</span>
+The first one is <strong>separable</strong>, i.e. we can view it as a pair of state vectors where each one pertains to one of the two qubits:
+<span class="math display">\[
+  \frac{1}{\sqrt 2}|00\rangle + \frac{1}{\sqrt 2}|01\rangle
+  = \underbrace{\vphantom{\frac{1}{\sqrt 2}}|0\rangle}_{\text{qubit 1}}
+  \;\;
+  \underbrace{\frac{1}{\sqrt 2}(|0\rangle+|1\rangle)}_{\text{qubit 2}},
+\]</span>
+The second state, however, does <em>not</em> admit such a decomposition: there do <em>not</em> exist any <span class="math inline">\(\psi_1,\psi_2\)</span> such that
+<span class="math display">\[
+  \frac{1}{\sqrt 2}|00\rangle + \frac{1}{\sqrt 2}|11\rangle
+  =
+  |\psi_1\rangle|\psi_2\rangle
+\]</span>
+and so we say that it is an <strong>entangled</strong> state.
+Informally, any bipartite state that cannot be viewed as a pair of two states pertaining to the constituent subsystems is said to be entangled.</p>
+<p>With this discussion in our minds, we can now give more formal account of the states of composite quantum systems.</p>
+</div>
+<div id="quantum-theory-formally-continued" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Quantum theory, formally (continued)</h2>
+<p>Recalling <a href="chapter4.html#chapter4">Chapter 4</a>, where we said that we were missing a key part of the formalism of quantum theory, we can now fill in this hole.
+Our mathematical formalism of choice behind the quantum theory of composite systems is based on the <strong>tensor product</strong> of Hilbert spaces.</p>
+<div id="tensor-products" class="section level3" number="5.3.1">
+<h3><span class="header-section-number">5.3.1</span> Tensor products</h3>
+<p>Let the states of some system <span class="math inline">\(\mathcal{A}\)</span> be described by vectors in an <span class="math inline">\(n\)</span>-dimensional Hilbert space <span class="math inline">\(\mathcal H_A\)</span>, and the states of some system <span class="math inline">\(\mathcal{B}\)</span> by vectors in an <span class="math inline">\(m\)</span>-dimensional Hilbert space <span class="math inline">\(\mathcal H_B\)</span>.
+The combined system of <span class="math inline">\(\mathcal{A}\)</span> and <span class="math inline">\(\mathcal{B}\)</span> is then described by vectors in the <span class="math inline">\((nm)\)</span>-dimensional <strong>tensor product space</strong> <span class="math inline">\(\mathcal{H}_A\otimes\mathcal{H}_B\)</span>.
+Given bases <span class="math inline">\(\{|a_1\rangle,\ldots,|a_n\rangle\}\)</span> of <span class="math inline">\(\mathcal H_A\)</span> and <span class="math inline">\(\{|b_1\rangle,\ldots,|b_m\rangle\}\)</span> of <span class="math inline">\(\mathcal H_B\)</span>, we form a basis of the tensor product by taking the ordered pairs <span class="math inline">\(|a_i\rangle\otimes|b_j\rangle\)</span>, for <span class="math inline">\(i=1,\ldots,n\)</span> and <span class="math inline">\(j=1,\ldots,m\)</span>.
+The tensor product space <span class="math inline">\(\mathcal{H}_A\otimes\mathcal{H}_B\)</span> then consists of all linear combination of such tensor product basis vectors:<a href="#fn58" class="footnote-ref" id="fnref58"><sup>58</sup></a>
+<span class="math display" id="eq:bipartite">\[\begin{equation}
+  |\psi\rangle
+  = \sum_{ij} c_{ij}|a_i\rangle\otimes|b_j\rangle.
+\tag{5.1}
+\end{equation}\]</span></p>
+<p>The tensor product operation <span class="math inline">\(\otimes\)</span> is distributive:
+<span class="math display">\[
+  \begin{gathered}
+    |a\rangle \otimes \left( \beta_1|b_1\rangle + \beta_2|b_2\rangle \right)
+    = \beta_1|a\rangle\otimes|b_1\rangle + \beta_2|a\rangle\otimes|b_2\rangle
+  \\\left( \alpha_1|a_1\rangle + \alpha_2|a_2\rangle \right) \otimes |b\rangle
+    = \alpha_1|a_1\rangle\otimes|b\rangle + \alpha_2|a_2\rangle\otimes|b\rangle.
+  \end{gathered}
+\]</span>
+The tensor product of Hilbert spaces is again a Hilbert space: the inner products on <span class="math inline">\(\mathcal{H}_A\)</span> and <span class="math inline">\(\mathcal{H}_B\)</span> give a natural inner product on <span class="math inline">\(\mathcal{H}_A\otimes\mathcal{H}_B\)</span>, defined for any two product vectors by<a href="#fn59" class="footnote-ref" id="fnref59"><sup>59</sup></a>
+<span class="math display">\[
+  \left( \langle a&#39;|\otimes\langle b&#39;| \right) \left( |a\rangle\otimes|b\rangle \right)
+  = \langle a&#39;|a\rangle\langle b&#39;|b\rangle
+\]</span>
+and extended by linearity to sums of tensor products of vectors, and by associativity<a href="#fn60" class="footnote-ref" id="fnref60"><sup>60</sup></a> to any number of subsystems.</p>
+<p>Some joint states of <span class="math inline">\(\mathcal{A}\)</span> and <span class="math inline">\(\mathcal{B}\)</span> can be expressed as a single tensor product, say <span class="math inline">\(|\psi\rangle=|a\rangle\otimes|b\rangle\)</span> (often written as <span class="math inline">\(|a\rangle|b\rangle\)</span>, or <span class="math inline">\(|a, b\rangle\)</span>, or even <span class="math inline">\(|ab\rangle\)</span>), meaning that the subsystem <span class="math inline">\(\mathcal{A}\)</span> is in state <span class="math inline">\(|a\rangle\)</span>, and the subsystem <span class="math inline">\(\mathcal{B}\)</span> in state <span class="math inline">\(|b\rangle\)</span>.
+If we expand <span class="math inline">\(|a\rangle=\sum_i\alpha_i|a_i\rangle\)</span> and <span class="math inline">\(|b\rangle=\sum_i\beta_j|b_j\rangle\)</span>, then <span class="math inline">\(|\psi\rangle=\sum_{ij}\alpha_i\beta_j|a_i\rangle\otimes|b_j\rangle\)</span> and we see that, for all such states, the coefficients <span class="math inline">\(c_{ij}\)</span> in Equation <a href="chapter5.html#eq:bipartite">(5.1)</a> are of a rather special form:
+<span class="math display">\[
+  c_{ij} = \alpha_i\beta_j.
+\]</span>
+We call such states <strong>separable</strong> (or just <strong>product states</strong>).
+States that are not separable are said to be <strong>entangled</strong>.</p>
+<p>A useful fact about tensor products is that <span class="math inline">\(\lambda a\otimes b = a\otimes\lambda b\)</span> (where <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are vectors, and <span class="math inline">\(\lambda\)</span> is a scalar).
+This means that we don’t need to worry about brackets and write something like <span class="math inline">\(\lambda(a\otimes b)\)</span>.</p>
+<p>We will also need the concept of the tensor product of two operators.
+If <span class="math inline">\(A\)</span> is an operator on <span class="math inline">\(\mathcal{H}_A\)</span> and <span class="math inline">\(B\)</span> an operator on <span class="math inline">\(\mathcal{H}_B\)</span>, then the tensor product operator <span class="math inline">\(A\otimes B\)</span> is an operator on <span class="math inline">\(\mathcal{H}_A\otimes\mathcal{H}_B\)</span> defined by its action on product vectors via
+<span class="math display">\[
+  (A\otimes B)(|a\rangle\otimes|b\rangle) = (A|a\rangle)\otimes (B|b\rangle)
+\]</span>
+and with its action on all other vectors determined by linearity:
+<span class="math display">\[
+  A\otimes B \left( \sum_{ij} c_{ij}|a_i\rangle\otimes|b_j\rangle \right)
+  = \sum_{ij}c_{ij} A|a_i\rangle\otimes B|b_j\rangle.
+\]</span></p>
+</div>
+</div>
+<div id="back-to-qubits" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Back to qubits</h2>
+<p>Let’s see how this formalism works for qubits.
+The <span class="math inline">\(n\)</span>-fold tensor product of vectors from the standard basis <span class="math inline">\(\{|0\rangle,|1\rangle\}\)</span> represent binary strings of length <span class="math inline">\(n\)</span>.
+For example, for <span class="math inline">\(n=3\)</span>,<a href="#fn61" class="footnote-ref" id="fnref61"><sup>61</sup></a>
+<span class="math display">\[
+  \begin{aligned}
+    |0\rangle\otimes|1\rangle\otimes|1\rangle
+    &amp; \equiv |011\rangle
+  \\|1\rangle\otimes|1\rangle\otimes|1\rangle
+    &amp; \equiv |111\rangle.
+  \end{aligned}
+\]</span>
+A <em>classical</em> register composed of three bits can store <em>only one</em> of these two binary strings at any time; a <em>quantum</em> register composed of three qubits can store <em>both of them</em> in a superposition.</p>
+<p>Indeed, if we start with the state <span class="math inline">\(|011\rangle\)</span> and apply the Hadamard gate to the first qubit (which is the same as applying <span class="math inline">\(H\otimes\operatorname{id}\otimes\operatorname{id}\)</span>), then, given that linear combinations distribute over tensor products, we obtain<a href="#fn62" class="footnote-ref" id="fnref62"><sup>62</sup></a>
+<span class="math display">\[
+  \begin{aligned}
+    |011\rangle
+    \longmapsto
+    &amp;\frac{1}{\sqrt2} \big(|0\rangle + |1\rangle\big) \otimes|1\rangle\otimes|1\rangle
+  \\\equiv
+    &amp;\frac{1}{\sqrt2} \big(|011\rangle + |111\rangle\big).
+  \end{aligned}
+\]</span>
+In fact, we can even prepare this register in a superposition of all eight possible binary strings: if we apply the tensor product operation <span class="math inline">\(H\otimes H\otimes H\)</span> to the state <span class="math inline">\(|0\rangle\otimes|0\rangle\otimes|0\rangle = |000\rangle\)</span> then we get</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-35-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>The resulting state is exactly a superposition of all binary string of length 3, and can also be written as
+<span class="math display">\[
+  \frac{1}{\sqrt2} \big(|0\rangle + |1\rangle\big)
+  \otimes
+  \frac{1}{\sqrt2} \big(|0\rangle + |1\rangle\big)
+  \otimes
+  \frac{1}{\sqrt2} \big(|0\rangle + |1\rangle\big).
+\]</span></p>
+<p>In general, the tensor product operation <span class="math inline">\(H^{\otimes n}\)</span>, which means “apply the Hadamard gate to each of your <span class="math inline">\(n\)</span> qubits”, is known as the <strong>Hadamard transform</strong>, and it maps product states to product states.
+Like the Hadamard gate in the typical quantum interference circuit, the Hadamard transform opens and closes a multi-qubit interference.</p>
+</div>
+<div id="separable-or-entangled" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> Separable or entangled?</h2>
+</div>
+<div id="why-qubits-subsystems-and-entanglement" class="section level2" number="5.6">
+<h2><span class="header-section-number">5.6</span> Why qubits, subsystems, and entanglement?</h2>
 <p>One question that is rather natural to ask at this point is the following:</p>
 <blockquote>
 <p>If entanglement is so fragile and difficult to control, then why bother?
@@ -290,6 +438,12 @@ This plausibility argument indicates that, for efficient processing of informati
 <hr />
 <ol start="56">
 <li id="fn56"><p>E. Schrodinger, Discussion of probability relations between separated system, <em>Mathematical Proceedings of the Cambridge Philosophical Society</em> <strong>31</strong> (1935), pp. 555–563.<a href="chapter5.html#fnref56" class="footnote-back">↩︎</a></p></li>
+<li id="fn57"><p>It looks like we are defining some sort of “multiplication rule” for kets here, saying that <span class="math inline">\(|a\rangle|b\rangle:=|ab\rangle\)</span>. This is indeed the case, but to talk about this properly we need to introduce the idea of <strong>tensor products</strong> (which we do very soon).<a href="chapter5.html#fnref57" class="footnote-back">↩︎</a></p></li>
+<li id="fn58"><p>If the bases <span class="math inline">\(\{|a_i\rangle\}\)</span> and <span class="math inline">\(\{|b_j\rangle\}\)</span> are orthonormal then so too is the tensor product basis <span class="math inline">\(\{|a_i\rangle\otimes|b_j\rangle\}\)</span>.<a href="chapter5.html#fnref58" class="footnote-back">↩︎</a></p></li>
+<li id="fn59"><p>The bra corresponding to the tensor product state <span class="math inline">\(|a\rangle\otimes|b\rangle\)</span> is written as <span class="math inline">\((|a\rangle\otimes|b\rangle)^\dagger = \langle a|\otimes\langle b|\)</span>, where the order of the factors on either side of <span class="math inline">\(\otimes\)</span> does not change when the dagger operation is applied.<a href="chapter5.html#fnref59" class="footnote-back">↩︎</a></p></li>
+<li id="fn60"><p><span class="math inline">\(({\mathcal{H}}_a \otimes {\mathcal{H}}_b)\otimes {\mathcal{H}}_c = {\mathcal{H}}_a \otimes ({\mathcal{H}}_b\otimes {\mathcal{H}}_c)\)</span>.<a href="chapter5.html#fnref60" class="footnote-back">↩︎</a></p></li>
+<li id="fn61"><p>We often drop the <span class="math inline">\(\otimes\)</span> symbol, especially when we deal with the standard tensor product basis. For example, a state of a quantum register composed of four qubits holding the binary string <span class="math inline">\(1001\)</span> may be written as <span class="math inline">\(|1\rangle\otimes|0\rangle\otimes|0\rangle\otimes|1\rangle\)</span>, as <span class="math inline">\(|1\rangle|0\rangle|0\rangle|1\rangle\)</span>, or even simply as <span class="math inline">\(|1001\rangle\)</span>.<a href="chapter5.html#fnref61" class="footnote-back">↩︎</a></p></li>
+<li id="fn62"><p>We often simply write <span class="math inline">\(H\otimes H\otimes H\)</span> as <span class="math inline">\(H^{\otimes 3}\)</span>.<a href="chapter5.html#fnref62" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

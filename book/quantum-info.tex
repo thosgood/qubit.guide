@@ -74,7 +74,7 @@
 
 \title{Lectures on Quantum Information Science}
 \author{Artur Ekert and Tim Hosgood}
-\date{Last updated: December 26, 2020}
+\date{Last updated: December 28, 2020}
 
 
 \begin{document}
@@ -3201,8 +3201,167 @@ But what exactly is quantum entanglement?
 In classical physics, the transition from a single object to a composite system of many objects is trivial: in order to describe the state of, say, 42 objects at any given moment of time, it is sufficient to describe the state of each of the objects separately.
 Indeed, the classical state of 42 point-like particles is described by specifying the position and the momentum of each particle.
 
-That is, in the \emph{classical} world, ``the whole is the sum of its parts''.
-But the \emph{quantum} world is quite different.
+\begin{idea}
+
+In the \emph{classical} world, ``the whole is the sum of its parts'', but the \emph{quantum} world is very different.
+
+\end{idea}
+
+Consider, for example, a pair of qubits.
+Suppose that each one is described by a state vector: the first one by \(|a\rangle\), and the second one by \(|b\rangle\).
+One might therefore think that the most general state of the two qubits should be represented by a pair of state vectors, \(|a\rangle|b\rangle\), with one for each qubit.
+Indeed, such a state is certainly possible, but there are other states that \emph{cannot} be expressed in this form.
+In order to write down the most general state of two qubits we first focus on the basis states.
+
+For a single qubit we have been using the standard basis \(\{|0\rangle,|1\rangle\}\).
+For two qubits we may choose the following as our standard basis states:\footnote{It looks like we are defining some sort of ``multiplication rule'' for kets here, saying that \(|a\rangle|b\rangle:=|ab\rangle\). This is indeed the case, but to talk about this properly we need to introduce the idea of \textbf{tensor products} (which we do very soon).}
+\[
+  \begin{array}{cc}
+    |00\rangle \equiv |0\rangle|0\rangle
+    & |01\rangle \equiv |0\rangle|1\rangle
+  \\|10\rangle \equiv |1\rangle|0\rangle
+    &|11\rangle \equiv |1\rangle|1\rangle.
+  \end{array}
+\]
+Within each ket, the first symbol refers to the first qubit, and the second to the second, and we have tacitly assumed that we can distinguish the two qubits by their location, or some other means.
+Now, the most general state of the two qubits is a normalised linear combination of these four basis states, i.e.~a vector of the form
+\[
+  |\psi\rangle
+  = c_{00}|00\rangle + c_{01}|01\rangle + c_{10}|10\rangle + c_{11}|11\rangle.
+\]
+Physical interpretation aside, let us count how many real parameters are needed to specify this state.
+Six, right?
+We have four complex numbers (eight real parameters) restricted by the normalisation condition, along with the fact that states differing only by a global phase factor are equivalent, which leaves us with six real parameters.
+Now, by the same line of argument, we need only two real parameters to specify the state of a single qubit, and hence need four real parameters to specify any state of two qubits of the form \(|a\rangle|b\rangle\).
+So it cannot be the case that every state of two qubits can be expressed as a pair of states \(|a\rangle|b\rangle\), simply for ``dimension reasons''.
+
+For example, compare the two states of two qubits,
+\[
+  \begin{gathered}
+    \frac{1}{\sqrt 2}|00\rangle + \frac{1}{\sqrt 2}|01\rangle
+  \\\mbox{and}
+  \\\frac{1}{\sqrt 2}|00\rangle + \frac{1}{\sqrt 2}|11\rangle.
+  \end{gathered}
+\]
+The first one is \textbf{separable}, i.e.~we can view it as a pair of state vectors where each one pertains to one of the two qubits:
+\[
+  \frac{1}{\sqrt 2}|00\rangle + \frac{1}{\sqrt 2}|01\rangle
+  = \underbrace{\vphantom{\frac{1}{\sqrt 2}}|0\rangle}_{\text{qubit 1}}
+  \;\;
+  \underbrace{\frac{1}{\sqrt 2}(|0\rangle+|1\rangle)}_{\text{qubit 2}},
+\]
+The second state, however, does \emph{not} admit such a decomposition: there do \emph{not} exist any \(\psi_1,\psi_2\) such that
+\[
+  \frac{1}{\sqrt 2}|00\rangle + \frac{1}{\sqrt 2}|11\rangle
+  =
+  |\psi_1\rangle|\psi_2\rangle
+\]
+and so we say that it is an \textbf{entangled} state.
+Informally, any bipartite state that cannot be viewed as a pair of two states pertaining to the constituent subsystems is said to be entangled.
+
+With this discussion in our minds, we can now give more formal account of the states of composite quantum systems.
+
+\hypertarget{quantum-theory-formally-continued}{%
+\subsection{Quantum theory, formally (continued)}\label{quantum-theory-formally-continued}}
+
+Recalling \protect\hyperlink{chapter4}{Chapter 4}, where we said that we were missing a key part of the formalism of quantum theory, we can now fill in this hole.
+Our mathematical formalism of choice behind the quantum theory of composite systems is based on the \textbf{tensor product} of Hilbert spaces.
+
+\hypertarget{tensor-products}{%
+\subsubsection{Tensor products}\label{tensor-products}}
+
+Let the states of some system \(\mathcal{A}\) be described by vectors in an \(n\)-dimensional Hilbert space \(\mathcal H_A\), and the states of some system \(\mathcal{B}\) by vectors in an \(m\)-dimensional Hilbert space \(\mathcal H_B\).
+The combined system of \(\mathcal{A}\) and \(\mathcal{B}\) is then described by vectors in the \((nm)\)-dimensional \textbf{tensor product space} \(\mathcal{H}_A\otimes\mathcal{H}_B\).
+Given bases \(\{|a_1\rangle,\ldots,|a_n\rangle\}\) of \(\mathcal H_A\) and \(\{|b_1\rangle,\ldots,|b_m\rangle\}\) of \(\mathcal H_B\), we form a basis of the tensor product by taking the ordered pairs \(|a_i\rangle\otimes|b_j\rangle\), for \(i=1,\ldots,n\) and \(j=1,\ldots,m\).
+The tensor product space \(\mathcal{H}_A\otimes\mathcal{H}_B\) then consists of all linear combination of such tensor product basis vectors:\footnote{If the bases \(\{|a_i\rangle\}\) and \(\{|b_j\rangle\}\) are orthonormal then so too is the tensor product basis \(\{|a_i\rangle\otimes|b_j\rangle\}\).}
+\begin{equation}
+  |\psi\rangle
+  = \sum_{ij} c_{ij}|a_i\rangle\otimes|b_j\rangle.
+\label{eq:bipartite}
+\end{equation}
+
+The tensor product operation \(\otimes\) is distributive:
+\[
+  \begin{gathered}
+    |a\rangle \otimes \left( \beta_1|b_1\rangle + \beta_2|b_2\rangle \right)
+    = \beta_1|a\rangle\otimes|b_1\rangle + \beta_2|a\rangle\otimes|b_2\rangle
+  \\\left( \alpha_1|a_1\rangle + \alpha_2|a_2\rangle \right) \otimes |b\rangle
+    = \alpha_1|a_1\rangle\otimes|b\rangle + \alpha_2|a_2\rangle\otimes|b\rangle.
+  \end{gathered}
+\]
+The tensor product of Hilbert spaces is again a Hilbert space: the inner products on \(\mathcal{H}_A\) and \(\mathcal{H}_B\) give a natural inner product on \(\mathcal{H}_A\otimes\mathcal{H}_B\), defined for any two product vectors by\footnote{The bra corresponding to the tensor product state \(|a\rangle\otimes|b\rangle\) is written as \((|a\rangle\otimes|b\rangle)^\dagger = \langle a|\otimes\langle b|\), where the order of the factors on either side of \(\otimes\) does not change when the dagger operation is applied.}
+\[
+  \left( \langle a'|\otimes\langle b'| \right) \left( |a\rangle\otimes|b\rangle \right)
+  = \langle a'|a\rangle\langle b'|b\rangle
+\]
+and extended by linearity to sums of tensor products of vectors, and by associativity\footnote{\(({\mathcal{H}}_a \otimes {\mathcal{H}}_b)\otimes {\mathcal{H}}_c = {\mathcal{H}}_a \otimes ({\mathcal{H}}_b\otimes {\mathcal{H}}_c)\).} to any number of subsystems.
+
+Some joint states of \(\mathcal{A}\) and \(\mathcal{B}\) can be expressed as a single tensor product, say \(|\psi\rangle=|a\rangle\otimes|b\rangle\) (often written as \(|a\rangle|b\rangle\), or \(|a, b\rangle\), or even \(|ab\rangle\)), meaning that the subsystem \(\mathcal{A}\) is in state \(|a\rangle\), and the subsystem \(\mathcal{B}\) in state \(|b\rangle\).
+If we expand \(|a\rangle=\sum_i\alpha_i|a_i\rangle\) and \(|b\rangle=\sum_i\beta_j|b_j\rangle\), then \(|\psi\rangle=\sum_{ij}\alpha_i\beta_j|a_i\rangle\otimes|b_j\rangle\) and we see that, for all such states, the coefficients \(c_{ij}\) in Equation \eqref{eq:bipartite} are of a rather special form:
+\[
+  c_{ij} = \alpha_i\beta_j.
+\]
+We call such states \textbf{separable} (or just \textbf{product states}).
+States that are not separable are said to be \textbf{entangled}.
+
+A useful fact about tensor products is that \(\lambda a\otimes b = a\otimes\lambda b\) (where \(a\) and \(b\) are vectors, and \(\lambda\) is a scalar).
+This means that we don't need to worry about brackets and write something like \(\lambda(a\otimes b)\).
+
+We will also need the concept of the tensor product of two operators.
+If \(A\) is an operator on \(\mathcal{H}_A\) and \(B\) an operator on \(\mathcal{H}_B\), then the tensor product operator \(A\otimes B\) is an operator on \(\mathcal{H}_A\otimes\mathcal{H}_B\) defined by its action on product vectors via
+\[
+  (A\otimes B)(|a\rangle\otimes|b\rangle) = (A|a\rangle)\otimes (B|b\rangle)
+\]
+and with its action on all other vectors determined by linearity:
+\[
+  A\otimes B \left( \sum_{ij} c_{ij}|a_i\rangle\otimes|b_j\rangle \right)
+  = \sum_{ij}c_{ij} A|a_i\rangle\otimes B|b_j\rangle.
+\]
+
+\hypertarget{back-to-qubits}{%
+\subsection{Back to qubits}\label{back-to-qubits}}
+
+Let's see how this formalism works for qubits.
+The \(n\)-fold tensor product of vectors from the standard basis \(\{|0\rangle,|1\rangle\}\) represent binary strings of length \(n\).
+For example, for \(n=3\),\footnote{We often drop the \(\otimes\) symbol, especially when we deal with the standard tensor product basis. For example, a state of a quantum register composed of four qubits holding the binary string \(1001\) may be written as \(|1\rangle\otimes|0\rangle\otimes|0\rangle\otimes|1\rangle\), as \(|1\rangle|0\rangle|0\rangle|1\rangle\), or even simply as \(|1001\rangle\).}
+\[
+  \begin{aligned}
+    |0\rangle\otimes|1\rangle\otimes|1\rangle
+    & \equiv |011\rangle
+  \\|1\rangle\otimes|1\rangle\otimes|1\rangle
+    & \equiv |111\rangle.
+  \end{aligned}
+\]
+A \emph{classical} register composed of three bits can store \emph{only one} of these two binary strings at any time; a \emph{quantum} register composed of three qubits can store \emph{both of them} in a superposition.
+
+Indeed, if we start with the state \(|011\rangle\) and apply the Hadamard gate to the first qubit (which is the same as applying \(H\otimes\operatorname{id}\otimes\operatorname{id}\)), then, given that linear combinations distribute over tensor products, we obtain\footnote{We often simply write \(H\otimes H\otimes H\) as \(H^{\otimes 3}\).}
+\[
+  \begin{aligned}
+    |011\rangle
+    \longmapsto
+    &\frac{1}{\sqrt2} \big(|0\rangle + |1\rangle\big) \otimes|1\rangle\otimes|1\rangle
+  \\\equiv
+    &\frac{1}{\sqrt2} \big(|011\rangle + |111\rangle\big).
+  \end{aligned}
+\]
+In fact, we can even prepare this register in a superposition of all eight possible binary strings: if we apply the tensor product operation \(H\otimes H\otimes H\) to the state \(|0\rangle\otimes|0\rangle\otimes|0\rangle = |000\rangle\) then we get
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-35-1} \end{center}
+
+The resulting state is exactly a superposition of all binary string of length 3, and can also be written as
+\[
+  \frac{1}{\sqrt2} \big(|0\rangle + |1\rangle\big)
+  \otimes
+  \frac{1}{\sqrt2} \big(|0\rangle + |1\rangle\big)
+  \otimes
+  \frac{1}{\sqrt2} \big(|0\rangle + |1\rangle\big).
+\]
+
+In general, the tensor product operation \(H^{\otimes n}\), which means ``apply the Hadamard gate to each of your \(n\) qubits'', is known as the \textbf{Hadamard transform}, and it maps product states to product states.
+Like the Hadamard gate in the typical quantum interference circuit, the Hadamard transform opens and closes a multi-qubit interference.
+
+\hypertarget{separable-or-entangled}{%
+\subsection{Separable or entangled?}\label{separable-or-entangled}}
 
 \hypertarget{why-qubits-subsystems-and-entanglement}{%
 \subsection{Why qubits, subsystems, and entanglement?}\label{why-qubits-subsystems-and-entanglement}}
@@ -3777,14 +3936,14 @@ The \emph{quantum} case, however, is more complicated, because we have both bit-
 In order to protect a qubit against bit-flips (incoherent \(X\) rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
 We take a qubit in some unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), introduce two auxiliary qubits, and encode it into three qubits as
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-35-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-36-1} \end{center}
 
 Suppose that at most one qubit is then flipped (say, the second one).
 The encoded state then becomes \(\alpha|010\rangle + \beta|101\rangle\).
 Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 Instead we introduce another two additional qubits, both in state \(|0\rangle\), and apply the following network:
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-36-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-37-1} \end{center}
 
 We measure the two auxiliary qubits, also known as \textbf{ancilla bits}, and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code.
 The theory behind this network runs as follows.
@@ -4214,7 +4373,7 @@ In order to see the relationship between the two, consider a joint state of a bi
   \\&= \sum_{j=1} |\widetilde\psi_j\rangle|b_j\rangle
   \\&= \sum_{j=1} \sqrt{p_j}|\psi_j\rangle|b_j\rangle
   \end{aligned}
-\label{eq:bipartite}
+\label{eq:bipartite-density}
 \end{equation}
 where \(|\widetilde\psi_j\rangle = \sum_i c_{ij}|a_i\rangle = \sqrt{p_j}|\psi_j\rangle\), and the vectors \(|\psi_j\rangle\) are the normalised versions of the \(|\widetilde\psi_j\rangle\).
 Note that \(p_j=\langle\widetilde\psi_j|\widetilde\psi_j\rangle\).
@@ -4295,7 +4454,7 @@ Any observable \(X\) on \(\mathcal{A}\) can be viewed as an observable \(X\otime
 When constructing \(\rho^A\) we had better make sure that for any observable \(X\) the average value of \(X\) in the state \(\rho_A\) is the same as the average value of \(X\otimes\operatorname{id}\) in the state \(\rho^{AB}\).
 This is indeed the case for the partial trace.
 
-For example, let us go back to the state in \eqref{eq:bipartite} and assume that Alice measures some observable \(X\) on her part of the system.
+For example, let us go back to the state in \eqref{eq:bipartite-density} and assume that Alice measures some observable \(X\) on her part of the system.
 Technically, such an observable can be expressed as \(X\otimes \operatorname{id}\), where \(\operatorname{id}\) is the identity operator acting on the subsystem \(\mathcal{B}\).
 The expected value of this observable in the state \(|\psi_{AB}\rangle\) is \(\operatorname{tr}(X\otimes\operatorname{id})|\psi_{AB}\rangle\langle\psi_{AB}|\), i.e.
 \[
