@@ -1,7 +1,7 @@
 \documentclass{article}
 \usepackage{NotesTeX}
 
-\renewcommand{\footnote}[1]{\en{#1}}
+\renewcommand{\footnote}[1]{\sn{#1}}
 
 \usepackage{amsmath,amssymb}
 \usepackage{enumitem}
@@ -74,7 +74,7 @@
 
 \title{Lectures on Quantum Information Science}
 \author{Artur Ekert and Tim Hosgood}
-\date{Last updated: December 28, 2020}
+\date{Last updated: December 29, 2020}
 
 
 \begin{document}
@@ -3363,6 +3363,97 @@ Like the Hadamard gate in the typical quantum interference circuit, the Hadamard
 \hypertarget{separable-or-entangled}{%
 \subsection{Separable or entangled?}\label{separable-or-entangled}}
 
+\begin{idea}
+
+\emph{Most} vectors in \(\mathcal{H}_a\otimes \mathcal{H}_b\) are entangled and \emph{cannot} be written as product states \(|a\rangle\otimes|b\rangle\) with \(|a\rangle\in\mathcal{H}_a\) and \(|b\rangle\in\mathcal{H}_b\).
+
+\end{idea}
+
+In order to see this, let us write any joint state \(|\psi\rangle\) of \(\mathcal{A}\) and \(\mathcal{B}\) in a product basis as
+\begin{equation}
+  \begin{aligned}
+    |\psi\rangle
+    &= \sum_{ij} c_{ij}|a_i\rangle\otimes|b_j\rangle
+  \\&= \sum_i|a_i\rangle\otimes\left(\sum_j c_{ij}|b_j\rangle\right)
+  \\&= \sum_i|a_i\rangle\otimes|\phi_i\rangle
+  \end{aligned}
+\label{eq:bipartite2}
+\end{equation}
+where the \(|\phi_i\rangle=\sum_j c_{ij}|b_j\rangle\) are vectors in \(\mathcal{H}_B\) that need not be normalised.
+For any \emph{product} state, these vectors have a special form.
+Indeed, if \(|\psi\rangle= |a\rangle\otimes|b\rangle\) then, after expanding the first state in the \(|a_i\rangle\) basis, we obtain
+\[
+  |\psi\rangle
+  = \sum_{i}|a_i\rangle\otimes\left(\sum_i\alpha_i|b\rangle\right).
+\]
+This expression has the same form as Equation \eqref{eq:bipartite2} with \(|\phi_i\rangle=\alpha_i|b\rangle\), i.e.~each of the \(|\phi_i\rangle\) vectors in this expansion is a multiple of the same vector \(|b\rangle\).
+Conversely, if \(|\phi_i\rangle = \alpha_i|b\rangle\) for all \(i\) in Equation \eqref{eq:bipartite2}, then \(|\psi\rangle\) must be a product state.\footnote{Even though an entangled state cannot be written as a tensor product, it can always be written as a linear combination of vectors from the tensor product basis. In fact, any state of \(n\) qubits \(|\psi\rangle\) can be expressed in the standard \emph{product} basis. In general, given \(n\) qubits, we need \(2(2^n-1)\) real parameters to describe their state vector, but only \(2n\) to describe separable states.}
+So if we want to identify which joint states are product states and which are not, we simply write the joint state according to Equation \eqref{eq:bipartite2} and check if all the vectors \(|\phi_i\rangle\) are multiples of a single vector.
+Needless to say, if we choose the states \(|\phi\rangle\) randomly, it is very unlikely that this condition is satisfied, and we almost certainly pick an entangled state.
+
+Quantum entanglement is one of the most fascinating aspects of quantum theory.
+We will now explore some of its implications.
+
+\hypertarget{controlled-not}{%
+\subsection{Controlled-NOT}\label{controlled-not}}
+
+How do entangled states arise in real physical situations?
+The short answer is that \emph{entanglement is the result of interactions}.
+It is easy to see that tensor product operations \(U_1\otimes\ldots U_n\) map product states to product states:
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-36-1} \end{center}
+
+and so any collection of separable qubits remains separable.
+
+As soon as qubits start interacting with one another, however, they become entangled, and things start to get really interesting.
+We will describe interactions that cannot be written as tensor products of unitary operations on individual qubits.
+The most popular two-qubit entangling gate is the \textbf{controlled-\(\texttt{NOT}\)} (or \(\texttt{c-NOT}\)), also known as the \textbf{controlled-\(X\)} gate.\footnote{Here the \(X\) refers to the Pauli operator \(\sigma_x\equiv X\) that implements the bit-flip.}
+The gate acts on two qubits: it flips the second qubit (referred to as the \textbf{target}) if the first qubit (referred to as the \textbf{control}) is \(|1\rangle\), and does nothing if the control qubit is \(|0\rangle\).
+In the standard basis\footnote{Recall that the standard, or \textbf{computational}, basis is \(\{|00\rangle,|01\rangle,|10\rangle,|11\rangle\}\).}, it is represented by the following unitary matrix:
+
+\begin{idea}
+
+\begin{longtable}[]{@{}c@{}}
+\toprule
+\begin{minipage}[b]{(\columnwidth - 0\tabcolsep) * \real{1.00}}\centering
+controlled-\(\texttt{NOT}\)\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{(\columnwidth - 0\tabcolsep) * \real{1.00}}\centering
+\(\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&\begin{matrix}0&1\\1&0\end{matrix}\end{array}\right]\)\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\end{idea}
+
+We can also represent the \(\texttt{c-NOT}\) gate using the circuit notation, as in \ref{fig:c-not-diagram}.
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{quantum-info_files/figure-latex/c-not-diagram-1} 
+
+}
+
+\caption{Where \(x,y\in\{0,1\}\), and \(\oplus\) denotes \(\texttt{XOR}\), or addition modulo 2.}\label{fig:c-not-diagram}
+\end{figure}
+
+Note that this gate does not admit any tensor product decomposition, but can be written as a sum of tensor products:\footnote{Make sure that you understand how the Dirac notation is used here. More generally, think why \[|0\rangle\langle 0|\otimes A + |1\rangle\langle 1|\otimes B\] means ``\emph{if the first qubit is in state \(|0\rangle\) then apply \(A\) to the second one, and if the first qubit is in state \(|1\rangle\) then apply \(B\) to the second one}''. What happens if the first qubit is in a superposition of \(|0\rangle\) and \(|1\rangle\)?}
+\[
+  \texttt{c-NOT}
+  = |0\rangle\langle 0|\otimes\operatorname{id}+ |1\rangle\langle 1|\otimes X
+\]
+where \(X\) is the Pauli bit-flip operation.
+
+The \(\texttt{c-NOT}\) gate lets us do many interesting things, and can act in a rather deceptive way.
+Let us now study some of these things.
+
+\hypertarget{the-bell-states-and-the-bell-measurement}{%
+\subsection{The Bell states, and the Bell measurement}\label{the-bell-states-and-the-bell-measurement}}
+
 \hypertarget{why-qubits-subsystems-and-entanglement}{%
 \subsection{Why qubits, subsystems, and entanglement?}\label{why-qubits-subsystems-and-entanglement}}
 
@@ -3936,14 +4027,14 @@ The \emph{quantum} case, however, is more complicated, because we have both bit-
 In order to protect a qubit against bit-flips (incoherent \(X\) rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
 We take a qubit in some unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), introduce two auxiliary qubits, and encode it into three qubits as
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-36-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-37-1} \end{center}
 
 Suppose that at most one qubit is then flipped (say, the second one).
 The encoded state then becomes \(\alpha|010\rangle + \beta|101\rangle\).
 Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 Instead we introduce another two additional qubits, both in state \(|0\rangle\), and apply the following network:
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-37-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-38-1} \end{center}
 
 We measure the two auxiliary qubits, also known as \textbf{ancilla bits}, and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code.
 The theory behind this network runs as follows.
