@@ -46,7 +46,6 @@ For any problems or queries regarding this site or its contents, please get in t
         * and make sure that _everything_ in the syllabus is covered!!
     + followed by a paragraph with a bit more of a detailed overview
 1. make sure that you use **only** _either_ "chapter" _or_ "lecture"
-1. idea blocks in dark mode
 1. license and funding information along with bookdown link in `_includes/footer.html`
 1. check everything (gitbook) on mobile (mainly for overly wide maths/tables)
 1. **pdf output**
@@ -59,6 +58,7 @@ For any problems or queries regarding this site or its contents, please get in t
     + sizes of all images
     + idea environment (and, later on, scenario and circuits too)
         * tables in ideas look... bad
+        * change the colours of circuit and scenario to primary and secondary
 1. switch to katex
 1. change the link prefixed to gitbook TOC when you have a domain
 1. check that all `{.idea}`s are actually `{.idea latex-data=""}` (or whatever it is)
