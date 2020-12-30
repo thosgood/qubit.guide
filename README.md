@@ -1,6 +1,6 @@
 For the past however-many years, Artur Ekert has been teaching the masters course "Introduction to Quantum Information" at the University of Oxford.
 During this time, many versions of accompanying lecture notes have come and gone, with constant improvements and changes being made.
-The version that you will find on this website has been carefully edited into a cohesive "book", containing additional exercises and topics.
+The version that you will find on this website has been carefully edited by Tim Hosgood into a cohesive "book", containing additional exercises and topics.
 
 <div style="text-align: center;margin: 2em"><a href="book/" style="padding: 1em;border: 1px solid black;border-radius: 5px;">Read the book</a></div>
 
