@@ -667,6 +667,52 @@ which results in the entangled state.
 
 ### Controlled-U
 
+Both the above two-qubit controlled gates (i.e. $\texttt{c-NOT}$ and $\texttt{c-}P_\varphi$) are specific examples of the more general construction of a **controlled-$U$ gate**:
+$$
+  \texttt{c-}U
+  =
+  \proj{0}0\otimes\id + \proj{1}1\otimes U
+$$
+where $U$ is an arbitrary single-qubit unitary transformation $U$.
+
+::: {.idea data-latex=""}
+| controlled-$U$ |
+| :--------------: |
+| $\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&U\end{array}\right]$ |
+:::
+
+We can also represent the $\texttt{c-}U$ gate using the circuit notation, as in \@ref(fig:c-U-diagram).
+
+(ref:c-U-diagram-caption) Where $x,y\in\{0,1\}$.
+
+```{r c-U-diagram,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.cap='(ref:c-U-diagram-caption)'}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{x}$}
+    & \ctrl{1}
+    & \qw
+  \\\lstick{$\ket{y}$}
+    & \gate{U}
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+We can go even further and consider a more general unitary operation: the two-qubit **$x$-controlled-$U$ gate**:
+$$
+  \sum_x \proj{x}\otimes U_x
+  \equiv
+  \proj{0}\otimes U_0 + \proj{1}\otimes U_1
+$$
+where each $U_x$ is a unitary transformation that is applied to the second qubit only if the first one is in state $\ket{x}$.
+In general, an $x$-controlled-$U$ gate can be defined on two registers of arbitrary size $n$ and $m$, with $x\in\{0,1\}^n$ and the $U_x$ being $(2^m\times 2^m)$ unitary matrices acting on the second register.
+
+
+
+
+
+### Phase kickback
+
 
 
 
