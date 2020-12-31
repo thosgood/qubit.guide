@@ -51,7 +51,6 @@ For any problems or queries regarding this site or its contents, please get in t
 1. check everything (gitbook) on mobile (mainly for overly wide maths/tables)
 1. **pdf output**
     + overlapping in the header (section/subsection names)
-    + make `quote` environment italic
     + marginfigures
         * just wrap them in a custom block that css ignores but latex puts in the margin?
     + sizes of all images
