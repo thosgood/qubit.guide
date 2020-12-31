@@ -506,6 +506,10 @@ Here is a dramatic version.
 > She performs the Bell measurement on the first two qubits, which gives her two binary digits, $x$ and $y$.
 > She then broadcasts $x$ and $y$ to Bob, who chooses the corresponding transformation, as in \@ref(eq:teleportation-transformations), performs it, and recovers the original state.
 
+This raises a natural "philosophical" question: what do we really _mean_ by teleportation?
+A key part of this question is understanding what happens to our original qubit when we teleport it.
+As it turns out, it must necessarily be _destroyed_, as we now explain.
+
 
 
 
@@ -513,7 +517,155 @@ Here is a dramatic version.
 
 ### Thou shalt not clone
 
-**!!!TODO!!!**
+Let us now look at something that controlled-$\texttt{NOT}$ _seems_ to be doing but, in fact, _isn't_.
+It is easy to see that the $\texttt{c-NOT}$ can copy the bit value of the first qubit:
+$$
+  \ket{x}\ket{0} \xmapsto{\texttt{c-NOT}} \ket{x}\ket{x}
+  \qquad\mbox{(for $x=0,1$)}
+$$
+so one might suppose that this gate could also be used to copy superpositions, such as $\ket{\psi} = \alpha\ket{0}+\beta\ket{1}$, so that
+$$
+  \ket{\psi}\ket{0} \xmapsto{\texttt{c-NOT}} \ket{\psi}\ket{\psi}
+$$
+for any $\ket{\psi}$.
+
+**This is not so!**
+
+The unitarity of the $\texttt{c-NOT}$ means that it turns superpositions in the control qubit into _entanglement_ of the control and the target: if the control qubit is in the a superposition state $\ket{\psi} = \alpha\ket{0}+\beta\ket{1}$ (with $\alpha,\beta\neq0$), and the target is in $\ket{0}$, then the $\texttt{c-NOT}$ gate generates the entangled state
+$$
+  \big( \alpha\ket{0}+\beta\ket{1} \big) \ket{0}
+  \xmapsto{\texttt{c-NOT}}
+  \alpha\ket{00} + \beta\ket{11}.
+$$
+In fact, it is _impossible_ to clone an unknown quantum state, and we can prove this!
+
+To prove this via contradiction, let's assume that we _could_ build a universal quantum cloner, and then take any two normalised states $\ket{\psi}$ and $\ket{\phi}$ that are _non-identical_ (i.e. $|\braket{\psi|\phi}|\neq1$) and _non-orthogonal_ (i.e. $\braket{\psi|\phi}\neq0$).
+If we then run our hypothetical cloning machine we get
+$$
+  \begin{aligned}
+    \ket{\psi}\ket{0}\ket{W}
+    &\mapsto \ket{\psi}\ket{\psi}\ket{W'}
+  \\\ket{\phi}\ket{0}\ket{W}
+    &\mapsto \ket{\phi}\ket{\phi}\ket{W''}
+  \end{aligned}
+$$
+where the third system, initially in state $\ket{W}$, represents everything else (say, the internal state of the cloning machine).
+For this transformation to be unitary, it must preserve the inner product, and so we require that
+$$
+  \braket{\psi|\phi}
+  = \braket{\psi|\phi}^2 \braket{W'|W''}
+$$
+which can only be satisfied if $|\braket{\psi|\phi}|$ is equal to $1$ or $0$, but this contradicts our assumptions!
+
+Thus, states of qubits, unlike states of classical bits, cannot be faithfully cloned.
+Note that, in quantum teleportation, the original state must therefore be _destroyed_, since otherwise we would be producing a clone of an unknown quantum state.
+The no-cloning property of quantum states leads to interesting applications, of which quantum cryptography is one.
+
+::: {.idea data-latex=""}
+Universal quantum cloners are _impossible_.
+:::
+
+
+
+
+
+
+## Other controlled gates
+
+### Controlled-phase
+
+Needless to say, not everything is about the controlled-$\texttt{NOT}$ gate.
+Another common two-qubit gate is the **controlled-phase** gate $\texttt{c-}P_\varphi$.
+
+::: {.idea data-latex=""}
+| controlled-phase |
+| :--------------: |
+| $\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&\begin{matrix}1&0\\0&e^{i\varphi}\end{matrix}\end{array}\right]$ |
+:::
+
+We can also represent the $\texttt{c-}P_\varphi$ gate using the circuit notation, as in \@ref(fig:c-phase-diagram).
+
+(ref:c-phase-diagram-caption) Where $x,y\in\{0,1\}$.
+
+```{r c-phase-diagram,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.cap='(ref:c-phase-diagram-caption)'}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{x}$}
+    & \ctrl{1}
+    & \qw \rstick[wires=2]{$e^{ixy\varphi}\ket{x}\ket{y}$}
+  \\\lstick{$\ket{y}$}
+    & \ctrl{-1} \qw
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+Again, the matrix is written in the computational basis $\{\ket{00},\ket{01},\ket{10},\ket{11}\}$.
+If we do not specify the phase then we usually assume that $\varphi=\pi$, in which case we call this operation the **controlled-$Z$ gate**, which acts as $\proj{0}0\otimes\id + \proj{1}1\otimes Z$.
+Here $Z$ refers again to the Pauli phase-flip $\sigma_z\equiv Z$ operation.
+
+In order to see the entangling power of the controlled-phase shift gate, consider the following circuit.
+
+:::: {.circuit data-latex=""}
+::: {.circuit_title}
+(Generating entanglement, again).
+:::
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \qw
+  \\\lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{-1}
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+::::
+
+In this circuit, first the two Hadamard gates prepare the equally-weighted superposition of all states from the computational basis
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \qw \rstick[wires=2]{$\frac12\big(\ket{00}+\ket{01}+\ket{10}+\ket{11}\big)$}
+  \\\lstick{$\ket{0}$}
+    & \gate{H}
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+and then the controlled-$Z$ operation flips the sign in front of $\ket{11}$
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \qw \rstick[wires=2]{$\frac12\big(\ket{00}+\ket{01}+\ket{10}-\ket{11}\big)$}
+  \\\lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{-1}
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+which results in the entangled state.
+
+
+
+
+
+### Controlled-U
 
 
 

@@ -185,7 +185,12 @@
 <li class="chapter" data-level="5.6.2" data-path="chapter5.html"><a href="chapter5.html#quantum-teleportation"><i class="fa fa-check"></i><b>5.6.2</b> Quantum teleportation</a></li>
 <li class="chapter" data-level="5.6.3" data-path="chapter5.html"><a href="chapter5.html#thou-shalt-not-clone"><i class="fa fa-check"></i><b>5.6.3</b> Thou shalt not clone</a></li>
 </ul></li>
-<li class="chapter" data-level="5.7" data-path="chapter5.html"><a href="chapter5.html#why-qubits-subsystems-and-entanglement"><i class="fa fa-check"></i><b>5.7</b> Why qubits, subsystems, and entanglement?</a></li>
+<li class="chapter" data-level="5.7" data-path="chapter5.html"><a href="chapter5.html#other-controlled-gates"><i class="fa fa-check"></i><b>5.7</b> Other controlled gates</a>
+<ul>
+<li class="chapter" data-level="5.7.1" data-path="chapter5.html"><a href="chapter5.html#controlled-phase"><i class="fa fa-check"></i><b>5.7.1</b> Controlled-phase</a></li>
+<li class="chapter" data-level="5.7.2" data-path="chapter5.html"><a href="chapter5.html#controlled-u"><i class="fa fa-check"></i><b>5.7.2</b> Controlled-U</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="chapter5.html"><a href="chapter5.html#why-qubits-subsystems-and-entanglement"><i class="fa fa-check"></i><b>5.8</b> Why qubits, subsystems, and entanglement?</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a></li>
 <li class="part"><span><b>II Flowering</b></span></li>
@@ -589,14 +594,109 @@ Can Alice rectify her mistake and save Cambridge science?</p>
 She performs the Bell measurement on the first two qubits, which gives her two binary digits, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>.
 She then broadcasts <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> to Bob, who chooses the corresponding transformation, as in <a href="chapter5.html#eq:teleportation-transformations">(5.3)</a>, performs it, and recovers the original state.</p>
 </blockquote>
+<p>This raises a natural “philosophical” question: what do we really <em>mean</em> by teleportation?
+A key part of this question is understanding what happens to our original qubit when we teleport it.
+As it turns out, it must necessarily be <em>destroyed</em>, as we now explain.</p>
 </div>
 <div id="thou-shalt-not-clone" class="section level3" number="5.6.3">
 <h3><span class="header-section-number">5.6.3</span> Thou shalt not clone</h3>
-<p><strong>!!!TODO!!!</strong></p>
+<p>Let us now look at something that controlled-<span class="math inline">\(\texttt{NOT}\)</span> <em>seems</em> to be doing but, in fact, <em>isn’t</em>.
+It is easy to see that the <span class="math inline">\(\texttt{c-NOT}\)</span> can copy the bit value of the first qubit:
+<span class="math display">\[
+  |x\rangle|0\rangle \overset{\texttt{c-NOT}}{\longmapsto} |x\rangle|x\rangle
+  \qquad\mbox{(for $x=0,1$)}
+\]</span>
+so one might suppose that this gate could also be used to copy superpositions, such as <span class="math inline">\(|\psi\rangle = \alpha|0\rangle+\beta|1\rangle\)</span>, so that
+<span class="math display">\[
+  |\psi\rangle|0\rangle \overset{\texttt{c-NOT}}{\longmapsto} |\psi\rangle|\psi\rangle
+\]</span>
+for any <span class="math inline">\(|\psi\rangle\)</span>.</p>
+<p><strong>This is not so!</strong></p>
+<p>The unitarity of the <span class="math inline">\(\texttt{c-NOT}\)</span> means that it turns superpositions in the control qubit into <em>entanglement</em> of the control and the target: if the control qubit is in the a superposition state <span class="math inline">\(|\psi\rangle = \alpha|0\rangle+\beta|1\rangle\)</span> (with <span class="math inline">\(\alpha,\beta\neq0\)</span>), and the target is in <span class="math inline">\(|0\rangle\)</span>, then the <span class="math inline">\(\texttt{c-NOT}\)</span> gate generates the entangled state
+<span class="math display">\[
+  \big( \alpha|0\rangle+\beta|1\rangle \big) |0\rangle
+  \overset{\texttt{c-NOT}}{\longmapsto}
+  \alpha|00\rangle + \beta|11\rangle.
+\]</span>
+In fact, it is <em>impossible</em> to clone an unknown quantum state, and we can prove this!</p>
+<p>To prove this via contradiction, let’s assume that we <em>could</em> build a universal quantum cloner, and then take any two normalised states <span class="math inline">\(|\psi\rangle\)</span> and <span class="math inline">\(|\phi\rangle\)</span> that are <em>non-identical</em> (i.e. <span class="math inline">\(|\langle\psi|\phi\rangle|\neq1\)</span>) and <em>non-orthogonal</em> (i.e. <span class="math inline">\(\langle\psi|\phi\rangle\neq0\)</span>).
+If we then run our hypothetical cloning machine we get
+<span class="math display">\[
+  \begin{aligned}
+    |\psi\rangle|0\rangle|W\rangle
+    &amp;\mapsto |\psi\rangle|\psi\rangle|W&#39;\rangle
+  \\|\phi\rangle|0\rangle|W\rangle
+    &amp;\mapsto |\phi\rangle|\phi\rangle|W&#39;&#39;\rangle
+  \end{aligned}
+\]</span>
+where the third system, initially in state <span class="math inline">\(|W\rangle\)</span>, represents everything else (say, the internal state of the cloning machine).
+For this transformation to be unitary, it must preserve the inner product, and so we require that
+<span class="math display">\[
+  \langle\psi|\phi\rangle
+  = \langle\psi|\phi\rangle^2 \langle W&#39;|W&#39;&#39;\rangle
+\]</span>
+which can only be satisfied if <span class="math inline">\(|\langle\psi|\phi\rangle|\)</span> is equal to <span class="math inline">\(1\)</span> or <span class="math inline">\(0\)</span>, but this contradicts our assumptions!</p>
+<p>Thus, states of qubits, unlike states of classical bits, cannot be faithfully cloned.
+Note that, in quantum teleportation, the original state must therefore be <em>destroyed</em>, since otherwise we would be producing a clone of an unknown quantum state.
+The no-cloning property of quantum states leads to interesting applications, of which quantum cryptography is one.</p>
+<div class="idea">
+<p>Universal quantum cloners are <em>impossible</em>.</p>
 </div>
 </div>
-<div id="why-qubits-subsystems-and-entanglement" class="section level2" number="5.7">
-<h2><span class="header-section-number">5.7</span> Why qubits, subsystems, and entanglement?</h2>
+</div>
+<div id="other-controlled-gates" class="section level2" number="5.7">
+<h2><span class="header-section-number">5.7</span> Other controlled gates</h2>
+<div id="controlled-phase" class="section level3" number="5.7.1">
+<h3><span class="header-section-number">5.7.1</span> Controlled-phase</h3>
+<p>Needless to say, not everything is about the controlled-<span class="math inline">\(\texttt{NOT}\)</span> gate.
+Another common two-qubit gate is the <strong>controlled-phase</strong> gate <span class="math inline">\(\texttt{c-}P_\varphi\)</span>.</p>
+<div class="idea">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">controlled-phase</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><span class="math inline">\(\left[\begin{array}{c|c}\begin{matrix}1&amp;0\\0&amp;1\end{matrix}&amp;\begin{matrix}0&amp;0\\0&amp;0\end{matrix}\\\hline\begin{matrix}0&amp;0\\0&amp;0\end{matrix}&amp;\begin{matrix}1&amp;0\\0&amp;e^{i\varphi}\end{matrix}\end{array}\right]\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We can also represent the <span class="math inline">\(\texttt{c-}P_\varphi\)</span> gate using the circuit notation, as in <a href="chapter5.html#fig:c-phase-diagram">5.2</a>.</p>
+
+<div class="figure" style="text-align: center"><span id="fig:c-phase-diagram"></span>
+<img src="quantum-info_files/figure-html/c-phase-diagram-1.png" alt="Where \(x,y\in\{0,1\}\)." width="672" />
+<p class="caption">
+Figure 5.2: Where <span class="math inline">\(x,y\in\{0,1\}\)</span>.
+</p>
+</div>
+<p>Again, the matrix is written in the computational basis <span class="math inline">\(\{|00\rangle,|01\rangle,|10\rangle,|11\rangle\}\)</span>.
+If we do not specify the phase then we usually assume that <span class="math inline">\(\varphi=\pi\)</span>, in which case we call this operation the <strong>controlled-<span class="math inline">\(Z\)</span> gate</strong>, which acts as <span class="math inline">\(|0\rangle\langle 0|0\otimes\operatorname{id}+ |1\rangle\langle 1|1\otimes Z\)</span>.
+Here <span class="math inline">\(Z\)</span> refers again to the Pauli phase-flip <span class="math inline">\(\sigma_z\equiv Z\)</span> operation.</p>
+<p>In order to see the entangling power of the controlled-phase shift gate, consider the following circuit.</p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Generating entanglement, again).</p>
+</div>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-40-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<p>In this circuit, first the two Hadamard gates prepare the equally-weighted superposition of all states from the computational basis</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>and then the controlled-<span class="math inline">\(Z\)</span> operation flips the sign in front of <span class="math inline">\(|11\rangle\)</span></p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>which results in the entangled state.</p>
+</div>
+<div id="controlled-u" class="section level3" number="5.7.2">
+<h3><span class="header-section-number">5.7.2</span> Controlled-U</h3>
+</div>
+</div>
+<div id="why-qubits-subsystems-and-entanglement" class="section level2" number="5.8">
+<h2><span class="header-section-number">5.8</span> Why qubits, subsystems, and entanglement?</h2>
 <p>One question that is rather natural to ask at this point is the following:</p>
 <blockquote>
 <p>If entanglement is so fragile and difficult to control, then why bother?

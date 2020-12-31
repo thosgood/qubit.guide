@@ -3583,10 +3583,128 @@ She performs the Bell measurement on the first two qubits, which gives her two b
 She then broadcasts \(x\) and \(y\) to Bob, who chooses the corresponding transformation, as in \eqref{eq:teleportation-transformations}, performs it, and recovers the original state.
 \end{quote}
 
+This raises a natural ``philosophical'' question: what do we really \emph{mean} by teleportation?
+A key part of this question is understanding what happens to our original qubit when we teleport it.
+As it turns out, it must necessarily be \emph{destroyed}, as we now explain.
+
 \hypertarget{thou-shalt-not-clone}{%
 \subsubsection{Thou shalt not clone}\label{thou-shalt-not-clone}}
 
-\textbf{!!!TODO!!!}
+Let us now look at something that controlled-\(\texttt{NOT}\) \emph{seems} to be doing but, in fact, \emph{isn't}.
+It is easy to see that the \(\texttt{c-NOT}\) can copy the bit value of the first qubit:
+\[
+  |x\rangle|0\rangle \overset{\texttt{c-NOT}}{\longmapsto} |x\rangle|x\rangle
+  \qquad\mbox{(for $x=0,1$)}
+\]
+so one might suppose that this gate could also be used to copy superpositions, such as \(|\psi\rangle = \alpha|0\rangle+\beta|1\rangle\), so that
+\[
+  |\psi\rangle|0\rangle \overset{\texttt{c-NOT}}{\longmapsto} |\psi\rangle|\psi\rangle
+\]
+for any \(|\psi\rangle\).
+
+\textbf{This is not so!}
+
+The unitarity of the \(\texttt{c-NOT}\) means that it turns superpositions in the control qubit into \emph{entanglement} of the control and the target: if the control qubit is in the a superposition state \(|\psi\rangle = \alpha|0\rangle+\beta|1\rangle\) (with \(\alpha,\beta\neq0\)), and the target is in \(|0\rangle\), then the \(\texttt{c-NOT}\) gate generates the entangled state
+\[
+  \big( \alpha|0\rangle+\beta|1\rangle \big) |0\rangle
+  \overset{\texttt{c-NOT}}{\longmapsto}
+  \alpha|00\rangle + \beta|11\rangle.
+\]
+In fact, it is \emph{impossible} to clone an unknown quantum state, and we can prove this!
+
+To prove this via contradiction, let's assume that we \emph{could} build a universal quantum cloner, and then take any two normalised states \(|\psi\rangle\) and \(|\phi\rangle\) that are \emph{non-identical} (i.e.~\(|\langle\psi|\phi\rangle|\neq1\)) and \emph{non-orthogonal} (i.e.~\(\langle\psi|\phi\rangle\neq0\)).
+If we then run our hypothetical cloning machine we get
+\[
+  \begin{aligned}
+    |\psi\rangle|0\rangle|W\rangle
+    &\mapsto |\psi\rangle|\psi\rangle|W'\rangle
+  \\|\phi\rangle|0\rangle|W\rangle
+    &\mapsto |\phi\rangle|\phi\rangle|W''\rangle
+  \end{aligned}
+\]
+where the third system, initially in state \(|W\rangle\), represents everything else (say, the internal state of the cloning machine).
+For this transformation to be unitary, it must preserve the inner product, and so we require that
+\[
+  \langle\psi|\phi\rangle
+  = \langle\psi|\phi\rangle^2 \langle W'|W''\rangle
+\]
+which can only be satisfied if \(|\langle\psi|\phi\rangle|\) is equal to \(1\) or \(0\), but this contradicts our assumptions!
+
+Thus, states of qubits, unlike states of classical bits, cannot be faithfully cloned.
+Note that, in quantum teleportation, the original state must therefore be \emph{destroyed}, since otherwise we would be producing a clone of an unknown quantum state.
+The no-cloning property of quantum states leads to interesting applications, of which quantum cryptography is one.
+
+\begin{idea}
+
+Universal quantum cloners are \emph{impossible}.
+
+\end{idea}
+
+\hypertarget{other-controlled-gates}{%
+\subsection{Other controlled gates}\label{other-controlled-gates}}
+
+\hypertarget{controlled-phase}{%
+\subsubsection{Controlled-phase}\label{controlled-phase}}
+
+Needless to say, not everything is about the controlled-\(\texttt{NOT}\) gate.
+Another common two-qubit gate is the \textbf{controlled-phase} gate \(\texttt{c-}P_\varphi\).
+
+\begin{idea}
+
+\begin{longtable}[]{@{}c@{}}
+\toprule
+\begin{minipage}[b]{(\columnwidth - 0\tabcolsep) * \real{1.00}}\centering
+controlled-phase\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{(\columnwidth - 0\tabcolsep) * \real{1.00}}\centering
+\(\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&\begin{matrix}1&0\\0&e^{i\varphi}\end{matrix}\end{array}\right]\)\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\end{idea}
+
+We can also represent the \(\texttt{c-}P_\varphi\) gate using the circuit notation, as in \ref{fig:c-phase-diagram}.
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{quantum-info_files/figure-latex/c-phase-diagram-1} 
+
+}
+
+\caption{Where \(x,y\in\{0,1\}\).}\label{fig:c-phase-diagram}
+\end{figure}
+
+Again, the matrix is written in the computational basis \(\{|00\rangle,|01\rangle,|10\rangle,|11\rangle\}\).
+If we do not specify the phase then we usually assume that \(\varphi=\pi\), in which case we call this operation the \textbf{controlled-\(Z\) gate}, which acts as \(|0\rangle\langle 0|0\otimes\operatorname{id}+ |1\rangle\langle 1|1\otimes Z\).
+Here \(Z\) refers again to the Pauli phase-flip \(\sigma_z\equiv Z\) operation.
+
+In order to see the entangling power of the controlled-phase shift gate, consider the following circuit.
+
+\begin{circuit}
+
+(Generating entanglement, again).
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-40-1} \end{center}
+
+\end{circuit}
+
+In this circuit, first the two Hadamard gates prepare the equally-weighted superposition of all states from the computational basis
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-41-1} \end{center}
+
+and then the controlled-\(Z\) operation flips the sign in front of \(|11\rangle\)
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-42-1} \end{center}
+
+which results in the entangled state.
+
+\hypertarget{controlled-u}{%
+\subsubsection{Controlled-U}\label{controlled-u}}
 
 \hypertarget{why-qubits-subsystems-and-entanglement}{%
 \subsection{Why qubits, subsystems, and entanglement?}\label{why-qubits-subsystems-and-entanglement}}
@@ -4163,14 +4281,14 @@ The \emph{quantum} case, however, is more complicated, because we have both bit-
 In order to protect a qubit against bit-flips (incoherent \(X\) rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
 We take a qubit in some unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), introduce two auxiliary qubits, and encode it into three qubits as
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-40-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-43-1} \end{center}
 
 Suppose that at most one qubit is then flipped (say, the second one).
 The encoded state then becomes \(\alpha|010\rangle + \beta|101\rangle\).
 Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 Instead we introduce another two additional qubits, both in state \(|0\rangle\), and apply the following network:
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-41-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-44-1} \end{center}
 
 We measure the two auxiliary qubits, also known as \textbf{ancilla bits}, and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code.
 The theory behind this network runs as follows.
