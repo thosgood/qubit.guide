@@ -158,7 +158,111 @@ This is sufficient for all our purposes and we will avoid many mathematical subt
 ### Bras and Kets
 
 
+With any physical system we associate a complex vector space with an inner product, known as a Hilbert space $\mathcal{H}$.
+The inner product^[The inner product is a function that assigns to each pair of vectors $\ket{u},\ket{v}\in{\mathcal{H}}$ a complex number $\braket{u|v}$ and satisfies the following conditions: $\braket{u|v}=\braket{v}{u}^\star$; $\braket{v|v}\geq 0$ for all $v$; $\braket{v|v}= 0$ if and only if $v=0$. The inner product must be linear in the second argument but antilinear in the first argument; $\braket{c_1u_1+c_2u_2}{v} = c_1^\star\braket{u_1}{v}+c_2^\star\braket{u_2}{v}$ for any complex constants $c_1$ and $c_2$.] between vectors $\ket{u}$ and $\ket{v}$ in ${\mathcal{H}}$ is written as
+$$
+  \braket{u|v}
+$$
+For example, for column vectors $\ket{u}$ and $\ket{v}$ in $\mathbb{C}^n$ written as
+$$
+  \ket{u}
+  = \begin{bmatrix}u_1\\u_2\\\vdots\\u_n\end{bmatrix}
+  \qquad
+  \ket{v}
+  = \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
+$$
+their inner product is defined as
+$$
+  \braket{u|v}
+  = u_1^\star v_1 + u_2^\star v_2+\ldots + u_n^\star v_n.
+$$
+Following Dirac we may split the inner product into two ingredients ^[The term "Hilbert space" used to be reserved for an infinite-dimensional inner product space that is **complete**, i.e. such that every Cauchy sequence in the space converges to an element in the space. Nowadays, as in these notes, the term includes finite-dimensional spaces, which automatically satisfy the condition of completeness.]
+$$
+  \braket{u|v}
+  \longrightarrow \bra{u}\,\ket{v}.
+$$
+Here $\ket{v}$ is a ket vector, and $\bra{u}$ is called a **bra** vector, or a **bra**, and can be represented by a row vector:
+$$
+  \bra{u}
+  = \begin{bmatrix}u_1^\star,&u_2^\star,&\ldots,&u_n^\star\end{bmatrix}.
+$$
+The inner product can now be viewed as the result of the matrix multiplication:
+$$
+  \begin{aligned}
+    \braket{u|v}
+    &= \begin{bmatrix}u_1^\star,&u_2^\star,&\ldots,&u_n^\star\end{bmatrix}
+    \cdot \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
+  \\&= u_1^\star v_1 + u_2^\star v_2 + \ldots + u_n^\star v_n.
+  \end{aligned}
+$$
+
+Bras are vectors: you can add them, and multiply them by scalars (which, here, are complex numbers), but they are vectors in the space ${\mathcal{H}}^\star$ which is **dual** to $\mathcal{H}$.
+Elements of ${\mathcal{H}}^\star$ are **linear functionals**, that is, linear maps from $\mathcal{H}$ to $\mathbb{C}$.
+A linear functional $\bra{u}$ acting on a vector $\ket{v}$ in $\mathcal{H}$ gives a complex number $\braket{u|v}$.
+
+All Hilbert spaces of the same dimension are isomorphic, so the differences between quantum systems cannot be really understood without additional structure. This structure is provided by a specific algebra of operators acting on $\mathcal{H}$.
+
+
 ### Daggers
+
+Although $\mathcal{H}$ and $\mathcal{H}^\star$ are not identical spaces -- the former is inhabited by kets, and the latter by bras -- they are closely related.
+There is a bijective map from one to the other, $\ket{v}\leftrightarrow \bra{v}$, denoted by a **dagger**:^["Is this a $\dagger$ which I see before me..."]
+$$
+  \begin{aligned}
+    \bra{v}
+    &= (\ket{v})^\dagger
+  \\\ket{v}
+    &= (\bra{v})^\dagger.
+  \end{aligned}
+$$
+We usually omit the parentheses when it is obvious what the dagger operation applies to.
+The dagger operation, also known as **Hermitian conjugation**, is _antilinear_: 
+$$
+  \begin{aligned}
+    (c_1\ket{v_1}+c_2\ket{v_2})^\dagger
+    &= c_1^\star\bra{v_1} + c_2^\star\bra{v_2}
+  \\(c_1\bra{v_1}+c_2\bra{v_2})^\dagger
+    &= c_1^\star\ket{v_1} + c_2^\star\ket{v_2}.
+  \end{aligned}
+$$
+Also, when applied twice, the dagger operation is the identity map.
+In the matrix representation,^[Recall that the conjugate transpose, or the Hermitian conjugate, of an $(n\times m)$ matrix $A$ is an $(m\times n)$ matrix $A^\dagger$, obtained by interchanging the rows and columns of $A$ and taking complex conjugates of each entry in $A$, i.e. $A^\dagger_{ij}=A^\star_{ji}$. In mathematics texts it is often denoted by ${}^\star$ rather than ${}^\dagger$.]
+$$
+  \ket{v} = \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
+  \overset{\dagger}{\longleftrightarrow}
+  \bra{v} = \begin{bmatrix}v_1^\star,&v_2^\star,&\ldots,&v_n^\star\end{bmatrix}.
+$$
+
+
+### Geometry
+
+The inner product brings geometry: the **length**, or **norm**, of $\ket{v}$ is given by $\|v\|=\sqrt{\braket{v|v}}$, and we say that $\ket{u}$ and $\ket{v}$ are **orthogonal** if $\braket{u|v}=0$.
+Any maximal set of pairwise orthogonal vectors of unit length^[That is, consider all sets $\{\ket{e_i}\}$ of vectors such that $\braket{e_i}{e_j}=\delta_{ij}$ (where the **Kronecker delta** $\delta_{ij}$ is a symbol that is defined to be $0$ if $i\neq j$, and to be $1$ if $i=j$.), and then pick any of the largest such sets (which must exist, by the fact that we assume our vector spaces to be finite dimensional).] forms an orthonormal basis, and so any vector can be expressed as a linear combination of the basis vectors:
+$$
+  \begin{gathered}
+    \ket{v}
+    =\sum_i v_i\ket{e_i}
+  \\\mbox{where $v_i=\braket{e_i|v}$}.
+  \end{gathered}
+$$
+Then the bras $\bra{e_i}$ form the **dual basis**
+$$
+  \begin{gathered}
+    \bra{v}
+    =\sum_i v_i^\star\bra{e_i}
+  \\\mbox{where $v_i^\star=\braket{v|e_i}$}.
+  \end{gathered}
+$$
+
+To make the notation a bit less cumbersome, we will sometimes^[Do not confuse $\ket{0}$ with the zero vector. We _never_ write the zero vector as $\ket{0}$, it will be always written as $0$ without any bra or ket decorations, e.g. $\ket{v}+0=\ket{v}$.] label the basis kets as $\ket{i}$ rather than $\ket{e_i}$, and write
+$$
+  \begin{aligned}
+    \ket{v}
+    &= \sum_i \ket{i}\braket{i|v}
+  \\\bra{v}
+    &= \sum_j \braket{v|i}\bra{i}.
+  \end{aligned}
+$$
 
 
 ### Operators

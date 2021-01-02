@@ -80,9 +80,10 @@
 <li class="chapter" data-level="0.1.2" data-path="index.html"><a href="index.html#vector-spaces"><i class="fa fa-check"></i><b>0.1.2</b> Vector spaces</a></li>
 <li class="chapter" data-level="0.1.3" data-path="index.html"><a href="index.html#bras-and-kets"><i class="fa fa-check"></i><b>0.1.3</b> Bras and Kets</a></li>
 <li class="chapter" data-level="0.1.4" data-path="index.html"><a href="index.html#daggers"><i class="fa fa-check"></i><b>0.1.4</b> Daggers</a></li>
-<li class="chapter" data-level="0.1.5" data-path="index.html"><a href="index.html#operators"><i class="fa fa-check"></i><b>0.1.5</b> Operators</a></li>
-<li class="chapter" data-level="0.1.6" data-path="index.html"><a href="index.html#outer-products"><i class="fa fa-check"></i><b>0.1.6</b> Outer products</a></li>
-<li class="chapter" data-level="0.1.7" data-path="index.html"><a href="index.html#the-trace"><i class="fa fa-check"></i><b>0.1.7</b> The trace</a></li>
+<li class="chapter" data-level="0.1.5" data-path="index.html"><a href="index.html#geometry"><i class="fa fa-check"></i><b>0.1.5</b> Geometry</a></li>
+<li class="chapter" data-level="0.1.6" data-path="index.html"><a href="index.html#operators"><i class="fa fa-check"></i><b>0.1.6</b> Operators</a></li>
+<li class="chapter" data-level="0.1.7" data-path="index.html"><a href="index.html#outer-products"><i class="fa fa-check"></i><b>0.1.7</b> Outer products</a></li>
+<li class="chapter" data-level="0.1.8" data-path="index.html"><a href="index.html#the-trace"><i class="fa fa-check"></i><b>0.1.8</b> The trace</a></li>
 </ul></li>
 </ul></li>
 <li class="part"><span><b>I Budding</b></span></li>
@@ -381,19 +382,116 @@ This is sufficient for all our purposes and we will avoid many mathematical subt
 </div>
 <div id="bras-and-kets" class="section level3" number="0.1.3">
 <h3><span class="header-section-number">0.1.3</span> Bras and Kets</h3>
+<p>With any physical system we associate a complex vector space with an inner product, known as a Hilbert space <span class="math inline">\(\mathcal{H}\)</span>.
+The inner product<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> between vectors <span class="math inline">\(|u\rangle\)</span> and <span class="math inline">\(|v\rangle\)</span> in <span class="math inline">\({\mathcal{H}}\)</span> is written as
+<span class="math display">\[
+  \langle u|v\rangle
+\]</span>
+For example, for column vectors <span class="math inline">\(|u\rangle\)</span> and <span class="math inline">\(|v\rangle\)</span> in <span class="math inline">\(\mathbb{C}^n\)</span> written as
+<span class="math display">\[
+  |u\rangle
+  = \begin{bmatrix}u_1\\u_2\\\vdots\\u_n\end{bmatrix}
+  \qquad
+  |v\rangle
+  = \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
+\]</span>
+their inner product is defined as
+<span class="math display">\[
+  \langle u|v\rangle
+  = u_1^\star v_1 + u_2^\star v_2+\ldots + u_n^\star v_n.
+\]</span>
+Following Dirac we may split the inner product into two ingredients <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>
+<span class="math display">\[
+  \langle u|v\rangle
+  \longrightarrow \langle u|\,|v\rangle.
+\]</span>
+Here <span class="math inline">\(|v\rangle\)</span> is a ket vector, and <span class="math inline">\(\langle u|\)</span> is called a <strong>bra</strong> vector, or a <strong>bra</strong>, and can be represented by a row vector:
+<span class="math display">\[
+  \langle u|
+  = \begin{bmatrix}u_1^\star,&amp;u_2^\star,&amp;\ldots,&amp;u_n^\star\end{bmatrix}.
+\]</span>
+The inner product can now be viewed as the result of the matrix multiplication:
+<span class="math display">\[
+  \begin{aligned}
+    \langle u|v\rangle
+    &amp;= \begin{bmatrix}u_1^\star,&amp;u_2^\star,&amp;\ldots,&amp;u_n^\star\end{bmatrix}
+    \cdot \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
+  \\&amp;= u_1^\star v_1 + u_2^\star v_2 + \ldots + u_n^\star v_n.
+  \end{aligned}
+\]</span></p>
+<p>Bras are vectors: you can add them, and multiply them by scalars (which, here, are complex numbers), but they are vectors in the space <span class="math inline">\({\mathcal{H}}^\star\)</span> which is <strong>dual</strong> to <span class="math inline">\(\mathcal{H}\)</span>.
+Elements of <span class="math inline">\({\mathcal{H}}^\star\)</span> are <strong>linear functionals</strong>, that is, linear maps from <span class="math inline">\(\mathcal{H}\)</span> to <span class="math inline">\(\mathbb{C}\)</span>.
+A linear functional <span class="math inline">\(\langle u|\)</span> acting on a vector <span class="math inline">\(|v\rangle\)</span> in <span class="math inline">\(\mathcal{H}\)</span> gives a complex number <span class="math inline">\(\langle u|v\rangle\)</span>.</p>
+<p>All Hilbert spaces of the same dimension are isomorphic, so the differences between quantum systems cannot be really understood without additional structure. This structure is provided by a specific algebra of operators acting on <span class="math inline">\(\mathcal{H}\)</span>.</p>
 </div>
 <div id="daggers" class="section level3" number="0.1.4">
 <h3><span class="header-section-number">0.1.4</span> Daggers</h3>
+<p>Although <span class="math inline">\(\mathcal{H}\)</span> and <span class="math inline">\(\mathcal{H}^\star\)</span> are not identical spaces – the former is inhabited by kets, and the latter by bras – they are closely related.
+There is a bijective map from one to the other, <span class="math inline">\(|v\rangle\leftrightarrow \langle v|\)</span>, denoted by a <strong>dagger</strong>:<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>
+<span class="math display">\[
+  \begin{aligned}
+    \langle v|
+    &amp;= (|v\rangle)^\dagger
+  \\|v\rangle
+    &amp;= (\langle v|)^\dagger.
+  \end{aligned}
+\]</span>
+We usually omit the parentheses when it is obvious what the dagger operation applies to.
+The dagger operation, also known as <strong>Hermitian conjugation</strong>, is <em>antilinear</em>:
+<span class="math display">\[
+  \begin{aligned}
+    (c_1|v_1\rangle+c_2|v_2\rangle)^\dagger
+    &amp;= c_1^\star\langle v_1| + c_2^\star\langle v_2|
+  \\(c_1\langle v_1|+c_2\langle v_2|)^\dagger
+    &amp;= c_1^\star|v_1\rangle + c_2^\star|v_2\rangle.
+  \end{aligned}
+\]</span>
+Also, when applied twice, the dagger operation is the identity map.
+In the matrix representation,<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>
+<span class="math display">\[
+  |v\rangle = \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
+  \overset{\dagger}{\longleftrightarrow}
+  \langle v| = \begin{bmatrix}v_1^\star,&amp;v_2^\star,&amp;\ldots,&amp;v_n^\star\end{bmatrix}.
+\]</span></p>
 </div>
-<div id="operators" class="section level3" number="0.1.5">
-<h3><span class="header-section-number">0.1.5</span> Operators</h3>
+<div id="geometry" class="section level3" number="0.1.5">
+<h3><span class="header-section-number">0.1.5</span> Geometry</h3>
+<p>The inner product brings geometry: the <strong>length</strong>, or <strong>norm</strong>, of <span class="math inline">\(|v\rangle\)</span> is given by <span class="math inline">\(\|v\|=\sqrt{\langle v|v\rangle}\)</span>, and we say that <span class="math inline">\(|u\rangle\)</span> and <span class="math inline">\(|v\rangle\)</span> are <strong>orthogonal</strong> if <span class="math inline">\(\langle u|v\rangle=0\)</span>.
+Any maximal set of pairwise orthogonal vectors of unit length<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> forms an orthonormal basis, and so any vector can be expressed as a linear combination of the basis vectors:
+<span class="math display">\[
+  \begin{gathered}
+    |v\rangle
+    =\sum_i v_i|e_i\rangle
+  \\\mbox{where $v_i=\langle e_i|v\rangle$}.
+  \end{gathered}
+\]</span>
+Then the bras <span class="math inline">\(\langle e_i|\)</span> form the <strong>dual basis</strong>
+<span class="math display">\[
+  \begin{gathered}
+    \langle v|
+    =\sum_i v_i^\star\langle e_i|
+  \\\mbox{where $v_i^\star=\langle v|e_i\rangle$}.
+  \end{gathered}
+\]</span></p>
+<p>To make the notation a bit less cumbersome, we will sometimes<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> label the basis kets as <span class="math inline">\(|i\rangle\)</span> rather than <span class="math inline">\(|e_i\rangle\)</span>, and write
+<span class="math display">\[
+  \begin{aligned}
+    |v\rangle
+    &amp;= \sum_i |i\rangle\langle i|v\rangle
+  \\\langle v|
+    &amp;= \sum_j \langle v|i\rangle\langle i|.
+  \end{aligned}
+\]</span></p>
+</div>
+<div id="operators" class="section level3" number="0.1.6">
+<h3><span class="header-section-number">0.1.6</span> Operators</h3>
 <p><strong>!!!TODO!!! note that unitary operators preserve the inner product (2.5)</strong></p>
 </div>
-<div id="outer-products" class="section level3" number="0.1.6">
-<h3><span class="header-section-number">0.1.6</span> Outer products</h3>
+<div id="outer-products" class="section level3" number="0.1.7">
+<h3><span class="header-section-number">0.1.7</span> Outer products</h3>
 </div>
-<div id="the-trace" class="section level3" number="0.1.7">
-<h3><span class="header-section-number">0.1.7</span> The trace</h3>
+<div id="the-trace" class="section level3" number="0.1.8">
+<h3><span class="header-section-number">0.1.8</span> The trace</h3>
 
 </div>
 </div>
@@ -405,6 +503,12 @@ This is sufficient for all our purposes and we will avoid many mathematical subt
 <hr />
 <ol start="1">
 <li id="fn1"><p>As we said, there are certain “nice properties” that these things must satisfy. Addition of vectors must be commutative and associative, with an identity (the zero vector, which will always be written as <span class="math inline">\(\mathbf{0}\)</span> ) and an inverse for each <span class="math inline">\(v\)</span> (written as <span class="math inline">\(-v\)</span>). Multiplication by complex numbers must obey the two distributive laws: <span class="math inline">\((\alpha+\beta)v = \alpha v+\beta v\)</span> and <span class="math inline">\(\alpha (v+w) = \alpha v+\alpha w\)</span>.<a href="index.html#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>The inner product is a function that assigns to each pair of vectors <span class="math inline">\(|u\rangle,|v\rangle\in{\mathcal{H}}\)</span> a complex number <span class="math inline">\(\langle u|v\rangle\)</span> and satisfies the following conditions: <span class="math inline">\(\langle u|v\rangle=\langle v\rangle{u}^\star\)</span>; <span class="math inline">\(\langle v|v\rangle\geqslant 0\)</span> for all <span class="math inline">\(v\)</span>; <span class="math inline">\(\langle v|v\rangle= 0\)</span> if and only if <span class="math inline">\(v=0\)</span>. The inner product must be linear in the second argument but antilinear in the first argument; <span class="math inline">\(\langle c_1u_1+c_2u_2\rangle{v} = c_1^\star\langle u_1\rangle{v}+c_2^\star\langle u_2\rangle{v}\)</span> for any complex constants <span class="math inline">\(c_1\)</span> and <span class="math inline">\(c_2\)</span>.<a href="index.html#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>The term “Hilbert space” used to be reserved for an infinite-dimensional inner product space that is <strong>complete</strong>, i.e. such that every Cauchy sequence in the space converges to an element in the space. Nowadays, as in these notes, the term includes finite-dimensional spaces, which automatically satisfy the condition of completeness.<a href="index.html#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>“Is this a <span class="math inline">\(\dagger\)</span> which I see before me…”<a href="index.html#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p>Recall that the conjugate transpose, or the Hermitian conjugate, of an <span class="math inline">\((n\times m)\)</span> matrix <span class="math inline">\(A\)</span> is an <span class="math inline">\((m\times n)\)</span> matrix <span class="math inline">\(A^\dagger\)</span>, obtained by interchanging the rows and columns of <span class="math inline">\(A\)</span> and taking complex conjugates of each entry in <span class="math inline">\(A\)</span>, i.e. <span class="math inline">\(A^\dagger_{ij}=A^\star_{ji}\)</span>. In mathematics texts it is often denoted by <span class="math inline">\({}^\star\)</span> rather than <span class="math inline">\({}^\dagger\)</span>.<a href="index.html#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p>That is, consider all sets <span class="math inline">\(\{|e_i\rangle\}\)</span> of vectors such that <span class="math inline">\(\langle e_i\rangle{e_j}=\delta_{ij}\)</span> (where the <strong>Kronecker delta</strong> <span class="math inline">\(\delta_{ij}\)</span> is a symbol that is defined to be <span class="math inline">\(0\)</span> if <span class="math inline">\(i\neq j\)</span>, and to be <span class="math inline">\(1\)</span> if <span class="math inline">\(i=j\)</span>.), and then pick any of the largest such sets (which must exist, by the fact that we assume our vector spaces to be finite dimensional).<a href="index.html#fnref6" class="footnote-back">↩︎</a></p></li>
+<li id="fn7"><p>Do not confuse <span class="math inline">\(|0\rangle\)</span> with the zero vector. We <em>never</em> write the zero vector as <span class="math inline">\(|0\rangle\)</span>, it will be always written as <span class="math inline">\(0\)</span> without any bra or ket decorations, e.g. <span class="math inline">\(|v\rangle+0=|v\rangle\)</span>.<a href="index.html#fnref7" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
