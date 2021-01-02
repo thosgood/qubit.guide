@@ -385,6 +385,15 @@ $$
     \ket{\psi_{11}} = \frac{1}{\sqrt 2}(\ket{01}-\ket{10})
   \end{aligned}
 $$
+The more standard notation for these states, however, is the following:
+$$
+  \begin{aligned}
+    \Phi^+ &= \ket{\psi_{00}}
+  \\\Psi^+ &= \ket{\psi_{01}}
+  \\\Phi^- &= \ket{\psi_{10}}
+  \\\Psi^-&= \ket{\psi_{11}}
+  \end{aligned}
+$$
 :::
 
 The Bell states form an orthonormal basis in the Hilbert space $\mathcal{H}_1\otimes\mathcal{H}_2$ of two qubits.
@@ -1149,4 +1158,53 @@ The swap gate $S$ on two qubits is defined first on product vectors by $S\colon\
 
 ## Appendix: The Schmidt decomposition
 
-**!!!TODO!!!**
+An arbitrary vector in the Hilbert space $\mathcal{H}_A\otimes \mathcal{H}_B$ can be expanded in a product basis as
+$$
+  \ket{\psi}
+  = \sum_{ij} c_{ij}\ket{a_i}\ket{b_j}.
+$$
+Moreover, for each particular joint state $\ket{\psi}$, we can find orthonormal bases, $\{\ket{\widetilde{a_i}}\}$ in $\mathcal{H}_A$ and $\{\ket{\widetilde{b_j}}\}$ in $\mathcal{H}_B$, such that $\ket{\psi}$ can be expressed as
+$$
+  \ket{\psi}
+  = \sum_{i} d_{i}\ket{\tilde a_i}\ket{\tilde b_i},
+$$
+where the coefficients $d_i$ are non-negative numbers.
+This is known as the **Schmidt decomposition** of $\ket{\psi}$.
+Any bipartite state can be expressed in this form, but remember that _the bases used depend on the state being expanded_.
+Indeed, given two bipartite states $\ket{\psi}$ and $\ket{\phi}$, we usually _cannot_ perform the Schmidt decomposition using the _same_ orthonormal bases in $\mathcal{H}_A$ and $\mathcal{H}_B$.
+The number of terms in the Schmidt decomposition is, at most, the minimum of $\dim\mathcal{H}_A$ and $\dim\mathcal{H}_B$.
+
+The Schmidt decomposition follows from the **singular value decomposition**  or **SVD**): _any_ $(n\times m)$ matrix  $C$ can be written as
+$$
+  C = UDV
+$$
+where $U$ and $V$ are (respectively) $(n\times n)$ and $(m\times m)$ unitary matrices and $D$ is an $(n\times m)$ diagonal matrix with real, non-negative elements in descending order $d_1\geq d_2\geq\ldots\geq d_{\min{(n,m)}}$ (and with the rest of the matrix is filled with zeros).
+The elements $d_k$ are called the **singular values** of $C$.
+
+You can visualize the SVD by thinking of $C$ as representing a linear
+transformation from $m$-dimensional to $n$-dimensional Euclidean space: it maps the unit ball in the $m$-dimensional space to an ellipsoid in
+the $n$-dimensional space; the singular values are the lengths of
+the semi-axes of that ellipsoid; the matrices $U$ and $V$ carry
+information about the locations of those axes and the vectors in
+the first space which map into them.
+Thus SVD tells us that the transformation $C$ is composed of rotating the unit ball (transformation $V$), stretching the axes by factors $d_k$, and then rotating the resulting ellipsoid (transformation $U$).
+
+Using the index notation $C_{ij} = \sum_k U_{ik}d_k V_{kj}$, we can thus apply SVD to $c_{ij}$,
+$$
+  \begin{aligned}
+    \ket{\psi}
+    &= \sum_{i,j} c_{ij}\ket{a_ib_j}
+  \\&= \sum_{i,j} \sum_k U_{ik}d_k V_{kj}\ket{a_ib_j}
+  \\&= \sum_k d_k \left(\sum_i U_{ik}\ket{a_i}\right)\otimes\left(\sum_j V_{kj}\ket{b_j}\right).
+  \end{aligned}
+$$
+The Schmidt decomposition of a separable state of the form
+$\ket{a}\otimes\ket{b}$ is trivially just this state.
+The Bell states $\Psi^+$ and $\Phi^+$ are already written in their Schmidt form, whereas $\Psi^-$ and $\Phi^-$ can be easily expressed in the Schmidt form.
+For example, for $\ket{\Psi^-}$ we have $d_1 = d_2 = \frac{1}{\sqrt 2}$, and the Schmidt basis is $\ket{\bar a_1} =\ket{0}, \ket{\bar a_2}=\ket{1}$, $\ket{\bar b_1} = \ket{1}, \ket{\bar b_2}=-\ket{0}$.
+The number of non-zero singular values of $c_{ij}$ is called the **rank** of $c_{ij}$, or the rank of the corresponding quantum state, or sometimes, the **Schmidt number**.
+Clearly, all bipartite states of rank one are separable.
+
+The Schmidt decomposition is _almost_ unique.
+The ambiguity arises when we have two or more identical singular values, as, for example, in the case of the Bell states.
+Then any unitary transformation of the basis vectors corresponding to a degenerate singular value, both in $\mathcal{H}_a$ and in $\mathcal{H}_b$, generates another set of basis vectors.

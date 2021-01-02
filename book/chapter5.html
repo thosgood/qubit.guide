@@ -540,6 +540,15 @@ In fact, this circuit implements the unitary operation which maps the standard c
     &amp;\mapsto
     |\psi_{11}\rangle = \frac{1}{\sqrt 2}(|01\rangle-|10\rangle)
   \end{aligned}
+\]</span>
+The more standard notation for these states, however, is the following:
+<span class="math display">\[
+  \begin{aligned}
+    \Phi^+ &amp;= |\psi_{00}\rangle
+  \\\Psi^+ &amp;= |\psi_{01}\rangle
+  \\\Phi^- &amp;= |\psi_{10}\rangle
+  \\\Psi^-&amp;= |\psi_{11}\rangle
+  \end{aligned}
 \]</span></p>
 </div>
 <p>The Bell states form an orthonormal basis in the Hilbert space <span class="math inline">\(\mathcal{H}_1\otimes\mathcal{H}_2\)</span> of two qubits.
@@ -1048,7 +1057,52 @@ How can this be achieved?</p></li>
 </div>
 <div id="appendix-the-schmidt-decomposition" class="section level2" number="5.11">
 <h2><span class="header-section-number">5.11</span> Appendix: The Schmidt decomposition</h2>
-<p><strong>!!!TODO!!!</strong></p>
+<p>An arbitrary vector in the Hilbert space <span class="math inline">\(\mathcal{H}_A\otimes \mathcal{H}_B\)</span> can be expanded in a product basis as
+<span class="math display">\[
+  |\psi\rangle
+  = \sum_{ij} c_{ij}|a_i\rangle|b_j\rangle.
+\]</span>
+Moreover, for each particular joint state <span class="math inline">\(|\psi\rangle\)</span>, we can find orthonormal bases, <span class="math inline">\(\{|\widetilde{a_i}\rangle\}\)</span> in <span class="math inline">\(\mathcal{H}_A\)</span> and <span class="math inline">\(\{|\widetilde{b_j}\rangle\}\)</span> in <span class="math inline">\(\mathcal{H}_B\)</span>, such that <span class="math inline">\(|\psi\rangle\)</span> can be expressed as
+<span class="math display">\[
+  |\psi\rangle
+  = \sum_{i} d_{i}|\tilde a_i\rangle|\tilde b_i\rangle,
+\]</span>
+where the coefficients <span class="math inline">\(d_i\)</span> are non-negative numbers.
+This is known as the <strong>Schmidt decomposition</strong> of <span class="math inline">\(|\psi\rangle\)</span>.
+Any bipartite state can be expressed in this form, but remember that <em>the bases used depend on the state being expanded</em>.
+Indeed, given two bipartite states <span class="math inline">\(|\psi\rangle\)</span> and <span class="math inline">\(|\phi\rangle\)</span>, we usually <em>cannot</em> perform the Schmidt decomposition using the <em>same</em> orthonormal bases in <span class="math inline">\(\mathcal{H}_A\)</span> and <span class="math inline">\(\mathcal{H}_B\)</span>.
+The number of terms in the Schmidt decomposition is, at most, the minimum of <span class="math inline">\(\dim\mathcal{H}_A\)</span> and <span class="math inline">\(\dim\mathcal{H}_B\)</span>.</p>
+<p>The Schmidt decomposition follows from the <strong>singular value decomposition</strong> or <strong>SVD</strong>): <em>any</em> <span class="math inline">\((n\times m)\)</span> matrix <span class="math inline">\(C\)</span> can be written as
+<span class="math display">\[
+  C = UDV
+\]</span>
+where <span class="math inline">\(U\)</span> and <span class="math inline">\(V\)</span> are (respectively) <span class="math inline">\((n\times n)\)</span> and <span class="math inline">\((m\times m)\)</span> unitary matrices and <span class="math inline">\(D\)</span> is an <span class="math inline">\((n\times m)\)</span> diagonal matrix with real, non-negative elements in descending order <span class="math inline">\(d_1\geqslant d_2\geqslant\ldots\geqslant d_{\min{(n,m)}}\)</span> (and with the rest of the matrix is filled with zeros).
+The elements <span class="math inline">\(d_k\)</span> are called the <strong>singular values</strong> of <span class="math inline">\(C\)</span>.</p>
+<p>You can visualize the SVD by thinking of <span class="math inline">\(C\)</span> as representing a linear
+transformation from <span class="math inline">\(m\)</span>-dimensional to <span class="math inline">\(n\)</span>-dimensional Euclidean space: it maps the unit ball in the <span class="math inline">\(m\)</span>-dimensional space to an ellipsoid in
+the <span class="math inline">\(n\)</span>-dimensional space; the singular values are the lengths of
+the semi-axes of that ellipsoid; the matrices <span class="math inline">\(U\)</span> and <span class="math inline">\(V\)</span> carry
+information about the locations of those axes and the vectors in
+the first space which map into them.
+Thus SVD tells us that the transformation <span class="math inline">\(C\)</span> is composed of rotating the unit ball (transformation <span class="math inline">\(V\)</span>), stretching the axes by factors <span class="math inline">\(d_k\)</span>, and then rotating the resulting ellipsoid (transformation <span class="math inline">\(U\)</span>).</p>
+<p>Using the index notation <span class="math inline">\(C_{ij} = \sum_k U_{ik}d_k V_{kj}\)</span>, we can thus apply SVD to <span class="math inline">\(c_{ij}\)</span>,
+<span class="math display">\[
+  \begin{aligned}
+    |\psi\rangle
+    &amp;= \sum_{i,j} c_{ij}|a_ib_j\rangle
+  \\&amp;= \sum_{i,j} \sum_k U_{ik}d_k V_{kj}|a_ib_j\rangle
+  \\&amp;= \sum_k d_k \left(\sum_i U_{ik}|a_i\rangle\right)\otimes\left(\sum_j V_{kj}|b_j\rangle\right).
+  \end{aligned}
+\]</span>
+The Schmidt decomposition of a separable state of the form
+<span class="math inline">\(|a\rangle\otimes|b\rangle\)</span> is trivially just this state.
+The Bell states <span class="math inline">\(\Psi^+\)</span> and <span class="math inline">\(\Phi^+\)</span> are already written in their Schmidt form, whereas <span class="math inline">\(\Psi^-\)</span> and <span class="math inline">\(\Phi^-\)</span> can be easily expressed in the Schmidt form.
+For example, for <span class="math inline">\(|\Psi^-\rangle\)</span> we have <span class="math inline">\(d_1 = d_2 = \frac{1}{\sqrt 2}\)</span>, and the Schmidt basis is <span class="math inline">\(|\bar a_1\rangle =|0\rangle, |\bar a_2\rangle=|1\rangle\)</span>, <span class="math inline">\(|\bar b_1\rangle = |1\rangle, |\bar b_2\rangle=-|0\rangle\)</span>.
+The number of non-zero singular values of <span class="math inline">\(c_{ij}\)</span> is called the <strong>rank</strong> of <span class="math inline">\(c_{ij}\)</span>, or the rank of the corresponding quantum state, or sometimes, the <strong>Schmidt number</strong>.
+Clearly, all bipartite states of rank one are separable.</p>
+<p>The Schmidt decomposition is <em>almost</em> unique.
+The ambiguity arises when we have two or more identical singular values, as, for example, in the case of the Bell states.
+Then any unitary transformation of the basis vectors corresponding to a degenerate singular value, both in <span class="math inline">\(\mathcal{H}_a\)</span> and in <span class="math inline">\(\mathcal{H}_b\)</span>, generates another set of basis vectors.</p>
 
 </div>
 </div>
