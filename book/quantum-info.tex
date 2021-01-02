@@ -3872,9 +3872,9 @@ As a spoiler, here is a dictionary of some of the new concepts that will soon be
 \begin{longtable}[]{@{}rcl@{}}
 \toprule
 \endhead
-state vectors & \(\mapsto\) & density operators\tabularnewline
-unitary evolutions & \(\mapsto\) & completely-positive trace-preserving maps\tabularnewline
-orthogonal projectors & \(\mapsto\) & positive operator-valued measures\tabularnewline
+state vectors & \(\longmapsto\) & density operators\tabularnewline
+unitary evolutions & \(\longmapsto\) & completely-positive trace-preserving maps\tabularnewline
+orthogonal projectors & \(\longmapsto\) & positive operator-valued measures\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -3914,6 +3914,207 @@ That is, we have to trade energy for time.
 
 It turns out that whichever way we try to represent the number \(N\) using the unary encoding (i.e.~using \(N\) different states of a single chunk of matter), we end up depleting our physical resources (such as energy, time, space) at a much greater rate than in the case when we use subsystems.
 This plausibility argument indicates that, for efficient processing of information, the system must be divided into subsystems --- for example, into physical bits.
+
+\hypertarget{remarks-and-exercises-1}{%
+\subsection{Remarks and exercises}\label{remarks-and-exercises-1}}
+
+\hypertarget{entangled-or-not}{%
+\subsubsection{Entangled or not?}\label{entangled-or-not}}
+
+Let a joint state of \(\mathcal{A}\) and \(\mathcal{B}\) be written in a product basis as
+\[
+  |\psi\rangle = \sum_{ij} c_{ij}|a_i\rangle\otimes|b_j\rangle.
+\]
+Assume that \(\mathcal{H}_a\) and \(\mathcal{H}_b\) are of the same dimension.
+
+\begin{itemize}
+\tightlist
+\item
+  Show that, if \(|\psi\rangle\) is a product state, then \(\det (c_{ij}) = 0\).
+\item
+  Show that the converse (\(\det(c_{ij})=0\) implies that \(|\psi\rangle\) is a product state) holds only for qubits. Explain why.
+\item
+  Deduce that the state
+  \[
+      \frac12\big(|00\rangle + |01\rangle + |10\rangle + (-1)^k|11\rangle\big)
+    \]
+  is entangled for \(k=1\) and unentangled for \(k=0\). Express the latter case explicitly as a product state.
+\end{itemize}
+
+There is a lot of interesting physics behind the previous innocuous-looking mathematical statement.
+For example, think again about the state \((|00\rangle+|11\rangle)/\sqrt2\).
+What happens if you measure just the first qubit?
+It is equally likely that you get \(|0\rangle\) or \(|1\rangle\), right?
+But after your measurement the two qubits are either in state \(|00\rangle\) or in \(|11\rangle\), i.e.~they show the same bit value.
+Now, why might that be disturbing?
+Well, imagine the second qubit to be light-years away from the first one.
+It seems that the measurement of the first qubit affects the second qubit right away, which seems to imply faster-than-light communication!
+This is what Einstein called ``spooky action as a distance''.\footnote{``Spooky action at a distance'' is a loose translation of the German ``spukhafte Fernwirkung'', which is the phrase that Albert Einstein used in his 1947 letter to Max Born.}
+But can you actually use this effect to send a message faster than light?
+What would happen if you tried?
+
+I hope you can see that it would not work, since the result of the measurement is random --- you cannot choose the bit value you want to send.
+We shall return to this, and other related phenomena, later on.
+
+\hypertarget{section-11}{%
+\subsubsection{}\label{section-11}}
+
+Show that, for any states \(|\psi_1\rangle\) and \(|\psi_2\rangle\), the circuit below implements the swap operation \(|\psi_1\rangle|\psi_2\rangle \mapsto |\psi_2\rangle|\psi_1\rangle\).
+
+\begin{circuit}
+
+(Swapping).
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-44-1} \end{center}
+
+\end{circuit}
+
+\hypertarget{section-12}{%
+\subsubsection{}\label{section-12}}
+
+Show that the circuit below implements the controlled-\(\texttt{NOT}\) gate.
+
+\begin{circuit}
+
+(Controlled-\(\texttt{NOT}\), again).
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-45-1} \end{center}
+
+\end{circuit}
+
+\hypertarget{section-13}{%
+\subsubsection{}\label{section-13}}
+
+The controlled-\(\texttt{NOT}\) gate can act as a measurement gate: if you prepare the target in state \(|0\rangle\) then the gate acts as \(|x\rangle|0\rangle\mapsto|x\rangle|x\rangle\), and so the target learns the bit value of the control qubit.
+If you wish, you can think about a subsequent measurement of the target qubit in the computational basis as an observer learning about the bit value of the control qubit.
+
+Take a look at the circuit below, where \(M\) stands for measurement in the standard basis.
+
+\begin{circuit}
+
+(?).
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-46-1} \end{center}
+
+\end{circuit}
+
+Now assume that the top two qubits are in the state
+\[
+  |\psi\rangle
+  = \frac{1}{\sqrt3}\big( |01\rangle - |10\rangle + i|11\rangle \big).
+\]
+The measurement \(M\) gives two outcomes: \(0\) and \(1\).
+What are the probabilities of each outcome, and what is the post-measurement state in each case?
+Further, what is actually being measured here?
+
+\hypertarget{arbitrary-controlled-u-on-two-qubits}{%
+\subsubsection{\texorpdfstring{Arbitrary controlled-\(U\) on two qubits}{Arbitrary controlled-U on two qubits}}\label{arbitrary-controlled-u-on-two-qubits}}
+
+Any unitary operation \(U\) on a single qubit can be expressed as
+\[
+  U = B^\dagger XBA^\dagger XA
+\]
+where \(X\equiv\sigma_x\) is the Pauli bit-flip operator, and \(A\) and \(B\) are unitaries.
+Suppose that you can implement any single qubit gate, and that you have a bunch of controlled-\(\texttt{NOT}\) gates at your disposal.
+How would you implement any controlled-\(U\) operation on two qubits?
+
+\hypertarget{entangled-qubits}{%
+\subsubsection{Entangled qubits}\label{entangled-qubits}}
+
+Two entangled qubits in the state \(\frac{1}{\sqrt2}(|00\rangle+|11\rangle)\) are generated by some source \(S\).
+One qubit is sent to Alice, and one to Bob, who then both perform measurements in the computational basis.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  What is the probability that Alice and Bob will register identical results?
+  Can any correlations they observe be used for instantaneous communication?
+\item
+  Prior to the measurements in the computational basis, Alice and Bob apply unitary operations \(R_\alpha\) and \(R_\beta\) (respectively) to their respective qubits:
+
+  \begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-47-1} \end{center}
+
+  The gate \(R_\theta\) is defined by its action on the basis states:
+  \[
+     \begin{aligned}
+       |0\rangle
+       &\longmapsto
+       \cos\theta|0\rangle + \sin\theta|1\rangle
+     \\|1\rangle
+       &\longmapsto
+       -\sin\theta|0\rangle + \cos\theta|1\rangle.
+     \end{aligned}
+   \]
+  Show that the state of the two qubits prior to the measurements is
+  \[
+     \begin{aligned}
+       &\frac{1}{\sqrt2}\cos(\alpha-\beta)\big( |00\rangle + |11\rangle \big)
+     \\- &\frac{1}{\sqrt2}\sin(\alpha-\beta)\big( |01\rangle - |10\rangle \big).
+     \end{aligned}
+   \]
+\item
+  What is the probability that Alice and Bob's outcomes are identical?
+\end{enumerate}
+
+\hypertarget{quantum-dense-coding}{%
+\subsubsection{Quantum dense coding}\label{quantum-dense-coding}}
+
+\textbf{!!!TODO!!!}
+
+\hypertarget{playing-with-conditional-unitaries}{%
+\subsubsection{Playing with conditional unitaries}\label{playing-with-conditional-unitaries}}
+
+The swap gate \(S\) on two qubits is defined first on product vectors by \(S\colon|a\rangle|b\rangle\mapsto|b\rangle|a\rangle\) and then extended to sums of product vectors by linearity.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Show that the four Bell states \(\frac{1}{\sqrt2}(|00\rangle\pm|11\rangle)\) and \(\frac{1}{\sqrt2}(|01\rangle\pm|10\rangle)\) are eigenvectors of \(S\) that form an orthonormal basis in the Hilbert space associated to two qubits.
+  Which Bell states span the \emph{symmetric subspace} (i.e.~the space spanned by all eigenvectors with eigenvalue \(1\)), and which the \emph{antisymmetric} one (i.e.~that spanned by eigenvectors with eigenvalue \(-1\))?
+  Can \(S\) have any eigenvalues apart from \(\pm1\)?
+\item
+  Show that \(P_\pm = \frac12(\operatorname{id}\pm S)\) are two orthogonal projectors which form the decomposition of the identity and project on the symmetric and antisymmetric subspaces.
+  Decompose the state vector \(|a\rangle|b\rangle\) of two qubits into symmetric and antisymmetric components.
+\item
+  Consider the quantum circuit below, composed of two Hadamard gates, one controlled-\(S\) operation (also known as the \textbf{controlled-swap}, or \textbf{Fredkin} gate), and the measurement \(M\) in the computational basis.
+  Suppose that the state vectors \(|a\rangle\) and \(|b\rangle\) are normalised but \emph{not} orthogonal to one another.
+  Step through the execution of this network, writing down the quantum states of the three qubits after each computational step.
+  What are the probabilities of observing \(0\) or \(1\) when the measurement \(M\) is performed?
+\end{enumerate}
+
+\begin{circuit}
+
+(Symmetric and antisymmetric projection).
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-48-1} \end{center}
+
+\end{circuit}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\item
+  Explain why this quantum network implements projections on the symmetric and antisymmetric subspaces of the two qubits.
+\item
+  Two qubits are transmitted through a quantum channel which applies the same, randomly chosen, unitary operation \(U\) to each of them.
+  Show that the symmetric and antisymmetric subspaces are invariant under \(U\otimes U\).
+\item
+  Polarised photons are transmitted through an optical fibre.
+  Due to the variation of the refractive index along the fibre, the polarisation of each photon is rotated by the same unknown angle.
+  This makes communication based on polarisation encoding unreliable.
+  However, if you can prepare any polarisation state of the two photons then you can still use the channel to communicate without any errors.
+  How can this be achieved?
+\end{enumerate}
+
+\hypertarget{appendix-tensor-products-in-components}{%
+\subsection{Appendix: Tensor products in components}\label{appendix-tensor-products-in-components}}
+
+\textbf{!!!TODO!!!}
+
+\hypertarget{appendix-the-schmidt-decomposition}{%
+\subsection{Appendix: The Schmidt decomposition}\label{appendix-the-schmidt-decomposition}}
+
+\textbf{!!!TODO!!!}
 
 \hypertarget{chapter6}{%
 \section{Quantum algorithms}\label{chapter6}}
@@ -4453,14 +4654,14 @@ The \emph{quantum} case, however, is more complicated, because we have both bit-
 In order to protect a qubit against bit-flips (incoherent \(X\) rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
 We take a qubit in some unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), introduce two auxiliary qubits, and encode it into three qubits as
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-44-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-49-1} \end{center}
 
 Suppose that at most one qubit is then flipped (say, the second one).
 The encoded state then becomes \(\alpha|010\rangle + \beta|101\rangle\).
 Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 Instead we introduce another two additional qubits, both in state \(|0\rangle\), and apply the following network:
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-45-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-50-1} \end{center}
 
 We measure the two auxiliary qubits, also known as \textbf{ancilla bits}, and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code.
 The theory behind this network runs as follows.
