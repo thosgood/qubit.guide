@@ -1149,7 +1149,215 @@ The swap gate $S$ on two qubits is defined first on product vectors by $S\colon\
 
 ## Appendix: Tensor products in components
 
-**!!!TODO!!!**
+In our discussion of tensor products we have so far taken a rather abstract approach.
+There are, however, situations in which we have to put numbers in, and write tensor products of vectors and matrices explicitly.
+For example, here is the standard basis of two qubits written explicitly as column vectors:
+$$
+  \begin{aligned}
+    \ket{00} &\equiv \ket{0}\otimes\ket{0}
+    = \bmqty{1\\0} \otimes \bmqty{1\\0}
+    = \bmqty{1\\0\\0\\0}
+  \\[1em]
+    \ket{01} &\equiv \ket{0}\otimes\ket{1}
+    = \bmqty{1\\0} \otimes \bmqty{0\\1}
+    = \bmqty{0\\1\\0\\0}
+  \\[1em]
+    \ket{10} &\equiv \ket{1}\otimes\ket{0}
+    = \bmqty{0\\1} \otimes \bmqty{1\\0}
+    = \bmqty{0\\0\\1\\0}
+  \\[1em]
+    \ket{11} &\equiv \ket{1}\otimes\ket{1}
+    = \bmqty{0\\1} \otimes \bmqty{0\\1}
+    = \bmqty{0\\0\\0\\1}
+  \end{aligned}
+$$
+Given $\ket{a} = \alpha_0\ket{0} + \alpha_1\ket{1}$ and $\ket{b} = \beta_0\ket{0} +\beta_1\ket{1}$, we write $\ket{a}\otimes\ket{b}$ as
+$$
+  \begin{aligned}
+    \ket{a}\otimes\ket{b}
+    &= \bmqty{\alpha_0\\\alpha_1} \otimes \bmqty{\beta_0\\\beta_1}
+  \\&= \bmqty{\alpha_0\bmqty{\beta_0\\\beta_1}\\\alpha_1\bmqty{\beta_0\\\beta_1}}
+  \\&= \bmqty{\alpha_0\beta_0\\\alpha_0\beta_1\\\alpha_1\beta_0\\\alpha_1\beta_1}.
+  \end{aligned}
+$$
+Note that each element of the first vector multiplies the entire second vector.
+This is often the easiest way to get the tensor products in practice.
+
+The matrix elements of the tensor product operation $A\otimes B$
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \qw & \qw & \gate{A} & \qw & \qw
+  \\\qw & \qw & \gate{B} & \qw & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+are given by
+$$
+  (A\otimes B)_{ik,jl} = A_{ij}B_{kl}
+$$
+where $ik\in\{00,01,10,11\}$ labels the rows, and $kl\in\{00,01,10,11\}$ labels columns, when forming the block matrix:^[We always use the lexicographic order $00<01<10<11$.]
+$$
+  \begin{aligned}
+    A\otimes B
+    &= \bmqty{A_{00}&A_{01}\\A_{10}&A_{11}} \otimes \bmqty{B_{00}&B_{01}\\B_{10}&B_{11}}
+  \\&= \bmqty{A_{00}B&A_{01}B\\A_{10}B&A_{11}B}
+  \\&=
+  \left[
+  \,
+    \begin{array}{c|c}
+      \mqty{A_{00}B_{00}&A_{00}B_{01}\\A_{00}B_{10}&A_{00}B_{11}}
+      & \mqty{A_{01}B_{00}&A_{01}B_{01}\\A_{01}B_{10}&A_{01}B_{11}}
+    \\\hline
+    \mqty{A_{10}B_{00}&A_{10}B_{01}\\A_{10}B_{10}&A_{10}B_{11}}
+      & \mqty{A_{11}B_{00}&A_{11}B_{01}\\A_{11}B_{10}&A_{11}B_{11}}
+    \end{array}
+  \,
+  \right]
+  \end{aligned}
+$$
+
+The tensor product induces a natural partition of matrices into blocks.
+Multiplication of block matrices works pretty much the same as regular matrix multiplication (assuming the dimensions of the sub-matrices are appropriate), except that the entries are now matrices rather than numbers, and so may not commute.
+
+1. Evaluate the following matrix product of $(4\times 4)$ block matrices:
+    $$
+      \left[
+      \,
+        \begin{array}{c|c}
+          \id & X
+        \\\hline
+          Y & Z
+        \end{array}
+      \,
+      \right]
+      \left[
+      \,
+        \begin{array}{c|c}
+          \id & Y
+        \\\hline
+          X & Z
+        \end{array}
+      \,
+      \right]
+    $$
+    (where $X$, $Y$, and $Z$ are the Pauli matrices).
+
+2. Using the block matrix form of $A\otimes B$ expressed in terms of $A_{ij}$ and $B_{ij}$ described above, explain how the following operations are performed on the block matrix:
+    - transposition $(A\otimes B)^T$; partial transpositions $A^T\otimes B$ and $A\otimes B^T$;
+    - trace $\tr (A\otimes B)$; partial traces $(\tr A )\otimes B$ and $A\otimes (\tr B)$.
+    \end{enumerate}
+
+Consider the Hadamard transform $H\otimes H\otimes H$ on three qubits, which is described by a $(2^3\times2^3)$ matrix.
+We know that
+$$
+  H = \frac{1}{\sqrt2}\bmqty{1&1\\1&-1}
+$$
+and so we can calculate that
+$$
+  H\otimes H
+  = \frac12
+  \left[
+  \,
+    \begin{array}{c|c}
+      \mqty{1&1\\1&-1}
+      & \mqty{1&1\\1&-1}
+    \\\hline
+      \mqty{1&1\\1&-1}
+      & \mqty{-1&-1\\-1&1}
+    \end{array}
+  \,
+  \right]
+$$
+and thus that
+$$
+  H\otimes H\otimes H
+  = \frac12
+  \left[
+  \,
+    \begin{array}{c|c|c|c}
+      \mqty{1&1\\1&-1}
+      & \mqty{1&1\\1&-1}
+      & \mqty{1&1\\1&-1}
+      & \mqty{1&1\\1&-1}
+    \\\hline
+      \mqty{1&1\\1&-1}
+      & \mqty{-1&-1\\-1&1}
+      & \mqty{1&1\\1&-1}
+      & \mqty{-1&-1\\-1&1}
+    \\\hline
+      \mqty{1&1\\1&-1}
+      & \mqty{1&1\\1&-1}
+      & \mqty{-1&-1\\-1&1}
+      & \mqty{-1&-1\\-1&1}
+    \\\hline
+      \mqty{1&1\\1&-1}
+      & \mqty{-1&-1\\-1&1}
+      & \mqty{-1&-1\\-1&1}
+      & \mqty{1&1\\1&-1}
+    \end{array}
+  \,
+  \right].
+$$
+The rows and columns of $H\otimes H\otimes H$ are labelled by the triples $000,001,\ldots,111$.
+Now, suppose we apply $H\otimes H\otimes H$ to the state $\ket{110}$:
+
+``` {r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\begin{equation*}
+  \left.
+    \begin{quantikz}
+      \lstick{$\ket{1}$}
+      & \gate{H}
+      & \qw \rstick{$\frac{\ket{0}-\ket{1}}{\sqrt2}$}
+    \\\lstick{$\ket{1}$}
+      & \gate{H}
+      & \qw \rstick{$\frac{\ket{0}-\ket{1}}{\sqrt2}$}
+    \\\lstick{$\ket{0}$}
+      & \gate{H}
+      & \qw \rstick{$\frac{\ket{0}+\ket{1}}{\sqrt2}$}
+    \end{quantikz}
+  \right\}
+  =
+  \frac{1}{2^{3/2}}
+  \left(
+    \begin{array}{r}
+      \ket{000} + \ket{001} - \ket{010} - \ket{011}
+    \\-\ket{100} - \ket{101} + \ket{110} + \ket{111}
+    \end{array}
+  \right)
+\end{equation*}
+```
+
+3. The output state is a superposition of all binary strings: $\sum_x c_x\ket{x}$, with $x\in\{0,1\}^3$.
+    Where in the $H^{\otimes 3}$ matrix will you find the coefficients $c_x$?
+
+Now, do you want to write down $H\otimes H\otimes H\otimes H$?
+I don't think so.
+This is an exponentially growing monster and you may soon run out of space if you actually do try to write it down.
+Instead, let's spot the pattern of the entries $\pm1$ in these matrices.
+
+4. Consider the Hadamard gate matrix $H_{ab}$, where $a,b=0,1$ are the labels for the rows and the columns.
+    Observe that $H_{ab}=(-1)^{ab}/\sqrt{2}$.
+    (This may look like a fancy way of writing the entries of the Hadamard matrix but it will pay off in a moment).
+    Using the fact that $(A\otimes B)_{ik,jl} = A_{ij}B_{kl}$, or any other method, analyse the pattern of the $\pm1$ in the tensor product of Hadamard matrices.
+    What is the entry $H^{\otimes 4}_{0101,1110}$?
+
+5. For any two binary strings $a=(a_1,\ldots, a_n)$ and $b =(b_1,\ldots , b_n)$ of the same length we can define their "scalar" product as $a\cdot b = (a_1b_1\oplus \ldots \oplus a_n b_n)$.
+    Show that, up to the constant $(1/\sqrt{2})^n$, the entry $H^{\otimes n}_{a,b}$, for any $n$ and for any binary strings $a$ and $b$ of length $n$, is $(-1)^{a\cdot b}$.
+
+6. Show that $H^{\otimes n}$ acts as
+    $$
+      \ket{a}
+      \longmapsto
+      \left(\frac{1}{\sqrt 2}\right)^n
+      \sum_{b\in\{0,1\}^n} (-1)^{a\cdot b}\ket{b}
+    $$
+
+7. A quantum register of $10$ qubits holds the binary string $0110101001$.
+    The Hadamard Transform is then applied to this register yielding a superposition of all binary strings of length $10$.
+    What is the sign in front of the $\ket{0101010101}$ term?
 
 
 

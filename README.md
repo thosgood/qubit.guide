@@ -47,6 +47,7 @@ For any problems or queries regarding this site or its contents, please get in t
     + followed by a paragraph with a bit more of a detailed overview
 1. make sure that you use **only** _either_ "chapter" _or_ "lecture"
 1. pdf title page
+1. always use `\longmapsto` instead of `\mapsto`?
 1. license and funding information along with bookdown link in `_includes/footer.html`
 1. check everything (gitbook) on mobile (mainly for overly wide maths/tables)
 1. **pdf output**

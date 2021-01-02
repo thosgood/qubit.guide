@@ -96,6 +96,8 @@
 \providecommand{\tr}{\operatorname{tr}}
 \providecommand{\id}{\operatorname{id}}
 \providecommand{\diag}[2]{\begin{bmatrix}#1&0\\0&#2\end{bmatrix}}
+\providecommand{\mqty}[1]{\begin{matrix}#1\end{matrix}}
+\providecommand{\bmqty}[1]{\begin{bmatrix}#1\end{bmatrix}}
 \renewcommand{\leq}{\leqslant}
 \renewcommand{\geq}{\geqslant}
 
@@ -4118,7 +4120,205 @@ The swap gate \(S\) on two qubits is defined first on product vectors by \(S\col
 \hypertarget{appendix-tensor-products-in-components}{%
 \subsection{Appendix: Tensor products in components}\label{appendix-tensor-products-in-components}}
 
-\textbf{!!!TODO!!!}
+In our discussion of tensor products we have so far taken a rather abstract approach.
+There are, however, situations in which we have to put numbers in, and write tensor products of vectors and matrices explicitly.
+For example, here is the standard basis of two qubits written explicitly as column vectors:
+\[
+  \begin{aligned}
+    |00\rangle &\equiv |0\rangle\otimes|0\rangle
+    = \begin{bmatrix}1\\0\end{bmatrix} \otimes \begin{bmatrix}1\\0\end{bmatrix}
+    = \begin{bmatrix}1\\0\\0\\0\end{bmatrix}
+  \\[1em]
+    |01\rangle &\equiv |0\rangle\otimes|1\rangle
+    = \begin{bmatrix}1\\0\end{bmatrix} \otimes \begin{bmatrix}0\\1\end{bmatrix}
+    = \begin{bmatrix}0\\1\\0\\0\end{bmatrix}
+  \\[1em]
+    |10\rangle &\equiv |1\rangle\otimes|0\rangle
+    = \begin{bmatrix}0\\1\end{bmatrix} \otimes \begin{bmatrix}1\\0\end{bmatrix}
+    = \begin{bmatrix}0\\0\\1\\0\end{bmatrix}
+  \\[1em]
+    |11\rangle &\equiv |1\rangle\otimes|1\rangle
+    = \begin{bmatrix}0\\1\end{bmatrix} \otimes \begin{bmatrix}0\\1\end{bmatrix}
+    = \begin{bmatrix}0\\0\\0\\1\end{bmatrix}
+  \end{aligned}
+\]
+Given \(|a\rangle = \alpha_0|0\rangle + \alpha_1|1\rangle\) and \(|b\rangle = \beta_0|0\rangle +\beta_1|1\rangle\), we write \(|a\rangle\otimes|b\rangle\) as
+\[
+  \begin{aligned}
+    |a\rangle\otimes|b\rangle
+    &= \begin{bmatrix}\alpha_0\\\alpha_1\end{bmatrix} \otimes \begin{bmatrix}\beta_0\\\beta_1\end{bmatrix}
+  \\&= \begin{bmatrix}\alpha_0\begin{bmatrix}\beta_0\\\beta_1\end{bmatrix}\\\alpha_1\begin{bmatrix}\beta_0\\\beta_1\end{bmatrix}\end{bmatrix}
+  \\&= \begin{bmatrix}\alpha_0\beta_0\\\alpha_0\beta_1\\\alpha_1\beta_0\\\alpha_1\beta_1\end{bmatrix}.
+  \end{aligned}
+\]
+Note that each element of the first vector multiplies the entire second vector.
+This is often the easiest way to get the tensor products in practice.
+
+The matrix elements of the tensor product operation \(A\otimes B\)
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-49-1} \end{center}
+
+are given by
+\[
+  (A\otimes B)_{ik,jl} = A_{ij}B_{kl}
+\]
+where \(ik\in\{00,01,10,11\}\) labels the rows, and \(kl\in\{00,01,10,11\}\) labels columns, when forming the block matrix:\footnote{We always use the lexicographic order \(00<01<10<11\).}
+\[
+  \begin{aligned}
+    A\otimes B
+    &= \begin{bmatrix}A_{00}&A_{01}\\A_{10}&A_{11}\end{bmatrix} \otimes \begin{bmatrix}B_{00}&B_{01}\\B_{10}&B_{11}\end{bmatrix}
+  \\&= \begin{bmatrix}A_{00}B&A_{01}B\\A_{10}B&A_{11}B\end{bmatrix}
+  \\&=
+  \left[
+  \,
+    \begin{array}{c|c}
+      \begin{matrix}A_{00}B_{00}&A_{00}B_{01}\\A_{00}B_{10}&A_{00}B_{11}\end{matrix}
+      & \begin{matrix}A_{01}B_{00}&A_{01}B_{01}\\A_{01}B_{10}&A_{01}B_{11}\end{matrix}
+    \\\hline
+    \begin{matrix}A_{10}B_{00}&A_{10}B_{01}\\A_{10}B_{10}&A_{10}B_{11}\end{matrix}
+      & \begin{matrix}A_{11}B_{00}&A_{11}B_{01}\\A_{11}B_{10}&A_{11}B_{11}\end{matrix}
+    \end{array}
+  \,
+  \right]
+  \end{aligned}
+\]
+
+The tensor product induces a natural partition of matrices into blocks.
+Multiplication of block matrices works pretty much the same as regular matrix multiplication (assuming the dimensions of the sub-matrices are appropriate), except that the entries are now matrices rather than numbers, and so may not commute.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Evaluate the following matrix product of \((4\times 4)\) block matrices:
+  \[
+     \left[
+     \,
+       \begin{array}{c|c}
+         \operatorname{id}& X
+       \\\hline
+         Y & Z
+       \end{array}
+     \,
+     \right]
+     \left[
+     \,
+       \begin{array}{c|c}
+         \operatorname{id}& Y
+       \\\hline
+         X & Z
+       \end{array}
+     \,
+     \right]
+   \]
+  (where \(X\), \(Y\), and \(Z\) are the Pauli matrices).
+\item
+  Using the block matrix form of \(A\otimes B\) expressed in terms of \(A_{ij}\) and \(B_{ij}\) described above, explain how the following operations are performed on the block matrix:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    transposition \((A\otimes B)^T\); partial transpositions \(A^T\otimes B\) and \(A\otimes B^T\);
+  \item
+    trace \(\operatorname{tr}(A\otimes B)\); partial traces \((\operatorname{tr}A )\otimes B\) and \(A\otimes (\operatorname{tr}B)\).
+    \textbackslash end\{enumerate\}
+  \end{itemize}
+\end{enumerate}
+
+Consider the Hadamard transform \(H\otimes H\otimes H\) on three qubits, which is described by a \((2^3\times2^3)\) matrix.
+We know that
+\[
+  H = \frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}
+\]
+and so we can calculate that
+\[
+  H\otimes H
+  = \frac12
+  \left[
+  \,
+    \begin{array}{c|c}
+      \begin{matrix}1&1\\1&-1\end{matrix}
+      & \begin{matrix}1&1\\1&-1\end{matrix}
+    \\\hline
+      \begin{matrix}1&1\\1&-1\end{matrix}
+      & \begin{matrix}-1&-1\\-1&1\end{matrix}
+    \end{array}
+  \,
+  \right]
+\]
+and thus that
+\[
+  H\otimes H\otimes H
+  = \frac12
+  \left[
+  \,
+    \begin{array}{c|c|c|c}
+      \begin{matrix}1&1\\1&-1\end{matrix}
+      & \begin{matrix}1&1\\1&-1\end{matrix}
+      & \begin{matrix}1&1\\1&-1\end{matrix}
+      & \begin{matrix}1&1\\1&-1\end{matrix}
+    \\\hline
+      \begin{matrix}1&1\\1&-1\end{matrix}
+      & \begin{matrix}-1&-1\\-1&1\end{matrix}
+      & \begin{matrix}1&1\\1&-1\end{matrix}
+      & \begin{matrix}-1&-1\\-1&1\end{matrix}
+    \\\hline
+      \begin{matrix}1&1\\1&-1\end{matrix}
+      & \begin{matrix}1&1\\1&-1\end{matrix}
+      & \begin{matrix}-1&-1\\-1&1\end{matrix}
+      & \begin{matrix}-1&-1\\-1&1\end{matrix}
+    \\\hline
+      \begin{matrix}1&1\\1&-1\end{matrix}
+      & \begin{matrix}-1&-1\\-1&1\end{matrix}
+      & \begin{matrix}-1&-1\\-1&1\end{matrix}
+      & \begin{matrix}1&1\\1&-1\end{matrix}
+    \end{array}
+  \,
+  \right].
+\]
+The rows and columns of \(H\otimes H\otimes H\) are labelled by the triples \(000,001,\ldots,111\).
+Now, suppose we apply \(H\otimes H\otimes H\) to the state \(|110\rangle\):
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-50-1} \end{center}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  The output state is a superposition of all binary strings: \(\sum_x c_x|x\rangle\), with \(x\in\{0,1\}^3\).
+  Where in the \(H^{\otimes 3}\) matrix will you find the coefficients \(c_x\)?
+\end{enumerate}
+
+Now, do you want to write down \(H\otimes H\otimes H\otimes H\)?
+I don't think so.
+This is an exponentially growing monster and you may soon run out of space if you actually do try to write it down.
+Instead, let's spot the pattern of the entries \(\pm1\) in these matrices.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\item
+  Consider the Hadamard gate matrix \(H_{ab}\), where \(a,b=0,1\) are the labels for the rows and the columns.
+  Observe that \(H_{ab}=(-1)^{ab}/\sqrt{2}\).
+  (This may look like a fancy way of writing the entries of the Hadamard matrix but it will pay off in a moment).
+  Using the fact that \((A\otimes B)_{ik,jl} = A_{ij}B_{kl}\), or any other method, analyse the pattern of the \(\pm1\) in the tensor product of Hadamard matrices.
+  What is the entry \(H^{\otimes 4}_{0101,1110}\)?
+\item
+  For any two binary strings \(a=(a_1,\ldots, a_n)\) and \(b =(b_1,\ldots , b_n)\) of the same length we can define their ``scalar'' product as \(a\cdot b = (a_1b_1\oplus \ldots \oplus a_n b_n)\).
+  Show that, up to the constant \((1/\sqrt{2})^n\), the entry \(H^{\otimes n}_{a,b}\), for any \(n\) and for any binary strings \(a\) and \(b\) of length \(n\), is \((-1)^{a\cdot b}\).
+\item
+  Show that \(H^{\otimes n}\) acts as
+  \[
+     |a\rangle
+     \longmapsto
+     \left(\frac{1}{\sqrt 2}\right)^n
+     \sum_{b\in\{0,1\}^n} (-1)^{a\cdot b}|b\rangle
+   \]
+\item
+  A quantum register of \(10\) qubits holds the binary string \(0110101001\).
+  The Hadamard Transform is then applied to this register yielding a superposition of all binary strings of length \(10\).
+  What is the sign in front of the \(|0101010101\rangle\) term?
+\end{enumerate}
 
 \hypertarget{appendix-the-schmidt-decomposition}{%
 \subsection{Appendix: The Schmidt decomposition}\label{appendix-the-schmidt-decomposition}}
@@ -4712,14 +4912,14 @@ The \emph{quantum} case, however, is more complicated, because we have both bit-
 In order to protect a qubit against bit-flips (incoherent \(X\) rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
 We take a qubit in some unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), introduce two auxiliary qubits, and encode it into three qubits as
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-49-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-51-1} \end{center}
 
 Suppose that at most one qubit is then flipped (say, the second one).
 The encoded state then becomes \(\alpha|010\rangle + \beta|101\rangle\).
 Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 Instead we introduce another two additional qubits, both in state \(|0\rangle\), and apply the following network:
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-50-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-52-1} \end{center}
 
 We measure the two auxiliary qubits, also known as \textbf{ancilla bits}, and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code.
 The theory behind this network runs as follows.

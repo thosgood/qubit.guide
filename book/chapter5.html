@@ -1053,7 +1053,178 @@ How can this be achieved?</p></li>
 </div>
 <div id="appendix-tensor-products-in-components" class="section level2" number="5.10">
 <h2><span class="header-section-number">5.10</span> Appendix: Tensor products in components</h2>
-<p><strong>!!!TODO!!!</strong></p>
+<p>In our discussion of tensor products we have so far taken a rather abstract approach.
+There are, however, situations in which we have to put numbers in, and write tensor products of vectors and matrices explicitly.
+For example, here is the standard basis of two qubits written explicitly as column vectors:
+<span class="math display">\[
+  \begin{aligned}
+    |00\rangle &amp;\equiv |0\rangle\otimes|0\rangle
+    = \begin{bmatrix}1\\0\end{bmatrix} \otimes \begin{bmatrix}1\\0\end{bmatrix}
+    = \begin{bmatrix}1\\0\\0\\0\end{bmatrix}
+  \\[1em]
+    |01\rangle &amp;\equiv |0\rangle\otimes|1\rangle
+    = \begin{bmatrix}1\\0\end{bmatrix} \otimes \begin{bmatrix}0\\1\end{bmatrix}
+    = \begin{bmatrix}0\\1\\0\\0\end{bmatrix}
+  \\[1em]
+    |10\rangle &amp;\equiv |1\rangle\otimes|0\rangle
+    = \begin{bmatrix}0\\1\end{bmatrix} \otimes \begin{bmatrix}1\\0\end{bmatrix}
+    = \begin{bmatrix}0\\0\\1\\0\end{bmatrix}
+  \\[1em]
+    |11\rangle &amp;\equiv |1\rangle\otimes|1\rangle
+    = \begin{bmatrix}0\\1\end{bmatrix} \otimes \begin{bmatrix}0\\1\end{bmatrix}
+    = \begin{bmatrix}0\\0\\0\\1\end{bmatrix}
+  \end{aligned}
+\]</span>
+Given <span class="math inline">\(|a\rangle = \alpha_0|0\rangle + \alpha_1|1\rangle\)</span> and <span class="math inline">\(|b\rangle = \beta_0|0\rangle +\beta_1|1\rangle\)</span>, we write <span class="math inline">\(|a\rangle\otimes|b\rangle\)</span> as
+<span class="math display">\[
+  \begin{aligned}
+    |a\rangle\otimes|b\rangle
+    &amp;= \begin{bmatrix}\alpha_0\\\alpha_1\end{bmatrix} \otimes \begin{bmatrix}\beta_0\\\beta_1\end{bmatrix}
+  \\&amp;= \begin{bmatrix}\alpha_0\begin{bmatrix}\beta_0\\\beta_1\end{bmatrix}\\\alpha_1\begin{bmatrix}\beta_0\\\beta_1\end{bmatrix}\end{bmatrix}
+  \\&amp;= \begin{bmatrix}\alpha_0\beta_0\\\alpha_0\beta_1\\\alpha_1\beta_0\\\alpha_1\beta_1\end{bmatrix}.
+  \end{aligned}
+\]</span>
+Note that each element of the first vector multiplies the entire second vector.
+This is often the easiest way to get the tensor products in practice.</p>
+<p>The matrix elements of the tensor product operation <span class="math inline">\(A\otimes B\)</span></p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-49-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>are given by
+<span class="math display">\[
+  (A\otimes B)_{ik,jl} = A_{ij}B_{kl}
+\]</span>
+where <span class="math inline">\(ik\in\{00,01,10,11\}\)</span> labels the rows, and <span class="math inline">\(kl\in\{00,01,10,11\}\)</span> labels columns, when forming the block matrix:<a href="#fn73" class="footnote-ref" id="fnref73"><sup>73</sup></a>
+<span class="math display">\[
+  \begin{aligned}
+    A\otimes B
+    &amp;= \begin{bmatrix}A_{00}&amp;A_{01}\\A_{10}&amp;A_{11}\end{bmatrix} \otimes \begin{bmatrix}B_{00}&amp;B_{01}\\B_{10}&amp;B_{11}\end{bmatrix}
+  \\&amp;= \begin{bmatrix}A_{00}B&amp;A_{01}B\\A_{10}B&amp;A_{11}B\end{bmatrix}
+  \\&amp;=
+  \left[
+  \,
+    \begin{array}{c|c}
+      \begin{matrix}A_{00}B_{00}&amp;A_{00}B_{01}\\A_{00}B_{10}&amp;A_{00}B_{11}\end{matrix}
+      &amp; \begin{matrix}A_{01}B_{00}&amp;A_{01}B_{01}\\A_{01}B_{10}&amp;A_{01}B_{11}\end{matrix}
+    \\\hline
+    \begin{matrix}A_{10}B_{00}&amp;A_{10}B_{01}\\A_{10}B_{10}&amp;A_{10}B_{11}\end{matrix}
+      &amp; \begin{matrix}A_{11}B_{00}&amp;A_{11}B_{01}\\A_{11}B_{10}&amp;A_{11}B_{11}\end{matrix}
+    \end{array}
+  \,
+  \right]
+  \end{aligned}
+\]</span></p>
+<p>The tensor product induces a natural partition of matrices into blocks.
+Multiplication of block matrices works pretty much the same as regular matrix multiplication (assuming the dimensions of the sub-matrices are appropriate), except that the entries are now matrices rather than numbers, and so may not commute.</p>
+<ol style="list-style-type: decimal">
+<li><p>Evaluate the following matrix product of <span class="math inline">\((4\times 4)\)</span> block matrices:
+<span class="math display">\[
+   \left[
+   \,
+     \begin{array}{c|c}
+       \operatorname{id}&amp; X
+     \\\hline
+       Y &amp; Z
+     \end{array}
+   \,
+   \right]
+   \left[
+   \,
+     \begin{array}{c|c}
+       \operatorname{id}&amp; Y
+     \\\hline
+       X &amp; Z
+     \end{array}
+   \,
+   \right]
+ \]</span>
+(where <span class="math inline">\(X\)</span>, <span class="math inline">\(Y\)</span>, and <span class="math inline">\(Z\)</span> are the Pauli matrices).</p></li>
+<li><p>Using the block matrix form of <span class="math inline">\(A\otimes B\)</span> expressed in terms of <span class="math inline">\(A_{ij}\)</span> and <span class="math inline">\(B_{ij}\)</span> described above, explain how the following operations are performed on the block matrix:</p>
+<ul>
+<li>transposition <span class="math inline">\((A\otimes B)^T\)</span>; partial transpositions <span class="math inline">\(A^T\otimes B\)</span> and <span class="math inline">\(A\otimes B^T\)</span>;</li>
+<li>trace <span class="math inline">\(\operatorname{tr}(A\otimes B)\)</span>; partial traces <span class="math inline">\((\operatorname{tr}A )\otimes B\)</span> and <span class="math inline">\(A\otimes (\operatorname{tr}B)\)</span>.
+\end{enumerate}</li>
+</ul></li>
+</ol>
+<p>Consider the Hadamard transform <span class="math inline">\(H\otimes H\otimes H\)</span> on three qubits, which is described by a <span class="math inline">\((2^3\times2^3)\)</span> matrix.
+We know that
+<span class="math display">\[
+  H = \frac{1}{\sqrt2}\begin{bmatrix}1&amp;1\\1&amp;-1\end{bmatrix}
+\]</span>
+and so we can calculate that
+<span class="math display">\[
+  H\otimes H
+  = \frac12
+  \left[
+  \,
+    \begin{array}{c|c}
+      \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+      &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+    \\\hline
+      \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+      &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+    \end{array}
+  \,
+  \right]
+\]</span>
+and thus that
+<span class="math display">\[
+  H\otimes H\otimes H
+  = \frac12
+  \left[
+  \,
+    \begin{array}{c|c|c|c}
+      \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+      &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+      &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+      &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+    \\\hline
+      \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+      &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+      &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+      &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+    \\\hline
+      \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+      &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+      &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+      &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+    \\\hline
+      \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+      &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+      &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+      &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+    \end{array}
+  \,
+  \right].
+\]</span>
+The rows and columns of <span class="math inline">\(H\otimes H\otimes H\)</span> are labelled by the triples <span class="math inline">\(000,001,\ldots,111\)</span>.
+Now, suppose we apply <span class="math inline">\(H\otimes H\otimes H\)</span> to the state <span class="math inline">\(|110\rangle\)</span>:</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-50-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li>The output state is a superposition of all binary strings: <span class="math inline">\(\sum_x c_x|x\rangle\)</span>, with <span class="math inline">\(x\in\{0,1\}^3\)</span>.
+Where in the <span class="math inline">\(H^{\otimes 3}\)</span> matrix will you find the coefficients <span class="math inline">\(c_x\)</span>?</li>
+</ol>
+<p>Now, do you want to write down <span class="math inline">\(H\otimes H\otimes H\otimes H\)</span>?
+I don’t think so.
+This is an exponentially growing monster and you may soon run out of space if you actually do try to write it down.
+Instead, let’s spot the pattern of the entries <span class="math inline">\(\pm1\)</span> in these matrices.</p>
+<ol start="4" style="list-style-type: decimal">
+<li><p>Consider the Hadamard gate matrix <span class="math inline">\(H_{ab}\)</span>, where <span class="math inline">\(a,b=0,1\)</span> are the labels for the rows and the columns.
+Observe that <span class="math inline">\(H_{ab}=(-1)^{ab}/\sqrt{2}\)</span>.
+(This may look like a fancy way of writing the entries of the Hadamard matrix but it will pay off in a moment).
+Using the fact that <span class="math inline">\((A\otimes B)_{ik,jl} = A_{ij}B_{kl}\)</span>, or any other method, analyse the pattern of the <span class="math inline">\(\pm1\)</span> in the tensor product of Hadamard matrices.
+What is the entry <span class="math inline">\(H^{\otimes 4}_{0101,1110}\)</span>?</p></li>
+<li><p>For any two binary strings <span class="math inline">\(a=(a_1,\ldots, a_n)\)</span> and <span class="math inline">\(b =(b_1,\ldots , b_n)\)</span> of the same length we can define their “scalar” product as <span class="math inline">\(a\cdot b = (a_1b_1\oplus \ldots \oplus a_n b_n)\)</span>.
+Show that, up to the constant <span class="math inline">\((1/\sqrt{2})^n\)</span>, the entry <span class="math inline">\(H^{\otimes n}_{a,b}\)</span>, for any <span class="math inline">\(n\)</span> and for any binary strings <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> of length <span class="math inline">\(n\)</span>, is <span class="math inline">\((-1)^{a\cdot b}\)</span>.</p></li>
+<li><p>Show that <span class="math inline">\(H^{\otimes n}\)</span> acts as
+<span class="math display">\[
+   |a\rangle
+   \longmapsto
+   \left(\frac{1}{\sqrt 2}\right)^n
+   \sum_{b\in\{0,1\}^n} (-1)^{a\cdot b}|b\rangle
+ \]</span></p></li>
+<li><p>A quantum register of <span class="math inline">\(10\)</span> qubits holds the binary string <span class="math inline">\(0110101001\)</span>.
+The Hadamard Transform is then applied to this register yielding a superposition of all binary strings of length <span class="math inline">\(10\)</span>.
+What is the sign in front of the <span class="math inline">\(|0101010101\rangle\)</span> term?</p></li>
+</ol>
 </div>
 <div id="appendix-the-schmidt-decomposition" class="section level2" number="5.11">
 <h2><span class="header-section-number">5.11</span> Appendix: The Schmidt decomposition</h2>
@@ -1126,6 +1297,7 @@ Then any unitary transformation of the basis vectors corresponding to a degenera
 <li id="fn70"><p>We neglect to write the normalisation factors.<a href="chapter5.html#fnref70" class="footnote-back">↩︎</a></p></li>
 <li id="fn71"><p>Recall the big-<span class="math inline">\(O\)</span> asymptotic notation: given a <em>positive</em> function <span class="math inline">\(f(n)\)</span>, we write <span class="math inline">\(O(f(n))\)</span> to mean “bounded above by <span class="math inline">\(c\,f(n)\)</span> for some constant <span class="math inline">\(c &gt; 0\)</span> (for sufficiently large <span class="math inline">\(n\)</span>)”. For example, <span class="math inline">\(15n^2+4n+7\)</span> is <span class="math inline">\(O(n^2)\)</span>.<a href="chapter5.html#fnref71" class="footnote-back">↩︎</a></p></li>
 <li id="fn72"><p>“Spooky action at a distance” is a loose translation of the German “spukhafte Fernwirkung”, which is the phrase that Albert Einstein used in his 1947 letter to Max Born.<a href="chapter5.html#fnref72" class="footnote-back">↩︎</a></p></li>
+<li id="fn73"><p>We always use the lexicographic order <span class="math inline">\(00&lt;01&lt;10&lt;11\)</span>.<a href="chapter5.html#fnref73" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
