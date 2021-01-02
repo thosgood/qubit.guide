@@ -713,6 +713,139 @@ In general, an $x$-controlled-$U$ gate can be defined on two registers of arbitr
 
 ### Phase kickback
 
+Before moving on to the next section, we first describe a simple "trick" --- an unusual way of introducing phase shifts that will be essential for our analysis of quantum algorithms.
+Consider the following circuit.
+
+:::: {.circuit data-latex=""}
+::: {.circuit_title}
+(Controlled-$U$ interference).
+:::
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \gate{H}
+    & \qw \rstick{$\cos\frac{\varphi}{2}\ket{0} - i\sin\frac{\varphi}{2}\ket{1}$}
+  \\\lstick{$\ket{u}$}
+    & \qw
+    & \gate{U}
+    & \qw
+    & \qw \rstick{$\ket{u}$}
+  \end{quantikz}
+\end{equation*}
+```
+where $\ket{u}$ is an _eigenstate_ of $U$ (that is, $U\ket{u} = e^{i\varphi}\ket{U}$ for some $\varphi$).
+::::
+
+This should look familiar: it is the usual interference circuit, but with the phase gate replaced by a controlled-$U$ gate, which will mimic the phase gate, as we shall soon see.
+Note that the second qubit is prepared in state $\ket{u}$, which is _required to be an eigenstate of $U$_.
+The circuit effects the following sequence of transformations (omitting the normalisation factors):
+$$
+  \begin{aligned}
+    \ket{0}\ket{u}
+    &\xmapsto{H}
+    (\ket{0}+\ket{1})\ket{u}
+  \\&\quad = \ket{0}\ket{u} + \ket{1}\ket{u}
+  \\&\xmapsto{\texttt{c-}U}
+    \ket{0}\ket{u} + \ket{1}U\ket{u}
+  \\&\quad = \ket{0}\ket{u} + e^{i\varphi}\ket{1}\ket{u}
+  \\&\quad = (\ket{0} + e^{i\varphi}\ket{1}) \ket{u}
+  \\&\xmapsto{H}
+    \left(
+      \cos\frac{\varphi}{2}\ket{0}
+      - i\sin\frac{\varphi}{2}\ket{1}
+    \right) \ket{u}.
+  \end{aligned}
+$$
+Note that the second qubit does _not_ get entangled with the first one: it remains in its original state $\ket{u}$.
+However, the interaction between the two qubits introduces a phase shift on the first qubit.
+This may look like an unnecessarily complicated way of introducing phase shifts, but, as we shall soon see, this is how quantum computers do it.
+Let me give you a preview of things to come.
+
+Consider the following $x$-controlled-$U$ operation:
+$$
+  \begin{gathered}
+    \left[
+      \begin{array}{cccc}
+        \id & 0 & 0 & 0
+      \\0 & \id & 0 & 0
+      \\0 & 0 & \id & 0
+      \\0 & 0 & 0 & X
+      \end{array}
+    \right]
+  \\[1em]
+    =\proj{00}00\otimes\id
+  \\+ \proj{01}01\otimes\id
+  \\+ \proj{10}10\otimes\id
+  \\+ \proj{11}11\otimes X.
+  \end{gathered}
+$$
+The first register is of size $2$, and the second register is of size $1$.
+If the first register is prepared in state $\ket{11}$, then the qubit in the second register is flipped (by the Pauli bit-flip $X$); otherwise, nothing happens.
+This unitary operation is a quantum version of the Boolean function evaluation: it corresponds to the Boolean function
+$$
+  \begin{aligned}
+    f\colon\{0,1\}^2 &\to \{0,1\}
+  \\00&\mapsto0
+  \\01&\mapsto0
+  \\10&\mapsto0
+  \\11&\mapsto1.
+  \end{aligned}
+$$
+If $f(x)=1$, then we flip the bit value in the second register (with operation $X$); if $f(x)=0$, then we do nothing.
+
+Now, prepare the qubit in the second register in state $\ket{0}-\ket{1}$, which is an eigenstate of $X$ with eigenvalue $e^{\pi i}=-1$.
+So whenever $X$ is applied to the second register, the phase factor $-1$ appears in front of the corresponding term in the first register.
+If we prepare the first register in the superposition $\ket{00}+\ket{01}+\ket{10}+\ket{11}$ then the result of applying the above $x$-controlled-$U$ operation is the entangled state $\ket{00}+\ket{01}+\ket{10}-\ket{11}$.
+That is, _the phase kickback mechanism introduced a relative phase in the equally-weighted superposition of all binary strings of length two_.
+
+::: {.idea data-latex=""}
+This is how we control quantum interference in quantum computation.
+:::
+
+We will return to this topic later on, when we discuss quantum evaluation of Boolean functions and quantum algorithms.
+
+
+
+
+
+
+### Universality revisited
+
+We will come across few more gates in this course, but at this stage you already know all the elementary unitary operations that are needed to construct any unitary operation on any number of qubits:
+
+- the Hadamard gate,
+- all phase gates, and
+- the $\texttt{c-NOT}$
+
+These gates form a **universal set of gates**: with $O(4^{n}n)$ of these gates, we can construct any $n$-qubit unitary operation.^[Recall the big-$O$ asymptotic notation: given a _positive_ function $f(n)$, we write $O(f(n))$ to mean "bounded above by $c\,f(n)$ for some constant $c > 0$ (for sufficiently large $n$)". For example, $15n^2+4n+7$ is $O(n^2)$.]
+We should mention that there are many universal sets of gates.
+In fact, almost any gate that can entangle two qubits can be used as a universal gate.
+
+We are particularly interested in any _finite_ universal set of gates (such as the one containing the Hadamard, $P_{\frac{\pi}{4}}$ (the $T$ gate), and the $\texttt{c-NOT}$), which can approximate any unitary operation on $n$ qubits with arbitrary precision.
+The price to pay is the number of gates --- better precision requires more gates.
+We shall elaborate on this later.
+
+
+
+
+
+### Density operators and the like
+
+The existence of entangled states leads to an obvious question: if we cannot attribute a state vector to an individual qubit, then how can we describe its quantum state?
+In the next few lectures we will see that, when we limit our attentions to a part of a larger system, states are not represented by vectors, measurements are not described by orthogonal projections, and evolution is not unitary.
+As a spoiler, here is a dictionary of some of the new concepts that will soon be introduced:
+
+| | | |
+| -: | :-: | :- |
+| state vectors | $\longmapsto$ | density operators |
+| unitary evolutions | $\longmapsto$ | completely-positive trace-preserving maps |
+| orthogonal projectors | $\longmapsto$ | positive operator-valued measures |
+
+
 
 
 
@@ -751,3 +884,10 @@ That is, we have to trade energy for time.
 
 It turns out that whichever way we try to represent the number $N$ using the unary encoding (i.e. using $N$ different states of a single chunk of matter), we end up depleting our physical resources (such as energy, time, space) at a much greater rate than in the case when we use subsystems.
 This plausibility argument indicates that, for efficient processing of information, the system must be divided into subsystems --- for example, into physical bits.
+
+
+
+
+
+
+## Remarks and exercises

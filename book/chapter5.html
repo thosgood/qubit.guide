@@ -190,6 +190,8 @@
 <li class="chapter" data-level="5.7.1" data-path="chapter5.html"><a href="chapter5.html#controlled-phase"><i class="fa fa-check"></i><b>5.7.1</b> Controlled-phase</a></li>
 <li class="chapter" data-level="5.7.2" data-path="chapter5.html"><a href="chapter5.html#controlled-u"><i class="fa fa-check"></i><b>5.7.2</b> Controlled-U</a></li>
 <li class="chapter" data-level="5.7.3" data-path="chapter5.html"><a href="chapter5.html#phase-kickback"><i class="fa fa-check"></i><b>5.7.3</b> Phase kickback</a></li>
+<li class="chapter" data-level="5.7.4" data-path="chapter5.html"><a href="chapter5.html#universality-revisited"><i class="fa fa-check"></i><b>5.7.4</b> Universality revisited</a></li>
+<li class="chapter" data-level="5.7.5" data-path="chapter5.html"><a href="chapter5.html#density-operators-and-the-like"><i class="fa fa-check"></i><b>5.7.5</b> Density operators and the like</a></li>
 </ul></li>
 <li class="chapter" data-level="5.8" data-path="chapter5.html"><a href="chapter5.html#why-qubits-subsystems-and-entanglement"><i class="fa fa-check"></i><b>5.8</b> Why qubits, subsystems, and entanglement?</a></li>
 </ul></li>
@@ -737,6 +739,118 @@ In general, an <span class="math inline">\(x\)</span>-controlled-<span class="ma
 </div>
 <div id="phase-kickback" class="section level3" number="5.7.3">
 <h3><span class="header-section-number">5.7.3</span> Phase kickback</h3>
+<p>Before moving on to the next section, we first describe a simple “trick” — an unusual way of introducing phase shifts that will be essential for our analysis of quantum algorithms.
+Consider the following circuit.</p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Controlled-<span class="math inline">\(U\)</span> interference).</p>
+</div>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;" />
+where <span class="math inline">\(|u\rangle\)</span> is an <em>eigenstate</em> of <span class="math inline">\(U\)</span> (that is, <span class="math inline">\(U|u\rangle = e^{i\varphi}|U\rangle\)</span> for some <span class="math inline">\(\varphi\)</span>).</p>
+</div>
+<p>This should look familiar: it is the usual interference circuit, but with the phase gate replaced by a controlled-<span class="math inline">\(U\)</span> gate, which will mimic the phase gate, as we shall soon see.
+Note that the second qubit is prepared in state <span class="math inline">\(|u\rangle\)</span>, which is <em>required to be an eigenstate of <span class="math inline">\(U\)</span></em>.
+The circuit effects the following sequence of transformations (omitting the normalisation factors):
+<span class="math display">\[
+  \begin{aligned}
+    |0\rangle|u\rangle
+    &amp;\overset{H}{\longmapsto}
+    (|0\rangle+|1\rangle)|u\rangle
+  \\&amp;\quad = |0\rangle|u\rangle + |1\rangle|u\rangle
+  \\&amp;\overset{\texttt{c-}U}{\longmapsto}
+    |0\rangle|u\rangle + |1\rangle U|u\rangle
+  \\&amp;\quad = |0\rangle|u\rangle + e^{i\varphi}|1\rangle|u\rangle
+  \\&amp;\quad = (|0\rangle + e^{i\varphi}|1\rangle) |u\rangle
+  \\&amp;\overset{H}{\longmapsto}
+    \left(
+      \cos\frac{\varphi}{2}|0\rangle
+      - i\sin\frac{\varphi}{2}|1\rangle
+    \right) |u\rangle.
+  \end{aligned}
+\]</span>
+Note that the second qubit does <em>not</em> get entangled with the first one: it remains in its original state <span class="math inline">\(|u\rangle\)</span>.
+However, the interaction between the two qubits introduces a phase shift on the first qubit.
+This may look like an unnecessarily complicated way of introducing phase shifts, but, as we shall soon see, this is how quantum computers do it.
+Let me give you a preview of things to come.</p>
+<p>Consider the following <span class="math inline">\(x\)</span>-controlled-<span class="math inline">\(U\)</span> operation:
+<span class="math display">\[
+  \begin{gathered}
+    \left[
+      \begin{array}{cccc}
+        \operatorname{id}&amp; 0 &amp; 0 &amp; 0
+      \\0 &amp; \operatorname{id}&amp; 0 &amp; 0
+      \\0 &amp; 0 &amp; \operatorname{id}&amp; 0
+      \\0 &amp; 0 &amp; 0 &amp; X
+      \end{array}
+    \right]
+  \\[1em]
+    =|00\rangle\langle 00|00\otimes\operatorname{id}
+  \\+ |01\rangle\langle 01|01\otimes\operatorname{id}
+  \\+ |10\rangle\langle 10|10\otimes\operatorname{id}
+  \\+ |11\rangle\langle 11|11\otimes X.
+  \end{gathered}
+\]</span>
+The first register is of size <span class="math inline">\(2\)</span>, and the second register is of size <span class="math inline">\(1\)</span>.
+If the first register is prepared in state <span class="math inline">\(|11\rangle\)</span>, then the qubit in the second register is flipped (by the Pauli bit-flip <span class="math inline">\(X\)</span>); otherwise, nothing happens.
+This unitary operation is a quantum version of the Boolean function evaluation: it corresponds to the Boolean function
+<span class="math display">\[
+  \begin{aligned}
+    f\colon\{0,1\}^2 &amp;\to \{0,1\}
+  \\00&amp;\mapsto0
+  \\01&amp;\mapsto0
+  \\10&amp;\mapsto0
+  \\11&amp;\mapsto1.
+  \end{aligned}
+\]</span>
+If <span class="math inline">\(f(x)=1\)</span>, then we flip the bit value in the second register (with operation <span class="math inline">\(X\)</span>); if <span class="math inline">\(f(x)=0\)</span>, then we do nothing.</p>
+<p>Now, prepare the qubit in the second register in state <span class="math inline">\(|0\rangle-|1\rangle\)</span>, which is an eigenstate of <span class="math inline">\(X\)</span> with eigenvalue <span class="math inline">\(e^{\pi i}=-1\)</span>.
+So whenever <span class="math inline">\(X\)</span> is applied to the second register, the phase factor <span class="math inline">\(-1\)</span> appears in front of the corresponding term in the first register.
+If we prepare the first register in the superposition <span class="math inline">\(|00\rangle+|01\rangle+|10\rangle+|11\rangle\)</span> then the result of applying the above <span class="math inline">\(x\)</span>-controlled-<span class="math inline">\(U\)</span> operation is the entangled state <span class="math inline">\(|00\rangle+|01\rangle+|10\rangle-|11\rangle\)</span>.
+That is, <em>the phase kickback mechanism introduced a relative phase in the equally-weighted superposition of all binary strings of length two</em>.</p>
+<div class="idea">
+<p>This is how we control quantum interference in quantum computation.</p>
+</div>
+<p>We will return to this topic later on, when we discuss quantum evaluation of Boolean functions and quantum algorithms.</p>
+</div>
+<div id="universality-revisited" class="section level3" number="5.7.4">
+<h3><span class="header-section-number">5.7.4</span> Universality revisited</h3>
+<p>We will come across few more gates in this course, but at this stage you already know all the elementary unitary operations that are needed to construct any unitary operation on any number of qubits:</p>
+<ul>
+<li>the Hadamard gate,</li>
+<li>all phase gates, and</li>
+<li>the <span class="math inline">\(\texttt{c-NOT}\)</span></li>
+</ul>
+<p>These gates form a <strong>universal set of gates</strong>: with <span class="math inline">\(O(4^{n}n)\)</span> of these gates, we can construct any <span class="math inline">\(n\)</span>-qubit unitary operation.<a href="#fn71" class="footnote-ref" id="fnref71"><sup>71</sup></a>
+We should mention that there are many universal sets of gates.
+In fact, almost any gate that can entangle two qubits can be used as a universal gate.</p>
+<p>We are particularly interested in any <em>finite</em> universal set of gates (such as the one containing the Hadamard, <span class="math inline">\(P_{\frac{\pi}{4}}\)</span> (the <span class="math inline">\(T\)</span> gate), and the <span class="math inline">\(\texttt{c-NOT}\)</span>), which can approximate any unitary operation on <span class="math inline">\(n\)</span> qubits with arbitrary precision.
+The price to pay is the number of gates — better precision requires more gates.
+We shall elaborate on this later.</p>
+</div>
+<div id="density-operators-and-the-like" class="section level3" number="5.7.5">
+<h3><span class="header-section-number">5.7.5</span> Density operators and the like</h3>
+<p>The existence of entangled states leads to an obvious question: if we cannot attribute a state vector to an individual qubit, then how can we describe its quantum state?
+In the next few lectures we will see that, when we limit our attentions to a part of a larger system, states are not represented by vectors, measurements are not described by orthogonal projections, and evolution is not unitary.
+As a spoiler, here is a dictionary of some of the new concepts that will soon be introduced:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td align="right">state vectors</td>
+<td align="center"><span class="math inline">\(\mapsto\)</span></td>
+<td align="left">density operators</td>
+</tr>
+<tr class="even">
+<td align="right">unitary evolutions</td>
+<td align="center"><span class="math inline">\(\mapsto\)</span></td>
+<td align="left">completely-positive trace-preserving maps</td>
+</tr>
+<tr class="odd">
+<td align="right">orthogonal projectors</td>
+<td align="center"><span class="math inline">\(\mapsto\)</span></td>
+<td align="left">positive operator-valued measures</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="why-qubits-subsystems-and-entanglement" class="section level2" number="5.8">
@@ -787,6 +901,7 @@ This plausibility argument indicates that, for efficient processing of informati
 <li id="fn68"><p>For any state <span class="math inline">\(|\psi\rangle\)</span> of two qubits, the amplitude <span class="math inline">\(\langle\psi_{xy}|\psi\rangle\)</span> can be written as <span class="math inline">\(\langle xy|U^\dagger|\psi\rangle\)</span>, where <span class="math inline">\(U^\dagger\)</span> is such that <span class="math inline">\(|\psi_{xy}\rangle = U|xy\rangle\)</span>.<a href="chapter5.html#fnref68" class="footnote-back">↩︎</a></p></li>
 <li id="fn69"><p><em>Divide et impera</em>, or “divide and conquer”: a good approach to solving problems in mathematics (and in life). Start with smaller circuits, those surrounded by the dashed boxes.<a href="chapter5.html#fnref69" class="footnote-back">↩︎</a></p></li>
 <li id="fn70"><p>We neglect to write the normalisation factors.<a href="chapter5.html#fnref70" class="footnote-back">↩︎</a></p></li>
+<li id="fn71"><p>Recall the big-<span class="math inline">\(O\)</span> asymptotic notation: given a <em>positive</em> function <span class="math inline">\(f(n)\)</span>, we write <span class="math inline">\(O(f(n))\)</span> to mean “bounded above by <span class="math inline">\(c\,f(n)\)</span> for some constant <span class="math inline">\(c &gt; 0\)</span> (for sufficiently large <span class="math inline">\(n\)</span>)”. For example, <span class="math inline">\(15n^2+4n+7\)</span> is <span class="math inline">\(O(n^2)\)</span>.<a href="chapter5.html#fnref71" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

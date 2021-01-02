@@ -79,7 +79,7 @@
 
 \title{Lectures on Quantum Information Science}
 \author{Artur Ekert and Tim Hosgood}
-\date{Last updated: December 31, 2020}
+\date{Last updated: January 02, 2021}
 
 
 \begin{document}
@@ -3756,6 +3756,128 @@ In general, an \(x\)-controlled-\(U\) gate can be defined on two registers of ar
 \hypertarget{phase-kickback}{%
 \subsubsection{Phase kickback}\label{phase-kickback}}
 
+Before moving on to the next section, we first describe a simple ``trick'' --- an unusual way of introducing phase shifts that will be essential for our analysis of quantum algorithms.
+Consider the following circuit.
+
+\begin{circuit}
+
+(Controlled-\(U\) interference).
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-43-1} \end{center}
+
+where \(|u\rangle\) is an \emph{eigenstate} of \(U\) (that is, \(U|u\rangle = e^{i\varphi}|U\rangle\) for some \(\varphi\)).
+
+\end{circuit}
+
+This should look familiar: it is the usual interference circuit, but with the phase gate replaced by a controlled-\(U\) gate, which will mimic the phase gate, as we shall soon see.
+Note that the second qubit is prepared in state \(|u\rangle\), which is \emph{required to be an eigenstate of \(U\)}.
+The circuit effects the following sequence of transformations (omitting the normalisation factors):
+\[
+  \begin{aligned}
+    |0\rangle|u\rangle
+    &\overset{H}{\longmapsto}
+    (|0\rangle+|1\rangle)|u\rangle
+  \\&\quad = |0\rangle|u\rangle + |1\rangle|u\rangle
+  \\&\overset{\texttt{c-}U}{\longmapsto}
+    |0\rangle|u\rangle + |1\rangle U|u\rangle
+  \\&\quad = |0\rangle|u\rangle + e^{i\varphi}|1\rangle|u\rangle
+  \\&\quad = (|0\rangle + e^{i\varphi}|1\rangle) |u\rangle
+  \\&\overset{H}{\longmapsto}
+    \left(
+      \cos\frac{\varphi}{2}|0\rangle
+      - i\sin\frac{\varphi}{2}|1\rangle
+    \right) |u\rangle.
+  \end{aligned}
+\]
+Note that the second qubit does \emph{not} get entangled with the first one: it remains in its original state \(|u\rangle\).
+However, the interaction between the two qubits introduces a phase shift on the first qubit.
+This may look like an unnecessarily complicated way of introducing phase shifts, but, as we shall soon see, this is how quantum computers do it.
+Let me give you a preview of things to come.
+
+Consider the following \(x\)-controlled-\(U\) operation:
+\[
+  \begin{gathered}
+    \left[
+      \begin{array}{cccc}
+        \operatorname{id}& 0 & 0 & 0
+      \\0 & \operatorname{id}& 0 & 0
+      \\0 & 0 & \operatorname{id}& 0
+      \\0 & 0 & 0 & X
+      \end{array}
+    \right]
+  \\[1em]
+    =|00\rangle\langle 00|00\otimes\operatorname{id}
+  \\+ |01\rangle\langle 01|01\otimes\operatorname{id}
+  \\+ |10\rangle\langle 10|10\otimes\operatorname{id}
+  \\+ |11\rangle\langle 11|11\otimes X.
+  \end{gathered}
+\]
+The first register is of size \(2\), and the second register is of size \(1\).
+If the first register is prepared in state \(|11\rangle\), then the qubit in the second register is flipped (by the Pauli bit-flip \(X\)); otherwise, nothing happens.
+This unitary operation is a quantum version of the Boolean function evaluation: it corresponds to the Boolean function
+\[
+  \begin{aligned}
+    f\colon\{0,1\}^2 &\to \{0,1\}
+  \\00&\mapsto0
+  \\01&\mapsto0
+  \\10&\mapsto0
+  \\11&\mapsto1.
+  \end{aligned}
+\]
+If \(f(x)=1\), then we flip the bit value in the second register (with operation \(X\)); if \(f(x)=0\), then we do nothing.
+
+Now, prepare the qubit in the second register in state \(|0\rangle-|1\rangle\), which is an eigenstate of \(X\) with eigenvalue \(e^{\pi i}=-1\).
+So whenever \(X\) is applied to the second register, the phase factor \(-1\) appears in front of the corresponding term in the first register.
+If we prepare the first register in the superposition \(|00\rangle+|01\rangle+|10\rangle+|11\rangle\) then the result of applying the above \(x\)-controlled-\(U\) operation is the entangled state \(|00\rangle+|01\rangle+|10\rangle-|11\rangle\).
+That is, \emph{the phase kickback mechanism introduced a relative phase in the equally-weighted superposition of all binary strings of length two}.
+
+\begin{idea}
+
+This is how we control quantum interference in quantum computation.
+
+\end{idea}
+
+We will return to this topic later on, when we discuss quantum evaluation of Boolean functions and quantum algorithms.
+
+\hypertarget{universality-revisited}{%
+\subsubsection{Universality revisited}\label{universality-revisited}}
+
+We will come across few more gates in this course, but at this stage you already know all the elementary unitary operations that are needed to construct any unitary operation on any number of qubits:
+
+\begin{itemize}
+\tightlist
+\item
+  the Hadamard gate,
+\item
+  all phase gates, and
+\item
+  the \(\texttt{c-NOT}\)
+\end{itemize}
+
+These gates form a \textbf{universal set of gates}: with \(O(4^{n}n)\) of these gates, we can construct any \(n\)-qubit unitary operation.\footnote{Recall the big-\(O\) asymptotic notation: given a \emph{positive} function \(f(n)\), we write \(O(f(n))\) to mean ``bounded above by \(c\,f(n)\) for some constant \(c > 0\) (for sufficiently large \(n\))''. For example, \(15n^2+4n+7\) is \(O(n^2)\).}
+We should mention that there are many universal sets of gates.
+In fact, almost any gate that can entangle two qubits can be used as a universal gate.
+
+We are particularly interested in any \emph{finite} universal set of gates (such as the one containing the Hadamard, \(P_{\frac{\pi}{4}}\) (the \(T\) gate), and the \(\texttt{c-NOT}\)), which can approximate any unitary operation on \(n\) qubits with arbitrary precision.
+The price to pay is the number of gates --- better precision requires more gates.
+We shall elaborate on this later.
+
+\hypertarget{density-operators-and-the-like}{%
+\subsubsection{Density operators and the like}\label{density-operators-and-the-like}}
+
+The existence of entangled states leads to an obvious question: if we cannot attribute a state vector to an individual qubit, then how can we describe its quantum state?
+In the next few lectures we will see that, when we limit our attentions to a part of a larger system, states are not represented by vectors, measurements are not described by orthogonal projections, and evolution is not unitary.
+As a spoiler, here is a dictionary of some of the new concepts that will soon be introduced:
+
+\begin{longtable}[]{@{}rcl@{}}
+\toprule
+\endhead
+state vectors & \(\mapsto\) & density operators\tabularnewline
+unitary evolutions & \(\mapsto\) & completely-positive trace-preserving maps\tabularnewline
+orthogonal projectors & \(\mapsto\) & positive operator-valued measures\tabularnewline
+\bottomrule
+\end{longtable}
+
 \hypertarget{why-qubits-subsystems-and-entanglement}{%
 \subsection{Why qubits, subsystems, and entanglement?}\label{why-qubits-subsystems-and-entanglement}}
 
@@ -4331,14 +4453,14 @@ The \emph{quantum} case, however, is more complicated, because we have both bit-
 In order to protect a qubit against bit-flips (incoherent \(X\) rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
 We take a qubit in some unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), introduce two auxiliary qubits, and encode it into three qubits as
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-43-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-44-1} \end{center}
 
 Suppose that at most one qubit is then flipped (say, the second one).
 The encoded state then becomes \(\alpha|010\rangle + \beta|101\rangle\).
 Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 Instead we introduce another two additional qubits, both in state \(|0\rangle\), and apply the following network:
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-44-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-45-1} \end{center}
 
 We measure the two auxiliary qubits, also known as \textbf{ancilla bits}, and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code.
 The theory behind this network runs as follows.
