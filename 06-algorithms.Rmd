@@ -198,3 +198,65 @@ For this purpose, we ignore everything that happens inside the black box: the Bo
 
 ### Deutsch's algorithm
 
+We start, once more, with the simplest quantum interference circuit:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \phase{\varphi}
+    & \gate{H}
+    & \qw \rstick{$\cos\frac{\varphi}{2}\ket{0} - i\sin\frac{\varphi}{2}\ket{1}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+Suppose you can prepare the input, you can read the output, you _cannot_ see the phase shifter, _but_ you are promised that the phase shifter is set to either $\varphi=0$ or $\varphi=\pi$.
+Can you tell which value $\varphi$ has been set to?
+
+Of course you can!
+
+One way of doing it is to set your input to $\ket{0}$ and check the output: for $\varphi=0$ the output is always $\ket{0}$, and for $\varphi=\pi$ it is always $\ket{1}$.
+A single run of the interference experiment is sufficient to determine the difference.
+The first quantum algorithm, proposed by David Deutsch in 1985, is very much related to this effect, but where the phase setting is determined by the Boolean function evaluation via the phase kick-back.
+
+::: {.scenario data-latex=""}
+We are presented with an oracle that computes some unknown function $f\colon\{0,1\}\to\{0,1\}$.
+Note that there are only four possibilities for what $f$ can be: it could be one of two constant functions (i.e. those where $f(0)=f(1)$), or one of two "balanced" functions (i.e. those where $f(0)\neq f(1)$).
+
+|    | $f(0)$ | $f(1)$ |
+| -: | :----: | :----: |
+| constant | $\mqty{0\\1}$ | $\mqty{0\\1}$ |
+| balanced | $\mqty{0\\1}$ | $\mqty{1\\0}$ |
+
+Our task is to determine whether the function computed by the oracle is constant or balanced using the fewest queries possible.
+:::
+
+Note that we are _not_ asked for the particular values $f(0)$ and $f(1)$, but _only whether the two values are the same or different_.
+Classical intuition tells us that we have to evaluate both $f(0)$ and $f(1)$ and compare them, which involves evaluating $f$ _twice_.
+But, in the quantum setting, we can solve this problem with a _single_ function evaluation, using the following circuit.
+
+:::: {.circuit data-latex=""}
+::: {.circuit_title}
+(Deutsch's).
+:::
+(First register: $1$ qubit. Second register: $1$ qubit.)
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \gate{H}
+    & \qw \rstick{$\begin{cases}0&\mbox{if constant}\\1&\mbox{if balanced}\end{cases}$}
+  \\\lstick{$\ket{-}$}
+    & \qw
+    & \gate{f}
+    & \qw
+    & \qw \rstick{$\ket{-}$}
+  \end{quantikz}
+\end{equation*}
+```
+::::

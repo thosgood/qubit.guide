@@ -436,6 +436,50 @@ In such a setting, the objective is to minimise number of queries to the oracle 
 For this purpose, we ignore everything that happens inside the black box: the Boolean function evaluation counts as just <em>one</em> computational step.</p>
 <div id="deutschs-algorithm" class="section level3" number="6.3.1">
 <h3><span class="header-section-number">6.3.1</span> Deutsch’s algorithm</h3>
+<p>We start, once more, with the simplest quantum interference circuit:</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-51-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Suppose you can prepare the input, you can read the output, you <em>cannot</em> see the phase shifter, <em>but</em> you are promised that the phase shifter is set to either <span class="math inline">\(\varphi=0\)</span> or <span class="math inline">\(\varphi=\pi\)</span>.
+Can you tell which value <span class="math inline">\(\varphi\)</span> has been set to?</p>
+<p>Of course you can!</p>
+<p>One way of doing it is to set your input to <span class="math inline">\(|0\rangle\)</span> and check the output: for <span class="math inline">\(\varphi=0\)</span> the output is always <span class="math inline">\(|0\rangle\)</span>, and for <span class="math inline">\(\varphi=\pi\)</span> it is always <span class="math inline">\(|1\rangle\)</span>.
+A single run of the interference experiment is sufficient to determine the difference.
+The first quantum algorithm, proposed by David Deutsch in 1985, is very much related to this effect, but where the phase setting is determined by the Boolean function evaluation via the phase kick-back.</p>
+<div class="scenario">
+<p>We are presented with an oracle that computes some unknown function <span class="math inline">\(f\colon\{0,1\}\to\{0,1\}\)</span>.
+Note that there are only four possibilities for what <span class="math inline">\(f\)</span> can be: it could be one of two constant functions (i.e. those where <span class="math inline">\(f(0)=f(1)\)</span>), or one of two “balanced” functions (i.e. those where <span class="math inline">\(f(0)\neq f(1)\)</span>).</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right"></th>
+<th align="center"><span class="math inline">\(f(0)\)</span></th>
+<th align="center"><span class="math inline">\(f(1)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">constant</td>
+<td align="center"><span class="math inline">\(\begin{matrix}0\\1\end{matrix}\)</span></td>
+<td align="center"><span class="math inline">\(\begin{matrix}0\\1\end{matrix}\)</span></td>
+</tr>
+<tr class="even">
+<td align="right">balanced</td>
+<td align="center"><span class="math inline">\(\begin{matrix}0\\1\end{matrix}\)</span></td>
+<td align="center"><span class="math inline">\(\begin{matrix}1\\0\end{matrix}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Our task is to determine whether the function computed by the oracle is constant or balanced using the fewest queries possible.</p>
+</div>
+<p>Note that we are <em>not</em> asked for the particular values <span class="math inline">\(f(0)\)</span> and <span class="math inline">\(f(1)\)</span>, but <em>only whether the two values are the same or different</em>.
+Classical intuition tells us that we have to evaluate both <span class="math inline">\(f(0)\)</span> and <span class="math inline">\(f(1)\)</span> and compare them, which involves evaluating <span class="math inline">\(f\)</span> <em>twice</em>.
+But, in the quantum setting, we can solve this problem with a <em>single</em> function evaluation, using the following circuit.</p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(D).</p>
+</div>
+<p>(First register: <span class="math inline">\(1\)</span> qubit. Second register: <span class="math inline">\(1\)</span> qubit.)</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-52-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
 
 </div>
 </div>
