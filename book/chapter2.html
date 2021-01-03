@@ -220,7 +220,18 @@
 <li class="chapter" data-level="5.10" data-path="chapter5.html"><a href="chapter5.html#appendix-tensor-products-in-components"><i class="fa fa-check"></i><b>5.10</b> Appendix: Tensor products in components</a></li>
 <li class="chapter" data-level="5.11" data-path="chapter5.html"><a href="chapter5.html#appendix-the-schmidt-decomposition"><i class="fa fa-check"></i><b>5.11</b> Appendix: The Schmidt decomposition</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="chapter6.html"><a href="chapter6.html#quantum-boolean-function-evaluation"><i class="fa fa-check"></i><b>6.1</b> Quantum Boolean function evaluation</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="chapter6.html"><a href="chapter6.html#example"><i class="fa fa-check"></i><b>6.1.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="chapter6.html"><a href="chapter6.html#phase-kick-back"><i class="fa fa-check"></i><b>6.2</b> Phase kick-back</a></li>
+<li class="chapter" data-level="6.3" data-path="chapter6.html"><a href="chapter6.html#oracles-and-query-complexity"><i class="fa fa-check"></i><b>6.3</b> Oracles and query complexity</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#deutschs-algorithm"><i class="fa fa-check"></i><b>6.3.1</b> Deutsch’s algorithm</a></li>
+</ul></li>
+</ul></li>
 <li class="part"><span><b>II Flowering</b></span></li>
 <li class="chapter" data-level="7" data-path="chapter7.html"><a href="chapter7.html"><i class="fa fa-check"></i><b>7</b> Bell’s theorem</a>
 <ul>
@@ -647,7 +658,7 @@ These three operators, combined with the identity, satisfy a lot of nice formal 
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center"><span class="math inline">\(\operatorname{id}=\begin{bmatrix}1&amp;0\\0&amp;1\end{bmatrix}\)</span></td>
+<td align="center"><span class="math inline">\(\mathbf{1}=\begin{bmatrix}1&amp;0\\0&amp;1\end{bmatrix}\)</span></td>
 <td align="center"><span class="math inline">\(X=\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}\)</span></td>
 <td align="center"><span class="math inline">\(Y=\begin{bmatrix}0&amp;-i\\i&amp;0\end{bmatrix}\)</span></td>
 <td align="center"><span class="math inline">\(Z=\begin{bmatrix}1&amp;0\\1&amp;-1\end{bmatrix}\)</span></td>
@@ -773,7 +784,7 @@ Figure 2.4: Phase gates <span class="math inline">\(P_\alpha\)</span> represent 
 <p>As previously mentioned, the Pauli operator <span class="math inline">\(Z=\sigma_z\)</span> is a special case of a phase gate, and represents rotation by <span class="math inline">\({180}^{\circ}\)</span> (that is, <span class="math inline">\(\pi\)</span> radians), about the <span class="math inline">\(z\)</span>-axis.
 You can also verify that <span class="math inline">\(X=\sigma_x\)</span>, with eigenvectors <span class="math inline">\({(|0\rangle\pm|1\rangle)/\sqrt{2}}\)</span>, represents rotation by <span class="math inline">\({180}^{\circ}\)</span> about the <span class="math inline">\(x\)</span>-axis, and <span class="math inline">\(Y=\sigma_y\)</span>, with eigenvectors <span class="math inline">\({(|0\rangle\pm i|1\rangle)/\sqrt{2}}\)</span>, represents rotation by <span class="math inline">\({180}^{\circ}\)</span> about the <span class="math inline">\(y\)</span>-axis.</p>
 <p>How about the Hadamard gate?
-Like the Pauli operators, it squares to the identity (<span class="math inline">\(H^2=\operatorname{id}\)</span>), which implies that its eigenvalues are <span class="math inline">\(\pm 1\)</span>.
+Like the Pauli operators, it squares to the identity (<span class="math inline">\(H^2=\mathbf{1}\)</span>), which implies that its eigenvalues are <span class="math inline">\(\pm 1\)</span>.
 Thus it will correspond to a rotation by <span class="math inline">\({180}^{\circ}\)</span>.
 But about which axis?
 This time, rather than finding eigenvectors of <span class="math inline">\(H\)</span>, we notice that <span class="math inline">\(HXH=Z\)</span> and <span class="math inline">\(HZH=X\)</span>, thus <span class="math inline">\(H\)</span> must swap <span class="math inline">\(x\)</span>- and <span class="math inline">\(z\)</span>-axes, turning rotations about the <span class="math inline">\(z\)</span>-axis into rotations about the <span class="math inline">\(x\)</span>-axis, and vice versa.
@@ -828,13 +839,13 @@ Can you do that?</p></li>
 <li><p>Derive the identity
 <span class="math display">\[
    (\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma})
-   = (\vec{a}\cdot\vec{b})\operatorname{id}+ i(\vec{a}\times \vec{b})\cdot \vec{\sigma}.
+   = (\vec{a}\cdot\vec{b})\mathbf{1}+ i(\vec{a}\times \vec{b})\cdot \vec{\sigma}.
  \]</span>
 (All you need here are the Pauli matrices’ commutation and anti-commutation relations, but it is instructive to derive the identity using the component notation, and below we give a sketch of how such a derivation would go.)</p>
 <p>First, notice that the products of Pauli matrices can be written succinctly as
 <span class="math display">\[
   \sigma_{i}\sigma_{j}
-  = \delta _{ij}\operatorname{id}+ i\varepsilon_{ijk}\,\sigma _{k},
+  = \delta _{ij}\mathbf{1}+ i\varepsilon_{ijk}\,\sigma _{k},
  \]</span>
 where <span class="math inline">\(\delta_{ij}\)</span> is the Kronecker delta and <span class="math inline">\(\varepsilon_{ijk}\)</span> is the <strong>Levi-Civita symbol</strong>:
 <span class="math display">\[
@@ -869,7 +880,7 @@ The rest is rather straightforward:
 <div class="footnotes">
 <hr />
 <ol start="29">
-<li id="fn29"><p>Recall that matrix <span class="math inline">\(U\)</span> is called <strong>unitary</strong> if <span class="math display">\[U^\dagger U = UU^\dagger = \operatorname{id}\]</span> where the <strong>adjoint</strong> or <strong>Hermitian conjugate</strong> <span class="math inline">\(U^\dagger\)</span> of any matrix <span class="math inline">\(U\)</span> with complex entries <span class="math inline">\(U_{ij}\)</span> is obtained by taking the complex conjugate of every element in the matrix and then interchanging rows and columns (<span class="math inline">\(U^\dagger_{kl}= U^\star_{lk}\)</span>).<a href="chapter2.html#fnref29" class="footnote-back">↩︎</a></p></li>
+<li id="fn29"><p>Recall that matrix <span class="math inline">\(U\)</span> is called <strong>unitary</strong> if <span class="math display">\[U^\dagger U = UU^\dagger = \mathbf{1}\]</span> where the <strong>adjoint</strong> or <strong>Hermitian conjugate</strong> <span class="math inline">\(U^\dagger\)</span> of any matrix <span class="math inline">\(U\)</span> with complex entries <span class="math inline">\(U_{ij}\)</span> is obtained by taking the complex conjugate of every element in the matrix and then interchanging rows and columns (<span class="math inline">\(U^\dagger_{kl}= U^\star_{lk}\)</span>).<a href="chapter2.html#fnref29" class="footnote-back">↩︎</a></p></li>
 <li id="fn30"><p> Here we are talking about <em>isolated</em> systems. As you will soon learn, a larger class of physically admissible operations is described by completely positive maps. It may sound awfully complicated but, as you will soon see, it is actually very simple.<a href="chapter2.html#fnref30" class="footnote-back">↩︎</a></p></li>
 <li id="fn31"><p>We ignore the global phase factor <span class="math inline">\(e^{i\frac{\varphi}{2}}\)</span>.<a href="chapter2.html#fnref31" class="footnote-back">↩︎</a></p></li>
 <li id="fn32"><p>There are infinitely many unitary operations that act as the square root of <span class="math inline">\(\texttt{NOT}\)</span>.<a href="chapter2.html#fnref32" class="footnote-back">↩︎</a></p></li>

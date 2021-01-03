@@ -220,7 +220,18 @@
 <li class="chapter" data-level="5.10" data-path="chapter5.html"><a href="chapter5.html#appendix-tensor-products-in-components"><i class="fa fa-check"></i><b>5.10</b> Appendix: Tensor products in components</a></li>
 <li class="chapter" data-level="5.11" data-path="chapter5.html"><a href="chapter5.html#appendix-the-schmidt-decomposition"><i class="fa fa-check"></i><b>5.11</b> Appendix: The Schmidt decomposition</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="chapter6.html"><a href="chapter6.html#quantum-boolean-function-evaluation"><i class="fa fa-check"></i><b>6.1</b> Quantum Boolean function evaluation</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="chapter6.html"><a href="chapter6.html#example"><i class="fa fa-check"></i><b>6.1.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="chapter6.html"><a href="chapter6.html#phase-kick-back"><i class="fa fa-check"></i><b>6.2</b> Phase kick-back</a></li>
+<li class="chapter" data-level="6.3" data-path="chapter6.html"><a href="chapter6.html#oracles-and-query-complexity"><i class="fa fa-check"></i><b>6.3</b> Oracles and query complexity</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#deutschs-algorithm"><i class="fa fa-check"></i><b>6.3.1</b> Deutsch’s algorithm</a></li>
+</ul></li>
+</ul></li>
 <li class="part"><span><b>II Flowering</b></span></li>
 <li class="chapter" data-level="7" data-path="chapter7.html"><a href="chapter7.html"><i class="fa fa-check"></i><b>7</b> Bell’s theorem</a>
 <ul>
@@ -417,7 +428,7 @@ For example, for <span class="math inline">\(n=3\)</span>,<a href="#fn68" class=
   \end{aligned}
 \]</span>
 A <em>classical</em> register composed of three bits can store <em>only one</em> of these two binary strings at any time; a <em>quantum</em> register composed of three qubits can store <em>both of them</em> in a superposition.</p>
-<p>Indeed, if we start with the state <span class="math inline">\(|011\rangle\)</span> and apply the Hadamard gate to the first qubit (which is the same as applying <span class="math inline">\(H\otimes\operatorname{id}\otimes\operatorname{id}\)</span>), then, given that linear combinations distribute over tensor products, we obtain<a href="#fn69" class="footnote-ref" id="fnref69"><sup>69</sup></a>
+<p>Indeed, if we start with the state <span class="math inline">\(|011\rangle\)</span> and apply the Hadamard gate to the first qubit (which is the same as applying <span class="math inline">\(H\otimes\mathbf{1}\otimes\mathbf{1}\)</span>), then, given that linear combinations distribute over tensor products, we obtain<a href="#fn69" class="footnote-ref" id="fnref69"><sup>69</sup></a>
 <span class="math display">\[
   \begin{aligned}
     |011\rangle
@@ -509,7 +520,7 @@ Figure 5.1: Where <span class="math inline">\(x,y\in\{0,1\}\)</span>, and <span 
 <p>Note that this gate does not admit any tensor product decomposition, but can be written as a sum of tensor products:<a href="#fn73" class="footnote-ref" id="fnref73"><sup>73</sup></a>
 <span class="math display">\[
   \texttt{c-NOT}
-  = |0\rangle\langle 0|\otimes\operatorname{id}+ |1\rangle\langle 1|\otimes X
+  = |0\rangle\langle 0|\otimes\mathbf{1}+ |1\rangle\langle 1|\otimes X
 \]</span>
 where <span class="math inline">\(X\)</span> is the Pauli bit-flip operation.</p>
 <p>The <span class="math inline">\(\texttt{c-NOT}\)</span> gate lets us do many interesting things, and can act in a rather deceptive way.
@@ -605,7 +616,7 @@ Then the part of the circuit in the second dashed box maps the four Bell states 
 Upon performing the standard measurement and learning the values of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, we choose one of the four following transformations depending on these values:
 <span class="math display" id="eq:teleportation-transformations">\[\begin{equation}
   \begin{array}{ll}
-    00 \mapsto \operatorname{id}
+    00 \mapsto \mathbf{1}
     &amp;\quad 01 \mapsto X
   \\[1em]
     10 \mapsto Z
@@ -713,7 +724,7 @@ Figure 5.2: Where <span class="math inline">\(x,y\in\{0,1\}\)</span>.
 </p>
 </div>
 <p>Again, the matrix is written in the computational basis <span class="math inline">\(\{|00\rangle,|01\rangle,|10\rangle,|11\rangle\}\)</span>.
-If we do not specify the phase then we usually assume that <span class="math inline">\(\varphi=\pi\)</span>, in which case we call this operation the <strong>controlled-<span class="math inline">\(Z\)</span> gate</strong>, which acts as <span class="math inline">\(|0\rangle\langle 0|0\otimes\operatorname{id}+ |1\rangle\langle 1|1\otimes Z\)</span>.
+If we do not specify the phase then we usually assume that <span class="math inline">\(\varphi=\pi\)</span>, in which case we call this operation the <strong>controlled-<span class="math inline">\(Z\)</span> gate</strong>, which acts as <span class="math inline">\(|0\rangle\langle 0|0\otimes\mathbf{1}+ |1\rangle\langle 1|1\otimes Z\)</span>.
 Here <span class="math inline">\(Z\)</span> refers again to the Pauli phase-flip <span class="math inline">\(\sigma_z\equiv Z\)</span> operation.</p>
 <p>In order to see the entangling power of the controlled-phase shift gate, consider the following circuit.</p>
 <div class="circuit">
@@ -734,7 +745,7 @@ Here <span class="math inline">\(Z\)</span> refers again to the Pauli phase-flip
 <span class="math display">\[
   \texttt{c-}U
   =
-  |0\rangle\langle 0|0\otimes\operatorname{id}+ |1\rangle\langle 1|1\otimes U
+  |0\rangle\langle 0|0\otimes\mathbf{1}+ |1\rangle\langle 1|1\otimes U
 \]</span>
 where <span class="math inline">\(U\)</span> is an arbitrary single-qubit unitary transformation <span class="math inline">\(U\)</span>.</p>
 <div class="idea">
@@ -811,16 +822,16 @@ Let me give you a preview of things to come.</p>
   \begin{gathered}
     \left[
       \begin{array}{cccc}
-        \operatorname{id}&amp; 0 &amp; 0 &amp; 0
-      \\0 &amp; \operatorname{id}&amp; 0 &amp; 0
-      \\0 &amp; 0 &amp; \operatorname{id}&amp; 0
+        \mathbf{1}&amp; 0 &amp; 0 &amp; 0
+      \\0 &amp; \mathbf{1}&amp; 0 &amp; 0
+      \\0 &amp; 0 &amp; \mathbf{1}&amp; 0
       \\0 &amp; 0 &amp; 0 &amp; X
       \end{array}
     \right]
   \\[1em]
-    =|00\rangle\langle 00|00\otimes\operatorname{id}
-  \\+ |01\rangle\langle 01|01\otimes\operatorname{id}
-  \\+ |10\rangle\langle 10|10\otimes\operatorname{id}
+    =|00\rangle\langle 00|00\otimes\mathbf{1}
+  \\+ |01\rangle\langle 01|01\otimes\mathbf{1}
+  \\+ |10\rangle\langle 10|10\otimes\mathbf{1}
   \\+ |11\rangle\langle 11|11\otimes X.
   \end{gathered}
 \]</span>
@@ -1038,7 +1049,7 @@ Show that the state of the two qubits prior to the measurements is
 <li><p>Show that the four Bell states <span class="math inline">\(\frac{1}{\sqrt2}(|00\rangle\pm|11\rangle)\)</span> and <span class="math inline">\(\frac{1}{\sqrt2}(|01\rangle\pm|10\rangle)\)</span> are eigenvectors of <span class="math inline">\(S\)</span> that form an orthonormal basis in the Hilbert space associated to two qubits.
 Which Bell states span the <em>symmetric subspace</em> (i.e. the space spanned by all eigenvectors with eigenvalue <span class="math inline">\(1\)</span>), and which the <em>antisymmetric</em> one (i.e. that spanned by eigenvectors with eigenvalue <span class="math inline">\(-1\)</span>)?
 Can <span class="math inline">\(S\)</span> have any eigenvalues apart from <span class="math inline">\(\pm1\)</span>?</p></li>
-<li><p>Show that <span class="math inline">\(P_\pm = \frac12(\operatorname{id}\pm S)\)</span> are two orthogonal projectors which form the decomposition of the identity and project on the symmetric and antisymmetric subspaces.
+<li><p>Show that <span class="math inline">\(P_\pm = \frac12(\mathbf{1}\pm S)\)</span> are two orthogonal projectors which form the decomposition of the identity and project on the symmetric and antisymmetric subspaces.
 Decompose the state vector <span class="math inline">\(|a\rangle|b\rangle\)</span> of two qubits into symmetric and antisymmetric components.</p></li>
 <li><p>Consider the quantum circuit below, composed of two Hadamard gates, one controlled-<span class="math inline">\(S\)</span> operation (also known as the <strong>controlled-swap</strong>, or <strong>Fredkin</strong> gate), and the measurement <span class="math inline">\(M\)</span> in the computational basis.
 Suppose that the state vectors <span class="math inline">\(|a\rangle\)</span> and <span class="math inline">\(|b\rangle\)</span> are normalised but <em>not</em> orthogonal to one another.
@@ -1132,7 +1143,7 @@ Multiplication of block matrices works pretty much the same as regular matrix mu
    \left[
    \,
      \begin{array}{c|c}
-       \operatorname{id}&amp; X
+       \mathbf{1}&amp; X
      \\\hline
        Y &amp; Z
      \end{array}
@@ -1141,7 +1152,7 @@ Multiplication of block matrices works pretty much the same as regular matrix mu
    \left[
    \,
      \begin{array}{c|c}
-       \operatorname{id}&amp; Y
+       \mathbf{1}&amp; Y
      \\\hline
        X &amp; Z
      \end{array}

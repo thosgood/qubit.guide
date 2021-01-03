@@ -220,7 +220,18 @@
 <li class="chapter" data-level="5.10" data-path="chapter5.html"><a href="chapter5.html#appendix-tensor-products-in-components"><i class="fa fa-check"></i><b>5.10</b> Appendix: Tensor products in components</a></li>
 <li class="chapter" data-level="5.11" data-path="chapter5.html"><a href="chapter5.html#appendix-the-schmidt-decomposition"><i class="fa fa-check"></i><b>5.11</b> Appendix: The Schmidt decomposition</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="chapter6.html"><a href="chapter6.html#quantum-boolean-function-evaluation"><i class="fa fa-check"></i><b>6.1</b> Quantum Boolean function evaluation</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="chapter6.html"><a href="chapter6.html#example"><i class="fa fa-check"></i><b>6.1.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="chapter6.html"><a href="chapter6.html#phase-kick-back"><i class="fa fa-check"></i><b>6.2</b> Phase kick-back</a></li>
+<li class="chapter" data-level="6.3" data-path="chapter6.html"><a href="chapter6.html#oracles-and-query-complexity"><i class="fa fa-check"></i><b>6.3</b> Oracles and query complexity</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#deutschs-algorithm"><i class="fa fa-check"></i><b>6.3.1</b> Deutsch’s algorithm</a></li>
+</ul></li>
+</ul></li>
 <li class="part"><span><b>II Flowering</b></span></li>
 <li class="chapter" data-level="7" data-path="chapter7.html"><a href="chapter7.html"><i class="fa fa-check"></i><b>7</b> Bell’s theorem</a>
 <ul>
@@ -310,10 +321,10 @@ Some of these things are covered at the end of this chapter.</p>
 <ul>
 <li>phase gate</li>
 <li>Hadamard</li>
-<li>controlled-not</li>
+<li>controlled-<span class="math inline">\(\texttt{NOT}\)</span></li>
 <li>SWAP</li>
 <li>the Hadamard-phase-Hadamard network</li>
-<li>phase “kick-back” induced by controlled-U</li>
+<li>phase “kick-back” induced by controlled-<span class="math inline">\(U\)</span></li>
 <li>phase “kick-back” induced by quantum Boolean function evaluation</li>
 </ul></li>
 <li>Quantum algorithms
@@ -500,14 +511,14 @@ Choosing such states, as we shall see in a moment, is equivalent to choosing a p
 \]</span>
 for any vectors <span class="math inline">\(|v_1\rangle,|v_2\rangle\)</span> and any complex numbers <span class="math inline">\(c_1,c_2\)</span>.
 We will focus mostly on <strong>endomorphisms</strong>, that is, maps from <span class="math inline">\(\mathcal{H}\)</span> to <span class="math inline">\(\mathcal{H}\)</span>, and we will call them <strong>operators</strong>.
-The symbol <span class="math inline">\(\operatorname{id}\)</span> is reserved for the identity operator that maps every element of <span class="math inline">\(\mathcal{H}\)</span> to itself (i.e. <span class="math inline">\(\operatorname{id}|v\rangle=|v\rangle\)</span> for all <span class="math inline">\(|v\rangle\in\mathcal{H}\)</span>).
+The symbol <span class="math inline">\(\mathbf{1}\)</span> is reserved for the identity operator that maps every element of <span class="math inline">\(\mathcal{H}\)</span> to itself (i.e. <span class="math inline">\(\mathbf{1}|v\rangle=|v\rangle\)</span> for all <span class="math inline">\(|v\rangle\in\mathcal{H}\)</span>).
 The product <span class="math inline">\(AB\)</span> of two operators <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> is the operator obtained by first applying <span class="math inline">\(B\)</span> to some ket <span class="math inline">\(|v\rangle\)</span> and then <span class="math inline">\(A\)</span> to the ket which results from applying <span class="math inline">\(B\)</span>:
 <span class="math display">\[
   (AB)|v\rangle = A(B|v\rangle).
 \]</span>
 The order <em>does</em> matter: in general, <span class="math inline">\(AB\neq BA\)</span>.
 In the exceptional case in which <span class="math inline">\(AB=BA\)</span>, one says that these two operators <strong>commute</strong>.
-The inverse of <span class="math inline">\(A\)</span>, written as <span class="math inline">\(A^{-1}\)</span>, is the operator that satisfies <span class="math inline">\(AA^{-1}=\operatorname{id}=A^{-1}A\)</span>.
+The inverse of <span class="math inline">\(A\)</span>, written as <span class="math inline">\(A^{-1}\)</span>, is the operator that satisfies <span class="math inline">\(AA^{-1}=\mathbf{1}=A^{-1}A\)</span>.
 For finite-dimensional spaces, one only needs to check <em>one</em> of these two conditions, since any one of the two implies the other, whereas, on an infinite-dimensional space, <em>both</em> must be checked.
 Finally, given a particular basis, an operator <span class="math inline">\(A\)</span> is uniquely determined by the entries of its matrix, defined by <span class="math inline">\(A_{ij}=\langle i|A|j\rangle\)</span>.
 The <strong>adjoint</strong>, or <strong>Hermitian conjugate</strong>, of <span class="math inline">\(A\)</span>, denoted by <span class="math inline">\(A^\dagger\)</span>, is defined by the relation
@@ -521,7 +532,7 @@ The <strong>adjoint</strong>, or <strong>Hermitian conjugate</strong>, of <span 
 <p>An operator <span class="math inline">\(A\)</span> is said to be</p>
 <ul>
 <li><strong>normal</strong> if <span class="math inline">\(AA^\dagger = A^\dagger A\)</span>,</li>
-<li><strong>unitary</strong> if <span class="math inline">\(AA^\dagger = A^\dagger A = \operatorname{id}\)</span>,</li>
+<li><strong>unitary</strong> if <span class="math inline">\(AA^\dagger = A^\dagger A = \mathbf{1}\)</span>,</li>
 <li><strong>Hermitian</strong> (or <strong>self-adjoint</strong>) if <span class="math inline">\(A^\dagger = A\)</span>.</li>
 </ul>
 <p>Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.
@@ -530,7 +541,7 @@ Note that unitary operators preserve the inner product: given a unitary operator
   \begin{gathered}
     \langle a&#39;|=\langle a|U^\dagger
   \\\langle b&#39;|=\langle b|U^\dagger
-  \\\langle a&#39;|b&#39;\rangle=\langle a|U^\dagger U|b\rangle=\langle a|\operatorname{id}|b\rangle=\langle a|b\rangle.
+  \\\langle a&#39;|b&#39;\rangle=\langle a|U^\dagger U|b\rangle=\langle a|\mathbf{1}|b\rangle=\langle a|b\rangle.
   \end{gathered}
 \]</span>
 Preserving the inner product implies preserving the norm induced by this product, i.e. unit state vectors are mapped to unit state vectors, i.e. <em>unitary operations are the isometries of the Euclidean norm</em>.</p>
@@ -553,14 +564,14 @@ If the vectors <span class="math inline">\(\{|f_i\rangle\}\)</span> also form an
 These are unitary operators which preserve the inner product.
 In particular, if each <span class="math inline">\(|e_i\rangle\)</span> is mapped to <span class="math inline">\(|e_i\rangle\)</span>, then we obtain the identity operator:
 <span class="math display">\[
-  \sum_i|e_i\rangle\langle e_i|=\operatorname{id}.
+  \sum_i|e_i\rangle\langle e_i|=\mathbf{1}.
 \]</span>
 This relation holds for <em>any</em> orthonormal basis, and it is one of the most ubiquitous and useful formulas in quantum theory.
 For example, for any vector <span class="math inline">\(|v\rangle\)</span> and for any orthonormal basis <span class="math inline">\(\{|e_i\rangle\}\)</span>, we have
 <span class="math display">\[
   \begin{aligned}
     |v\rangle
-    &amp;= \operatorname{id}|v\rangle
+    &amp;= \mathbf{1}|v\rangle
   \\&amp;= \sum_i |e_i\rangle\langle e_i|\;|v\rangle
   \\&amp;= \sum_i |e_i\rangle\;\langle e_i|v\rangle
   \\&amp;= \sum_i v_i|e_i\rangle,
@@ -587,12 +598,12 @@ Moreover,
     \operatorname{tr}|b\rangle\langle a|
     &amp;= \sum_k \langle e_k|b\rangle\langle a|e_k\rangle
   \\&amp;= \sum_k \langle a|e_k\rangle\langle e_k|b\rangle
-  \\&amp;= \langle a|\operatorname{id}\rangle|b\rangle
+  \\&amp;= \langle a|\mathbf{1}\rangle|b\rangle
   \\&amp;= \langle a|b\rangle.
   \end{aligned}
 \]</span>
 Here, the second term can be viewed both as the sum of the diagonal elements of <span class="math inline">\(|b\rangle\langle a|\)</span> in the <span class="math inline">\(|e_k\rangle\)</span> basis, and as the sum of the products of two complex numbers <span class="math inline">\(\langle e_k|b\rangle\)</span> and <span class="math inline">\(\langle a|e_k\rangle\)</span>.
-We have used the decomposition of the identity, <span class="math inline">\(\sum_k|e_k\rangle\langle e_k|=\operatorname{id}\)</span>.
+We have used the decomposition of the identity, <span class="math inline">\(\sum_k|e_k\rangle\langle e_k|=\mathbf{1}\)</span>.
 Given that we can decompose the identity by choosing any orthonormal basis, it is clear that the trace does <em>not</em> depend on the choice of the basis.</p>
 </div>
 <div id="some-useful-identities" class="section level3" number="0.1.9">

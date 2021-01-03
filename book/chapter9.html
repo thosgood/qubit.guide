@@ -220,7 +220,18 @@
 <li class="chapter" data-level="5.10" data-path="chapter5.html"><a href="chapter5.html#appendix-tensor-products-in-components"><i class="fa fa-check"></i><b>5.10</b> Appendix: Tensor products in components</a></li>
 <li class="chapter" data-level="5.11" data-path="chapter5.html"><a href="chapter5.html#appendix-the-schmidt-decomposition"><i class="fa fa-check"></i><b>5.11</b> Appendix: The Schmidt decomposition</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="chapter6.html"><a href="chapter6.html#quantum-boolean-function-evaluation"><i class="fa fa-check"></i><b>6.1</b> Quantum Boolean function evaluation</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="chapter6.html"><a href="chapter6.html#example"><i class="fa fa-check"></i><b>6.1.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="chapter6.html"><a href="chapter6.html#phase-kick-back"><i class="fa fa-check"></i><b>6.2</b> Phase kick-back</a></li>
+<li class="chapter" data-level="6.3" data-path="chapter6.html"><a href="chapter6.html#oracles-and-query-complexity"><i class="fa fa-check"></i><b>6.3</b> Oracles and query complexity</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#deutschs-algorithm"><i class="fa fa-check"></i><b>6.3.1</b> Deutsch’s algorithm</a></li>
+</ul></li>
+</ul></li>
 <li class="part"><span><b>II Flowering</b></span></li>
 <li class="chapter" data-level="7" data-path="chapter7.html"><a href="chapter7.html"><i class="fa fa-check"></i><b>7</b> Bell’s theorem</a>
 <ul>
@@ -285,11 +296,11 @@ It may be that the system is part of a composite system that is in an entangled 
 Nevertheless, in either case we are able to make statistical predictions about the outcomes of measurements performed on the system using a more general description of quantum states.</p>
 <p>We have already mentioned that the existence of entangled states begs an obvious question: if we cannot attribute a state vectors to an individual quantum system then how shall we describe its quantum state?
 In this chapter we will introduce an alternate description of quantum states that can be applied both to a composite system and to any of its subsystems.
-Our new mathematical tool is called a <strong>density operator</strong>.<a href="#fn84" class="footnote-ref" id="fnref84"><sup>84</sup></a>
+Our new mathematical tool is called a <strong>density operator</strong>.<a href="#fn85" class="footnote-ref" id="fnref85"><sup>85</sup></a>
 We will start with the density operator as a description of the mixture of quantum states, and will then discuss the partial trace, which is a unique operation that takes care of the reduction of a density operator of a composite system to density operators of its components.</p>
 <div id="definitions" class="section level2" number="9.1">
 <h2><span class="header-section-number">9.1</span> Definitions</h2>
-<p>If you are an impatient mathematically minded person, who feels more comfortable when things are properly defined right from the beginning, here is your definition:<a href="#fn85" class="footnote-ref" id="fnref85"><sup>85</sup></a></p>
+<p>If you are an impatient mathematically minded person, who feels more comfortable when things are properly defined right from the beginning, here is your definition:<a href="#fn86" class="footnote-ref" id="fnref86"><sup>86</sup></a></p>
 <div class="idea">
 <p>A <strong>density operator</strong> <span class="math inline">\(\rho\)</span> on a finite dimensional Hilbert space <span class="math inline">\(\mathcal{H}\)</span> is any non-negative self-adjoint operator with trace equal to one.</p>
 </div>
@@ -303,8 +314,8 @@ Moreover, given two density operators <span class="math inline">\(\rho_1\)</span
   p_1+p_2 = 1.
 \]</span>
 You should check that <span class="math inline">\(\rho\)</span> has all the defining properties of a density matrix, i.e. that it is self-adjoint, non-negative, and that its trace is one.
-This means that density operators form a convex set.<a href="#fn86" class="footnote-ref" id="fnref86"><sup>86</sup></a>
-An important example of a density operator is a rank one projector.<a href="#fn87" class="footnote-ref" id="fnref87"><sup>87</sup></a>
+This means that density operators form a convex set.<a href="#fn87" class="footnote-ref" id="fnref87"><sup>87</sup></a>
+An important example of a density operator is a rank one projector.<a href="#fn88" class="footnote-ref" id="fnref88"><sup>88</sup></a>
 Any quantum state that can be described by the state vector <span class="math inline">\(|\psi\rangle\)</span>, called a <strong>pure state</strong>, can be also described by the density operator <span class="math inline">\(\rho=|\psi\rangle\langle\psi|\)</span>.
 Pure states are the extremal points in the convex set of density operators: they cannot be expressed as a convex sum of other elements in the set.
 In contrast, all other states, called <strong>mixed states</strong>, can be always written as the convex sum of pure states: <span class="math inline">\(\sum_i p_i |\psi_i\rangle\langle\psi_i|\)</span> (<span class="math inline">\(p_i\geqslant 0\)</span> and <span class="math inline">\(\sum_i p_i=1\)</span>).
@@ -314,7 +325,7 @@ Now that we have cleared the mathematical essentials, we will turn to physical a
 <h2><span class="header-section-number">9.2</span> Mixtures</h2>
 <p>Let us start with probability distributions over state vectors.
 Suppose Alice prepares a quantum system and hands it over to Bob who subsequently measures observable <span class="math inline">\(M\)</span>.
-If Alice’s preparation is described by a state vector <span class="math inline">\(|\psi\rangle\)</span>, then, quantum theory declares, the average value of any observable <span class="math inline">\(M\)</span> is given by <span class="math inline">\(\langle\psi|M|\psi\rangle\)</span>, which can be also written as<a href="#fn88" class="footnote-ref" id="fnref88"><sup>88</sup></a>
+If Alice’s preparation is described by a state vector <span class="math inline">\(|\psi\rangle\)</span>, then, quantum theory declares, the average value of any observable <span class="math inline">\(M\)</span> is given by <span class="math inline">\(\langle\psi|M|\psi\rangle\)</span>, which can be also written as<a href="#fn89" class="footnote-ref" id="fnref89"><sup>89</sup></a>
 <span class="math display">\[
   \langle M\rangle = \operatorname{tr}M|\psi\rangle\langle\psi|.
 \]</span>
@@ -326,7 +337,7 @@ We call this situation a <strong>mixture of the states</strong> <span class="mat
 <div class="idea">
 <p>Remember, a mixture of states is very different from a superposition of states: a superposition <em>always</em> yields a definite state vector, whereas a mixture does <em>not</em>, and so must be described by a density operator.</p>
 </div>
-<p>Bob knows the ensemble of states <span class="math inline">\(|\psi_1\rangle,\ldots,|\psi_m\rangle\)</span> and the corresponding probability distribution <span class="math inline">\(p_1,\ldots,p_m\)</span>, and can hence calculate <span class="math inline">\(\langle M\rangle\)</span> as<a href="#fn89" class="footnote-ref" id="fnref89"><sup>89</sup></a>
+<p>Bob knows the ensemble of states <span class="math inline">\(|\psi_1\rangle,\ldots,|\psi_m\rangle\)</span> and the corresponding probability distribution <span class="math inline">\(p_1,\ldots,p_m\)</span>, and can hence calculate <span class="math inline">\(\langle M\rangle\)</span> as<a href="#fn90" class="footnote-ref" id="fnref90"><sup>90</sup></a>
 <span class="math display">\[
   \begin{aligned}
     \langle M\rangle
@@ -387,7 +398,7 @@ Bob’s knowledge of the qubit is now described by the density matrix
    \end{aligned}
  \]</span></p></li>
 <li><p>Suppose Alice picks up any pair of orthogonal states of a qubit and then flips the coin to chose one of them.
-Any two orthonormal states of a qubit, <span class="math inline">\(|u_1\rangle\)</span>, <span class="math inline">\(|u_2\rangle\)</span>, form a complete basis, so the mixture <span class="math inline">\(\frac12|u_1\rangle\langle u_1|+\frac12|u_2\rangle\langle u_2|\)</span> gives <span class="math inline">\(\frac12\operatorname{id}\)</span>.</p></li>
+Any two orthonormal states of a qubit, <span class="math inline">\(|u_1\rangle\)</span>, <span class="math inline">\(|u_2\rangle\)</span>, form a complete basis, so the mixture <span class="math inline">\(\frac12|u_1\rangle\langle u_1|+\frac12|u_2\rangle\langle u_2|\)</span> gives <span class="math inline">\(\frac12\mathbf{1}\)</span>.</p></li>
 </ol>
 <p>As you can see, these three different preparations yield precisely the same density matrix and are hence statistically indistinguishable.
 In general, two different mixtures can be distinguished (in a statistical sense) if and only if they yield different density matrices.
@@ -469,10 +480,10 @@ You cannot tell the difference between the equally weighted mixture of <span cla
 <li><p>If the states <span class="math inline">\(|u_1\rangle,\ldots,|u_m\rangle\)</span> form an orthonormal basis, and each occurs with equal probability <span class="math inline">\(1/m\)</span>, then the resulting density matrix is proportional to the identity:
 <span class="math display">\[
    \frac{1}{m}\sum_{i=1}^m |\psi_i\rangle\langle\psi_i|
-   = \frac{1}{m}\operatorname{id}.
+   = \frac{1}{m}\mathbf{1}.
  \]</span>
 This is called the <strong>maximally mixed state</strong>.
-For qubits, any pair of orthogonal states taken with equal probabilities gives the maximally mixed state <span class="math inline">\(\frac12\operatorname{id}\)</span>.
+For qubits, any pair of orthogonal states taken with equal probabilities gives the maximally mixed state <span class="math inline">\(\frac12\mathbf{1}\)</span>.
 In maximally mixed states, outcomes of <em>any</em> measurement are completely random.</p></li>
 <li><p>It is often convenient to write density operators in terms of projectors on states which are not normalised, incorporating the probabilities into the length of the state vector:
 <span class="math display">\[
@@ -487,14 +498,14 @@ We tend to mark such states with the tilde, e.g. <span class="math inline">\(|\
 <h2><span class="header-section-number">9.4</span> Mixed states of a qubit, and the Bloch sphere</h2>
 <p><strong>!!!TODO!!! mention the part in chapters 2 and 3 where we have already talked about this, and maybe rewrite the following with that in mind</strong></p>
 <p>There is an elegant way to visualise the set of density operators for a qubit.
-The most general Hermitian <span class="math inline">\((2\times 2)\)</span> matrix has four real parameters and can be expanded in the basis composed of the identity and the three Pauli matrices: <span class="math inline">\(\{\operatorname{id}, \sigma_x, \sigma_y, \sigma_z\}\)</span>.
-Since the Pauli matrices are traceless, the coefficient of <span class="math inline">\(\operatorname{id}\)</span> in the expansion of a density matrix <span class="math inline">\(\rho\)</span> must be <span class="math inline">\(\frac12\)</span>, so that <span class="math inline">\(\operatorname{tr}\rho=1\)</span>.
-Thus <span class="math inline">\(\rho\)</span> may be expressed as<a href="#fn90" class="footnote-ref" id="fnref90"><sup>90</sup></a>
+The most general Hermitian <span class="math inline">\((2\times 2)\)</span> matrix has four real parameters and can be expanded in the basis composed of the identity and the three Pauli matrices: <span class="math inline">\(\{\mathbf{1}, \sigma_x, \sigma_y, \sigma_z\}\)</span>.
+Since the Pauli matrices are traceless, the coefficient of <span class="math inline">\(\mathbf{1}\)</span> in the expansion of a density matrix <span class="math inline">\(\rho\)</span> must be <span class="math inline">\(\frac12\)</span>, so that <span class="math inline">\(\operatorname{tr}\rho=1\)</span>.
+Thus <span class="math inline">\(\rho\)</span> may be expressed as<a href="#fn91" class="footnote-ref" id="fnref91"><sup>91</sup></a>
 <span class="math display">\[
   \begin{aligned}
     \rho
-    &amp;= \frac12\left( \operatorname{id}+\vec{s}\cdot\vec{\sigma} \right)
-  \\&amp;= \frac12\left( \operatorname{id}+ s_x\sigma_x + s_y\sigma_y + s_z\sigma_z \right)
+    &amp;= \frac12\left( \mathbf{1}+\vec{s}\cdot\vec{\sigma} \right)
+  \\&amp;= \frac12\left( \mathbf{1}+ s_x\sigma_x + s_y\sigma_y + s_z\sigma_z \right)
   \\&amp;= \frac12
     \begin{bmatrix}
       1 + s_z &amp; s_x - is_y
@@ -514,8 +525,8 @@ The sum of the two eigenvalues of <span class="math inline">\(\rho\)</span> is, 
 \]</span>
 where <span class="math inline">\(s=|\vec{s}|\)</span>.
 It follows that the two eigenvalues of <span class="math inline">\(\rho\)</span> are <span class="math inline">\(\frac12(1\pm s)\)</span>.
-They have to be non-negative, and so <span class="math inline">\(s\)</span>, the length of the Bloch vector, cannot exceed one.<a href="#fn91" class="footnote-ref" id="fnref91"><sup>91</sup></a>
-We can now visualise the convex set of <span class="math inline">\(2\times 2\)</span> density matrices as a unit ball in three-dimensional Euclidean space: the extremal points, which represent pure states, are the points on the boundary, i.e. the surface of the ball (<span class="math inline">\(s=1\)</span>); the maximally mixed state <span class="math inline">\(\operatorname{id}/2\)</span> corresponds to <span class="math inline">\(s=0\)</span>, i.e. the centre of the ball.
+They have to be non-negative, and so <span class="math inline">\(s\)</span>, the length of the Bloch vector, cannot exceed one.<a href="#fn92" class="footnote-ref" id="fnref92"><sup>92</sup></a>
+We can now visualise the convex set of <span class="math inline">\(2\times 2\)</span> density matrices as a unit ball in three-dimensional Euclidean space: the extremal points, which represent pure states, are the points on the boundary, i.e. the surface of the ball (<span class="math inline">\(s=1\)</span>); the maximally mixed state <span class="math inline">\(\mathbf{1}/2\)</span> corresponds to <span class="math inline">\(s=0\)</span>, i.e. the centre of the ball.
 The length of the Bloch vector <span class="math inline">\(s\)</span> can be thought of as a “purity” of a state.</p>
 </div>
 <div id="subsystems-of-entangled-systems" class="section level2" number="9.5">
@@ -577,8 +588,8 @@ In particular, for the maximally entangled states in the <span class="math inlin
   |\psi_{AB}\rangle
   = \frac{1}{\sqrt{d}} \sum_{i}^d |a_i\rangle|b_i\rangle,
 \]</span>
-and the reduced density operators, <span class="math inline">\(\rho_A\)</span> and <span class="math inline">\(\rho_B\)</span>, are the maximally mixed states: <span class="math inline">\(\rho_A=\rho_B=\frac{1}{d}\operatorname{id}\)</span>.
-It follows that the quantum states of individual qubits in any of the Bell states are maximally mixed: their density matrix is <span class="math inline">\(\frac12\operatorname{id}\)</span>.
+and the reduced density operators, <span class="math inline">\(\rho_A\)</span> and <span class="math inline">\(\rho_B\)</span>, are the maximally mixed states: <span class="math inline">\(\rho_A=\rho_B=\frac{1}{d}\mathbf{1}\)</span>.
+It follows that the quantum states of individual qubits in any of the Bell states are maximally mixed: their density matrix is <span class="math inline">\(\frac12\mathbf{1}\)</span>.
 A state such as
 <span class="math display">\[
   \frac{1}{\sqrt 2} \left( |00\rangle + |11\rangle \right)
@@ -603,7 +614,7 @@ The tensor product structure of this <span class="math inline">\((4\times 4)\)</
   \right]
 \]</span>
 where <span class="math inline">\(P,Q,R,S\)</span> are <span class="math inline">\(2\times 2\)</span> sized sub-matrices.
-The two partial traces can then be evaluated as<a href="#fn92" class="footnote-ref" id="fnref92"><sup>92</sup></a>
+The two partial traces can then be evaluated as<a href="#fn93" class="footnote-ref" id="fnref93"><sup>93</sup></a>
 <span class="math display">\[
   \begin{aligned}
     \rho_A
@@ -678,7 +689,7 @@ The joint state can now be expressed as
   \end{aligned}
 \]</span></p>
 <p>If Bob measures in the <span class="math inline">\(|d_i\rangle\)</span> basis then he generates a new mixture of states <span class="math inline">\(|\phi_1\rangle,\ldots|\phi_m\rangle\)</span>, which are the normalised versions of <span class="math inline">\(|\widetilde\phi_1\rangle,\ldots|\widetilde\phi_m\rangle\)</span>, with each <span class="math inline">\(|\phi_k\rangle\)</span> occurring with probability <span class="math inline">\(p_k=\langle\widetilde\phi_k\rangle{\widetilde\phi_k}\)</span>.
-But this new mixture has exactly the same density operator as the previous one:<a href="#fn93" class="footnote-ref" id="fnref93"><sup>93</sup></a>
+But this new mixture has exactly the same density operator as the previous one:<a href="#fn94" class="footnote-ref" id="fnref94"><sup>94</sup></a>
 <span class="math display">\[
   \begin{aligned}
     \sum_j|\widetilde\phi_j\rangle\langle\widetilde\phi_j|
@@ -691,29 +702,29 @@ which is exactly <span class="math inline">\(\rho_A\)</span>.
 So does it really matter whether Bob performs the measurement or not?</p>
 <p><em>It does not.</em></p>
 <p>After all, Alice and Bob may be miles away from each other, and if any of Bob’s actions were to result in something that is physically detectable at the Alice’s location that would amount to instantaneous communication between the two of them.</p>
-<p>From the operational point of view it does not really matter whether the density operator represents our ignorance of the actual state (mixtures) or provides the only description we can have after discarding one part of an entangled state (partial trace).<a href="#fn94" class="footnote-ref" id="fnref94"><sup>94</sup></a>
+<p>From the operational point of view it does not really matter whether the density operator represents our ignorance of the actual state (mixtures) or provides the only description we can have after discarding one part of an entangled state (partial trace).<a href="#fn95" class="footnote-ref" id="fnref95"><sup>95</sup></a>
 In the former case, the system is in some definite pure state but we do not know which.
 In contrast, when the density operator arises from tracing out irrelevant, or unavailable, degrees of freedom, the individual system cannot be thought to be in some definite state of which we are ignorant.
 Philosophy aside, the fact that the two interpretations give exactly the same predictions is useful: switching back and forth between the two pictures often offers additional insights and may even simplify lengthy calculations.</p>
 </div>
 <div id="partial-trace-yet-again" class="section level2" number="9.8">
 <h2><span class="header-section-number">9.8</span> Partial trace, yet again</h2>
-<p>The partial trace is the only map <span class="math inline">\(\rho^{AB}\mapsto\rho^A\)</span> such that<a href="#fn95" class="footnote-ref" id="fnref95"><sup>95</sup></a>
+<p>The partial trace is the only map <span class="math inline">\(\rho^{AB}\mapsto\rho^A\)</span> such that<a href="#fn96" class="footnote-ref" id="fnref96"><sup>96</sup></a>
 <span class="math display">\[
-  \operatorname{tr}X \rho^A = \operatorname{tr}(X\otimes\operatorname{id})\rho^{AB}
+  \operatorname{tr}X \rho^A = \operatorname{tr}(X\otimes\mathbf{1})\rho^{AB}
 \]</span>
 holds for any observable <span class="math inline">\(X\)</span> acting on <span class="math inline">\(\mathcal{A}\)</span>.
 This condition concerns the consistency of statistical predictions.
-Any observable <span class="math inline">\(X\)</span> on <span class="math inline">\(\mathcal{A}\)</span> can be viewed as an observable <span class="math inline">\(X\otimes\operatorname{id}\)</span> on the composite system <span class="math inline">\(\mathcal{AB}\)</span>, where <span class="math inline">\(\operatorname{id}\)</span> is the identity operator acting on <span class="math inline">\(\mathcal{B}\)</span>.
-When constructing <span class="math inline">\(\rho^A\)</span> we had better make sure that for any observable <span class="math inline">\(X\)</span> the average value of <span class="math inline">\(X\)</span> in the state <span class="math inline">\(\rho_A\)</span> is the same as the average value of <span class="math inline">\(X\otimes\operatorname{id}\)</span> in the state <span class="math inline">\(\rho^{AB}\)</span>.
+Any observable <span class="math inline">\(X\)</span> on <span class="math inline">\(\mathcal{A}\)</span> can be viewed as an observable <span class="math inline">\(X\otimes\mathbf{1}\)</span> on the composite system <span class="math inline">\(\mathcal{AB}\)</span>, where <span class="math inline">\(\mathbf{1}\)</span> is the identity operator acting on <span class="math inline">\(\mathcal{B}\)</span>.
+When constructing <span class="math inline">\(\rho^A\)</span> we had better make sure that for any observable <span class="math inline">\(X\)</span> the average value of <span class="math inline">\(X\)</span> in the state <span class="math inline">\(\rho_A\)</span> is the same as the average value of <span class="math inline">\(X\otimes\mathbf{1}\)</span> in the state <span class="math inline">\(\rho^{AB}\)</span>.
 This is indeed the case for the partial trace.</p>
 <p>For example, let us go back to the state in <a href="chapter9.html#eq:bipartite-density">(9.1)</a> and assume that Alice measures some observable <span class="math inline">\(X\)</span> on her part of the system.
-Technically, such an observable can be expressed as <span class="math inline">\(X\otimes \operatorname{id}\)</span>, where <span class="math inline">\(\operatorname{id}\)</span> is the identity operator acting on the subsystem <span class="math inline">\(\mathcal{B}\)</span>.
-The expected value of this observable in the state <span class="math inline">\(|\psi_{AB}\rangle\)</span> is <span class="math inline">\(\operatorname{tr}(X\otimes\operatorname{id})|\psi_{AB}\rangle\langle\psi_{AB}|\)</span>, i.e.
+Technically, such an observable can be expressed as <span class="math inline">\(X\otimes \mathbf{1}\)</span>, where <span class="math inline">\(\mathbf{1}\)</span> is the identity operator acting on the subsystem <span class="math inline">\(\mathcal{B}\)</span>.
+The expected value of this observable in the state <span class="math inline">\(|\psi_{AB}\rangle\)</span> is <span class="math inline">\(\operatorname{tr}(X\otimes\mathbf{1})|\psi_{AB}\rangle\langle\psi_{AB}|\)</span>, i.e.
 <span class="math display">\[
   \begin{aligned}
-    \operatorname{tr}(X\otimes \operatorname{id}) \rho^{AB}
-    &amp;= \operatorname{tr}(X\otimes\operatorname{id}) \left(
+    \operatorname{tr}(X\otimes \mathbf{1}) \rho^{AB}
+    &amp;= \operatorname{tr}(X\otimes\mathbf{1}) \left(
         \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| \otimes |b_i\rangle\langle b_j|
       \right)
   \\&amp;= \sum_{ij} \left[
@@ -735,7 +746,7 @@ as required.</p>
 Such a <span class="math inline">\(|\psi\rangle\)</span> is called a <strong>purification</strong> of <span class="math inline">\(\rho\)</span>.</p></li>
 <li><p>Show that purification is unique up to unitary equivalence.
 Let <span class="math inline">\(|\psi_1\rangle\)</span> and <span class="math inline">\(|\psi_2\rangle\)</span> in <span class="math inline">\(\mathcal{H}_A\otimes\mathcal{H}_B\)</span> be two pure states such that <span class="math inline">\(\operatorname{tr}_B|\psi_1\rangle\langle\psi_1| = \operatorname{tr}_B|\psi_2\rangle\langle\psi_2|\)</span>.
-Show that <span class="math inline">\(|\psi_1\rangle = \operatorname{id}\otimes U|\psi_2\rangle\)</span> for some unitary operator <span class="math inline">\(U\)</span> on <span class="math inline">\(\mathcal{H}_B\)</span>.</p></li>
+Show that <span class="math inline">\(|\psi_1\rangle = \mathbf{1}\otimes U|\psi_2\rangle\)</span> for some unitary operator <span class="math inline">\(U\)</span> on <span class="math inline">\(\mathcal{H}_B\)</span>.</p></li>
 <li><p>Two qubits are in the state described by the density operator <span class="math inline">\(\rho = \rho_A\otimes\rho_B\)</span>.
 What is the partial trace of <span class="math inline">\(\rho\)</span> over each qubit?</p></li>
 <li><p>Write the density matrix of two qubits corresponding to the mixture of the Bell state <span class="math inline">\(\frac{1}{\sqrt 2}\left(|00\rangle + |11\rangle\right)\)</span> with probability <span class="math inline">\(\frac12\)</span> and the maximally mixed state of two qubits (<span class="math inline">\((4\times 4)\)</span> matrix in <span class="math inline">\(\mathcal{H}_A\otimes\mathcal{H}_B\)</span>) with probability <span class="math inline">\(\frac12\)</span>.</p></li>
@@ -747,19 +758,19 @@ What is the partial trace of <span class="math inline">\(\rho\)</span> over each
 </div>
 <div class="footnotes">
 <hr />
-<ol start="84">
-<li id="fn84"><p>If we choose a particular basis, operators become matrices. Here I will use both terms (density <em>operators</em> and density <em>matrices</em>) interchangeably.<a href="chapter9.html#fnref84" class="footnote-back">↩︎</a></p></li>
-<li id="fn85"><p>A self-adjoint matrix <span class="math inline">\(M\)</span> is said to be <strong>non-negative</strong>, or <strong>positive semi-definite</strong>, if <span class="math inline">\(\langle v|M|v\rangle\geqslant 0\)</span> for any vector <span class="math inline">\(|v\rangle\)</span>, or if all of its eigenvalues are non-negative, or if here exists a matrix <span class="math inline">\(A\)</span> such that <span class="math inline">\(M=A^\dagger A\)</span>. (This is called a <strong>Cholesky factorization</strong>.)<a href="chapter9.html#fnref85" class="footnote-back">↩︎</a></p></li>
-<li id="fn86"><p>A subset of a vector space is said to be <strong>convex</strong> if, for any two points in the subset, the straight line segment joining them is also entirely contained inside the subset.<a href="chapter9.html#fnref86" class="footnote-back">↩︎</a></p></li>
-<li id="fn87"><p>The <strong>rank</strong> of a matrix is the number of its non-zero eigenvalues.<a href="chapter9.html#fnref87" class="footnote-back">↩︎</a></p></li>
-<li id="fn88"><p>If <span class="math inline">\(M\)</span> is one of the orthogonal projectors <span class="math inline">\(P_k\)</span> describing the measurement, then the average <span class="math inline">\(\langle P_k\rangle\)</span> is the probability of the outcome <span class="math inline">\(k\)</span> associated with this projector.<a href="chapter9.html#fnref88" class="footnote-back">↩︎</a></p></li>
-<li id="fn89"><p>A pure state can be seen as a special case of a mixed state, where all but one the probabilities <span class="math inline">\(p_i\)</span> equal zero.<a href="chapter9.html#fnref89" class="footnote-back">↩︎</a></p></li>
-<li id="fn90"><p>Physicists usually refer to the Bloch ball as the <strong>Bloch sphere</strong>, although it really is a ball, not a sphere.<a href="chapter9.html#fnref90" class="footnote-back">↩︎</a></p></li>
-<li id="fn91"><p>One might hope that there is an equally nice visualisation of the density operators in higher dimensions. Unfortunately there isn’t.<a href="chapter9.html#fnref91" class="footnote-back">↩︎</a></p></li>
-<li id="fn92"><p>Take any of the Bell states, write its <span class="math inline">\((4\times 4)\)</span>-density matrix explicitly, and then trace over each qubit. In each case you should get the maximally mixed state.<a href="chapter9.html#fnref92" class="footnote-back">↩︎</a></p></li>
-<li id="fn93"><p>The <span class="math inline">\(U_{ij}\)</span> are the components of a unitary matrix, hence <span class="math inline">\(\sum_k U_{ik}U^\star_{jk}=\delta_{ij}\)</span>.<a href="chapter9.html#fnref93" class="footnote-back">↩︎</a></p></li>
-<li id="fn94"><p>The two interpretations of density operators filled volumes of academic papers. The terms <strong>proper mixtures</strong> and <strong>improper mixtures</strong> are used, mostly by philosophers, to describe the statistical mixture and the partial trace approach, respectively.<a href="chapter9.html#fnref94" class="footnote-back">↩︎</a></p></li>
-<li id="fn95"><p>One can repeat the same argument for <span class="math inline">\(\rho^{AB}\mapsto\rho^B\)</span>: the partial trace is the unique map <span class="math inline">\(\rho^{AB}\mapsto\rho^B\)</span> such that <span class="math inline">\(\rho^B\)</span> satisfies <span class="math inline">\(\operatorname{tr}Y\rho^B = \operatorname{tr}(1\otimes Y)\rho^{AB}\)</span> for any observable <span class="math inline">\(Y\)</span> on <span class="math inline">\(\mathcal{B}\)</span>.<a href="chapter9.html#fnref95" class="footnote-back">↩︎</a></p></li>
+<ol start="85">
+<li id="fn85"><p>If we choose a particular basis, operators become matrices. Here I will use both terms (density <em>operators</em> and density <em>matrices</em>) interchangeably.<a href="chapter9.html#fnref85" class="footnote-back">↩︎</a></p></li>
+<li id="fn86"><p>A self-adjoint matrix <span class="math inline">\(M\)</span> is said to be <strong>non-negative</strong>, or <strong>positive semi-definite</strong>, if <span class="math inline">\(\langle v|M|v\rangle\geqslant 0\)</span> for any vector <span class="math inline">\(|v\rangle\)</span>, or if all of its eigenvalues are non-negative, or if here exists a matrix <span class="math inline">\(A\)</span> such that <span class="math inline">\(M=A^\dagger A\)</span>. (This is called a <strong>Cholesky factorization</strong>.)<a href="chapter9.html#fnref86" class="footnote-back">↩︎</a></p></li>
+<li id="fn87"><p>A subset of a vector space is said to be <strong>convex</strong> if, for any two points in the subset, the straight line segment joining them is also entirely contained inside the subset.<a href="chapter9.html#fnref87" class="footnote-back">↩︎</a></p></li>
+<li id="fn88"><p>The <strong>rank</strong> of a matrix is the number of its non-zero eigenvalues.<a href="chapter9.html#fnref88" class="footnote-back">↩︎</a></p></li>
+<li id="fn89"><p>If <span class="math inline">\(M\)</span> is one of the orthogonal projectors <span class="math inline">\(P_k\)</span> describing the measurement, then the average <span class="math inline">\(\langle P_k\rangle\)</span> is the probability of the outcome <span class="math inline">\(k\)</span> associated with this projector.<a href="chapter9.html#fnref89" class="footnote-back">↩︎</a></p></li>
+<li id="fn90"><p>A pure state can be seen as a special case of a mixed state, where all but one the probabilities <span class="math inline">\(p_i\)</span> equal zero.<a href="chapter9.html#fnref90" class="footnote-back">↩︎</a></p></li>
+<li id="fn91"><p>Physicists usually refer to the Bloch ball as the <strong>Bloch sphere</strong>, although it really is a ball, not a sphere.<a href="chapter9.html#fnref91" class="footnote-back">↩︎</a></p></li>
+<li id="fn92"><p>One might hope that there is an equally nice visualisation of the density operators in higher dimensions. Unfortunately there isn’t.<a href="chapter9.html#fnref92" class="footnote-back">↩︎</a></p></li>
+<li id="fn93"><p>Take any of the Bell states, write its <span class="math inline">\((4\times 4)\)</span>-density matrix explicitly, and then trace over each qubit. In each case you should get the maximally mixed state.<a href="chapter9.html#fnref93" class="footnote-back">↩︎</a></p></li>
+<li id="fn94"><p>The <span class="math inline">\(U_{ij}\)</span> are the components of a unitary matrix, hence <span class="math inline">\(\sum_k U_{ik}U^\star_{jk}=\delta_{ij}\)</span>.<a href="chapter9.html#fnref94" class="footnote-back">↩︎</a></p></li>
+<li id="fn95"><p>The two interpretations of density operators filled volumes of academic papers. The terms <strong>proper mixtures</strong> and <strong>improper mixtures</strong> are used, mostly by philosophers, to describe the statistical mixture and the partial trace approach, respectively.<a href="chapter9.html#fnref95" class="footnote-back">↩︎</a></p></li>
+<li id="fn96"><p>One can repeat the same argument for <span class="math inline">\(\rho^{AB}\mapsto\rho^B\)</span>: the partial trace is the unique map <span class="math inline">\(\rho^{AB}\mapsto\rho^B\)</span> such that <span class="math inline">\(\rho^B\)</span> satisfies <span class="math inline">\(\operatorname{tr}Y\rho^B = \operatorname{tr}(1\otimes Y)\rho^{AB}\)</span> for any observable <span class="math inline">\(Y\)</span> on <span class="math inline">\(\mathcal{B}\)</span>.<a href="chapter9.html#fnref96" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

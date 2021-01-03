@@ -1,1 +1,200 @@
 # Quantum algorithms {#chapter6}
+
+> About quantum interference in disguise: Hadamard, function evaluation, Hadamard.
+> Also about the early quantum algorithms and how they deal with querying oracles, searching for a needle in a haystack, and estimating periodicity of certain functions.
+
+**!!!TODO!!!**
+
+
+## Quantum Boolean function evaluation
+
+Classical computers essentially evaluate functions: given $n$-bits of input they produce $m$-bits of output that are uniquely determined by the input; that is, they find the value of
+$$
+  f\colon \{0,1\}^n \to \{0,1\}^m
+$$
+for a particular specified $n$-bit argument.
+A function with an $m$-bit value is equivalent to $m$ Boolean functions, each with a one-bit value, so we may just as well say that the basic task performed by a computer is the evaluation of Boolean functions
+$$
+  f\colon \{0,1\}^n \to  \{0,1\}.
+$$
+_In quantum computation, all elementary operations are reversible_ (unitary), so we compute Boolean functions in a reversible fashion as
+$$
+  \ket{x}\ket{y} \mapsto \ket{x}\ket{y\oplus f(x)}.
+$$
+
+The corresponding circuit diagram (for $n=3$) is shown in Figure \@ref(fig:n-equals-3-circuit-diagram).
+
+(ref:n-equals-3-circuit-diagram-caption) Computing some $f\colon\{0,1\}^3\to\{0,1\}$ in a quantum manner.
+
+```{r n-equals-3-circuit-diagram,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.cap='(ref:n-equals-3-circuit-diagram-caption)'}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=3]{$\ket{x}$}
+    & \ctrl{3}
+    & \qw \rstick[wires=3]{$\ket{x}$}
+  \\[-1em]
+    & \ctrl{2}
+    & \qw
+  \\[-1em]
+    & \ctrl{1}
+    & \qw
+  \\\lstick{$\ket{y}$}
+    & \gate{f}
+    & \qw \rstick{$\ket{y\oplus f(x)}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+Here we use two registers: the first one (counting from the top to the bottom of the circuit diagram) stores the arguments $x$, and the second one the values $f(x)$.
+More precisely, the value $f(x)$ is added bit-wise to the pre-existing binary value $y$ of the second register.
+We usually set $y=0$ to get
+$$
+  \ket{x}\ket{0} \mapsto \ket{x}\ket{f(x)}.
+$$
+
+Quantum Boolean function evaluation is a special case of the generalised $x$-controlled-$U$ on two registers:
+$$
+  \sum_x \proj{x}\otimes U_x
+$$
+where $U_x$ is either the identity $\id$ (when $f(x)=0$) or the bit-flip^[Please: do not confuse the capital $X$, which is the Pauli flip operator $\sigma_x$, with the small $x$, which is a binary string stored in the first register and the argument of our Boolean function $f$.] $X$ (when $f(x)=1$).
+We may also write this as
+$$
+  \sum_x \proj{x}\otimes X^{f(x)}.
+$$
+
+
+### Example
+
+Consider the Boolean function $f\colon\{0,1\}^2\to\{0,1\}$ given by
+$$
+  f(x)
+  =
+  \begin{cases}
+    1 &\mbox{if $x=01$,}
+  \\0 &\mbox{otherwise.}
+  \end{cases}
+$$
+The evaluation $\ket{x}\ket{y} \mapsto \ket{x}\ket{y\oplus f(x)}$ can be tabulated explicitly as
+$$
+  \begin{array}{cc}
+    \ket{00}\ket{0} \mapsto \ket{00}\ket{0}
+    & \ket{00}\ket{1} \mapsto \ket{00}\ket{1}
+  \\\ket{01}\ket{0} \mapsto \ket{01}\ket{1}
+    & \ket{01}\ket{1} \mapsto \ket{01}\ket{0}
+  \\\ket{10}\ket{0} \mapsto \ket{10}\ket{0}
+    & \ket{10}\ket{1} \mapsto \ket{10}\ket{1}
+  \\\ket{11}\ket{0} \mapsto \ket{11}\ket{0}
+    & \ket{11}\ket{1} \mapsto \ket{11}\ket{1}
+  \end{array}
+$$
+and the expression $\sum_x \ket{x}\bra{x}\otimes X^{f(x)}$ becomes
+$$
+  \begin{aligned}
+    &\ket{00}\bra{00}00 \otimes \id
+  \\+ &\ket{01}\bra{01}01 \otimes X
+  \\+ &\ket{10}\bra{10}10 \otimes \id
+  \\+ &\ket{11}\bra{11}11 \otimes \id.
+  \end{aligned}
+$$
+Finally, the matrix form looks like
+$$
+  \left[
+  \,
+    \begin{array}{c|c|c|c}
+      \mqty{1&0\\0&1}
+      & \mqty{0&0\\0&0}
+      & \mqty{0&0\\0&0}
+      & \mqty{0&0\\0&0}
+    \\\hline
+    \mqty{0&0\\0&0}
+      & \mqty{0&1\\1&0}
+      & \mqty{0&0\\0&0}
+      & \mqty{0&0\\0&0}
+    \\\hline
+    \mqty{0&0\\0&0}
+      & \mqty{0&0\\0&0}
+      & \mqty{1&0\\0&1}
+      & \mqty{0&0\\0&0}
+    \\\hline
+    \mqty{0&0\\0&0}
+      & \mqty{0&0\\0&0}
+      & \mqty{0&0\\0&0}
+      & \mqty{1&0\\0&1}
+    \end{array}
+  \,
+  \right]
+$$
+As you can see, this is a diagonal block matrix: a $(4\times 4)$ matrix with $(2\times 2)$ matrices as entries.
+The rows and the columns of the $(4\times 4)$ matrix are labelled by the binary strings $00, 01, 10, 11$, and the $(2\times 2)$ matrices on the diagonal represent operations applied to the qubit in the second register.
+Here all of them are the identity $\id$ except the $(01, 01)$ entry, which represents the bit-flip $X$.
+This is because $f(01)=1$, and $f(x)=0$ for all other binary strings $x$.
+
+
+
+
+
+
+## Phase kick-back
+
+What makes the quantum evaluation of Boolean functions really interesting is its action on a superposition of different inputs $x$.
+For example,
+$$
+  \sum_{x}\ket{x}\ket{0}
+  \longmapsto
+  \sum_{x}\ket{x}\ket{f(x)}
+$$
+produces $f(x)$ for _all_ $x$ in a _single_ run (note that we have dropped the normalisation factor).
+It is more instructive to see the effect of the function evaluation when the qubit in the second register is prepared in the state $\ket{-} = \frac{1}{\sqrt 2}(\ket{0} - \ket{1}$, since then
+$$
+  \sum_x\ket{x}\ket{-}
+  \longmapsto
+  \sum_x (-1)^{f(x)}\ket{x}\ket{-}
+$$
+(as shown in Figure \@ref(fig:n-equals-3-minus-circuit-diagram)).
+Whenever $f(x)=1$, the bit flip $X$ is applied to the qubit in the second register.
+
+(ref:n-equals-3-minus-circuit-diagram-caption) Computing some $f\colon\{0,1\}^3\to\{0,1\}$ with the second-register qubit in state $\ket{-}$.
+
+```{r n-equals-3-minus-circuit-diagram,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.cap='(ref:n-equals-3-minus-circuit-diagram-caption)'}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=3]{\footnotesize$\sum_x\ket{x}$}
+    & \ctrl{3}
+    & \qw \rstick[wires=3]{\footnotesize$\sum_x(-1)^{f(x)}\ket{x}$}
+  \\[-1em]
+    & \ctrl{2}
+    & \qw
+  \\[-1em]
+    & \ctrl{1}
+    & \qw
+  \\\lstick{$\ket{-}$}
+    & \gate{f}
+    & \qw \rstick{$\ket{-}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+The reason for defining the state $\ket{-}$ as we do is that it is the eigenstate of $X$ with eigenvalue $-1$.
+So, due the phase kick-back, whenever $f(x)=1$, the phase factor $-1$ appears in front of the corresponding term $\ket{x}$.
+As you can see, the second register stays in state $\ket{-}$ all the way through the computation --- it is the first register where things happen.
+Let us now see how quantum Boolean function evaluation introduces phase shifts in quantum interference experiments, and how such experiments can be viewed as computations.
+
+
+
+
+
+
+## Oracles and query complexity
+
+The computational power of quantum interference was discovered by counting how many times certain Boolean functions have to be evaluated in order to find the answer to a given problem.
+Imagine a "black box" (also called an **oracle**) that computes some fixed Boolean function, but whose inner workings are unknown to us, and a scenario in which one wants to learn about a given property of the Boolean function but has to "pay" (in energy, or in money!) for each use (often referred to as a **query**) of the box.
+In such a setting, the objective is to minimise number of queries to the oracle while finding out as much information as possible about the function computed by the oracle.
+For this purpose, we ignore everything that happens inside the black box: the Boolean function evaluation counts as just _one_ computational step.
+
+
+
+
+
+
+### Deutsch's algorithm
+

@@ -220,7 +220,18 @@
 <li class="chapter" data-level="5.10" data-path="chapter5.html"><a href="chapter5.html#appendix-tensor-products-in-components"><i class="fa fa-check"></i><b>5.10</b> Appendix: Tensor products in components</a></li>
 <li class="chapter" data-level="5.11" data-path="chapter5.html"><a href="chapter5.html#appendix-the-schmidt-decomposition"><i class="fa fa-check"></i><b>5.11</b> Appendix: The Schmidt decomposition</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="chapter6.html"><a href="chapter6.html#quantum-boolean-function-evaluation"><i class="fa fa-check"></i><b>6.1</b> Quantum Boolean function evaluation</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="chapter6.html"><a href="chapter6.html#example"><i class="fa fa-check"></i><b>6.1.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="chapter6.html"><a href="chapter6.html#phase-kick-back"><i class="fa fa-check"></i><b>6.2</b> Phase kick-back</a></li>
+<li class="chapter" data-level="6.3" data-path="chapter6.html"><a href="chapter6.html#oracles-and-query-complexity"><i class="fa fa-check"></i><b>6.3</b> Oracles and query complexity</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#deutschs-algorithm"><i class="fa fa-check"></i><b>6.3.1</b> Deutsch’s algorithm</a></li>
+</ul></li>
+</ul></li>
 <li class="part"><span><b>II Flowering</b></span></li>
 <li class="chapter" data-level="7" data-path="chapter7.html"><a href="chapter7.html"><i class="fa fa-check"></i><b>7</b> Bell’s theorem</a>
 <ul>
@@ -491,7 +502,7 @@ In fact, when you do all the calculations you obtain <span class="math inline">\
 <h2><span class="header-section-number">3.3</span> The Pauli matrices, algebraically</h2>
 <p>Matrices form a vector space: you can add them, and you can multiply them by a scalar.
 One possible choice of a basis in the vector space of <span class="math inline">\((2\times 2)\)</span> matrices is the set of matrices <span class="math inline">\(\{M_{00},M_{01},M_{10},M_{11}\}\)</span>, where the entries of <span class="math inline">\(M_{ij}\)</span> are all <span class="math inline">\(0\)</span> except for the <span class="math inline">\(ij\)</span>-th entry, which is <span class="math inline">\(1\)</span> (e.g. <span class="math inline">\(M_{01}=\begin{bmatrix}0&amp;1\\0&amp;0\end{bmatrix}\)</span>).
-However, it turns out that there is a different basis which offers lots of insights into the structure of the general single-qubit unitary transformations, namely <span class="math inline">\(\{\operatorname{id},X,Y,Z\}\)</span>, i.e. the identity matrix and the three Pauli matrices.</p>
+However, it turns out that there is a different basis which offers lots of insights into the structure of the general single-qubit unitary transformations, namely <span class="math inline">\(\{\mathbf{1},X,Y,Z\}\)</span>, i.e. the identity matrix and the three Pauli matrices.</p>
 <div class="idea">
 <table>
 <colgroup>
@@ -502,7 +513,7 @@ However, it turns out that there is a different basis which offers lots of insig
 </colgroup>
 <thead>
 <tr class="header">
-<th align="center"><span class="math inline">\(\operatorname{id}\)</span></th>
+<th align="center"><span class="math inline">\(\mathbf{1}\)</span></th>
 <th align="center"><span class="math inline">\(X=\sigma_x\)</span></th>
 <th align="center"><span class="math inline">\(Y=\sigma_y\)</span></th>
 <th align="center"><span class="math inline">\(Z=\sigma_z\)</span></th>
@@ -527,8 +538,8 @@ However, it turns out that there is a different basis which offers lots of insig
       a_0 + a_z &amp; a_x - i a_y
     \\a_x +i a_y &amp;  a_0 - a_z
     \end{bmatrix}
-  \\&amp;= a_0\operatorname{id}+ a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
-  \\&amp;= a_0\operatorname{id}+ \vec{a}\cdot\vec{\sigma}.
+  \\&amp;= a_0\mathbf{1}+ a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
+  \\&amp;= a_0\mathbf{1}+ \vec{a}\cdot\vec{\sigma}.
   \end{aligned}
 \tag{3.2}
 \end{equation}\]</span>
@@ -539,7 +550,7 @@ The algebraic properties of the Pauli matrices can be neatly compacted (see the 
 <p>The <strong>multiplication rule</strong>:
 <span class="math display">\[
   (\vec{a}\cdot\vec{\sigma})\,(\vec{b}\cdot\vec{\sigma})
-  = (\vec{a}\cdot\vec{b})\,\operatorname{id}+ i(\vec{a}\times \vec{b})\cdot\vec{\sigma}.
+  = (\vec{a}\cdot\vec{b})\,\mathbf{1}+ i(\vec{a}\times \vec{b})\cdot\vec{\sigma}.
 \]</span></p>
 </div>
 <p>We also introduce the inner product of two matrices:</p>
@@ -561,16 +572,16 @@ Note, however, that this does <em>not</em> imply that e.g. <span class="math in
 <div id="exercises-1" class="section level3" number="3.3.1">
 <h3><span class="header-section-number">3.3.1</span> Exercises</h3>
 <ol style="list-style-type: decimal">
-<li><p>Show that <span class="math inline">\(\{\operatorname{id},\sigma_x,\sigma_y,\sigma_z\}\)</span> is an orthonormal basis with respect to the Hilbert-Schmidt product in the space of complex <span class="math inline">\((2\times 2)\)</span> matrices.</p></li>
+<li><p>Show that <span class="math inline">\(\{\mathbf{1},\sigma_x,\sigma_y,\sigma_z\}\)</span> is an orthonormal basis with respect to the Hilbert-Schmidt product in the space of complex <span class="math inline">\((2\times 2)\)</span> matrices.</p></li>
 <li><p>Show that the coefficients <span class="math inline">\(a_k\)</span> (for <span class="math inline">\(k=x,y,z\)</span>) in Equation <a href="chapter3.html#eq:pauli">(3.2)</a> are given by the inner product <span class="math inline">\(a_k = (\sigma_k|A) = \frac12\operatorname{tr}\sigma_k A\)</span>.</p></li>
 <li><p>Show that <span class="math inline">\(\frac12\operatorname{tr}(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}\)</span>.</p></li>
 <li><p>Show that any <span class="math inline">\(\vec{n}\cdot\vec{\sigma}\)</span> has eigenvalues are <span class="math inline">\(\pm|\vec{n}|\)</span>.</p></li>
 <li><p>Show that, if <span class="math inline">\(\vec{n}\cdot\vec{m}=0\)</span>, then the operators <span class="math inline">\(\vec{n}\cdot\vec{\sigma}\)</span> and <span class="math inline">\(\vec{m}\cdot\vec{\sigma}\)</span> anticommute.</p></li>
-<li><p>In these notes, we usually deal with matrices that are Hermitian (<span class="math inline">\(A=A^\dagger\)</span>) or unitary (<span class="math inline">\(AA^\dagger=\operatorname{id}\)</span>).
+<li><p>In these notes, we usually deal with matrices that are Hermitian (<span class="math inline">\(A=A^\dagger\)</span>) or unitary (<span class="math inline">\(AA^\dagger=\mathbf{1}\)</span>).
 It is easy to see that, if <span class="math inline">\(A\)</span> is Hermitian, then <span class="math inline">\(a_0\)</span> and the three components of <span class="math inline">\(\vec{a}\)</span> are all real.
 The <span class="math inline">\((2\times 2)\)</span> unitaries are usually parametrised as
 <span class="math display">\[
-   U = e^{i\gamma}\Big(u_0\operatorname{id}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
+   U = e^{i\gamma}\Big(u_0\mathbf{1}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
  \]</span>
 where <span class="math inline">\(e^{i\gamma}\)</span> is an overall multiplicative phase factor, with <span class="math inline">\(\gamma\)</span> real, and <span class="math inline">\(u_0\)</span> and the three components <span class="math inline">\(u_x\)</span>, <span class="math inline">\(u_y\)</span>, <span class="math inline">\(u_z\)</span> are all real numbers.</p>
 <p>Show that the unitarity condition implies that
@@ -586,7 +597,7 @@ and show that the determinant of <span class="math inline">\(U\)</span> is <span
 <p>Geometrically speaking, the group of unitaries <span class="math inline">\(\mathrm{U}(2)\)</span> is a three-dimensional sphere <span class="math inline">\(S^3\)</span> in <span class="math inline">\(\mathbb{R}^4\)</span>.
 We often fix the determinant to be <span class="math inline">\(+1\)</span> and express <span class="math inline">\((2\times 2)\)</span> unitaries as
 <span class="math display">\[
-  U = u_0\operatorname{id}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z).
+  U = u_0\mathbf{1}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z).
 \]</span>
 Such matrices form a popular subgroup of <span class="math inline">\(\mathrm{U}(2)\)</span>; it is called the <strong>special</strong> (meaning the determinant is equal to <span class="math inline">\(1\)</span>) unitary group, and denoted by <span class="math inline">\(\mathrm{SU}(2)\)</span>.
 In quantum theory, any two unitary matrices that differ by some global multiplicative phase factor represent the same physical operation, so we are “allowed to” fix the determinant to be <span class="math inline">\(+1\)</span>, and thus restrict ourselves to considering matrices in <span class="math inline">\(\mathrm{SU}(2)\)</span>.
@@ -609,14 +620,14 @@ is called the <span class="math inline">\(\pi/8\)</span> gate, because of its <s
 <p>Let us write any <span class="math inline">\((2\times 2)\)</span> unitary, up to an overall phase factor, as
 <span class="math display">\[
   U
-  = u_0\operatorname{id}+ i(u_x \sigma_x + u_y \sigma_y + u_z \sigma_z)
-  = u_0\operatorname{id}+ i{\vec{u}}\cdot{\vec{\sigma}}
+  = u_0\mathbf{1}+ i(u_x \sigma_x + u_y \sigma_y + u_z \sigma_z)
+  = u_0\mathbf{1}+ i{\vec{u}}\cdot{\vec{\sigma}}
 \]</span>
 where <span class="math inline">\(u_0^2+|\vec{u}|^2=1\)</span>.
 This additional unitarity restriction allows us to parametrise <span class="math inline">\(u_0\)</span> and <span class="math inline">\(\vec{u}\)</span> in terms of a real unit vector <span class="math inline">\(\vec{n}\)</span>, parallel to <span class="math inline">\(\vec{u}\)</span>, and a real angle <span class="math inline">\(\theta\)</span> so that<a href="#fn49" class="footnote-ref" id="fnref49"><sup>49</sup></a>
 <span class="math display">\[
   U
-  = (\cos\theta)\operatorname{id}+ (i\sin\theta){\vec{n}}\cdot{\vec{\sigma}}.
+  = (\cos\theta)\mathbf{1}+ (i\sin\theta){\vec{n}}\cdot{\vec{\sigma}}.
 \]</span>
 An alternative way of writing this expression is
 <span class="math display">\[
@@ -628,7 +639,7 @@ Indeed, any unitary matrix can always be written in the exponential form as
 <span class="math display">\[
   \begin{aligned}
     e^{iA}
-    &amp;\equiv \operatorname{id}+ iA + \frac{(i A)^2}{1\cdot 2} + \frac{(i A)^3}{1\cdot 2\cdot 3} \ldots
+    &amp;\equiv \mathbf{1}+ iA + \frac{(i A)^2}{1\cdot 2} + \frac{(i A)^3}{1\cdot 2\cdot 3} \ldots
   \\&amp;= \sum_{n=0}^\infty \frac{(i A)^n}{n!}
   \end{aligned}
 \]</span>
@@ -639,16 +650,16 @@ where <span class="math inline">\(A\)</span> is a Hermitian matrix.</p>
 <div id="exercises-2" class="section level3" number="3.4.1">
 <h3><span class="header-section-number">3.4.1</span> Exercises</h3>
 <ol style="list-style-type: decimal">
-<li>Show that, if <span class="math inline">\(A^2=\operatorname{id}\)</span>, then we can turn the power series expansion into a simple expression: for any real <span class="math inline">\(\alpha\)</span>,
+<li>Show that, if <span class="math inline">\(A^2=\mathbf{1}\)</span>, then we can turn the power series expansion into a simple expression: for any real <span class="math inline">\(\alpha\)</span>,
 <span class="math display">\[
    e^{i\alpha A}
-   = (\cos\alpha)\operatorname{id}+ (i\sin\alpha)A.
+   = (\cos\alpha)\mathbf{1}+ (i\sin\alpha)A.
  \]</span></li>
 <li>Using the previous exercise, or otherwise, show that any <span class="math inline">\((2\times 2)\)</span> unitary matrix <span class="math inline">\(U\)</span> can be written, up to an overall multiplicative phase factor, as
 <span class="math display">\[
    U
    = e^{i \theta \vec{n}\cdot\vec{\sigma}}
-   = (\cos\theta)\operatorname{id}+ (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
+   = (\cos\theta)\mathbf{1}+ (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
  \]</span>
 (The argument here is the same as the argument that <span class="math inline">\(e^{i\theta}=\cos\theta +i\sin\theta\)</span>).</li>
 </ol>
@@ -737,11 +748,11 @@ For small values of <span class="math inline">\(\alpha\)</span>, we can write
     \vec{s&#39;}\cdot\vec{\sigma}
     &amp;= U(\vec{s}\cdot\vec{\sigma}) U^\dagger
   \\&amp;= \Big(
-      \operatorname{id}+i\alpha (\vec{n}\cdot\vec{\sigma})+\ldots
+      \mathbf{1}+i\alpha (\vec{n}\cdot\vec{\sigma})+\ldots
     \Big)
     (\vec{s}\cdot\vec{\sigma}) 
     \Big(
-      \operatorname{id}- i\alpha(\vec{n}\cdot\vec{\sigma})+\ldots
+      \mathbf{1}- i\alpha(\vec{n}\cdot\vec{\sigma})+\ldots
     \Big).
   \end{aligned}
 \]</span>
@@ -922,12 +933,12 @@ For time independent Hamiltonians<a href="#fn55" class="footnote-ref" id="fnref5
     = e^{-\frac{i}{\hbar}Ht}.
   \end{gathered}
 \]</span></p>
-<p>Now, to relate this to the earlier parts of this chapter, we note that the Hamiltonian of a qubit can always be written in the form <span class="math inline">\(H = E_0\operatorname{id}+\omega(\vec{n}\cdot\vec{\sigma})\)</span>, hence
+<p>Now, to relate this to the earlier parts of this chapter, we note that the Hamiltonian of a qubit can always be written in the form <span class="math inline">\(H = E_0\mathbf{1}+\omega(\vec{n}\cdot\vec{\sigma})\)</span>, hence
 <span class="math display">\[
   \begin{aligned}
     U(t)
     &amp;= e^{-i\omega t \vec n\cdot\vec\sigma}
-  \\&amp;= (\cos\omega t)\operatorname{id}- (i\sin\omega t)\vec{n}\cdot\vec{\sigma}
+  \\&amp;= (\cos\omega t)\mathbf{1}- (i\sin\omega t)\vec{n}\cdot\vec{\sigma}
   \end{aligned}
 \]</span>
 which is a rotation with angular frequency <span class="math inline">\(\omega\)</span> about the axis defined by the unit vector <span class="math inline">\(\vec n\)</span>.</p>

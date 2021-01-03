@@ -24,8 +24,8 @@
 \renewcommand{\leq}{\leqslant}
 \renewcommand{\geq}{\geqslant}
 
-\definecolor{primary}{RGB}{255,153,0}
-\definecolor{secondary}{RGB}{51,102,136}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
 
 \usepackage{hyperref}
 \hypersetup{linkcolor={secondary},urlcolor={primary}}
@@ -94,7 +94,7 @@
 \providecommand{\proj}[1]{|#1\rangle\langle#1|}
 \providecommand{\av}[1]{\braket{#1}}
 \providecommand{\tr}{\operatorname{tr}}
-\providecommand{\id}{\operatorname{id}}
+\providecommand{\id}{\mathbf{1}}
 \providecommand{\diag}[2]{\begin{bmatrix}#1&0\\0&#2\end{bmatrix}}
 \providecommand{\mqty}[1]{\begin{matrix}#1\end{matrix}}
 \providecommand{\bmqty}[1]{\begin{bmatrix}#1\end{bmatrix}}
@@ -160,13 +160,13 @@ Some of these things are covered at the end of this chapter.
   \item
     Hadamard
   \item
-    controlled-not
+    controlled-\(\texttt{NOT}\)
   \item
     SWAP
   \item
     the Hadamard-phase-Hadamard network
   \item
-    phase ``kick-back'' induced by controlled-U
+    phase ``kick-back'' induced by controlled-\(U\)
   \item
     phase ``kick-back'' induced by quantum Boolean function evaluation
   \end{itemize}
@@ -393,14 +393,14 @@ A \textbf{linear map} between two vector spaces \(\mathcal{H}\) and \(\mathcal{K
 \]
 for any vectors \(|v_1\rangle,|v_2\rangle\) and any complex numbers \(c_1,c_2\).
 We will focus mostly on \textbf{endomorphisms}, that is, maps from \(\mathcal{H}\) to \(\mathcal{H}\), and we will call them \textbf{operators}.
-The symbol \(\operatorname{id}\) is reserved for the identity operator that maps every element of \(\mathcal{H}\) to itself (i.e.~\(\operatorname{id}|v\rangle=|v\rangle\) for all \(|v\rangle\in\mathcal{H}\)).
+The symbol \(\mathbf{1}\) is reserved for the identity operator that maps every element of \(\mathcal{H}\) to itself (i.e.~\(\mathbf{1}|v\rangle=|v\rangle\) for all \(|v\rangle\in\mathcal{H}\)).
 The product \(AB\) of two operators \(A\) and \(B\) is the operator obtained by first applying \(B\) to some ket \(|v\rangle\) and then \(A\) to the ket which results from applying \(B\):
 \[
   (AB)|v\rangle = A(B|v\rangle).
 \]
 The order \emph{does} matter: in general, \(AB\neq BA\).
 In the exceptional case in which \(AB=BA\), one says that these two operators \textbf{commute}.
-The inverse of \(A\), written as \(A^{-1}\), is the operator that satisfies \(AA^{-1}=\operatorname{id}=A^{-1}A\).
+The inverse of \(A\), written as \(A^{-1}\), is the operator that satisfies \(AA^{-1}=\mathbf{1}=A^{-1}A\).
 For finite-dimensional spaces, one only needs to check \emph{one} of these two conditions, since any one of the two implies the other, whereas, on an infinite-dimensional space, \emph{both} must be checked.
 Finally, given a particular basis, an operator \(A\) is uniquely determined by the entries of its matrix, defined by \(A_{ij}=\langle i|A|j\rangle\).
 The \textbf{adjoint}, or \textbf{Hermitian conjugate}, of \(A\), denoted by \(A^\dagger\), is defined by the relation
@@ -419,7 +419,7 @@ An operator \(A\) is said to be
 \item
   \textbf{normal} if \(AA^\dagger = A^\dagger A\),
 \item
-  \textbf{unitary} if \(AA^\dagger = A^\dagger A = \operatorname{id}\),
+  \textbf{unitary} if \(AA^\dagger = A^\dagger A = \mathbf{1}\),
 \item
   \textbf{Hermitian} (or \textbf{self-adjoint}) if \(A^\dagger = A\).
 \end{itemize}
@@ -430,7 +430,7 @@ Note that unitary operators preserve the inner product: given a unitary operator
   \begin{gathered}
     \langle a'|=\langle a|U^\dagger
   \\\langle b'|=\langle b|U^\dagger
-  \\\langle a'|b'\rangle=\langle a|U^\dagger U|b\rangle=\langle a|\operatorname{id}|b\rangle=\langle a|b\rangle.
+  \\\langle a'|b'\rangle=\langle a|U^\dagger U|b\rangle=\langle a|\mathbf{1}|b\rangle=\langle a|b\rangle.
   \end{gathered}
 \]
 Preserving the inner product implies preserving the norm induced by this product, i.e.~unit state vectors are mapped to unit state vectors, i.e.~\emph{unitary operations are the isometries of the Euclidean norm}.
@@ -460,14 +460,14 @@ If the vectors \(\{|f_i\rangle\}\) also form an orthonormal basis then the opera
 These are unitary operators which preserve the inner product.
 In particular, if each \(|e_i\rangle\) is mapped to \(|e_i\rangle\), then we obtain the identity operator:
 \[
-  \sum_i|e_i\rangle\langle e_i|=\operatorname{id}.
+  \sum_i|e_i\rangle\langle e_i|=\mathbf{1}.
 \]
 This relation holds for \emph{any} orthonormal basis, and it is one of the most ubiquitous and useful formulas in quantum theory.
 For example, for any vector \(|v\rangle\) and for any orthonormal basis \(\{|e_i\rangle\}\), we have
 \[
   \begin{aligned}
     |v\rangle
-    &= \operatorname{id}|v\rangle
+    &= \mathbf{1}|v\rangle
   \\&= \sum_i |e_i\rangle\langle e_i|\;|v\rangle
   \\&= \sum_i |e_i\rangle\;\langle e_i|v\rangle
   \\&= \sum_i v_i|e_i\rangle,
@@ -495,12 +495,12 @@ Moreover,
     \operatorname{tr}|b\rangle\langle a|
     &= \sum_k \langle e_k|b\rangle\langle a|e_k\rangle
   \\&= \sum_k \langle a|e_k\rangle\langle e_k|b\rangle
-  \\&= \langle a|\operatorname{id}\rangle|b\rangle
+  \\&= \langle a|\mathbf{1}\rangle|b\rangle
   \\&= \langle a|b\rangle.
   \end{aligned}
 \]
 Here, the second term can be viewed both as the sum of the diagonal elements of \(|b\rangle\langle a|\) in the \(|e_k\rangle\) basis, and as the sum of the products of two complex numbers \(\langle e_k|b\rangle\) and \(\langle a|e_k\rangle\).
-We have used the decomposition of the identity, \(\sum_k|e_k\rangle\langle e_k|=\operatorname{id}\).
+We have used the decomposition of the identity, \(\sum_k|e_k\rangle\langle e_k|=\mathbf{1}\).
 Given that we can decompose the identity by choosing any orthonormal basis, it is clear that the trace does \emph{not} depend on the choice of the basis.
 
 \hypertarget{some-useful-identities}{%
@@ -1390,7 +1390,7 @@ Thus any computational step \(U\) of this machine can be described by a matrix w
   \end{bmatrix}.
 \]
 The matrix element \(U_{lk}\) represents the amplitude of transition from state \(|k\rangle\) to state \(|l\rangle\) (again, watch the order of indices).
-To be clear, the entries in this matrix are not any random complex numbers: their moduli squared represent transition probabilities, which in turn implies that such matrices must be \textbf{unitary}.\footnote{Recall that matrix \(U\) is called \textbf{unitary} if \[U^\dagger U = UU^\dagger = \operatorname{id}\] where the \textbf{adjoint} or \textbf{Hermitian conjugate} \(U^\dagger\) of any matrix \(U\) with complex entries \(U_{ij}\) is obtained by taking the complex conjugate of every element in the matrix and then interchanging rows and columns (\(U^\dagger_{kl}= U^\star_{lk}\)).}
+To be clear, the entries in this matrix are not any random complex numbers: their moduli squared represent transition probabilities, which in turn implies that such matrices must be \textbf{unitary}.\footnote{Recall that matrix \(U\) is called \textbf{unitary} if \[U^\dagger U = UU^\dagger = \mathbf{1}\] where the \textbf{adjoint} or \textbf{Hermitian conjugate} \(U^\dagger\) of any matrix \(U\) with complex entries \(U_{ij}\) is obtained by taking the complex conjugate of every element in the matrix and then interchanging rows and columns (\(U^\dagger_{kl}= U^\star_{lk}\)).}
 
 We can also describe \(U\) by drawing a diagram, which contains exactly the same information as the matrix representation, but just in a different form:
 
@@ -1788,7 +1788,7 @@ Phase-flip\strut
 \midrule
 \endhead
 \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.20}}\centering
-\(\operatorname{id}=\begin{bmatrix}1&0\\0&1\end{bmatrix}\)\strut
+\(\mathbf{1}=\begin{bmatrix}1&0\\0&1\end{bmatrix}\)\strut
 \end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.20}}\centering
 \(X=\begin{bmatrix}0&1\\1&0\end{bmatrix}\)\strut
 \end{minipage} & \begin{minipage}[t]{(\columnwidth - 3\tabcolsep) * \real{0.35}}\centering
@@ -1951,7 +1951,7 @@ As previously mentioned, the Pauli operator \(Z=\sigma_z\) is a special case of 
 You can also verify that \(X=\sigma_x\), with eigenvectors \({(|0\rangle\pm|1\rangle)/\sqrt{2}}\), represents rotation by \({180}^{\circ}\) about the \(x\)-axis, and \(Y=\sigma_y\), with eigenvectors \({(|0\rangle\pm i|1\rangle)/\sqrt{2}}\), represents rotation by \({180}^{\circ}\) about the \(y\)-axis.
 
 How about the Hadamard gate?
-Like the Pauli operators, it squares to the identity (\(H^2=\operatorname{id}\)), which implies that its eigenvalues are \(\pm 1\).
+Like the Pauli operators, it squares to the identity (\(H^2=\mathbf{1}\)), which implies that its eigenvalues are \(\pm 1\).
 Thus it will correspond to a rotation by \({180}^{\circ}\).
 But about which axis?
 This time, rather than finding eigenvectors of \(H\), we notice that \(HXH=Z\) and \(HZH=X\), thus \(H\) must swap \(x\)- and \(z\)-axes, turning rotations about the \(z\)-axis into rotations about the \(x\)-axis, and vice versa.
@@ -2021,14 +2021,14 @@ For more details on all the above, see \protect\hyperlink{chapter3}{Chapter 3}.
   Derive the identity
   \[
      (\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma})
-     = (\vec{a}\cdot\vec{b})\operatorname{id}+ i(\vec{a}\times \vec{b})\cdot \vec{\sigma}.
+     = (\vec{a}\cdot\vec{b})\mathbf{1}+ i(\vec{a}\times \vec{b})\cdot \vec{\sigma}.
    \]
   (All you need here are the Pauli matrices' commutation and anti-commutation relations, but it is instructive to derive the identity using the component notation, and below we give a sketch of how such a derivation would go.)
 
   First, notice that the products of Pauli matrices can be written succinctly as
   \[
     \sigma_{i}\sigma_{j}
-    = \delta _{ij}\operatorname{id}+ i\varepsilon_{ijk}\,\sigma _{k},
+    = \delta _{ij}\mathbf{1}+ i\varepsilon_{ijk}\,\sigma _{k},
    \]
   where \(\delta_{ij}\) is the Kronecker delta and \(\varepsilon_{ijk}\) is the \textbf{Levi-Civita symbol}:
   \[
@@ -2319,14 +2319,14 @@ In fact, when you do all the calculations you obtain \(ie^{i\frac{\varphi_0+\var
 
 Matrices form a vector space: you can add them, and you can multiply them by a scalar.
 One possible choice of a basis in the vector space of \((2\times 2)\) matrices is the set of matrices \(\{M_{00},M_{01},M_{10},M_{11}\}\), where the entries of \(M_{ij}\) are all \(0\) except for the \(ij\)-th entry, which is \(1\) (e.g.~\(M_{01}=\begin{bmatrix}0&1\\0&0\end{bmatrix}\)).
-However, it turns out that there is a different basis which offers lots of insights into the structure of the general single-qubit unitary transformations, namely \(\{\operatorname{id},X,Y,Z\}\), i.e.~the identity matrix and the three Pauli matrices.
+However, it turns out that there is a different basis which offers lots of insights into the structure of the general single-qubit unitary transformations, namely \(\{\mathbf{1},X,Y,Z\}\), i.e.~the identity matrix and the three Pauli matrices.
 
 \begin{idea}
 
 \begin{longtable}[]{@{}cccc@{}}
 \toprule
 \begin{minipage}[b]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
-\(\operatorname{id}\)\strut
+\(\mathbf{1}\)\strut
 \end{minipage} & \begin{minipage}[b]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
 \(X=\sigma_x\)\strut
 \end{minipage} & \begin{minipage}[b]{(\columnwidth - 3\tabcolsep) * \real{0.25}}\centering
@@ -2360,8 +2360,8 @@ Any \((2\times 2)\) complex matrix \(A\) has a unique expansion in the form
       a_0 + a_z & a_x - i a_y
     \\a_x +i a_y &  a_0 - a_z
     \end{bmatrix}
-  \\&= a_0\operatorname{id}+ a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
-  \\&= a_0\operatorname{id}+ \vec{a}\cdot\vec{\sigma}.
+  \\&= a_0\mathbf{1}+ a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
+  \\&= a_0\mathbf{1}+ \vec{a}\cdot\vec{\sigma}.
   \end{aligned}
 \label{eq:pauli}
 \end{equation}
@@ -2372,7 +2372,7 @@ The algebraic properties of the Pauli matrices can be neatly compacted (see the 
 The \textbf{multiplication rule}:
 \[
   (\vec{a}\cdot\vec{\sigma})\,(\vec{b}\cdot\vec{\sigma})
-  = (\vec{a}\cdot\vec{b})\,\operatorname{id}+ i(\vec{a}\times \vec{b})\cdot\vec{\sigma}.
+  = (\vec{a}\cdot\vec{b})\,\mathbf{1}+ i(\vec{a}\times \vec{b})\cdot\vec{\sigma}.
 \]
 
 We also introduce the inner product of two matrices:
@@ -2398,7 +2398,7 @@ Note, however, that this does \emph{not} imply that e.g.~\(\operatorname{tr}(ABC
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  Show that \(\{\operatorname{id},\sigma_x,\sigma_y,\sigma_z\}\) is an orthonormal basis with respect to the Hilbert-Schmidt product in the space of complex \((2\times 2)\) matrices.
+  Show that \(\{\mathbf{1},\sigma_x,\sigma_y,\sigma_z\}\) is an orthonormal basis with respect to the Hilbert-Schmidt product in the space of complex \((2\times 2)\) matrices.
 \item
   Show that the coefficients \(a_k\) (for \(k=x,y,z\)) in Equation \eqref{eq:pauli} are given by the inner product \(a_k = (\sigma_k|A) = \frac12\operatorname{tr}\sigma_k A\).
 \item
@@ -2408,11 +2408,11 @@ Note, however, that this does \emph{not} imply that e.g.~\(\operatorname{tr}(ABC
 \item
   Show that, if \(\vec{n}\cdot\vec{m}=0\), then the operators \(\vec{n}\cdot\vec{\sigma}\) and \(\vec{m}\cdot\vec{\sigma}\) anticommute.
 \item
-  In these notes, we usually deal with matrices that are Hermitian (\(A=A^\dagger\)) or unitary (\(AA^\dagger=\operatorname{id}\)).
+  In these notes, we usually deal with matrices that are Hermitian (\(A=A^\dagger\)) or unitary (\(AA^\dagger=\mathbf{1}\)).
   It is easy to see that, if \(A\) is Hermitian, then \(a_0\) and the three components of \(\vec{a}\) are all real.
   The \((2\times 2)\) unitaries are usually parametrised as
   \[
-     U = e^{i\gamma}\Big(u_0\operatorname{id}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
+     U = e^{i\gamma}\Big(u_0\mathbf{1}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
    \]
   where \(e^{i\gamma}\) is an overall multiplicative phase factor, with \(\gamma\) real, and \(u_0\) and the three components \(u_x\), \(u_y\), \(u_z\) are all real numbers.
 
@@ -2429,7 +2429,7 @@ Note, however, that this does \emph{not} imply that e.g.~\(\operatorname{tr}(ABC
 Geometrically speaking, the group of unitaries \(\mathrm{U}(2)\) is a three-dimensional sphere \(S^3\) in \(\mathbb{R}^4\).
 We often fix the determinant to be \(+1\) and express \((2\times 2)\) unitaries as
 \[
-  U = u_0\operatorname{id}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z).
+  U = u_0\mathbf{1}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z).
 \]
 Such matrices form a popular subgroup of \(\mathrm{U}(2)\); it is called the \textbf{special} (meaning the determinant is equal to \(1\)) unitary group, and denoted by \(\mathrm{SU}(2)\).
 In quantum theory, any two unitary matrices that differ by some global multiplicative phase factor represent the same physical operation, so we are ``allowed to'' fix the determinant to be \(+1\), and thus restrict ourselves to considering matrices in \(\mathrm{SU}(2)\).
@@ -2453,14 +2453,14 @@ is called the \(\pi/8\) gate, because of its \(\mathrm{SU}(2)\) form.
 Let us write any \((2\times 2)\) unitary, up to an overall phase factor, as
 \[
   U
-  = u_0\operatorname{id}+ i(u_x \sigma_x + u_y \sigma_y + u_z \sigma_z)
-  = u_0\operatorname{id}+ i{\vec{u}}\cdot{\vec{\sigma}}
+  = u_0\mathbf{1}+ i(u_x \sigma_x + u_y \sigma_y + u_z \sigma_z)
+  = u_0\mathbf{1}+ i{\vec{u}}\cdot{\vec{\sigma}}
 \]
 where \(u_0^2+|\vec{u}|^2=1\).
 This additional unitarity restriction allows us to parametrise \(u_0\) and \(\vec{u}\) in terms of a real unit vector \(\vec{n}\), parallel to \(\vec{u}\), and a real angle \(\theta\) so that\footnote{As you can see, we often make progress and gain insights simply by choosing a convenient parametrisation.}
 \[
   U
-  = (\cos\theta)\operatorname{id}+ (i\sin\theta){\vec{n}}\cdot{\vec{\sigma}}.
+  = (\cos\theta)\mathbf{1}+ (i\sin\theta){\vec{n}}\cdot{\vec{\sigma}}.
 \]
 An alternative way of writing this expression is
 \[
@@ -2472,7 +2472,7 @@ Indeed, any unitary matrix can always be written in the exponential form as
 \[
   \begin{aligned}
     e^{iA}
-    &\equiv \operatorname{id}+ iA + \frac{(i A)^2}{1\cdot 2} + \frac{(i A)^3}{1\cdot 2\cdot 3} \ldots
+    &\equiv \mathbf{1}+ iA + \frac{(i A)^2}{1\cdot 2} + \frac{(i A)^3}{1\cdot 2\cdot 3} \ldots
   \\&= \sum_{n=0}^\infty \frac{(i A)^n}{n!}
   \end{aligned}
 \]
@@ -2487,17 +2487,17 @@ Writing unitary matrices in the form \(e^{iA}\) is analogous to writing complex 
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Show that, if \(A^2=\operatorname{id}\), then we can turn the power series expansion into a simple expression: for any real \(\alpha\),
+  Show that, if \(A^2=\mathbf{1}\), then we can turn the power series expansion into a simple expression: for any real \(\alpha\),
   \[
      e^{i\alpha A}
-     = (\cos\alpha)\operatorname{id}+ (i\sin\alpha)A.
+     = (\cos\alpha)\mathbf{1}+ (i\sin\alpha)A.
    \]
 \item
   Using the previous exercise, or otherwise, show that any \((2\times 2)\) unitary matrix \(U\) can be written, up to an overall multiplicative phase factor, as
   \[
      U
      = e^{i \theta \vec{n}\cdot\vec{\sigma}}
-     = (\cos\theta)\operatorname{id}+ (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
+     = (\cos\theta)\mathbf{1}+ (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
    \]
   (The argument here is the same as the argument that \(e^{i\theta}=\cos\theta +i\sin\theta\)).
 \end{enumerate}
@@ -2594,11 +2594,11 @@ For small values of \(\alpha\), we can write
     \vec{s'}\cdot\vec{\sigma}
     &= U(\vec{s}\cdot\vec{\sigma}) U^\dagger
   \\&= \Big(
-      \operatorname{id}+i\alpha (\vec{n}\cdot\vec{\sigma})+\ldots
+      \mathbf{1}+i\alpha (\vec{n}\cdot\vec{\sigma})+\ldots
     \Big)
     (\vec{s}\cdot\vec{\sigma}) 
     \Big(
-      \operatorname{id}- i\alpha(\vec{n}\cdot\vec{\sigma})+\ldots
+      \mathbf{1}- i\alpha(\vec{n}\cdot\vec{\sigma})+\ldots
     \Big).
   \end{aligned}
 \]
@@ -2814,12 +2814,12 @@ For time independent Hamiltonians\footnote{That is, where \(|\psi(t)\rangle=|\ps
   \end{gathered}
 \]
 
-Now, to relate this to the earlier parts of this chapter, we note that the Hamiltonian of a qubit can always be written in the form \(H = E_0\operatorname{id}+\omega(\vec{n}\cdot\vec{\sigma})\), hence
+Now, to relate this to the earlier parts of this chapter, we note that the Hamiltonian of a qubit can always be written in the form \(H = E_0\mathbf{1}+\omega(\vec{n}\cdot\vec{\sigma})\), hence
 \[
   \begin{aligned}
     U(t)
     &= e^{-i\omega t \vec n\cdot\vec\sigma}
-  \\&= (\cos\omega t)\operatorname{id}- (i\sin\omega t)\vec{n}\cdot\vec{\sigma}
+  \\&= (\cos\omega t)\mathbf{1}- (i\sin\omega t)\vec{n}\cdot\vec{\sigma}
   \end{aligned}
 \]
 which is a rotation with angular frequency \(\omega\) about the axis defined by the unit vector \(\vec n\).
@@ -2960,7 +2960,7 @@ So far we have identified measurements with orthonormal bases, or, if you wish, 
 \item
   The \textbf{completeness} condition:
   \[
-      \sum_k|e_k\rangle\langle e_k| = \operatorname{id}
+      \sum_k|e_k\rangle\langle e_k| = \mathbf{1}
     \]
   i.e.~\emph{any} vector in \(\mathcal{H}\) can be expressed as the sum of orthogonal projections on \(|e_k\rangle\).
 \end{itemize}
@@ -2971,7 +2971,7 @@ Given a quantum system in state \(|\psi\rangle\) such that \(|\psi\rangle = \sum
 \[
   \begin{aligned}
     |\psi\rangle
-    &= \operatorname{id}|\psi\rangle
+    &= \mathbf{1}|\psi\rangle
   \\&= \sum_k |e_k\rangle\langle e_k| |\psi\rangle
   \\&= \sum_k |e_k\rangle\langle e_k|\psi\rangle
   \\&= \sum_k |e_k\rangle\alpha_k
@@ -3010,7 +3010,7 @@ In general, instead of projecting on one dimensional subspaces spanned by vector
 \item
   The projector decomposition of the identity:
   \[
-      \sum_k P_k = \operatorname{id}
+      \sum_k P_k = \mathbf{1}
     \]
 \end{itemize}
 
@@ -3033,7 +3033,7 @@ Consider a three-dimensional Hilbert space \(\mathcal{H}\), and the two orthogon
   \\Q &= |e_3\rangle\langle e_3|
   \end{aligned}
 \]
-that form the decomposition of the identity: \(P+Q=\operatorname{id}\).
+that form the decomposition of the identity: \(P+Q=\mathbf{1}\).
 Suppose that a physical system is prepared in state \(|\psi\rangle = \alpha_1|e_1\rangle + \alpha_2|e_2\rangle + \alpha_3|e_3\rangle\).
 Ideally, we would like to perform a complete measurement that would resolve the state \(|v\rangle\) into the three basis states, but suppose our experimental apparatus is not good enough, and lumps together \(|e_1\rangle\) and \(|e_2\rangle\).
 In other words, it can only differentiate between the two subspaces associated with projectors \(P\) and \(Q\).
@@ -3079,7 +3079,7 @@ Recall the following types of operator:
 \toprule
 \endhead
 \textbf{normal} & \(AA^\dagger = A^\dagger A\)\tabularnewline
-\textbf{unitary} & \(AA^\dagger = A^\dagger A = \operatorname{id}\)\tabularnewline
+\textbf{unitary} & \(AA^\dagger = A^\dagger A = \mathbf{1}\)\tabularnewline
 \textbf{Hermitian}, or \textbf{self-adjoint} & \(A^\dagger = A\)\tabularnewline
 \textbf{positive semi-definite} & \(\langle v|A|v\rangle\geqslant 0\) for all \(|v\rangle\)\tabularnewline
 \bottomrule
@@ -3171,7 +3171,7 @@ We have the following \textbf{trace identities}:
   \(\operatorname{tr}BP \leqslant\operatorname{tr}B\) for any positive semi-definite \(B\) and projector \(P\).
 \end{itemize}
 
-To prove this last identity, consider the projector \(Q=\operatorname{id}-P\), and note that
+To prove this last identity, consider the projector \(Q=\mathbf{1}-P\), and note that
 \[
   \begin{aligned}
     \operatorname{tr}B
@@ -3208,7 +3208,7 @@ Let us bound this expression above by using the trace identities:
     \frac{1}{N} \sum_k \operatorname{tr}(PP_kP) |s_k\rangle\langle s_k|
     &\leqslant\frac{1}{N} \sum_k \operatorname{tr}(PP_kP)
   \\&= \frac{1}{N} \sum_k \operatorname{tr}\left( P\left( \sum_k P_k \right) P \right)
-  \\&= \frac{1}{N} \sum_k \operatorname{tr}(P\operatorname{id}P)
+  \\&= \frac{1}{N} \sum_k \operatorname{tr}(P\mathbf{1}P)
   \\&= \frac{d}{N}
   \end{aligned}
 \]
@@ -3258,7 +3258,7 @@ Then
         \operatorname{tr}P_1|s_1\rangle\langle s_1| + \operatorname{tr}P_2|s_2\rangle\langle s_2|
       \right)
   \\&= \frac12\left(
-        \operatorname{tr}P_1|s_1\rangle\langle s_1| + \operatorname{tr}(\operatorname{id}-P_1)|s_2\rangle\langle s_2|
+        \operatorname{tr}P_1|s_1\rangle\langle s_1| + \operatorname{tr}(\mathbf{1}-P_1)|s_2\rangle\langle s_2|
       \right)
   \\&= \frac12\left(
         1 + \operatorname{tr}P_1\left( |s_1\rangle\langle s_1| - |s_2\rangle\langle s_2| \right)
@@ -3346,12 +3346,12 @@ As we increase \(\alpha\), the two states become more distinguishable, and, as w
   The \(Z\) measurement is defined by the projectors
   \[
      \begin{aligned}
-       P_0 &= \frac12(\operatorname{id}+ Z),
-     \\P_1 &= \frac12(\operatorname{id}- Z).
+       P_0 &= \frac12(\mathbf{1}+ Z),
+     \\P_1 &= \frac12(\mathbf{1}- Z).
      \end{aligned}
    \]
-  Consider the measurement associated to some Hermitian operator \(S\) that satisfies \(S^2=\operatorname{id}\).
-  Show that the two outcomes \(\pm 1\) correspond to the projectors \(\frac12(\operatorname{id}\pm S)\).
+  Consider the measurement associated to some Hermitian operator \(S\) that satisfies \(S^2=\mathbf{1}\).
+  Show that the two outcomes \(\pm 1\) correspond to the projectors \(\frac12(\mathbf{1}\pm S)\).
 \item
   In our quantum circuits, unless specified otherwise, all measurements are assumed to be performed in the standard basis.
   This is because any measurement can be reduced to the standard measurement by performing some prior unitary transformation.
@@ -3447,11 +3447,11 @@ Any unitary matrix can be represented\footnote{We ignore convergence issues.} as
 \[
   \begin{aligned}
     e^{i t H}
-    &\equiv \operatorname{id}+ itH + \frac{(it)^2}{2}H^2 + \frac{(it)^3}{2\cdot3}H^3 +\ldots
+    &\equiv \mathbf{1}+ itH + \frac{(it)^2}{2}H^2 + \frac{(it)^3}{2\cdot3}H^3 +\ldots
   \\&= \sum_{n=0}^\infty \frac{(it)^n}{n!}H^n.
   \end{aligned}
 \]
-The state vector changes smoothly: for \(t=0\) the time evolution operator is merely the unit operator \(\operatorname{id}\), and when \(t\) is very small \(U(t)\approx \operatorname{id}-itH\) is close to the unit operator, differing from it by something of order \(t\).
+The state vector changes smoothly: for \(t=0\) the time evolution operator is merely the unit operator \(\mathbf{1}\), and when \(t\) is very small \(U(t)\approx \mathbf{1}-itH\) is close to the unit operator, differing from it by something of order \(t\).
 
 \hypertarget{quantum-circuits}{%
 \subsubsection{Quantum circuits}\label{quantum-circuits}}
@@ -3478,7 +3478,7 @@ This is consistent with our interpretation of the inner product \(\langle e_k|\p
 State vectors forming orthonormal bases are perfectly distinguishable from each other (\(\langle e_i|e_j\rangle=\delta_{ij}\)), so there is no ambiguity about the outcome.
 A complete measurement is the best we can do in terms of resolving state vectors in the basis states.
 
-In general, for any decomposition of the identity \(\sum_k P_k=\operatorname{id}\) into orthogonal projectors \(P_k\) (i.e.~\(P_kP_l = P_k\delta_{kl}\)), there exists a measurement that takes a quantum system in state \(|\psi\rangle\), outputs label \(k\) with probability \(\langle\psi|P_k|\psi\rangle\), and leaves the system in the state \(P_k|\psi\rangle\) (multiplied by the normalisation factor i.e.~divided by the length of \(P_k|\psi\rangle\)):
+In general, for any decomposition of the identity \(\sum_k P_k=\mathbf{1}\) into orthogonal projectors \(P_k\) (i.e.~\(P_kP_l = P_k\delta_{kl}\)), there exists a measurement that takes a quantum system in state \(|\psi\rangle\), outputs label \(k\) with probability \(\langle\psi|P_k|\psi\rangle\), and leaves the system in the state \(P_k|\psi\rangle\) (multiplied by the normalisation factor i.e.~divided by the length of \(P_k|\psi\rangle\)):
 \[
   |\psi\rangle
   \mapsto
@@ -3649,7 +3649,7 @@ For example, for \(n=3\),\footnote{We often drop the \(\otimes\) symbol, especia
 \]
 A \emph{classical} register composed of three bits can store \emph{only one} of these two binary strings at any time; a \emph{quantum} register composed of three qubits can store \emph{both of them} in a superposition.
 
-Indeed, if we start with the state \(|011\rangle\) and apply the Hadamard gate to the first qubit (which is the same as applying \(H\otimes\operatorname{id}\otimes\operatorname{id}\)), then, given that linear combinations distribute over tensor products, we obtain\footnote{We often simply write \(H\otimes H\otimes H\) as \(H^{\otimes 3}\).}
+Indeed, if we start with the state \(|011\rangle\) and apply the Hadamard gate to the first qubit (which is the same as applying \(H\otimes\mathbf{1}\otimes\mathbf{1}\)), then, given that linear combinations distribute over tensor products, we obtain\footnote{We often simply write \(H\otimes H\otimes H\) as \(H^{\otimes 3}\).}
 \[
   \begin{aligned}
     |011\rangle
@@ -3759,7 +3759,7 @@ We can also represent the \(\texttt{c-NOT}\) gate using the circuit notation, as
 Note that this gate does not admit any tensor product decomposition, but can be written as a sum of tensor products:\footnote{Make sure that you understand how the Dirac notation is used here. More generally, think why \[|0\rangle\langle 0|\otimes A + |1\rangle\langle 1|\otimes B\] means ``\emph{if the first qubit is in state \(|0\rangle\) then apply \(A\) to the second one, and if the first qubit is in state \(|1\rangle\) then apply \(B\) to the second one}''. What happens if the first qubit is in a superposition of \(|0\rangle\) and \(|1\rangle\)?}
 \[
   \texttt{c-NOT}
-  = |0\rangle\langle 0|\otimes\operatorname{id}+ |1\rangle\langle 1|\otimes X
+  = |0\rangle\langle 0|\otimes\mathbf{1}+ |1\rangle\langle 1|\otimes X
 \]
 where \(X\) is the Pauli bit-flip operation.
 
@@ -3869,7 +3869,7 @@ Then the part of the circuit in the second dashed box maps the four Bell states 
 Upon performing the standard measurement and learning the values of \(x\) and \(y\), we choose one of the four following transformations depending on these values:
 \begin{equation}
   \begin{array}{ll}
-    00 \mapsto \operatorname{id}
+    00 \mapsto \mathbf{1}
     &\quad 01 \mapsto X
   \\[1em]
     10 \mapsto Z
@@ -3999,7 +3999,7 @@ We can also represent the \(\texttt{c-}P_\varphi\) gate using the circuit notati
 \end{figure}
 
 Again, the matrix is written in the computational basis \(\{|00\rangle,|01\rangle,|10\rangle,|11\rangle\}\).
-If we do not specify the phase then we usually assume that \(\varphi=\pi\), in which case we call this operation the \textbf{controlled-\(Z\) gate}, which acts as \(|0\rangle\langle 0|0\otimes\operatorname{id}+ |1\rangle\langle 1|1\otimes Z\).
+If we do not specify the phase then we usually assume that \(\varphi=\pi\), in which case we call this operation the \textbf{controlled-\(Z\) gate}, which acts as \(|0\rangle\langle 0|0\otimes\mathbf{1}+ |1\rangle\langle 1|1\otimes Z\).
 Here \(Z\) refers again to the Pauli phase-flip \(\sigma_z\equiv Z\) operation.
 
 In order to see the entangling power of the controlled-phase shift gate, consider the following circuit.
@@ -4029,7 +4029,7 @@ Both the above two-qubit controlled gates (i.e.~\(\texttt{c-NOT}\) and \(\texttt
 \[
   \texttt{c-}U
   =
-  |0\rangle\langle 0|0\otimes\operatorname{id}+ |1\rangle\langle 1|1\otimes U
+  |0\rangle\langle 0|0\otimes\mathbf{1}+ |1\rangle\langle 1|1\otimes U
 \]
 where \(U\) is an arbitrary single-qubit unitary transformation \(U\).
 
@@ -4118,16 +4118,16 @@ Consider the following \(x\)-controlled-\(U\) operation:
   \begin{gathered}
     \left[
       \begin{array}{cccc}
-        \operatorname{id}& 0 & 0 & 0
-      \\0 & \operatorname{id}& 0 & 0
-      \\0 & 0 & \operatorname{id}& 0
+        \mathbf{1}& 0 & 0 & 0
+      \\0 & \mathbf{1}& 0 & 0
+      \\0 & 0 & \mathbf{1}& 0
       \\0 & 0 & 0 & X
       \end{array}
     \right]
   \\[1em]
-    =|00\rangle\langle 00|00\otimes\operatorname{id}
-  \\+ |01\rangle\langle 01|01\otimes\operatorname{id}
-  \\+ |10\rangle\langle 10|10\otimes\operatorname{id}
+    =|00\rangle\langle 00|00\otimes\mathbf{1}
+  \\+ |01\rangle\langle 01|01\otimes\mathbf{1}
+  \\+ |10\rangle\langle 10|10\otimes\mathbf{1}
   \\+ |11\rangle\langle 11|11\otimes X.
   \end{gathered}
 \]
@@ -4392,7 +4392,7 @@ The swap gate \(S\) on two qubits is defined first on product vectors by \(S\col
   Which Bell states span the \emph{symmetric subspace} (i.e.~the space spanned by all eigenvectors with eigenvalue \(1\)), and which the \emph{antisymmetric} one (i.e.~that spanned by eigenvectors with eigenvalue \(-1\))?
   Can \(S\) have any eigenvalues apart from \(\pm1\)?
 \item
-  Show that \(P_\pm = \frac12(\operatorname{id}\pm S)\) are two orthogonal projectors which form the decomposition of the identity and project on the symmetric and antisymmetric subspaces.
+  Show that \(P_\pm = \frac12(\mathbf{1}\pm S)\) are two orthogonal projectors which form the decomposition of the identity and project on the symmetric and antisymmetric subspaces.
   Decompose the state vector \(|a\rangle|b\rangle\) of two qubits into symmetric and antisymmetric components.
 \item
   Consider the quantum circuit below, composed of two Hadamard gates, one controlled-\(S\) operation (also known as the \textbf{controlled-swap}, or \textbf{Fredkin} gate), and the measurement \(M\) in the computational basis.
@@ -4502,7 +4502,7 @@ Multiplication of block matrices works pretty much the same as regular matrix mu
      \left[
      \,
        \begin{array}{c|c}
-         \operatorname{id}& X
+         \mathbf{1}& X
        \\\hline
          Y & Z
        \end{array}
@@ -4511,7 +4511,7 @@ Multiplication of block matrices works pretty much the same as regular matrix mu
      \left[
      \,
        \begin{array}{c|c}
-         \operatorname{id}& Y
+         \mathbf{1}& Y
        \\\hline
          X & Z
        \end{array}
@@ -4685,6 +4685,174 @@ Then any unitary transformation of the basis vectors corresponding to a degenera
 \hypertarget{chapter6}{%
 \section{Quantum algorithms}\label{chapter6}}
 
+\begin{quote}
+About quantum interference in disguise: Hadamard, function evaluation, Hadamard.
+Also about the early quantum algorithms and how they deal with querying oracles, searching for a needle in a haystack, and estimating periodicity of certain functions.
+\end{quote}
+
+\textbf{!!!TODO!!!}
+
+\hypertarget{quantum-boolean-function-evaluation}{%
+\subsection{Quantum Boolean function evaluation}\label{quantum-boolean-function-evaluation}}
+
+Classical computers essentially evaluate functions: given \(n\)-bits of input they produce \(m\)-bits of output that are uniquely determined by the input; that is, they find the value of
+\[
+  f\colon \{0,1\}^n \to \{0,1\}^m
+\]
+for a particular specified \(n\)-bit argument.
+A function with an \(m\)-bit value is equivalent to \(m\) Boolean functions, each with a one-bit value, so we may just as well say that the basic task performed by a computer is the evaluation of Boolean functions
+\[
+  f\colon \{0,1\}^n \to  \{0,1\}.
+\]
+\emph{In quantum computation, all elementary operations are reversible} (unitary), so we compute Boolean functions in a reversible fashion as
+\[
+  |x\rangle|y\rangle \mapsto |x\rangle|y\oplus f(x)\rangle.
+\]
+
+The corresponding circuit diagram (for \(n=3\)) is shown in Figure \ref{fig:n-equals-3-circuit-diagram}.
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{quantum-info_files/figure-latex/n-equals-3-circuit-diagram-1} 
+
+}
+
+\caption{Computing some \(f\colon\{0,1\}^3\to\{0,1\}\) in a quantum manner.}\label{fig:n-equals-3-circuit-diagram}
+\end{figure}
+
+Here we use two registers: the first one (counting from the top to the bottom of the circuit diagram) stores the arguments \(x\), and the second one the values \(f(x)\).
+More precisely, the value \(f(x)\) is added bit-wise to the pre-existing binary value \(y\) of the second register.
+We usually set \(y=0\) to get
+\[
+  |x\rangle|0\rangle \mapsto |x\rangle|f(x)\rangle.
+\]
+
+Quantum Boolean function evaluation is a special case of the generalised \(x\)-controlled-\(U\) on two registers:
+\[
+  \sum_x |x\rangle\langle x|\otimes U_x
+\]
+where \(U_x\) is either the identity \(\mathbf{1}\) (when \(f(x)=0\)) or the bit-flip\footnote{Please: do not confuse the capital \(X\), which is the Pauli flip operator \(\sigma_x\), with the small \(x\), which is a binary string stored in the first register and the argument of our Boolean function \(f\).} \(X\) (when \(f(x)=1\)).
+We may also write this as
+\[
+  \sum_x |x\rangle\langle x|\otimes X^{f(x)}.
+\]
+
+\hypertarget{example}{%
+\subsubsection{Example}\label{example}}
+
+Consider the Boolean function \(f\colon\{0,1\}^2\to\{0,1\}\) given by
+\[
+  f(x)
+  =
+  \begin{cases}
+    1 &\mbox{if $x=01$,}
+  \\0 &\mbox{otherwise.}
+  \end{cases}
+\]
+The evaluation \(|x\rangle|y\rangle \mapsto |x\rangle|y\oplus f(x)\rangle\) can be tabulated explicitly as
+\[
+  \begin{array}{cc}
+    |00\rangle|0\rangle \mapsto |00\rangle|0\rangle
+    & |00\rangle|1\rangle \mapsto |00\rangle|1\rangle
+  \\|01\rangle|0\rangle \mapsto |01\rangle|1\rangle
+    & |01\rangle|1\rangle \mapsto |01\rangle|0\rangle
+  \\|10\rangle|0\rangle \mapsto |10\rangle|0\rangle
+    & |10\rangle|1\rangle \mapsto |10\rangle|1\rangle
+  \\|11\rangle|0\rangle \mapsto |11\rangle|0\rangle
+    & |11\rangle|1\rangle \mapsto |11\rangle|1\rangle
+  \end{array}
+\]
+and the expression \(\sum_x |x\rangle\langle x|\otimes X^{f(x)}\) becomes
+\[
+  \begin{aligned}
+    &|00\rangle\langle 00|00 \otimes \mathbf{1}
+  \\+ &|01\rangle\langle 01|01 \otimes X
+  \\+ &|10\rangle\langle 10|10 \otimes \mathbf{1}
+  \\+ &|11\rangle\langle 11|11 \otimes \mathbf{1}.
+  \end{aligned}
+\]
+Finally, the matrix form looks like
+\[
+  \left[
+  \,
+    \begin{array}{c|c|c|c}
+      \begin{matrix}1&0\\0&1\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+    \\\hline
+    \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&1\\1&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+    \\\hline
+    \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}1&0\\0&1\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+    \\\hline
+    \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}1&0\\0&1\end{matrix}
+    \end{array}
+  \,
+  \right]
+\]
+As you can see, this is a diagonal block matrix: a \((4\times 4)\) matrix with \((2\times 2)\) matrices as entries.
+The rows and the columns of the \((4\times 4)\) matrix are labelled by the binary strings \(00, 01, 10, 11\), and the \((2\times 2)\) matrices on the diagonal represent operations applied to the qubit in the second register.
+Here all of them are the identity \(\mathbf{1}\) except the \((01, 01)\) entry, which represents the bit-flip \(X\).
+This is because \(f(01)=1\), and \(f(x)=0\) for all other binary strings \(x\).
+
+\hypertarget{phase-kick-back}{%
+\subsection{Phase kick-back}\label{phase-kick-back}}
+
+What makes the quantum evaluation of Boolean functions really interesting is its action on a superposition of different inputs \(x\).
+For example,
+\[
+  \sum_{x}|x\rangle|0\rangle
+  \longmapsto
+  \sum_{x}|x\rangle|f(x)\rangle
+\]
+produces \(f(x)\) for \emph{all} \(x\) in a \emph{single} run (note that we have dropped the normalisation factor).
+It is more instructive to see the effect of the function evaluation when the qubit in the second register is prepared in the state \(|-\rangle = \frac{1}{\sqrt 2}(|0\rangle - |1\rangle\), since then
+\[
+  \sum_x|x\rangle|-\rangle
+  \longmapsto
+  \sum_x (-1)^{f(x)}|x\rangle|-\rangle
+\]
+(as shown in Figure \ref{fig:n-equals-3-minus-circuit-diagram}).
+Whenever \(f(x)=1\), the bit flip \(X\) is applied to the qubit in the second register.
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{quantum-info_files/figure-latex/n-equals-3-minus-circuit-diagram-1} 
+
+}
+
+\caption{Computing some \(f\colon\{0,1\}^3\to\{0,1\}\) with the second-register qubit in state \(|-\rangle\).}\label{fig:n-equals-3-minus-circuit-diagram}
+\end{figure}
+
+The reason for defining the state \(|-\rangle\) as we do is that it is the eigenstate of \(X\) with eigenvalue \(-1\).
+So, due the phase kick-back, whenever \(f(x)=1\), the phase factor \(-1\) appears in front of the corresponding term \(|x\rangle\).
+As you can see, the second register stays in state \(|-\rangle\) all the way through the computation --- it is the first register where things happen.
+Let us now see how quantum Boolean function evaluation introduces phase shifts in quantum interference experiments, and how such experiments can be viewed as computations.
+
+\hypertarget{oracles-and-query-complexity}{%
+\subsection{Oracles and query complexity}\label{oracles-and-query-complexity}}
+
+The computational power of quantum interference was discovered by counting how many times certain Boolean functions have to be evaluated in order to find the answer to a given problem.
+Imagine a ``black box'' (also called an \textbf{oracle}) that computes some fixed Boolean function, but whose inner workings are unknown to us, and a scenario in which one wants to learn about a given property of the Boolean function but has to ``pay'' (in energy, or in money!) for each use (often referred to as a \textbf{query}) of the box.
+In such a setting, the objective is to minimise number of queries to the oracle while finding out as much information as possible about the function computed by the oracle.
+For this purpose, we ignore everything that happens inside the black box: the Boolean function evaluation counts as just \emph{one} computational step.
+
+\hypertarget{deutschs-algorithm}{%
+\subsubsection{Deutsch's algorithm}\label{deutschs-algorithm}}
+
 \hypertarget{part-flowering}{%
 \part{Flowering}\label{part-flowering}}
 
@@ -4709,7 +4877,7 @@ and note that the projector \(|\psi\rangle\langle\psi|\) can be written as\footn
 \[
   |\psi\rangle\langle\psi|
   = \frac{1}{4} \left(
-    \operatorname{id}\otimes\operatorname{id}- \sigma_x\otimes\sigma_x - \sigma_y\otimes\sigma_y - \sigma_z\otimes \sigma_z
+    \mathbf{1}\otimes\mathbf{1}- \sigma_x\otimes\sigma_x - \sigma_y\otimes\sigma_y - \sigma_z\otimes \sigma_z
   \right).
 \]
 Any single qubit observable with values \(\pm 1\) can be represented by the operator
@@ -4745,7 +4913,7 @@ We now evaluate the expectation value in the singlet state:
       + (\vec{a}\cdot\vec\sigma)\sigma_z \otimes(\vec{a}\cdot\vec\sigma)\sigma_z
     \right]
 \\& = -\frac{1}{4} \operatorname{tr}\left[
-      (a_x b_x + a_y b_y + a_z b_z) \operatorname{id}\otimes\operatorname{id}
+      (a_x b_x + a_y b_y + a_z b_z) \mathbf{1}\otimes\mathbf{1}
     \right]
 \\& = -\vec{a}\cdot\vec{b}
 \end{aligned}
@@ -4904,7 +5072,7 @@ One can, however, derive a tighter bound.
 We can show (do it) that
 \[
   S^2
-  = 4(\operatorname{id}\otimes\operatorname{id}) + [A_1,A_2]\otimes[B_1,B_2].
+  = 4(\mathbf{1}\otimes\mathbf{1}) + [A_1,A_2]\otimes[B_1,B_2].
 \]
 The norm of each of the commutators (\(\|[A_1, A_2]\|\) and \(\|[B_1, B_2]\|\)) cannot exceed \(2\), and \(\|S^2\|=\|S\|^2\), which all together gives
 \[
@@ -4958,10 +5126,10 @@ or as
 \[
   |\psi\rangle|e\rangle
   \longmapsto
-  \operatorname{id}|\psi\rangle|e_1\rangle + Z|\psi\rangle|e_z\rangle,
+  \mathbf{1}|\psi\rangle|e_1\rangle + Z|\psi\rangle|e_z\rangle,
 \]
 where \(|e_1\rangle = \frac12(|e_{00}\rangle + |e_{11}\rangle)\) and \(|e_z\rangle = \frac12(|e_{00}\rangle - |e_{11}\rangle)\).
-We may interpret this expression by saying that two things can happen to the qubit: nothing \(\operatorname{id}\) (first term), or phase-flip \(Z\) (second term).
+We may interpret this expression by saying that two things can happen to the qubit: nothing \(\mathbf{1}\) (first term), or phase-flip \(Z\) (second term).
 \emph{This, however, should not be taken literally unless the states of the environment, \(|e_1\rangle\) and \(|e_z\rangle\), are orthogonal.}\footnote{Why not?}
 
 \hypertarget{decoherence-and-interference}{%
@@ -5052,13 +5220,13 @@ This is why this particular interaction is called decoherence.
 
 Notice that
 \[
-|\psi\rangle|e\rangle \longmapsto \operatorname{id}|\psi\rangle|e_1\rangle +Z|\psi\rangle|e_z\rangle,
+|\psi\rangle|e\rangle \longmapsto \mathbf{1}|\psi\rangle|e_1\rangle +Z|\psi\rangle|e_z\rangle,
 \]
 implies
 \[
-|\psi\rangle\langle\psi|\longmapsto \operatorname{id}|\psi\rangle\langle\psi| \operatorname{id}\langle e_1|e_1\rangle +Z|\psi\rangle\langle\psi| Z\langle e_z|e_z\rangle,
+|\psi\rangle\langle\psi|\longmapsto \mathbf{1}|\psi\rangle\langle\psi| \mathbf{1}\langle e_1|e_1\rangle +Z|\psi\rangle\langle\psi| Z\langle e_z|e_z\rangle,
 \]
-\emph{only} when \(\langle e_1|e_z\rangle=0\) (otherwise you would have additional cross terms \(\operatorname{id}|\psi\rangle\langle\psi| Z\) and \(Z|\psi\rangle\langle\psi| \operatorname{id}\)).
+\emph{only} when \(\langle e_1|e_z\rangle=0\) (otherwise you would have additional cross terms \(\mathbf{1}|\psi\rangle\langle\psi| Z\) and \(Z|\psi\rangle\langle\psi| \mathbf{1}\)).
 In this case we can indeed say that, with probability \(\langle e_1|e_1\rangle\), nothing happens, and, with probability \(\langle e_z|e_z\rangle\), the qubit undergoes the phase-flip \(Z\).
 
 \hypertarget{quantum-errors}{%
@@ -5083,7 +5251,7 @@ where the states of the environment are neither normalised nor orthogonal, leads
 \]
 We can also write this as
 \[
-|\psi\rangle|e\rangle \longmapsto  \operatorname{id}|\psi\rangle|e_1\rangle + Z|\psi\rangle |e_z\rangle +X|\psi\rangle |e_x\rangle + Y|\psi\rangle |e_y\rangle.
+|\psi\rangle|e\rangle \longmapsto  \mathbf{1}|\psi\rangle|e_1\rangle + Z|\psi\rangle |e_z\rangle +X|\psi\rangle |e_x\rangle + Y|\psi\rangle |e_y\rangle.
 \]
 The intuition behind this expression is that four things can happen to the qubit:
 
@@ -5091,7 +5259,7 @@ The intuition behind this expression is that four things can happen to the qubit
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  nothing (\(\operatorname{id}\)),
+  nothing (\(\mathbf{1}\)),
 \item
   phase-flip (\(Z\)),
 \item
@@ -5115,8 +5283,8 @@ In general, given \(n\) qubits in state \(|\psi\rangle\) and the environment in 
 where the \(E_i\) are the \(n\)-fold tensor products of the Pauli operators and the \(|e_i\rangle\) are the corresponding states of the environment, which are not assumed to be normalised or mutually orthogonal.
 A typical operator \(E_i\) acting on five qubits may look like this,
 \[
-  X\otimes Z \otimes \operatorname{id}\otimes \operatorname{id}\otimes Y
-  \equiv XZ\operatorname{id}\operatorname{id}Y.
+  X\otimes Z \otimes \mathbf{1}\otimes \mathbf{1}\otimes Y
+  \equiv XZ\mathbf{1}\mathbf{1}Y.
 \]
 We can say that \(E_i\) represents an error consisting of the bit (\(X\)) error on the first qubit, phase (\(Z\)) error on the second qubit and both bit and phase (\(Y\)) error on the fifth qubit.
 Again, \emph{this is not quite accurate if the corresponding states of the environment are not mutually orthogonal}, but it gives the right kind of intuition nonetheless.
@@ -5134,7 +5302,7 @@ We can always pick up an orthonormal basis \(|u_i\rangle\) in the environment an
     \\&= \sum_j M_j|\psi\rangle|u_j\rangle.
   \end{aligned}
 \]
-The new ``error'' operators \(M_j\) satisfy \(\sum_j M_j^\dagger M_j =\operatorname{id}\) and, in general, they are \emph{not} unitary.
+The new ``error'' operators \(M_j\) satisfy \(\sum_j M_j^\dagger M_j =\mathbf{1}\) and, in general, they are \emph{not} unitary.
 Now, the evolution of the density operator \(|\psi\rangle\langle\psi|\) can be written as
 \[
   |\psi\rangle\langle\psi|\longmapsto \sum_j M_j|\psi\rangle\langle\psi| M_j^\dagger.
@@ -5154,7 +5322,7 @@ and, consequently,
 \[
   |\psi\rangle\langle\psi|\longmapsto \sum_k N_k|\psi\rangle\langle\psi| N_k^\dagger.
 \]
-The new ``errors'' satisfy \(\sum_k N_k^\dagger N_k = \operatorname{id}\), and the error operators \(N_k\) and \(M_j\) are related by the unitary matrix \(U_{kj}=\langle v_k|u_j\rangle\).
+The new ``errors'' satisfy \(\sum_k N_k^\dagger N_k = \mathbf{1}\), and the error operators \(N_k\) and \(M_j\) are related by the unitary matrix \(U_{kj}=\langle v_k|u_j\rangle\).
 
 \hypertarget{some-errors-can-be-corrected-on-some-states}{%
 \subsection{Some errors can be corrected on some states}\label{some-errors-can-be-corrected-on-some-states}}
@@ -5177,7 +5345,7 @@ All Bob has to do is
 - apply \(U_k^\dagger\).
 
 As an example, consider an object composed of three qubits and the subspace \(\mathcal{C}\) spanned by the two basis vectors \(|000\rangle\) and \(|111\rangle\).
-Suppose Eve applies one of the following four unitary operations: \(U_0=\operatorname{id}\otimes\operatorname{id}\otimes \operatorname{id}\), \(U_1 =X\otimes\operatorname{id}\otimes \operatorname{id}\), \(U_2 =\operatorname{id}\otimes X\otimes \operatorname{id}\), and \(U_3=\operatorname{id}\otimes\operatorname{id}\otimes X\).
+Suppose Eve applies one of the following four unitary operations: \(U_0=\mathbf{1}\otimes\mathbf{1}\otimes \mathbf{1}\), \(U_1 =X\otimes\mathbf{1}\otimes \mathbf{1}\), \(U_2 =\mathbf{1}\otimes X\otimes \mathbf{1}\), and \(U_3=\mathbf{1}\otimes\mathbf{1}\otimes X\).
 That is, the identity, or bit-flip on the first, second, or third qubit.
 Each operation is chosen randomly with the same probability of \(1/4\).
 It is easy to see that the four operations generate four subspaces:
@@ -5192,8 +5360,8 @@ The eight dimensional Hilbert space of the three qubits is then decomposed into 
 \mathcal{C} \oplus \mathcal{C}_1 \oplus\mathcal{C}_2 \oplus \mathcal{C}_3
 \]
 So suppose Alice prepares \(|\psi\rangle=\alpha|000\rangle+\beta|111\rangle\) and Eve applies the bit-flip to the third qubit.
-This generates the state \(\operatorname{id}\otimes\operatorname{id}\otimes X|\psi\rangle=\alpha|001\rangle+\beta|110\rangle\in \mathcal{C}_3\).
-The projective measurement on these subspaces tells Bob that the new state is in the subspace \(\mathcal{C}_3\), and hence the original state can be recovered by the operation \(\operatorname{id}\otimes\operatorname{id}\otimes X\).
+This generates the state \(\mathbf{1}\otimes\mathbf{1}\otimes X|\psi\rangle=\alpha|001\rangle+\beta|110\rangle\in \mathcal{C}_3\).
+The projective measurement on these subspaces tells Bob that the new state is in the subspace \(\mathcal{C}_3\), and hence the original state can be recovered by the operation \(\mathbf{1}\otimes\mathbf{1}\otimes X\).
 
 \hypertarget{repetition-codes}{%
 \subsection{Repetition codes}\label{repetition-codes}}
@@ -5389,7 +5557,7 @@ Consider, for example, the following three scenarios:
    \]
 \item
   Suppose Alice picks up any pair of orthogonal states of a qubit and then flips the coin to chose one of them.
-  Any two orthonormal states of a qubit, \(|u_1\rangle\), \(|u_2\rangle\), form a complete basis, so the mixture \(\frac12|u_1\rangle\langle u_1|+\frac12|u_2\rangle\langle u_2|\) gives \(\frac12\operatorname{id}\).
+  Any two orthonormal states of a qubit, \(|u_1\rangle\), \(|u_2\rangle\), form a complete basis, so the mixture \(\frac12|u_1\rangle\langle u_1|+\frac12|u_2\rangle\langle u_2|\) gives \(\frac12\mathbf{1}\).
 \end{enumerate}
 
 As you can see, these three different preparations yield precisely the same density matrix and are hence statistically indistinguishable.
@@ -5482,10 +5650,10 @@ In fact, the optimal way of distinguishing quantum states with different density
   If the states \(|u_1\rangle,\ldots,|u_m\rangle\) form an orthonormal basis, and each occurs with equal probability \(1/m\), then the resulting density matrix is proportional to the identity:
   \[
      \frac{1}{m}\sum_{i=1}^m |\psi_i\rangle\langle\psi_i|
-     = \frac{1}{m}\operatorname{id}.
+     = \frac{1}{m}\mathbf{1}.
    \]
   This is called the \textbf{maximally mixed state}.
-  For qubits, any pair of orthogonal states taken with equal probabilities gives the maximally mixed state \(\frac12\operatorname{id}\).
+  For qubits, any pair of orthogonal states taken with equal probabilities gives the maximally mixed state \(\frac12\mathbf{1}\).
   In maximally mixed states, outcomes of \emph{any} measurement are completely random.
 \item
   It is often convenient to write density operators in terms of projectors on states which are not normalised, incorporating the probabilities into the length of the state vector:
@@ -5503,14 +5671,14 @@ In fact, the optimal way of distinguishing quantum states with different density
 \textbf{!!!TODO!!! mention the part in chapters 2 and 3 where we have already talked about this, and maybe rewrite the following with that in mind}
 
 There is an elegant way to visualise the set of density operators for a qubit.
-The most general Hermitian \((2\times 2)\) matrix has four real parameters and can be expanded in the basis composed of the identity and the three Pauli matrices: \(\{\operatorname{id}, \sigma_x, \sigma_y, \sigma_z\}\).
-Since the Pauli matrices are traceless, the coefficient of \(\operatorname{id}\) in the expansion of a density matrix \(\rho\) must be \(\frac12\), so that \(\operatorname{tr}\rho=1\).
+The most general Hermitian \((2\times 2)\) matrix has four real parameters and can be expanded in the basis composed of the identity and the three Pauli matrices: \(\{\mathbf{1}, \sigma_x, \sigma_y, \sigma_z\}\).
+Since the Pauli matrices are traceless, the coefficient of \(\mathbf{1}\) in the expansion of a density matrix \(\rho\) must be \(\frac12\), so that \(\operatorname{tr}\rho=1\).
 Thus \(\rho\) may be expressed as\footnote{Physicists usually refer to the Bloch ball as the \textbf{Bloch sphere}, although it really is a ball, not a sphere.}
 \[
   \begin{aligned}
     \rho
-    &= \frac12\left( \operatorname{id}+\vec{s}\cdot\vec{\sigma} \right)
-  \\&= \frac12\left( \operatorname{id}+ s_x\sigma_x + s_y\sigma_y + s_z\sigma_z \right)
+    &= \frac12\left( \mathbf{1}+\vec{s}\cdot\vec{\sigma} \right)
+  \\&= \frac12\left( \mathbf{1}+ s_x\sigma_x + s_y\sigma_y + s_z\sigma_z \right)
   \\&= \frac12
     \begin{bmatrix}
       1 + s_z & s_x - is_y
@@ -5532,7 +5700,7 @@ The sum of the two eigenvalues of \(\rho\) is, of course, equal to one (\(\opera
 where \(s=|\vec{s}|\).
 It follows that the two eigenvalues of \(\rho\) are \(\frac12(1\pm s)\).
 They have to be non-negative, and so \(s\), the length of the Bloch vector, cannot exceed one.\footnote{One might hope that there is an equally nice visualisation of the density operators in higher dimensions. Unfortunately there isn't.}
-We can now visualise the convex set of \(2\times 2\) density matrices as a unit ball in three-dimensional Euclidean space: the extremal points, which represent pure states, are the points on the boundary, i.e.~the surface of the ball (\(s=1\)); the maximally mixed state \(\operatorname{id}/2\) corresponds to \(s=0\), i.e.~the centre of the ball.
+We can now visualise the convex set of \(2\times 2\) density matrices as a unit ball in three-dimensional Euclidean space: the extremal points, which represent pure states, are the points on the boundary, i.e.~the surface of the ball (\(s=1\)); the maximally mixed state \(\mathbf{1}/2\) corresponds to \(s=0\), i.e.~the centre of the ball.
 The length of the Bloch vector \(s\) can be thought of as a ``purity'' of a state.
 
 \hypertarget{subsystems-of-entangled-systems}{%
@@ -5597,8 +5765,8 @@ In particular, for the maximally entangled states in the \((d\times d)\)-dimensi
   |\psi_{AB}\rangle
   = \frac{1}{\sqrt{d}} \sum_{i}^d |a_i\rangle|b_i\rangle,
 \]
-and the reduced density operators, \(\rho_A\) and \(\rho_B\), are the maximally mixed states: \(\rho_A=\rho_B=\frac{1}{d}\operatorname{id}\).
-It follows that the quantum states of individual qubits in any of the Bell states are maximally mixed: their density matrix is \(\frac12\operatorname{id}\).
+and the reduced density operators, \(\rho_A\) and \(\rho_B\), are the maximally mixed states: \(\rho_A=\rho_B=\frac{1}{d}\mathbf{1}\).
+It follows that the quantum states of individual qubits in any of the Bell states are maximally mixed: their density matrix is \(\frac12\mathbf{1}\).
 A state such as
 \[
   \frac{1}{\sqrt 2} \left( |00\rangle + |11\rangle \right)
@@ -5730,21 +5898,21 @@ Philosophy aside, the fact that the two interpretations give exactly the same pr
 
 The partial trace is the only map \(\rho^{AB}\mapsto\rho^A\) such that\footnote{One can repeat the same argument for \(\rho^{AB}\mapsto\rho^B\): the partial trace is the unique map \(\rho^{AB}\mapsto\rho^B\) such that \(\rho^B\) satisfies \(\operatorname{tr}Y\rho^B = \operatorname{tr}(1\otimes Y)\rho^{AB}\) for any observable \(Y\) on \(\mathcal{B}\).}
 \[
-  \operatorname{tr}X \rho^A = \operatorname{tr}(X\otimes\operatorname{id})\rho^{AB}
+  \operatorname{tr}X \rho^A = \operatorname{tr}(X\otimes\mathbf{1})\rho^{AB}
 \]
 holds for any observable \(X\) acting on \(\mathcal{A}\).
 This condition concerns the consistency of statistical predictions.
-Any observable \(X\) on \(\mathcal{A}\) can be viewed as an observable \(X\otimes\operatorname{id}\) on the composite system \(\mathcal{AB}\), where \(\operatorname{id}\) is the identity operator acting on \(\mathcal{B}\).
-When constructing \(\rho^A\) we had better make sure that for any observable \(X\) the average value of \(X\) in the state \(\rho_A\) is the same as the average value of \(X\otimes\operatorname{id}\) in the state \(\rho^{AB}\).
+Any observable \(X\) on \(\mathcal{A}\) can be viewed as an observable \(X\otimes\mathbf{1}\) on the composite system \(\mathcal{AB}\), where \(\mathbf{1}\) is the identity operator acting on \(\mathcal{B}\).
+When constructing \(\rho^A\) we had better make sure that for any observable \(X\) the average value of \(X\) in the state \(\rho_A\) is the same as the average value of \(X\otimes\mathbf{1}\) in the state \(\rho^{AB}\).
 This is indeed the case for the partial trace.
 
 For example, let us go back to the state in \eqref{eq:bipartite-density} and assume that Alice measures some observable \(X\) on her part of the system.
-Technically, such an observable can be expressed as \(X\otimes \operatorname{id}\), where \(\operatorname{id}\) is the identity operator acting on the subsystem \(\mathcal{B}\).
-The expected value of this observable in the state \(|\psi_{AB}\rangle\) is \(\operatorname{tr}(X\otimes\operatorname{id})|\psi_{AB}\rangle\langle\psi_{AB}|\), i.e.
+Technically, such an observable can be expressed as \(X\otimes \mathbf{1}\), where \(\mathbf{1}\) is the identity operator acting on the subsystem \(\mathcal{B}\).
+The expected value of this observable in the state \(|\psi_{AB}\rangle\) is \(\operatorname{tr}(X\otimes\mathbf{1})|\psi_{AB}\rangle\langle\psi_{AB}|\), i.e.
 \[
   \begin{aligned}
-    \operatorname{tr}(X\otimes \operatorname{id}) \rho^{AB}
-    &= \operatorname{tr}(X\otimes\operatorname{id}) \left(
+    \operatorname{tr}(X\otimes \mathbf{1}) \rho^{AB}
+    &= \operatorname{tr}(X\otimes\mathbf{1}) \left(
         \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| \otimes |b_i\rangle\langle b_j|
       \right)
   \\&= \sum_{ij} \left[
@@ -5771,7 +5939,7 @@ as required.
 \item
   Show that purification is unique up to unitary equivalence.
   Let \(|\psi_1\rangle\) and \(|\psi_2\rangle\) in \(\mathcal{H}_A\otimes\mathcal{H}_B\) be two pure states such that \(\operatorname{tr}_B|\psi_1\rangle\langle\psi_1| = \operatorname{tr}_B|\psi_2\rangle\langle\psi_2|\).
-  Show that \(|\psi_1\rangle = \operatorname{id}\otimes U|\psi_2\rangle\) for some unitary operator \(U\) on \(\mathcal{H}_B\).
+  Show that \(|\psi_1\rangle = \mathbf{1}\otimes U|\psi_2\rangle\) for some unitary operator \(U\) on \(\mathcal{H}_B\).
 \item
   Two qubits are in the state described by the density operator \(\rho = \rho_A\otimes\rho_B\).
   What is the partial trace of \(\rho\) over each qubit?

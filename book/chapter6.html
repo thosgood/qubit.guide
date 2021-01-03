@@ -220,7 +220,18 @@
 <li class="chapter" data-level="5.10" data-path="chapter5.html"><a href="chapter5.html#appendix-tensor-products-in-components"><i class="fa fa-check"></i><b>5.10</b> Appendix: Tensor products in components</a></li>
 <li class="chapter" data-level="5.11" data-path="chapter5.html"><a href="chapter5.html#appendix-the-schmidt-decomposition"><i class="fa fa-check"></i><b>5.11</b> Appendix: The Schmidt decomposition</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Quantum algorithms</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="chapter6.html"><a href="chapter6.html#quantum-boolean-function-evaluation"><i class="fa fa-check"></i><b>6.1</b> Quantum Boolean function evaluation</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="chapter6.html"><a href="chapter6.html#example"><i class="fa fa-check"></i><b>6.1.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="chapter6.html"><a href="chapter6.html#phase-kick-back"><i class="fa fa-check"></i><b>6.2</b> Phase kick-back</a></li>
+<li class="chapter" data-level="6.3" data-path="chapter6.html"><a href="chapter6.html#oracles-and-query-complexity"><i class="fa fa-check"></i><b>6.3</b> Oracles and query complexity</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#deutschs-algorithm"><i class="fa fa-check"></i><b>6.3.1</b> Deutsch’s algorithm</a></li>
+</ul></li>
+</ul></li>
 <li class="part"><span><b>II Flowering</b></span></li>
 <li class="chapter" data-level="7" data-path="chapter7.html"><a href="chapter7.html"><i class="fa fa-check"></i><b>7</b> Bell’s theorem</a>
 <ul>
@@ -277,11 +288,167 @@
             <section class="normal" id="section-">
 <div id="chapter6" class="section level1" number="6">
 <h1><span class="header-section-number">Chapter 6</span> Quantum algorithms</h1>
+<blockquote>
+<p>About quantum interference in disguise: Hadamard, function evaluation, Hadamard.
+Also about the early quantum algorithms and how they deal with querying oracles, searching for a needle in a haystack, and estimating periodicity of certain functions.</p>
+</blockquote>
+<p><strong>!!!TODO!!!</strong></p>
+<div id="quantum-boolean-function-evaluation" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Quantum Boolean function evaluation</h2>
+<p>Classical computers essentially evaluate functions: given <span class="math inline">\(n\)</span>-bits of input they produce <span class="math inline">\(m\)</span>-bits of output that are uniquely determined by the input; that is, they find the value of
+<span class="math display">\[
+  f\colon \{0,1\}^n \to \{0,1\}^m
+\]</span>
+for a particular specified <span class="math inline">\(n\)</span>-bit argument.
+A function with an <span class="math inline">\(m\)</span>-bit value is equivalent to <span class="math inline">\(m\)</span> Boolean functions, each with a one-bit value, so we may just as well say that the basic task performed by a computer is the evaluation of Boolean functions
+<span class="math display">\[
+  f\colon \{0,1\}^n \to  \{0,1\}.
+\]</span>
+<em>In quantum computation, all elementary operations are reversible</em> (unitary), so we compute Boolean functions in a reversible fashion as
+<span class="math display">\[
+  |x\rangle|y\rangle \mapsto |x\rangle|y\oplus f(x)\rangle.
+\]</span></p>
+<p>The corresponding circuit diagram (for <span class="math inline">\(n=3\)</span>) is shown in Figure <a href="chapter6.html#fig:n-equals-3-circuit-diagram">6.1</a>.</p>
 
+<div class="figure" style="text-align: center"><span id="fig:n-equals-3-circuit-diagram"></span>
+<img src="quantum-info_files/figure-html/n-equals-3-circuit-diagram-1.png" alt="Computing some \(f\colon\{0,1\}^3\to\{0,1\}\) in a quantum manner." width="672" />
+<p class="caption">
+Figure 6.1: Computing some <span class="math inline">\(f\colon\{0,1\}^3\to\{0,1\}\)</span> in a quantum manner.
+</p>
+</div>
+<p>Here we use two registers: the first one (counting from the top to the bottom of the circuit diagram) stores the arguments <span class="math inline">\(x\)</span>, and the second one the values <span class="math inline">\(f(x)\)</span>.
+More precisely, the value <span class="math inline">\(f(x)\)</span> is added bit-wise to the pre-existing binary value <span class="math inline">\(y\)</span> of the second register.
+We usually set <span class="math inline">\(y=0\)</span> to get
+<span class="math display">\[
+  |x\rangle|0\rangle \mapsto |x\rangle|f(x)\rangle.
+\]</span></p>
+<p>Quantum Boolean function evaluation is a special case of the generalised <span class="math inline">\(x\)</span>-controlled-<span class="math inline">\(U\)</span> on two registers:
+<span class="math display">\[
+  \sum_x |x\rangle\langle x|\otimes U_x
+\]</span>
+where <span class="math inline">\(U_x\)</span> is either the identity <span class="math inline">\(\mathbf{1}\)</span> (when <span class="math inline">\(f(x)=0\)</span>) or the bit-flip<a href="#fn81" class="footnote-ref" id="fnref81"><sup>81</sup></a> <span class="math inline">\(X\)</span> (when <span class="math inline">\(f(x)=1\)</span>).
+We may also write this as
+<span class="math display">\[
+  \sum_x |x\rangle\langle x|\otimes X^{f(x)}.
+\]</span></p>
+<div id="example" class="section level3" number="6.1.1">
+<h3><span class="header-section-number">6.1.1</span> Example</h3>
+<p>Consider the Boolean function <span class="math inline">\(f\colon\{0,1\}^2\to\{0,1\}\)</span> given by
+<span class="math display">\[
+  f(x)
+  =
+  \begin{cases}
+    1 &amp;\mbox{if $x=01$,}
+  \\0 &amp;\mbox{otherwise.}
+  \end{cases}
+\]</span>
+The evaluation <span class="math inline">\(|x\rangle|y\rangle \mapsto |x\rangle|y\oplus f(x)\rangle\)</span> can be tabulated explicitly as
+<span class="math display">\[
+  \begin{array}{cc}
+    |00\rangle|0\rangle \mapsto |00\rangle|0\rangle
+    &amp; |00\rangle|1\rangle \mapsto |00\rangle|1\rangle
+  \\|01\rangle|0\rangle \mapsto |01\rangle|1\rangle
+    &amp; |01\rangle|1\rangle \mapsto |01\rangle|0\rangle
+  \\|10\rangle|0\rangle \mapsto |10\rangle|0\rangle
+    &amp; |10\rangle|1\rangle \mapsto |10\rangle|1\rangle
+  \\|11\rangle|0\rangle \mapsto |11\rangle|0\rangle
+    &amp; |11\rangle|1\rangle \mapsto |11\rangle|1\rangle
+  \end{array}
+\]</span>
+and the expression <span class="math inline">\(\sum_x |x\rangle\langle x|\otimes X^{f(x)}\)</span> becomes
+<span class="math display">\[
+  \begin{aligned}
+    &amp;|00\rangle\langle 00|00 \otimes \mathbf{1}
+  \\+ &amp;|01\rangle\langle 01|01 \otimes X
+  \\+ &amp;|10\rangle\langle 10|10 \otimes \mathbf{1}
+  \\+ &amp;|11\rangle\langle 11|11 \otimes \mathbf{1}.
+  \end{aligned}
+\]</span>
+Finally, the matrix form looks like
+<span class="math display">\[
+  \left[
+  \,
+    \begin{array}{c|c|c|c}
+      \begin{matrix}1&amp;0\\0&amp;1\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+    \\\hline
+    \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;1\\1&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+    \\\hline
+    \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}1&amp;0\\0&amp;1\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+    \\\hline
+    \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}1&amp;0\\0&amp;1\end{matrix}
+    \end{array}
+  \,
+  \right]
+\]</span>
+As you can see, this is a diagonal block matrix: a <span class="math inline">\((4\times 4)\)</span> matrix with <span class="math inline">\((2\times 2)\)</span> matrices as entries.
+The rows and the columns of the <span class="math inline">\((4\times 4)\)</span> matrix are labelled by the binary strings <span class="math inline">\(00, 01, 10, 11\)</span>, and the <span class="math inline">\((2\times 2)\)</span> matrices on the diagonal represent operations applied to the qubit in the second register.
+Here all of them are the identity <span class="math inline">\(\mathbf{1}\)</span> except the <span class="math inline">\((01, 01)\)</span> entry, which represents the bit-flip <span class="math inline">\(X\)</span>.
+This is because <span class="math inline">\(f(01)=1\)</span>, and <span class="math inline">\(f(x)=0\)</span> for all other binary strings <span class="math inline">\(x\)</span>.</p>
+</div>
+</div>
+<div id="phase-kick-back" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Phase kick-back</h2>
+<p>What makes the quantum evaluation of Boolean functions really interesting is its action on a superposition of different inputs <span class="math inline">\(x\)</span>.
+For example,
+<span class="math display">\[
+  \sum_{x}|x\rangle|0\rangle
+  \longmapsto
+  \sum_{x}|x\rangle|f(x)\rangle
+\]</span>
+produces <span class="math inline">\(f(x)\)</span> for <em>all</em> <span class="math inline">\(x\)</span> in a <em>single</em> run (note that we have dropped the normalisation factor).
+It is more instructive to see the effect of the function evaluation when the qubit in the second register is prepared in the state <span class="math inline">\(|-\rangle = \frac{1}{\sqrt 2}(|0\rangle - |1\rangle\)</span>, since then
+<span class="math display">\[
+  \sum_x|x\rangle|-\rangle
+  \longmapsto
+  \sum_x (-1)^{f(x)}|x\rangle|-\rangle
+\]</span>
+(as shown in Figure <a href="chapter6.html#fig:n-equals-3-minus-circuit-diagram">6.2</a>).
+Whenever <span class="math inline">\(f(x)=1\)</span>, the bit flip <span class="math inline">\(X\)</span> is applied to the qubit in the second register.</p>
+
+<div class="figure" style="text-align: center"><span id="fig:n-equals-3-minus-circuit-diagram"></span>
+<img src="quantum-info_files/figure-html/n-equals-3-minus-circuit-diagram-1.png" alt="Computing some \(f\colon\{0,1\}^3\to\{0,1\}\) with the second-register qubit in state \(|-\rangle\)." width="672" />
+<p class="caption">
+Figure 6.2: Computing some <span class="math inline">\(f\colon\{0,1\}^3\to\{0,1\}\)</span> with the second-register qubit in state <span class="math inline">\(|-\rangle\)</span>.
+</p>
+</div>
+<p>The reason for defining the state <span class="math inline">\(|-\rangle\)</span> as we do is that it is the eigenstate of <span class="math inline">\(X\)</span> with eigenvalue <span class="math inline">\(-1\)</span>.
+So, due the phase kick-back, whenever <span class="math inline">\(f(x)=1\)</span>, the phase factor <span class="math inline">\(-1\)</span> appears in front of the corresponding term <span class="math inline">\(|x\rangle\)</span>.
+As you can see, the second register stays in state <span class="math inline">\(|-\rangle\)</span> all the way through the computation — it is the first register where things happen.
+Let us now see how quantum Boolean function evaluation introduces phase shifts in quantum interference experiments, and how such experiments can be viewed as computations.</p>
+</div>
+<div id="oracles-and-query-complexity" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Oracles and query complexity</h2>
+<p>The computational power of quantum interference was discovered by counting how many times certain Boolean functions have to be evaluated in order to find the answer to a given problem.
+Imagine a “black box” (also called an <strong>oracle</strong>) that computes some fixed Boolean function, but whose inner workings are unknown to us, and a scenario in which one wants to learn about a given property of the Boolean function but has to “pay” (in energy, or in money!) for each use (often referred to as a <strong>query</strong>) of the box.
+In such a setting, the objective is to minimise number of queries to the oracle while finding out as much information as possible about the function computed by the oracle.
+For this purpose, we ignore everything that happens inside the black box: the Boolean function evaluation counts as just <em>one</em> computational step.</p>
+<div id="deutschs-algorithm" class="section level3" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Deutsch’s algorithm</h3>
+
+</div>
+</div>
 </div>
 
 
 
+<div class="footnotes">
+<hr />
+<ol start="81">
+<li id="fn81"><p>Please: do not confuse the capital <span class="math inline">\(X\)</span>, which is the Pauli flip operator <span class="math inline">\(\sigma_x\)</span>, with the small <span class="math inline">\(x\)</span>, which is a binary string stored in the first register and the argument of our Boolean function <span class="math inline">\(f\)</span>.<a href="chapter6.html#fnref81" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
             </section>
 
           </div>
