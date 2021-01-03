@@ -79,7 +79,7 @@
 
 \title{Lectures on Quantum Information Science}
 \author{Artur Ekert and Tim Hosgood}
-\date{Last updated: January 02, 2021}
+\date{Last updated: January 03, 2021}
 
 
 \begin{document}
@@ -375,16 +375,160 @@ To make the notation a bit less cumbersome, we will sometimes\footnote{Do not co
   \end{aligned}
 \]
 
+::: \{.idea data-latex=""
+With any \emph{isolated} quantum system, which can be prepared in \(n\) \emph{perfectly distinguishable} states, we can associate a Hilbert space \(\mathcal{H}\) of dimension \(n\) such that each vector \(|v\rangle\in\mathcal{H}\) of unit length (i.e.~\(\langle v\rangle{v} =1\)) represents a quantum state of the system.
+The overall phase of the vector has no physical significance: \(|v\rangle\) and \(e^{i\varphi}|v\rangle\) (for any real \(\varphi\)) both describe the same state.
+The inner product \(\langle u|v\rangle\) is the \emph{probability amplitude} that a quantum system prepared in state \(|v\rangle\) will be found in state \(|u\rangle\) upon measurement.
+States corresponding to orthogonal vectors (i.e.~\(\langle u|v\rangle=0\)) are \emph{perfectly distinguishable}, since, if we prepare the system in state \(|v\rangle\), then it will never be found in state \(|u\rangle\), and vice versa.
+In particular, states forming orthonormal bases are always perfectly distinguishable from each other.
+Choosing such states, as we shall see in a moment, is equivalent to choosing a particular quantum measurement.
+:::
+
 \hypertarget{operators}{%
 \subsubsection{Operators}\label{operators}}
 
-\textbf{!!!TODO!!! note that unitary operators preserve the inner product (2.5)}
+A \textbf{linear map} between two vector spaces \(\mathcal{H}\) and \(\mathcal{K}\) is a function \(A\colon\mathcal{H}\to\mathcal{K}\) that respects linear combinations:
+\[
+  A(c_1|v_1\rangle+c_2|v_2\rangle)=c_1 A|v_1\rangle+c_2 A|v_2\rangle
+\]
+for any vectors \(|v_1\rangle,|v_2\rangle\) and any complex numbers \(c_1,c_2\).
+We will focus mostly on \textbf{endomorphisms}, that is, maps from \(\mathcal{H}\) to \(\mathcal{H}\), and we will call them \textbf{operators}.
+The symbol \(\operatorname{id}\) is reserved for the identity operator that maps every element of \(\mathcal{H}\) to itself (i.e.~\(\operatorname{id}|v\rangle=|v\rangle\) for all \(|v\rangle\in\mathcal{H}\)).
+The product \(AB\) of two operators \(A\) and \(B\) is the operator obtained by first applying \(B\) to some ket \(|v\rangle\) and then \(A\) to the ket which results from applying \(B\):
+\[
+  (AB)|v\rangle = A(B|v\rangle).
+\]
+The order \emph{does} matter: in general, \(AB\neq BA\).
+In the exceptional case in which \(AB=BA\), one says that these two operators \textbf{commute}.
+The inverse of \(A\), written as \(A^{-1}\), is the operator that satisfies \(AA^{-1}=\operatorname{id}=A^{-1}A\).
+For finite-dimensional spaces, one only needs to check \emph{one} of these two conditions, since any one of the two implies the other, whereas, on an infinite-dimensional space, \emph{both} must be checked.
+Finally, given a particular basis, an operator \(A\) is uniquely determined by the entries of its matrix, defined by \(A_{ij}=\langle i|A|j\rangle\).
+The \textbf{adjoint}, or \textbf{Hermitian conjugate}, of \(A\), denoted by \(A^\dagger\), is defined by the relation
+\[
+  \begin{gathered}
+    \langle i|A^\dagger|j\rangle
+    = \langle j|A|i\rangle^\star
+  \\\mbox{for all $|i\rangle,|j\rangle\in\mathcal{H}$}.
+  \end{gathered}
+\]
+
+An operator \(A\) is said to be
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{normal} if \(AA^\dagger = A^\dagger A\),
+\item
+  \textbf{unitary} if \(AA^\dagger = A^\dagger A = \operatorname{id}\),
+\item
+  \textbf{Hermitian} (or \textbf{self-adjoint}) if \(A^\dagger = A\).
+\end{itemize}
+
+Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.
+Note that unitary operators preserve the inner product: given a unitary operator \(U\) and two kets \(|a\rangle\) and \(|b\rangle\), and defining \(|a'\rangle=U|a\rangle\) and \(|b'\rangle=U|b\rangle\), we have that
+\[
+  \begin{gathered}
+    \langle a'|=\langle a|U^\dagger
+  \\\langle b'|=\langle b|U^\dagger
+  \\\langle a'|b'\rangle=\langle a|U^\dagger U|b\rangle=\langle a|\operatorname{id}|b\rangle=\langle a|b\rangle.
+  \end{gathered}
+\]
+Preserving the inner product implies preserving the norm induced by this product, i.e.~unit state vectors are mapped to unit state vectors, i.e.~\emph{unitary operations are the isometries of the Euclidean norm}.
 
 \hypertarget{outer-products}{%
 \subsubsection{Outer products}\label{outer-products}}
 
+Apart from the inner product \(\langle u|v\rangle\), which is a complex number, we can also form the \textbf{outer product} \(|u\rangle\langle v|\), which is a linear map (operator) on \(\mathcal{H}\) (or on \(\mathcal{H}^\star\), depending how you look at it).
+This is what physicists like (and what mathematicians dislike!) about Dirac notation: a certain degree of healthy ambiguity.
+
+\begin{itemize}
+\tightlist
+\item
+  The result of \(|u\rangle\langle v|\) acting on a ket \(|x\rangle\) is \(|u\rangle\langle v|x\rangle\), i.e.~the vector \(|u\rangle\) multiplied by the complex number \(\langle v|x\rangle\).
+\item
+  Similarly, the result of \(|u\rangle\langle v|\) acting on a bra \(\langle y|\) is \(\langle y|u\rangle\langle v|\), i.e.~the functional \(\langle v|\) multiplied by the complex number \(\langle y|u\rangle\).
+\end{itemize}
+
+The product of two maps, \(A=|a\rangle\langle b|\) followed by \(B=|c\rangle\langle d|\), is a linear map \(BA\), which can be written in Dirac notation as
+\[
+  BA = |c\rangle\langle d|a\rangle\langle b| = \langle d|a\rangle|c\rangle\langle b|
+\]
+i.e.~the inner product (complex number) \(\langle d|a\rangle\) times the outer product (linear map) \(|c\rangle\langle b|\).
+
+Any operator on \(\mathcal{H}\) can be expressed as a sum of outer products. Given an orthonormal basis \(\{|e_i\rangle\}\), any operator which maps the basis vectors \(|e_i\rangle\) to vectors \(|f_i\rangle\) can be written as \(\sum_i|f_i\rangle\langle e_i|\), where the sum is over all the vectors in the orthonormal basis.
+If the vectors \(\{|f_i\rangle\}\) also form an orthonormal basis then the operator simply ``rotates'' one orthonormal basis into another.
+These are unitary operators which preserve the inner product.
+In particular, if each \(|e_i\rangle\) is mapped to \(|e_i\rangle\), then we obtain the identity operator:
+\[
+  \sum_i|e_i\rangle\langle e_i|=\operatorname{id}.
+\]
+This relation holds for \emph{any} orthonormal basis, and it is one of the most ubiquitous and useful formulas in quantum theory.
+For example, for any vector \(|v\rangle\) and for any orthonormal basis \(\{|e_i\rangle\}\), we have
+\[
+  \begin{aligned}
+    |v\rangle
+    &= \operatorname{id}|v\rangle
+  \\&= \sum_i |e_i\rangle\langle e_i|\;|v\rangle
+  \\&= \sum_i |e_i\rangle\;\langle e_i|v\rangle
+  \\&= \sum_i v_i|e_i\rangle,
+  \end{aligned}
+\]
+where \(v_i=\langle e_i\rangle{v}\) are the components of \(|v\rangle\).
+Finally, note that the adjoint of \(|a\rangle\langle b|\) is \(|b\rangle\langle a|\).
+
 \hypertarget{the-trace}{%
 \subsubsection{The trace}\label{the-trace}}
+
+The \textbf{trace} is an operation which turns outer products into inner products,
+\[
+  \operatorname{tr}\colon |b\rangle\langle a| \longmapsto \langle a|b\rangle.
+\]
+We have just seen that any linear operator can be written as a sum of outer products, and so we can extend the definition of trace (by linearity) to any operator.
+Alternatively, for any square matrix \(A\), the trace of \(A\) is defined to be the sum of its diagonal elements:
+\[
+  \operatorname{tr}A = \sum_k \langle e_k|A|e_k\rangle = \sum_k A_{kk}.
+\]
+You can show, using this definition or otherwise, that the trace is cyclic (i.e.~\(\operatorname{tr}(AB) = \operatorname{tr}(BA)\)) and linear (i.e.~\(\operatorname{tr}(\alpha A+\beta B) = \alpha\operatorname{tr}(A)+\beta\operatorname{tr}(B)\), where \(A\) and \(B\) are square matrices and \(\alpha\) and \(\beta\) complex numbers).
+Moreover,
+\[
+  \begin{aligned}
+    \operatorname{tr}|b\rangle\langle a|
+    &= \sum_k \langle e_k|b\rangle\langle a|e_k\rangle
+  \\&= \sum_k \langle a|e_k\rangle\langle e_k|b\rangle
+  \\&= \langle a|\operatorname{id}\rangle|b\rangle
+  \\&= \langle a|b\rangle.
+  \end{aligned}
+\]
+Here, the second term can be viewed both as the sum of the diagonal elements of \(|b\rangle\langle a|\) in the \(|e_k\rangle\) basis, and as the sum of the products of two complex numbers \(\langle e_k|b\rangle\) and \(\langle a|e_k\rangle\).
+We have used the decomposition of the identity, \(\sum_k|e_k\rangle\langle e_k|=\operatorname{id}\).
+Given that we can decompose the identity by choosing any orthonormal basis, it is clear that the trace does \emph{not} depend on the choice of the basis.
+
+\hypertarget{some-useful-identities}{%
+\subsubsection{Some useful identities}\label{some-useful-identities}}
+
+\begin{itemize}
+\tightlist
+\item
+  \(|a\rangle^\dagger = \langle a|\)
+\item
+  \(\langle a|^\dagger = |a\rangle\)
+\item
+  \((\alpha|a\rangle+\beta|b\rangle)^\dagger = \alpha^\star\langle a|+\beta^\star\langle b|\)
+\item
+  \((|a\rangle\langle b|)^\dagger = |b\rangle\langle a|\)
+\item
+  \((AB)^\dagger=B^\dagger A^\dagger\)
+\item
+  \((\alpha A+\beta B)^\dagger=\alpha^\star A^\dagger+\beta^\star B^\dagger\)
+\item
+  \((A^\dagger)^\dagger=A\)
+\item
+  \(\operatorname{tr}(\alpha A+ \beta B) = \alpha \operatorname{tr}(A)+\beta\operatorname{tr}(B)\)
+\item
+  \(\operatorname{tr}|a\rangle\langle b| = \langle b|a\rangle\)
+\item
+  \(\operatorname{tr}(ABC) = \operatorname{tr}(CAB) = \operatorname{tr}(BCA)\)
+\end{itemize}
 
 \hypertarget{part-budding}{%
 \part{Budding}\label{part-budding}}

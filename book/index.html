@@ -84,6 +84,7 @@
 <li class="chapter" data-level="0.1.6" data-path="index.html"><a href="index.html#operators"><i class="fa fa-check"></i><b>0.1.6</b> Operators</a></li>
 <li class="chapter" data-level="0.1.7" data-path="index.html"><a href="index.html#outer-products"><i class="fa fa-check"></i><b>0.1.7</b> Outer products</a></li>
 <li class="chapter" data-level="0.1.8" data-path="index.html"><a href="index.html#the-trace"><i class="fa fa-check"></i><b>0.1.8</b> The trace</a></li>
+<li class="chapter" data-level="0.1.9" data-path="index.html"><a href="index.html#some-useful-identities"><i class="fa fa-check"></i><b>0.1.9</b> Some useful identities</a></li>
 </ul></li>
 </ul></li>
 <li class="part"><span><b>I Budding</b></span></li>
@@ -277,7 +278,7 @@
 <div id="header">
 <h1 class="title">Lectures on Quantum Information Science</h1>
 <p class="author"><em>Artur Ekert and Tim Hosgood</em></p>
-<p class="date"><em>Last updated: January 02, 2021</em></p>
+<p class="date"><em>Last updated: January 03, 2021</em></p>
 </div>
 <div id="introduction" class="section level1 unnumbered">
 <h1>Introduction</h1>
@@ -482,16 +483,132 @@ Then the bras <span class="math inline">\(\langle e_i|\)</span> form the <strong
     &amp;= \sum_j \langle v|i\rangle\langle i|.
   \end{aligned}
 \]</span></p>
+<p>::: {.idea data-latex=""
+With any <em>isolated</em> quantum system, which can be prepared in <span class="math inline">\(n\)</span> <em>perfectly distinguishable</em> states, we can associate a Hilbert space <span class="math inline">\(\mathcal{H}\)</span> of dimension <span class="math inline">\(n\)</span> such that each vector <span class="math inline">\(|v\rangle\in\mathcal{H}\)</span> of unit length (i.e. <span class="math inline">\(\langle v\rangle{v} =1\)</span>) represents a quantum state of the system.
+The overall phase of the vector has no physical significance: <span class="math inline">\(|v\rangle\)</span> and <span class="math inline">\(e^{i\varphi}|v\rangle\)</span> (for any real <span class="math inline">\(\varphi\)</span>) both describe the same state.
+The inner product <span class="math inline">\(\langle u|v\rangle\)</span> is the <em>probability amplitude</em> that a quantum system prepared in state <span class="math inline">\(|v\rangle\)</span> will be found in state <span class="math inline">\(|u\rangle\)</span> upon measurement.
+States corresponding to orthogonal vectors (i.e. <span class="math inline">\(\langle u|v\rangle=0\)</span>) are <em>perfectly distinguishable</em>, since, if we prepare the system in state <span class="math inline">\(|v\rangle\)</span>, then it will never be found in state <span class="math inline">\(|u\rangle\)</span>, and vice versa.
+In particular, states forming orthonormal bases are always perfectly distinguishable from each other.
+Choosing such states, as we shall see in a moment, is equivalent to choosing a particular quantum measurement.
+:::</p>
 </div>
 <div id="operators" class="section level3" number="0.1.6">
 <h3><span class="header-section-number">0.1.6</span> Operators</h3>
-<p><strong>!!!TODO!!! note that unitary operators preserve the inner product (2.5)</strong></p>
+<p>A <strong>linear map</strong> between two vector spaces <span class="math inline">\(\mathcal{H}\)</span> and <span class="math inline">\(\mathcal{K}\)</span> is a function <span class="math inline">\(A\colon\mathcal{H}\to\mathcal{K}\)</span> that respects linear combinations:
+<span class="math display">\[
+  A(c_1|v_1\rangle+c_2|v_2\rangle)=c_1 A|v_1\rangle+c_2 A|v_2\rangle
+\]</span>
+for any vectors <span class="math inline">\(|v_1\rangle,|v_2\rangle\)</span> and any complex numbers <span class="math inline">\(c_1,c_2\)</span>.
+We will focus mostly on <strong>endomorphisms</strong>, that is, maps from <span class="math inline">\(\mathcal{H}\)</span> to <span class="math inline">\(\mathcal{H}\)</span>, and we will call them <strong>operators</strong>.
+The symbol <span class="math inline">\(\operatorname{id}\)</span> is reserved for the identity operator that maps every element of <span class="math inline">\(\mathcal{H}\)</span> to itself (i.e. <span class="math inline">\(\operatorname{id}|v\rangle=|v\rangle\)</span> for all <span class="math inline">\(|v\rangle\in\mathcal{H}\)</span>).
+The product <span class="math inline">\(AB\)</span> of two operators <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> is the operator obtained by first applying <span class="math inline">\(B\)</span> to some ket <span class="math inline">\(|v\rangle\)</span> and then <span class="math inline">\(A\)</span> to the ket which results from applying <span class="math inline">\(B\)</span>:
+<span class="math display">\[
+  (AB)|v\rangle = A(B|v\rangle).
+\]</span>
+The order <em>does</em> matter: in general, <span class="math inline">\(AB\neq BA\)</span>.
+In the exceptional case in which <span class="math inline">\(AB=BA\)</span>, one says that these two operators <strong>commute</strong>.
+The inverse of <span class="math inline">\(A\)</span>, written as <span class="math inline">\(A^{-1}\)</span>, is the operator that satisfies <span class="math inline">\(AA^{-1}=\operatorname{id}=A^{-1}A\)</span>.
+For finite-dimensional spaces, one only needs to check <em>one</em> of these two conditions, since any one of the two implies the other, whereas, on an infinite-dimensional space, <em>both</em> must be checked.
+Finally, given a particular basis, an operator <span class="math inline">\(A\)</span> is uniquely determined by the entries of its matrix, defined by <span class="math inline">\(A_{ij}=\langle i|A|j\rangle\)</span>.
+The <strong>adjoint</strong>, or <strong>Hermitian conjugate</strong>, of <span class="math inline">\(A\)</span>, denoted by <span class="math inline">\(A^\dagger\)</span>, is defined by the relation
+<span class="math display">\[
+  \begin{gathered}
+    \langle i|A^\dagger|j\rangle
+    = \langle j|A|i\rangle^\star
+  \\\mbox{for all $|i\rangle,|j\rangle\in\mathcal{H}$}.
+  \end{gathered}
+\]</span></p>
+<p>An operator <span class="math inline">\(A\)</span> is said to be</p>
+<ul>
+<li><strong>normal</strong> if <span class="math inline">\(AA^\dagger = A^\dagger A\)</span>,</li>
+<li><strong>unitary</strong> if <span class="math inline">\(AA^\dagger = A^\dagger A = \operatorname{id}\)</span>,</li>
+<li><strong>Hermitian</strong> (or <strong>self-adjoint</strong>) if <span class="math inline">\(A^\dagger = A\)</span>.</li>
+</ul>
+<p>Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.
+Note that unitary operators preserve the inner product: given a unitary operator <span class="math inline">\(U\)</span> and two kets <span class="math inline">\(|a\rangle\)</span> and <span class="math inline">\(|b\rangle\)</span>, and defining <span class="math inline">\(|a&#39;\rangle=U|a\rangle\)</span> and <span class="math inline">\(|b&#39;\rangle=U|b\rangle\)</span>, we have that
+<span class="math display">\[
+  \begin{gathered}
+    \langle a&#39;|=\langle a|U^\dagger
+  \\\langle b&#39;|=\langle b|U^\dagger
+  \\\langle a&#39;|b&#39;\rangle=\langle a|U^\dagger U|b\rangle=\langle a|\operatorname{id}|b\rangle=\langle a|b\rangle.
+  \end{gathered}
+\]</span>
+Preserving the inner product implies preserving the norm induced by this product, i.e. unit state vectors are mapped to unit state vectors, i.e. <em>unitary operations are the isometries of the Euclidean norm</em>.</p>
 </div>
 <div id="outer-products" class="section level3" number="0.1.7">
 <h3><span class="header-section-number">0.1.7</span> Outer products</h3>
+<p>Apart from the inner product <span class="math inline">\(\langle u|v\rangle\)</span>, which is a complex number, we can also form the <strong>outer product</strong> <span class="math inline">\(|u\rangle\langle v|\)</span>, which is a linear map (operator) on <span class="math inline">\(\mathcal{H}\)</span> (or on <span class="math inline">\(\mathcal{H}^\star\)</span>, depending how you look at it).
+This is what physicists like (and what mathematicians dislike!) about Dirac notation: a certain degree of healthy ambiguity.</p>
+<ul>
+<li>The result of <span class="math inline">\(|u\rangle\langle v|\)</span> acting on a ket <span class="math inline">\(|x\rangle\)</span> is <span class="math inline">\(|u\rangle\langle v|x\rangle\)</span>, i.e. the vector <span class="math inline">\(|u\rangle\)</span> multiplied by the complex number <span class="math inline">\(\langle v|x\rangle\)</span>.</li>
+<li>Similarly, the result of <span class="math inline">\(|u\rangle\langle v|\)</span> acting on a bra <span class="math inline">\(\langle y|\)</span> is <span class="math inline">\(\langle y|u\rangle\langle v|\)</span>, i.e. the functional <span class="math inline">\(\langle v|\)</span> multiplied by the complex number <span class="math inline">\(\langle y|u\rangle\)</span>.</li>
+</ul>
+<p>The product of two maps, <span class="math inline">\(A=|a\rangle\langle b|\)</span> followed by <span class="math inline">\(B=|c\rangle\langle d|\)</span>, is a linear map <span class="math inline">\(BA\)</span>, which can be written in Dirac notation as
+<span class="math display">\[
+  BA = |c\rangle\langle d|a\rangle\langle b| = \langle d|a\rangle|c\rangle\langle b|
+\]</span>
+i.e. the inner product (complex number) <span class="math inline">\(\langle d|a\rangle\)</span> times the outer product (linear map) <span class="math inline">\(|c\rangle\langle b|\)</span>.</p>
+<p>Any operator on <span class="math inline">\(\mathcal{H}\)</span> can be expressed as a sum of outer products. Given an orthonormal basis <span class="math inline">\(\{|e_i\rangle\}\)</span>, any operator which maps the basis vectors <span class="math inline">\(|e_i\rangle\)</span> to vectors <span class="math inline">\(|f_i\rangle\)</span> can be written as <span class="math inline">\(\sum_i|f_i\rangle\langle e_i|\)</span>, where the sum is over all the vectors in the orthonormal basis.
+If the vectors <span class="math inline">\(\{|f_i\rangle\}\)</span> also form an orthonormal basis then the operator simply “rotates” one orthonormal basis into another.
+These are unitary operators which preserve the inner product.
+In particular, if each <span class="math inline">\(|e_i\rangle\)</span> is mapped to <span class="math inline">\(|e_i\rangle\)</span>, then we obtain the identity operator:
+<span class="math display">\[
+  \sum_i|e_i\rangle\langle e_i|=\operatorname{id}.
+\]</span>
+This relation holds for <em>any</em> orthonormal basis, and it is one of the most ubiquitous and useful formulas in quantum theory.
+For example, for any vector <span class="math inline">\(|v\rangle\)</span> and for any orthonormal basis <span class="math inline">\(\{|e_i\rangle\}\)</span>, we have
+<span class="math display">\[
+  \begin{aligned}
+    |v\rangle
+    &amp;= \operatorname{id}|v\rangle
+  \\&amp;= \sum_i |e_i\rangle\langle e_i|\;|v\rangle
+  \\&amp;= \sum_i |e_i\rangle\;\langle e_i|v\rangle
+  \\&amp;= \sum_i v_i|e_i\rangle,
+  \end{aligned}
+\]</span>
+where <span class="math inline">\(v_i=\langle e_i\rangle{v}\)</span> are the components of <span class="math inline">\(|v\rangle\)</span>.
+Finally, note that the adjoint of <span class="math inline">\(|a\rangle\langle b|\)</span> is <span class="math inline">\(|b\rangle\langle a|\)</span>.</p>
 </div>
 <div id="the-trace" class="section level3" number="0.1.8">
 <h3><span class="header-section-number">0.1.8</span> The trace</h3>
+<p>The <strong>trace</strong> is an operation which turns outer products into inner products,
+<span class="math display">\[
+  \operatorname{tr}\colon |b\rangle\langle a| \longmapsto \langle a|b\rangle.
+\]</span>
+We have just seen that any linear operator can be written as a sum of outer products, and so we can extend the definition of trace (by linearity) to any operator.
+Alternatively, for any square matrix <span class="math inline">\(A\)</span>, the trace of <span class="math inline">\(A\)</span> is defined to be the sum of its diagonal elements:
+<span class="math display">\[
+  \operatorname{tr}A = \sum_k \langle e_k|A|e_k\rangle = \sum_k A_{kk}.
+\]</span>
+You can show, using this definition or otherwise, that the trace is cyclic (i.e. <span class="math inline">\(\operatorname{tr}(AB) = \operatorname{tr}(BA)\)</span>) and linear (i.e. <span class="math inline">\(\operatorname{tr}(\alpha A+\beta B) = \alpha\operatorname{tr}(A)+\beta\operatorname{tr}(B)\)</span>, where <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are square matrices and <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> complex numbers).
+Moreover,
+<span class="math display">\[
+  \begin{aligned}
+    \operatorname{tr}|b\rangle\langle a|
+    &amp;= \sum_k \langle e_k|b\rangle\langle a|e_k\rangle
+  \\&amp;= \sum_k \langle a|e_k\rangle\langle e_k|b\rangle
+  \\&amp;= \langle a|\operatorname{id}\rangle|b\rangle
+  \\&amp;= \langle a|b\rangle.
+  \end{aligned}
+\]</span>
+Here, the second term can be viewed both as the sum of the diagonal elements of <span class="math inline">\(|b\rangle\langle a|\)</span> in the <span class="math inline">\(|e_k\rangle\)</span> basis, and as the sum of the products of two complex numbers <span class="math inline">\(\langle e_k|b\rangle\)</span> and <span class="math inline">\(\langle a|e_k\rangle\)</span>.
+We have used the decomposition of the identity, <span class="math inline">\(\sum_k|e_k\rangle\langle e_k|=\operatorname{id}\)</span>.
+Given that we can decompose the identity by choosing any orthonormal basis, it is clear that the trace does <em>not</em> depend on the choice of the basis.</p>
+</div>
+<div id="some-useful-identities" class="section level3" number="0.1.9">
+<h3><span class="header-section-number">0.1.9</span> Some useful identities</h3>
+<ul>
+<li><span class="math inline">\(|a\rangle^\dagger = \langle a|\)</span></li>
+<li><span class="math inline">\(\langle a|^\dagger = |a\rangle\)</span></li>
+<li><span class="math inline">\((\alpha|a\rangle+\beta|b\rangle)^\dagger = \alpha^\star\langle a|+\beta^\star\langle b|\)</span></li>
+<li><span class="math inline">\((|a\rangle\langle b|)^\dagger = |b\rangle\langle a|\)</span></li>
+<li><span class="math inline">\((AB)^\dagger=B^\dagger A^\dagger\)</span></li>
+<li><span class="math inline">\((\alpha A+\beta B)^\dagger=\alpha^\star A^\dagger+\beta^\star B^\dagger\)</span></li>
+<li><span class="math inline">\((A^\dagger)^\dagger=A\)</span></li>
+<li><span class="math inline">\(\operatorname{tr}(\alpha A+ \beta B) = \alpha \operatorname{tr}(A)+\beta\operatorname{tr}(B)\)</span></li>
+<li><span class="math inline">\(\operatorname{tr}|a\rangle\langle b| = \langle b|a\rangle\)</span></li>
+<li><span class="math inline">\(\operatorname{tr}(ABC) = \operatorname{tr}(CAB) = \operatorname{tr}(BCA)\)</span></li>
+</ul>
 
 </div>
 </div>
