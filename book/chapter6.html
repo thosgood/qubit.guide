@@ -238,6 +238,7 @@
 <li class="chapter" data-level="6.4.2" data-path="chapter6.html"><a href="chapter6.html#grovers-search-algorithm"><i class="fa fa-check"></i><b>6.4.2</b> Grover’s search algorithm</a></li>
 <li class="chapter" data-level="6.4.3" data-path="chapter6.html"><a href="chapter6.html#simons-problem"><i class="fa fa-check"></i><b>6.4.3</b> Simon’s problem</a></li>
 </ul></li>
+<li class="chapter" data-level="6.5" data-path="chapter6.html"><a href="chapter6.html#remarks-and-exercises-2"><i class="fa fa-check"></i><b>6.5</b> Remarks and exercises</a></li>
 </ul></li>
 <li class="part"><span><b>II Flowering</b></span></li>
 <li class="chapter" data-level="7" data-path="chapter7.html"><a href="chapter7.html"><i class="fa fa-check"></i><b>7</b> Bell’s theorem</a>
@@ -513,6 +514,8 @@ Let me now take you through the three early quantum algorithms, each one offerin
 </div>
 <div id="three-more-quantum-algorithms" class="section level2" number="6.4">
 <h2><span class="header-section-number">6.4</span> Three more quantum algorithms</h2>
+<p>Along with Deutsch’s algorithm, there are three more fundamental quantum algorithms that we will study here.
+Each one was designed to solve a different specific problem, but they all share some similarity: this omnipresent sequence of Hadamard, function evaluation, Hadamard.</p>
 <div id="the-bernstein-vazirani-algorithm" class="section level3" number="6.4.1">
 <h3><span class="header-section-number">6.4.1</span> The Bernstein-Vazirani algorithm</h3>
 <div class="scenario">
@@ -673,8 +676,133 @@ If these can be checked at a rate of, say, one million keys per second, then a c
 <div id="simons-problem" class="section level3" number="6.4.3">
 <h3><span class="header-section-number">6.4.3</span> Simon’s problem</h3>
 <p>Here we will see the simplest quantum algorithm that shows an exponential speed-up compared to the best classical algorithm.</p>
-
+<div class="scenario">
+<p>We are presented with an oracle that computes some unknown function <span class="math inline">\(f\colon\{0,1\}^n\to\{0,1\}^n\)</span>, but we are promised that <span class="math inline">\(f\)</span> satisfies<a href="#fn87" class="footnote-ref" id="fnref87"><sup>87</sup></a>
+<span class="math display">\[
+  f(x) = f(x\oplus s)
+\]</span>
+for some fixed <span class="math inline">\(s\in\{0,1\}^n\)</span>, which we call the <strong>period</strong> of <span class="math inline">\(f\)</span>.</p>
+<p>Our task is to determine, using the fewest queries possible, the value of the <span class="math inline">\(n\)</span>-bit string <span class="math inline">\(s\)</span>.</p>
 </div>
+<p>Classically, this problem is exponentially hard.
+We will not go through a detailed proof of this fact, but the intuition is reasonably simple: since there is no structure in the function <span class="math inline">\(f\)</span> that would help us find its period <span class="math inline">\(s\)</span>, the best we can do is evaluate <span class="math inline">\(f\)</span> on random inputs and hope that we find some distinct <span class="math inline">\(x\)</span> and <span class="math inline">\(x&#39;\)</span> such that <span class="math inline">\(f(x)=f(x&#39;)\)</span>, and then we know that <span class="math inline">\(s=x\oplus y\)</span>.
+After having made <span class="math inline">\(m\)</span> queries to the oracle, we have a list of <span class="math inline">\(m\)</span> values of the tuple <span class="math inline">\((x,f(x))\)</span>; there are <span class="math inline">\(m(m-1)/2\)</span> possible pairs which could match within this list, and the probability that a randomly chosen pair match is <span class="math inline">\(1/2^{n-1}\)</span>.
+This means that the probability of there being at least one matching pair within the list of <span class="math inline">\(m\)</span> tuples is less than <span class="math inline">\(m^2/2^n\)</span>.
+Clearly, the chance of finding a matching pair is negligible if the oracle is queried on fewer than <span class="math inline">\(\sqrt{2^n}\)</span> inputs.</p>
+<p>The quantum case, on the other hand, gives a result with high probability within a <em>linear</em> number of steps.
+The circuit that solves this problem, shown below, has a familiar Hadamard–function–Hadamard structure, but the second register has been expanded to <span class="math inline">\(n\)</span> qubits.</p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Simon’s problem).</p>
+</div>
+<p><em>First register: <span class="math inline">\(n\)</span> qubits. Second register: <span class="math inline">\(n\)</span> qubits.</em></p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-58-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<p>Let’s follow the evolution of the two registers in this circuit.
+We start off by preparing the equally-weighted superposition of all <span class="math inline">\(n\)</span>-bit strings, and then query the oracle:
+<span class="math display">\[
+  \begin{aligned}
+    |0^n\rangle|0^n\rangle
+    &amp;\longmapsto
+    \frac{1}{\sqrt{2^n}} \sum_x |x\rangle|0^n\rangle
+  \\&amp;\longmapsto
+    \frac{1}{\sqrt{2^n}} \sum_x |x\rangle|f(x)\rangle.
+  \end{aligned}
+\]</span>
+The second Hadamard transform on the first register then yields the final output state:
+<span class="math display" id="eq:final-first-register-simon">\[\begin{equation}
+  \frac{1}{2^n} \sum_{x,y} (-1)^{x\cdot y} |y\rangle|f(x)\rangle.
+\tag{6.1}
+\end{equation}\]</span></p>
+<p>Now, if we measure the second register <em>before</em> applying the second Hadamard transform to the first, we obtain one of the <span class="math inline">\(2^{n-1}\)</span> possible values of <span class="math inline">\(f(x)\)</span>, each equally likely.<a href="#fn88" class="footnote-ref" id="fnref88"><sup>88</sup></a>
+<strong>!!!TODO!!! have I understood this correctly?</strong></p>
+<p>Suppose that the outcome of the measurement is <span class="math inline">\(f(a)\)</span>.
+Given that both <span class="math inline">\(a\)</span> and <span class="math inline">\(a\oplus s\)</span> are mapped to <span class="math inline">\(f(a)\)</span> by <span class="math inline">\(f\)</span>, the first register then collapses to the state
+<span class="math display">\[
+  \frac{1}{\sqrt{2}}\big( |a\rangle + |a\oplus s\rangle \big).
+\]</span></p>
+<p>The subsequent Hadamard transform on the first register then gives us the final state<a href="#fn89" class="footnote-ref" id="fnref89"><sup>89</sup></a>
+<span class="math display">\[
+  \frac{1}{\sqrt{2^{n+1}}} \sum_y (-1)^{a\cdot y}
+    \Big( 1 + (-1)^{s\cdot y} \Big) |y\rangle|f(a)\rangle
+  =
+  \frac{1}{\sqrt{2^{n-1}}} \sum_{y\in s^\perp}
+    (-1)^{a\cdot y} |y\rangle|f(a)\rangle
+\]</span>
+where we have used the fact that <span class="math inline">\((a\oplus s)\cdot y = (a\cdot y)\oplus(s\cdot y)\)</span>, and that <span class="math inline">\(1+(-1)^{s\cdot y}\)</span> can have only two values: either <span class="math inline">\(2\)</span> (when <span class="math inline">\(s\cdot y = 0\)</span>), or <span class="math inline">\(0\)</span> (when <span class="math inline">\(s\cdot y = 1\)</span>).
+Now we measure the first register: the outcome is selected at random from all possible values of <span class="math inline">\(y\)</span> such that <span class="math inline">\(a\cdot y = 0\)</span>, each occurring with probability <span class="math inline">\(1/(2^{n-1})\)</span>.</p>
+<p>In fact, we do not have to measure the second register at all: it was a mathematical shortcut, simply taken for pedagogical purposes.
+Instead of collapsing the state to just one term in a superposition, we can express Equation <a href="chapter6.html#eq:final-first-register-simon">(6.1)</a> as<a href="#fn90" class="footnote-ref" id="fnref90"><sup>90</sup></a>
+<span class="math display">\[
+  \frac{1}{2^n} \sum_{y,f(a)}
+    \Big( (-1)^{a\cdot y} + (-1)^{(a\oplus s)\cdot y} \Big) |y\rangle|f(a)\rangle
+  =
+  \frac{1}{2^n} \sum_{y,f(a)} (-1)^{a\cdot y}
+    \Big( 1 + (-1)^{s\cdot y} \Big) |y\rangle|f(a)\rangle
+\]</span>
+where the summation over <span class="math inline">\(f(a)\)</span> means summing over all binary strings in the image of <span class="math inline">\(f\)</span>.</p>
+<p>The output of the algorithm is then
+<span class="math display">\[
+  \frac{1}{2^{n-1}} \sum_{y\in s^\perp} |y\rangle
+    \sum_{f(a)} (-1)^{a\cdot y} |f(a)\rangle
+\]</span>
+and, again, the measurement outcome is selected at random from all possible values of <span class="math inline">\(y\)</span> such that <span class="math inline">\(s\cdot y=0\)</span>.</p>
+<p>We are not quite done yet: we cannot infer <span class="math inline">\(s\)</span> from a <em>single</em> output <span class="math inline">\(y\)</span>.
+However, once we have found <span class="math inline">\(n\)</span> linearly independent<a href="#fn91" class="footnote-ref" id="fnref91"><sup>91</sup></a> strings <span class="math inline">\(y_1,y_2,\ldots,y_n\)</span>, we can solve the <span class="math inline">\(n\)</span> equations
+<span class="math display">\[
+  \begin{aligned}
+    s\cdot y_1 &amp;= 0
+  \\s\cdot y_2 &amp;= 0
+  \\&amp;\,\,\,\vdots
+  \\s\cdot y_n &amp;= 0
+  \end{aligned}
+\]</span>
+to determine a unique value of <span class="math inline">\(s\)</span>.</p>
+<p>So we run this algorithm repeatedly, each time obtaining another value of <span class="math inline">\(y\)</span> that satisfies <span class="math inline">\(s\cdot y = 0\)</span>.
+Every time we find some new value of <span class="math inline">\(y\)</span> that is linearly independent of all previous ones, we can discard half the potential candidates for <span class="math inline">\(s\)</span>.
+The probability that <span class="math inline">\(y_1,\ldots,y_n\)</span> are linearly independent is
+<span class="math display" id="eq:probability-linearly-independent">\[\begin{equation}
+  \left( 1 - \frac{1}{2^n} \right)
+  \left( 1 - \frac{1}{2^{n-1}} \right)
+  \ldots
+  \left( 1 - \frac{1}{2} \right).
+\tag{6.2}
+\end{equation}\]</span></p>
+<p>Indeed, suppose that we have <span class="math inline">\(k\)</span> linearly independent binary strings <span class="math inline">\(y_1,\ldots,y_k\)</span>.
+Then these strings span a subspace of size <span class="math inline">\(2^k\)</span>, consisting of all binary strings of the form <span class="math inline">\(\bigoplus_{i=1}^k b_i y_i\)</span>, where <span class="math inline">\(b_1,\ldots,b_k\in\{0,1\}\)</span>.
+Now suppose we obtain some <span class="math inline">\(y_{k+1}\)</span>.
+It will be linearly independent from the <span class="math inline">\(y_1,\ldots,y_k\)</span> if and only if it lies <em>outside</em> the subspace spanned by the <span class="math inline">\(y_1,\ldots,y_k\)</span>, which occurs with probability <span class="math inline">\(1-(2^k)/(2^n)\)</span>.
+We can bound Equation <a href="chapter6.html#eq:probability-linearly-independent">(6.2)</a> from below:<a href="#fn92" class="footnote-ref" id="fnref92"><sup>92</sup></a>
+<span class="math display">\[
+  \left[
+    1 -
+    \left(
+      \frac{1}{2^n} + \frac{1}{2^{n-1}} + \ldots + \frac14
+    \right)
+  \right]
+  \cdot \frac12
+  \geqslant\frac14.
+\]</span></p>
+<p>We conclude that we can determine <span class="math inline">\(s\)</span> with some constant probability of error after repeating the algorithm <span class="math inline">\(O(n)\)</span> times.
+The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.</p>
+
+<div class="figure" style="text-align: center"><span id="fig:simons-diagramatically"></span>
+<img src="quantum-info_files/figure-html/simons-diagramatically-1.png" alt="Picture all possible binary strings as dots, but with the string \(s\) denoted by a star. Every linearly independent \(y_{k+1}\) lets us “zoom in” twice as close towards \(s\)." width="576" />
+<p class="caption">
+Figure 6.4: Picture all possible binary strings as dots, but with the string <span class="math inline">\(s\)</span> denoted by a star. Every linearly independent <span class="math inline">\(y_{k+1}\)</span> lets us “zoom in” twice as close towards <span class="math inline">\(s\)</span>.
+</p>
+</div>
+</div>
+</div>
+<div id="remarks-and-exercises-2" class="section level2" number="6.5">
+<h2><span class="header-section-number">6.5</span> Remarks and exercises</h2>
+<ol style="list-style-type: decimal">
+<li>Consider the Boolean function <span class="math inline">\(f\colon\{0,1\}^n\to\{0,1\}\)</span> defined by <span class="math inline">\(f(x) = a\cdot x\)</span> for some fixed <span class="math inline">\(a\in\{0,1\}^n\)</span>.
+Exactly one half of the binary strings <span class="math inline">\(x\in\{0,1\}^n\)</span> give <span class="math inline">\(f(x)=0\)</span>, and the other half give <span class="math inline">\(f(x)=1\)</span>.</li>
+<li><strong>!!!TODO!!! implementing reflections</strong></li>
+<li><strong>!!!TODO!!! optimality of Grover</strong></li>
+</ol>
+
 </div>
 </div>
 
@@ -689,6 +817,12 @@ If these can be checked at a rate of, say, one million keys per second, then a c
 <li id="fn84"><p>Even if you don’t immediately see how this sum works for <span class="math inline">\(z\neq a\)</span> (writing <span class="math inline">\(|z\rangle\)</span> to mean the output), you can first calculate the probability that the output is <span class="math inline">\(z=a\)</span>. In this case it is easy to see that the sum is <span class="math inline">\(2^n\)</span>, and that in the final state <span class="math inline">\(\sum_z\alpha_z|z\rangle\)</span> the term <span class="math inline">\(z=a\)</span> has amplitude <span class="math inline">\(1\)</span>. Thus, by normalisation, all the other terms must be equal to <span class="math inline">\(0\)</span>.<a href="chapter6.html#fnref84" class="footnote-back">↩︎</a></p></li>
 <li id="fn85"><p>In fact, we shall completely ignore the second register from now on.<a href="chapter6.html#fnref85" class="footnote-back">↩︎</a></p></li>
 <li id="fn86"><p>We often omit from our notation the fact that the sum is over all , leaving it (hopefully) implicitly understood from the context.<a href="chapter6.html#fnref86" class="footnote-back">↩︎</a></p></li>
+<li id="fn87"><p>This is equivalent to saying that <span class="math inline">\(f\)</span> is <strong>two-to-one</strong>: for any <span class="math inline">\(y\in\{0,1\}^n\)</span> such that there exists some <span class="math inline">\(x\in\{0,1\}^n\)</span> with <span class="math inline">\(f(x)=y\)</span>, there exists exactly one other <span class="math inline">\(x&#39;\neq x\)</span> such that <span class="math inline">\(f(x&#39;)=y\)</span> as well.<a href="chapter6.html#fnref87" class="footnote-back">↩︎</a></p></li>
+<li id="fn88"><p>As we shall see in a moment, the actual measurement on the second register is not actually necessary.<a href="chapter6.html#fnref88" class="footnote-back">↩︎</a></p></li>
+<li id="fn89"><p>We write <span class="math inline">\(s^\perp\)</span> to mean the set of all <span class="math inline">\(y\in\{0,1\}^n\)</span> such that <span class="math inline">\(y\cdot s=0\)</span>.<a href="chapter6.html#fnref89" class="footnote-back">↩︎</a></p></li>
+<li id="fn90"><p>Recall that the image of <span class="math inline">\(f\)</span> is the set of all <span class="math inline">\(z\in\{0,1\}^n\)</span> such that there exists some <span class="math inline">\(x\in\{0,1\}^n\)</span> satisfying <span class="math inline">\(f(x)=z\)</span>.<a href="chapter6.html#fnref90" class="footnote-back">↩︎</a></p></li>
+<li id="fn91"><p>Here, <strong>linearly independent</strong> means that no string in the set <span class="math inline">\(\{y_1,\ldots,y_n\}\)</span> can be expressed as the bitwise sum of some other strings in this set.<a href="chapter6.html#fnref91" class="footnote-back">↩︎</a></p></li>
+<li id="fn92"><p>Use the inequality <span class="math display">\[\begin{aligned}(1-x)(1-y)&amp;= 1 - x - y - xy\\&amp;\geqslant 1 - (x+y)\end{aligned}\]</span> which holds for any <span class="math inline">\(x,y\in(0,1)\)</span>.<a href="chapter6.html#fnref92" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <script type="text/javascript" src="../sidenotes.js"></script>

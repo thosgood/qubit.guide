@@ -44,6 +44,7 @@ For any problems or queries regarding this site or its contents, please get in t
     + generally, **check all sidenotes**
     + if they all look good, then can we switch back to `\en` in the latex version?
 1. **improve sidenote y-positioning using jquery**
+    + also x-position when from e.g. an `.scenario` environment
 1. horizontal scrolling when maths is too wide on mobile
 1. replace links to sections with links named "Chapter 3", etc.
 1. be more consistent with the start of chapters

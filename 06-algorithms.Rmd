@@ -305,6 +305,10 @@ Let me now take you through the three early quantum algorithms, each one offerin
 
 ## Three more quantum algorithms
 
+Along with Deutsch's algorithm, there are three more fundamental quantum algorithms that we will study here.
+Each one was designed to solve a different specific problem, but they all share some similarity: this omnipresent sequence of Hadamard, function evaluation, Hadamard.
+
+
 ### The Bernstein-Vazirani algorithm
 
 ::: {.scenario data-latex=""}
@@ -618,3 +622,214 @@ If these can be checked at a rate of, say, one million keys per second, then a c
 ### Simon's problem
 
 Here we will see the simplest quantum algorithm that shows an exponential speed-up compared to the best classical algorithm.
+
+::: {.scenario data-latex=""}
+We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}^n$, but we are promised that $f$ satisfies^[This is equivalent to saying that $f$ is **two-to-one**: for any $y\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ with $f(x)=y$, there exists exactly one other $x'\neq x$ such that $f(x')=y$ as well.]
+$$
+  f(x) = f(x\oplus s)
+$$
+for some fixed $s\in\{0,1\}^n$, which we call the **period** of $f$.
+
+Our task is to determine, using the fewest queries possible, the value of the $n$-bit string $s$.
+:::
+
+Classically, this problem is exponentially hard.
+We will not go through a detailed proof of this fact, but the intuition is reasonably simple: since there is no structure in the function $f$ that would help us find its period $s$, the best we can do is evaluate $f$ on random inputs and hope that we find some distinct $x$ and $x'$ such that $f(x)=f(x')$, and then we know that $s=x\oplus y$.
+After having made $m$ queries to the oracle, we have a list of $m$ values of the tuple $(x,f(x))$; there are $m(m-1)/2$ possible pairs which could match within this list, and the probability that a randomly chosen pair match is $1/2^{n-1}$.
+This means that the probability of there being at least one matching pair within the list of $m$ tuples is less than $m^2/2^n$.
+Clearly, the chance of finding a matching pair is negligible if the oracle is queried on fewer than $\sqrt{2^n}$ inputs.
+
+The quantum case, on the other hand, gives a result with high probability within a _linear_ number of steps.
+The circuit that solves this problem, shown below, has a familiar Hadamard--function--Hadamard structure, but the second register has been expanded to $n$ qubits.
+
+:::: {.circuit data-latex=""}
+::: {.circuit_title}
+(Simon's problem).
+:::
+_First register: $n$ qubits. Second register: $n$ qubits._
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\begin{equation*}
+    \begin{quantikz}
+      \lstick[wires=4]{$\ket{0^n}$}
+      & \gate{H}
+      & \ctrl{4}
+      & \gate{H}
+      & \qw
+    \\[-1em]
+      & \gate{H}
+      & \ctrl{3}
+      & \gate{H}
+      & \qw
+    \\[-1em]
+      &&\vdotsgate
+    \\[-1em]
+      & \gate{H}
+      & \ctrl{1}
+      & \gate{H}
+      & \qw
+    \\[2em]
+      \lstick[wires=4]{$\ket{0^n}$}
+      & \qw
+      & \gate[wires=4,nwires={3}]{f}
+      & \qw
+      & \qw
+    \\[-1em]
+      & \qw
+      && \qw
+      & \qw
+    \\[-1em]
+      &\vdotsgate
+      &&\vdotsgate
+    \\[-2em]
+      & \qw
+      && \qw
+      & \qw
+    \end{quantikz}
+\end{equation*}
+```
+::::
+
+Let's follow the evolution of the two registers in this circuit.
+We start off by preparing the equally-weighted superposition of all $n$-bit strings, and then query the oracle:
+$$
+  \begin{aligned}
+    \ket{0^n}\ket{0^n}
+    &\longmapsto
+    \frac{1}{\sqrt{2^n}} \sum_x \ket{x}\ket{0^n}
+  \\&\longmapsto
+    \frac{1}{\sqrt{2^n}} \sum_x \ket{x}\ket{f(x)}.
+  \end{aligned}
+$$
+The second Hadamard transform on the first register then yields the final output state:
+\begin{equation}
+  \frac{1}{2^n} \sum_{x,y} (-1)^{x\cdot y} \ket{y}\ket{f(x)}.
+(\#eq:final-first-register-simon)
+\end{equation}
+
+Now, if we measure the second register _before_ applying the second Hadamard transform to the first, we obtain one of the $2^{n-1}$ possible values of $f(x)$, each equally likely.^[As we shall see in a moment, the actual measurement on the second register is not actually necessary.]
+**!!!TODO!!! have I understood this correctly?**
+
+Suppose that the outcome of the measurement is $f(a)$.
+Given that both $a$ and $a\oplus s$ are mapped to $f(a)$ by $f$, the first register then collapses to the state
+$$
+  \frac{1}{\sqrt{2}}\big( \ket{a} + \ket{a\oplus s} \big).
+$$
+
+The subsequent Hadamard transform on the first register then gives us the final state^[We write $s^\perp$ to mean the set of all $y\in\{0,1\}^n$ such that $y\cdot s=0$.]
+$$
+  \frac{1}{\sqrt{2^{n+1}}} \sum_y (-1)^{a\cdot y}
+    \Big( 1 + (-1)^{s\cdot y} \Big) \ket{y}\ket{f(a)}
+  =
+  \frac{1}{\sqrt{2^{n-1}}} \sum_{y\in s^\perp}
+    (-1)^{a\cdot y} \ket{y}\ket{f(a)}
+$$
+where we have used the fact that $(a\oplus s)\cdot y = (a\cdot y)\oplus(s\cdot y)$, and that $1+(-1)^{s\cdot y}$ can have only two values: either $2$ (when $s\cdot y = 0$), or $0$ (when $s\cdot y = 1$).
+Now we measure the first register: the outcome is selected at random from all possible values of $y$ such that $a\cdot y = 0$, each occurring with probability $1/(2^{n-1})$.
+
+In fact, we do not have to measure the second register at all: it was a mathematical shortcut, simply taken for pedagogical purposes.
+Instead of collapsing the state to just one term in a superposition, we can express Equation \@ref(eq:final-first-register-simon) as^[Recall that the image of $f$ is the set of all $z\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ satisfying $f(x)=z$.]
+$$
+  \frac{1}{2^n} \sum_{y,f(a)}
+    \Big( (-1)^{a\cdot y} + (-1)^{(a\oplus s)\cdot y} \Big) \ket{y}\ket{f(a)}
+  =
+  \frac{1}{2^n} \sum_{y,f(a)} (-1)^{a\cdot y}
+    \Big( 1 + (-1)^{s\cdot y} \Big) \ket{y}\ket{f(a)}
+$$
+where the summation over $f(a)$ means summing over all binary strings in the image of $f$.
+
+The output of the algorithm is then
+$$
+  \frac{1}{2^{n-1}} \sum_{y\in s^\perp} \ket{y}
+    \sum_{f(a)} (-1)^{a\cdot y} \ket{f(a)}
+$$
+and, again, the measurement outcome is selected at random from all possible values of $y$ such that $s\cdot y=0$.
+
+We are not quite done yet: we cannot infer $s$ from a _single_ output $y$.
+However, once we have found $n$ linearly independent^[Here, **linearly independent** means that no string in the set $\{y_1,\ldots,y_n\}$ can be expressed as the bitwise sum of some other strings in this set.] strings $y_1,y_2,\ldots,y_n$, we can solve the $n$ equations
+$$
+  \begin{aligned}
+    s\cdot y_1 &= 0
+  \\s\cdot y_2 &= 0
+  \\&\,\,\,\vdots
+  \\s\cdot y_n &= 0
+  \end{aligned}
+$$
+to determine a unique value of $s$.
+
+So we run this algorithm repeatedly, each time obtaining another value of $y$ that satisfies $s\cdot y = 0$.
+Every time we find some new value of $y$ that is linearly independent of all previous ones, we can discard half the potential candidates for $s$.
+The probability that $y_1,\ldots,y_n$ are linearly independent is
+\begin{equation}
+  \left( 1 - \frac{1}{2^n} \right)
+  \left( 1 - \frac{1}{2^{n-1}} \right)
+  \ldots
+  \left( 1 - \frac{1}{2} \right).
+(\#eq:probability-linearly-independent)
+\end{equation}
+
+Indeed, suppose that we have $k$ linearly independent binary strings $y_1,\ldots,y_k$.
+Then these strings span a subspace of size $2^k$, consisting of all binary strings of the form $\bigoplus_{i=1}^k b_i y_i$, where $b_1,\ldots,b_k\in\{0,1\}$.
+Now suppose we obtain some $y_{k+1}$.
+It will be linearly independent from the $y_1,\ldots,y_k$ if and only if it lies _outside_ the subspace spanned by the $y_1,\ldots,y_k$, which occurs with probability $1-(2^k)/(2^n)$.
+We can bound Equation \@ref(eq:probability-linearly-independent) from below:^[Use the inequality $$\begin{aligned}(1-x)(1-y)&= 1 - x - y - xy\\&\geq 1 - (x+y)\end{aligned}$$ which holds for any $x,y\in(0,1)$.]
+$$
+  \left[
+    1 -
+    \left(
+      \frac{1}{2^n} + \frac{1}{2^{n-1}} + \ldots + \frac14
+    \right)
+  \right]
+  \cdot \frac12
+  \geq \frac14.
+$$
+
+We conclude that we can determine $s$ with some constant probability of error after repeating the algorithm $O(n)$ times.
+The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.
+
+(ref:simons-diagramatically-caption) Picture all possible binary strings as dots, but with the string $s$ denoted by a star. Every linearly independent $y_{k+1}$ lets us "zoom in" twice as close towards $s$.
+
+```{r simons-diagramatically,engine='tikz',fig.width=6,fig.cap='(ref:simons-diagramatically-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\usetikzlibrary{shapes}
+\begin{tikzpicture}[scale=1.1]
+  \begin{scope}
+    \draw (0,0) circle (1.1cm);
+    \node [draw,primary,star,star points=5,fill=white,inner sep=0.02cm] at (-22.5:0.7) {$s$};
+    \foreach \a in {22.5,67.5,...,292.5}
+      \node [dot,fill=primary] at (\a:0.7) {};
+  \end{scope}
+  \begin{scope}[shift={(3,0)}]
+    \draw (0,0) circle (1.1cm);
+    \draw [dashed,ultra thick,secondary] (0,-1.3) to (0,1.3) node [above] {$y_1$};
+    \node [draw,primary,star,star points=5,fill=white,inner sep=0.02cm] at (-22.5:0.7) {$s$};
+    \foreach \a in {22.5,67.5,292.5}
+      \node [dot,fill=primary] at (\a:0.7) {};
+    \foreach \a in {112.5,157.5,...,247.5}
+      \node [dot,fill=black!40] at (\a:0.7){};
+  \end{scope}
+  \begin{scope}[shift={(6,0)}]
+    \draw (0,0) circle (1.1cm);
+    \draw [dashed,ultra thick,secondary] (0,-1.3) to (0,1.3) node [above] {$y_1$};
+    \draw [dashed,ultra thick,secondary] (-1.3,0) to (1.3,0) node [right] {$y_2$};
+    \node [draw,primary,star,star points=5,fill=white,inner sep=0.02cm] at (-22.5:0.7) {$s$};
+    \foreach \a in {22.5,67.5,...,247.5}
+      \node [dot,fill=black!40] at (\a:0.7) {};
+    \node [dot,fill=primary] at (292.5:0.7) {};
+  \end{scope}
+\end{tikzpicture}
+```
+
+
+
+
+
+## Remarks and exercises
+
+1. Consider the Boolean function $f\colon\{0,1\}^n\to\{0,1\}$ defined by $f(x) = a\cdot x$ for some fixed $a\in\{0,1\}^n$.
+    Exactly one half of the binary strings $x\in\{0,1\}^n$ give $f(x)=0$, and the other half give $f(x)=1$.
+2. **!!!TODO!!! implementing reflections**
+2. **!!!TODO!!! optimality of Grover**
