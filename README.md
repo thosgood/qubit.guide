@@ -42,6 +42,8 @@ For any problems or queries regarding this site or its contents, please get in t
 
 1. **only one footnote per paragraph**
     + generally, **check all sidenotes**
+1. **improve sidenote y-positioning using jquery**
+1. horizontal scrolling when maths is too wide on mobile
 1. replace links to sections with links named "Chapter 3", etc.
 1. be more consistent with the start of chapters
     + blockquote which says "About ..." and **uses words from the syllabus**

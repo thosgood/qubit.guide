@@ -230,7 +230,7 @@ Note that there are only four possibilities for what $f$ can be: it could be one
 | constant | $\mqty{0\\1}$ | $\mqty{0\\1}$ |
 | balanced | $\mqty{0\\1}$ | $\mqty{1\\0}$ |
 
-Our task is to determine whether the function computed by the oracle is constant or balanced using the fewest queries possible.
+Our task is to determine, using the fewest queries possible, whether the function computed by the oracle is constant or balanced.
 :::
 
 Note that we are _not_ asked for the particular values $f(0)$ and $f(1)$, but _only whether the two values are the same or different_.
@@ -241,7 +241,7 @@ But, in the quantum setting, we can solve this problem with a _single_ function 
 ::: {.circuit_title}
 (Deutsch's).
 :::
-(First register: $1$ qubit. Second register: $1$ qubit.)
+_First register: $1$ qubit. Second register: $1$ qubit._
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \begin{equation*}
@@ -260,3 +260,361 @@ But, in the quantum setting, we can solve this problem with a _single_ function 
 \end{equation*}
 ```
 ::::
+
+During the function evaluation, the second register "kicks back" the phase factor $(-1)^{f(x)}$ in front of $\ket{x}$, but the state of the second register remains unchanged; the first register is modified as follows:
+$$
+  \begin{aligned}
+    \ket{0}
+    &\xmapsto{H}
+    \ket{0}+\ket{1}
+  \\&\xmapsto{f}
+    (-1)^{f(0)}\ket{0} + (-1)^{f(1)}\ket{1}
+  \\&\quad\equiv
+    \ket{0} + (-1)^{f(0)\oplus f(1)}\ket{1}
+  \\&\xmapsto{H}
+    \ket{f(0)\oplus f(1)}.
+  \end{aligned}
+$$
+
+This evolution can be represented by the circuit diagram
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \phase{\varphi}
+    & \gate{H}
+    & \qw \rstick{$\begin{cases}0&\mbox{if constant}\\1&\mbox{if balanced}\end{cases}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+where the relative phase is $\varphi = (-1)^{f(0)\oplus f(1)}$.
+The first qubit ends in state $\ket{0}$ if the function $f$ is constant, and in state $\ket{1}$ if the function is balanced, and the standard measurement distinguishes these two cases with certainty.^[The original Deutsch algorithm provides the correct answer with probability 50%. Here we have presented a modified/improved version.]
+
+Deutsch's result laid the foundation for the new field of quantum computation, and was followed by several other quantum algorithms for various problems.
+They all seem to rest on the same generic sequence: a Hadamard transform, followed by a function evaluation, followed by another Hadamard (or Fourier) transform.^[The Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$.]
+As we shall see in a moment, in some cases (such as in Grover's search algorithm) this sequence is repeated several times.
+Let me now take you through the three early quantum algorithms, each one offering a higher-order speed-up when compared to their classical analogues than the last.
+
+
+
+
+
+
+## Three more quantum algorithms
+
+### The Bernstein-Vazirani algorithm
+
+::: {.scenario data-latex=""}
+We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}$, but we are promised that $f$ is of the form
+$$
+  f(x) = a\cdot x
+  \equiv (a_1\cdot x_1) \oplus \ldots \oplus (a_n\cdot x_n)
+$$
+for some fixed $a\in\{0,1\}^n$.
+
+Our task is to determine, using the fewest queries possible, the value of the $n$-bit string $a$.
+:::
+
+It's quite easy to see how to do this classically: if we input the value $x=00\ldots010\ldots0$, with the $1$ in the $m$-th bit, then $f(x)$ is simply the $m$-th bit of $a$; after $n$ such calls, we can evaluate every bit value.
+It is also clear that there cannot exist a better classical algorithm: each call to the oracle teaches us exactly one bit of information, and since we must learn $n$ bits, we must query it $n$ times.
+
+In contrast, by running the circuit below, it is possible to determine the value of $a$ with a _single_ (!) call to the oracle.
+
+:::: {.circuit data-latex=""}
+::: {.circuit_title}
+(Bernstein-Vazirani).
+:::
+_First register: $n$ qubits. Second register: $1$ qubit._
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{4}
+    & \gate{H}
+    & \qw \rstick{$\ket{a_1}$}
+  \\[-1em]
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{3}
+    & \gate{H}
+    & \qw \rstick{$\ket{a_2}$}
+  \\[-1em]
+    &&\vdotsgate
+  \\[-1em]
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \gate{H}
+    & \qw \rstick{$\ket{a_n}$}
+  \\[2em]
+    \lstick{$\ket{-}$}
+    & \qw
+    & \gate{f}
+    & \qw
+    & \qw \rstick{$\ket{-}$}
+  \end{quantikz}
+\end{equation*}
+```
+::::
+
+N.B. The "$\ldots$" in the circuit means "there are more wires here but they are identical (apart from the numbering) to the ones above".
+You might also see other notation to denote this, such as
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0^n}$}
+    &[2mm] \gate{H}\qwbundle{n}
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+or even simply
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0^n}$}
+    & \gate{H}\qwbundle[alternate]{}
+    & \qwbundle[alternate]{}
+  \end{quantikz}
+\end{equation*}
+```
+
+Stepping through the execution of the circuit (and ignoring the second register, which remains in state $\ket{-}$ throughout), we obtain
+$$
+  \begin{aligned}
+    \ket{0}
+    &\xmapsto{H}
+    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} \ket{x}
+  \\&\xmapsto{f}
+    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} (-1)^{a\cdot x}\ket{x}
+  \\&\xmapsto{H}
+    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n}
+    \left[
+      (-1)^{a\cdot x} \left(\frac{1}{\sqrt2}\right)^n
+      \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x} \ket{y}
+    \right]
+  \\&\quad= \left(\frac12\right)^n \sum_{y\in\{0,1\}^n}
+    \left[
+      \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
+    \right]
+    \ket{y}
+  \\&\quad=\ket{a}
+  \end{aligned}
+$$
+where we write the second Hadamard transform as
+$$
+  \ket{x}
+  \mapsto
+  \left(\frac{1}{\sqrt2}\right)^n \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x}\ket{y}
+$$
+and where we have used the fact (which you should prove!) that, for any $y\in\{0,1\}^n$,
+$$
+  \sum_{x\in\{0,1\}^n} (-1)^{x\cdot y}
+  =
+  \begin{cases}
+    0 &\mbox{if $y\neq0$}
+  \\2^n &\mbox{if $y=0$}
+  \end{cases}
+$$
+
+This lets us write^[Even if you don't immediately see how this sum works for $z\neq a$ (writing $\ket{z}$ to mean the output), you can first calculate the probability that the output is $z=a$. In this case it is easy to see that the sum is $2^n$, and that in the final state $\sum_z\alpha_z\ket{z}$ the term $z=a$ has amplitude $1$. Thus, by normalisation, all the other terms must be equal to $0$.]
+$$
+  \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
+  =
+  \begin{cases}
+    0 &\mbox{if $y\neq a$}
+  \\2^n &\mbox{if $y=a$.}
+  \end{cases}
+$$
+If you take the sum over $x$, then all the terms always cancel out _unless_ $a\oplus y = 00\ldots0$, i.e. _unless $y=a$_.
+Thus the standard bit-by-bit measurement of the first register gives the value of $a$ and solves the problem with a single call to the oracle.
+
+Note that the algorithm follows the same pattern as Deutsch's algorithm: Hadamard, function evaluation, Hadamard, i.e. a generic quantum interference pattern.
+
+
+### Grover's search algorithm
+
+The next algorithm we will study aims to solve the problem of searching for a specific item in an _unsorted_ database.
+Think about an old-fashioned phone book: the entries are typically sorted alphabetically, by the name of the person that you want to find.
+However, what if you were in the opposite situation: you had a phone number and wanted to find the corresponding person's name?
+The phone book is not sorted in that way, and to find the number (and hence name) with, say, 50% probability, you would need to search through, on average, 50% of the entries.
+In a large phone book, this would take a long time.
+
+While this might seem like a rather contrived problem (a computer database should always maintain an index on any searchable field), many problems in computer science can be cast in this form, i.e. that of an **unstructured search**.
+
+::: {.scenario data-latex=""}
+We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}$.
+
+Our task is to find, using the fewest queries possible, an input $x\in\{0,1\}^n$ such that $f(x)=1$.
+:::
+
+Suppose that we know that, amongst the $N=2^n$ binary strings, there are $M$ which are "tagged", with $N\gg M$.
+**!!!TODO!!! explain what we mean by "tagged"**
+There is no structure in the database, and so any classical search requires around $N/M$ steps, i.e. the function $f$ must be evaluated roughly $N/M$ times.
+
+In contrast, there is a quantum search algorithm, implemented by the circuit below, that was proposed in 1996 by Lov Grover, and which requires only roughly $\sqrt{N/M}$ steps.
+
+:::: {.circuit data-latex=""}
+::: {.circuit_title}
+(Grover's search).
+:::
+_First register: $n$ qubits. Second register: $1$ qubit._
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=4]{$\ket{0^n}$}
+    & \gate{H}
+    & \qw
+    & \ctrl{4}
+      \gategroup[wires=5,steps=4,background,style={rounded corners,dashed,ultra thick,inner sep=0.5em},label style={yshift=0.4em}]{repeat $O(2^{n/2})$ times}
+    & \gate{H}
+    & \ctrl{4}
+    & \gate{H}
+    & \qw
+    & \qw \rstick{$\ket{z_1}$}
+  \\[-1em]
+    & \gate{H}
+    & \qw
+    & \ctrl{3}
+    & \gate{H}
+    & \ctrl{3}
+    & \gate{H}
+    & \qw
+    & \qw \rstick{$\ket{z_2}$}
+  \\[-1em]
+    &&&\vdotsgate
+    &&\vdotsgate
+  \\[-1em]
+    & \gate{H}
+    & \qw
+    & \ctrl{1}
+    & \gate{H}
+    & \ctrl{1}
+    & \gate{H}
+    & \qw
+    & \qw \rstick{$\ket{z_n}$}
+  \\[2em]
+    \lstick{$\ket{-}$}
+    & \qw
+    & \qw
+    & \gate{f}
+    & \qw
+    & \gate{f_0}
+    & \qw
+    & \qw
+    & \qw \rstick{$\ket{-}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+where $f_0$ tags the binary string of $n$ zeros: $f_0(x)=1$ if $x=00\ldots0$, and $f_0(x)=0$ otherwise. 
+::::
+
+We can recognise the typical Hadamard, function evaluation, Hadamard sequence, and we can see that the second register (the bottom qubit, in state $\ket{-}$) plays an auxiliary role: the real action takes place in the first register.
+However, unlike the previous algorithms, a single call to the oracle does not do very much, and we have to build up the quantum interference in the first register through repeated calls to the oracle (without any intermediate measurements!).
+
+Here, the basic step is the **Grover iteration operator $G$**, which is the boxed part of the circuit that we repeat over and over.
+After $O(2^{n/2})$ applications of $G$, we measure the first register bit-by-bit and obtain the value of $\ket{z}$, which is such that, _with "high" probability_, $f(z)=1$.
+In order to actually _see_ how this algorithm works, and to justify our claim that it gives what we are searching for "with high probability", we can take a more geometric approach.
+
+First, we define two orthonormal vectors in the Hilbert space of the first register:^[In fact, we shall completely ignore the second register from now on.]
+$$
+  \begin{aligned}
+    \ket{a}
+    &= \frac{1}{\sqrt{N-M}} \sum_{x\in f^{-1}(0)} \!\!\!\!\ket{x}
+  \\\ket{b}
+    &= \frac{1}{\sqrt{M}} \sum_{x\in f^{-1}(1)} \!\!\!\!\ket{x}
+  \end{aligned}
+$$
+where $f^{-1}(i) = \{x\in\{0,1\}^n \mid f(x)=i\}$.
+These two vectors span a two-dimensional subspace in which the search will take place.
+
+This subspace contains the equally-weighted superposition $\ket{s}$ of all binary strings of length $n$:^[We often omit from our notation the fact that the sum is over all \mbox{$x\in\{0,1\}^n$}, leaving it (hopefully) implicitly understood from the context.]
+$$
+  \begin{aligned}
+    \ket{s}
+    &= \frac{1}{\sqrt{N}} \sum_x\ket{x}
+  \\&= \sqrt{\frac{N-M}{N}}\ket{a} + \sqrt{\frac{M}{N}}\ket{b}
+  \\&= (\cos\alpha)\ket{a} + (\sin\alpha)\ket{b}
+  \end{aligned}
+$$
+where we have parametrised $\sqrt{\frac{N-M}{N}}$ as $\cos\alpha$, and $\sqrt{\frac{M}{N}}$ as $\sin\alpha$, with $\alpha\approx\sqrt{\frac{M}{N}}$, since $N\gg M$.
+
+The state $\ket{s}$ is our starting input for our sequence of Grover iterations, and we will show that, applying $G$, when restricting to the plane spanned by $\ket{a}$ and $\ket{b}$, amounts to applying a rotation by angle $2\alpha$.
+Grover's search algorithm can then be understood as a sequence of rotations which take the input state $\ket{s}$ towards the target state $\ket{b}$.
+
+To see this, note that the oracle induces the unitary transformation
+$$
+  f\colon \ket{x} \mapsto (-1)^{f(x)}\ket{x}
+$$
+which we shall write as $I_a = 2\proj{a}-\id$, and interpret as a reflection through the $\ket{a}$-axis.
+In particular, evaluation of $f_0$ can be written as $2\proj{0}-\id$, and thus thought of as a reflection through the $\ket{0}$-axis.
+If we sandwich $f_0$ in between two Hadamards then we obtain $I_s = 2\proj{s}-\id$, which is reflection through the $\ket{s}$-axis.
+The Grover iteration operator $G$ is the composition
+$$
+  G = I_s I_a.
+$$
+Note also that $I_a = 2\proj{a}-\id = \id-2\proj{b}$.
+
+Now recall the purely geometric fact that (working in $2$-dimensional Euclidean space), if we have two intersecting lines $L_1$ and $L_2$, meeting with angle $\theta$, then reflecting an object through $L_1$ and then reflecting the resulting image through $L_2$ is the same as simply rotating the original object around the point of intersection $L_1\cap L_2$ by $2\theta$.
+
+The angle between $\ket{a}$ and $\ket{s}$ is $\alpha$, and so, each time $G$ is applied, the vector is rotated (around the origin) by $2\alpha$ towards the $\ket{b}$-axis.
+We just have to choose the right number $r$ of steps such that we end up as close to the $\ket{b}$-axis as possible.
+The state $\ket{s}$ starts at angle $\alpha$ to $\ket{a}$, and we should perform our final (and only) measurement when this angle is $\pi/2$, i.e. when $(2r+1)\alpha = \pi/2$, which gives
+$$
+  r \approx \frac{\pi}{4}\sqrt{\frac{N}{M}}.
+$$
+
+```{r grover-search-geometrically,engine='tikz',fig.cap='Understanding the Grover search algorithm geometrically.',fig.width=6}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\usetikzlibrary{arrows.meta}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[scale=1.4]
+  \begin{scope}
+    \draw (0,0) circle (1cm);
+    \draw [->] (0,-1.4) to (0,1.4) node [above] {$\ket{b}$};
+    \draw [->] (-1.4,0) to (1.4,0) node [right] {$\ket{a}$};
+    %
+    \draw [thin] (0,0) to (0:0.7) to [bend right,dashed] (20:0.7) to cycle;
+    \node at (10:0.6) {\footnotesize$\alpha$};
+    \draw [-Latex,primary] (0,0) to (20:1) node [right] {$\ket{s}$};
+  \end{scope}
+  \node at (0,-1.7) {the initial state};
+  \begin{scope}[shift={(4,0)}]
+    \draw (0,0) circle (1cm);
+    \draw [->] (0,-1.4) to (0,1.4) node [above] {$\ket{b}$};
+    \draw [->] (-1.4,0) to (1.4,0) node [right] {$\ket{a}$};
+    %
+    \draw [thin] (0,0) to (-20:0.7) to [bend right=1.8cm] (60:0.7) to cycle;
+    \node at (-10:0.6) {\footnotesize$\alpha$};
+    \node at (10:0.6) {\footnotesize$\alpha$};
+    \node at (40:0.55) {\footnotesize$2\alpha$};
+    \draw [-Latex,primary] (0,0) to (20:1) node [right] {$\ket{s}$};
+    \draw [-Latex,secondary] (0,0) to (60:1) node [above right] {$I_sI_a\ket{s}$};
+    \draw [-Latex,secondary] (0,0) to (-20:1) node [right] {$I_a\ket{s}$};
+  \end{scope}
+  \node at (4,-1.7) {applying $G=I_sI_a$};
+\end{tikzpicture}
+```
+
+So the quantum algorithm searches an unsorted list of $N$ items in roughly $\sqrt{N}$ steps: it offers a _quadratic_ speed-up when compared to classical search, which can be of immense practical importance.
+For example, cracking some of the popular ciphers, such as AES (Advanced Encryption Standard), essentially requires a search among _many_ binary strings (called **keys**).
+If these can be checked at a rate of, say, one million keys per second, then a classical computer would need over a thousand years to find the correct key, while a quantum computer using Grover's algorithm would find it in less than four minutes.
+
+
+
+### Simon's problem
+
+Here we will see the simplest quantum algorithm that shows an exponential speed-up compared to the best classical algorithm.

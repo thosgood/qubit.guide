@@ -231,6 +231,12 @@
 <ul>
 <li class="chapter" data-level="6.3.1" data-path="chapter6.html"><a href="chapter6.html#deutschs-algorithm"><i class="fa fa-check"></i><b>6.3.1</b> Deutsch’s algorithm</a></li>
 </ul></li>
+<li class="chapter" data-level="6.4" data-path="chapter6.html"><a href="chapter6.html#three-more-quantum-algorithms"><i class="fa fa-check"></i><b>6.4</b> Three more quantum algorithms</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="chapter6.html"><a href="chapter6.html#the-bernstein-vazirani-algorithm"><i class="fa fa-check"></i><b>6.4.1</b> The Bernstein-Vazirani algorithm</a></li>
+<li class="chapter" data-level="6.4.2" data-path="chapter6.html"><a href="chapter6.html#grovers-search-algorithm"><i class="fa fa-check"></i><b>6.4.2</b> Grover’s search algorithm</a></li>
+<li class="chapter" data-level="6.4.3" data-path="chapter6.html"><a href="chapter6.html#simons-problem"><i class="fa fa-check"></i><b>6.4.3</b> Simon’s problem</a></li>
+</ul></li>
 </ul></li>
 <li class="part"><span><b>II Flowering</b></span></li>
 <li class="chapter" data-level="7" data-path="chapter7.html"><a href="chapter7.html"><i class="fa fa-check"></i><b>7</b> Bell’s theorem</a>
@@ -468,7 +474,7 @@ Note that there are only four possibilities for what <span class="math inline">\
 </tr>
 </tbody>
 </table>
-<p>Our task is to determine whether the function computed by the oracle is constant or balanced using the fewest queries possible.</p>
+<p>Our task is to determine, using the fewest queries possible, whether the function computed by the oracle is constant or balanced.</p>
 </div>
 <p>Note that we are <em>not</em> asked for the particular values <span class="math inline">\(f(0)\)</span> and <span class="math inline">\(f(1)\)</span>, but <em>only whether the two values are the same or different</em>.
 Classical intuition tells us that we have to evaluate both <span class="math inline">\(f(0)\)</span> and <span class="math inline">\(f(1)\)</span> and compare them, which involves evaluating <span class="math inline">\(f\)</span> <em>twice</em>.
@@ -477,9 +483,195 @@ But, in the quantum setting, we can solve this problem with a <em>single</em> fu
 <div class="circuit_title">
 <p>(Deutsch’s).</p>
 </div>
-<p>(First register: <span class="math inline">\(1\)</span> qubit. Second register: <span class="math inline">\(1\)</span> qubit.)</p>
+<p><em>First register: <span class="math inline">\(1\)</span> qubit. Second register: <span class="math inline">\(1\)</span> qubit.</em></p>
 <p><img src="quantum-info_files/figure-html/unnamed-chunk-52-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
+<p>During the function evaluation, the second register “kicks back” the phase factor <span class="math inline">\((-1)^{f(x)}\)</span> in front of <span class="math inline">\(|x\rangle\)</span>, but the state of the second register remains unchanged; the first register is modified as follows:
+<span class="math display">\[
+  \begin{aligned}
+    |0\rangle
+    &amp;\overset{H}{\longmapsto}
+    |0\rangle+|1\rangle
+  \\&amp;\overset{f}{\longmapsto}
+    (-1)^{f(0)}|0\rangle + (-1)^{f(1)}|1\rangle
+  \\&amp;\quad\equiv
+    |0\rangle + (-1)^{f(0)\oplus f(1)}|1\rangle
+  \\&amp;\overset{H}{\longmapsto}
+    |f(0)\oplus f(1)\rangle.
+  \end{aligned}
+\]</span></p>
+<p>This evolution can be represented by the circuit diagram</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-53-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>where the relative phase is <span class="math inline">\(\varphi = (-1)^{f(0)\oplus f(1)}\)</span>.
+The first qubit ends in state <span class="math inline">\(|0\rangle\)</span> if the function <span class="math inline">\(f\)</span> is constant, and in state <span class="math inline">\(|1\rangle\)</span> if the function is balanced, and the standard measurement distinguishes these two cases with certainty.<a href="#fn82" class="footnote-ref" id="fnref82"><sup>82</sup></a></p>
+<p>Deutsch’s result laid the foundation for the new field of quantum computation, and was followed by several other quantum algorithms for various problems.
+They all seem to rest on the same generic sequence: a Hadamard transform, followed by a function evaluation, followed by another Hadamard (or Fourier) transform.<a href="#fn83" class="footnote-ref" id="fnref83"><sup>83</sup></a>
+As we shall see in a moment, in some cases (such as in Grover’s search algorithm) this sequence is repeated several times.
+Let me now take you through the three early quantum algorithms, each one offering a higher-order speed-up when compared to their classical analogues than the last.</p>
+</div>
+</div>
+<div id="three-more-quantum-algorithms" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> Three more quantum algorithms</h2>
+<div id="the-bernstein-vazirani-algorithm" class="section level3" number="6.4.1">
+<h3><span class="header-section-number">6.4.1</span> The Bernstein-Vazirani algorithm</h3>
+<div class="scenario">
+<p>We are presented with an oracle that computes some unknown function <span class="math inline">\(f\colon\{0,1\}^n\to\{0,1\}\)</span>, but we are promised that <span class="math inline">\(f\)</span> is of the form
+<span class="math display">\[
+  f(x) = a\cdot x
+  \equiv (a_1\cdot x_1) \oplus \ldots \oplus (a_n\cdot x_n)
+\]</span>
+for some fixed <span class="math inline">\(a\in\{0,1\}^n\)</span>.</p>
+<p>Our task is to determine, using the fewest queries possible, the value of the <span class="math inline">\(n\)</span>-bit string <span class="math inline">\(a\)</span>.</p>
+</div>
+<p>It’s quite easy to see how to do this classically: if we input the value <span class="math inline">\(x=00\ldots010\ldots0\)</span>, with the <span class="math inline">\(1\)</span> in the <span class="math inline">\(m\)</span>-th bit, then <span class="math inline">\(f(x)\)</span> is simply the <span class="math inline">\(m\)</span>-th bit of <span class="math inline">\(a\)</span>; after <span class="math inline">\(n\)</span> such calls, we can evaluate every bit value.
+It is also clear that there cannot exist a better classical algorithm: each call to the oracle teaches us exactly one bit of information, and since we must learn <span class="math inline">\(n\)</span> bits, we must query it <span class="math inline">\(n\)</span> times.</p>
+<p>In contrast, by running the circuit below, it is possible to determine the value of <span class="math inline">\(a\)</span> with a <em>single</em> (!) call to the oracle.</p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Bernstein-Vazirani).</p>
+</div>
+<p><em>First register: <span class="math inline">\(n\)</span> qubits. Second register: <span class="math inline">\(1\)</span> qubit.</em></p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-54-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<p>N.B. The “<span class="math inline">\(\ldots\)</span>” in the circuit means “there are more wires here but they are identical (apart from the numbering) to the ones above”.
+You might also see other notation to denote this, such as</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-55-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>or even simply</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-56-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Stepping through the execution of the circuit (and ignoring the second register, which remains in state <span class="math inline">\(|-\rangle\)</span> throughout), we obtain
+<span class="math display">\[
+  \begin{aligned}
+    |0\rangle
+    &amp;\overset{H}{\longmapsto}
+    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} |x\rangle
+  \\&amp;\overset{f}{\longmapsto}
+    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} (-1)^{a\cdot x}|x\rangle
+  \\&amp;\overset{H}{\longmapsto}
+    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n}
+    \left[
+      (-1)^{a\cdot x} \left(\frac{1}{\sqrt2}\right)^n
+      \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x} |y\rangle
+    \right]
+  \\&amp;\quad= \left(\frac12\right)^n \sum_{y\in\{0,1\}^n}
+    \left[
+      \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
+    \right]
+    |y\rangle
+  \\&amp;\quad=|a\rangle
+  \end{aligned}
+\]</span>
+where we write the second Hadamard transform as
+<span class="math display">\[
+  |x\rangle
+  \mapsto
+  \left(\frac{1}{\sqrt2}\right)^n \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x}|y\rangle
+\]</span>
+and where we have used the fact (which you should prove!) that, for any <span class="math inline">\(y\in\{0,1\}^n\)</span>,
+<span class="math display">\[
+  \sum_{x\in\{0,1\}^n} (-1)^{x\cdot y}
+  =
+  \begin{cases}
+    0 &amp;\mbox{if $y\neq0$}
+  \\2^n &amp;\mbox{if $y=0$}
+  \end{cases}
+\]</span></p>
+<p>This lets us write<a href="#fn84" class="footnote-ref" id="fnref84"><sup>84</sup></a>
+<span class="math display">\[
+  \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
+  =
+  \begin{cases}
+    0 &amp;\mbox{if $y\neq a$}
+  \\2^n &amp;\mbox{if $y=a$.}
+  \end{cases}
+\]</span>
+If you take the sum over <span class="math inline">\(x\)</span>, then all the terms always cancel out <em>unless</em> <span class="math inline">\(a\oplus y = 00\ldots0\)</span>, i.e. <em>unless <span class="math inline">\(y=a\)</span></em>.
+Thus the standard bit-by-bit measurement of the first register gives the value of <span class="math inline">\(a\)</span> and solves the problem with a single call to the oracle.</p>
+<p>Note that the algorithm follows the same pattern as Deutsch’s algorithm: Hadamard, function evaluation, Hadamard, i.e. a generic quantum interference pattern.</p>
+</div>
+<div id="grovers-search-algorithm" class="section level3" number="6.4.2">
+<h3><span class="header-section-number">6.4.2</span> Grover’s search algorithm</h3>
+<p>The next algorithm we will study aims to solve the problem of searching for a specific item in an <em>unsorted</em> database.
+Think about an old-fashioned phone book: the entries are typically sorted alphabetically, by the name of the person that you want to find.
+However, what if you were in the opposite situation: you had a phone number and wanted to find the corresponding person’s name?
+The phone book is not sorted in that way, and to find the number (and hence name) with, say, 50% probability, you would need to search through, on average, 50% of the entries.
+In a large phone book, this would take a long time.</p>
+<p>While this might seem like a rather contrived problem (a computer database should always maintain an index on any searchable field), many problems in computer science can be cast in this form, i.e. that of an <strong>unstructured search</strong>.</p>
+<div class="scenario">
+<p>We are presented with an oracle that computes some unknown function <span class="math inline">\(f\colon\{0,1\}^n\to\{0,1\}\)</span>.</p>
+<p>Our task is to find, using the fewest queries possible, an input <span class="math inline">\(x\in\{0,1\}^n\)</span> such that <span class="math inline">\(f(x)=1\)</span>.</p>
+</div>
+<p>Suppose that we know that, amongst the <span class="math inline">\(N=2^n\)</span> binary strings, there are <span class="math inline">\(M\)</span> which are “tagged”, with <span class="math inline">\(N\gg M\)</span>.
+<strong>!!!TODO!!! explain what we mean by “tagged”</strong>
+There is no structure in the database, and so any classical search requires around <span class="math inline">\(N/M\)</span> steps, i.e. the function <span class="math inline">\(f\)</span> must be evaluated roughly <span class="math inline">\(N/M\)</span> times.</p>
+<p>In contrast, there is a quantum search algorithm, implemented by the circuit below, that was proposed in 1996 by Lov Grover, and which requires only roughly <span class="math inline">\(\sqrt{N/M}\)</span> steps.</p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Grover’s search).</p>
+</div>
+<p><em>First register: <span class="math inline">\(n\)</span> qubits. Second register: <span class="math inline">\(1\)</span> qubit.</em></p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-57-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>where <span class="math inline">\(f_0\)</span> tags the binary string of <span class="math inline">\(n\)</span> zeros: <span class="math inline">\(f_0(x)=1\)</span> if <span class="math inline">\(x=00\ldots0\)</span>, and <span class="math inline">\(f_0(x)=0\)</span> otherwise.</p>
+</div>
+<p>We can recognise the typical Hadamard, function evaluation, Hadamard sequence, and we can see that the second register (the bottom qubit, in state <span class="math inline">\(|-\rangle\)</span>) plays an auxiliary role: the real action takes place in the first register.
+However, unlike the previous algorithms, a single call to the oracle does not do very much, and we have to build up the quantum interference in the first register through repeated calls to the oracle (without any intermediate measurements!).</p>
+<p>Here, the basic step is the <strong>Grover iteration operator <span class="math inline">\(G\)</span></strong>, which is the boxed part of the circuit that we repeat over and over.
+After <span class="math inline">\(O(2^{n/2})\)</span> applications of <span class="math inline">\(G\)</span>, we measure the first register bit-by-bit and obtain the value of <span class="math inline">\(|z\rangle\)</span>, which is such that, <em>with “high” probability</em>, <span class="math inline">\(f(z)=1\)</span>.
+In order to actually <em>see</em> how this algorithm works, and to justify our claim that it gives what we are searching for “with high probability”, we can take a more geometric approach.</p>
+<p>First, we define two orthonormal vectors in the Hilbert space of the first register:<a href="#fn85" class="footnote-ref" id="fnref85"><sup>85</sup></a>
+<span class="math display">\[
+  \begin{aligned}
+    |a\rangle
+    &amp;= \frac{1}{\sqrt{N-M}} \sum_{x\in f^{-1}(0)} \!\!\!\!|x\rangle
+  \\|b\rangle
+    &amp;= \frac{1}{\sqrt{M}} \sum_{x\in f^{-1}(1)} \!\!\!\!|x\rangle
+  \end{aligned}
+\]</span>
+where <span class="math inline">\(f^{-1}(i) = \{x\in\{0,1\}^n \mid f(x)=i\}\)</span>.
+These two vectors span a two-dimensional subspace in which the search will take place.</p>
+<p>This subspace contains the equally-weighted superposition <span class="math inline">\(|s\rangle\)</span> of all binary strings of length <span class="math inline">\(n\)</span>:<a href="#fn86" class="footnote-ref" id="fnref86"><sup>86</sup></a>
+<span class="math display">\[
+  \begin{aligned}
+    |s\rangle
+    &amp;= \frac{1}{\sqrt{N}} \sum_x|x\rangle
+  \\&amp;= \sqrt{\frac{N-M}{N}}|a\rangle + \sqrt{\frac{M}{N}}|b\rangle
+  \\&amp;= (\cos\alpha)|a\rangle + (\sin\alpha)|b\rangle
+  \end{aligned}
+\]</span>
+where we have parametrised <span class="math inline">\(\sqrt{\frac{N-M}{N}}\)</span> as <span class="math inline">\(\cos\alpha\)</span>, and <span class="math inline">\(\sqrt{\frac{M}{N}}\)</span> as <span class="math inline">\(\sin\alpha\)</span>, with <span class="math inline">\(\alpha\approx\sqrt{\frac{M}{N}}\)</span>, since <span class="math inline">\(N\gg M\)</span>.</p>
+<p>The state <span class="math inline">\(|s\rangle\)</span> is our starting input for our sequence of Grover iterations, and we will show that, applying <span class="math inline">\(G\)</span>, when restricting to the plane spanned by <span class="math inline">\(|a\rangle\)</span> and <span class="math inline">\(|b\rangle\)</span>, amounts to applying a rotation by angle <span class="math inline">\(2\alpha\)</span>.
+Grover’s search algorithm can then be understood as a sequence of rotations which take the input state <span class="math inline">\(|s\rangle\)</span> towards the target state <span class="math inline">\(|b\rangle\)</span>.</p>
+<p>To see this, note that the oracle induces the unitary transformation
+<span class="math display">\[
+  f\colon |x\rangle \mapsto (-1)^{f(x)}|x\rangle
+\]</span>
+which we shall write as <span class="math inline">\(I_a = 2|a\rangle\langle a|-\mathbf{1}\)</span>, and interpret as a reflection through the <span class="math inline">\(|a\rangle\)</span>-axis.
+In particular, evaluation of <span class="math inline">\(f_0\)</span> can be written as <span class="math inline">\(2|0\rangle\langle 0|-\mathbf{1}\)</span>, and thus thought of as a reflection through the <span class="math inline">\(|0\rangle\)</span>-axis.
+If we sandwich <span class="math inline">\(f_0\)</span> in between two Hadamards then we obtain <span class="math inline">\(I_s = 2|s\rangle\langle s|-\mathbf{1}\)</span>, which is reflection through the <span class="math inline">\(|s\rangle\)</span>-axis.
+The Grover iteration operator <span class="math inline">\(G\)</span> is the composition
+<span class="math display">\[
+  G = I_s I_a.
+\]</span>
+Note also that <span class="math inline">\(I_a = 2|a\rangle\langle a|-\mathbf{1}= \mathbf{1}-2|b\rangle\langle b|\)</span>.</p>
+<p>Now recall the purely geometric fact that (working in <span class="math inline">\(2\)</span>-dimensional Euclidean space), if we have two intersecting lines <span class="math inline">\(L_1\)</span> and <span class="math inline">\(L_2\)</span>, meeting with angle <span class="math inline">\(\theta\)</span>, then reflecting an object through <span class="math inline">\(L_1\)</span> and then reflecting the resulting image through <span class="math inline">\(L_2\)</span> is the same as simply rotating the original object around the point of intersection <span class="math inline">\(L_1\cap L_2\)</span> by <span class="math inline">\(2\theta\)</span>.</p>
+<p>The angle between <span class="math inline">\(|a\rangle\)</span> and <span class="math inline">\(|s\rangle\)</span> is <span class="math inline">\(\alpha\)</span>, and so, each time <span class="math inline">\(G\)</span> is applied, the vector is rotated (around the origin) by <span class="math inline">\(2\alpha\)</span> towards the <span class="math inline">\(|b\rangle\)</span>-axis.
+We just have to choose the right number <span class="math inline">\(r\)</span> of steps such that we end up as close to the <span class="math inline">\(|b\rangle\)</span>-axis as possible.
+The state <span class="math inline">\(|s\rangle\)</span> starts at angle <span class="math inline">\(\alpha\)</span> to <span class="math inline">\(|a\rangle\)</span>, and we should perform our final (and only) measurement when this angle is <span class="math inline">\(\pi/2\)</span>, i.e. when <span class="math inline">\((2r+1)\alpha = \pi/2\)</span>, which gives
+<span class="math display">\[
+  r \approx \frac{\pi}{4}\sqrt{\frac{N}{M}}.
+\]</span></p>
+<div class="figure" style="text-align: center"><span id="fig:grover-search-geometrically"></span>
+<img src="quantum-info_files/figure-html/grover-search-geometrically-1.png" alt="Understanding the Grover search algorithm geometrically." width="576" />
+<p class="caption">
+Figure 6.3: Understanding the Grover search algorithm geometrically.
+</p>
+</div>
+<p>So the quantum algorithm searches an unsorted list of <span class="math inline">\(N\)</span> items in roughly <span class="math inline">\(\sqrt{N}\)</span> steps: it offers a <em>quadratic</em> speed-up when compared to classical search, which can be of immense practical importance.
+For example, cracking some of the popular ciphers, such as AES (the Advanced Encryption Standard), essentially requires a search among <em>many</em> binary strings (called <strong>keys</strong>).
+If these can be checked at a rate of, say, one million keys per second, then a classical computer would need over a thousand years to find the correct key, while a quantum computer using Grover’s algorithm would find it in less than four minutes.</p>
+</div>
+<div id="simons-problem" class="section level3" number="6.4.3">
+<h3><span class="header-section-number">6.4.3</span> Simon’s problem</h3>
+<p>Here we will see the simplest quantum algorithm that shows an exponential speed-up compared to the best classical algorithm.</p>
 
 </div>
 </div>
@@ -491,6 +683,11 @@ But, in the quantum setting, we can solve this problem with a <em>single</em> fu
 <hr />
 <ol start="81">
 <li id="fn81"><p>Please: do not confuse the capital <span class="math inline">\(X\)</span>, which is the Pauli flip operator <span class="math inline">\(\sigma_x\)</span>, with the small <span class="math inline">\(x\)</span>, which is a binary string stored in the first register and the argument of our Boolean function <span class="math inline">\(f\)</span>.<a href="chapter6.html#fnref81" class="footnote-back">↩︎</a></p></li>
+<li id="fn82"><p>The original Deutsch algorithm provides the correct answer with probability 50%. Here we have presented a modified/improved version.<a href="chapter6.html#fnref82" class="footnote-back">↩︎</a></p></li>
+<li id="fn83"><p>The Hadamard transform is a special case of the Fourier transform over the group <span class="math inline">\(\mathbb{Z}_2^n\)</span>.<a href="chapter6.html#fnref83" class="footnote-back">↩︎</a></p></li>
+<li id="fn84"><p>Even if you don’t immediately see how this sum works for <span class="math inline">\(z\neq a\)</span> (writing <span class="math inline">\(|z\rangle\)</span> to mean the output), you can first calculate the probability that the output is <span class="math inline">\(z=a\)</span>. In this case it is easy to see that the sum is <span class="math inline">\(2^n\)</span>, and that in the final state <span class="math inline">\(\sum_z\alpha_z|z\rangle\)</span> the term <span class="math inline">\(z=a\)</span> has amplitude <span class="math inline">\(1\)</span>. Thus, by normalisation, all the other terms must be equal to <span class="math inline">\(0\)</span>.<a href="chapter6.html#fnref84" class="footnote-back">↩︎</a></p></li>
+<li id="fn85"><p>In fact, we shall completely ignore the second register from now on.<a href="chapter6.html#fnref85" class="footnote-back">↩︎</a></p></li>
+<li id="fn86"><p>We often omit from our notation the fact that the sum is over all , leaving it (hopefully) implicitly understood from the context.<a href="chapter6.html#fnref86" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <script type="text/javascript" src="../sidenotes.js"></script>
