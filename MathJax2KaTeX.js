@@ -1,8 +1,14 @@
 var $document = $(document);
 
 $document.ready(function() {
-  // TODO: this should run AFTER everything else has finished (i.e. MathJax...)
-  $('.math.display span').remove();
-  // TODO: turn all display code things into <div class="math display">
-  // TODO: then run KaTeX on everything!
+  // TODO: run KaTeX on all <eq> tags (with env="math" or "displaymath")
+  $('eq').map(function() {
+    var display = (this.getAttribute('env') == "displaymath");
+    try {
+      katex.render(this.textContent, this, {displayMode: display});
+    }
+    catch(err) {
+      this.style.color = 'red';
+    }
+  });
 });
