@@ -11,4 +11,7 @@ $document.ready(function() {
       this.style.color = 'red';
     }
   });
+  $('eq span').map(function() {
+    this.unwrap();
+  });
 });

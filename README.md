@@ -54,7 +54,6 @@ For any problems or queries regarding this site or its contents, please get in t
 1. pdf title page
 1. always use `\longmapsto` instead of `\mapsto`?
 1. license and funding information along with bookdown link in `_includes/footer.html`
-1. check everything (gitbook) on mobile (mainly for overly wide maths/tables)
 1. **pdf output**
     + overlapping in the header (section/subsection names)
     + marginfigures
@@ -63,10 +62,9 @@ For any problems or queries regarding this site or its contents, please get in t
     + idea environment (and, later on, scenario and circuits too)
         * tables in ideas look... bad
         * change the colours of circuit and scenario to primary and secondary (and remove background colour?)
-1. switch to katex
 1. new custom block for gate definitions?
     + also, stop using tables...?
 1. change the link prefixed to gitbook TOC when you have a domain
-1. check that all `{.idea}`s are actually `{.idea latex-data=""}` (or whatever it is)
+1. check that all `{.idea}`s are actually `{.idea data-latex=""}`
     + same for circuit and scenario blocks!
 1. **search for "TODO"**
