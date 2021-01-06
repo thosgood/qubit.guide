@@ -39,7 +39,6 @@ function createSidenotes() {
 
 function toggleSidenotes() {
   var wideEnough = $footnotes.length > 0 && $markers.length > 0 && $wrapper.width() > 1280;
-  console.log(wideEnough);
   $page.toggleClass('has-sidenotes', wideEnough);
 }
 
