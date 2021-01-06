@@ -316,17 +316,57 @@ We will call them <strong>quantum channels</strong>.
 Here, <eq env="math">\mathcal{H}</eq> and <eq env="math">\mathcal{H}'</eq> are the Hilbert spaces associated with the input and the output, respectively (these two spaces may be of different dimensions: <eq env="math">\dim\mathcal{H}=d</eq> and <eq env="math">\dim\mathcal{H}'=d'</eq>, with <eq env="math">d</eq> not necessarily equal to <eq env="math">d'</eq>).
 It is not a trivial task, since some operations (such as the matrix transpose) turn density matrices into seemingly legal density matrices, and yet they are <em>not</em> physically admissible.
 We want to understand why.</p>
-<p>There are essentially two approaches to characterising quantum channels. Let us call them <strong>constructive</strong> and <strong>axiomatic</strong>.
-In the constructive approach (much favoured by physicists) we assume that, in the quantum world, there are only unitary evolutions, and that <em>non</em>-unitary evolutions of subsystems are induced by unitary evolutions of <em>larger</em> systems.
+<p>There are essentially two approaches to characterising quantum channels. Let us call them <strong>constructive</strong> and <strong>axiomatic</strong>.</p>
+<ul>
+<li><p>In the constructive approach (much favoured by physicists) we assume that, in the quantum world, there are only unitary evolutions, and that <em>non</em>-unitary evolutions of subsystems are induced by unitary evolutions of <em>larger</em> systems.
 We can view them as the result of adding or removing physical systems that participate in unitary evolutions.
-In particular, <em>any</em> quantum channel can be constructed by taking a physical system in state <eq env="math">\rho</eq>, combining it with an auxiliary system (e.g. the environment) in some fixed quantum state, applying a unitary transformation to the combined system, and then discarding everything that is of no interest to us.</p>
-<p>In the axiomatic approach we proceed as mathematicians usually do.
+In particular, <em>any</em> quantum channel can be constructed by taking a physical system in state <eq env="math">\rho</eq>, combining it with an auxiliary system (e.g. the environment) in some fixed quantum state, applying a unitary transformation to the combined system, and then discarding everything that is of no interest to us.</p></li>
+<li><p>In the axiomatic approach we proceed as mathematicians usually do.
 We refer to quantum theory for inspiration, scratch our heads, and list all the desired properties that a map should have in order to be called an admissible quantum operation.
-This way we define <strong>completely positive trace-preserving</strong> (CPTP) maps.</p>
+This way we define <strong>completely positive trace-preserving</strong> (CPTP) maps.</p></li>
+</ul>
 <p>In the end, you will be relieved to learn, the two approaches are equivalent, leading to the same mathematical formalism.
 This equivalence is often goes by the name of the <strong>Stinespring dilation theorem</strong><a href="#fn108" class="footnote-ref" id="fnref108"><sup>108</sup></a>, which says that the CPTP maps are exactly the maps which can be constructed from unitary evolutions by adding and removing subsystems.</p>
 <div id="unitary-evolution-is-all-there-is" class="section level2" number="10.1">
 <h2><span class="header-section-number">10.1</span> Unitary evolution is all there is…</h2>
+<p>Here we consider the constructive approach described above.
+So we know that any evolution of any <em>isolated</em> system is always unitary, since, at the fundamental level, this is the only evolution that is offered by quantum theory.
+Anything else that is not unitary has to be, somehow, derived from a unitary evolution of the whole, and it is easy to see that a unitary evolution of the whole does not imply unitary evolutions of its constituent parts.
+The question is: <em>what kind of sub-evolutions can be induced on subsystems by a global unitary evolution?</em></p>
+<p>Consider a physical system, prepared in some input state <eq env="math">|\psi\rangle\in\mathcal{H}</eq>, which is then combined with another system (here, the environment) that is initially in state <eq env="math">|e\rangle\in\mathcal{H}_E</eq>.
+The two systems interact, and their joint unitary evolution <eq env="math">U</eq> produces, in general, an entangled state.
+The system itself, after discarding the environment, ends in an output state <eq env="math">\rho'</eq>, which is given by taking a partial trace, as shown in Figure <a href="chapter10.html#fig:joint-system-discard-output">10.1</a>.</p>
+
+<div class="figure" style="text-align: center"><span id="fig:joint-system-discard-output"></span>
+<img src="quantum-info_files/figure-html/joint-system-discard-output-1.png" alt="The output (discarding what happens to the environment) is given by \rho'=\operatorname{tr}_E \big(U|\psi\rangle\langle\psi|\otimes|e\rangle\langle e| U^\dagger\big)." width="576" />
+<p class="caption">
+Figure 10.1: The output (discarding what happens to the environment) is given by <eq env="math">\rho'=\operatorname{tr}_E \big(U|\psi\rangle\langle\psi|\otimes|e\rangle\langle e| U^\dagger\big)</eq>.
+</p>
+</div>
+<p>The requirement that the environment start in a pure state is not very restrictive: if it were initially in a mixed state, then we could always regard the environment as a sub-environment of some larger environment in an entangled pure state.
+It <em>is</em> important, however, that the system and its environment <em>initially have no correlation with each other</em>: they are in a product state <eq env="math">|\psi\rangle\otimes |e\rangle</eq>.
+Then, if we fix the initial state of the environment <eq env="math">|e\rangle</eq> and the unitary <eq env="math">U</eq>, the final state of the system depends <em>only</em> on its initial state <eq env="math">|\psi\rangle</eq>.
+In fact, the initial state of the system can be a mixed state, described by some density operator <eq env="math">\rho</eq>.
+This is because any mixed state can be interpreted as a statistical mixture of pure states, and any linear process respects such a mixture.
+Thus, by fixing <eq env="math">U</eq> and <eq env="math">|e\rangle</eq>, we have constructed a well defined linear map <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H})</eq> that transforms the input state <eq env="math">\rho</eq> into the output state <eq env="math">\rho'=\mathcal{E}(\rho)</eq>.</p>
+<div class="idea">
+<p><eq env="displaymath">
+  \begin{aligned}
+    \mathcal{E}\colon \mathcal{B}(\mathcal{H}) &amp;\longrightarrow \mathcal{B}(\mathcal{H})
+  \\\rho &amp;\longmapsto \rho'=\operatorname{tr}_E \big(U|\psi\rangle\langle\psi|\otimes|e\rangle\langle e| U^\dagger\big)
+  \end{aligned}
+</eq></p>
+</div>
+<p>This way of describing the action of a quantum channel is often called the <strong>unitary representation</strong> of a channel.
+As mentioned above, the channel is completely defined by the unitary <eq env="math">U</eq> and the initial state of the environment <eq env="math">|e\rangle</eq>, but note that, once the system and the environment cease to interact, any operation <em>on the environment alone</em> has no effect on the state of the system.
+That is, the two diagrams in Figure <a href="chapter10.html#fig:environment-same-channel">10.2</a> define the same channel, or, in other words, the unitaries <eq env="math">U</eq> and <eq env="math">(\mathbf{1}\otimes R)U</eq>, where <eq env="math">R</eq> acts only on <eq env="math">\mathcal{H}_E</eq>, define the same channel.<a href="#fn109" class="footnote-ref" id="fnref109"><sup>109</sup></a></p>
+
+<div class="figure" style="text-align: center"><span id="fig:environment-same-channel"></span>
+<img src="quantum-info_files/figure-html/environment-same-channel-1.png" alt="Here the \times represents discarding the final state of the environment." width="576" />
+<p class="caption">
+Figure 10.2: Here the <eq env="math">\times</eq> represents discarding the final state of the environment.
+</p>
+</div>
 
 </div>
 </div>
@@ -335,6 +375,7 @@ This equivalence is often goes by the name of the <strong>Stinespring dilation t
 <ol start="107">
 <li id="fn107"><p>Recall that, given a pair of Hilbert spaces <eq env="math">\mathcal{H}_A</eq> and <eq env="math">\mathcal{H}_B</eq>, we denote the set of (bounded) linear operators from <eq env="math">\mathcal{H}_A</eq> to <eq env="math">\mathcal{H}_B</eq> by <eq env="math">\mathcal{B}(\mathcal{H}_A,\mathcal{H}_B)</eq>. The shorthand <eq env="math">\mathcal{B}(\mathcal{H})</eq> is used to denote <eq env="math">\mathcal{B(H,H)}</eq>. For example, an element of <eq env="math">\mathcal{B}(\mathcal{H})</eq> is exactly a density operator on <eq env="math">\mathcal{H}</eq>.<a href="chapter10.html#fnref107" class="footnote-back">↩︎</a></p></li>
 <li id="fn108"><p><a href="https://en.wikipedia.org/wiki/W._Forrest_Stinespring">William Forrest “Woody” Stinespring</a> (1929–2012) was an American mathematician specialising in operator theory.<a href="chapter10.html#fnref108" class="footnote-back">↩︎</a></p></li>
+<li id="fn109"><p>Consider <eq env="math">U</eq> and <eq env="math">U(\mathbf{1}\otimes R)</eq>, where <eq env="math">R</eq> acts only on <eq env="math">\mathcal{H}_E</eq>. Do these two unitaries also define the same quantum channel?<a href="chapter10.html#fnref109" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <script type="text/javascript" src="../sidenotes.js"></script>

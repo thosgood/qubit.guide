@@ -1,6 +1,6 @@
 # Quantum channels (or CP maps) {#chapter10}
 
-> About linear transformations --- often called **quantum channels**, **quantum operations**, or **superoperators** --- that map density operators to density operators. Mathematically, such objects are known as **completely positive trace-preserving maps**. Be prepared for some name dropping; you will hear about Karl Kraus, Woody Stinespring, Andrzej Jamiołkowski, and Man-Duen Choi. To be sure, knowing names will not give you more insights, but at least you will not be intimidated when you hear about the **Stinespring** and the **Kraus representations**, the **Jamiołkowski isomorphism**, or the **Choi matrix**. 
+> About linear transformations --- often called **quantum channels**, **quantum operations**, or **superoperators** --- that map density operators to density operators. Mathematically, such objects are known as **completely positive trace-preserving maps**. Be prepared for some name dropping; you will hear about Karl Kraus, Woody Stinespring, Andrzej Jamiołkowski, and Man-Duen Choi. To be sure, knowing names will not give you more insights, but at least you will not be intimidated when you hear about the **Stinespring** and the **Kraus representations**, the **Jamiołkowski isomorphism**, or the **Choi matrix**.
 
 In quantum information science (and in life) we often divide the world into two parts: things we can control and everything else.
 Things we can control (at least with some precision), such as a bunch of ions in an ion trap, will now acquire a generic name -- the **system** -- and the "everything else" part will be called the **environment**.
@@ -18,11 +18,12 @@ It is not a trivial task, since some operations (such as the matrix transpose) t
 We want to understand why.
 
 There are essentially two approaches to characterising quantum channels. Let us call them **constructive** and **axiomatic**.
-In the constructive approach (much favoured by physicists) we assume that, in the quantum world, there are only unitary evolutions, and that _non_-unitary evolutions of subsystems are induced by unitary evolutions of _larger_ systems.
+
+- In the constructive approach (much favoured by physicists) we assume that, in the quantum world, there are only unitary evolutions, and that _non_-unitary evolutions of subsystems are induced by unitary evolutions of _larger_ systems.
 We can view them as the result of adding or removing physical systems that participate in unitary evolutions.
 In particular, _any_ quantum channel can be constructed by taking a physical system in state $\rho$, combining it with an auxiliary system (e.g. the environment) in some fixed quantum state, applying a unitary transformation to the combined system, and then discarding everything that is of no interest to us.
 
-In the axiomatic approach we proceed as mathematicians usually do.
+- In the axiomatic approach we proceed as mathematicians usually do.
 We refer to quantum theory for inspiration, scratch our heads, and list all the desired properties that a map should have in order to be called an admissible quantum operation.
 This way we define **completely positive trace-preserving** (CPTP) maps.
 
@@ -35,3 +36,60 @@ This equivalence is often goes by the name of the **Stinespring dilation theorem
 
 
 ## Unitary evolution is all there is...
+
+Here we consider the constructive approach described above.
+So we know that any evolution of any _isolated_ system is always unitary, since, at the fundamental level, this is the only evolution that is offered by quantum theory.
+Anything else that is not unitary has to be, somehow, derived from a unitary evolution of the whole, and it is easy to see that a unitary evolution of the whole does not imply unitary evolutions of its constituent parts.
+The question is: _what kind of sub-evolutions can be induced on subsystems by a global unitary evolution?_
+
+Consider a physical system, prepared in some input state $\ket{\psi}\in\mathcal{H}$, which is then combined with another system (here, the environment) that is initially in state $\ket{e}\in\mathcal{H}_E$.
+The two systems interact, and their joint unitary evolution $U$ produces, in general, an entangled state.
+The system itself, after discarding the environment, ends in an output state $\rho'$, which is given by taking a partial trace, as shown in Figure \@ref(fig:joint-system-discard-output).
+
+(ref:joint-system-discard-output-caption) The output (discarding what happens to the environment) is given by $\rho'=\tr_E \big(U\proj{\psi}\otimes\proj{e} U^\dagger\big)$.
+
+```{r joint-system-discard-output,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6,fig.cap='(ref:joint-system-discard-output-caption)'}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{input $\ket{\psi}$} & \gate[wires=2]{U} &\rstick{output $\rho'$} \qw
+  \\\lstick{fixed $\ket{e}$} &\hphantom{really wide} &\rstick{discard} \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+The requirement that the environment start in a pure state is not very restrictive: if it were initially in a mixed state, then we could always regard the environment as a sub-environment of some larger environment in an entangled pure state.
+It _is_ important, however, that the system and its environment _initially have no correlation with each other_: they are in a product state $\ket{\psi}\otimes \ket{e}$.
+Then, if we fix the initial state of the environment $\ket{e}$ and the unitary $U$, the final state of the system depends _only_ on its initial state $\ket{\psi}$.
+In fact, the initial state of the system can be a mixed state, described by some density operator $\rho$.
+This is because any mixed state can be interpreted as a statistical mixture of pure states, and any linear process respects such a mixture.
+Thus, by fixing $U$ and $\ket{e}$, we have constructed a well defined linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H})$ that transforms the input state $\rho$ into the output state $\rho'=\mathcal{E}(\rho)$.
+
+::: {.idea data-latex=""}
+$$
+  \begin{aligned}
+    \mathcal{E}\colon \mathcal{B}(\mathcal{H}) &\longrightarrow \mathcal{B}(\mathcal{H})
+  \\\rho &\longmapsto \rho'=\tr_E \big(U\proj{\psi}\otimes\proj{e} U^\dagger\big)
+  \end{aligned}
+$$
+:::
+
+This way of describing the action of a quantum channel is often called the **unitary representation** of a channel.
+As mentioned above, the channel is completely defined by the unitary $U$ and the initial state of the environment $\ket{e}$, but note that, once the system and the environment cease to interact, any operation _on the environment alone_ has no effect on the state of the system.
+That is, the two diagrams in Figure \@ref(fig:environment-same-channel) define the same channel, or, in other words, the unitaries $U$ and $(\id\otimes R)U$, where $R$ acts only on $\mathcal{H}_E$, define the same channel.^[Consider $U$ and $U(\id\otimes R)$, where $R$ acts only on $\mathcal{H}_E$. Do these two unitaries also define the same quantum channel?]
+
+(ref:environment-same-channel-caption) Here the $\times$ represents discarding the final state of the environment.
+
+```{r environment-same-channel,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6,fig.cap='(ref:environment-same-channel-caption)'}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{\psi}$} & \gate[wires=2]{U} &\qw &\qw &\rstick{$\rho'$} \qw
+  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\qw &\qw &\rstick{$\times$} \qw
+  \end{quantikz}
+\end{equation*}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{\psi}$} & \gate[wires=2]{U} &\qw &\rstick{$\rho'$} \qw
+  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\gate{R} &\rstick{$\times$} \qw
+  \end{quantikz}
+\end{equation*}
+```
