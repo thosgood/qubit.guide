@@ -278,6 +278,7 @@
 <li class="chapter" data-level="10" data-path="chapter10.html"><a href="chapter10.html"><i class="fa fa-check"></i><b>10</b> Quantum channels (or CP maps)</a>
 <ul>
 <li class="chapter" data-level="10.1" data-path="chapter10.html"><a href="chapter10.html#unitary-evolution-is-all-there-is"><i class="fa fa-check"></i><b>10.1</b> Unitary evolution is all there is…</a></li>
+<li class="chapter" data-level="10.2" data-path="chapter10.html"><a href="chapter10.html#operator-sum-representation"><i class="fa fa-check"></i><b>10.2</b> Operator sum representation</a></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="chapter11.html"><a href="chapter11.html"><i class="fa fa-check"></i><b>11</b> Quantum error correction and fault tolerance</a></li>
 <li class="chapter" data-level="12" data-path="chapter12.html"><a href="chapter12.html"><i class="fa fa-check"></i><b>12</b> Bonus material</a></li>
@@ -362,11 +363,39 @@ As mentioned above, the channel is completely defined by the unitary <eq env="ma
 That is, the two diagrams in Figure <a href="chapter10.html#fig:environment-same-channel">10.2</a> define the same channel, or, in other words, the unitaries <eq env="math">U</eq> and <eq env="math">(\mathbf{1}\otimes R)U</eq>, where <eq env="math">R</eq> acts only on <eq env="math">\mathcal{H}_E</eq>, define the same channel.<a href="#fn109" class="footnote-ref" id="fnref109"><sup>109</sup></a></p>
 
 <div class="figure" style="text-align: center"><span id="fig:environment-same-channel"></span>
-<img src="quantum-info_files/figure-html/environment-same-channel-1.png" alt="Here the \times represents discarding the final state of the environment." width="576" />
+<img src="quantum-info_files/figure-html/environment-same-channel-1.png" alt="The \bullet here represents discarding the final state of the environment." width="576" />
 <p class="caption">
-Figure 10.2: Here the <eq env="math">\times</eq> represents discarding the final state of the environment.
+Figure 10.2: The <eq env="math">\bullet</eq> here represents discarding the final state of the environment.
 </p>
 </div>
+<p>Note that, for any operator <eq env="math">\tilde{\rho}</eq> on <eq env="math">\mathcal{H}\otimes\mathcal{H}_E</eq>, and for any operator <eq env="math">R</eq> on <eq env="math">\mathcal{H}_E</eq>, we have that
+<eq env="displaymath">
+  \operatorname{tr}_E\left[
+    (\mathbf{1}\otimes R) \tilde{\rho} (\mathbf{1}\otimes R^\dagger)
+  \right] = \operatorname{tr}_E \tilde{\rho}.
+</eq>
+The reduced density operator <eq env="math">\rho=\operatorname{tr}_E\tilde{\rho}</eq> is not affected by <eq env="math">R</eq>.
+We can easily prove this for operators <eq env="math">\tilde{\rho}</eq> that are tensor products <eq env="math">\tilde{\rho}=X\otimes Y</eq> (a good exercise to try yourself), and then, by linearity, extend the result to any operator <eq env="math">\tilde{\rho}</eq>.</p>
+<p>We must point out that our construction of quantum channels does not capture all possible quantum evolutions.
+The assumption that the system and the environment are not initially correlated is crucial, and it does impose some restrictions on the applicability of our formalism.
+Compare, for example, the following two versions of a process in which the system, initially in state <eq env="math">\rho</eq>, undergoes two stages of evolution.</p>
+<p>Firstly:</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-61-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here, the environment is not discarded after the first unitary evolution <eq env="math">U_A</eq> — it carries on and participates in the second unitary evolution <eq env="math">U_B</eq>.
+In this case, the evolutions <eq env="math">\rho\mapsto\rho'</eq> and <eq env="math">\rho\mapsto\rho''</eq> <em>are</em> well-defined quantum channels, but the evolution <eq env="math">\rho'\mapsto\rho''</eq> is <em>not</em>; it falls outside the remit of our formalism for the input state of the system and the state of the environment are not independent.</p>
+<p>Secondly:</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-62-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>In contrast to the previous process, here we discard the environment after the first unitary, and start the second unitary evolution in a fresh tensor product state with a <em>new</em> environment — the two stages involve independent environments.
+In this case, all three evolutions (<eq env="math">\rho\mapsto\rho'</eq>, <eq env="math">\rho'\mapsto\rho''</eq>, and <eq env="math">\rho\mapsto\rho''</eq>) are well-defined quantum channels, and can be composed.<a href="#fn110" class="footnote-ref" id="fnref110"><sup>110</sup></a>
+If <eq env="math">\mathcal{E}_A</eq> describes the evolution from <eq env="math">\rho</eq> to <eq env="math">\rho'</eq>, and <eq env="math">\mathcal{E}_B</eq> the evolution from <eq env="math">\rho'</eq> to <eq env="math">\rho''</eq>, then the composition <eq env="math">\mathcal{E}_B\mathcal{E}_A</eq> describes the evolution from <eq env="math">\rho</eq> to <eq env="math">\rho''</eq>.</p>
+<p>In practice, we often deal with complex environments that have internal dynamics that “hide” any entanglement with the system as quickly as it arises.
+For example, let our system be an atom, surrounded by electromagnetic field (which serves as the environment), and let the field start in the vacuum state.
+If the atom emits a photon into the environment, then the photon quickly propagates away, and the immediate vicinity of the atom appears to be empty, i.e. it resets to the vacuum state.
+In this approximation, we assume that the environment quickly forgets about its state resulting from any previous evolution.
+This is known as the <strong>Markov approximation</strong>, and, in the quantum Markov process<a href="#fn111" class="footnote-ref" id="fnref111"><sup>111</sup></a>, the environment has essentially no memory.</p>
+</div>
+<div id="operator-sum-representation" class="section level2" number="10.2">
+<h2><span class="header-section-number">10.2</span> Operator sum representation</h2>
 
 </div>
 </div>
@@ -376,6 +405,8 @@ Figure 10.2: Here the <eq env="math">\times</eq> represents discarding the final
 <li id="fn107"><p>Recall that, given a pair of Hilbert spaces <eq env="math">\mathcal{H}_A</eq> and <eq env="math">\mathcal{H}_B</eq>, we denote the set of (bounded) linear operators from <eq env="math">\mathcal{H}_A</eq> to <eq env="math">\mathcal{H}_B</eq> by <eq env="math">\mathcal{B}(\mathcal{H}_A,\mathcal{H}_B)</eq>. The shorthand <eq env="math">\mathcal{B}(\mathcal{H})</eq> is used to denote <eq env="math">\mathcal{B(H,H)}</eq>. For example, an element of <eq env="math">\mathcal{B}(\mathcal{H})</eq> is exactly a density operator on <eq env="math">\mathcal{H}</eq>.<a href="chapter10.html#fnref107" class="footnote-back">↩︎</a></p></li>
 <li id="fn108"><p><a href="https://en.wikipedia.org/wiki/W._Forrest_Stinespring">William Forrest “Woody” Stinespring</a> (1929–2012) was an American mathematician specialising in operator theory.<a href="chapter10.html#fnref108" class="footnote-back">↩︎</a></p></li>
 <li id="fn109"><p>Consider <eq env="math">U</eq> and <eq env="math">U(\mathbf{1}\otimes R)</eq>, where <eq env="math">R</eq> acts only on <eq env="math">\mathcal{H}_E</eq>. Do these two unitaries also define the same quantum channel?<a href="chapter10.html#fnref109" class="footnote-back">↩︎</a></p></li>
+<li id="fn110"><p>Unitary evolutions form a group, quantum channels form a semigroup. Quantum operations are invertible only if they are unitary operations or simple isometric embeddings, such as bringing the environment is some fixed state and then discarding it right away, without any intermediate interaction.<a href="chapter10.html#fnref110" class="footnote-back">↩︎</a></p></li>
+<li id="fn111"><p><a href="https://en.wikipedia.org/wiki/Andrey_Markov">Andrey Markov</a> (1929–2012) was a Russian mathematician best known for his work on stochastic processes.<a href="chapter10.html#fnref111" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <script type="text/javascript" src="../sidenotes.js"></script>

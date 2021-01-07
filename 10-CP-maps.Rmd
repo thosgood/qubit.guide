@@ -77,19 +77,76 @@ This way of describing the action of a quantum channel is often called the **uni
 As mentioned above, the channel is completely defined by the unitary $U$ and the initial state of the environment $\ket{e}$, but note that, once the system and the environment cease to interact, any operation _on the environment alone_ has no effect on the state of the system.
 That is, the two diagrams in Figure \@ref(fig:environment-same-channel) define the same channel, or, in other words, the unitaries $U$ and $(\id\otimes R)U$, where $R$ acts only on $\mathcal{H}_E$, define the same channel.^[Consider $U$ and $U(\id\otimes R)$, where $R$ acts only on $\mathcal{H}_E$. Do these two unitaries also define the same quantum channel?]
 
-(ref:environment-same-channel-caption) Here the $\times$ represents discarding the final state of the environment.
+(ref:environment-same-channel-caption) The $\bullet$ here represents discarding the final state of the environment.
 
 ```{r environment-same-channel,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6,fig.cap='(ref:environment-same-channel-caption)'}
 \begin{equation*}
   \begin{quantikz}
     \lstick{$\ket{\psi}$} & \gate[wires=2]{U} &\qw &\qw &\rstick{$\rho'$} \qw
-  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\qw &\qw &\rstick{$\times$} \qw
+  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\qw &\qw &\rstick{$\bullet$} \qw
   \end{quantikz}
 \end{equation*}
 \begin{equation*}
   \begin{quantikz}
     \lstick{$\ket{\psi}$} & \gate[wires=2]{U} &\qw &\rstick{$\rho'$} \qw
-  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\gate{R} &\rstick{$\times$} \qw
+  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\gate{R} &\rstick{$\bullet$} \qw
   \end{quantikz}
 \end{equation*}
 ```
+
+Note that, for any operator $\tilde{\rho}$ on $\mathcal{H}\otimes\mathcal{H}_E$, and for any operator $R$ on $\mathcal{H}_E$, we have that
+$$
+  \tr_E\left[
+    (\id\otimes R) \tilde{\rho} (\id\otimes R^\dagger)
+  \right] = \tr_E \tilde{\rho}.
+$$
+The reduced density operator $\rho=\tr_E\tilde{\rho}$ is not affected by $R$.
+We can easily prove this for operators $\tilde{\rho}$ that are tensor products $\tilde{\rho}=X\otimes Y$ (a good exercise to try yourself), and then, by linearity, extend the result to any operator $\tilde{\rho}$.
+
+We must point out that our construction of quantum channels does not capture all possible quantum evolutions.
+The assumption that the system and the environment are not initially correlated is crucial, and it does impose some restrictions on the applicability of our formalism.
+Compare, for example, the following two versions of a process in which the system, initially in state $\rho$, undergoes two stages of evolution.
+
+Firstly:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\rho$} &\gate[2]{U_A} &\rstick{$\rho'$} \qw & &\gate[2]{U_B} &\rstick{$\rho''$} \qw
+  \\\lstick{$\ket{e}$} &\qw &\qw &\qw &\qw & \ar[d,dash,thickness]\qw
+  \\& & & & &\bullet
+  \end{quantikz}
+\end{equation*}
+```
+
+Here, the environment is not discarded after the first unitary evolution $U_A$ --- it carries on and participates in the second unitary evolution $U_B$.
+In this case, the evolutions $\rho\mapsto\rho'$ and $\rho\mapsto\rho''$ _are_ well-defined quantum channels, but the evolution $\rho'\mapsto\rho''$ is _not_; it falls outside the remit of our formalism for the input state of the system and the state of the environment are not independent.
+
+Secondly:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\rho$} &\gate[2]{U_A} &\qw &\rstick{$\rho'$} \qw & &\qw &\gate[2]{U_B} &\rstick{$\rho''$} \qw
+  \\\lstick{$\ket{a}$} & &\qw \ar[d,dash,thickness]\qw & & & \lstick{$\ket{b}$} &\qw &\ar[d,dash,thickness]\qw
+  \\& &\bullet & & & & &\bullet
+  \end{quantikz}
+\end{equation*}
+```
+
+In contrast to the previous process, here we discard the environment after the first unitary, and start the second unitary evolution in a fresh tensor product state with a _new_ environment --- the two stages involve independent environments.
+In this case, all three evolutions ($\rho\mapsto\rho'$, $\rho'\mapsto\rho''$, and $\rho\mapsto\rho''$) are well-defined quantum channels, and can be composed.^[Unitary evolutions form a group; quantum channels form a _[semigroup](https://en.wikipedia.org/wiki/Semigroup)_. Quantum channels are invertible only if they are unitary operations or simple isometric embeddings, such as including the environment in some fixed state and then discarding it right away, without any intermediate interaction.]
+If $\mathcal{E}_A$ describes the evolution from $\rho$ to $\rho'$, and $\mathcal{E}_B$ the evolution from $\rho'$ to $\rho''$, then the composition $\mathcal{E}_B\mathcal{E}_A$ describes the evolution from $\rho$ to $\rho''$.
+
+In practice, we often deal with complex environments that have internal dynamics that "hide" any entanglement with the system as quickly as it arises.
+For example, let our system be an atom, surrounded by electromagnetic field (which serves as the environment), and let the field start in the vacuum state.
+If the atom emits a photon into the environment, then the photon quickly propagates away, and the immediate vicinity of the atom appears to be empty, i.e. it resets to the vacuum state.
+In this approximation, we assume that the environment quickly forgets about its state resulting from any previous evolution.
+This is known as the **Markov approximation**, and, in the quantum Markov process^[[Andrey Markov](https://en.wikipedia.org/wiki/Andrey_Markov) (1929--2012) was a Russian mathematician best known for his work on stochastic processes.], the environment has essentially no memory.
+
+
+
+
+
+
+## Operator sum representation
