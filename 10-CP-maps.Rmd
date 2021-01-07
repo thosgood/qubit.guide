@@ -150,3 +150,29 @@ This is known as the **Markov approximation**, and, in the quantum Markov proces
 
 
 ## Operator sum representation
+
+The unitary representation of a quantum channel is usually too general to be of any practical use, at least for our purposes.
+We will find it convenient, as you will see when we start discussing quantum error correction, to choose an orthonormal basis $\{\ket{e_k}\}$ of $\mathcal{H}_E$, and express the joint (i.e. "system plus environment") unitary evolution $U$ as
+$$
+  U(\ket{\psi}\otimes\ket{e})
+  = \sum_k E_k\ket{\psi}\otimes\ket{e_k}
+$$
+where $E_k$ is an operator on $\mathcal{H}$ defined by
+$$
+  E_k\ket{\psi}
+  = \bra{e_k}U(\ket{\psi}\otimes\ket{e})
+$$
+for any vector $\ket{\psi}\in\mathcal{H}$
+Think about $\bra{e_k}U(\ket{\psi}\otimes\ket{e}$ as a partial inner product^[Recall that, given $\mathcal{H}_A\otimes\mathcal{H}_B$, the partial inner product of $\ket{x}\in \mathcal{H}_A$ and $\ket{a}\otimes\ket{b}\in\mathcal{H}_A\otimes\mathcal{H}_B$ is first defined by the formula $$\bra{x}(\ket{a}\otimes\ket{b}) = \braket{x|a}\ket{b}$$ and then extended to other (non direct tensor product) vectors in  $\mathcal{H}_A\otimes \mathcal{H}_B$ by linearity.] of $\ket{e_k}\in\mathcal{H}_E$ and  $U\ket{\psi}\ket{e}\in \mathcal{H}\otimes\mathcal{H}_E$.
+In analogy with classical communication channels we sometimes refer to the operators $E_k$ as **quantum errors**.
+
+The intuition behind the expression
+$$
+  \ket{\psi}\otimes \ket{e}
+  \longmapsto \sum_k E_k\ket{\psi}\otimes\ket{e_k}
+$$
+is that the operation $E_k$ (which changes the state of the system as $\ket{\psi}\mapsto E_k\ket{\psi}$) occurs with the probability $p_k=\bra{\psi}E^\dagger_k E_k\ket{\psi}$.
+The probabilities sum up to one ($\sum_k p_k=\bra{\psi}E^\dagger_k E_k\ket{\psi} =1$) for any state $\ket{\psi}$, and so the operators $E_k$ must satisfy the completeness relation
+$$
+  \sum_k E^\dagger_k E_k=\id.
+$$
