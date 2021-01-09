@@ -279,6 +279,7 @@
 <ul>
 <li class="chapter" data-level="10.1" data-path="chapter10.html"><a href="chapter10.html#unitary-evolution-is-all-there-is"><i class="fa fa-check"></i><b>10.1</b> Unitary evolution is all there is…</a></li>
 <li class="chapter" data-level="10.2" data-path="chapter10.html"><a href="chapter10.html#operator-sum-representation"><i class="fa fa-check"></i><b>10.2</b> Operator sum representation</a></li>
+<li class="chapter" data-level="10.3" data-path="chapter10.html"><a href="chapter10.html#expand-evolve-and-discard"><i class="fa fa-check"></i><b>10.3</b> Expand, evolve, and discard</a></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="chapter11.html"><a href="chapter11.html"><i class="fa fa-check"></i><b>11</b> Quantum error correction and fault tolerance</a></li>
 <li class="chapter" data-level="12" data-path="chapter12.html"><a href="chapter12.html"><i class="fa fa-check"></i><b>12</b> Bonus material</a></li>
@@ -416,10 +417,146 @@ In analogy with classical communication channels we sometimes refer to the opera
   \longmapsto \sum_k E_k|\psi\rangle\otimes|e_k\rangle
 </eq>
 is that the operation <eq env="math">E_k</eq> (which changes the state of the system as <eq env="math">|\psi\rangle\mapsto E_k|\psi\rangle</eq>) occurs with the probability <eq env="math">p_k=\langle\psi|E^\dagger_k E_k|\psi\rangle</eq>.
-The probabilities sum up to one (<eq env="math">\sum_k p_k=\langle\psi|E^\dagger_k E_k|\psi\rangle =1</eq>) for any state <eq env="math">|\psi\rangle</eq>, and so the operators <eq env="math">E_k</eq> must satisfy the completeness relation
+The probabilities sum up to one, i.e. <eq env="math">\sum_k p_k=\langle\psi|E^\dagger_k E_k|\psi\rangle =1</eq> for any state <eq env="math">|\psi\rangle</eq>, and so the operators <eq env="math">E_k</eq> must satisfy the completeness relation
 <eq env="displaymath">
   \sum_k E^\dagger_k E_k=\mathbf{1}.
 </eq></p>
+<p>Note that the matrix <eq env="math">U</eq> acts on the tensor product space, which gives it a natural partition into blocks of sub-matrices, such as <eq env="math">E_k=\langle e_k|U|e\rangle</eq>.
+In order to visualise <eq env="math">E_k=\langle e_k|U|e\rangle</eq>, write <eq env="math">U</eq> as a matrix on <eq env="math">\mathcal{H}_E\otimes\mathcal{H}</eq> rather than <eq env="math">\mathcal{H}\otimes\mathcal{H}_E</eq> (i.e. place the environment first and the system second).
+Then, in a tensor product basis in which <eq env="math">|e\rangle\equiv|e_1\rangle</eq>, the <eq env="math">(d\times d)</eq> matrices <eq env="math">E_k</eq> form the first block column:
+<eq env="displaymath">
+U=
+  \left[
+  \,
+    \begin{array}{c|c|c}
+        E_1
+      &amp; \cdots
+      &amp; \cdot
+    \\\hline
+      E_2
+      &amp; \cdots
+      &amp; \cdot
+    \\\hline
+       \vdots
+      &amp; \ddots
+      &amp; \vdots
+    \\\hline
+      E_n
+      &amp; \cdots
+      &amp; \cdot
+    \end{array}
+  \,
+  \right].
+</eq>
+The remaining entries of <eq env="math">U</eq> are irrelevant for the purpose of describing our sub-dynamics, since we have fixed the initial state of the environment.
+If we had chosen <eq env="math">|e\rangle\equiv|e_2\rangle</eq> instead, then we would have been looking at the matrices in the <em>second</em> block column, and all other entries would be irrelevant.
+You see the pattern, right?
+Here, the <eq env="math">k</eq> in <eq env="math">E_k</eq> ranges from <eq env="math">1</eq> to some <eq env="math">n\leqslant D</eq>, if we discount zero matrices.
+Finally, to be clear, reversing the order of the system and the environment does not affect the physical description <em>as long as we remember which part is which</em>.
+We changed the order just for pedagogical purposes; you can stick to the original order if you wish, but then the entries of <eq env="math">E_k</eq> will be dispersed all over the matrix <eq env="math">U</eq>.</p>
+<p>Now, if we express the system-plus-environment evolution in terms of density operators
+<eq env="displaymath">
+  |\psi\rangle\langle\psi|\otimes|e\rangle\langle e|
+  \longmapsto \sum_{k,l} E_k|\psi\rangle\langle\psi| E^\dagger_l\otimes |e_k\rangle\langle e_l|
+</eq>
+and trace over the environment, then we can write the evolution of the system alone as
+<eq env="displaymath">
+  |\psi\rangle\langle\psi|
+  \longmapsto \sum_k E_k|\psi\rangle\langle\psi| E^\dagger_k.
+</eq>
+Recall that any density operator can be represented as a statistical mixture of pure states, and so:</p>
+<div class="idea">
+<p>The above equation can be generalised and written as
+<eq env="displaymath">\rho\longrightarrow \sum_k E_k\rho E^\dagger_k</eq>
+where <eq env="math">\rho</eq> is any state of the system, pure or mixed.</p>
+<p>It turns out that <em>all</em> quantum channels can be represented in this way, which is known as the <strong>operator sum representation</strong>, or the <strong>Kraus representation</strong>.
+The operators <eq env="math">E_k</eq> are often referred to as the <strong>Kraus</strong> operators.<a href="#fn112" class="footnote-ref" id="fnref112"><sup>112</sup></a></p>
+</div>
+<p>The operator sum (Kraus) representation follows from the unitary representation once we choose an orthonormal basis in <eq env="math">\mathcal{H}_E</eq>.
+Conversely, given an operator sum representation <eq env="math">E_k\in\mathcal{B}(\mathcal{H})</eq> of the channel <eq env="math">\mathcal{E}</eq>, we can always view it as an operation resulting from a unitary map acting on some extended system: we just introduce an auxiliary system, the environment, which has dimension equal to the number of Kraus operators, and then choose an orthonormal basis <eq env="math">|e_k\rangle</eq>.
+We then define <eq env="math">U</eq> via <eq env="math">U|\psi\rangle|e\rangle\mapsto\sum_k E_k|\psi\rangle|e_k\rangle</eq>.
+It is convenient to choose <eq env="math">|e\rangle\equiv|e_1\rangle</eq>; in this case the operators <eq env="math">E_k</eq> form the first block column of <eq env="math">U</eq>.
+All other entries can be chosen as you please (as long as <eq env="math">U</eq> remains unitary).</p>
+<p>By now it should be clear that an operator sum representation of a given quantum channel is <em>not</em> unique: once we fix <eq env="math">U</eq> and <eq env="math">|e\rangle</eq>, and hence define a quantum channel, we may still choose the basis vectors <eq env="math">|e_k\rangle</eq> in <eq env="math">\mathcal{H}_E</eq> as we please.
+This means that the Kraus operators <eq env="math">E_k=\langle e_k|U|e\rangle</eq> and <eq env="math">F_k=\langle f_k|U|e\rangle</eq>, where <eq env="math">\{|e_k\rangle\}</eq> and <eq env="math">\{|f_k\rangle\}</eq> are two orthonormal bases, describe the same quantum channel.
+They are unitarily related:
+<eq env="displaymath">
+  \begin{aligned}
+    F_k
+    &amp;=\langle f_k| U|e\rangle
+  \\&amp;=\sum_l\langle f_k|e_l\rangle\langle e_l|U|e\rangle
+  \\&amp;=\sum_l \langle f_k|e_l\rangle E_l
+  \\&amp;=\sum_l R_{kl} E_l
+  \end{aligned}
+</eq>
+where <eq env="math">R_{kl}=\langle f_k |e_l\rangle</eq> is a unitary matrix, and we have used the decomposition of the identity <eq env="math">\sum_l|e_l\rangle\langle e_l|=\mathbf{1}_E</eq>.
+In fact, the converse holds true as well:</p>
+<div class="idea">
+<p>Suppose that <eq env="math">E_1,\ldots,E_n</eq> and <eq env="math">F_1,\ldots,F_m</eq> are Kraus operators associated to the quantum channels <eq env="math">\mathcal{E}</eq> and <eq env="math">\mathcal{F}</eq>, respectively.
+Let us append zero operators to the shorter list to ensure that <eq env="math">n=m</eq>.</p>
+<p><em>Then <eq env="math">\mathcal{E}</eq> and <eq env="math">\mathcal{F}</eq> describe the same channel if and only if <eq env="math">F_k=\sum_l R_{kl} E_l</eq> for some unitary <eq env="math">R</eq>.</em></p>
+</div>
+<p>It is easy to see the reverse implication:
+<eq env="displaymath">
+  \begin{aligned}
+    \mathcal{F}(\rho)
+    &amp;=\sum_k F_k\rho F^\dagger_k
+  \\&amp;= \sum_{ijk} R_{ki}E_i \rho E^\dagger_j R^\star_{jk}
+  \\&amp;=\sum_{ij} \underbrace{\left(\sum_k R_{jk}^\star R_{ki}\right)}_{\delta_{ij}} E_i\rho E^\dagger_j
+  \\&amp;= \sum_j E_j\rho E^\dagger_j
+  \\&amp;= \mathcal{E} (\rho).
+  \end{aligned}
+</eq></p>
+<p>Without any restrictions on the operators <eq env="math">E_k</eq>, any map of the form <eq env="math">U\mapsto\sum_k E_k U E_k^\dagger</eq> preserves Hermiticity and positivity.<a href="#fn113" class="footnote-ref" id="fnref113"><sup>113</sup></a>
+If we additionally require the completeness relation <eq env="math">\sum_k E_k^\dagger E_k=\mathbf{1}</eq>, then the map becomes trace-preserving:
+<eq env="displaymath">
+  \begin{aligned}
+    \operatorname{tr}\mathcal{E}(\rho)
+    &amp;= \operatorname{tr}\sum_k E_k\rho E_k^\dagger
+  \\&amp;= \operatorname{tr}\underbrace{\left(\sum_k E^\dagger_k E_k\right)}_{\mathbf{1}} \rho
+  \\&amp;= \operatorname{tr}\rho
+  \\&amp;= 1.
+  \end{aligned}
+</eq></p>
+<p>Any unitary evolution of a density operator
+<eq env="displaymath">
+  \rho \longmapsto U\rho U^\dagger
+</eq>
+is a trivial example of the operator sum representation, with just one Kraus operator <eq env="math">U</eq>.
+Next we may consider a probability distribution on a finite set of unitary operations <eq env="math">U_1,\ldots, U_m</eq>.
+In this scenario, <eq env="math">U_k</eq> will be chosen at random according to the probability distribution <eq env="math">p_1\ldots p_k \ldots p_m</eq>, and applied to <eq env="math">\rho</eq>.
+If this is all that is known about the procedure, then the resulting transformation of <eq env="math">\rho</eq> can be written as
+<eq env="displaymath">
+  \begin{aligned}
+    \rho\longmapsto
+    &amp;\sum_k p_k U_k\rho U_k^\dagger
+  \\=&amp;\sum_k  \underbrace{\sqrt{p_k} U_k}_{E_k}  \rho \underbrace{U_k^\dagger\sqrt{p_k}}_{E_k^\dagger}
+  \\=&amp;\sum_k E_k\rho E^\dagger_k.
+  \end{aligned}
+</eq>
+In this case,
+<eq env="displaymath">
+  \rho\lognmapsto \sum_k E_k\rho E_k^\dagger
+</eq>
+where <eq env="math">\sum_k E_k^\dagger E_k = \sum_k E_k E^\dagger_k =\mathbf{1}</eq>.
+This is an example of a <strong>unital channel</strong>, i.e. one for which <eq env="math">\sum_k E_k E^\dagger_k =\mathbf{1}</eq>; such a channel sends maximally mixed inputs to maximally mixed outputs (if <eq env="math">\rho \propto \mathbf{1}</eq>, then so too is <eq env="math">\rho'</eq>).</p>
+<p>In particular, if we restrict our attention to qubits, and choose the unitaries to be the identity and the three Pauli operators, then we construct what is known as a <strong>Pauli channel</strong>:
+<eq env="displaymath">
+  \rho
+  \longmapsto p_0 \mathbf{1}\rho\mathbf{1}+ p_x X\rho X + p_y Y\rho Y + p_z Z\rho Z.
+</eq></p>
+<p>The most popular Pauli channel is the <strong>depolarising channel</strong>
+<eq env="displaymath">
+  \rho
+  \longmapsto (1-p) \mathbf{1}\rho\mathbf{1}+ \frac{p}{3} (X\rho X + Y\rho Y + Z\rho Z).
+</eq>
+In the depolarising channel, a qubit in state <eq env="math">\rho</eq> remains intact with probability <eq env="math">1-p</eq>, or is otherwise transformed under one of the Pauli operators <eq env="math">X</eq>, <eq env="math">Y</eq>, or <eq env="math">Z</eq>, with each chosen randomly with probability <eq env="math">p/3</eq>.</p>
+<p><strong>Exercise.</strong>
+Show that the action of the depolarising channel is equivalent to the following operation: with probability <eq env="math">p</eq>, the input state is thrown away and replaced with the maximally mixed state, and with probability <eq env="math">(1-p)</eq> the input state survives without any disturbance.
+Use the Bloch sphere picture and show that the depolarising channel uniformly contracts the sphere by the factor <eq env="math">1-\frac{4}{3}p</eq>.</p>
+</div>
+<div id="expand-evolve-and-discard" class="section level2" number="10.3">
+<h2><span class="header-section-number">10.3</span> Expand, evolve, and discard</h2>
 
 </div>
 </div>
@@ -432,6 +569,8 @@ The probabilities sum up to one (<eq env="math">\sum_k p_k=\langle\psi|E^\dagger
 <li id="fn109"><p>Unitary evolutions form a group; quantum channels form a <em><a href="https://en.wikipedia.org/wiki/Semigroup">semigroup</a></em>. Quantum channels are invertible only if they are unitary operations or simple isometric embeddings, such as including the environment in some fixed state and then discarding it right away, without any intermediate interaction.<a href="chapter10.html#fnref109" class="footnote-back">↩︎</a></p></li>
 <li id="fn110"><p><a href="https://en.wikipedia.org/wiki/Andrey_Markov">Andrey Markov</a> (1929–2012) was a Russian mathematician best known for his work on stochastic processes.<a href="chapter10.html#fnref110" class="footnote-back">↩︎</a></p></li>
 <li id="fn111"><p>Recall that, given <eq env="math">\mathcal{H}_A\otimes\mathcal{H}_B</eq>, the partial inner product of <eq env="math">|x\rangle\in \mathcal{H}_A</eq> and <eq env="math">|a\rangle\otimes|b\rangle\in\mathcal{H}_A\otimes\mathcal{H}_B</eq> is first defined by the formula <eq env="displaymath">\langle x|(|a\rangle\otimes|b\rangle) = \langle x|a\rangle|b\rangle</eq> and then extended to other (non direct tensor product) vectors in <eq env="math">\mathcal{H}_A\otimes \mathcal{H}_B</eq> by linearity.<a href="chapter10.html#fnref111" class="footnote-back">↩︎</a></p></li>
+<li id="fn112"><p><a href="https://en.wikipedia.org/wiki/Karl_Kraus_(physicist)">Karl Kraus</a> (1938–1988) was a German physicist.<a href="chapter10.html#fnref112" class="footnote-back">↩︎</a></p></li>
+<li id="fn113"><p>Prove this!<a href="chapter10.html#fnref113" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <script type="text/javascript" src="../sidenotes.js"></script>

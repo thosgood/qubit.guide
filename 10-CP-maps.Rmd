@@ -176,3 +176,157 @@ The probabilities sum up to one, i.e. $\sum_k p_k=\bra{\psi}E^\dagger_k E_k\ket{
 $$
   \sum_k E^\dagger_k E_k=\id.
 $$
+
+Note that the matrix $U$ acts on the tensor product space, which gives it a natural partition into blocks of sub-matrices, such as $E_k=\bra{e_k}U\ket{e}$.
+In order to visualise $E_k=\bra{e_k}U\ket{e}$, write $U$ as a matrix on $\mathcal{H}_E\otimes\mathcal{H}$ rather than $\mathcal{H}\otimes\mathcal{H}_E$ (i.e. place the environment first and the system second).
+Then, in a tensor product basis in which $\ket{e}\equiv\ket{e_1}$, the $(d\times d)$ matrices $E_k$ form the first block column:
+$$
+U=
+  \left[
+  \,
+    \begin{array}{c|c|c}
+        E_1
+      & \cdots
+      & \cdot
+    \\\hline
+      E_2
+      & \cdots
+      & \cdot
+    \\\hline
+       \vdots
+      & \ddots
+      & \vdots
+    \\\hline
+      E_n
+      & \cdots
+      & \cdot
+    \end{array}
+  \,
+  \right].
+$$
+The remaining entries of $U$ are irrelevant for the purpose of describing our sub-dynamics, since we have fixed the initial state of the environment.
+If we had chosen $\ket{e}\equiv\ket{e_2}$ instead, then we would have been looking at the matrices in the _second_ block column, and all other entries would be irrelevant.
+You see the pattern, right?
+Here, the $k$ in $E_k$ ranges from $1$ to some $n\leq D$, if we discount zero matrices.
+Finally, to be clear, reversing the order of the system and the environment does not affect the physical description _as long as we remember which part is which_.
+We changed the order just for pedagogical purposes; you can stick to the original order if you wish, but then the entries of $E_k$ will be dispersed all over the matrix $U$.
+
+Now, if we express the system-plus-environment evolution in terms of density operators
+$$
+  \proj{\psi}\otimes\proj{e}
+  \longmapsto \sum_{k,l} E_k\proj{\psi} E^\dagger_l\otimes \ket{e_k}\bra{e_l}
+$$
+and trace over the environment, then we can write the evolution of the system alone as
+$$
+  \proj{\psi}
+  \longmapsto \sum_k E_k\proj{\psi} E^\dagger_k.
+$$
+Recall that any density operator can be represented as a statistical mixture of pure states, and so:
+
+::: {.idea data-latex=""}
+The above equation can be generalised and written as
+$$\rho\longrightarrow \sum_k E_k\rho E^\dagger_k$$
+where $\rho$ is any state of the system, pure or mixed.
+
+It turns out that _all_ quantum channels can be represented in this way, which is known as the **operator sum representation**, or the **Kraus representation**.
+The operators $E_k$ are often referred to as the **Kraus** operators.^[[Karl Kraus](https://en.wikipedia.org/wiki/Karl_Kraus_(physicist)) (1938--1988) was a German physicist.]
+:::
+
+The operator sum (Kraus) representation follows from the unitary representation once we choose an orthonormal basis in $\mathcal{H}_E$.
+Conversely, given an operator sum representation $E_k\in\mathcal{B}(\mathcal{H})$ of the channel $\mathcal{E}$, we can always view it as an operation resulting from a unitary map acting on some extended system: we just introduce an auxiliary system, the environment, which has dimension equal to the number of Kraus operators, and then choose an orthonormal basis $\ket{e_k}$.
+We then define $U$ via $U\ket{\psi}\ket{e}\mapsto\sum_k E_k\ket{\psi}\ket{e_k}$.
+It is convenient to choose $\ket{e}\equiv\ket{e_1}$; in this case the operators $E_k$ form the first block column of $U$.
+All other entries can be chosen as you please (as long as $U$ remains unitary).
+
+By now it should be clear that an operator sum representation of a given quantum channel is _not_ unique: once we fix $U$ and $\ket{e}$, and hence define a quantum channel, we may still choose the basis vectors $\ket{e_k}$ in $\mathcal{H}_E$ as we please.
+This means that the Kraus operators $E_k=\bra{e_k}U\ket{e}$ and $F_k=\bra{f_k}U\ket{e}$, where $\{\ket{e_k}\}$ and $\{\ket{f_k}\}$ are two orthonormal bases, describe the same quantum channel.
+They are unitarily related:
+$$
+  \begin{aligned}
+    F_k
+    &=\bra{f_k} U\ket{e}
+  \\&=\sum_l\braket{f_k|e_l}\bra{e_l}U\ket{e}
+  \\&=\sum_l \braket{f_k|e_l} E_l
+  \\&=\sum_l R_{kl} E_l
+  \end{aligned}
+$$
+where $R_{kl}=\braket{f_k |e_l}$ is a unitary matrix, and we have used the decomposition of the identity $\sum_l\proj{e_l}=\id_E$.
+In fact, the converse holds true as well:
+
+::: {.idea data-latex=""}
+Suppose that $E_1,\ldots,E_n$ and $F_1,\ldots,F_m$ are Kraus operators associated to the quantum channels $\mathcal{E}$ and $\mathcal{F}$, respectively.
+Let us append zero operators to the shorter list to ensure that $n=m$.
+
+_Then $\mathcal{E}$ and $\mathcal{F}$ describe the same channel if and only if $F_k=\sum_l R_{kl} E_l$ for some unitary $R$._
+:::
+
+It is easy to see the reverse implication:
+$$
+  \begin{aligned}
+    \mathcal{F}(\rho)
+    &=\sum_k F_k\rho F^\dagger_k
+  \\&= \sum_{ijk} R_{ki}E_i \rho E^\dagger_j R^\star_{jk}
+  \\&=\sum_{ij} \underbrace{\left(\sum_k R_{jk}^\star R_{ki}\right)}_{\delta_{ij}} E_i\rho E^\dagger_j
+  \\&= \sum_j E_j\rho E^\dagger_j
+  \\&= \mathcal{E} (\rho).
+  \end{aligned}
+$$
+
+Without any restrictions on the operators $E_k$, any map of the form $U\mapsto\sum_k E_k U E_k^\dagger$ preserves Hermiticity and positivity.^[Prove this!]
+If we additionally require the completeness relation $\sum_k E_k^\dagger E_k=\id$, then the map becomes trace-preserving:
+$$
+  \begin{aligned}
+    \tr\mathcal{E}(\rho)
+    &= \tr\sum_k E_k\rho E_k^\dagger
+  \\&= \tr\underbrace{\left(\sum_k E^\dagger_k E_k\right)}_{\id} \rho
+  \\&= \tr\rho
+  \\&= 1.
+  \end{aligned}
+$$
+
+Any unitary evolution of a density operator
+$$
+  \rho \longmapsto U\rho U^\dagger
+$$
+is a trivial example of the operator sum representation, with just one Kraus operator $U$.
+Next we may consider a probability distribution on a finite set of unitary operations $U_1,\ldots, U_m$.
+In this scenario, $U_k$ will be chosen at random according to the probability distribution $p_1\ldots p_k \ldots p_m$, and applied to $\rho$.
+If this is all that is known about the procedure, then the resulting transformation of $\rho$ can be written as
+$$
+  \begin{aligned}
+    \rho\longmapsto
+    &\sum_k p_k U_k\rho U_k^\dagger
+  \\=&\sum_k  \underbrace{\sqrt{p_k} U_k}_{E_k}  \rho \underbrace{U_k^\dagger\sqrt{p_k}}_{E_k^\dagger}
+  \\=&\sum_k E_k\rho E^\dagger_k.
+  \end{aligned}
+$$
+In this case,
+$$
+  \rho\lognmapsto \sum_k E_k\rho E_k^\dagger
+$$
+where $\sum_k E_k^\dagger E_k = \sum_k E_k E^\dagger_k =\id$.
+This is an example of a **unital channel**, i.e. one for which $\sum_k E_k E^\dagger_k =\id$; such a channel sends maximally mixed inputs to maximally mixed outputs (if $\rho \propto \id$, then so too is $\rho'$).
+
+In particular, if we restrict our attention to qubits, and choose the unitaries to be the identity and the three Pauli operators, then we construct what is known as a **Pauli channel**:
+$$
+  \rho
+  \longmapsto p_0 \id\rho\id + p_x X\rho X + p_y Y\rho Y + p_z Z\rho Z.
+$$
+
+The most popular Pauli channel is the **depolarising channel**
+$$
+  \rho
+  \longmapsto (1-p) \id\rho\id + \frac{p}{3} (X\rho X + Y\rho Y + Z\rho Z).
+$$
+In the depolarising channel, a qubit in state $\rho$ remains intact with probability $1-p$, or is otherwise transformed under one of the Pauli operators $X$, $Y$, or $Z$, each chosen randomly with probability $p/3$.
+
+**Useful exercise.**
+Show that the action of the depolarising channel is equivalent to the following operation: _with probability $p$, the input state is thrown away and replaced with the maximally mixed state, and with probability $(1-p)$ the input state survives without any disturbance_.
+Use the Bloch sphere picture and show that the depolarising channel uniformly contracts the sphere by the factor $1-\frac{4}{3}p$.
+
+
+
+
+
+
+## Expand, evolve, and discard
