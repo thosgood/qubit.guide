@@ -280,6 +280,7 @@
 <li class="chapter" data-level="10.1" data-path="chapter10.html"><a href="chapter10.html#unitary-evolution-is-all-there-is"><i class="fa fa-check"></i><b>10.1</b> Unitary evolution is all there is…</a></li>
 <li class="chapter" data-level="10.2" data-path="chapter10.html"><a href="chapter10.html#operator-sum-representation"><i class="fa fa-check"></i><b>10.2</b> Operator sum representation</a></li>
 <li class="chapter" data-level="10.3" data-path="chapter10.html"><a href="chapter10.html#expand-evolve-and-discard"><i class="fa fa-check"></i><b>10.3</b> Expand, evolve, and discard</a></li>
+<li class="chapter" data-level="10.4" data-path="chapter10.html"><a href="chapter10.html#completely-positive-maps"><i class="fa fa-check"></i><b>10.4</b> Completely positive maps</a></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="chapter11.html"><a href="chapter11.html"><i class="fa fa-check"></i><b>11</b> Quantum error correction and fault tolerance</a></li>
 <li class="chapter" data-level="12" data-path="chapter12.html"><a href="chapter12.html"><i class="fa fa-check"></i><b>12</b> Bonus material</a></li>
@@ -550,13 +551,124 @@ This is an example of a <strong>unital channel</strong>, i.e. one for which <eq
   \rho
   \longmapsto (1-p) \mathbf{1}\rho\mathbf{1}+ \frac{p}{3} (X\rho X + Y\rho Y + Z\rho Z).
 </eq>
-In the depolarising channel, a qubit in state <eq env="math">\rho</eq> remains intact with probability <eq env="math">1-p</eq>, or is otherwise transformed under one of the Pauli operators <eq env="math">X</eq>, <eq env="math">Y</eq>, or <eq env="math">Z</eq>, with each chosen randomly with probability <eq env="math">p/3</eq>.</p>
-<p><strong>Exercise.</strong>
-Show that the action of the depolarising channel is equivalent to the following operation: with probability <eq env="math">p</eq>, the input state is thrown away and replaced with the maximally mixed state, and with probability <eq env="math">(1-p)</eq> the input state survives without any disturbance.
+In the depolarising channel, a qubit in state <eq env="math">\rho</eq> remains intact with probability <eq env="math">1-p</eq>, or is otherwise transformed under one of the Pauli operators <eq env="math">X</eq>, <eq env="math">Y</eq>, or <eq env="math">Z</eq>, each chosen randomly with probability <eq env="math">p/3</eq>.</p>
+<p><strong>Useful exercise.</strong>
+Show that the action of the depolarising channel is equivalent to the following operation: <em>with probability <eq env="math">p</eq>, the input state is thrown away and replaced with the maximally mixed state, and with probability <eq env="math">(1-p)</eq> the input state survives without any disturbance</em>.
 Use the Bloch sphere picture and show that the depolarising channel uniformly contracts the sphere by the factor <eq env="math">1-\frac{4}{3}p</eq>.</p>
 </div>
 <div id="expand-evolve-and-discard" class="section level2" number="10.3">
 <h2><span class="header-section-number">10.3</span> Expand, evolve, and discard</h2>
+<p>We shall now discuss two important operations: <em>adding</em> and <em>discarding</em> subsystems.
+You need to pay attention to the dimensions of the Hilbert spaces involved, for they are different.
+Given a system <eq env="math">\mathcal{A}</eq>, we can bring in another system <eq env="math">\mathcal{B}</eq> to form the combined system <eq env="math">\mathcal{AB}</eq>.
+This will be described by a map (<strong>expansion</strong>)
+<eq env="displaymath">
+  \mathcal{B}(\mathcal{H}_A)
+  \longrightarrow \mathcal{B}(\mathcal{H}_A\otimes\mathcal{H}_B).
+</eq>
+Conversely, given a composite system <eq env="math">\mathcal{AB}</eq>, we can discard subsystem <eq env="math">\mathcal{B}</eq>, which is described by a map (<strong>reduction</strong>)
+<eq env="displaymath">
+  \mathcal{B}(\mathcal{H}_A\otimes\mathcal{H}_B)
+  \longrightarrow \mathcal{B}(\mathcal{H}_A).
+</eq>
+We will show now that the two operations can be written in the operator sum representation.
+For consistency with the rest of the exposition, we will choose <eq env="math">\mathcal{A}</eq> to be the system and <eq env="math">\mathcal{B}</eq> the environment.</p>
+<ul>
+<li><p><strong>Expansion.</strong>
+Any quantum system can be expanded by bringing in an auxiliary system (here, the environment) in a fixed state.
+This is described by the <strong>isometric embedding</strong>
+<eq env="displaymath">
+    |\psi\rangle
+    \longmapsto |\psi\rangle\otimes|e\rangle
+     (\mathbf{1}\otimes|e\rangle) |\psi\rangle.
+  </eq>
+It takes vectors in the Hilbert space associated with the original system, <eq env="math">\mathcal{H}</eq> (where <eq env="math">\dim\mathcal{H}=d</eq>) and tensors them with a fixed vector <eq env="math">|e\rangle</eq> in the Hilbert space associated with the environment, <eq env="math">\mathcal{H}_E</eq> (where <eq env="math">\dim\mathcal{H}_E=d_E</eq>).
+So it <em>embeds</em> the structure of <eq env="math">\mathcal{H}</eq> into a larger Hilbert space <eq env="math">\mathcal{H}\otimes\mathcal{H}_E</eq> (where <eq env="math">\dim\mathcal{H}\otimes\mathcal{H}_A=d\cdot d_E</eq>).
+In terms of density operators, we write the expansion as
+<eq env="displaymath">
+    \begin{aligned}
+      \rho
+      \longmapsto &amp;\rho\otimes|e\rangle\langle e|
+    \\=&amp; (\mathbf{1}\otimes|e\rangle)\rho (\mathbf{1}\otimes\langle e|)
+    \\=&amp; E\rho E^\dagger
+    \end{aligned}
+  </eq>
+where <eq env="math">E=\mathbf{1}\otimes|e\rangle</eq> can be represented by a <eq env="math">(d\times(d\cdot d_E))</eq> matrix.
+We note that <eq env="math">E^\dagger E=\mathbf{1}\otimes\langle e|e\rangle=\mathbf{1}</eq> is the identity in <eq env="math">\mathcal{H}</eq>.</p></li>
+<li><p><strong>Reduction.</strong>
+We can also discard a part of a composed system.
+If <eq env="math">\rho\in \mcB(\mathcal{H}\otimes\mathcal{H}_E)</eq> is a joint state of the system and the environment (the two may be entangled), then we can neglect or discard the environment by tracing over it:
+<eq env="displaymath">
+    \begin{aligned}
+      \rho
+      &amp;\longmapsto \operatorname{tr}_E\rho
+    \\=&amp;\sum_k (\mathbf{1}\otimes \langle e_k|) \rho (\mathbf{1}\otimes |e_k\rangle)
+    \\=&amp; \sum_k E_k \rho E^\dagger_k
+    \end{aligned}
+  </eq>
+where <eq env="math">E_k=\mathbf{1}\otimes\langle e_k|</eq> and can be represented by a <eq env="math">(d\cdot d_E)\times d</eq> matrices.
+Again, we note that <eq env="math">\sum_k E_k^\dagger E_k=\mathbf{1}\otimes\sum_k|e_k\rangle\langle e_k|=\mathbf{1}\otimes\mathbf{1}_E</eq> is the identity in <eq env="math">\mathcal{H}\otimes\mathcal{H}_E</eq>.</p></li>
+</ul>
+<p>So both expansion and reduction can be expressed in the operator sum representation as <eq env="math">\rho\mapsto\sum_k E_k\rho E_k^\dagger</eq>, where <eq env="math">\sum_k E_k^\dagger E_k=\mathbf{1}</eq>.
+Here, the identity operator acts on the Hilbert space associated with the original density operator <eq env="math">\rho</eq>, that is, <eq env="math">\mathcal{H}</eq> for the expansion and <eq env="math">\mathcal{H}\otimes\mathcal{H}_E</eq> for the reduction.
+Note that we do <em>not</em> require that <eq env="math">\sum_k E_k E^\dagger_k =\mathbf{1}</eq>.</p>
+<p>The next thing to notice is that we can compose quantum channels.
+This is straightforward in the operator sum representation: if
+<eq env="displaymath">
+  \begin{gathered}
+    \mathcal{E}_A\colon \rho
+    \longmapsto\sum_i A_i\rho A^\dagger_i
+  \\\mbox{where $\sum_i A^\dagger_i A_i=\mathbf{1}$}
+  \end{gathered}
+</eq>
+and
+<eq env="displaymath">
+  \begin{gathered}
+    \mathcal{E}_B\colon \rho
+    \longmapsto\sum_j B_j\rho B^\dagger_j
+  \\\mbox{where $\sum_j B^\dagger_j B_j=\mathbf{1}$}
+  \end{gathered}
+</eq>
+then
+<eq env="displaymath">
+  \mathcal{E}_B\mathcal{E}_A\colon \rho
+  \longmapsto \sum_{ij} (B_jA_i) \rho (B_jA_i)^\dagger
+</eq>
+where the <eq env="math">B_jA_i</eq> are the Kraus operators associated with the new channel <eq env="math">\mathcal{E}_B\mathcal{E}_A</eq>.
+We can verify that
+<eq env="displaymath">
+  \begin{aligned}
+    \sum_{ij} (B_jA_i)^\dagger (B_jA_i)
+    &amp;= \sum_i A_i^\dagger\left(\sum_j B_j^\dagger B_j\right)A_i
+  \\&amp;= \sum_i A_i^\dagger A_i
+  \\&amp;= \mathbf{1}.
+  \end{aligned}
+</eq></p>
+<div class="idea">
+<p>We now postulate that <em>any quantum channel is a composition of the three elementary operations</em>:</p>
+<ol style="list-style-type: decimal">
+<li><strong>expansion</strong>, i.e. bringing in another physical system in a fixed state (via an isometric embedding);</li>
+<li><strong>unitary evolution</strong> of the <em>whole</em> system; and</li>
+<li><strong>reduction</strong>, i.e. discarding everything we do not care about (via the partial trace).</li>
+</ol>
+</div>
+<p>Given that any unitary evolution <eq env="math">\rho\mapsto U\rho U^\dagger</eq> can be explicitly expressed in the operator sum form, the typical sequence “expand – unitary – reduce”, which is the composition of three quantum channels, also admits an operator sum representation.</p>
+<p>From a <em>mathematical</em> perspective, we have extended the class of quantum evolutions from
+<eq env="displaymath">
+  \rho
+  \longmapsto U\rho U^\dagger
+  \quad\mbox{with $U^\dagger U=\mathbf{1}$}
+</eq>
+to
+<eq env="displaymath">
+  \rho
+  \longmapsto \sum_k E_k\rho E^\dagger_k
+  \quad\mbox{with $\sum_k E^\dagger_k E_k=\mathbf{1}$.}
+</eq></p>
+<p>To be clear, we are not claiming here that the operator sum representation has any fundamental significance: it simply follows from a unitary evolution of a larger quantum system, and it is a convenient mathematical shortcut when we deal with subsystems of that larger system.</p>
+</div>
+<div id="completely-positive-maps" class="section level2" number="10.4">
+<h2><span class="header-section-number">10.4</span> Completely positive maps</h2>
 
 </div>
 </div>

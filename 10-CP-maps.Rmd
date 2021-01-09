@@ -330,3 +330,124 @@ Use the Bloch sphere picture and show that the depolarising channel uniformly co
 
 
 ## Expand, evolve, and discard
+
+We shall now discuss two important operations: _adding_ and _discarding_ subsystems.
+You need to pay attention to the dimensions of the Hilbert spaces involved, for they are different.
+Given a system $\mathcal{A}$, we can bring in another system $\mathcal{B}$ to form the combined system $\mathcal{AB}$.
+This will be described by a map (**expansion**)
+$$
+  \mathcal{B}(\mathcal{H}_A)
+  \longrightarrow \mathcal{B}(\mathcal{H}_A\otimes\mathcal{H}_B).
+$$
+Conversely, given a composite system $\mathcal{AB}$, we can discard subsystem $\mathcal{B}$, which is described by a map (**reduction**)
+$$
+  \mathcal{B}(\mathcal{H}_A\otimes\mathcal{H}_B)
+  \longrightarrow \mathcal{B}(\mathcal{H}_A).
+$$
+We will show now that the two operations can be written in the operator sum representation.
+For consistency with the rest of the exposition, we will choose $\mathcal{A}$ to be the system and $\mathcal{B}$ the environment.
+
+- **Expansion.**
+    Any quantum system can be expanded by bringing in an auxiliary system (here, the environment) in a fixed state.
+    This is described by the **isometric embedding**
+    $$
+      \ket{\psi}
+      \longmapsto \ket{\psi}\otimes\ket{e}
+       (\id\otimes\ket{e}) \ket{\psi}.
+    $$
+    It takes vectors in the Hilbert space associated with the original system, $\mathcal{H}$ (where $\dim\mathcal{H}=d$) and tensors them with a fixed vector $\ket{e}$ in the Hilbert space associated with the environment, $\mathcal{H}_E$ (where $\dim\mathcal{H}_E=d_E$).
+    So it _embeds_ the structure of $\mathcal{H}$ into a larger Hilbert space $\mathcal{H}\otimes\mathcal{H}_E$ (where $\dim\mathcal{H}\otimes\mathcal{H}_A=d\cdot d_E$).
+    In terms of density operators, we write the expansion as
+    $$
+      \begin{aligned}
+        \rho
+        \longmapsto &\rho\otimes\proj{e}
+      \\=& (\id\otimes\ket{e})\rho (\id\otimes\bra{e})
+      \\=& E\rho E^\dagger
+      \end{aligned}
+    $$
+    where $E=\id\otimes\ket{e}$ can be represented by a $(d\times(d\cdot d_E))$ matrix.
+    We note that $E^\dagger E=\id\otimes\braket{e|e}=\id$ is the identity in $\mathcal{H}$.
+
+- **Reduction.**
+    We can also discard a part of a composed system.
+    If $\rho\in \mcB(\mathcal{H}\otimes\mathcal{H}_E)$ is a joint state of the system and the environment (the two may be entangled), then we can neglect or discard the environment by tracing over it:
+    $$
+      \begin{aligned}
+        \rho
+        &\longmapsto \tr_E\rho
+      \\=&\sum_k (\id\otimes \bra{e_k}) \rho (\id\otimes \ket{e_k})
+      \\=& \sum_k E_k \rho E^\dagger_k
+      \end{aligned}
+    $$
+    where $E_k=\id\otimes\bra{e_k}$ and can be represented by a $(d\cdot d_E)\times d$ matrices.
+    Again, we note that $\sum_k E_k^\dagger E_k=\id\otimes\sum_k\proj{e_k}=\id\otimes\id_E$ is the identity in $\mathcal{H}\otimes\mathcal{H}_E$.
+
+So both expansion and reduction can be expressed in the operator sum representation as $\rho\mapsto\sum_k E_k\rho E_k^\dagger$, where $\sum_k E_k^\dagger E_k=\id$.
+Here, the identity operator acts on the Hilbert space associated with the original density operator $\rho$, that is, $\mathcal{H}$ for the expansion and $\mathcal{H}\otimes\mathcal{H}_E$ for the reduction.
+Note that we do _not_ require that $\sum_k E_k E^\dagger_k =\id$.
+
+The next thing to notice is that we can compose quantum channels.
+This is straightforward in the operator sum representation: if
+$$
+  \begin{gathered}
+    \mathcal{E}_A\colon \rho
+    \longmapsto\sum_i A_i\rho A^\dagger_i
+  \\\mbox{where $\sum_i A^\dagger_i A_i=\id$}
+  \end{gathered}
+$$
+and
+$$
+  \begin{gathered}
+    \mathcal{E}_B\colon \rho
+    \longmapsto\sum_j B_j\rho B^\dagger_j
+  \\\mbox{where $\sum_j B^\dagger_j B_j=\id$}
+  \end{gathered}
+$$
+then
+$$
+  \mathcal{E}_B\mathcal{E}_A\colon \rho
+  \longmapsto \sum_{ij} (B_jA_i) \rho (B_jA_i)^\dagger
+$$
+where the $B_jA_i$ are the Kraus operators associated with the new channel $\mathcal{E}_B\mathcal{E}_A$.
+We can verify that
+$$
+  \begin{aligned}
+    \sum_{ij} (B_jA_i)^\dagger (B_jA_i)
+    &= \sum_i A_i^\dagger\left(\sum_j B_j^\dagger B_j\right)A_i
+  \\&= \sum_i A_i^\dagger A_i
+  \\&= \id.
+  \end{aligned}
+$$
+
+::: {.idea}
+We now postulate that _any quantum channel is a composition of the three elementary operations_:
+
+1. **expansion**, i.e. bringing in another physical system in a fixed state (via an isometric embedding);
+2. **unitary evolution** of the _whole_ system; and
+3. **reduction**, i.e. discarding everything we do not care about (via the partial trace). 
+:::
+
+Given that any unitary evolution $\rho\mapsto U\rho U^\dagger$ can be explicitly expressed in the operator sum form, the typical sequence "expand -- unitary -- reduce", which is the composition of three quantum channels, also admits an operator sum representation.
+
+From a _mathematical_ perspective, we have extended the class of quantum evolutions from
+$$
+  \rho
+  \longmapsto U\rho U^\dagger
+  \quad\mbox{with $U^\dagger U=\id$}
+$$
+to
+$$
+  \rho
+  \longmapsto \sum_k E_k\rho E^\dagger_k
+  \quad\mbox{with $\sum_k E^\dagger_k E_k=\id$.}
+$$
+
+To be clear, we are not claiming here that the operator sum representation has any fundamental significance: it simply follows from a unitary evolution of a larger quantum system, and it is a convenient mathematical shortcut when we deal with subsystems of that larger system.
+
+
+
+
+
+
+## Completely positive maps
