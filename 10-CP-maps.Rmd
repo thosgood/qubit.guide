@@ -478,7 +478,7 @@ We can represent this construction of $\rho'_{AB}$ diagrammatically^[In fact, a 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
 \begin{equation*}
   \begin{quantikz}
-    & &\qw &\gate{\mathcal{I}} &\qw &\qw
+    &&\qw &\gate{\mathcal{I}} &\qw &\qw
   \\\lstick{$\rho_{AB}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]&&&&& \rstick{$\rho'_{AB}$}&
   \\&&\qw &\gate{\mathcal{E}} &\qw &\qw
   \end{quantikz}
@@ -544,7 +544,7 @@ A linear map $\mathcal{E}\colon B(\mathcal{H}) \rightarrow B(\mathcal{H}')$ is c
 \newcommand{\id}{\mathbf{1}}
 \begin{equation*}
   \begin{quantikz}
-    & &\qw &\gate{\mathcal{I}} &\qw &\qw
+    &&\qw &\gate{\mathcal{I}} &\qw &\qw
   \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
   \\&&\qw &\gate{\mathcal{E}} &\qw &\qw
   \end{quantikz}
@@ -559,21 +559,66 @@ Any such pure bipartite state $\ket{\Psi}$ can be written as $(A\otimes\id)\ket{
 \newcommand{\id}{\mathbf{1}}
 \begin{equation*}
   \begin{quantikz}
-    & &\qw &\gate{\id} &\qw &\qw
+    &&\qw &\gate{\id} &\qw &\qw
   \\\lstick{$\ket{\Psi}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
   \\&&\qw &\gate{\id} &\qw &\qw
   \end{quantikz}
 \end{equation*}
 \begin{equation*}
   \begin{quantikz}
-    & &\qw &\gate{A} &\qw &\qw
+    &&\qw &\gate{A} &\qw &\qw
   \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
   \\&&\qw &\gate{\id} &\qw &\qw
   \end{quantikz}
+  \quad
   \begin{quantikz}
-    & &\qw &\gate{\id} &\qw &\qw
+    &&\qw &\gate{\id} &\qw &\qw
   \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
   \\&&\qw &\gate{B} &\qw &\qw
   \end{quantikz}
 \end{equation*}
 ```
+
+**!!!TODO!!! caption the above diagram! be clear with what it really means!**
+
+Given that the map $\mathcal{E}$ acts only on the subsystem $\mathcal{B}$, we have that
+$$
+  \mathcal{I}\otimes\mathcal{E} ((A\otimes\id) \proj{\Omega} (A^\dagger\otimes\id))
+  = (A\otimes\id)[(\mathcal{I}\otimes\mathcal{E})(\proj{\Omega})](A^\dagger\otimes\id),
+$$
+and if $(\mathcal{I}\otimes\mathcal{E})(\proj{\Omega})$ is positive semidefinite, then so too is $(A\otimes\id)[(\mathcal{I}\otimes\mathcal{E})(\proj{\Omega})](A^\dagger\otimes\id)$.
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=14}
+\newcommand{\id}{\mathbf{1}}
+\definecolor{primary}{RGB}{177,98,78}
+\begin{equation*}
+  \begin{quantikz}
+    &&\qw &\gate{\id} &\qw &\qw
+  \\\lstick{$\ket{\Psi}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
+  \\&&\qw &\gate{\id} &\qw &\qw
+  \end{quantikz}
+\end{equation*}
+\begin{equation*}
+  \begin{quantikz}
+    &&\gate{A}\slice\qw &\gate{\mathcal{I}} &\qw
+  \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
+  \\&&\gate{\id} &\gate{\mathcal{E}} &\qw
+  \end{quantikz}
+  \quad
+  \begin{quantikz}
+    &&\gate{\mathcal{I}}\slice\qw &\gate{A} &\qw
+  \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
+  \\&&\gate{\mathcal{E}} &\gate{\id} &\qw
+  \end{quantikz}
+\end{equation*}
+```
+
+**!!!TODO!!! this diagram seems confusing given the previous one: the three circuits aren't in bijection!**
+
+**!!!TODO!!! caption the above diagram as well! are we saying everything is equal?**
+
+
+
+
+
+### The Choi matrix
