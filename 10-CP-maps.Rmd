@@ -35,7 +35,9 @@ This equivalence is often goes by the name of the **Stinespring dilation theorem
 
 
 
-## Unitary evolution is all there is...
+## The constructive approach
+
+### Unitary evolution is all there is...
 
 Here we consider the constructive approach described above.
 So we know that any evolution of any _isolated_ system is always unitary, since, at the fundamental level, this is the only evolution that is offered by quantum theory.
@@ -149,7 +151,7 @@ This is known as the **Markov approximation**, and, in the quantum Markov proces
 
 
 
-## Operator sum representation
+### Operator sum representation
 
 The unitary representation of a quantum channel is usually too general to be of any practical use, at least for our purposes.
 We will find it convenient, as you will see when we start discussing quantum error correction, to choose an orthonormal basis $\{\ket{e_k}\}$ of $\mathcal{H}_E$, and express the joint (i.e. "system plus environment") unitary evolution $U$ as
@@ -329,7 +331,7 @@ Use the Bloch sphere picture and show that the depolarising channel uniformly co
 
 
 
-## Expand, evolve, and discard
+### Expand, evolve, and discard
 
 We shall now discuss two important operations: _adding_ and _discarding_ subsystems.
 You need to pay attention to the dimensions of the Hilbert spaces involved, for they are different.
@@ -371,7 +373,7 @@ For consistency with the rest of the exposition, we will choose $\mathcal{A}$ to
 
 - **Reduction.**
     We can also discard a part of a composed system.
-    If $\rho\in \mcB(\mathcal{H}\otimes\mathcal{H}_E)$ is a joint state of the system and the environment (the two may be entangled), then we can neglect or discard the environment by tracing over it:
+    If $\rho\in\mathcal{B}(\mathcal{H}\otimes\mathcal{H}_E)$ is a joint state of the system and the environment (the two may be entangled), then we can neglect or discard the environment by tracing over it:
     $$
       \begin{aligned}
         \rho
@@ -425,7 +427,7 @@ We now postulate that _any quantum channel is a composition of the three element
 
 1. **expansion**, i.e. bringing in another physical system in a fixed state (via an isometric embedding);
 2. **unitary evolution** of the _whole_ system; and
-3. **reduction**, i.e. discarding everything we do not care about (via the partial trace). 
+3. **reduction**, i.e. discarding everything we do not care about (via the partial trace).
 :::
 
 Given that any unitary evolution $\rho\mapsto U\rho U^\dagger$ can be explicitly expressed in the operator sum form, the typical sequence "expand -- unitary -- reduce", which is the composition of three quantum channels, also admits an operator sum representation.
@@ -450,4 +452,42 @@ To be clear, we are not claiming here that the operator sum representation has a
 
 
 
-## Completely positive maps
+## The axiomatic approach
+
+### Completely positive maps
+
+Let us now turn to the axiomatic approach.
+What are the most general transformations that map density operators to density operators?
+
+The first thing to notice is that any such a transformation $\mathcal{E}$ must respect the mixing of states.
+Consider an ensemble of systems, with a fraction $p_1$ of them in the state $\rho_1$, and the remaining $p_2$ of them in the state $\rho_2$.
+The overall ensemble is described by $\rho=p_1\rho_1+p_2\rho_2$.
+If we apply $\mathcal{E}$ to each member of the ensemble, then the overall ensemble will be described by the density operator $\rho'=\mathcal{E}(\rho)$, which is $\rho'=p_1 \mathcal{E}(\rho_1)+p_2 \mathcal{E}(\rho_2)$.
+We conclude that $\mathcal{E}$ must be a _linear_ map^[More precisely, we require that $\mathcal{E}$ be an _affine_ map.] on density operators: $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\mapsto \mathcal{B}(\mathcal{H}')$.
+Moreover, since $\mathcal{E}$ maps density operators to density operators, it must be **positive** ($\mathcal{E}(\rho)\geq0$ whenever $\rho\geq0$) and **trace preserving** ($\tr \mathcal{E}(\rho)=\tr\rho$ for all $\rho\in\mathcal{B}(\mathcal{H})$).
+Can we stop here and conclude that quantum channels are described by linear, positive, trace-preserving maps?
+
+It turns out that there is one more property which must added to the list: we must require that the map remains positive even when it acts on a part of a larger system.
+That is, for any bipartite state $\rho_{AB}$ of a composed system $\mathcal{A}\mathcal{B}$, the extended map $\mathcal{I}\otimes\mathcal{E}$ (meaning "apply $\mathcal{E}$ to either one of the subsystems (it does not matter which one; here we have chosen subsystem $\mathcal{B}$), and do nothing (i.e. apply the identity map $\mathcal{I}$) to the remaining subsystem") gives a proper density operator $\rho'_{AB}$:
+$$
+  \rho'_{AB} = (\mathcal{I}\otimes\mathcal{E})(\rho_{AB}) \geq 0.
+$$
+
+We can represent this construction of $\rho'_{AB}$ diagrammatically^[In fact, a _lot_ of quantum information theory can be converted into similar looking diagrams, using the formalism of **string diagrams** from **category theory**. A very related concept is that of [ZX-calculus](https://zxcalculus.com/intro.html).] as follows:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+\begin{equation*}
+  \begin{tikzcd}
+    & & \qw  &\gate{\mathcal{I}} &\qw & \qw
+  \\\lstick{$\rho_{AB}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]&&&&& & \rstick{$\rho'_{AB}$}&
+  \\\lstick{$$}& & \qw &\gate{\mathcal{E}}  & \qw &\qw \rstick{$$}\\
+  \end{tikzcd}
+\end{equation*}
+```
+
+This is a stronger property than mere positivity; now we are asking for something called **complete positivity**.
+You may naively think that such trivial extensions of positive maps must be also positive, but this is not the case: the positivity of $\mathcal{E}$ does _not_ imply the positivity of its extension $\mathcal{I}\otimes\mathcal{E}$.
+_Positivity does not imply complete positivity!_
+Why?
+_Because physical systems do not exist in isolation_; applying $\mathcal{E}$ to a part of the whole and doing nothing (i.e. applying the identity) to the rest may mess up the state of the whole in an unacceptable way.
+This is a very quantum phenomenon, and is another consequence of quantum entanglement between parts of the composite system.
