@@ -468,20 +468,20 @@ Moreover, since $\mathcal{E}$ maps density operators to density operators, it mu
 Can we stop here and conclude that quantum channels are described by linear, positive, trace-preserving maps?
 
 It turns out that there is one more property which must added to the list: we must require that the map remains positive even when it acts on a part of a larger system.
-That is, for any bipartite state $\rho_{AB}$ of a composed system $\mathcal{A}\mathcal{B}$, the extended map $\mathcal{I}\otimes\mathcal{E}$ (meaning "apply $\mathcal{E}$ to either one of the subsystems (it does not matter which one; here we have chosen subsystem $\mathcal{B}$), and do nothing (i.e. apply the identity map $\mathcal{I}$) to the remaining subsystem") gives a proper density operator $\rho'_{AB}$:
+That is, for any bipartite state $\rho_{AB}$ of a composed system $\mathcal{A}\mathcal{B}$, the extended map $\mathcal{I}\otimes\mathcal{E}$ (meaning "apply $\mathcal{E}$ to either one of the subsystems (it does not matter which one; here we have chosen subsystem $\mathcal{B}$), and do nothing^[**!!!TODO explain the difference between $\id$ and $\mathcal{I}$!!!**] (i.e. apply the identity map $\mathcal{I}$) to the remaining subsystem") gives a proper density operator $\rho'_{AB}$:
 $$
   \rho'_{AB} = (\mathcal{I}\otimes\mathcal{E})(\rho_{AB}) \geq 0.
 $$
 
-We can represent this construction of $\rho'_{AB}$ diagrammatically^[In fact, a _lot_ of quantum information theory can be converted into similar looking diagrams, using the formalism of **string diagrams** from **category theory**. A very related concept is that of [ZX-calculus](https://zxcalculus.com/intro.html).] as follows:
+We can represent this construction of $\rho'_{AB}$ diagrammatically^[In fact, a _lot_ of quantum information theory can be converted into similar looking diagrams, using the formalism of **string diagrams** from **category theory**. A related concept is that of [ZX-calculus](https://zxcalculus.com/intro.html).] as follows:
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
 \begin{equation*}
-  \begin{tikzcd}
-    & & \qw  &\gate{\mathcal{I}} &\qw & \qw
-  \\\lstick{$\rho_{AB}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]&&&&& & \rstick{$\rho'_{AB}$}&
-  \\\lstick{$$}& & \qw &\gate{\mathcal{E}}  & \qw &\qw \rstick{$$}\\
-  \end{tikzcd}
+  \begin{quantikz}
+    & &\qw &\gate{\mathcal{I}} &\qw &\qw
+  \\\lstick{$\rho_{AB}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]&&&&& \rstick{$\rho'_{AB}$}&
+  \\&&\qw &\gate{\mathcal{E}} &\qw &\qw
+  \end{quantikz}
 \end{equation*}
 ```
 
@@ -491,3 +491,89 @@ _Positivity does not imply complete positivity!_
 Why?
 _Because physical systems do not exist in isolation_; applying $\mathcal{E}$ to a part of the whole and doing nothing (i.e. applying the identity) to the rest may mess up the state of the whole in an unacceptable way.
 This is a very quantum phenomenon, and is another consequence of quantum entanglement between parts of the composite system.
+
+A simple example of a positive map that is not completely positive is the transpose.
+Consider the transpose operation on a single qubit: $T\ket{i}\bra{j}\mapsto\ket{j}\bra{i}$ (for $i,j=0,1$).
+It preserves both trace and positivity, and, if $\rho$ is a density matrix, then so is $\rho'=\rho^T$.
+However, if the input qubit is part of a _two-qubit_ system, initially in the entangled state $\ket{\Omega}=\frac{1}{\sqrt{2}}(\ket{0}\ket{0}+\ket{1}\ket{1})$, and the transpose is applied to _only one_ of the two qubits, (say, the second one) then, under the action of the partial transpose $\mathcal{I}\otimes T$, the density matrix of the two qubits becomes
+$$
+  \begin{aligned}
+    \proj{\Omega}
+    =& \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes \ket{i}\bra{j}
+  \\\xmapsto{\mathcal{I}\otimes T}& \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes T(\ket{i}\bra{j})
+  \\=& \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes \ket{j}\bra{i}.
+  \end{aligned}
+$$
+The output is the $\texttt{SWAP}$ matrix, since it describes the $\texttt{SWAP}$ operation: $\ket{j}\ket{i}\mapsto\ket{i}\ket{j}$.
+Since the square of $\texttt{SWAP}$ is the identity, its eigenvalues are $\pm1$; states which are symmetric under interchange of the two qubits have eigenvalue $1$, while antisymmetric states have eigenvalue $-1$.
+Thus the $\texttt{SWAP}$ matrix has negative eigenvalues, which means that $\mathcal{I}\otimes T$ does _not_ preserve positivity, and therefore $T$ is _not_ a completely positive map.
+If you prefer to see this more explicitly, then you can use the matrix representation of $\proj{\Omega}$, apply the partial transpose $\mathcal{I}\otimes T$, and inspect the resulting matrix:
+$$
+  \half\left[
+  \begin{array}{cc|cc}
+    1 & 0 & 0 & 1
+  \\0 & 0 & 0 & 0\\
+  \hline
+  0 & 0 & 0 & 0
+  \\1 & 0 & 0 & 1
+  \end{array}\right]
+  \xmapsto{\mathcal{I}\otimes T}
+  \half\left[
+  \begin{array}{cc|cc}
+    1 & 0 & 0 & 0
+  \\0 & 0 & 1 & 0\\
+  \hline
+ 0 & 1 & 0 & 0
+  \\0 & 0 & 0 & 1
+  \end{array}\right].
+$$
+The partial transpose maps the density matrix of a maximally entangled state $\proj{\Omega}$ to the $\texttt{SWAP}$ matrix, which has one negative eigenvalue (namely $-1$), and so is not a density matrix.
+
+So how can we tell if a given map $\mathcal{E}$ is completely positive or not?
+The answer is "in pretty much the same way we discovered that the transpose is not a completely positive map".
+It suffices to apply $\mathcal{I}\otimes\mathcal{E}$ (or $\mathcal{E}\otimes \mathcal{I}$) to the maximally entangled state of two subsystems and check if the result is a legal density matrix.
+In fact, it works both ways:
+
+::: {.idea data-latex=""}
+A linear map $\mathcal{E}\colon B(\mathcal{H}) \rightarrow B(\mathcal{H}')$ is completely positive iff $(\mathcal{I}\otimes\mathcal{E})(\proj{\Omega})\geq0$, where $\ket{\Omega}$ is a maximally entangled state of dimension $d=\dim{\mathcal{H}}$.
+:::
+
+(ref:cp-test-caption) Test for complete positivity: apply the map $\mathcal{E}$ to half of a maximally entangled state and check if the resulting bipartite operator is a density operator.
+
+```{r cp-test,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7,fig.cap='(ref:cp-test-caption)'}
+\newcommand{\id}{\mathbf{1}}
+\begin{equation*}
+  \begin{quantikz}
+    & &\qw &\gate{\mathcal{I}} &\qw &\qw
+  \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
+  \\&&\qw &\gate{\mathcal{E}} &\qw &\qw
+  \end{quantikz}
+\end{equation*}
+```
+
+Clearly, if $\mathcal{E}$ is completely positive, then, from the definition, $(\mathcal{I}\otimes\mathcal{E})(\proj{\Omega})\geq0$.
+Conversely, in order to check if $(\mathcal{I}\otimes\mathcal{E})(\rho_{AB})\geq0$ holds for any bipartite state $\rho_{AB}$, it is sufficient to consider only pure states, e.g. the states that appear in the spectral decomposition of $\rho_{AB}$.
+Any such pure bipartite state $\ket{\Psi}$ can be written as $(A\otimes\id)\ket{\Omega}$ or $(\id\otimes B)\ket{\Omega}$, for some linear operators $A$ and $B$, on subsystems $\mathcal{A}$ or $\mathcal{B}$, respectively:^[The state $\ket{\Psi}$ has the Schmidt decomposition $\sum_k\lambda_k\ket{k}\ket{k}$, where $\lambda^2_k$ are the eigenvalues of the reduced density operators $\sigma_A$ and $\sigma_B$. Thus $\ket{\Psi}$ can be written as $(\sqrt{d\sigma_A}\otimes\id)\ket{\Omega}$ or $(\id\otimes \sqrt{d\sigma_B})\ket{\Omega}$, where $d$ is the Schmidt rank.]
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=14}
+\newcommand{\id}{\mathbf{1}}
+\begin{equation*}
+  \begin{quantikz}
+    & &\qw &\gate{\id} &\qw &\qw
+  \\\lstick{$\ket{\Psi}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
+  \\&&\qw &\gate{\id} &\qw &\qw
+  \end{quantikz}
+\end{equation*}
+\begin{equation*}
+  \begin{quantikz}
+    & &\qw &\gate{A} &\qw &\qw
+  \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
+  \\&&\qw &\gate{\id} &\qw &\qw
+  \end{quantikz}
+  \begin{quantikz}
+    & &\qw &\gate{\id} &\qw &\qw
+  \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
+  \\&&\qw &\gate{B} &\qw &\qw
+  \end{quantikz}
+\end{equation*}
+```

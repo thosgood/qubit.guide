@@ -690,11 +690,11 @@ We conclude that <eq env="math">\mathcal{E}</eq> must be a <em>linear</em> map<a
 Moreover, since <eq env="math">\mathcal{E}</eq> maps density operators to density operators, it must be <strong>positive</strong> (<eq env="math">\mathcal{E}(\rho)\geqslant 0</eq> whenever <eq env="math">\rho\geqslant 0</eq>) and <strong>trace preserving</strong> (<eq env="math">\operatorname{tr}\mathcal{E}(\rho)=\operatorname{tr}\rho</eq> for all <eq env="math">\rho\in\mathcal{B}(\mathcal{H})</eq>).
 Can we stop here and conclude that quantum channels are described by linear, positive, trace-preserving maps?</p>
 <p>It turns out that there is one more property which must added to the list: we must require that the map remains positive even when it acts on a part of a larger system.
-That is, for any bipartite state <eq env="math">\rho_{AB}</eq> of a composed system <eq env="math">\mathcal{A}\mathcal{B}</eq>, the extended map <eq env="math">\mathcal{I}\otimes\mathcal{E}</eq> (meaning “apply <eq env="math">\mathcal{E}</eq> to either one of the subsystems (it does not matter which one; here we have chosen subsystem <eq env="math">\mathcal{B}</eq>), and do nothing (i.e. apply the identity map <eq env="math">\mathcal{I}</eq>) to the remaining subsystem”) gives a proper density operator <eq env="math">\rho'_{AB}</eq>:
+That is, for any bipartite state <eq env="math">\rho_{AB}</eq> of a composed system <eq env="math">\mathcal{A}\mathcal{B}</eq>, the extended map <eq env="math">\mathcal{I}\otimes\mathcal{E}</eq> (meaning “apply <eq env="math">\mathcal{E}</eq> to either one of the subsystems (it does not matter which one; here we have chosen subsystem <eq env="math">\mathcal{B}</eq>), and do nothing<a href="#fn115" class="footnote-ref" id="fnref115"><sup>115</sup></a> (i.e. apply the identity map <eq env="math">\mathcal{I}</eq>) to the remaining subsystem”) gives a proper density operator <eq env="math">\rho'_{AB}</eq>:
 <eq env="displaymath">
   \rho'_{AB} = (\mathcal{I}\otimes\mathcal{E})(\rho_{AB}) \geqslant 0.
 </eq></p>
-<p>We can represent this construction of <eq env="math">\rho'_{AB}</eq> diagrammatically<a href="#fn115" class="footnote-ref" id="fnref115"><sup>115</sup></a> as follows:</p>
+<p>We can represent this construction of <eq env="math">\rho'_{AB}</eq> diagrammatically<a href="#fn116" class="footnote-ref" id="fnref116"><sup>116</sup></a> as follows:</p>
 <p><img src="quantum-info_files/figure-html/unnamed-chunk-63-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>This is a stronger property than mere positivity; now we are asking for something called <strong>complete positivity</strong>.
 You may naively think that such trivial extensions of positive maps must be also positive, but this is not the case: the positivity of <eq env="math">\mathcal{E}</eq> does <em>not</em> imply the positivity of its extension <eq env="math">\mathcal{I}\otimes\mathcal{E}</eq>.
@@ -702,6 +702,60 @@ You may naively think that such trivial extensions of positive maps must be also
 Why?
 <em>Because physical systems do not exist in isolation</em>; applying <eq env="math">\mathcal{E}</eq> to a part of the whole and doing nothing (i.e. applying the identity) to the rest may mess up the state of the whole in an unacceptable way.
 This is a very quantum phenomenon, and is another consequence of quantum entanglement between parts of the composite system.</p>
+<p>A simple example of a positive map that is not completely positive is the transpose.
+Consider the transpose operation on a single qubit: <eq env="math">T(|i\rangle\langle j|)=|j\rangle\langle i|</eq> (for <eq env="math">i,j=0,1</eq>).
+It preserves both trace and positivity, and, if <eq env="math">\rho</eq> is a density matrix, then so is <eq env="math">\rho'=\rho^T</eq>.
+However, if the input qubit is part of a <em>two-qubit</em> system, initially in the entangled state <eq env="math">|\Omega\rangle=\frac{1}{\sqrt{2}}(|0\rangle|0\rangle+|1\rangle|1\rangle)</eq>, and the transpose is applied to <em>only one</em> of the two qubits, (say, the second one) then, under the action of the partial transpose <eq env="math">\mathcal{I}\otimes T</eq>, the density matrix of the two qubits becomes
+<eq env="displaymath">
+  \begin{aligned}
+    |\Omega\rangle\langle\Omega|
+    =&amp; \frac{1}{2}\sum_{ij} |i\rangle\langle j| \otimes |i\rangle\langle j|
+  \\\longmapsto&amp;\frac{1}{2}\sum_{ij} |i\rangle\langle j| \otimes T(|i\rangle\langle j|)
+  \\=&amp; \frac{1}{2}\sum_{ij} |i\rangle\langle j| \otimes |j\rangle\langle i|.
+  \end{aligned}
+</eq>
+The output is the <eq env="math">\texttt{SWAP}</eq> matrix, since it describes the <eq env="math">\texttt{SWAP}</eq> operation: <eq env="math">|j\rangle|i\rangle\mapsto|i\rangle|j\rangle</eq>.
+Since the square of <eq env="math">\texttt{SWAP}</eq> is the identity, its eigenvalues are <eq env="math">\pm1</eq>; states which are symmetric under interchange of the two qubits have eigenvalue <eq env="math">1</eq>, while antisymmetric states have eigenvalue <eq env="math">-1</eq>.
+Thus the <eq env="math">\texttt{SWAP}</eq> matrix has negative eigenvalues, which means that <eq env="math">\mathcal{I}\otimes T</eq> does <em>not</em> preserve positivity, and therefore <eq env="math">T</eq> is <em>not</em> a completely positive map.
+If you prefer to see this more explicitly, then you can use the matrix representation of <eq env="math">|\Omega\rangle\langle\Omega|</eq>, apply the partial transpose <eq env="math">\mathcal{I}\otimes T</eq>, and inspect the resulting matrix:
+<eq env="displaymath">
+  \half\left[
+  \begin{array}{cc|cc}
+    1 &amp; 0 &amp; 0 &amp; 1
+  \\0 &amp; 0 &amp; 0 &amp; 0\\
+  \hline
+  0 &amp; 0 &amp; 0 &amp; 0
+  \\1 &amp; 0 &amp; 0 &amp; 1
+  \end{array}\right]
+  \overset{\mathcal{I}\otimes T}{\longmapsto}
+  \half\left[
+  \begin{array}{cc|cc}
+    1 &amp; 0 &amp; 0 &amp; 0
+  \\0 &amp; 0 &amp; 1 &amp; 0\\
+  \hline
+ 0 &amp; 1 &amp; 0 &amp; 0
+  \\0 &amp; 0 &amp; 0 &amp; 1
+  \end{array}\right].
+</eq>
+The partial transpose maps the density matrix of a maximally entangled state <eq env="math">|\Omega\rangle\langle\Omega|</eq> to the <eq env="math">\texttt{SWAP}</eq> matrix, which has one negative eigenvalue (namely <eq env="math">-1</eq>), and so is not a density matrix.</p>
+<p>So how can we tell if a given map <eq env="math">\mathcal{E}</eq> is completely positive or not?
+The answer is “in pretty much the same way we discovered that the transpose is not a completely positive map”.
+It suffices to apply <eq env="math">\mathcal{I}\otimes\mathcal{E}</eq> (or <eq env="math">\mathcal{E}\otimes \mathcal{I}</eq>) to the maximally entangled state of two subsystems and check if the result is a legal density matrix.
+In fact, it works both ways:</p>
+<div class="idea">
+<p>A linear map <eq env="math">\mathcal{E}\colon B(\mathcal{H}) \rightarrow B(\mathcal{H}')</eq> is completely positive iff <eq env="math">(\mathcal{I}\otimes\mathcal{E})(|\Omega\rangle\langle\Omega|)\geqslant 0</eq>, where <eq env="math">|\Omega\rangle</eq> is a maximally entangled state of dimension <eq env="math">d=\dim{\mathcal{H}}</eq>.</p>
+</div>
+
+<div class="figure" style="text-align: center"><span id="fig:cp-test"></span>
+<img src="quantum-info_files/figure-html/cp-test-1.png" alt="Test for complete positivity: apply the map \mathcal{E} to half of a maximally entangled state and check if the resulting bipartite operator is a density operator." width="672" />
+<p class="caption">
+Figure 10.3: Test for complete positivity: apply the map <eq env="math">\mathcal{E}</eq> to half of a maximally entangled state and check if the resulting bipartite operator is a density operator.
+</p>
+</div>
+<p>Clearly, if <eq env="math">\mathcal{E}</eq> is completely positive, then, from the definition, <eq env="math">(\mathcal{I}\otimes\mathcal{E})(|\Omega\rangle\langle\Omega|)\geqslant 0</eq>.
+Conversely, in order to check if <eq env="math">(\mathcal{I}\otimes\mathcal{E})(\rho_{AB})\geqslant 0</eq> holds for any bipartite state <eq env="math">\rho_{AB}</eq>, it is sufficient to consider only pure states, e.g. the states that appear in the spectral decomposition of <eq env="math">\rho_{AB}</eq>.
+Any such pure bipartite state <eq env="math">|\Psi\rangle</eq> can be written as <eq env="math">(A\otimes\mathbf{1})|\Omega\rangle</eq> or <eq env="math">(\mathbf{1}\otimes B)|\Omega\rangle</eq>, for some linear operators <eq env="math">A</eq> and <eq env="math">B</eq>, on subsystems <eq env="math">\mathcal{A}</eq> or <eq env="math">\mathcal{B}</eq>, respectively:<a href="#fn117" class="footnote-ref" id="fnref117"><sup>117</sup></a></p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-64-1.png" width="1344" style="display: block; margin: auto;" /></p>
 
 </div>
 </div>
@@ -718,7 +772,9 @@ This is a very quantum phenomenon, and is another consequence of quantum entangl
 <li id="fn112"><p><a href="https://en.wikipedia.org/wiki/Karl_Kraus_(physicist)">Karl Kraus</a> (1938–1988) was a German physicist.<a href="chapter10.html#fnref112" class="footnote-back">↩︎</a></p></li>
 <li id="fn113"><p>Prove this!<a href="chapter10.html#fnref113" class="footnote-back">↩︎</a></p></li>
 <li id="fn114"><p>More precisely, we require that <eq env="math">\mathcal{E}</eq> be an <em>affine</em> map.<a href="chapter10.html#fnref114" class="footnote-back">↩︎</a></p></li>
-<li id="fn115"><p>In fact, a <em>lot</em> of quantum information theory can be converted into similar looking diagrams, using the formalism of <strong>string diagrams</strong> from <strong>category theory</strong>. A very related concept is that of <a href="https://zxcalculus.com/intro.html">ZX-calculus</a>.<a href="chapter10.html#fnref115" class="footnote-back">↩︎</a></p></li>
+<li id="fn115"><p><strong>!!!TODO explain the difference between <eq env="math">\mathbf{1}</eq> and <eq env="math">\mathcal{I}</eq>!!!</strong><a href="chapter10.html#fnref115" class="footnote-back">↩︎</a></p></li>
+<li id="fn116"><p>In fact, a <em>lot</em> of quantum information theory can be converted into similar looking diagrams, using the formalism of <strong>string diagrams</strong> from <strong>category theory</strong>. A related concept is that of <a href="https://zxcalculus.com/intro.html">ZX-calculus</a>.<a href="chapter10.html#fnref116" class="footnote-back">↩︎</a></p></li>
+<li id="fn117"><p>The state <eq env="math">|\Psi\rangle</eq> has the Schmidt decomposition <eq env="math">\sum_k\lambda_k|k\rangle|k\rangle</eq>, where <eq env="math">\lambda^2_k</eq> are the eigenvalues of the reduced density operators <eq env="math">\sigma_A</eq> and <eq env="math">\sigma_B</eq>. Thus <eq env="math">|\Psi\rangle</eq> can be written as <eq env="math">(\sqrt{d\sigma_A}\otimes\mathbf{1})|\Omega\rangle</eq> or <eq env="math">(\mathbf{1}\otimes \sqrt{d\sigma_B})|\Omega\rangle</eq>, where <eq env="math">d</eq> is the Schmidt rank.<a href="chapter10.html#fnref117" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <script type="text/javascript" src="../sidenotes.js"></script>
