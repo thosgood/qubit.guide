@@ -622,3 +622,81 @@ and if $(\mathcal{I}\otimes\mathcal{E})(\proj{\Omega})$ is positive semidefinite
 
 
 ### The Choi matrix
+
+If we choose bases of $\mathcal{H}$ and $\mathcal{H}'$ (where $\dim\mathcal{H}=d$ and $\dim\mathcal{H}'=d'$), then any linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\rightarrow\mathcal{B}(\mathcal{H'})$ can be completely characterised by its action on the $d^2$ basis matrices $\ket{i}\bra{j}$, where $i,j=1,2\ldots,d$.
+
+::: {.idea data-latex=""}
+The **Choi matrix $\widetilde{\mathcal{E}}$** of $\mathcal{E}$ is defined by
+$$
+  \widetilde{\mathcal{E}}
+  = (\mathcal{I}\otimes\mathcal{E})\proj{\Omega}
+  =\frac{1}{d}\sum_{i,j}\ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j}).
+$$
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\dim\mathcal{H}=d$}&&\qw &\gate{\mathcal{I}} &\qw &\qw\rstick{$\dim\mathcal{H}=d$}
+  \\\lstick{$\Omega$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
+  \\\lstick{$\dim\mathcal{H}=d$}&&\qw &\gate{\mathcal{E}} &\qw &\qw\rstick{$\dim\mathcal{H}'=d'$}
+  \end{quantikz}
+\end{equation*}
+```
+:::
+
+The Choi matrix is a neat way of tabulating all possible values of $\mathcal{E}(\ket{i}\bra{j})$, since the $(i,j)$-th block entry of $\widetilde{\mathcal{E}}$ is the $(d'\times d')$-matrix $\mathcal{E}(\ket{i}\bra{j})$:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{equation*}
+  \tilde{\mathcal{E}} =
+  \left[\,
+  \setlength\arraycolsep{0.4em}
+  \def\arraystretch{1.5}
+    \begin{array}{cccc}
+      \cellcolor{secondary!20}\mathcal{E}(\ket{0}\bra{0})
+      & \mathcal{E}(\ket{0}\bra{1})
+      & \cellcolor{secondary!20}\mathcal{E}(\ket{0}\bra{2})
+      & \ldots
+    \\\mathcal{E}(\ket{1}\bra{0})
+      & \cellcolor{secondary!20}\mathcal{E}(\ket{1}\bra{1})
+      & \mathcal{E}(\ket{1}\bra{0})
+      & \cellcolor{secondary!20}\ldots
+    \\\cellcolor{secondary!20} \mathcal{E}(\ket{2}\bra{0})
+      & \mathcal{E}(\ket{2}\bra{1})
+      & \cellcolor{secondary!20}\mathcal{E}(\ket{2}\bra{2})
+      & \ldots
+    \\\vdots
+      & \cellcolor{secondary!20}\vdots
+      & \vdots
+      & \cellcolor{secondary!20}\ddots
+    \end{array}
+  \,\right].
+\end{equation*}
+```
+
+Of course, once we know how $\mathcal{E}$ acts on the $d^2$ basis matrices $\ket{i}\bra{j}$, we know how it acts on any $(d\times d)$ matrix $X=\sum_{ij}X_{ij}\ket{i}\bra{j}$, since $\mathcal{E}(X) = \sum_{ij}X_{ij}\mathcal{E}(\ket{i}\bra{j})$, where $i,j=1,\ldots, d$.
+This can be written as follows:
+
+::: {.idea data-latex=""}
+$$
+  \mathcal{E}(X) =  d \tr_A [(X^T\otimes\id)\widetilde{\mathcal{E}}]
+$$
+:::
+
+where the partial trace is taken over the "first half" of the entangled state, the part to which we did not apply $\mathcal{E}$ in our construction of $\widetilde{\mathcal{E}}$.
+
+In practice it is more convenient to use the following formula (which holds for any $(d\times d)$ matrix $X$ and any $(d'\times d')$ matrix $Y$):
+
+::: {.idea data-latex=""}
+$$
+ \tr\mathcal{E}(X)Y
+ = \tr\widetilde{\mathcal{E}} (X^T\otimes Y)
+$$
+:::
+
+For example, if we are interested in the component $\mathcal{E}(X)_{ij}= \bra{i}\mathcal{E}(X)\ket{j}$, then we take $Y=\ket{j}\bra{i}$.
+
+The Choi matrix $\widetilde{\mathcal{E}}$ in $\mathcal{B}(\mathcal{H}\otimes\mathcal{H'})$ is essentially another way of representing the linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\rightarrow\mathcal{B}(\mathcal{H'})$.
+One can express all properties of $\mathcal{E}$ in terms of properties of $\widetilde{\mathcal{E}}$, e.g. "$\mathcal{E}$ is completely positive if and only if $\widetilde{\mathcal{E}}\geq0$", or "$\mathcal{E}$ is trace preserving if $\tr_B\widetilde{\mathcal{E}}=d\id$".
