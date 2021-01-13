@@ -782,5 +782,140 @@ What _is_ interesting, and perhaps not so obvious, is that the positivity condit
 
 
 
+
 ## Operator sum representation, revisited
 
+The one remaining thing (well, almost) left to do is to bring the operator sum representation approach and the completely positive trace-preserving maps approach together, and show that they are essentially the same thing.
+
+::: {.idea data-latex=""}
+A linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\rightarrow\mathcal{B}(\mathcal{H}')$ is completely positive iff it admits an operator sum (Kraus) decomposition of the form
+$$
+  \mathcal{E}(\rho) = \sum_k E_k\rho E^\dagger_k.
+$$
+
+When this is the case, the above decomposition has the following properties:
+
+- $\mathcal{E}$ is trace preserving iff $\sum_k E^\dagger_kE_k=\id$.
+- Two sets of Kraus operators $\{E_k\}$ and $\{F_l\}$ represent the same map $\mathcal{E}$ iff there is a unitary $R$ such that $E_k =\sum_l R_{kl}F_l$, where the smaller set of the Kraus operators is padded with zeros.
+- For _any_ $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\rightarrow\mathcal{B}(\mathcal{H}')$, there is _always_ a representation with at most $dd'$ mutually orthogonal Kraus operators: $\tr E_i^\dagger E_j\propto\delta_{ij}$.
+:::
+
+Any map $\mathcal{E}$ written in the operator sum form is completely positive, since its Choi matrix $\widetilde{\mathcal{E}}$ is positive semidefinite:
+^[Here, the Choi matrix is of the form $\sum_k\proj{v_k}$, where $\ket{v_k}=\id\otimes E_k \ket{\Omega}$. This is a positive semidefinite matrix since, for any vector $\ket{\Psi}$, the expression $\sum_k \braket{\Psi |v_k}\braket{v_k|\Psi}$ is non-negative.]
+$$
+  \begin{aligned}
+    \widetilde{\mathcal{E}}
+    &= \id \otimes \mathcal{E} \proj{\Omega}
+  \\&= \sum_k (\id\otimes E_k) \proj{\Omega} (\id\otimes E^\dagger_k)
+  \\&\geq 0.
+  \end{aligned}
+$$
+Conversely, if $\mathcal{E}$ is completely positive, then its Choi matrix is positive semidefinite, which means that it can be written as a mixture of pure states $\proj{\psi_k}$ with probabilities $p_k$:
+$$
+  \widetilde{\mathcal{E}}
+  = \sum_k\proj{\widetilde{\psi_k}}
+$$
+where $\ket{\widetilde{\psi_k}}=\sqrt{p_k}\ket{\psi_k}$ are (non-normalised) vectors, and any such vector can be written as
+$$
+  \ket{\widetilde{\psi_k}} = (\id\otimes E_k)\ket{\Omega}
+  \tag{10.3.1}
+$$
+for some operator $E_k$.
+Hence
+$$
+  \begin{aligned}
+    \widetilde{\mathcal{E}}
+    &= \sum_k\proj{\widetilde{\psi_k}}
+  \\&= \sum_k (\id\otimes E_k)\proj{\Omega} (\id\otimes E^\dagger_k)
+  \\&= \frac{1}{d} \sum_{ij} \ket{i}\bra{j} \otimes \underbrace{\sum_k E_k(\ket{i}\bra{j}) E^\dagger_k}_{\mathcal{E}(\ket{i}\bra{j})}.
+  \end{aligned}
+$$
+Comparing the last expression on the right with the definition of $\widetilde{\mathcal{E}}$, we conclude that
+$$
+  \mathcal{E}(\rho)
+  = \sum_k E_k \rho E^\dagger_k.
+$$
+
+The unitary freedom of choosing the Kraus operators is directly related to the unitary freedom of choosing the statistical ensemble for $\widetilde{\mathcal{E}}$.
+We know that two mixtures $\{p_k,\ket{\psi_k}\}$ and $\{q_l,\ket{\phi_l}\}$ described by the same density operator
+$$
+  \widetilde{\mathcal{E}}
+  = \sum_k\proj{\widetilde{\psi_k}}
+  = \sum_l\proj{\widetilde{\phi_l}},
+$$
+where $\ket{\widetilde{\psi_k}}=\sqrt{p_k}\ket{\psi_k}$ and $\ket{\widetilde{\phi_l}}=\sqrt{q_l}\ket{\phi_l}$ are related via
+$$
+  \ket{\widetilde{\psi_k}} = \sum_{l} R_{kl} \ket{\widetilde{\phi_l}},
+$$
+for some unitary $R$. Given the correspondence in Equation (10.3.1), this implies the same unitary freedom in choosing the Kraus operators.
+The number of vectors contributing to each mixture, and hence the number of corresponding Kraus operators, may be different, so we simply extend the smaller set to the required size by adding zero operators.
+
+We can also see that the minimal number of Kraus operators needed to express $\mathcal{E}$ in the operator sum form is given by the rank of its Choi matrix $\widetilde{\mathcal{E}}$, and so we need no more than $dd'$ such operators.
+This minimal set of Kraus operators corresponds to the spectral decomposition of $\widetilde{\mathcal{E}}$.
+Indeed, if $\widetilde{\mathcal{E}}=\sum_k \proj{\widetilde{v_k}}$ and $\ket{\widetilde{v_k}} = (\id\otimes E_k)\ket{\Omega}$, then the orthogonality of $\ket{\widetilde{v_k}}$ and $\ket{\widetilde{v_l}}$ implies the orthogonality, in the Hilbert-Schmidt sense, of the corresponding Kraus operators $E_k$ and $E_l$.
+In order to see this, we express $\braket{\widetilde{v_k}|\widetilde{v_l}}$ as
+$$
+  \begin{aligned}
+    \braket{\widetilde{v_k} |\widetilde{v_l}}
+    &= \bra{\Omega} ( \id\otimes E_k^\dagger)(\id\otimes E_l)\ket{\Omega}
+  \\&= \tr(\id\otimes E_k^\dagger E_l)\proj{\Omega}
+  \\&= \frac{1}{d} \tr \sum_{ij} \ket{i}\bra{j}\otimes E_k^\dagger E_l \ket{i}\bra{j}
+  \end{aligned}
+$$
+where we have substituted $\frac{1}{d}\sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{j}$ for $\proj{\Omega}$.
+The trace of the tensor product of two matrices is the product of their traces, whence
+$$
+  \begin{aligned}
+    \braket{\widetilde{v_k} |\widetilde{v_l}}
+    &= \frac{1}{d}\sum_{ij} \braket{i |j} \tr E_k^\dagger E_l \ket{i}\bra{j}
+  \\&= \frac{1}{d} \tr E_k^\dagger E_l
+  \end{aligned}
+$$
+for $\braket{i|j}=\delta_{ij}$ and $\sum_i\proj{i}=\id$.
+That is, $\braket{\widetilde{v_k}|\widetilde{v_l}}=0$ implies that $\tr E_k^\dagger E_l=0$.
+
+
+
+
+
+## What are positive maps good for?
+
+Positive maps that are not completely positive are not completely useless.
+True, they cannot describe any quantum dynamics, but still they have useful applications --- for example, they can help us to determine if a given state is entangled or not.
+
+A quantum state of a bipartite system $\mathcal{AB}$ described by the density matrix $\varrho^{AB}$ is said to be **separable** if $\varrho^{AB}$ is of the form
+$$
+  \varrho^{AB}
+  = \sum_k p_k \rho^A_k \otimes \rho^B_k
+$$
+where $p_k \geq 0$ and $\sum_{k=1} p_k=1$; otherwise $\varrho^{AB}$ is said to be **entangled**.
+If we apply the partial transpose $\id\otimes T$ to this state, then it remains separable, since, as we have seen, the transpose $\rho^B$ is a legal density matrix.
+
+::: {.idea data-latex=""}
+Positive maps, such as the transpose, can be quite deceptive: you have to include other systems in order to detect their unphysical character.
+:::
+
+In separable states, one subsystem does not really know about the existence of the other, and so applying a positive map to one part produces a proper density operator, and thus does _not_ reveal the unphysical character of the map.
+So, for _any separable state_ $\rho$, we have $(\id\otimes T)\rho\geq 0$.
+
+As an example, consider a quantum state of two qubits which is a mixture of the maximally entangled state $\ket{\psi} = \frac{1}{\sqrt 2}(\ket{00} + \ket{11})$ and the maximally mixed state described by the density matrix
+$$
+  \rho_p
+  = p\proj{\psi} + (1-p)\frac{1}{4}\id\otimes\id,
+$$
+where $p\in [0,1]$.
+Apply the partial transpose $\id\otimes T$ to this state and check for which values of $p$ the resulting matrix is a density matrix.
+You should get $p\leq\frac{1}{3}$, which implies that, for all $p$ from $\frac{1}{3}$ to $1$, the density operator $\rho$ describes an entangled state.
+Note that the implication "if separable then the partial transpose is positive" does not imply the converse: there exist entangled states for which the partial transpose is positive, and they are known as the **entangled PPT states**^["PPT" stands for _positive partial transpose_.]
+However, for _two_ qubits, the PPT states are exactly the separable states.
+
+```{r,engine='tikz',fig.width=3}
+\begin{tikzpicture}
+  \node at (0,0) {{\small\textsf{SEP}}};
+  \node at (0,0.7) {{\small\textsf{PPT}}};
+  \node at (0,1.3) {{\small\textsf{all other states}}};
+  \draw (0,0) circle (0.5cm);
+  \draw (0,0) circle (1cm);
+  \draw (0,0) circle (1.8cm);
+\end{tikzpicture}
+```

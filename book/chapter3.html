@@ -289,6 +289,7 @@
 <li class="chapter" data-level="10.2.2" data-path="chapter10.html"><a href="chapter10.html#the-choi-matrix"><i class="fa fa-check"></i><b>10.2.2</b> The Choi matrix</a></li>
 </ul></li>
 <li class="chapter" data-level="10.3" data-path="chapter10.html"><a href="chapter10.html#operator-sum-representation-revisited"><i class="fa fa-check"></i><b>10.3</b> Operator sum representation, revisited</a></li>
+<li class="chapter" data-level="10.4" data-path="chapter10.html"><a href="chapter10.html#what-are-positive-maps-good-for"><i class="fa fa-check"></i><b>10.4</b> What are positive maps good for?</a></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="chapter11.html"><a href="chapter11.html"><i class="fa fa-check"></i><b>11</b> Quantum error correction and fault tolerance</a></li>
 <li class="chapter" data-level="12" data-path="chapter12.html"><a href="chapter12.html"><i class="fa fa-check"></i><b>12</b> Bonus material</a></li>
@@ -357,7 +358,18 @@ Figure 3.3: The two possible classical scenarios. Note that this is <strong>not<
 <p>In experimental reality, when the optical paths between the two beam-splitters are the same, the photon fired from input port <eq env="math">|0\rangle</eq> <em>always</em> strikes detector 1 and <em>never</em> detector 0 (and the photon fired from input port <eq env="math">|1\rangle</eq> <em>always</em> strikes detector 0 and <em>never</em> detector 1).
 Thus a beam-splitter acts as the square root of <eq env="math">\texttt{NOT}</eq> gate.</p>
 <p>The action of the beam-splitter — in fact, the action of any quantum device — can be described by tabulating the amplitudes of transitions between its input and output ports.<a href="#fn42" class="footnote-ref" id="fnref42"><sup>42</sup></a>
-
+<eq env="displaymath">
+  B = 
+  \begin{bmatrix}
+  B_{00} &amp; B_{01}\\
+  B_{10} &amp; B_{11}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  \frac{1}{\sqrt 2} &amp; \frac{i}{\sqrt 2}\\
+  \frac{i}{\sqrt 2} &amp; \frac{1}{\sqrt 2}
+  \end{bmatrix}.
+</eq>
 The matrix element <eq env="math">B_{lk}</eq>, where <eq env="math">k,l=0,1</eq>, represents the amplitude of transition from input <eq env="math">|k\rangle</eq> to output <eq env="math">|l\rangle</eq> (watch the order of indices).
 Each reflection (entries <eq env="math">B_{01}</eq> and <eq env="math">B_{10}</eq>) happens with amplitude <eq env="math">i/\sqrt{2}</eq> and each transmission (entries <eq env="math">B_{00}</eq> and <eq env="math">B_{11}</eq>) happens with amplitude <eq env="math">1/\sqrt{2}</eq>.
 Thus the total amplitude that a photon fired from input port <eq env="math">|0\rangle</eq> will reach detector <eq env="math">0</eq> is the sum of the amplitude of the two consecutive reflections (<eq env="math">i/\sqrt{2}\times i/{\sqrt 2} = -1/2</eq>) and the amplitude of the two consecutive transmissions (<eq env="math">1/{\sqrt 2}\times 1/{\sqrt 2} = 1/2</eq>) which gives the total amplitude <eq env="math">0</eq>.
@@ -392,7 +404,7 @@ Figure 3.4: All possible transitions and their amplitudes when we compose two be
   = iX
 </eq>
 where <eq env="math">X=\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}</eq> is the <eq env="math">\texttt{NOT}</eq> operator.</p>
-<p>Recalling <a href="chapter2.html#the-square-root-of-not">The square root of NOT</a>, we see that beam-splitters give a physical way of constructing the square root of <eq env="math">\texttt{NOT}</eq>.</p>
+<p>Recalling <a href="Chapter%202">Chapter 2</a>, we see that beam-splitters give a physical way of constructing the square root of <eq env="math">\texttt{NOT}</eq>.</p>
 <div class="idea">
 <table>
 <colgroup>
@@ -542,7 +554,18 @@ However, it turns out that there is a different basis which offers lots of insig
 </div>
 <p>Recalling <a href="chapter2.html#chapter2">Chapter 2</a>, we know that the Pauli operators (as well as the identity operator) are unitary and Hermitian, square to the identity, and anti-commute.</p>
 <p>Any <eq env="math">(2\times 2)</eq> complex matrix <eq env="math">A</eq> has a unique expansion in the form
-
+<eq env="displaymath">
+  \begin{aligned}
+    A &amp;=
+    \begin{bmatrix}
+      a_0 + a_z &amp; a_x - i a_y
+    \\a_x +i a_y &amp;  a_0 - a_z
+    \end{bmatrix}
+  \\&amp;= a_0\mathbf{1}+ a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
+  \\&amp;= a_0\mathbf{1}+ \vec{a}\cdot\vec{\sigma}.
+  \end{aligned}
+\tag{3.3.1}
+</eq>
 for some complex numbers <eq env="math">a_0</eq>, <eq env="math">a_x</eq>, <eq env="math">a_y</eq>, and <eq env="math">a_z</eq>.
 Here, <eq env="math">\vec{a}</eq> is a vector with three complex components <eq env="math">(a_x, a_y, a_z)</eq>, and <eq env="math">\vec{\sigma}</eq> represents the “vector” of Pauli matrices <eq env="math">(\sigma_x,\sigma_y,\sigma_z)</eq>.
 The algebraic properties of the Pauli matrices can be neatly compacted (see the exercises) into a single expression:</p>
@@ -573,7 +596,7 @@ Note, however, that this does <em>not</em> imply that e.g. <eq env="math">\oper
 <h3><span class="header-section-number">3.3.1</span> Exercises</h3>
 <ol style="list-style-type: decimal">
 <li><p>Show that <eq env="math">\{\mathbf{1},\sigma_x,\sigma_y,\sigma_z\}</eq> is an orthonormal basis with respect to the Hilbert-Schmidt product in the space of complex <eq env="math">(2\times 2)</eq> matrices.</p></li>
-<li><p>Show that the coefficients <eq env="math">a_k</eq> (for <eq env="math">k=x,y,z</eq>) in Equation <a href="#eq:pauli">(<strong>??</strong>)</a> are given by the inner product <eq env="math">a_k = (\sigma_k|A) = \frac12\operatorname{tr}\sigma_k A</eq>.</p></li>
+<li><p>Show that the coefficients <eq env="math">a_k</eq> (for <eq env="math">k=x,y,z</eq>) in Equation (3.3.1) are given by the inner product <eq env="math">a_k = (\sigma_k|A) = \frac12\operatorname{tr}\sigma_k A</eq>.</p></li>
 <li><p>Show that <eq env="math">\frac12\operatorname{tr}(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}</eq>.</p></li>
 <li><p>Show that any <eq env="math">\vec{n}\cdot\vec{\sigma}</eq> has eigenvalues are <eq env="math">\pm|\vec{n}|</eq>.</p></li>
 <li><p>Show that, if <eq env="math">\vec{n}\cdot\vec{m}=0</eq>, then the operators <eq env="math">\vec{n}\cdot\vec{\sigma}</eq> and <eq env="math">\vec{m}\cdot\vec{\sigma}</eq> anticommute.</p></li>
@@ -716,7 +739,13 @@ Figure 3.7: <eq env="math">e^{i\theta\vec{n}\cdot\vec{\sigma}}</eq> rotates the 
 <p>In somewhat abstract terms, we make the connection between unitaries and rotations by looking how the unitary group <eq env="math">\mathrm{U}(2)</eq> acts on the three-dimensional Euclidian space of <eq env="math">(2\times 2)</eq> Hermitian matrices <em>with zero trace</em>.
 All such matrices <eq env="math">S</eq> can be written as <eq env="math">S=\vec{s}\cdot\vec{\sigma}</eq> for some real <eq env="math">\vec{s}</eq>, i.e. each matrix is represented by a Euclidean vector <eq env="math">\vec{s}</eq> in <eq env="math">\mathbb{R}^3</eq>.
 Now, <eq env="math">U\in \mathrm{U}(2)</eq> acts on the Euclidean space of such matrices by <eq env="math">S\mapsto S' = USU^\dagger</eq>, i.e.
-
+<eq env="displaymath">
+  \vec{s}\cdot\vec{\sigma}
+  \mapsto
+  \vec{s'}\cdot\vec{\sigma}
+  = U(\vec{s}\cdot\vec{\sigma})U^\dagger
+\tag{3.5.1}
+</eq>
 This is a linear map <eq env="math">\mathbb{R}^3\to\mathbb{R}^3</eq>, and is thus given by some <eq env="math">(3\times 3)</eq> real-valued matrix <eq env="math">R</eq>.
 We note that this map is an isometry (a distance preserving operation), since it preserves the scalar product in the Euclidean space: for any two vectors <eq env="math">\vec{s}</eq> and <eq env="math">\vec{v}</eq>,
 <eq env="displaymath">
@@ -733,7 +762,7 @@ This means that matrix <eq env="math">R</eq> is <em>orthogonal</em>.<a href="#fn
 Furthermore, we can show<a href="#fn49" class="footnote-ref" id="fnref49"><sup>49</sup></a> that <eq env="math">\det R=1</eq>.
 The only isometries in three dimensional Euclidian space, which are described by orthogonal matrices <eq env="math">R</eq> with <eq env="math">\det R=1</eq>, are rotations.
 Thus, in the mathematical lingo, we have established a homomorphism<a href="#fn50" class="footnote-ref" id="fnref50"><sup>50</sup></a> between <eq env="math">\mathrm{U}(2)</eq> and <eq env="math">\mathrm{SO}(3)</eq>, where <eq env="math">\mathrm{SO}(3)</eq> stands for the special orthogonal group in three dimensions (the group of all rotations about the origin of three-dimensional Euclidean space <eq env="math">\mathbb{R}^3</eq> under the operation of composition).
-It is quite clear from Equation <a href="#eq:u2so3map">(<strong>??</strong>)</a> that unitary matrices differing only by a global multiplicative phase factor (e.g. <eq env="math">U</eq> and <eq env="math">e^{i\gamma}U</eq>) represent the same rotation.</p>
+It is quite clear from Equation (3.5.1) that unitary matrices differing only by a global multiplicative phase factor (e.g. <eq env="math">U</eq> and <eq env="math">e^{i\gamma}U</eq>) represent the same rotation.</p>
 <p>Physicists, however, usually prefer a more direct demonstration, which goes roughly like this.
 Consider the map <eq env="math">\vec{s} \mapsto \vec{s'}</eq> induced by <eq env="math">U=e^{i \alpha \vec{n}\cdot\vec{\sigma}}</eq>.
 For small values of <eq env="math">\alpha</eq>, we can write
@@ -785,7 +814,7 @@ How are the three vectors <eq env="math">\vec f_x</eq>, <eq env="math">\vec f_y<
    \end{aligned}
  </eq>
 (which implies that <eq env="math">\det R=1</eq>).</li>
-<li>Make use of the orthonormality of the Pauli basis and Equation <a href="#eq:u2so3map">(<strong>??</strong>)</a> to show that the elements of the matrix <eq env="math">R</eq> can be expressed in terms of those of the matrix <eq env="math">U</eq>, in the form
+<li>Make use of the orthonormality of the Pauli basis and Equation (3.5.1) to show that the elements of the matrix <eq env="math">R</eq> can be expressed in terms of those of the matrix <eq env="math">U</eq>, in the form
 <eq env="displaymath">
    R_{ij}=\frac12\operatorname{tr}\left(\sigma_i U\sigma_j U^\dagger\right).
  </eq>

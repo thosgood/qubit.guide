@@ -289,6 +289,7 @@
 <li class="chapter" data-level="10.2.2" data-path="chapter10.html"><a href="chapter10.html#the-choi-matrix"><i class="fa fa-check"></i><b>10.2.2</b> The Choi matrix</a></li>
 </ul></li>
 <li class="chapter" data-level="10.3" data-path="chapter10.html"><a href="chapter10.html#operator-sum-representation-revisited"><i class="fa fa-check"></i><b>10.3</b> Operator sum representation, revisited</a></li>
+<li class="chapter" data-level="10.4" data-path="chapter10.html"><a href="chapter10.html#what-are-positive-maps-good-for"><i class="fa fa-check"></i><b>10.4</b> What are positive maps good for?</a></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="chapter11.html"><a href="chapter11.html"><i class="fa fa-check"></i><b>11</b> Quantum error correction and fault tolerance</a></li>
 <li class="chapter" data-level="12" data-path="chapter12.html"><a href="chapter12.html"><i class="fa fa-check"></i><b>12</b> Bonus material</a></li>
@@ -725,7 +726,10 @@ We start off by preparing the equally-weighted superposition of all <eq env="mat
   \end{aligned}
 </eq>
 The second Hadamard transform on the first register then yields the final output state:
-</p>
+<eq env="displaymath">
+  \frac{1}{2^n} \sum_{x,y} (-1)^{x\cdot y} |y\rangle|f(x)\rangle.
+\tag{6.4.3.1}
+</eq></p>
 <p>Now, if we measure the second register <em>before</em> applying the second Hadamard transform to the first, we obtain one of the <eq env="math">2^{n-1}</eq> possible values of <eq env="math">f(x)</eq>, each equally likely.<a href="#fn86" class="footnote-ref" id="fnref86"><sup>86</sup></a>
 <strong>!!!TODO!!! have I understood this correctly?</strong></p>
 <p>Suppose that the outcome of the measurement is <eq env="math">f(a)</eq>.
@@ -744,7 +748,7 @@ Given that both <eq env="math">a</eq> and <eq env="math">a\oplus s</eq> are mapp
 where we have used the fact that <eq env="math">(a\oplus s)\cdot y = (a\cdot y)\oplus(s\cdot y)</eq>, and that <eq env="math">1+(-1)^{s\cdot y}</eq> can have only two values: either <eq env="math">2</eq> (when <eq env="math">s\cdot y = 0</eq>), or <eq env="math">0</eq> (when <eq env="math">s\cdot y = 1</eq>).
 Now we measure the first register: the outcome is selected at random from all possible values of <eq env="math">y</eq> such that <eq env="math">a\cdot y = 0</eq>, each occurring with probability <eq env="math">1/(2^{n-1})</eq>.</p>
 <p>In fact, we do not have to measure the second register at all: it was a mathematical shortcut, simply taken for pedagogical purposes.
-Instead of collapsing the state to just one term in a superposition, we can express Equation <a href="#eq:final-first-register-simon">(<strong>??</strong>)</a> as<a href="#fn88" class="footnote-ref" id="fnref88"><sup>88</sup></a>
+Instead of collapsing the state to just one term in a superposition, we can express Equation (6.4.3.1) as<a href="#fn88" class="footnote-ref" id="fnref88"><sup>88</sup></a>
 <eq env="displaymath">
   \frac{1}{2^n} \sum_{y,f(a)}
     \Big( (-1)^{a\cdot y} + (-1)^{(a\oplus s)\cdot y} \Big) |y\rangle|f(a)\rangle
@@ -773,12 +777,18 @@ to determine a unique value of <eq env="math">s</eq>.</p>
 <p>So we run this algorithm repeatedly, each time obtaining another value of <eq env="math">y</eq> that satisfies <eq env="math">s\cdot y = 0</eq>.
 Every time we find some new value of <eq env="math">y</eq> that is linearly independent of all previous ones, we can discard half the potential candidates for <eq env="math">s</eq>.
 The probability that <eq env="math">y_1,\ldots,y_n</eq> are linearly independent is
-</p>
+<eq env="displaymath">
+  \left( 1 - \frac{1}{2^n} \right)
+  \left( 1 - \frac{1}{2^{n-1}} \right)
+  \ldots
+  \left( 1 - \frac{1}{2} \right).
+\tag{6.4.3.2}
+</eq></p>
 <p>Indeed, suppose that we have <eq env="math">k</eq> linearly independent binary strings <eq env="math">y_1,\ldots,y_k</eq>.
 Then these strings span a subspace of size <eq env="math">2^k</eq>, consisting of all binary strings of the form <eq env="math">\bigoplus_{i=1}^k b_i y_i</eq>, where <eq env="math">b_1,\ldots,b_k\in\{0,1\}</eq>.
 Now suppose we obtain some <eq env="math">y_{k+1}</eq>.
 It will be linearly independent from the <eq env="math">y_1,\ldots,y_k</eq> if and only if it lies <em>outside</em> the subspace spanned by the <eq env="math">y_1,\ldots,y_k</eq>, which occurs with probability <eq env="math">1-(2^k)/(2^n)</eq>.
-We can bound Equation <a href="#eq:probability-linearly-independent">(<strong>??</strong>)</a> from below:<a href="#fn90" class="footnote-ref" id="fnref90"><sup>90</sup></a>
+We can bound Equation (6.4.3.2) from below:<a href="#fn90" class="footnote-ref" id="fnref90"><sup>90</sup></a>
 <eq env="displaymath">
   \left[
     1 -

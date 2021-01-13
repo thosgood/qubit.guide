@@ -289,6 +289,7 @@
 <li class="chapter" data-level="10.2.2" data-path="chapter10.html"><a href="chapter10.html#the-choi-matrix"><i class="fa fa-check"></i><b>10.2.2</b> The Choi matrix</a></li>
 </ul></li>
 <li class="chapter" data-level="10.3" data-path="chapter10.html"><a href="chapter10.html#operator-sum-representation-revisited"><i class="fa fa-check"></i><b>10.3</b> Operator sum representation, revisited</a></li>
+<li class="chapter" data-level="10.4" data-path="chapter10.html"><a href="chapter10.html#what-are-positive-maps-good-for"><i class="fa fa-check"></i><b>10.4</b> What are positive maps good for?</a></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="chapter11.html"><a href="chapter11.html"><i class="fa fa-check"></i><b>11</b> Quantum error correction and fault tolerance</a></li>
 <li class="chapter" data-level="12" data-path="chapter12.html"><a href="chapter12.html"><i class="fa fa-check"></i><b>12</b> Bonus material</a></li>
@@ -834,7 +835,7 @@ Its action on the four basis matrices is
     \longmapsto \begin{bmatrix}\frac{1-p}{2}&amp;0\\0&amp;\frac{1+p}{2}\end{bmatrix}
   \end{gathered}
 </eq>
-which is neatly collected and tabulated in the corresponding Choi matrix:
+which we can neatly collect and tabulate in the corresponding Choi matrix:
 <eq env="displaymath">
   \widetilde{\mathcal{E}_p}
   = \frac{1}{2}
@@ -854,8 +855,8 @@ For example, <eq env="math">\mathcal{E}_p</eq> is completely positive if and onl
 Needless to say, mathematics alone cannot tell us what is physically admissible, but we can certainly compare this axiomatic approach with the constructive one.
 As it happens, our claims makes sense, since we can show that a map is completely positive if and only if it can be written in the operator sum form.
 In other words, <em>quantum channels are exactly completely positive trace-preserving (CPTP) maps</em>.
-We will prove this after first returning to our above example.</p>
-<p>The map <eq env="math">\mathcal{E}_p</eq> defined above maps a density operator <eq env="math">\rho</eq> to
+We will prove this in the next section</p>
+<p>Returning to the example, the map <eq env="math">\mathcal{E}_p</eq> sends a density operator <eq env="math">\rho</eq> to
 <eq env="displaymath">
   \rho \longmapsto p\rho^T +(1-p) \frac{1}{2}\mathbf{1},
 </eq>
@@ -877,6 +878,118 @@ What <em>is</em> interesting, and perhaps not so obvious, is that the positivity
 </div>
 <div id="operator-sum-representation-revisited" class="section level2" number="10.3">
 <h2><span class="header-section-number">10.3</span> Operator sum representation, revisited</h2>
+<p>The one remaining thing (well, almost) left to do is to bring the operator sum representation approach and the completely positive trace-preserving maps approach together, and show that they are essentially the same thing.</p>
+<div class="idea">
+<p>A linear map <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\rightarrow\mathcal{B}(\mathcal{H}')</eq> is completely positive iff it admits an operator sum (Kraus) decomposition of the form
+<eq env="displaymath">
+  \mathcal{E}(\rho) = \sum_k E_k\rho E^\dagger_k.
+</eq></p>
+<p>When this is the case, the above decomposition has the following properties:</p>
+<ul>
+<li><eq env="math">\mathcal{E}</eq> is trace preserving iff <eq env="math">\sum_k E^\dagger_kE_k=\mathbf{1}</eq>.</li>
+<li>Two sets of Kraus operators <eq env="math">\{E_k\}</eq> and <eq env="math">\{F_l\}</eq> represent the same map <eq env="math">\mathcal{E}</eq> iff there is a unitary <eq env="math">R</eq> such that <eq env="math">E_k =\sum_l R_{kl}F_l</eq>, where the smaller set of the Kraus operators is padded with zeros.</li>
+<li>For <em>any</em> <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\rightarrow\mathcal{B}(\mathcal{H}')</eq>, there is <em>always</em> a representation with at most <eq env="math">dd'</eq> mutually orthogonal Kraus operators: <eq env="math">\operatorname{tr}E_i^\dagger E_j\propto\delta_{ij}</eq>.</li>
+</ul>
+</div>
+<p>Any map <eq env="math">\mathcal{E}</eq> written in the operator sum form is completely positive, since its Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq> is positive semidefinite:
+<a href="#fn118" class="footnote-ref" id="fnref118"><sup>118</sup></a>
+<eq env="displaymath">
+  \begin{aligned}
+    \widetilde{\mathcal{E}}
+    &amp;= \mathbf{1}\otimes \mathcal{E} |\Omega\rangle\langle\Omega|
+  \\&amp;= \sum_k (\mathbf{1}\otimes E_k) |\Omega\rangle\langle\Omega| (\mathbf{1}\otimes E^\dagger_k)
+  \\&amp;\geqslant 0.
+  \end{aligned}
+</eq>
+Conversely, if <eq env="math">\mathcal{E}</eq> is completely positive, then its Choi matrix is positive semidefinite, which means that it can be written as a mixture of pure states <eq env="math">|\psi_k\rangle\langle\psi_k|</eq> with probabilities <eq env="math">p_k</eq>:
+<eq env="displaymath">
+  \widetilde{\mathcal{E}}
+  = \sum_k|\widetilde{\psi_k}\rangle\langle\widetilde{\psi_k}|
+</eq>
+where <eq env="math">|\widetilde{\psi_k}\rangle=\sqrt{p_k}|\psi_k\rangle</eq> are (non-normalised) vectors, and any such vector can be written as
+<eq env="displaymath">
+  |\widetilde{\psi_k}\rangle = (\mathbf{1}\otimes E_k)|\Omega\rangle
+  \tag{10.3.1}
+</eq>
+for some operator <eq env="math">E_k</eq>.
+Hence
+<eq env="displaymath">
+  \begin{aligned}
+    \widetilde{\mathcal{E}}
+    &amp;= \sum_k|\widetilde{\psi_k}\rangle\langle\widetilde{\psi_k}|
+  \\&amp;= \sum_k (\mathbf{1}\otimes E_k)|\Omega\rangle\langle\Omega| (\mathbf{1}\otimes E^\dagger_k)
+  \\&amp;= \frac{1}{d} \sum_{ij} |i\rangle\langle j| \otimes \underbrace{\sum_k E_k(|i\rangle\langle j|) E^\dagger_k}_{\mathcal{E}(|i\rangle\langle j|)}.
+  \end{aligned}
+</eq>
+Comparing the last expression on the right with the definition of <eq env="math">\widetilde{\mathcal{E}}</eq>, we conclude that
+<eq env="displaymath">
+  \mathcal{E}(\rho)
+  = \sum_k E_k \rho E^\dagger_k.
+</eq></p>
+<p>The unitary freedom of choosing the Kraus operators is directly related to the unitary freedom of choosing the statistical ensemble for <eq env="math">\widetilde{\mathcal{E}}</eq>.
+We know that two mixtures <eq env="math">\{p_k,|\psi_k\rangle\}</eq> and <eq env="math">\{q_l,|\phi_l\rangle\}</eq> described by the same density operator
+<eq env="displaymath">
+  \widetilde{\mathcal{E}}
+  = \sum_k|\widetilde{\psi_k}\rangle\langle\widetilde{\psi_k}|
+  = \sum_l|\widetilde{\phi_l}\rangle\langle\widetilde{\phi_l}|,
+</eq>
+where <eq env="math">|\widetilde{\psi_k}\rangle=\sqrt{p_k}|\psi_k\rangle</eq> and <eq env="math">|\widetilde{\phi_l}\rangle=\sqrt{q_l}|\phi_l\rangle</eq> are related via
+<eq env="displaymath">
+  |\widetilde{\psi_k}\rangle = \sum_{l} R_{kl} |\widetilde{\phi_l}\rangle,
+</eq>
+for some unitary <eq env="math">R</eq>. Given the correspondence in Equation (10.3.1), this implies the same unitary freedom in choosing the Kraus operators.
+The number of vectors contributing to each mixture, and hence the number of corresponding Kraus operators, may be different, so we simply extend the smaller set to the required size by adding zero operators.</p>
+<p>We can also see that the minimal number of Kraus operators needed to express <eq env="math">\mathcal{E}</eq> in the operator sum form is given by the rank of its Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq>, and so we need no more than <eq env="math">dd'</eq> such operators.
+This minimal set of Kraus operators corresponds to the spectral decomposition of <eq env="math">\widetilde{\mathcal{E}}</eq>.
+Indeed, if <eq env="math">\widetilde{\mathcal{E}}=\sum_k |\widetilde{v_k}\rangle\langle\widetilde{v_k}|</eq> and <eq env="math">|\widetilde{v_k}\rangle = (\mathbf{1}\otimes E_k)|\Omega\rangle</eq>, then the orthogonality of <eq env="math">|\widetilde{v_k}\rangle</eq> and <eq env="math">|\widetilde{v_l}\rangle</eq> implies the orthogonality, in the Hilbert-Schmidt sense, of the corresponding Kraus operators <eq env="math">E_k</eq> and <eq env="math">E_l</eq>.
+In order to see this, we express <eq env="math">\langle\widetilde{v_k}|\widetilde{v_l}\rangle</eq> as
+<eq env="displaymath">
+  \begin{aligned}
+    \langle\widetilde{v_k} |\widetilde{v_l}\rangle
+    &amp;= \langle\Omega| ( \mathbf{1}\otimes E_k^\dagger)(\mathbf{1}\otimes E_l)|\Omega\rangle
+  \\&amp;= \operatorname{tr}(\mathbf{1}\otimes E_k^\dagger E_l)|\Omega\rangle\langle\Omega|
+  \\&amp;= \frac{1}{d} \operatorname{tr}\sum_{ij} |i\rangle\langle j|\otimes E_k^\dagger E_l |i\rangle\langle j|
+  \end{aligned}
+</eq>
+where we have substituted <eq env="math">\frac{1}{d}\sum_{ij}|i\rangle\langle j|\otimes|i\rangle\langle j|</eq> for <eq env="math">|\Omega\rangle\langle\Omega|</eq>.
+The trace of the tensor product of two matrices is the product of their traces, whence
+<eq env="displaymath">
+  \begin{aligned}
+    \langle\widetilde{v_k} |\widetilde{v_l}\rangle
+    &amp;= \frac{1}{d}\sum_{ij} \langle i |j\rangle \operatorname{tr}E_k^\dagger E_l |i\rangle\langle j|
+  \\&amp;= \frac{1}{d} \operatorname{tr}E_k^\dagger E_l
+  \end{aligned}
+</eq>
+for <eq env="math">\langle i|j\rangle=\delta_{ij}</eq> and <eq env="math">\sum_i|i\rangle\langle i|=\mathbf{1}</eq>.
+That is, <eq env="math">\langle\widetilde{v_k}|\widetilde{v_l}\rangle=0</eq> implies that <eq env="math">\operatorname{tr}E_k^\dagger E_l=0</eq>.</p>
+</div>
+<div id="what-are-positive-maps-good-for" class="section level2" number="10.4">
+<h2><span class="header-section-number">10.4</span> What are positive maps good for?</h2>
+<p>Positive maps that are not completely positive are not completely useless.
+True, they cannot describe any quantum dynamics, but still they have useful applications — for example, they can help us to determine if a given state is entangled or not.</p>
+<p>A quantum state of a bipartite system <eq env="math">\mathcal{AB}</eq> described by the density matrix <eq env="math">\varrho^{AB}</eq> is said to be <strong>separable</strong> if <eq env="math">\varrho^{AB}</eq> is of the form
+<eq env="displaymath">
+  \varrho^{AB}
+  = \sum_k p_k \rho^A_k \otimes \rho^B_k
+</eq>
+where <eq env="math">p_k \geqslant 0</eq> and <eq env="math">\sum_{k=1} p_k=1</eq>; otherwise <eq env="math">\varrho^{AB}</eq> is said to be <strong>entangled</strong>.
+If we apply the partial transpose <eq env="math">\mathbf{1}\otimes T</eq> to this state, then it remains separable, since, as we have seen, the transpose <eq env="math">\rho^B</eq> is a legal density matrix.</p>
+<div class="idea">
+<p>Positive maps, such as the transpose, can be quite deceptive: you have to include other systems in order to detect their unphysical character.</p>
+</div>
+<p>In separable states, one subsystem does not really know about the existence of the other, and so applying a positive map to one part produces a proper density operator, and thus does <em>not</em> reveal the unphysical character of the map.
+So, for <em>any separable state</em> <eq env="math">\rho</eq>, we have <eq env="math">(\mathbf{1}\otimes T)\rho\geqslant 0</eq>.</p>
+<p>As an example, consider a quantum state of two qubits which is a mixture of the maximally entangled state <eq env="math">|\psi\rangle = \frac{1}{\sqrt 2}(|00\rangle + |11\rangle)</eq> and the maximally mixed state described by the density matrix
+<eq env="displaymath">
+  \rho_p
+  = p|\psi\rangle\langle\psi| + (1-p)\frac{1}{4}\mathbf{1}\otimes\mathbf{1},
+</eq>
+where <eq env="math">p\in [0,1]</eq>.
+Apply the partial transpose <eq env="math">\mathbf{1}\otimes T</eq> to this state and check for which values of <eq env="math">p</eq> the resulting matrix is a density matrix.
+You should get <eq env="math">p\leqslant\frac{1}{3}</eq>, which implies that, for all <eq env="math">p</eq> from <eq env="math">\frac{1}{3}</eq> to <eq env="math">1</eq>, the density operator <eq env="math">\rho</eq> describes an entangled state.
+Note that the implication “if separable then the partial transpose is positive” does not imply the converse: there exist entangled states for which the partial transpose is positive, and they are known as the <strong>entangled PPT states</strong><a href="#fn119" class="footnote-ref" id="fnref119"><sup>119</sup></a>
+However, for <em>two</em> qubits, the PPT states are exactly the separable states.</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-68-1.png" width="288" style="display: block; margin: auto;" /></p>
 
 </div>
 </div>
@@ -895,6 +1008,8 @@ What <em>is</em> interesting, and perhaps not so obvious, is that the positivity
 <li id="fn115"><p><strong>!!!TODO explain the difference between <eq env="math">\mathbf{1}</eq> and <eq env="math">\mathcal{I}</eq>!!!</strong><a href="chapter10.html#fnref115" class="footnote-back">↩︎</a></p></li>
 <li id="fn116"><p>In fact, a <em>lot</em> of quantum information theory can be converted into similar looking diagrams, using the formalism of <strong>string diagrams</strong> from <strong>category theory</strong>. A related concept is that of <a href="https://zxcalculus.com/intro.html">ZX-calculus</a>.<a href="chapter10.html#fnref116" class="footnote-back">↩︎</a></p></li>
 <li id="fn117"><p>The state <eq env="math">|\Psi\rangle</eq> has the Schmidt decomposition <eq env="math">\sum_k\lambda_k|k\rangle|k\rangle</eq>, where <eq env="math">\lambda^2_k</eq> are the eigenvalues of the reduced density operators <eq env="math">\sigma_A</eq> and <eq env="math">\sigma_B</eq>. Thus <eq env="math">|\Psi\rangle</eq> can be written as <eq env="math">(\sqrt{d\sigma_A}\otimes\mathbf{1})|\Omega\rangle</eq> or <eq env="math">(\mathbf{1}\otimes \sqrt{d\sigma_B})|\Omega\rangle</eq>, where <eq env="math">d</eq> is the Schmidt rank.<a href="chapter10.html#fnref117" class="footnote-back">↩︎</a></p></li>
+<li id="fn118"><p>Here, the Choi matrix is of the form <eq env="math">\sum_k|v_k\rangle\langle v_k|</eq>, where <eq env="math">|v_k\rangle=\mathbf{1}\otimes E_k |\Omega\rangle</eq>. This is a positive semidefinite matrix since, for any vector <eq env="math">|\Psi\rangle</eq>, the expression <eq env="math">\sum_k \langle\Psi |v_k\rangle\langle v_k|\Psi\rangle</eq> is non-negative.<a href="chapter10.html#fnref118" class="footnote-back">↩︎</a></p></li>
+<li id="fn119"><p>“PPT” stands for <em>positive partial transpose</em>.<a href="chapter10.html#fnref119" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <script type="text/javascript" src="../sidenotes.js"></script>
