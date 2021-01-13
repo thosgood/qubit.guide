@@ -652,7 +652,7 @@ The Choi matrix is a neat way of tabulating all possible values of $\mathcal{E}(
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \begin{equation*}
-  \tilde{\mathcal{E}} =
+  \widetilde{\mathcal{E}} =
   \left[\,
   \setlength\arraycolsep{0.4em}
   \def\arraystretch{1.5}
@@ -702,3 +702,85 @@ For example, if we are interested in the component $\mathcal{E}(X)_{ij}= \bra{i}
 
 The Choi matrix $\widetilde{\mathcal{E}}$ in $\mathcal{B}(\mathcal{H}\otimes\mathcal{H'})$ is essentially another way of representing the linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\rightarrow\mathcal{B}(\mathcal{H'})$.
 One can express all properties of $\mathcal{E}$ in terms of properties of $\widetilde{\mathcal{E}}$, e.g. "$\mathcal{E}$ is completely positive if and only if $\widetilde{\mathcal{E}}\geq0$", or "$\mathcal{E}$ is trace preserving if $\tr_B\widetilde{\mathcal{E}}=d\id$".
+
+As an example, any linear map $\mathcal{E}$ acting on a qubit can be completely characterised by its action on the four basis matrices $\ket{i}\bra{j}$ (for $i,j=0,1$) and thus represented as the $(4\times 4)$ Choi matrix
+$$
+  \widetilde{\mathcal{E}}
+  = \frac12
+  \left[
+    \begin{array}{c|c}
+      \mathcal{E}(\ket{0}\bra{0}) & \mathcal{E}(\ket{0}\bra{1})
+    \\\hline
+      \mathcal{E}(\ket{1}\bra{0}))  & \mathcal{E}(\ket{1}\bra{1})
+    \end{array}
+  \right].
+$$
+
+Consider the following map:
+$$
+  \mathcal{E}_p\colon \ket{i}\bra{j}
+  \longmapsto p \ket{j}\bra{i}+ (1-p)\delta_{ij} \frac{1}{2}\ket{i}\bra{j},
+$$
+where $0\leq p\leq 1$ is a parameter.
+Its action on the four basis matrices is
+$$
+  \begin{gathered}
+    \ket{0}\bra{0} = \begin{bmatrix}1&0\\0&0\end{bmatrix}
+    \longmapsto \begin{bmatrix}\frac{1+p}{2}&0\\0&\frac{1-p}{2}\end{bmatrix}
+  \\\ket{0}\bra{1} = \begin{bmatrix}0&1\\0&0\end{bmatrix}
+    \longmapsto \begin{bmatrix}0&0\\p&0\end{bmatrix},
+  \\\ket{1}\bra{0} = \begin{bmatrix}0&0\\1&0\end{bmatrix}
+    \longmapsto \begin{bmatrix}0&p\\0&0\end{bmatrix}
+  \\\ket{1}\bra{1} = \begin{bmatrix}0&0\\0&1\end{bmatrix}
+    \longmapsto \begin{bmatrix}\frac{1-p}{2}&0\\0&\frac{1+p}{2}\end{bmatrix}
+  \end{gathered}
+$$
+which we can neatly collect and tabulate in the corresponding Choi matrix:
+$$
+  \widetilde{\mathcal{E}_p}
+  = \frac{1}{2}
+  \left[
+    \begin{array}{cc|cc}
+      \frac{1+p}{2} & 0 & 0 & 0
+    \\0 & \frac{1-p}{2} & p & 0
+    \\\hline
+      0 & p & \frac{1-p}{2} & 0
+    \\0 & 0 & 0 & \frac{1+p}{2}
+    \end{array}
+  \right].
+$$
+This matrix contains all information about the map $\mathcal{E}_p$.
+For example, $\mathcal{E}_p$ is completely positive if and only if $\widetilde{\mathcal{E}_p}\geq0$, which happens for $p\leq\frac{1}{3}$ (the eigenvalues of $\widetilde{\mathcal{E}_p}$ are $\frac{1}{4}(1+p)$ and $\frac{1}{4}(1-3p)$).
+
+Stepping out of this example for minute, we now claim that _all quantum channels are described by completely positive trace preserving (CPTP) maps_. This is because we cannot think of any further restrictions we should be imposing on the linear maps $\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$ to make them physically admissible.
+Needless to say, mathematics alone cannot tell us what is physically admissible, but we can certainly compare this axiomatic approach with the constructive one.
+As it happens, our claims makes sense, since we can show that a map is completely positive if and only if it can be written in the operator sum form.
+In other words, _quantum channels are exactly completely positive trace-preserving (CPTP) maps_.
+We will prove this in the next section
+
+Returning to the example, the map $\mathcal{E}_p$ sends a density operator $\rho$ to
+$$
+  \rho \longmapsto p\rho^T +(1-p) \frac{1}{2}\id,
+$$
+where $\rho^T$ is the transpose of $\rho$.
+Is this map a quantum channel?
+That is, does it represent a physical process that can be implemented in a lab?
+In the expression above, the convex sum on the right hand side can be interpreted as follows: take the input state $\rho$ and either apply the transpose or replace it with the maximally mixed state, with probabilities $p$ and $1-p$ respectively.
+This is fine, except that the transpose operation is _not_ completely positive, and as such it is not physically admissible; it cannot be implemented.
+Does it mean that this map cannot be implemented?
+No, it does not: it just depends on the value of $p$.
+The case $p=0$ corresponds to just replacing the input with the maximally mixed state, which is something that can be easily implemented.
+However, as $p$ increases from $0$ to $1$, at some critical point the map switches from completely positive to positive. We know from the previous example that this critical point corresponds to $p=\frac{1}{3}$.
+
+As a closing remark before moving on, note that the equivalence of linear maps $\mathcal{B}(\mathcal{H})\rightarrow \mathcal{B}(\mathcal{H'})$ and matrices in $\mathcal{B}(\mathcal{H}\otimes\mathcal{H'})$ is well known.
+In the context of quantum channels it is often referred to as the **Choi-Jamiołkowski isomorphism**.
+For CPTP maps, the Choi matrix is a density matrix, also known as the **Jamiolkowski state**, and the correspondence is referred to as the **channel-state duality**.
+Mathematically, it is hardly surprising that the matrix elements of an operator on a tensor product can be reorganised and reinterpreted as the matrix elements of an operator between operator spaces.
+What _is_ interesting, and perhaps not so obvious, is that the positivity conditions for maps and their Choi matrices match up exactly under this correspondence.
+
+
+
+
+
+## Operator sum representation, revisited
+
