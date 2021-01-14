@@ -41,7 +41,7 @@ function toggleSidenotes() {
   // var toc = $('body div.book').hasClass('with-summary')
   var wideEnough =
     $footnotes.length > 0 && $markers.length > 0 && $wrapper.width() > 1050;
-  console.log(wideEnough);
+  // console.log(wideEnough);
   $page.toggleClass('has-sidenotes', wideEnough);
 }
 

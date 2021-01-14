@@ -301,15 +301,11 @@ For example, the standard measurement on a single qubit is often called the **$Z
 The two outcomes, $\ket{0}$ and $\ket{1}$, are now labelled as $+1$ and $-1$, respectively.
 Using the same association we also have the $X$- and the $Y$-measurements, defined by the Pauli $X$ and $Y$ operators, respectively.
 
-Let us mention in passing that many textbooks describe observables in terms of Hermitian operators and claim that the corresponding operators have to be Hermitian "because the outcomes are real numbers".
-This is misleading, since:
-
 ::: {.idea data-latex=""}
 The outcomes can be labelled by any symbols of your choice; it is the _decomposition_ of the Hilbert space into _mutually orthogonal subspaces_ that defines a measurement, not the labels.
 :::
 
-
-This said, labelling outcomes with real numbers is very useful.
+This said, labelling outcomes with real numbers is very useful.^[Some textbooks describe observables in terms of Hermitian operators, claiming that the corresponding operators _have to_ be Hermitian "because the outcomes are real numbers". This is actually a bit backwards. As we say above, the labels can be arbitrary, but, since real number labels are often useful (as we're about to justify), we tend to only work with Hermitian operators.]
 For example, the expected value $\av{A}$, which is the average of the numerical values $\lambda_k$ weighted by their probabilities, is a very useful quantity and can be easily expressed in terms of the operator $A$ as $\braket{\psi|A|\psi}$, as follows:
 $$
   \begin{aligned}
@@ -359,12 +355,12 @@ The answer is _no_.
 ## Basic quantum coding and decoding
 
 Suppose Alice randomly chooses one of the pre-agreed $N$ signal states $\ket{s_k}$ and sends it to Bob, who tries to identify the signal states by performing a measurement defined by the projectors $P_l$.
-Let $P$ be a projector on a subspace spanned by the signal states $\ket{e_k}$, i.e. $P\ket{s_k} = \ket{s_k}$.
+Let $P$ be a projector on a subspace spanned by the signal states $\ket{s_k}$, i.e. $P\ket{s_k} = \ket{s_k}$.
 The dimension $d$ of this subspace is given by $d = \tr P$.
 We shall assume, without any loss of generality, that Bob designed his measurement in such a way that, whenever he gets outcome $P_k$, he concludes that Alice sent state $\ket{s_k}$.
 His probability of success is given by
 $$
-  \Pr(\mbox{success})
+  \Pr(\text{success})
   = \frac{1}{N} \sum_k \braket{s_k|P_k|s_k}
 $$
 which is the probability that signal state $\ket{s_k}$ is selected (here equal to $1/N$, since all the signal states are equally likely) times the probability that the selected signal state is correctly identified by Bob (which is $\braket{s_k|P_k|s_k}$), and we sum over all signal states.
@@ -400,21 +396,23 @@ $$
 In our case,
 $$
   \begin{aligned}
-    \Pr(\mbox{success})
+    \Pr(\text{success})
     &= \frac{1}{N} \sum_k \braket{s_k|P_k|s_k}
   \\&= \frac{1}{N} \sum_k \braket{s_k|PP_kP|s_k}
-  \\&= \frac{1}{N} \sum_k \tr(PP_kP) \proj{s_k}
+  \\&= \frac{1}{N} \sum_k \tr(PP_kP\proj{s_k})
   \end{aligned}
 $$
 where we have also used that $P\ket{s_k}=\ket{s_k}$.
-Let us bound this expression above by using the trace identities:
+Let us bound this expression above by using the aforementioned trace identities:
 $$
   \begin{aligned}
-    \frac{1}{N} \sum_k \tr(PP_kP) \proj{s_k}
-    &\leq \frac{1}{N} \sum_k \tr(PP_kP)
-  \\&= \frac{1}{N} \sum_k \tr\left( P\left( \sum_k P_k \right) P \right)
-  \\&= \frac{1}{N} \sum_k \tr(P\id P)
-  \\&= \frac{d}{N}
+    \sum_k\frac{1}{N} \braket{s_k|P_k|s_k}
+    &= \frac{1}{N} \sum_k \tr(PP_kP\proj{s_k})
+  \\&\leq \frac{1}{N} \sum_k \tr(PP_kP)
+  \\&= \frac{1}{N} P\left(\sum_k P_k\right)P
+  \\&= \frac{1}{N} \tr(P\id P)
+  \\&= \frac{1}{N} \tr(P)
+  \\&= \frac{d}{N}.
   \end{aligned}
 $$
 
@@ -423,7 +421,7 @@ If the number $N$ of possible signals exceeds the dimension $d$, then Bob will n
 In particular:
 
 ::: {.idea data-latex=""}
-One qubit can store and carry _at most_ one bit of information that can _reliably_ be read by a measurement.
+In this setting^[There is something called [**superdense coding**](https://en.wikipedia.org/wiki/Superdense_coding), where one qubit can actually store _two_ classical bits, but this relies on Alice and Bob both having access to a shared entangled state right from the very start of the experiment.], one qubit can store _at most_ one bit of information that can _reliably_ be read by a measurement.
 :::
 
 
@@ -464,7 +462,7 @@ Suppose Bob's measurement is described by projectors $P_1$ and $P_2$, with the i
 Then
 $$
   \begin{aligned}
-    \Pr(\mbox{success})
+    \Pr(\text{success})
     &= \frac12\left(
         \braket{s_1|P_1|s_1} + \braket{s_2|P_2|s_2}
       \right)
@@ -480,12 +478,12 @@ $$
 \end{aligned}
 $$
 Let us look at the operator $D = \proj{s_1} - \proj{s_2}$ that appears in the last expression.
-This operator acts on the subspace spanned by $\ket{s_1}$ and $\ket{s_2}$; it is Hermitian; the sum of its two (real) eigenvalues is zero; and $\tr D=\braket{s_1}{s_1}-\braket{s_2}{s_2}=0$.
+This operator acts on the subspace spanned by $\ket{s_1}$ and $\ket{s_2}$; it is Hermitian; the sum of its two (real) eigenvalues is zero; and $\tr D=\braket{s_1|s_1}-\braket{s_2|s_2}=0$.
 Let us write $D$ as $\lambda(\proj{d_+} - \proj{d_-})$, where $\ket{d_\pm}$ are the two orthonormal eigenstates of $D$, and $\pm\lambda$ are the corresponding eigenvalues.
 Now we write
 $$
 \begin{aligned}
-  \Pr (\mbox{success})
+  \Pr (\text{success})
   &= \frac12\left(
       1 + \lambda\tr P_1\left( \proj{d_+}-\proj{d_-} \right)
     \right)
@@ -510,7 +508,7 @@ $$
 which gives $\lambda = \sqrt{1-|\braket{s_1|s_2}|^2}$.
 Bringing it all together we have the final expression:
 $$
- \Pr (\mbox{success})
+ \Pr (\text{success})
  = \frac12\left( 1+ \sqrt{1-|\braket{s_1|s_2}|^2} \right).
 $$
 
@@ -532,13 +530,13 @@ We can parametrise $|\braket{s_1|s_2}| = \cos\alpha$, and interpret $\alpha$ as 
 
 This allows us to express our findings in a clearer way: given two equally likely states, $\ket{s_1}$ and $\ket{s_2}$, such that $|\braket{s_1|s_2}| = \cos\alpha$, the probability of correctly identifying the state by a projective measurement is bounded by
 $$
- \Pr (\mbox{success})
+ \Pr (\text{success})
  = \frac12(1 + \sin\alpha),
 $$
 and the optimal measurement that achieves this bound is determined by the eigenvectors of $D = \proj{s_1}-\proj{s_2}$ (try to visualise these eigenvectors).
 
 It makes sense, right?
-If we try just guessing the state, without any measurement, then we expect $\Pr (\mbox{success}) = \frac12$.
+If we try just guessing the state, without any measurement, then we expect $\Pr (\text{success}) = \frac12$.
 This is our lower bound, and in any attempt to distinguish the two states we should do better than that.
 If the two signal states are very close to each other then $\sin\alpha$ is small and we are slightly better off than guessing.
 As we increase $\alpha$, the two states become more distinguishable, and, as we can see from the formula, when the two states become orthogonal they also become completely distinguishable.
@@ -685,16 +683,16 @@ For time independent Hamiltonians, the formal solution of the Schrödinger equat
 $$
   \begin{gathered}
     \ket{\psi(t)} = U(t) \ket{\psi(0)}
-  \\\mbox{where}\qquad
-    U(t) = e^{-\frac{i}{\hbar}Ht}.
+  \\\text{where}
+  \\U(t) = e^{-\frac{i}{\hbar}Ht}.
   \end{gathered}
 $$
-Any unitary matrix can be represented^[We ignore convergence issues.] as the exponential of some Hermitian matrix $H$ and some real coefficient $t$
+Any unitary matrix can be represented^[We ignore convergence issues.] as the exponential of some Hermitian matrix $H$ and some real coefficient $t$:
 $$
   \begin{aligned}
-    e^{i t H}
-    &\equiv \id + itH + \frac{(it)^2}{2}H^2 + \frac{(it)^3}{2\cdot3}H^3 +\ldots
-  \\&= \sum_{n=0}^\infty \frac{(it)^n}{n!}H^n.
+    e^{-itH}
+    &\equiv \id - itH + \frac{(-it)^2}{2}H^2 + \frac{(-it)^3}{2\cdot3}H^3 +\ldots
+  \\&= \sum_{n=0}^\infty \frac{(-it)^n}{n!}H^n.
   \end{aligned}
 $$
 The state vector changes smoothly: for $t=0$ the time evolution operator is merely the unit operator $\id$, and when $t$ is very small $U(t)\approx \id -itH$ is close to the unit operator, differing from it by something of order $t$.
