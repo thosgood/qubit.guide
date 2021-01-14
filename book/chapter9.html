@@ -558,7 +558,7 @@ The sum of the two eigenvalues of <eq env="math">\rho</eq> is, of course, equal 
 <eq env="displaymath">
   \det\rho
   = \frac{1}{4}(1-s^2)
-  = \frac12(1+s)\frac12(1+s)
+  = \frac12(1+s)\frac12(1-s)
 </eq>
 where <eq env="math">s=|\vec{s}|</eq>.
 It follows that the two eigenvalues of <eq env="math">\rho</eq> are <eq env="math">\frac12(1\pm s)</eq>.
@@ -612,7 +612,7 @@ Let us compute the reduced density operator <eq env="math">\rho^A</eq> by taking
   \\&amp;= \operatorname{tr}_\mathcal{B} |\psi_{AB}\rangle\langle\psi_{AB}|
   \\&amp;= \operatorname{tr}_\mathcal{B} \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j| \otimes |b_i\rangle\langle b_j|
   \\&amp;= \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j|(\operatorname{tr}|b_i\rangle\langle b_j|)
-  \\&amp;= \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j| \underbrace{\langle b_i\rangle{b_j}}_{\delta_{ij}}
+  \\&amp;= \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j| \underbrace{\langle b_i|b_j\rangle}_{\delta_{ij}}
   \\&amp; = \sum_{i} |c_i|^2 |a_i\rangle\langle a_i|
   \end{aligned}
 </eq>
@@ -724,7 +724,7 @@ The joint state can now be expressed as
   \\&amp;= \sum_j|\widetilde\phi_j\rangle|d_j\rangle.
   \end{aligned}
 </eq></p>
-<p>If Bob measures in the <eq env="math">|d_i\rangle</eq> basis then he generates a new mixture of states <eq env="math">|\phi_1\rangle,\ldots|\phi_m\rangle</eq>, which are the normalised versions of <eq env="math">|\widetilde\phi_1\rangle,\ldots|\widetilde\phi_m\rangle</eq>, with each <eq env="math">|\phi_k\rangle</eq> occurring with probability <eq env="math">p_k=\langle\widetilde\phi_k\rangle{\widetilde\phi_k}</eq>.
+<p>If Bob measures in the <eq env="math">|d_i\rangle</eq> basis then he generates a new mixture of states <eq env="math">|\phi_1\rangle,\ldots|\phi_m\rangle</eq>, which are the normalised versions of <eq env="math">|\widetilde\phi_1\rangle,\ldots|\widetilde\phi_m\rangle</eq>, with each <eq env="math">|\phi_k\rangle</eq> occurring with probability <eq env="math">p_k=\langle\widetilde\phi_k|\widetilde\phi_k\rangle</eq>.
 But this new mixture has exactly the same density operator as the previous one:<a href="#fn109" class="footnote-ref" id="fnref109"><sup>109</sup></a>
 <eq env="displaymath">
   \begin{aligned}
@@ -747,7 +747,7 @@ Philosophy aside, the fact that the two interpretations give exactly the same pr
 <h2><span class="header-section-number">9.8</span> Partial trace, yet again</h2>
 <p>The partial trace is the only map <eq env="math">\rho^{AB}\mapsto\rho^A</eq> such that<a href="#fn111" class="footnote-ref" id="fnref111"><sup>111</sup></a>
 <eq env="displaymath">
-  \operatorname{tr}X \rho^A = \operatorname{tr}(X\otimes\mathbf{1})\rho^{AB}
+  \operatorname{tr}[X\rho^A] = \operatorname{tr}[(X\otimes\mathbf{1})\rho^{AB}]
 </eq>
 holds for any observable <eq env="math">X</eq> acting on <eq env="math">\mathcal{A}</eq>.
 This condition concerns the consistency of statistical predictions.
@@ -759,17 +759,21 @@ Technically, such an observable can be expressed as <eq env="math">X\otimes \mat
 The expected value of this observable in the state <eq env="math">|\psi_{AB}\rangle</eq> is <eq env="math">\operatorname{tr}(X\otimes\mathbf{1})|\psi_{AB}\rangle\langle\psi_{AB}|</eq>, i.e.
 <eq env="displaymath">
   \begin{aligned}
-    \operatorname{tr}(X\otimes \mathbf{1}) \rho^{AB}
-    &amp;= \operatorname{tr}(X\otimes\mathbf{1}) \left(
-        \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| \otimes |b_i\rangle\langle b_j|
-      \right)
+    \operatorname{tr}[(X\otimes \mathbf{1}) \rho^{AB}]
+    &amp;= \operatorname{tr}\left[
+        (X\otimes\mathbf{1}) \left(
+          \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| \otimes |b_i\rangle\langle b_j|
+        \right)
+      \right]
   \\&amp;= \sum_{ij} \left[
         \operatorname{tr}\left(X |\widetilde\psi_i\rangle\langle\widetilde\psi_j|\right)
       \right]
       \underbrace{\left[\operatorname{tr}\left(|b_i\rangle\langle b_j|\right)\right]}_{\delta_{ij}}
-  \\&amp;= \sum_i \operatorname{tr}X |\widetilde\psi_i\rangle\langle\widetilde\psi_i|
-  \\&amp;= \operatorname{tr}X \underbrace{\sum_i p_i|\psi_i\rangle\langle\psi_i|}_{\rho^A = \operatorname{tr}_\mathcal{B}\rho^{AB}}
-  \\&amp;= \operatorname{tr}X\rho^A,
+  \\&amp;= \sum_i \operatorname{tr}\big[X |\widetilde\psi_i\rangle\langle\widetilde\psi_i|\big]
+  \\&amp;= \operatorname{tr}\left[
+      X \underbrace{\sum_i p_i|\psi_i\rangle\langle\psi_i|}_{\rho^A = \operatorname{tr}_\mathcal{B}\rho^{AB}}
+    \right]
+  \\&amp;= \operatorname{tr}[X\rho^A]
   \end{aligned}
 </eq>
 as required.</p>
@@ -806,7 +810,7 @@ What is the partial trace of <eq env="math">\rho</eq> over each qubit?</p></li>
 <li id="fn108"><p>Take any of the Bell states, write its <eq env="math">(4\times 4)</eq>-density matrix explicitly, and then trace over each qubit. In each case you should get the maximally mixed state.<a href="chapter9.html#fnref108" class="footnote-back">↩︎</a></p></li>
 <li id="fn109"><p>The <eq env="math">U_{ij}</eq> are the components of a unitary matrix, hence <eq env="math">\sum_k U_{ik}U^\star_{jk}=\delta_{ij}</eq>.<a href="chapter9.html#fnref109" class="footnote-back">↩︎</a></p></li>
 <li id="fn110"><p>The two interpretations of density operators filled volumes of academic papers. The terms <strong>proper mixtures</strong> and <strong>improper mixtures</strong> are used, mostly by philosophers, to describe the statistical mixture and the partial trace approach, respectively.<a href="chapter9.html#fnref110" class="footnote-back">↩︎</a></p></li>
-<li id="fn111"><p>One can repeat the same argument for <eq env="math">\rho^{AB}\mapsto\rho^B</eq>: the partial trace is the unique map <eq env="math">\rho^{AB}\mapsto\rho^B</eq> such that <eq env="math">\rho^B</eq> satisfies <eq env="math">\operatorname{tr}Y\rho^B = \operatorname{tr}(1\otimes Y)\rho^{AB}</eq> for any observable <eq env="math">Y</eq> on <eq env="math">\mathcal{B}</eq>.<a href="chapter9.html#fnref111" class="footnote-back">↩︎</a></p></li>
+<li id="fn111"><p>One can repeat the same argument for <eq env="math">\rho^{AB}\mapsto\rho^B</eq>: the partial trace is the unique map <eq env="math">\rho^{AB}\mapsto\rho^B</eq> such that <eq env="math">\rho^B</eq> satisfies <eq env="math">\operatorname{tr}[Y\rho^B] = \operatorname{tr}[(1\otimes Y)\rho^{AB}]</eq> for any observable <eq env="math">Y</eq> on <eq env="math">\mathcal{B}</eq>.<a href="chapter9.html#fnref111" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <script type="text/javascript" src="../sidenotes.js"></script>

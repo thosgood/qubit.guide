@@ -264,7 +264,7 @@ The sum of the two eigenvalues of $\rho$ is, of course, equal to one ($\tr\rho=1
 $$
   \det\rho
   = \frac{1}{4}(1-s^2)
-  = \frac12(1+s)\frac12(1+s)
+  = \frac12(1+s)\frac12(1-s)
 $$
 where $s=|\vec{s}|$.
 It follows that the two eigenvalues of $\rho$ are $\frac12(1\pm s)$.
@@ -324,7 +324,7 @@ $$
   \\&= \tr_\mathcal{B} \proj{\psi_{AB}}
   \\&= \tr_\mathcal{B} \sum_{ij} c_i c^\star_j \ket{a_i}\bra{a_j} \otimes \ket{b_i}\bra{b_j}
   \\&= \sum_{ij} c_i c^\star_j \ket{a_i}\bra{a_j}(\tr\ket{b_i}\bra{b_j})
-  \\&= \sum_{ij} c_i c^\star_j \ket{a_i}\bra{a_j} \underbrace{\braket{b_i}{b_j}}_{\delta_{ij}}
+  \\&= \sum_{ij} c_i c^\star_j \ket{a_i}\bra{a_j} \underbrace{\braket{b_i|b_j}}_{\delta_{ij}}
   \\& = \sum_{i} |c_i|^2 \proj{a_i}
   \end{aligned}
 $$
@@ -448,7 +448,7 @@ $$
   \end{aligned}
 $$
 
-If Bob measures in the $\ket{d_i}$ basis then he generates a new mixture of states $\ket{\phi_1},\ldots\ket{\phi_m}$, which are the normalised versions of $\ket{\widetilde\phi_1},\ldots\ket{\widetilde\phi_m}$, with each $\ket{\phi_k}$ occurring with probability $p_k=\braket{\widetilde\phi_k}{\widetilde\phi_k}$.
+If Bob measures in the $\ket{d_i}$ basis then he generates a new mixture of states $\ket{\phi_1},\ldots\ket{\phi_m}$, which are the normalised versions of $\ket{\widetilde\phi_1},\ldots\ket{\widetilde\phi_m}$, with each $\ket{\phi_k}$ occurring with probability $p_k=\braket{\widetilde\phi_k|\widetilde\phi_k}$.
 But this new mixture has exactly the same density operator as the previous one:^[The $U_{ij}$ are the components of a unitary matrix, hence $\sum_k U_{ik}U^\star_{jk}=\delta_{ij}$.]
 $$
   \begin{aligned}
@@ -476,9 +476,9 @@ Philosophy aside, the fact that the two interpretations give exactly the same pr
 
 ## Partial trace, yet again
 
-The partial trace is the only map $\rho^{AB}\mapsto\rho^A$ such that^[One can repeat the same argument for $\rho^{AB}\mapsto\rho^B$: the partial trace is the unique map $\rho^{AB}\mapsto\rho^B$ such that $\rho^B$ satisfies $\tr Y\rho^B = \tr (1\otimes Y)\rho^{AB}$ for any observable $Y$ on $\mathcal{B}$.]
+The partial trace is the only map $\rho^{AB}\mapsto\rho^A$ such that^[One can repeat the same argument for $\rho^{AB}\mapsto\rho^B$: the partial trace is the unique map $\rho^{AB}\mapsto\rho^B$ such that $\rho^B$ satisfies $\tr [Y\rho^B] = \tr [(1\otimes Y)\rho^{AB}]$ for any observable $Y$ on $\mathcal{B}$.]
 $$
-  \tr X \rho^A = \tr (X\otimes\id)\rho^{AB}
+  \tr [X\rho^A] = \tr [(X\otimes\id)\rho^{AB}]
 $$
 holds for any observable $X$ acting on $\mathcal{A}$.
 This condition concerns the consistency of statistical predictions.
@@ -491,17 +491,21 @@ Technically, such an observable can be expressed as $X\otimes \id$, where $\id$ 
 The expected value of this observable in the state $\ket{\psi_{AB}}$ is $\tr (X\otimes\id)\proj{\psi_{AB}}$, i.e.
 $$
   \begin{aligned}
-    \tr (X\otimes \id) \rho^{AB}
-    &= \tr (X\otimes\id) \left(
-        \sum_{ij} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} \otimes \ket{b_i}\bra{b_j}
-      \right)
+    \tr [(X\otimes \id) \rho^{AB}]
+    &= \tr \left[
+        (X\otimes\id) \left(
+          \sum_{ij} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} \otimes \ket{b_i}\bra{b_j}
+        \right)
+      \right]
   \\&= \sum_{ij} \left[
         \tr\left(X \ket{\widetilde\psi_i}\bra{\widetilde\psi_j}\right)
       \right]
       \underbrace{\left[\tr\left(\ket{b_i}\bra{b_j}\right)\right]}_{\delta_{ij}}
-  \\&= \sum_i \tr X \ket{\widetilde\psi_i}\bra{\widetilde\psi_i}
-  \\&= \tr X \underbrace{\sum_i p_i\proj{\psi_i}}_{\rho^A = \tr_\mathcal{B}\rho^{AB}}
-  \\&= \tr X\rho^A,
+  \\&= \sum_i \tr \big[X \ket{\widetilde\psi_i}\bra{\widetilde\psi_i}\big]
+  \\&= \tr \left[
+      X \underbrace{\sum_i p_i\proj{\psi_i}}_{\rho^A = \tr_\mathcal{B}\rho^{AB}}
+    \right]
+  \\&= \tr [X\rho^A]
   \end{aligned}
 $$
 as required.

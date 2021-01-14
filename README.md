@@ -42,30 +42,15 @@ For any problems or queries regarding this site or its contents, please get in t
 
 1. **only one footnote per paragraph**
     + generally, **check all sidenotes**
-    + if they all look good, then can we switch back to `\en` in the latex version?
-1. **improve sidenote y-positioning using jquery**
-    + find the previous `.footnote-ref` in the DOM and align with that
-    + also x-position when from e.g. an `.scenario` environment
-1. horizontal scrolling when maths is too wide on mobile
+    + if they all look good, then can we switch back to `\en` in the latex version please?
+    + **improve sidenote y-positioning using jquery**
+        - find the previous `.footnote-ref` in the DOM and align with that
 1. replace links to sections with links named "Chapter 3", etc.
-1. be more consistent with the start of chapters
-    + blockquote which says "About ..." and **uses words from the syllabus**
-        * and make sure that _everything_ in the syllabus is covered!!
-    + followed by a paragraph with a bit more of a detailed overview
 1. pdf title page
-1. always use `\longmapsto` instead of `\mapsto`?
-1. license and funding information along with bookdown link in `_includes/footer.html`
 1. **pdf output**
     + overlapping in the header (section/subsection names)
-    + marginfigures
-        * just wrap them in a custom block that css ignores but latex puts in the margin?
     + sizes of all images
     + idea environment (and, later on, scenario and circuits too)
         * tables in ideas look... bad
         * change the colours of circuit and scenario to primary and secondary (and remove background colour?)
-1. new custom block for gate definitions?
-    + also, stop using tables...?
-1. change the link prefixed to gitbook TOC when you have a domain
-1. check that all `{.idea}`s are actually `{.idea data-latex=""}`
-    + same for circuit and scenario blocks!
 1. **search for "TODO"**
