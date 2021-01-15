@@ -7,13 +7,13 @@ The version that you will find on this website has been carefully edited by [Tim
 The online book is built using (the [Bookdown](https://github.com/rstudio/bookdown/) fork of) Gitbook.
 This means that it has some nice functionality to make reading more comfortable, with most options being accessed through the toolbar at the top (as explained below).
 
+<img src="gitbook-toolbar.png" alt="The book toolbar" width="350" style="border: 1px solid black;float: right;">
+
 1. Show/hide the table of contents.
 2. Search within the entire book.
 3. Change display settings (e.g. font size, dark mode).
 4. View the source code of the current section on GitHub.
 5. Open the PDF version of the book.
-
-<img src="gitbook-toolbar.png" alt="The book toolbar" width="350" style="border: 1px solid black;float: right;">
 
 
 ## Further reading
