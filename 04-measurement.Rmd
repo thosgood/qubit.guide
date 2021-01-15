@@ -15,20 +15,20 @@ Even though it is a physical process, like any other quantum evolution, it is tr
 
 A formal mathematical setting for a quantum system is that of a **Hilbert space** $\mathcal{H}$, i.e. a vector space with an inner product.
 The result of any preparation of a system is represented by some unit vector $\ket{\psi}\in \mathcal{H}$, and any test is represented by some other unit vector $\ket{e}\in \mathcal{H}$.^[The term "Hilbert space" used to be reserved for an infinite-dimensional inner product space that is **complete**, i.e. such that every Cauchy sequence in the space converges to an element in the space. Nowadays, as in these notes, the term includes finite-dimensional spaces, which automatically satisfy the condition of completeness.]
-The inner product of these two vectors, $\braket{e|\psi}$, gives the probability amplitude that an object prepared in state $\ket{\psi}$ will pass a test for being in state $\ket{e}$.
+The inner product of these two vectors, $\braket{e}{\psi}$, gives the probability amplitude that an object prepared in state $\ket{\psi}$ will pass a test for being in state $\ket{e}$.
 Probabilities are obtained by squaring absolute values of probability amplitudes:
 $$
-  |\braket{e|\psi}|^2
-  = \braket{\psi|e}\braket{e|\psi}.
+  |\braket{e}{\psi}|^2
+  = \braket{\psi}{e}\braket{e}{\psi}.
 $$
 After the test, in which the object was found to be in state $\ket{e}$, say, the object forgets about its previous state $\ket{\psi}$ and is, indeed, actually now in state $\ket{e}$.
 This is the mysterious **quantum collapse** which we will briefly discuss later on.
 
 A more complete test involves multiple states $e_k$ that form an orthonormal basis $\{\ket{e_1},\ldots,\ket{e_n}\}$.
-These states are perfectly distinguishable from each other: the condition $\braket{e_k|e_l} = \delta_{kl}$ implies that a quantum system prepared in state $\ket{e_l}$ will never be found in state $\ket{e_k}$ (unless $k=l$).
-The probability amplitude that the system in state $\ket{\psi}$ will be found in state $\ket{e_k}$ is $\braket{e_k|\psi}$ and, given that the vectors $\ket{e_k}$ span the whole vector space, the system will be always found in one of the basis states, whence
+These states are perfectly distinguishable from each other: the condition $\braket{e_k}{e_l} = \delta_{kl}$ implies that a quantum system prepared in state $\ket{e_l}$ will never be found in state $\ket{e_k}$ (unless $k=l$).
+The probability amplitude that the system in state $\ket{\psi}$ will be found in state $\ket{e_k}$ is $\braket{e_k}{\psi}$ and, given that the vectors $\ket{e_k}$ span the whole vector space, the system will be always found in one of the basis states, whence
 $$
-  \sum_k |\braket{e_k|\psi}|^2 = 1.
+  \sum_k |\braket{e_k}{\psi}|^2 = 1.
 $$
 As a result:
 
@@ -45,7 +45,7 @@ A **complete** measurement in quantum theory is determined by the choice of an o
 ::: {.idea data-latex=""}
 A **projector** is any Hermitian operator $P=P^\dagger$ which is idempotent ($P^2=P$).
 The rank of $P$ is evaluated using $\tr(P)$.
-In the Dirac notation, $\proj{e}$ is a rank one projector on the subspace spanned by the unit vector $\ket{e}$, and it acts on any vector $\ket{v}$ as $(\proj{e})\ket{v} = \ket{e}\braket{e|v}$.
+In the Dirac notation, $\proj{e}$ is a rank one projector on the subspace spanned by the unit vector $\ket{e}$, and it acts on any vector $\ket{v}$ as $(\proj{e})\ket{v} = \ket{e}\braket{e}{v}$.
 :::
 
 The most common measurement in quantum information science is the standard measurement on a qubit, also referred to as the measurement in the **standard** (or **computational**) basis $\{\ket{0},\ket{1}\}$.
@@ -107,11 +107,11 @@ As we can see, if the qubit is prepared in state $\ket{\psi} = \alpha_0\ket{0} +
 $$
   \begin{aligned}
     |\alpha_k|^2
-    &= |\braket{k|\psi}|^2
-  \\&= \underbrace{\braket{\psi|k}}_{\alpha_k^\star}
-    \underbrace{\braket{k|\psi}}_{\alpha_k}
+    &= |\braket{k}{\psi}|^2
+  \\&= \underbrace{\braket{\psi}{k}}_{\alpha_k^\star}
+    \underbrace{\braket{k}{\psi}}_{\alpha_k}
   \\&= \bra{\psi} \underbrace{\proj{k}}_{\text{projector}} \ket{\psi}
-  \\&= \braket{\psi|P_k|\psi}
+  \\&= \braket{\psi}{P_k|\psi}
   \end{aligned}
 $$
 where $P_k=\proj{k}$ is the projector on $\ket{k}$.
@@ -138,7 +138,7 @@ So far we have identified measurements with orthonormal bases, or, if you wish, 
 ::: {.idea data-latex=""}
 - The **orthonormality** condition:
     $$
-      \braket{e_k|e_l} = \delta_{kl}
+      \braket{e_k}{e_l} = \delta_{kl}
     $$
     i.e. the basis consists of unit vectors that are pairwise orthogonal.
 - The **completeness** condition:
@@ -154,14 +154,14 @@ $$
     \ket{\psi}
     &= \id \ket{\psi}
   \\&= \sum_k \proj{e_k} \ket{\psi}
-  \\&= \sum_k \ket{e_k}\braket{e_k|\psi}
+  \\&= \sum_k \ket{e_k}\braket{e_k}{\psi}
   \\&= \sum_k \ket{e_k}\alpha_k
   \\&= \sum_k \alpha_k\ket{e_k}.
   \end{aligned}
 $$
 This says that the measurement in the basis $\{\ket{e_i}\}$ gives the outcome labelled by $e_k$ with probability
 $$
-  |\braket{e_k|\psi}|^2 = \braket{\psi|e_k}\braket{e_k|\psi}
+  |\braket{e_k}{\psi}}{^2 = \braket{\psi}{e_k}\braket{e_k}{\psi}
 $$
 and leaves the system in state $\ket{e_k}$.
 This is a _complete_ measurement, which represents the best we can do in terms of resolving state vectors in the basis states.
@@ -188,11 +188,11 @@ In general, instead of projecting on one dimensional subspaces spanned by vector
     $$
 :::
 
-For any decomposition of the identity into orthogonal projectors $P_k$, there exists a measurement that takes a quantum system in state $\ket{\psi}$, outputs label $k$ with probability $\braket{\psi|P_k|\psi}$, and leaves the system in the state $P_k\ket{\psi}$ (multiplied by the normalisation factor, i.e. divided by the length of $P_k\ket{\psi}$):
+For any decomposition of the identity into orthogonal projectors $P_k$, there exists a measurement that takes a quantum system in state $\ket{\psi}$, outputs label $k$ with probability $\braket{\psi}{P_k|\psi}$, and leaves the system in the state $P_k\ket{\psi}$ (multiplied by the normalisation factor, i.e. divided by the length of $P_k\ket{\psi}$):
 $$
   \ket{\psi}
   \mapsto
-  \frac{P_k\ket{\psi}}{\sqrt{\braket{\psi|P_k|\psi}}}.
+  \frac{P_k\ket{\psi}}{\sqrt{\braket{\psi}{P_k|\psi}}}.
 $$
 
 
@@ -217,8 +217,8 @@ The apparatus, in this incomplete measurement, may find the system in the subspa
 This happens with probability
 $$
   \begin{aligned}
-    \braket{\psi|P|\psi}
-    &= \braket{\psi|e_1} \braket{e_1|\psi} + \braket{\psi|e_2} \braket{e_2|\psi}
+    \braket{\psi}{P|\psi}
+    &= \braket{\psi}{e_1} \braket{e_1}{\psi} + \braket{\psi}{e_2} \braket{e_2}{\psi}
   \\&= |\alpha_1|^2 + |\alpha_2|^2,
   \end{aligned}
 $$
@@ -227,7 +227,7 @@ $$
   \frac{\alpha_1\ket{e_1}+\alpha_2\ket{e_2}}{\sqrt{|\alpha_1|^2 + |\alpha_2|^2}}.
 $$
 
-The measurement may also find the system in the subspace associated with $Q$ with the probability $\braket{\psi|Q|\psi} = |\alpha_3|^2$, resulting in the post-measurement state $\ket{e_3}$.
+The measurement may also find the system in the subspace associated with $Q$ with the probability $\braket{\psi}{Q|\psi} = |\alpha_3|^2$, resulting in the post-measurement state $\ket{e_3}$.
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=3.5}
 \definecolor{primary}{RGB}{177,98,78}
@@ -290,7 +290,7 @@ Recall the following types of operator:
 | **normal** | $AA^\dagger = A^\dagger A$ |
 | **unitary** | $AA^\dagger = A^\dagger A = \id$ |
 | **Hermitian**, or **self-adjoint** | $A^\dagger = A$ |
-| **positive semi-definite** | $\braket{v|A|v}\geq0$ for all $\ket{v}$ |
+| **positive semi-definite** | $\braket{v}{A|v}\geq0$ for all $\ket{v}$ |
 
 Note that an operator $A$ is normal if and only if it is unitarily diagonalisable, and that both unitary and Hermitian operators are normal.
 :::
@@ -306,20 +306,20 @@ The outcomes can be labelled by any symbols of your choice; it is the _decomposi
 :::
 
 This said, labelling outcomes with real numbers is very useful.^[Some textbooks describe observables in terms of Hermitian operators, claiming that the corresponding operators _have to_ be Hermitian "because the outcomes are real numbers". This is actually a bit backwards. As we say above, the labels can be arbitrary, but, since real number labels are often useful (as we're about to justify), we tend to only work with Hermitian operators.]
-For example, the expected value $\av{A}$, which is the average of the numerical values $\lambda_k$ weighted by their probabilities, is a very useful quantity and can be easily expressed in terms of the operator $A$ as $\braket{\psi|A|\psi}$, as follows:
+For example, the expected value $\av{A}$, which is the average of the numerical values $\lambda_k$ weighted by their probabilities, is a very useful quantity and can be easily expressed in terms of the operator $A$ as $\braket{\psi}{A|\psi}$, as follows:
 $$
   \begin{aligned}
     \sum_k \lambda_k \Pr (\text{outcome k})
-    &= \sum_k \lambda_k |\braket{e_k|\psi}|^2
-  \\&= \sum_k\lambda_k \braket{\psi|e_k}\braket{e_k|\psi}
+    &= \sum_k \lambda_k |\braket{e_k}{\psi}|^2
+  \\&= \sum_k\lambda_k \braket{\psi}{e_k}\braket{e_k}{\psi}
   \\&= \bra{\psi} \left( \sum_k\lambda_k\proj{e_k} \right)\ket{\psi}
-  \\&= \braket{\psi|A|\psi}.
+  \\&= \braket{\psi}{A|\psi}.
   \end{aligned}
 $$
 To be clear, this is not a value we expect to see in any particular experiment.
 Instead, imagine a huge number of quantum objects, all prepared in the state $\ket{\psi}$ and think about the observable $A$ being measured on each of the objects.
 Statistically we then expect the average of our measurement results to be roughly $\av{A}$.
-Note that when $A$ is a projector then $\braket{\psi|A|\psi}$ is the probability of the outcome associated with $A$.
+Note that when $A$ is a projector then $\braket{\psi}{A|\psi}$ is the probability of the outcome associated with $A$.
 
 
 
@@ -361,16 +361,16 @@ We shall assume, without any loss of generality, that Bob designed his measureme
 His probability of success is given by
 $$
   \Pr(\text{success})
-  = \frac{1}{N} \sum_k \braket{s_k|P_k|s_k}
+  = \frac{1}{N} \sum_k \braket{s_k}{P_k|s_k}
 $$
-which is the probability that signal state $\ket{s_k}$ is selected (here equal to $1/N$, since all the signal states are equally likely) times the probability that the selected signal state is correctly identified by Bob (which is $\braket{s_k|P_k|s_k}$), and we sum over all signal states.
+which is the probability that signal state $\ket{s_k}$ is selected (here equal to $1/N$, since all the signal states are equally likely) times the probability that the selected signal state is correctly identified by Bob (which is $\braket{s_k}{P_k|s_k}$), and we sum over all signal states.
 
 ::: {.idea data-latex=""}
 We have the following **trace identities**:
 
 - $\tr(ABC) = \tr(BCA) = \tr(CAB)$
-- $\tr\ket{a}\bra{b} = \braket{b|a}$
-- $\tr\ket{a}\bra{b} = \braket{b|A|a}$
+- $\tr\ket{a}\bra{b} = \braket{b}{a}$
+- $\tr\ket{a}\bra{b} = \braket{b}{A|a}$
 - $\tr BP \leq \tr B$ for any positive semi-definite $B$ and projector $P$.
 
 To prove this last identity, consider the projector $Q=\id-P$, and note that
@@ -385,10 +385,10 @@ and that $\tr BQ$ is non-negative.
 :::
 
 Let us use this case to practice some of the trace identities.
-It is often convenient to write expressions such as $\braket{\psi|A|\psi}$ in terms of the trace: for any vector $\ket{\psi}$ and operator $A$ we have
+It is often convenient to write expressions such as $\braket{\psi}{A|\psi}$ in terms of the trace: for any vector $\ket{\psi}$ and operator $A$ we have
 $$
   \begin{aligned}
-    \braket{\psi|A|\psi}
+    \braket{\psi}{A|\psi}
     &= \tr(A\proj{\psi})
   \\&= \tr(\proj{\psi} A).
   \end{aligned}
@@ -397,8 +397,8 @@ In our case,
 $$
   \begin{aligned}
     \Pr(\text{success})
-    &= \frac{1}{N} \sum_k \braket{s_k|P_k|s_k}
-  \\&= \frac{1}{N} \sum_k \braket{s_k|PP_kP|s_k}
+    &= \frac{1}{N} \sum_k \braket{s_k}{P_k|s_k}
+  \\&= \frac{1}{N} \sum_k \braket{s_k}{PP_kP|s_k}
   \\&= \frac{1}{N} \sum_k \tr(PP_kP\proj{s_k})
   \end{aligned}
 $$
@@ -406,7 +406,7 @@ where we have also used that $P\ket{s_k}=\ket{s_k}$.
 Let us bound this expression above by using the aforementioned trace identities:
 $$
   \begin{aligned}
-    \sum_k\frac{1}{N} \braket{s_k|P_k|s_k}
+    \sum_k\frac{1}{N} \braket{s_k}{P_k|s_k}
     &= \frac{1}{N} \sum_k \tr(PP_kP\proj{s_k})
   \\&\leq \frac{1}{N} \sum_k \tr(PP_kP)
   \\&= \frac{1}{N} P\left(\sum_k P_k\right)P
@@ -464,7 +464,7 @@ $$
   \begin{aligned}
     \Pr(\text{success})
     &= \frac12\left(
-        \braket{s_1|P_1|s_1} + \braket{s_2|P_2|s_2}
+        \braket{s_1}{P_1|s_1} + \braket{s_2}{P_2|s_2}
       \right)
   \\&= \frac12\left(
         \tr P_1\proj{s_1} + \tr P_2\proj{s_2}
@@ -478,7 +478,7 @@ $$
 \end{aligned}
 $$
 Let us look at the operator $D = \proj{s_1} - \proj{s_2}$ that appears in the last expression.
-This operator acts on the subspace spanned by $\ket{s_1}$ and $\ket{s_2}$; it is Hermitian; the sum of its two (real) eigenvalues is zero; and $\tr D=\braket{s_1|s_1}-\braket{s_2|s_2}=0$.
+This operator acts on the subspace spanned by $\ket{s_1}$ and $\ket{s_2}$; it is Hermitian; the sum of its two (real) eigenvalues is zero; and $\tr D=\braket{s_1}{s_1}-\braket{s_2}{s_2}=0$.
 Let us write $D$ as $\lambda(\proj{d_+} - \proj{d_-})$, where $\ket{d_\pm}$ are the two orthonormal eigenstates of $D$, and $\pm\lambda$ are the corresponding eigenvalues.
 Now we write
 $$
@@ -492,7 +492,7 @@ $$
     \right)
 \end{aligned}
 $$
-where we have dropped the non-negative term $\tr P_1\ket{d_-}\!\bra{d_-}$.
+where we have dropped the non-negative term $\tr P_1\ket{d_-}\bra{d_-}$.
 In fact, it is easy to see that we will maximise the expression above by choosing $P_1 = \proj{d_+}$ (and $P_2 = \proj{d_-}$).
 The probability of success is then bounded by $\frac12(1+\lambda)$.
 All we have to do now is to find the positive eigenvalue $\lambda$ for the operator $D$.
@@ -502,17 +502,17 @@ $$
   \begin{aligned}
     \tr D^2
     &= \tr \left( \proj{s_1}-\proj{s_2} \right) \left( \proj{s_1}-\proj{s_2} \right)
-  \\&= 2-2|\braket{s_1|s_2}|^2
+  \\&= 2-2|\braket{s_1}{s_2}|^2
   \end{aligned}
 $$
-which gives $\lambda = \sqrt{1-|\braket{s_1|s_2}|^2}$.
+which gives $\lambda = \sqrt{1-|\braket{s_1}{s_2}|^2}$.
 Bringing it all together we have the final expression:
 $$
  \Pr (\text{success})
- = \frac12\left( 1+ \sqrt{1-|\braket{s_1|s_2}|^2} \right).
+ = \frac12\left( 1+ \sqrt{1-|\braket{s_1}{s_2}|^2} \right).
 $$
 
-We can parametrise $|\braket{s_1|s_2}| = \cos\alpha$, and interpret $\alpha$ as the angle between $\ket{s_1}$ and $\ket{s_2}$.
+We can parametrise $|\braket{s_1}{s_2}| = \cos\alpha$, and interpret $\alpha$ as the angle between $\ket{s_1}$ and $\ket{s_2}$.
 
 ```{r,engine='tikz',fig.width=2}
 \definecolor{primary}{RGB}{177,98,78}
@@ -528,7 +528,7 @@ We can parametrise $|\braket{s_1|s_2}| = \cos\alpha$, and interpret $\alpha$ as 
 \end{tikzpicture}
 ```
 
-This allows us to express our findings in a clearer way: given two equally likely states, $\ket{s_1}$ and $\ket{s_2}$, such that $|\braket{s_1|s_2}| = \cos\alpha$, the probability of correctly identifying the state by a projective measurement is bounded by
+This allows us to express our findings in a clearer way: given two equally likely states, $\ket{s_1}$ and $\ket{s_2}$, such that $|\braket{s_1}{s_2}| = \cos\alpha$, the probability of correctly identifying the state by a projective measurement is bounded by
 $$
  \Pr (\text{success})
  = \frac12(1 + \sin\alpha),
@@ -658,10 +658,10 @@ To talk about this, we need to introduce the notion of **entanglement**, and thi
 
 ### Quantum states
 
-With any isolated quantum system which can be prepared in $n$ perfectly distinguishable states, we can associate a Hilbert space $\mathcal{H}$ of dimension $n$ such that each vector $\ket{v}\in\mathcal{H}$ of unit length ($\braket{v|v} =1$) represents a quantum state of the system.
+With any isolated quantum system which can be prepared in $n$ perfectly distinguishable states, we can associate a Hilbert space $\mathcal{H}$ of dimension $n$ such that each vector $\ket{v}\in\mathcal{H}$ of unit length ($\braket{v}{v} =1$) represents a quantum state of the system.
 The overall phase of the vector has no physical significance: $\ket{v}$ and $e^{i\varphi}\ket{v}$, for any real $\varphi$, describe the same state.
-The inner product $\braket{u|v}$ is the probability amplitude that a quantum system prepared in state $\ket{v}$ will be found in state $\ket{u}$.
-States corresponding to orthogonal vectors, $\braket{u|v}=0$, are perfectly distinguishable, since the system prepared in state $\ket{v}$ will never be found in state $\ket{u}$, and vice versa.
+The inner product $\braket{u}{v}$ is the probability amplitude that a quantum system prepared in state $\ket{v}$ will be found in state $\ket{u}$.
+States corresponding to orthogonal vectors, $\braket{u}{v}=0$, are perfectly distinguishable, since the system prepared in state $\ket{v}$ will never be found in state $\ket{u}$, and vice versa.
 In particular, states forming orthonormal bases are always perfectly distinguishable from each other.
 
 
@@ -723,18 +723,18 @@ This diagram should be read from left to right, and the horizontal line represen
 A complete measurement in quantum theory is determined by the choice of an orthonormal basis $\{\ket{e_i}\}$ in $\mathcal{H}$, and every such basis (in principle) represents a possible measurement.
 Given a quantum system in state $\ket{\psi}$ such that
 $$
-  \ket{\psi} = \sum_i \ket{e_i}\braket{e_i|\psi},
+  \ket{\psi} = \sum_i \ket{e_i}\braket{e_i}{\psi},
 $$
-the measurement in the basis $\{\ket{e_i}\}$ gives the outcome labelled by $e_k$ with probability $|\braket{e_k\psi}|^2$, and leaves the system in state $\ket{e_k}$.
-This is consistent with our interpretation of the inner product $\braket{e_k|\psi}$ as the probability amplitude that a quantum system prepared in state $\ket{\psi}$ will be found in state $\ket{e_k}$.
-State vectors forming orthonormal bases are perfectly distinguishable from each other ($\braket{e_i|e_j}=\delta_{ij}$), so there is no ambiguity about the outcome.
+the measurement in the basis $\{\ket{e_i}\}$ gives the outcome labelled by $e_k$ with probability $|\braket{e_k\psi}}{^2$, and leaves the system in state $\ket{e_k}$.
+This is consistent with our interpretation of the inner product $\braket{e_k}{\psi}$ as the probability amplitude that a quantum system prepared in state $\ket{\psi}$ will be found in state $\ket{e_k}$.
+State vectors forming orthonormal bases are perfectly distinguishable from each other ($\braket{e_i}{e_j}=\delta_{ij}$), so there is no ambiguity about the outcome.
 A complete measurement is the best we can do in terms of resolving state vectors in the basis states.
 
 In general, for any decomposition of the identity $\sum_k P_k=\id$ into orthogonal projectors $P_k$ (i.e. $P_kP_l = P_k\delta_{kl}$), there exists a measurement that takes a quantum system in state $\ket{\psi}$, outputs label $k$ with probability $\bra{\psi}P_k\ket{\psi}$, and leaves the system in the state $P_k\ket{\psi}$ (multiplied by the normalisation factor i.e. divided by the length of $P_k\ket{\psi}$):
 $$
   \ket{\psi}
   \mapsto
-  \frac{P_k\ket{\psi}}{\sqrt{\braket{\psi|P_k|\psi}}}.
+  \frac{P_k\ket{\psi}}{\sqrt{\braket{\psi}{P_k|\psi}}}.
 $$
 The projector formalism covers both complete and incomplete measurements.
 The complete measurements are defined by rank one projectors, $P_k=\proj{e_k}$, projecting on vectors from some orthonormal basis $\{\ket{e_k}\}$.

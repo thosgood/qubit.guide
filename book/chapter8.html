@@ -362,15 +362,16 @@ or as
 <eq env="displaymath">
   |\psi\rangle|e\rangle
   \longmapsto
-  \mathbf{1}|\psi\rangle|e_1\rangle + Z|\psi\rangle|e_z\rangle,
+  \mathbf{1}|\psi\rangle|e_{\mathbf{1}}\rangle + Z|\psi\rangle|e_Z\rangle,
 </eq>
-where <eq env="math">|e_1\rangle = \frac12(|e_{00}\rangle + |e_{11}\rangle)</eq> and <eq env="math">|e_z\rangle = \frac12(|e_{00}\rangle - |e_{11}\rangle)</eq>.
+where <eq env="math">|e_{\mathbf{1}}\rangle = \frac12(|e_{00}\rangle + |e_{11}\rangle)</eq> and <eq env="math">|e_Z\rangle = \frac12(|e_{00}\rangle - |e_{11}\rangle)</eq>.
 We may interpret this expression by saying that two things can happen to the qubit: nothing <eq env="math">\mathbf{1}</eq> (first term), or phase-flip <eq env="math">Z</eq> (second term).
-<em>This, however, should not be taken literally unless the states of the environment, <eq env="math">|e_1\rangle</eq> and <eq env="math">|e_z\rangle</eq>, are orthogonal.</em><a href="#fn99" class="footnote-ref" id="fnref99"><sup>99</sup></a></p>
+<em>This, however, should not be taken literally unless the states of the environment, <eq env="math">|e_{\mathbf{1}}\rangle</eq> and <eq env="math">|e_Z\rangle</eq>, are orthogonal.</em><a href="#fn99" class="footnote-ref" id="fnref99"><sup>99</sup></a></p>
+<p>This process is what we refer to as <strong>decoherence</strong>.</p>
 </div>
 <div id="decoherence-and-interference" class="section level2" number="8.2">
 <h2><span class="header-section-number">8.2</span> Decoherence and interference</h2>
-<p>Suppose the qubit undergoes the usual interference experiment, but, in between the two Hadamard gates, it is affected by <strong>decoherence</strong> (denoted by <eq env="math">\times</eq>).</p>
+<p>Suppose the qubit undergoes the usual interference experiment, but, in between the two Hadamard gates, it is affected by <strong>decoherence</strong> (denoted by <eq env="math">\times</eq>), which acts as described above (i.e. <eq env="math">|0\rangle|e\rangle\mapsto|0\rangle|e_{00}\rangle</eq> and <eq env="math">|1\rangle|e\rangle\mapsto|1\rangle|e_{11}\rangle</eq>).</p>
 <div class="figure" style="text-align: center"><span id="fig:decoherence-interference"></span>
 <img src="quantum-info_files/figure-html/decoherence-interference-1.png" alt="The usual interference experiment, but with decoherence." width="384" />
 <p class="caption">
@@ -383,11 +384,11 @@ Figure 8.1: The usual interference experiment, but with decoherence.
     |0\rangle|e\rangle
     &amp; \overset{H}{\longmapsto} \Big( |0\rangle + |1\rangle \Big) |e\rangle
   \\&amp; \overset{\phi}{\longmapsto} \Big( |0\rangle + e^{i\phi}|1\rangle \Big) |e\rangle
-  \\&amp; \overset{\times}{\longmapsto} |0\rangle|e_0\rangle + e^{i\phi}|1\rangle|e_1\rangle
+  \\&amp; \overset{\times}{\longmapsto} |0\rangle|e_{00}\rangle + e^{i\phi}|1\rangle|e_{11}\rangle
   \\&amp; \overset{H}{\longmapsto} |0\rangle\Big( |e_{00}\rangle + e^{i\phi}|e_{11}\rangle \Big) + |1\rangle\Big( |e_{00}\rangle - e^{i\phi}|e_{11}\rangle \Big).
   \end{aligned}
 </eq>
-If we write <eq env="math">\langle e_0|e_1\rangle = ve^{i\alpha}</eq>, then the final probabilities of <eq env="math">0</eq> and <eq env="math">1</eq> oscillate with <eq env="math">\phi</eq> as
+If we write <eq env="math">\langle e_{00}|e_{11}\rangle = ve^{i\alpha}</eq>, then the final probabilities of <eq env="math">0</eq> and <eq env="math">1</eq> oscillate with <eq env="math">\phi</eq> as
 <eq env="displaymath">
   \begin{aligned}
     P_{0}(\phi) &amp;= \frac12\big(1 + v\cos(\phi + \alpha)\big),
@@ -395,16 +396,15 @@ If we write <eq env="math">\langle e_0|e_1\rangle = ve^{i\alpha}</eq>, then the 
   \end{aligned}
 </eq></p>
 <div class="figure" style="text-align: center"><span id="fig:visibility-suppression"></span>
-<img src="quantum-info_files/figure-html/visibility-suppression-1.png" alt="Visibility suppression." width="384" />
+<img src="quantum-info_files/figure-html/visibility-suppression-1.png" alt="Visibility suppression." width="480" />
 <p class="caption">
 Figure 8.2: Visibility suppression.
 </p>
 </div>
-<p><strong>!!!TODO!!! be more descriptive with the axis labelling: what is <eq env="math">p</eq> the probability of exactly?</strong></p>
 <p>As we can see in Figure <a href="chapter8.html#fig:visibility-suppression">8.2</a>, the interference pattern is suppressed by a factor <eq env="math">v</eq>, which we call the <strong>visibility</strong>.
-As <eq env="math">v=|\!\langle e_0|e_1\rangle\!|</eq> decreases, we lose all the advantages of quantum interference.
-For example, in Deutsch’s algorithm we obtain the correct answer with probability at most <eq env="math">(1+v)/2</eq>.
-For <eq env="math">\langle e_0|e_1\rangle = 0</eq>, the perfect decoherence case, the network outputs <eq env="math">0</eq> or <eq env="math">1</eq> with equal probabilities, i.e. it is <em>useless</em> as a computing device.</p>
+As <eq env="math">v=|\langle e_{00}|e_{11}\rangle|</eq> decreases, we lose all the advantages of quantum interference.
+For example, in Deutsch’s algorithm we obtain the correct answer with probability at most <eq env="math">\frac12(1+v)</eq>.
+For <eq env="math">\langle e_{00}|e_{11}\rangle = 0</eq>, the <strong>perfect decoherence</strong> case, the network outputs <eq env="math">0</eq> or <eq env="math">1</eq> with equal probabilities, i.e. <em>it is useless as a computing device</em>.</p>
 <div class="idea">
 <p>It is clear that we want to avoid decoherence, or at least diminish its impact on our computing device.
 For this we need <strong>quantum error correction</strong>: we encode the state of a single (logical) qubit across several (physical) qubits.</p>
@@ -421,8 +421,8 @@ We start with the evolution of the state vector <eq env="math">|\psi\rangle=\alp
 Then we write it as the evolution of the projector <eq env="math">|\psi\rangle\langle\psi|</eq>, and trace over the environment to obtain
 <eq env="displaymath">
   \begin{aligned}
-    |\psi\rangle\langle\psi| \longmapsto &amp; |\alpha|^2|0\rangle\langle 0| \langle e_{00}|e_{00}\rangle+ \alpha\beta^\star |0\rangle\!\langle 1|\langle e_{11}|e_{00}\rangle
-  \\+ &amp;\alpha^\star\beta |1\rangle\!\langle 0|\langle e_{00}|e_{11}\rangle  + |\beta|^2|1\rangle\langle 1|\langle e_{11}|e_{11}\rangle.
+    |\psi\rangle\langle\psi| \longmapsto &amp; |\alpha|^2|0\rangle\langle 0| \langle e_{00}|e_{00}\rangle+ \alpha\beta^\star |0\rangle\langle 1|\langle e_{11}|e_{00}\rangle
+  \\+ &amp;\alpha^\star\beta |1\rangle\langle 0|\langle e_{00}|e_{11}\rangle  + |\beta|^2|1\rangle\langle 1|\langle e_{11}|e_{11}\rangle.
   \end{aligned}
 </eq>
 Written in the matrix form, this is
@@ -437,18 +437,18 @@ Written in the matrix form, this is
     \\\alpha^\ast\beta \langle e_{00}|e_{11}\rangle &amp; |\beta|^2
   \end{bmatrix}.
 </eq>
-The off-diagonal elements, originally called <strong>coherences</strong>, vanish as <eq env="math">\langle e_0|e_1\rangle</eq> approaches zero.
+The off-diagonal elements, originally called <strong>coherences</strong>, vanish as <eq env="math">\langle e_{00}|e_{11}\rangle</eq> approaches zero.
 This is why this particular interaction is called decoherence.</p>
 <p>Notice that
 <eq env="displaymath">
-|\psi\rangle|e\rangle \longmapsto \mathbf{1}|\psi\rangle|e_1\rangle +Z|\psi\rangle|e_z\rangle,
+|\psi\rangle|e\rangle \longmapsto \mathbf{1}|\psi\rangle|e_{\mathbf{1}}\rangle+Z|\psi\rangle|e_Z\rangle,
 </eq>
 implies
 <eq env="displaymath">
-|\psi\rangle\langle\psi|\longmapsto \mathbf{1}|\psi\rangle\langle\psi| \mathbf{1}\langle e_1|e_1\rangle +Z|\psi\rangle\langle\psi| Z\langle e_z|e_z\rangle,
+|\psi\rangle\langle\psi|\longmapsto \mathbf{1}|\psi\rangle\langle\psi| \mathbf{1}\langle e_{\mathbf{1}}|e_{\mathbf{1}}\rangle +Z|\psi\rangle\langle\psi| Z\langle e_Z|e_Z\rangle,
 </eq>
-<em>only</em> when <eq env="math">\langle e_1|e_z\rangle=0</eq> (otherwise you would have additional cross terms <eq env="math">\mathbf{1}|\psi\rangle\langle\psi| Z</eq> and <eq env="math">Z|\psi\rangle\langle\psi| \mathbf{1}</eq>).
-In this case we can indeed say that, with probability <eq env="math">\langle e_1|e_1\rangle</eq>, nothing happens, and, with probability <eq env="math">\langle e_z|e_z\rangle</eq>, the qubit undergoes the phase-flip <eq env="math">Z</eq>.</p>
+<em>only</em> when <eq env="math">\langle e_{\mathbf{1}}|e_Z\rangle=0</eq> (otherwise you would have additional cross terms <eq env="math">\mathbf{1}|\psi\rangle\langle\psi| Z</eq> and <eq env="math">Z|\psi\rangle\langle\psi| \mathbf{1}</eq>).
+In this case we can indeed say that, with probability <eq env="math">\langle e_{\mathbf{1}}|e_{\mathbf{1}}\rangle</eq>, nothing happens, and, with probability <eq env="math">\langle e_Z|e_Z\rangle</eq>, the qubit undergoes the phase-flip <eq env="math">Z</eq>.</p>
 </div>
 <div id="quantum-errors" class="section level2" number="8.4">
 <h2><span class="header-section-number">8.4</span> Quantum errors</h2>
@@ -471,7 +471,7 @@ where the states of the environment are neither normalised nor orthogonal, leads
 </eq>
 We can also write this as
 <eq env="displaymath">
-|\psi\rangle|e\rangle \longmapsto  \mathbf{1}|\psi\rangle|e_1\rangle + Z|\psi\rangle |e_z\rangle +X|\psi\rangle |e_x\rangle + Y|\psi\rangle |e_y\rangle.
+|\psi\rangle|e\rangle \longmapsto  \mathbf{1}|\psi\rangle|e_{\mathbf{1}}\rangle + Z|\psi\rangle |e_Z\rangle +X|\psi\rangle |e_X\rangle + Y|\psi\rangle |e_Y\rangle.
 </eq>
 The intuition behind this expression is that four things can happen to the qubit:</p>
 <ol style="list-style-type: decimal">
@@ -480,7 +480,7 @@ The intuition behind this expression is that four things can happen to the qubit
 <li>bit-flip (<eq env="math">X</eq>), or</li>
 <li>both bit-flip and phase-flip (<eq env="math">Y</eq>).</li>
 </ol>
-<p>This is certainly the case when the states <eq env="math">|e_1\rangle, |e_x\rangle, |e_y\rangle</eq> and <eq env="math">|e_z\rangle</eq> are mutually orthogonal, otherwise we cannot perfectly distinguish between the four alternatives.</p>
+<p>This is certainly the case when the states <eq env="math">|e_{\mathbf{1}}\rangle, |e_X\rangle, |e_Y\rangle</eq> and <eq env="math">|e_Z\rangle</eq> are mutually orthogonal, otherwise we cannot perfectly distinguish between the four alternatives.</p>
 <div class="idea">
 <p>What is important here is the discretisation of errors, and the fact that we can reduce quantum errors to <em>two types</em>: bit-flip errors <eq env="math">X</eq>, and phase-flip errors <eq env="math">Z</eq>.</p>
 </div>

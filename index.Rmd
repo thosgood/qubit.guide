@@ -38,9 +38,9 @@ output:
 \providecommand{\xmapsto}[1]{\overset{#1}{\longmapsto}}
 \providecommand{\bra}[1]{\langle#1|}
 \providecommand{\ket}[1]{|#1\rangle}
-\providecommand{\braket}[1]{\langle#1\rangle}
+\providecommand{\braket}[2]{\langle#1|#2\rangle}
 \providecommand{\proj}[1]{|#1\rangle\langle#1|}
-\providecommand{\av}[1]{\braket{#1}}
+\providecommand{\av}[1]{\langle#1\rangle}
 \providecommand{\tr}{\operatorname{tr}}
 \providecommand{\id}{\mathbf{1}}
 \providecommand{\diag}[2]{\begin{bmatrix}#1&0\\0&#2\end{bmatrix}}
@@ -167,22 +167,22 @@ This is sufficient for all our purposes and we will avoid many mathematical subt
 
 ### Bras and Kets
 
-An **inner product** on a vector space $V$ (over the complex numbers) is a function that assigns to each pair of vectors $\ket{u},\ket{v}\in V$ a complex number $\braket{u|v}$, and satisfies the following conditions:
+An **inner product** on a vector space $V$ (over the complex numbers) is a function that assigns to each pair of vectors $\ket{u},\ket{v}\in V$ a complex number $\braket{u}{v}$, and satisfies the following conditions:
 
-- $\braket{u|v}=\braket{v}{u}^\star$;
-- $\braket{v|v}\geq 0$ for all $\ket{v}$;
-- $\braket{v|v}= 0$ if and only if $\ket{v}=0$.
+- $\braket{u}{v}=\braket{v}{u}^\star$;
+- $\braket{v}{v}\geq 0$ for all $\ket{v}$;
+- $\braket{v}{v}= 0$ if and only if $\ket{v}=0$.
 
 The inner product must also be _linear_ in the second argument but _antilinear_ in the first argument:
 $$
-  \braket{c_1u_1+c_2u_2}{v} = c_1^\star\braket{u_1|v}+c_2^\star\braket{u_2|v}
+  \braket{c_1u_1+c_2u_2}{v} = c_1^\star\braket{u_1}{v}+c_2^\star\braket{u_2}{v}
 $$
 for any complex constants $c_1$ and $c_2$.
 
 With any physical system we associate a complex vector space with an inner product, known as a **Hilbert space**^[The term "Hilbert space" used to be reserved for an infinite-dimensional inner product space that is **complete**, i.e. such that every Cauchy sequence in the space converges to an element in the space. Nowadays, as in these notes, the term includes finite-dimensional spaces, which automatically satisfy the condition of completeness.] $\mathcal{H}$.
 The inner product between vectors $\ket{u}$ and $\ket{v}$ in ${\mathcal{H}}$ is written as
 $$
-  \braket{u|v}.
+  \braket{u}{v}.
 $$
 
 For example, for column vectors $\ket{u}$ and $\ket{v}$ in $\mathbb{C}^n$ written as
@@ -195,12 +195,12 @@ $$
 $$
 their inner product is defined as
 $$
-  \braket{u|v}
+  \braket{u}{v}
   = u_1^\star v_1 + u_2^\star v_2+\ldots + u_n^\star v_n.
 $$
 Following Dirac we may split the inner product into two ingredients
 $$
-  \braket{u|v}
+  \braket{u}{v}
   \longrightarrow \bra{u}\,\ket{v}.
 $$
 Here $\ket{v}$ is a ket vector, and $\bra{u}$ is called a **bra** vector, or a **bra**, and can be represented by a row vector:
@@ -211,7 +211,7 @@ $$
 The inner product can now be viewed as the result of the matrix multiplication:
 $$
   \begin{aligned}
-    \braket{u|v}
+    \braket{u}{v}
     &= \begin{bmatrix}u_1^\star,&u_2^\star,&\ldots,&u_n^\star\end{bmatrix}
     \cdot \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
   \\&= u_1^\star v_1 + u_2^\star v_2 + \ldots + u_n^\star v_n.
@@ -220,7 +220,7 @@ $$
 
 Bras are vectors: you can add them, and multiply them by scalars (which, here, are complex numbers), but they are vectors in the space ${\mathcal{H}}^\star$ which is **dual** to $\mathcal{H}$.
 Elements of ${\mathcal{H}}^\star$ are **linear functionals**, that is, linear maps from $\mathcal{H}$ to $\mathbb{C}$.
-A linear functional $\bra{u}$ acting on a vector $\ket{v}$ in $\mathcal{H}$ gives a complex number $\braket{u|v}$.
+A linear functional $\bra{u}$ acting on a vector $\ket{v}$ in $\mathcal{H}$ gives a complex number $\braket{u}{v}$.
 
 ::: {.idea data-latex=""}
 All Hilbert spaces of the same dimension are isomorphic, so the differences between quantum systems cannot be really understood without additional structure. This structure is provided by a specific algebra of operators acting on $\mathcal{H}$.
@@ -261,13 +261,13 @@ $$
 
 ### Geometry
 
-The inner product brings geometry: the **length**, or **norm**, of $\ket{v}$ is given by $\|v\|=\sqrt{\braket{v|v}}$, and we say that $\ket{u}$ and $\ket{v}$ are **orthogonal** if $\braket{u|v}=0$.
+The inner product brings geometry: the **length**, or **norm**, of $\ket{v}$ is given by $\|v\|=\sqrt{\braket{v}{v}}$, and we say that $\ket{u}$ and $\ket{v}$ are **orthogonal** if $\braket{u}{v}=0$.
 Any maximal set of pairwise orthogonal vectors of unit length^[That is, consider sets of vectors $\ket{e_i}$ such that $\braket{e_i}{e_j}=\delta_{ij}$ (where the **Kronecker delta** $\delta_{ij}$ is $0$ if $i\neq j$, and $1$ if $i=j$.), and then pick any of the largest such sets (which must exist, since we assume our vector spaces to be finite dimensional).] forms an orthonormal basis, and so any vector can be expressed as a linear combination of the basis vectors:
 $$
   \begin{gathered}
     \ket{v}
     =\sum_i v_i\ket{e_i}
-  \\\text{where $v_i=\braket{e_i|v}$}.
+  \\\text{where $v_i=\braket{e_i}{v}$}.
   \end{gathered}
 $$
 Then the bras $\bra{e_i}$ form the **dual basis**
@@ -275,7 +275,7 @@ $$
   \begin{gathered}
     \bra{v}
     =\sum_i v_i^\star\bra{e_i}
-  \\\text{where $v_i^\star=\braket{v|e_i}$}.
+  \\\text{where $v_i^\star=\braket{v}{e_i}$}.
   \end{gathered}
 $$
 
@@ -283,9 +283,9 @@ To make the notation a bit less cumbersome, we will sometimes label the basis ke
 $$
   \begin{aligned}
     \ket{v}
-    &= \sum_i \ket{i}\braket{i|v}
+    &= \sum_i \ket{i}\braket{i}{v}
   \\\bra{v}
-    &= \sum_j \braket{v|i}\bra{i}.
+    &= \sum_j \braket{v}{i}\bra{i}.
   \end{aligned}
 $$
 But _do not confuse $\ket{0}$ with the zero vector_!
@@ -296,9 +296,9 @@ With any _isolated_ quantum system, which can be prepared in $n$ _perfectly dist
 
 The overall phase of the vector has no physical significance: $\ket{v}$ and $e^{i\varphi}\ket{v}$ (for any real $\varphi$) both describe the same state.
 
-The inner product $\braket{u|v}$ is the _probability amplitude_ that a quantum system prepared in state $\ket{v}$ will be found in state $\ket{u}$ upon measurement.
+The inner product $\braket{u}{v}$ is the _probability amplitude_ that a quantum system prepared in state $\ket{v}$ will be found in state $\ket{u}$ upon measurement.
 
-States corresponding to orthogonal vectors (i.e. $\braket{u|v}=0$) are _perfectly distinguishable_, since, if we prepare the system in state $\ket{v}$, then it will never be found in state $\ket{u}$, and vice versa.
+States corresponding to orthogonal vectors (i.e. $\braket{u}{v}=0$) are _perfectly distinguishable_, since, if we prepare the system in state $\ket{v}$, then it will never be found in state $\ket{u}$, and vice versa.
 In particular, states forming orthonormal bases are always perfectly distinguishable from each other.
 Choosing such states, as we shall see in a moment, is equivalent to choosing a particular quantum measurement.
 :::
@@ -343,7 +343,7 @@ $$
   \begin{gathered}
     \bra{a'}=\bra{a}U^\dagger
   \\\bra{b'}=\bra{b}U^\dagger
-  \\\braket{a'|b'}=\bra{a}U^\dagger U\ket{b}=\bra{a}\id\ket{b}=\braket{a|b}.
+  \\\braket{a'}{b'}=\bra{a}U^\dagger U\ket{b}=\bra{a}\id\ket{b}=\braket{a}{b}.
   \end{gathered}
 $$
 Preserving the inner product implies preserving the norm induced by this product, i.e. unit state vectors are mapped to unit state vectors, i.e. _unitary operations are the isometries of the Euclidean norm_.
@@ -351,17 +351,17 @@ Preserving the inner product implies preserving the norm induced by this product
 
 ### Outer products
 
-Apart from the inner product $\braket{u|v}$, which is a complex number, we can also form the **outer product** $\ket{u}\bra{v}$, which is a linear map (operator) on $\mathcal{H}$ (or on $\mathcal{H}^\star$, depending how you look at it).
+Apart from the inner product $\braket{u}{v}$, which is a complex number, we can also form the **outer product** $\ket{u}\bra{v}$, which is a linear map (operator) on $\mathcal{H}$ (or on $\mathcal{H}^\star$, depending how you look at it).
 This is what physicists like (and what mathematicians dislike!) about Dirac notation: a certain degree of healthy ambiguity.
 
-- The result of $\ket{u}\bra{v}$ acting on a ket $\ket{x}$ is $\ket{u}\braket{v|x}$, i.e. the vector $\ket{u}$ multiplied by the complex number $\braket{v|x}$.
-- Similarly, the result of $\ket{u}\bra{v}$ acting on a bra $\bra{y}$ is $\braket{y|u}\bra{v}$, i.e. the functional $\bra{v}$ multiplied by the complex number $\braket{y|u}$.
+- The result of $\ket{u}\bra{v}$ acting on a ket $\ket{x}$ is $\ket{u}\braket{v}{x}$, i.e. the vector $\ket{u}$ multiplied by the complex number $\braket{v}{x}$.
+- Similarly, the result of $\ket{u}\bra{v}$ acting on a bra $\bra{y}$ is $\braket{y}{u}\bra{v}$, i.e. the functional $\bra{v}$ multiplied by the complex number $\braket{y}{u}$.
 
 The product of two maps, $A=\ket{a}\bra{b}$ followed by $B=\ket{c}\bra{d}$, is a linear map $BA$, which can be written in Dirac notation as
 $$
-  BA = \ket{c}\braket{d|a}\bra{b} = \braket{d|a}\ket{c}\bra{b}
+  BA = \ket{c}\braket{d}{a}\bra{b} = \braket{d}{a}\ket{c}\bra{b}
 $$
-i.e. the inner product (complex number) $\braket{d|a}$ times the outer product (linear map) $\ket{c}\bra{b}$.
+i.e. the inner product (complex number) $\braket{d}{a}$ times the outer product (linear map) $\ket{c}\bra{b}$.
 
 Any operator on $\mathcal{H}$ can be expressed as a sum of outer products. Given an orthonormal basis $\{\ket{e_i}\}$, any operator which maps the basis vectors $\ket{e_i}$ to vectors $\ket{f_i}$ can be written as $\sum_i\ket{f_i}\bra{e_i}$, where the sum is over all the vectors in the orthonormal basis.
 If the vectors $\{\ket{f_i}\}$ also form an orthonormal basis then the operator simply "rotates" one orthonormal basis into another.
@@ -377,7 +377,7 @@ $$
     \ket{v}
     &= \id\ket{v}
   \\&= \sum_i \ket{e_i}\bra{e_i}\;\ket{v}
-  \\&= \sum_i \ket{e_i}\;\braket{e_i|v}
+  \\&= \sum_i \ket{e_i}\;\braket{e_i}{v}
   \\&= \sum_i v_i\ket{e_i},
   \end{aligned}
 $$
@@ -389,7 +389,7 @@ Finally, note that the adjoint of $\ket{a}\bra{b}$ is $\ket{b}\bra{a}$.
 
 The **trace** is an operation which turns outer products into inner products,
 $$
-  \tr\colon \ket{b}\bra{a} \longmapsto \braket{a|b}.
+  \tr\colon \ket{b}\bra{a} \longmapsto \braket{a}{b}.
 $$
 We have just seen that any linear operator can be written as a sum of outer products, and so we can extend the definition of trace (by linearity) to any operator.
 Alternatively, for any square matrix $A$, the trace of $A$ is defined to be the sum of its diagonal elements:
@@ -401,13 +401,13 @@ Moreover,
 $$
   \begin{aligned}
     \tr\ket{b}\bra{a}
-    &= \sum_k \braket{e_k|b}\braket{a|e_k}
-  \\&= \sum_k \braket{a|e_k}\braket{e_k|b}
-  \\&= \braket{a|\id}\ket{b}
-  \\&= \braket{a|b}.
+    &= \sum_k \braket{e_k}{b}\braket{a}{e_k}
+  \\&= \sum_k \braket{a}{e_k}\braket{e_k}{b}
+  \\&= \braket{a}{\id}\ket{b}
+  \\&= \braket{a}{b}.
   \end{aligned}
 $$
-Here, the second term can be viewed both as the sum of the diagonal elements of $\ket{b}\bra{a}$ in the $\ket{e_k}$ basis, and as the sum of the products of two complex numbers $\braket{e_k|b}$ and $\braket{a|e_k}$.
+Here, the second term can be viewed both as the sum of the diagonal elements of $\ket{b}\bra{a}$ in the $\ket{e_k}$ basis, and as the sum of the products of two complex numbers $\braket{e_k}{b}$ and $\braket{a}{e_k}$.
 We have used the decomposition of the identity, $\sum_k\ket{e_k}\bra{e_k}=\id$.
 Given that we can decompose the identity by choosing any orthonormal basis, it is clear that the trace does _not_ depend on the choice of the basis.
 
@@ -422,5 +422,5 @@ Given that we can decompose the identity by choosing any orthonormal basis, it i
 - $(\alpha A+\beta B)^\dagger=\alpha^\star A^\dagger+\beta^\star B^\dagger$
 - $(A^\dagger)^\dagger=A$
 - $\tr(\alpha A+ \beta B) = \alpha \tr(A)+\beta\tr(B)$
-- $\tr\ket{a}\bra{b} = \braket{b|a}$
+- $\tr\ket{a}\bra{b} = \braket{b}{a}$
 - $\tr(ABC) = \tr(CAB) = \tr(BCA)$
