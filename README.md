@@ -49,8 +49,4 @@ For any problems or queries regarding this site or its contents, please get in t
 1. pdf title page
 1. **pdf output**
     + overlapping in the header (section/subsection names)
-    + sizes of all images
-    + idea environment (and, later on, scenario and circuits too)
-        * tables in ideas look... bad
-        * change the colours of circuit and scenario to primary and secondary (and remove background colour?)
 1. **search for "TODO"**
