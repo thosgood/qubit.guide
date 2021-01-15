@@ -50,3 +50,4 @@ For any problems or queries regarding this site or its contents, please get in t
 1. **pdf output**
     + overlapping in the header (section/subsection names)
 1. **search for "TODO"**
+1. actually turn all the `\tr_A` into `\tr_{\mathcal{A}}`, the `\rho^A` into `\rho^{\mathcal{A}}`, the `\mathcal{H}_A` into `\mathcal{H}_{\mathcal{A}}`, etc.
