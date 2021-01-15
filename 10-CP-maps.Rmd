@@ -7,7 +7,7 @@ Things we can control (at least with some precision), such as a bunch of ions in
 The joint evolution of the system and the environment is unitary, but the system _alone_ may deviate from the unitary evolution due to the entangling interactions with the environment.
 What does this non-unitary quantum evolution look like?
 
-Mathematically speaking^[Recall that, given a pair of Hilbert spaces $\mathcal{H}_{\mathcal{A}}$ and $\mathcal{H}_{\mathcal{B}}$, we denote the set of (bounded) linear operators from $\mathcal{H}_{\mathcal{A}}$ to $\mathcal{H}_{\mathcal{B}}$ by $\mathscr{B}(\mathcal{H}_{\mathcal{A}},\mathcal{H}_{\mathcal{B}})$. The shorthand $\mathscr{B}(\mathcal{H})$ is used to denote $\mathcal{B(\mathcal{H},\mathcal{H})}$. Thus an element of $\mathscr{B}(\mathcal{H})$ is exactly a density operator on $\mathcal{H}$.], we want to characterise **physically admissible** maps
+Mathematically speaking^[Recall that, given a pair of Hilbert spaces $\mathcal{H}_{\mathcal{A}}$ and $\mathcal{H}_{\mathcal{B}}$, we denote the set of (bounded) linear operators from $\mathcal{H}_{\mathcal{A}}$ to $\mathcal{H}_{\mathcal{B}}$ by $\mathscr{B}(\mathcal{H}_{\mathcal{A}},\mathcal{H}_{\mathcal{B}})$. The shorthand $\mathscr{B}(\mathcal{H})$ is used to denote $\mathscr{B}(\mathcal{H},\mathcal{H})$. Thus an element of $\mathscr{B}(\mathcal{H})$ is exactly a density operator on $\mathcal{H}$.], we want to characterise **physically admissible** maps
 $$
   \mathcal{B}\colon \mathscr{B}(\mathcal{H}) \to \mathscr{B}(\mathcal{H}')
 $$
@@ -84,13 +84,13 @@ That is, the two diagrams in Figure \@ref(fig:environment-same-channel) define t
 ```{r environment-same-channel,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6,fig.cap='(ref:environment-same-channel-caption)'}
 \begin{equation*}
   \begin{quantikz}
-    \lstick{$\ket{\psi}$} & \gate[wires=2]{U} &\qw &\qw &\rstick{$\rho'$} \qw
+    \lstick{$\rho$} & \gate[wires=2]{U} &\qw &\qw &\rstick{$\rho'$} \qw
   \\\lstick{$\ket{e}$} &\hphantom{really wide} &\qw &\qw &\rstick{$\bullet$} \qw
   \end{quantikz}
 \end{equation*}
 \begin{equation*}
   \begin{quantikz}
-    \lstick{$\ket{\psi}$} & \gate[wires=2]{U} &\qw &\rstick{$\rho'$} \qw
+    \lstick{$\rho$} & \gate[wires=2]{U} &\qw &\rstick{$\rho'$} \qw
   \\\lstick{$\ket{e}$} &\hphantom{really wide} &\gate{R} &\rstick{$\bullet$} \qw
   \end{quantikz}
 \end{equation*}
@@ -499,9 +499,9 @@ However, if the input qubit is part of a _two-qubit_ system, initially in the en
 $$
   \begin{aligned}
     \proj{\Omega}
-    =& \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes\ket{i}\bra{j}
-  \\\xmapsto{\mathcal{I}\otimes T}& \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes T(\ket{i}\bra{j})
-  \\=& \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes\ket{j}\bra{i}.
+    =& \frac12\sum_{ij} \ket{i}\bra{j} \otimes\ket{i}\bra{j}
+  \\\xmapsto{\mathcal{I}\otimes T}& \frac12\sum_{ij} \ket{i}\bra{j} \otimes T(\ket{i}\bra{j})
+  \\=& \frac12\sum_{ij} \ket{i}\bra{j} \otimes\ket{j}\bra{i}.
   \end{aligned}
 $$
 The output is the $\texttt{SWAP}$ matrix, since it describes the $\texttt{SWAP}$ operation: $\ket{j}\ket{i}\mapsto\ket{i}\ket{j}$.
@@ -735,7 +735,7 @@ $$
 which we can neatly collect and tabulate in the corresponding Choi matrix:
 $$
   \widetilde{\mathcal{E}_p}
-  = \frac{1}{2}
+  = \frac12
   \left[
     \begin{array}{cc|cc}
       \frac{1+p}{2} & 0 & 0 & 0
@@ -863,8 +863,8 @@ where we have substituted $\frac{1}{d}\sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{
 The trace of the tensor product of two matrices is the product of their traces, whence
 $$
   \begin{aligned}
-    \braket{\widetilde{v_k} }{\widetilde{v_l}}
-    &= \frac{1}{d}\sum_{ij} \braket{i }{j} \tr E_k^\dagger E_l \ket{i}\bra{j}
+    \braket{\widetilde{v_k}}{\widetilde{v_l}}
+    &= \frac{1}{d}\sum_{ij} \braket{i}{j} \tr E_k^\dagger E_l \ket{i}\bra{j}
   \\&= \frac{1}{d} \tr E_k^\dagger E_l
   \end{aligned}
 $$
@@ -1165,13 +1165,13 @@ Given $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$, any vector $\
 It is first defined on the product vectors $\ket{a}\otimes\ket{b}$ by the formula
 $$
   \ket{a}\otimes\ket{b}
-  \longmapsto \braket{x|a}\ket{b}
+  \longmapsto \braket{x}{a}\ket{b}
 $$
 and then extended to other vectors in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ by linearity.
 Similarly, any $\ket{y}\in\mathcal{H}_{\mathcal{B}}$ defines a map $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\to\mathcal{H}_{\mathcal{A}}$ via
 $$
   \ket{a}\otimes\ket{b}
-  \longmapsto \ket{a}\braket{y|b}
+  \longmapsto \ket{a}\braket{y}{b}
 $$
 
 For example, the partial inner product of
@@ -1180,11 +1180,11 @@ $$
 $$
 with of $\ket{0}\in\mathcal{H}_{\mathcal{A}}$ is
 $$
-  \braket{0|\psi} = c_{00}\ket{0} + c_{01}\ket{1}
+  \braket{0}{\psi} = c_{00}\ket{0} + c_{01}\ket{1}
 $$
 and the partial inner product of the same $\ket{\psi}$ with $\ket{1}\in\mathcal{H}_{\mathcal{B}}$ is
 $$
-  \braket{1|\psi} = c_{01}\ket{0} + c_{11}\ket{1}.
+  \braket{1}{\psi} = c_{01}\ket{0} + c_{11}\ket{1}.
 $$
 
 
@@ -1197,19 +1197,218 @@ Here the partial trace is over the second system in our definition of $\widetild
 
 ### {}
 
-**!!!TODO!!!**
+Mathematically speaking, Kraus operators $E_k$ are vectors in a $(dd')$-dimensional Hilbert space, with the Hilbert--Schmidt inner product given by $\tr E_k^\dagger E_l$.
+Thus, our intuition tells us, in order to describe any quantum channel with $\dim\mathcal{H}=\dim\mathcal{H}'=d$, we should need no more than $d^2$ Kraus operators.
+We can pick any orthonormal basis of operators $\{B_i\}$ and express each Kraus vector in this basis as $E_k=\sum c_{ki} B_i$ (where $i=1,\ldots,d^2$, $k=1,\ldots,n$, and $n$ can be much larger than $d^2$).
+This gives us
+$$
+  \begin{aligned}
+    \rho
+    \longmapsto &\sum_{ij} B_i\rho B^\dagger_j \left(\sum _k c_{ki}c^\star_{kj}\right)
+  \\= &\sum_{ij} B_i\rho B^\dagger_j  C_{ij}
+  \end{aligned}
+$$
+where the matrix $C_{ij}$ is positive semidefinite, and hence unitarily diagonalisable: $C_{ij}=\sum_k U_{ik} d_k U_{kj}^\dagger$ for some unitary $U$ and some real $d_k\geq 0$.
+We can then unitarily "rotate" our operator basis, and use $C_k=\sum_j U_{jk}B_j \sqrt{d_k}$ as our new Krauss operators.
 
 
 ### Operator sum freedom
 
-**!!!TODO!!!**
+Another way to understand the freedom in the operator sum representation is to realise that any unitary operation _on the environment alone_ does not affect the principal system, i.e. the quantum channel $\mathcal{E}$ is not affected by the choice of the unitary $R$ in the diagram below.
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{input $\rho$} & \gate[wires=2]{U} &\qw &\rstick{output $\rho'$} \qw
+  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\gate{R} &\rstick{discard} \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+This is true, even though the Kraus operators $E_k=\bra{e_k}U\ket{e}$ have now changed to
+$$
+  \begin{aligned}
+    F_k
+    &= \bra{e_k}(\id\otimes R)U\ket{e}
+  \\&= \sum_j \bra{e_k}R\proj{e_j}U\ket{e}
+  \\&= \sum_j R_{kj}E_j
+  \end{aligned}
+$$
+Indeed, the unitary evolution $(\id\otimes R) U$ gives
+$$
+  \rho\otimes\proj{e}
+  \longmapsto \sum_{kl} E_k \rho E_l^\dagger \otimes R\ket{e_k}\bra{e_l} R^\dagger,
+$$
+and the subsequent trace over the environment gives
+$$
+  \begin{aligned}
+    \tr_E \sum_{kl} E_k \rho E_l^\dagger \otimes R\ket{e_k}\bra{e_l} R^\dagger
+    &= \sum_{kl} E_k \rho E_l^\dagger \bra{e_l}R^\dagger R\ket{e_k}
+  \\&= \sum_{k} E_k \rho E_k^\dagger.
+  \end{aligned}
+$$
 
 
 ### {}
 
-**!!!TODO!!!**
+Consider two single-qubit channels
+$$
+  \begin{aligned}
+    \mathcal{E}\colon \rho
+    &\longmapsto \sum_k E_k\rho E_k^\dagger
+  \\\mathcal{F}\colon \rho
+    &\longmapsto \sum_k F_k\rho F_k^\dagger
+  \end{aligned}
+$$
+defined by their respective Kraus operators
+$$
+  \begin{aligned}
+    E_1
+    &= \frac{1}{\sqrt{2}}\id
+    = \frac{1}{\sqrt{2}}\bmqty{1&0\\0&1}
+  \\E_2
+    &= \frac{1}{\sqrt{2}}Z
+    = \frac{1}{\sqrt{2}}\bmqty{1&0\\0&-1}
+  \\F_1
+    &= \proj{0}
+    = \bmqty{1&0\\0&0}
+  \\F_2
+    &= \proj{1}
+    = \bmqty{0&0\\0&1}.
+  \end{aligned}
+$$
+
+The first channel chooses randomly, with equal probability, between the two options: it will either let the qubit pass undisturbed, or apply the phase flip.
+The second channel essentially performs the measurement in the standard basis, but the outcome of the measurement is not revealed.
+These two apparently very different physical processes correspond to the _same_ quantum channel: $\mathcal{E}(\rho)=\mathcal{F}(\rho)$ for any $\rho$.
+
+Indeed, you can check that $E_1=(F_1+F_2)/\sqrt{2}$ and $E_2=(F_1-F_2)/\sqrt{2}$, whence
+$$
+  \begin{aligned}
+    E(\rho)
+    &= E_1\rho E_1^\dagger + E_2\rho E_2^\dagger
+  \\&= \frac12(F_1+F_2)\rho(F_1+F_2)^\dagger + \frac12(F_1-F_2)\rho(F_1-F_2)^\dagger
+  \\&= F_1\rho F_1^\dagger + F_2\rho F_2^\dagger
+  \\&= F(\rho).
+  \end{aligned}
+$$
+You can also check that the two channels can be implemented by the following two circuits:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\rho$}
+    & \ctrl{1}
+    & \qw \rstick{$\mathcal{F}(\rho)$}
+  \\\lstick{$\ket{0}$}
+    & \targ \qw
+    & \ar[d,dash,thickness]\qw
+  \\& & \text{discard} &
+  \end{quantikz}
+\end{equation*}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\rho$}
+    & \ctrl{1}
+    & \qw
+    & \qw\rstick{$\mathcal{E}(\rho)$}
+  \\\lstick{$\ket{0}$}
+    & \targ \qw &\gate{H}
+    & \ar[d,dash,thickness]\qw
+  \\& & & \text{discard} &
+  \end{quantikz}
+\end{equation*}
+```
+
+The $\texttt{c-NOT}$ gate appears here as the measurement gate.
+The target qubit measures the control qubit in either the standard basis (the operation $\mathcal{F}$) or in the Hadamard basis (the operation $\mathcal{E}$).
+The extra Hadamard gate on the target qubit has no effect on the control qubit.
 
 
 ### C-NOT, again
 
-**!!!TODO!!!**
+We can study the above example more generally, as follows.
+Let us consider a single-qubit channel induced by the action of the $\texttt{c-NOT}$ gate.
+Recall that the unitary operator associated with the $\texttt{c-NOT}$ gate can be written as
+$$
+  U=\proj{0}\otimes\id + \proj{1}\otimes X
+$$
+where is $X$ is the Pauli operator $\sigma_x$, i.e. the $\texttt{NOT}$ gate.
+
+Let us step through the following simple circuit:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{input $\rho$}
+    & \ctrl{1}
+    & \qw \rstick{output $\rho'$}
+  \\\lstick{$\ket{0}$}
+    & \targ \qw
+    & \qw\rstick{discard}
+  \end{quantikz}
+\end{equation*}
+```
+
+The control qubit will be our system, and the target qubit, initially in a fixed state $\ket{e}\equiv\ket{0}$, will play the role of the environment.
+Let the $\{\ket{e_1},\ket{e_2}\}$ basis be the standard basis of the target qubit $\{\ket{0},\ket{1}\}$.
+In this case we have^[Be careful here, the proliferation of $\ket{0}$ and $\ket{1}$ can be confusing. Make sure you do indeed apply $\bra{0}\square\ket{0}$ and $\bra{1}\square\ket{0}$ _only to the environment_, i.e. to the second term in the tensor products.]
+$$
+  \begin{aligned}
+    E_1
+    &= \bra{e_1}U\ket{e}
+  \\&= \bra{0}U\ket{0}
+  \\&= \bra{0} \big(\proj{0}\otimes\id+\proj{1}\otimes X\big) \ket{0}
+  \\&= \proj{0}\bra{0}\id\ket{0} + \proj{1}\bra{0}X\ket{0}
+  \\&= \proj{0}
+  \end{aligned}
+$$
+and
+$$
+  \begin{aligned}
+    E_2
+    &= \bra{e_2}U\ket{e}
+  \\&= \bra{1}U\ket{0}
+  \\&= \bra{1} \big(\proj{0}\otimes\id+\proj{1}\otimes X\big) \ket{0}
+  \\&= \proj{0}\bra{1}\id\ket{0} + \proj{1}\bra{1}X\ket{0}
+  \\&= \proj{1}
+  \end{aligned}
+$$
+It is then easy to see that $E_1^\dagger E_1 + E_2^\dagger E_2=\proj{0}+\proj{1}=\id$.
+
+The unitary part of the evolution
+$$
+  \begin{aligned}
+    \ket{\psi}\ket{e}
+    \longmapsto & E_1\ket{\psi}\ket{e_1}+E_2\ket{\psi}\ket{e_2}
+    \\= &\ket{0}\braket{0}{\psi}\ket{0}+\ket{1}\braket{1}{\psi}\ket{1}
+    \\= &\braket{0}{\psi}\ket{0}\ket{0}+ \braket{1}{\psi}\ket{1}\ket{1}
+  \end{aligned}
+$$
+is a familiar $\texttt{c-NOT}$ entangling process: if $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, then $\ket{\psi}\ket{0}$ becomes $\alpha\ket{0}\ket{0}+\beta\ket{1}\ket{1}$.
+
+The final state of the system qubit, the output, is given by
+$$
+  \begin{aligned}
+    \rho'
+    &= E_1\rho E_1^\dagger + E_2\rho E_2^\dagger
+  \\&= \proj{0}\rho\proj{0} + \proj{1}\rho\proj{1}
+  \\&= \rho_{00}\proj{0}+\rho_{11}\proj{1}
+  \end{aligned}
+$$
+or, in matrix form, by
+$$
+  \begin{bmatrix}
+    |\alpha|^2 & \alpha\beta^\star
+  \\\alpha^\star\beta & |\beta|^2
+  \end{bmatrix}
+  =\rho
+  \longmapsto
+  \rho'=
+  \begin{bmatrix}
+    |\alpha|^2 & 0
+  \\0 & |\beta|^2
+  \end{bmatrix}.
+$$
+As we can see, the diagonal elements of $\rho$ survive, and the off-diagonal elements (i.e. the coherences) disappear.
+You may think about this operation as being equivalent to measuring the system qubit in the standard basis and then forgetting the result.

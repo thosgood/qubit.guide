@@ -725,9 +725,9 @@ However, if the input qubit is part of a <em>two-qubit</em> system, initially in
 <eq env="displaymath">
   \begin{aligned}
     |\Omega\rangle\langle\Omega|
-    =&amp; \frac{1}{2}\sum_{ij} |i\rangle\langle j| \otimes|i\rangle\langle j|
-  \\\overset{\mathcal{I}\otimes T}{\longmapsto}&amp; \frac{1}{2}\sum_{ij} |i\rangle\langle j| \otimes T(|i\rangle\langle j|)
-  \\=&amp; \frac{1}{2}\sum_{ij} |i\rangle\langle j| \otimes|j\rangle\langle i|.
+    =&amp; \frac12\sum_{ij} |i\rangle\langle j| \otimes|i\rangle\langle j|
+  \\\overset{\mathcal{I}\otimes T}{\longmapsto}&amp; \frac12\sum_{ij} |i\rangle\langle j| \otimes T(|i\rangle\langle j|)
+  \\=&amp; \frac12\sum_{ij} |i\rangle\langle j| \otimes|j\rangle\langle i|.
   \end{aligned}
 </eq>
 The output is the <eq env="math">\texttt{SWAP}</eq> matrix, since it describes the <eq env="math">\texttt{SWAP}</eq> operation: <eq env="math">|j\rangle|i\rangle\mapsto|i\rangle|j\rangle</eq>.
@@ -860,7 +860,7 @@ Its action on the four basis matrices is
 which we can neatly collect and tabulate in the corresponding Choi matrix:
 <eq env="displaymath">
   \widetilde{\mathcal{E}_p}
-  = \frac{1}{2}
+  = \frac12
   \left[
     \begin{array}{cc|cc}
       \frac{1+p}{2} &amp; 0 &amp; 0 &amp; 0
@@ -977,8 +977,8 @@ where we have substituted <eq env="math">\frac{1}{d}\sum_{ij}|i\rangle\langle j|
 The trace of the tensor product of two matrices is the product of their traces, whence
 <eq env="displaymath">
   \begin{aligned}
-    \langle\widetilde{v_k} |\widetilde{v_l}\rangle
-    &amp;= \frac{1}{d}\sum_{ij} \langle i |j\rangle \operatorname{tr}E_k^\dagger E_l |i\rangle\langle j|
+    \langle\widetilde{v_k}|\widetilde{v_l}\rangle
+    &amp;= \frac{1}{d}\sum_{ij} \langle i|j\rangle \operatorname{tr}E_k^\dagger E_l |i\rangle\langle j|
   \\&amp;= \frac{1}{d} \operatorname{tr}E_k^\dagger E_l
   \end{aligned}
 </eq>
@@ -1195,13 +1195,13 @@ Given <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}</
 It is first defined on the product vectors <eq env="math">|a\rangle\otimes|b\rangle</eq> by the formula
 <eq env="displaymath">
   |a\rangle\otimes|b\rangle
-  \longmapsto \langle x|a||\rangle\rangle{b}
+  \longmapsto \langle x|a\rangle|b\rangle
 </eq>
 and then extended to other vectors in <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}</eq> by linearity.
 Similarly, any <eq env="math">|y\rangle\in\mathcal{H}_{\mathcal{B}}</eq> defines a map <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\to\mathcal{H}_{\mathcal{A}}</eq> via
 <eq env="displaymath">
   |a\rangle\otimes|b\rangle
-  \longmapsto |a\rangle\braket{y|b}
+  \longmapsto |a\rangle\langle y|b\rangle
 </eq></p>
 <p>For example, the partial inner product of
 <eq env="displaymath">
@@ -1209,11 +1209,11 @@ Similarly, any <eq env="math">|y\rangle\in\mathcal{H}_{\mathcal{B}}</eq> defines
 </eq>
 with of <eq env="math">|0\rangle\in\mathcal{H}_{\mathcal{A}}</eq> is
 <eq env="displaymath">
-  \langle 0|\psi|=\rangle c_{00}|0\rangle + c_{01}|1\rangle
+  \langle 0|\psi\rangle = c_{00}|0\rangle + c_{01}|1\rangle
 </eq>
 and the partial inner product of the same <eq env="math">|\psi\rangle</eq> with <eq env="math">|1\rangle\in\mathcal{H}_{\mathcal{B}}</eq> is
 <eq env="displaymath">
-  \langle 1|\psi|=\rangle c_{01}|0\rangle + c_{11}|1\rangle.
+  \langle 1|\psi\rangle = c_{01}|0\rangle + c_{11}|1\rangle.
 </eq></p>
 </div>
 <div id="section-15" class="section level3" number="10.5.7">
@@ -1224,19 +1224,165 @@ Here the partial trace is over the second system in our definition of <eq env="m
 </div>
 <div id="section-16" class="section level3" number="10.5.8">
 <h3><span class="header-section-number">10.5.8</span> </h3>
-<p><strong>!!!TODO!!!</strong></p>
+<p>Mathematically speaking, Kraus operators <eq env="math">E_k</eq> are vectors in a <eq env="math">(dd')</eq>-dimensional Hilbert space, with the Hilbert–Schmidt inner product given by <eq env="math">\operatorname{tr}E_k^\dagger E_l</eq>.
+Thus, our intuition tells us, in order to describe any quantum channel with <eq env="math">\dim\mathcal{H}=\dim\mathcal{H}'=d</eq>, we should need no more than <eq env="math">d^2</eq> Kraus operators.
+We can pick any orthonormal basis of operators <eq env="math">\{B_i\}</eq> and express each Kraus vector in this basis as <eq env="math">E_k=\sum c_{ki} B_i</eq> (where <eq env="math">i=1,\ldots,d^2</eq>, <eq env="math">k=1,\ldots,n</eq>, and <eq env="math">n</eq> can be much larger than <eq env="math">d^2</eq>).
+This gives us
+<eq env="displaymath">
+  \begin{aligned}
+    \rho
+    \longmapsto &amp;\sum_{ij} B_i\rho B^\dagger_j \left(\sum _k c_{ki}c^\star_{kj}\right)
+  \\= &amp;\sum_{ij} B_i\rho B^\dagger_j  C_{ij}
+  \end{aligned}
+</eq>
+where the matrix <eq env="math">C_{ij}</eq> is positive semidefinite, and hence unitarily diagonalisable: <eq env="math">C_{ij}=\sum_k U_{ik} d_k U_{kj}^\dagger</eq> for some unitary <eq env="math">U</eq> and some real <eq env="math">d_k\geqslant 0</eq>.
+We can then unitarily “rotate” our operator basis, and use <eq env="math">C_k=\sum_j U_{jk}B_j \sqrt{d_k}</eq> as our new Krauss operators.</p>
 </div>
 <div id="operator-sum-freedom" class="section level3" number="10.5.9">
 <h3><span class="header-section-number">10.5.9</span> Operator sum freedom</h3>
-<p><strong>!!!TODO!!!</strong></p>
+<p>Another way to understand the freedom in the operator sum representation is to realise that any unitary operation <em>on the environment alone</em> does not affect the principal system, i.e. the quantum channel <eq env="math">\mathcal{E}</eq> is not affected by the choice of the unitary <eq env="math">R</eq> in the diagram below.</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-69-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>This is true, even though the Kraus operators <eq env="math">E_k=\langle e_k|U|e\rangle</eq> have now changed to
+<eq env="displaymath">
+  \begin{aligned}
+    F_k
+    &amp;= \langle e_k|(\mathbf{1}\otimes R)U|e\rangle
+  \\&amp;= \sum_j \langle e_k|R|e_j\rangle\langle e_j|U|e\rangle
+  \\&amp;= \sum_j R_{kj}E_j
+  \end{aligned}
+</eq>
+Indeed, the unitary evolution <eq env="math">(\mathbf{1}\otimes R) U</eq> gives
+<eq env="displaymath">
+  \rho\otimes|e\rangle\langle e|
+  \longmapsto \sum_{kl} E_k \rho E_l^\dagger \otimes R|e_k\rangle\langle e_l| R^\dagger,
+</eq>
+and the subsequent trace over the environment gives
+<eq env="displaymath">
+  \begin{aligned}
+    \operatorname{tr}_E \sum_{kl} E_k \rho E_l^\dagger \otimes R|e_k\rangle\langle e_l| R^\dagger
+    &amp;= \sum_{kl} E_k \rho E_l^\dagger \langle e_l|R^\dagger R|e_k\rangle
+  \\&amp;= \sum_{k} E_k \rho E_k^\dagger.
+  \end{aligned}
+</eq></p>
 </div>
 <div id="section-17" class="section level3" number="10.5.10">
 <h3><span class="header-section-number">10.5.10</span> </h3>
-<p><strong>!!!TODO!!!</strong></p>
+<p>Consider two single-qubit channels
+<eq env="displaymath">
+  \begin{aligned}
+    \mathcal{E}\colon \rho
+    &amp;\longmapsto \sum_k E_k\rho E_k^\dagger
+  \\\mathcal{F}\colon \rho
+    &amp;\longmapsto \sum_k F_k\rho F_k^\dagger
+  \end{aligned}
+</eq>
+defined by their respective Kraus operators
+<eq env="displaymath">
+  \begin{aligned}
+    E_1
+    &amp;= \frac{1}{\sqrt{2}}\mathbf{1}
+    = \frac{1}{\sqrt{2}}\begin{bmatrix}1&amp;0\\0&amp;1\end{bmatrix}
+  \\E_2
+    &amp;= \frac{1}{\sqrt{2}}Z
+    = \frac{1}{\sqrt{2}}\begin{bmatrix}1&amp;0\\0&amp;-1\end{bmatrix}
+  \\F_1
+    &amp;= |0\rangle\langle 0|
+    = \begin{bmatrix}1&amp;0\\0&amp;0\end{bmatrix}
+  \\F_2
+    &amp;= |1\rangle\langle 1|
+    = \begin{bmatrix}0&amp;0\\0&amp;1\end{bmatrix}.
+  \end{aligned}
+</eq></p>
+<p>The first channel chooses randomly, with equal probability, between the two options: it will either let the qubit pass undisturbed, or apply the phase flip.
+The second channel essentially performs the measurement in the standard basis, but the outcome of the measurement is not revealed.
+These two apparently very different physical processes correspond to the <em>same</em> quantum channel: <eq env="math">\mathcal{E}(\rho)=\mathcal{F}(\rho)</eq> for any <eq env="math">\rho</eq>.</p>
+<p>Indeed, you can check that <eq env="math">E_1=(F_1+F_2)/\sqrt{2}</eq> and <eq env="math">E_2=(F_1-F_2)/\sqrt{2}</eq>, whence
+<eq env="displaymath">
+  \begin{aligned}
+    E(\rho)
+    &amp;= E_1\rho E_1^\dagger + E_2\rho E_2^\dagger
+  \\&amp;= \frac12(F_1+F_2)\rho(F_1+F_2)^\dagger + \frac12(F_1-F_2)\rho(F_1-F_2)^\dagger
+  \\&amp;= F_1\rho F_1^\dagger + F_2\rho F_2^\dagger
+  \\&amp;= F(\rho).
+  \end{aligned}
+</eq>
+You can also check that the two channels can be implemented by the following two circuits:</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-70-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The <eq env="math">\texttt{c-NOT}</eq> gate appears here as the measurement gate.
+The target qubit measures the control qubit in either the standard basis (the operation <eq env="math">\mathcal{F}</eq>) or in the Hadamard basis (the operation <eq env="math">\mathcal{E}</eq>).
+The extra Hadamard gate on the target qubit has no effect on the control qubit.</p>
 </div>
 <div id="c-not-again" class="section level3" number="10.5.11">
 <h3><span class="header-section-number">10.5.11</span> C-NOT, again</h3>
-<p><strong>!!!TODO!!!</strong></p>
+<p>We can study the above example more generally, as follows.
+Let us consider a single-qubit channel induced by the action of the <eq env="math">\texttt{c-NOT}</eq> gate.
+Recall that the unitary operator associated with the <eq env="math">\texttt{c-NOT}</eq> gate can be written as
+<eq env="displaymath">
+  U=|0\rangle\langle 0|\otimes\mathbf{1}+ |1\rangle\langle 1|\otimes X
+</eq>
+where is <eq env="math">X</eq> is the Pauli operator <eq env="math">\sigma_x</eq>, i.e. the <eq env="math">\texttt{NOT}</eq> gate.</p>
+<p>Let us step through the following simple circuit:</p>
+<p><img src="quantum-info_files/figure-html/unnamed-chunk-71-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The control qubit will be our system, and the target qubit, initially in a fixed state <eq env="math">|e\rangle\equiv|0\rangle</eq>, will play the role of the environment.
+Let the <eq env="math">\{|e_1\rangle,|e_2\rangle\}</eq> basis be the standard basis of the target qubit <eq env="math">\{|0\rangle,|1\rangle\}</eq>.
+In this case we have<a href="#fn124" class="footnote-ref" id="fnref124"><sup>124</sup></a>
+<eq env="displaymath">
+  \begin{aligned}
+    E_1
+    &amp;= \langle e_1|U|e\rangle
+  \\&amp;= \langle 0|U|0\rangle
+  \\&amp;= \langle 0| \big(|0\rangle\langle 0|\otimes\mathbf{1}+|1\rangle\langle 1|\otimes X\big) |0\rangle
+  \\&amp;= |0\rangle\langle 0|\langle 0|\mathbf{1}|0\rangle + |1\rangle\langle 1|\langle 0|X|0\rangle
+  \\&amp;= |0\rangle\langle 0|
+  \end{aligned}
+</eq>
+and
+<eq env="displaymath">
+  \begin{aligned}
+    E_2
+    &amp;= \langle e_2|U|e\rangle
+  \\&amp;= \langle 1|U|0\rangle
+  \\&amp;= \langle 1| \big(|0\rangle\langle 0|\otimes\mathbf{1}+|1\rangle\langle 1|\otimes X\big) |0\rangle
+  \\&amp;= |0\rangle\langle 0|\langle 1|\mathbf{1}|0\rangle + |1\rangle\langle 1|\langle 1|X|0\rangle
+  \\&amp;= |1\rangle\langle 1|
+  \end{aligned}
+</eq>
+It is then easy to see that <eq env="math">E_1^\dagger E_1 + E_2^\dagger E_2=|0\rangle\langle 0|+|1\rangle\langle 1|=\mathbf{1}</eq>.</p>
+<p>The unitary part of the evolution
+<eq env="displaymath">
+  \begin{aligned}
+    |\psi\rangle|e\rangle
+    \longmapsto &amp; E_1|\psi\rangle|e_1\rangle+E_2|\psi\rangle|e_2\rangle
+    \\= &amp;|0\rangle\langle 0|\psi\rangle|0\rangle+|1\rangle\langle 1|\psi\rangle|1\rangle
+    \\= &amp;\langle 0|\psi\rangle|0\rangle|0\rangle+ \langle 1|\psi\rangle|1\rangle|1\rangle
+  \end{aligned}
+</eq>
+is a familiar <eq env="math">\texttt{c-NOT}</eq> entangling process: if <eq env="math">|\psi\rangle=\alpha|0\rangle+\beta|1\rangle</eq>, then <eq env="math">|\psi\rangle|0\rangle</eq> becomes <eq env="math">\alpha|0\rangle|0\rangle+\beta|1\rangle|1\rangle</eq>.</p>
+<p>The final state of the system qubit, the output, is given by
+<eq env="displaymath">
+  \begin{aligned}
+    \rho'
+    &amp;= E_1\rho E_1^\dagger + E_2\rho E_2^\dagger
+  \\&amp;= |0\rangle\langle 0|\rho|0\rangle\langle 0| + |1\rangle\langle 1|\rho|1\rangle\langle 1|
+  \\&amp;= \rho_{00}|0\rangle\langle 0|+\rho_{11}|1\rangle\langle 1|
+  \end{aligned}
+</eq>
+or, in matrix form, by
+<eq env="displaymath">
+  \begin{bmatrix}
+    |\alpha|^2 &amp; \alpha\beta^\star
+  \\\alpha^\star\beta &amp; |\beta|^2
+  \end{bmatrix}
+  =\rho
+  \longmapsto
+  \rho'=
+  \begin{bmatrix}
+    |\alpha|^2 &amp; 0
+  \\0 &amp; |\beta|^2
+  \end{bmatrix}.
+</eq>
+As we can see, the diagonal elements of <eq env="math">\rho</eq> survive, and the off-diagonal elements (i.e. the coherences) disappear.
+You may think about this operation as being equivalent to measuring the system qubit in the standard basis and then forgetting the result.</p>
 
 </div>
 </div>
@@ -1244,7 +1390,7 @@ Here the partial trace is over the second system in our definition of <eq env="m
 <div class="footnotes">
 <hr />
 <ol start="109">
-<li id="fn109"><p>Recall that, given a pair of Hilbert spaces <eq env="math">\mathcal{H}_{\mathcal{A}}</eq> and <eq env="math">\mathcal{H}_{\mathcal{B}}</eq>, we denote the set of (bounded) linear operators from <eq env="math">\mathcal{H}_{\mathcal{A}}</eq> to <eq env="math">\mathcal{H}_{\mathcal{B}}</eq> by <eq env="math">\mathscr{B}(\mathcal{H}_{\mathcal{A}},\mathcal{H}_{\mathcal{B}})</eq>. The shorthand <eq env="math">\mathscr{B}(\mathcal{H})</eq> is used to denote <eq env="math">\mathcal{B(\mathcal{H},\mathcal{H})}</eq>. Thus an element of <eq env="math">\mathscr{B}(\mathcal{H})</eq> is exactly a density operator on <eq env="math">\mathcal{H}</eq>.<a href="chapter10.html#fnref109" class="footnote-back">↩︎</a></p></li>
+<li id="fn109"><p>Recall that, given a pair of Hilbert spaces <eq env="math">\mathcal{H}_{\mathcal{A}}</eq> and <eq env="math">\mathcal{H}_{\mathcal{B}}</eq>, we denote the set of (bounded) linear operators from <eq env="math">\mathcal{H}_{\mathcal{A}}</eq> to <eq env="math">\mathcal{H}_{\mathcal{B}}</eq> by <eq env="math">\mathscr{B}(\mathcal{H}_{\mathcal{A}},\mathcal{H}_{\mathcal{B}})</eq>. The shorthand <eq env="math">\mathscr{B}(\mathcal{H})</eq> is used to denote <eq env="math">\mathscr{B}(\mathcal{H},\mathcal{H})</eq>. Thus an element of <eq env="math">\mathscr{B}(\mathcal{H})</eq> is exactly a density operator on <eq env="math">\mathcal{H}</eq>.<a href="chapter10.html#fnref109" class="footnote-back">↩︎</a></p></li>
 <li id="fn110"><p><a href="https://en.wikipedia.org/wiki/W._Forrest_Stinespring">William Forrest “Woody” Stinespring</a> (1929–2012) was an American mathematician specialising in operator theory.<a href="chapter10.html#fnref110" class="footnote-back">↩︎</a></p></li>
 <li id="fn111"><p>Consider <eq env="math">U</eq> and <eq env="math">U(\mathbf{1}\otimes R)</eq>, where <eq env="math">R</eq> acts only on <eq env="math">\mathcal{H}_E</eq>. Do these two unitaries also define the same quantum channel?<a href="chapter10.html#fnref111" class="footnote-back">↩︎</a></p></li>
 <li id="fn112"><p>Unitary evolutions form a group; quantum channels form a <em><a href="https://en.wikipedia.org/wiki/Semigroup">semigroup</a></em>. Quantum channels are invertible only if they are unitary operations or simple isometric embeddings, such as including the environment in some fixed state and then discarding it right away, without any intermediate interaction.<a href="chapter10.html#fnref112" class="footnote-back">↩︎</a></p></li>
@@ -1259,6 +1405,7 @@ Here the partial trace is over the second system in our definition of <eq env="m
 <li id="fn121"><p>Here, the Choi matrix is of the form <eq env="math">\sum_k|v_k\rangle\langle v_k|</eq>, where <eq env="math">|v_k\rangle=\mathbf{1}\otimes E_k |\Omega\rangle</eq>. This is a positive semidefinite matrix since, for any vector <eq env="math">|\Psi\rangle</eq>, the expression <eq env="math">\sum_k \langle\Psi |v_k\rangle\langle v_k|\Psi\rangle</eq> is non-negative.<a href="chapter10.html#fnref121" class="footnote-back">↩︎</a></p></li>
 <li id="fn122"><p>“PPT” stands for <em>positive partial transpose</em>.<a href="chapter10.html#fnref122" class="footnote-back">↩︎</a></p></li>
 <li id="fn123"><p>We write <eq env="math">X^{T_{\mathcal{A}}}</eq> to mean the partial transpose over <eq env="math">\mathcal{A}</eq>, i.e. <eq env="math">T\otimes\mathcal{I}</eq>.<a href="chapter10.html#fnref123" class="footnote-back">↩︎</a></p></li>
+<li id="fn124"><p>Be careful here, the proliferation of <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq> can be confusing. Make sure you do indeed apply <eq env="math">\langle 0|\square|0\rangle</eq> and <eq env="math">\langle 1|\square|0\rangle</eq> <em>only to the environment</em>, i.e. to the second term in the tensor products.<a href="chapter10.html#fnref124" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <script type="text/javascript" src="../sidenotes.js"></script>
