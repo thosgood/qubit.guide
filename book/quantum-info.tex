@@ -38,52 +38,45 @@
 \crefformat{equation}{(#2#1#3)}
 
 
-% \newenvironment{idea}%
-% {\bigskip\noindent\begin{minipage}{\textwidth}\smallskip\begin{tcolorbox}[colback=gray!10,boxrule=0.01mm]\noindent}%
-% {\end{tcolorbox}\end{minipage}\bigskip}
-
-% \newtheorem*{idea}{Idea}
 \newenvironment{idea}{\noindent}{\medskip}
 
 \tcolorboxenvironment{idea}{
-  boxrule=0pt,
-  boxsep=0pt,
-  colback={secondary!20},
+  boxrule=2pt,
+  boxsep=3pt,
+  colback={white},
+  colframe={secondary},
   enhanced jigsaw,
-  borderline west={2pt}{0pt}{secondary},
-  sharp corners,
+  rounded corners,
   before skip=10pt,
   after skip=10pt,
-  breakable,
 }
 
 \newtheorem*{scenario}{Scenario}
 
 \tcolorboxenvironment{scenario}{
-  boxrule=0pt,
-  boxsep=0pt,
-  colback={gray!20},
+  boxrule=2pt,
+  boxsep=3pt,
+  colback={white},
+  colframe={gray},
   enhanced jigsaw,
-  borderline west={2pt}{0pt}{gray},
-  sharp corners,
+  rounded corners,
   before skip=10pt,
   after skip=10pt,
-  breakable,
 }
 
 \newtheorem*{circuit}{Circuit}
 
 \tcolorboxenvironment{circuit}{
-  boxrule=0pt,
-  boxsep=0pt,
-  colback={primary!20},
+  boxrule=2pt,
+  boxsep=3pt,
+  colback={white},
+  colframe={primary},
   enhanced jigsaw,
-  borderline west={2pt}{0pt}{primary},
-  sharp corners,
+  rounded corners,
   before skip=10pt,
   after skip=10pt,
-  breakable,
 }
+
 
 \renewcommand{\footnote}[1]{\en{#1}}
 
@@ -92,6 +85,13 @@
 \let\oldpart\part
 \renewcommand\part{\clearpage\oldpart}
 
+
+\pagestyle{fancy}
+\lhead{\thesubsection\,\,{\itshape\rightmark}}
+\rhead{\thepage}
+\fancyfoot{}
+
+
 \usepackage{etoolbox}
 \AtBeginEnvironment{quote}{\itshape}
 
@@ -99,7 +99,7 @@
 
 \title{Lectures on Quantum Information Science}
 \author{Artur Ekert and Tim Hosgood}
-\date{Last updated: January 15, 2021}
+\date{Last updated: January 16, 2021}
 
 
 \begin{document}
@@ -128,7 +128,7 @@
 For the past however-many years, \href{https://www.arturekert.com/}{Artur Ekert} has been teaching the masters course ``Introduction to Quantum Information'' at the University of Oxford.
 During this time, many versions of accompanying lecture notes have come and gone, with constant improvements and changes being made.
 The version that you will find on this website has been carefully edited by \href{https://thosgood.com}{Tim Hosgood} into a cohesive ``book'', containing additional exercises and topics.
-Thanks also go to Zhenyu Cai for many helpful comments and corrections.
+Thanks also go to Zhenyu Cai for many helpful comments and corrections, as well as Yihui Xie for developing the \href{https://bookdown.org/yihui/bookdown/}{Bookdown package} with which this document was built.
 
 For more information, see the \href{https://thosgood.com/quantum-info}{accompanying website}.
 
@@ -178,9 +178,9 @@ Some of these things are covered at the end of this chapter.
     action of quantum gates on the Bloch vector
   \end{itemize}
 \item
-  The definition of quantum entanglement (tensor product structure)
+  The definition of quantum entanglement (the tensor product structure)
 \item
-  The no-cloning theorem and quantum teleportation
+  The no-cloning theorem, and quantum teleportation
 \item
   Quantum gates
 
@@ -222,17 +222,21 @@ Some of these things are covered at the end of this chapter.
     Quantum correlations
   \item
     CHSH inequality
-  \item
-    density matrices
+  \end{itemize}
+\item
+  Density matrices
+
+  \begin{itemize}
+  \tightlist
   \item
     partial trace
   \item
-    statistical mixture of pure states,
+    statistical mixture of pure states
+  \item
+    Born rule for density matrices
+  \item
+    quantum entanglement in terms of density matrices
   \end{itemize}
-\item
-  Born rule for density matrices
-\item
-  Quantum entanglement in terms of density matrices
 \item
   Completely positive maps
 
@@ -1427,7 +1431,9 @@ If we are willing to accept a probability of error no larger than \(\epsilon\), 
 About \textbf{quantum bits} and \textbf{quantum circuits}, including the ``impossible'' \textbf{square root of \(\texttt{NOT}\)}, as well as an introduction to \textbf{single-qubit unitaries} and rotations of the \textbf{Bloch sphere}, and the implications concerning \textbf{universal gates}.
 \end{quote}
 
-\textbf{!!!TODO!!!}
+When studying classical information theory, one single bit isn't usually the most interesting object to think about --- it's either \(0\) or \(1\).
+Yet in the quantum case, just working with one ``quantum bit'' (which we call a \textbf{qubit}) opens up a whole world of interesting mathematics.
+In fact, \textbf{single qubit interference} is arguably one of the fundamental building blocks for quantum computing, and deserves to be thoroughly investigated and understood.
 
 \hypertarget{composing-quantum-operations}{%
 \subsection{Composing quantum operations}\label{composing-quantum-operations}}
@@ -2200,13 +2206,15 @@ There is no reason why probability theory (or any other \emph{a priori} mathemat
 
 \end{idea}
 
+
+
 \begin{figure}[H]
 
 {\centering \includegraphics{quantum-info_files/figure-latex/classical-guess-double-beam-splitter-1} 
 
 }
 
-\caption{The two possible classical scenarios. Note that this is **not** what actually happens in the real physical world!}\label{fig:classical-guess-double-beam-splitter}
+\caption{The two possible classical scenarios. Note that this is \textbf{not} what actually happens in the real physical world!}\label{fig:classical-guess-double-beam-splitter}
 \end{figure}
 
 In experimental reality, when the optical paths between the two beam-splitters are the same, the photon fired from input port \(|0\rangle\) \emph{always} strikes detector 1 and \emph{never} detector 0 (and the photon fired from input port \(|1\rangle\) \emph{always} strikes detector 0 and \emph{never} detector 1).
@@ -2262,9 +2270,12 @@ However, instead of going through all the paths in this diagram and linking spec
   \end{bmatrix}
   = iX
 \]
-where \(X=\begin{bmatrix}0&1\\1&0\end{bmatrix}\) is the \(\texttt{NOT}\) operator.
+where
+\[
+  X = \texttt{NOT} = \begin{bmatrix}0&1\\1&0\end{bmatrix}.
+\]
 
-Recalling \href{Chapter\%202}{Chapter 2}, we see that beam-splitters give a physical way of constructing the square root of \(\texttt{NOT}\).
+Recalling \protect\hyperlink{chapter2}{Chapter 2}, we see that beam-splitters give a physical way of constructing the square root of \(\texttt{NOT}\).
 
 \begin{idea}
 
@@ -2401,7 +2412,7 @@ The most popular instance of a Mach--Zehnder interferometer involves only symmet
   \end{bmatrix}
 \]
 where \(\varphi=\varphi_1-\varphi_0\).
-In fact, when you do all the calculations\footnote{\textbf{!!!TODO!!! explain what calculations you have to do! i.e.~which matrices you need to multiply}} you obtain \(ie^{i\frac{\varphi_0+\varphi_1}{2}}U\) rather than \(U\), but the global phase factor \(ie^{i\frac{\varphi_0+\varphi_1}{2}}\) is common to all the amplitudes in the matrix and as such it does not contribute to the resulting probabilities.\footnote{Why is this? Hint: think about the eigenvalues of a matrix \(A\) and of the matrix \(\mu A\), where \(\mu\) is a complex number with \(|\mu|=1\).}
+In fact, when you do all the calculations\footnote{That is, when you write down the matrices describing the action of the symmetric beam-splitters and the phase gates, and then multiply them all together (which is an exercise worth doing).} you obtain \(ie^{i\frac{\varphi_0+\varphi_1}{2}}U\) rather than \(U\), but the global phase factor \(ie^{i\frac{\varphi_0+\varphi_1}{2}}\) is common to all the amplitudes in the matrix and as such it does not contribute to the resulting probabilities.\footnote{Why is this? Hint: think about the eigenvalues of a matrix \(A\) and of the matrix \(\mu A\), where \(\mu\) is a complex number with \(|\mu|=1\).}
 
 \hypertarget{the-pauli-matrices-algebraically}{%
 \subsection{The Pauli matrices, algebraically}\label{the-pauli-matrices-algebraically}}
@@ -2559,7 +2570,8 @@ This additional unitarity restriction allows us to parametrise \(u_0\) and \(\ve
   U
   = (\cos\theta)\mathbf{1}+ (i\sin\theta){\vec{n}}\cdot{\vec{\sigma}}.
 \]
-An alternative way of writing this expression is
+
+An alternative way of writing this expression is\footnote{Although this looks neat and tidy, the normal convention is to parametrise so that \(U=e^{i\frac{-\theta}{2}\vec{n}\cdot\vec{\sigma}}\), and then the direction follows from the right-hand rule, and the rotation corresponds to that in the Bloch sphere. It is a useful exercise to show that you can write \(U\) in this way as well.}
 \[
   U
   = e^{i\theta {\vec{n}}\cdot{\vec{\sigma}}},
@@ -3599,7 +3611,8 @@ The complete measurements are defined by rank one projectors, \(P_k=|e_k\rangle\
 \section{Quantum entanglement}\label{chapter5}}
 
 \begin{quote}
-On \ldots{} \textbf{!!!TODO!!!}
+About the fundamental tool of quantum computing: \textbf{entanglement}, via the formalism of \textbf{tensor products}, which was the missing ingredient from our previous formalism of quantum theory.
+Also about various \textbf{controlled gates}, including the always useful \textbf{controlled-NOT}.
 \end{quote}
 
 We now know everything we need to know about a single qubit and its quantum behaviour.
@@ -4793,11 +4806,6 @@ About quantum interference in disguise: \textbf{Hadamard, function evaluation, H
 Also about the early quantum algorithms and how they deal with querying oracles, searching for a needle in a haystack, and estimating periodicity of certain functions.
 \end{quote}
 
-\textbf{!!!TODO!!!}
-
-\hypertarget{quantum-boolean-function-evaluation}{%
-\subsection{Quantum Boolean function evaluation}\label{quantum-boolean-function-evaluation}}
-
 Classical computers essentially evaluate functions: given \(n\)-bits of input they produce \(m\)-bits of output that are uniquely determined by the input; that is, they find the value of
 \[
   f\colon \{0,1\}^n \to \{0,1\}^m
@@ -4807,6 +4815,11 @@ A function with an \(m\)-bit value is equivalent to \(m\) Boolean functions, eac
 \[
   f\colon \{0,1\}^n \to  \{0,1\}.
 \]
+How can we adapt this to the world of quantum computing?
+
+\hypertarget{quantum-boolean-function-evaluation}{%
+\subsection{Quantum Boolean function evaluation}\label{quantum-boolean-function-evaluation}}
+
 \emph{In quantum computation, all elementary operations are reversible} (unitary), so we compute Boolean functions in a reversible fashion as
 \[
   |x\rangle|y\rangle \mapsto |x\rangle|y\oplus f(x)\rangle.
@@ -5146,8 +5159,7 @@ Our task is to find, using the fewest queries possible, an input \(x\in\{0,1\}^n
 
 \end{scenario}
 
-Suppose that we know that, amongst the \(N=2^n\) binary strings, there are \(M\) which are ``tagged'', with \(N\gg M\).
-\textbf{!!!TODO!!! explain what we mean by ``tagged''}
+Suppose that we know that, amongst the \(N=2^n\) binary strings, there are \(M\ll N\) which are ``tagged'', i.e.~on which \(f\) evaluates to \(1\).
 There is no structure in the database, and so any classical search requires around \(N/M\) steps, i.e.~the function \(f\) must be evaluated roughly \(N/M\) times.
 
 In contrast, there is a quantum search algorithm, implemented by the circuit below, that was proposed in 1996 by Lov Grover, and which requires only roughly \(\sqrt{N/M}\) steps.
@@ -5239,7 +5251,7 @@ Here we will see the simplest quantum algorithm that shows an exponential speed-
 
 \begin{scenario}
 
-We are presented with an oracle that computes some unknown function \(f\colon\{0,1\}^n\to\{0,1\}^n\), but we are promised that \(f\) satisfies\footnote{This is equivalent to saying that \(f\) is \textbf{two-to-one}: for any \(y\in\{0,1\}^n\) such that there exists some \(x\in\{0,1\}^n\) with \(f(x)=y\), there exists exactly one other \(x'\neq x\) such that \(f(x')=y\) as well.}
+We are presented with an oracle that computes some unknown function \(f\colon\{0,1\}^n\to\{0,1\}^n\), but we are promised that \(f\) satisfies, for all \(x\in\{0,1\}^n\),\footnote{This is equivalent to saying that \(f\) is \textbf{two-to-one}: for any \(y\in\{0,1\}^n\) such that there exists some \(x\in\{0,1\}^n\) with \(f(x)=y\), there exists exactly one other \(x'\neq x\) such that \(f(x')=y\) as well.}
 \[
   f(x) = f(x\oplus s)
 \]
@@ -5286,7 +5298,6 @@ The second Hadamard transform on the first register then yields the final output
 \]
 
 Now, if we measure the second register \emph{before} applying the second Hadamard transform to the first, we obtain one of the \(2^{n-1}\) possible values of \(f(x)\), each equally likely.\footnote{As we shall see in a moment, the actual measurement on the second register is not actually necessary.}
-\textbf{!!!TODO!!! have I understood this correctly?}
 
 Suppose that the outcome of the measurement is \(f(a)\).
 Given that both \(a\) and \(a\oplus s\) are mapped to \(f(a)\) by \(f\), the first register then collapses to the state
@@ -5398,10 +5409,16 @@ The exponential separation that this algorithm demonstrates between quantum and 
 \section{Bell's theorem}\label{chapter7}}
 
 \begin{quote}
-About \textbf{quantum correlations}, which are stronger than any correlations allowed by classical physics, and about the \href{https://en.wikipedia.org/wiki/CHSH_inequality}{\textbf{CHSH inequality}} which demonstrates this fact.
+About \textbf{quantum correlations}, which are stronger than any correlations allowed by classical physics, and about the \href{https://en.wikipedia.org/wiki/CHSH_inequality}{\textbf{CHSH inequality}} which demonstrates this fact, and which is a variant of \textbf{Bell's theorem}.
 \end{quote}
 
-\textbf{!!!TODO!!!} maybe also link to that minutephysics video about the polarisation ``corollary''?
+Every now and then, it is nice to put down your lecture notes and go and see how things actually work in the real world.
+What is wonderful (and surprising) about quantum theory is that it turns up in many places that we might not expect it to, such as in the polarisation of light, where we stumble across an intriguing paradox.
+
+If we take two polarising filters, and place them on top of each other with their polarisations oriented at \(90^\circ\) to one another, then basically no light will pass through, since the only light passing through the first filter is orthogonally polarised with respect to the second filter, and is thus blocked.
+But then, if we take a third filter, and place it in between the other two, at an angle in the middle of both (i.e.~at \(45^\circ\)), then somehow \emph{more} light is let through than if the middle filter weren't there at all.\footnote{For the more visually inclined, there is a \href{https://www.youtube.com/watch?v=zcqZHYo7ONs}{video on YouTube by minutephysics} about this experiment.}
+
+This is intrinsically linked to Bell's theorem, which proves the technical sounding statement that ``any local real hidden variable theory must satisfy certain statistical properties'', which is \emph{not} satisfied in reality, as many quantum mechanical experiments (such as the above) show!
 
 \hypertarget{quantum-correlations}{%
 \subsection{Quantum correlations}\label{quantum-correlations}}
@@ -5480,7 +5497,7 @@ Then, in 1964, John Bell showed that the hidden variable hypothesis can be teste
 \subsection{CHSH inequality}\label{chsh-inequality}}
 
 \begin{quote}
-Upper bound on \textbf{classical} correlations.
+An upper bound on \textbf{classical} correlations.
 \end{quote}
 
 We will describe the most popular version of Bell's argument, introduced in 1969 by John Clauser, Michael Horne, Abner Shimony, and Richard Holt (CHSH).
@@ -5589,7 +5606,7 @@ The behaviour of entangled quantum systems cannot be explained by any local hidd
 \subsection{Tsirelson's inequality}\label{tsirelsons-inequality}}
 
 \begin{quote}
-Upper bound on \textbf{quantum} correlations.
+An upper bound on \textbf{quantum} correlations.
 \end{quote}
 
 One may ask if \(|\langle S\rangle|= 2\sqrt{2}\) is the maximal violation of the CHSH inequality, and the answer is ``yes, it is'': quantum correlations cannot achieve any value of \(|\langle S\rangle|\) larger than \(2\sqrt{2}\).
@@ -5625,7 +5642,7 @@ This result is known as the \textbf{Tsirelson inequality}.
 \section{Decoherence, and elements of quantum error correction}\label{chapter8}}
 
 \begin{quote}
-About \ldots{} \textbf{!!!TODO!!!}
+About the one big problem that hinders us from physically implementing everything that we've learnt so far, namely \textbf{decoherence}, as well as how we can start to deal with it via some elementary \textbf{error correction}.
 \end{quote}
 
 In principle we know how to build a quantum computer: we can start with simple quantum logic gates and try to integrate them together into quantum networks.
@@ -5968,7 +5985,8 @@ Computation on encoded states using noisy gates requires few more tricks (to be 
 \section{Density matrices}\label{chapter9}}
 
 \begin{quote}
-About \ldots{} \textbf{!!!TODO!!!}
+About \textbf{density matrices}, and how they help to solve the problem introduced by entangled states, as well as how they let us talk about mixtures and subsystems.
+Also a first look at the \textbf{partial trace}.
 \end{quote}
 
 We cannot always assign a definite state vector to a quantum system.
@@ -6206,7 +6224,7 @@ In fact, the optimal way of distinguishing quantum states with different density
 \hypertarget{mixed-states-of-a-qubit-and-the-bloch-sphere}{%
 \subsection{Mixed states of a qubit, and the Bloch sphere}\label{mixed-states-of-a-qubit-and-the-bloch-sphere}}
 
-\textbf{!!!TODO!!! mention the part in chapters 2 and 3 where we have already talked about this, and maybe rewrite the following with that in mind}
+We have already talked in some depth about the Bloch sphere in \protect\hypertarget{chapter2}{}{Chapter 2} and \protect\hypertarget{chapter3}{}{Chapter 3}, but we approach the topic again here from a slightly different point of view.
 
 There is an elegant way to visualise the set of density operators for a qubit.
 The most general Hermitian \((2\times 2)\) matrix has four real parameters and can be expanded in the basis composed of the identity and the three Pauli matrices: \(\{\mathbf{1}, \sigma_x, \sigma_y, \sigma_z\}\).
@@ -6238,7 +6256,7 @@ The sum of the two eigenvalues of \(\rho\) is, of course, equal to one (\(\opera
 where \(s=|\vec{s}|\).
 It follows that the two eigenvalues of \(\rho\) are \(\frac12(1\pm s)\).
 They have to be non-negative, and so \(s\), the length of the Bloch vector, cannot exceed one.\footnote{One might hope that there is an equally nice visualisation of the density operators in higher dimensions. Unfortunately there isn't.}
-We can now visualise the convex set of \(2\times 2\) density matrices as a unit ball in three-dimensional Euclidean space: the extremal points, which represent pure states, are the points on the boundary, i.e.~the surface of the ball (\(s=1\)); the maximally mixed state \(\mathbf{1}/2\) corresponds to \(s=0\), i.e.~the centre of the ball.
+We can now visualise the convex set of \((2\times 2)\) density matrices as a unit ball in three-dimensional Euclidean space: the extremal points, which represent pure states, are the points on the boundary, i.e.~the surface of the ball (\(s=1\)); the maximally mixed state \(\mathbf{1}/2\) corresponds to \(s=0\), i.e.~the centre of the ball.
 The length of the Bloch vector \(s\) can be thought of as a ``purity'' of a state.
 
 \hypertarget{subsystems-of-entangled-systems}{%
@@ -6328,7 +6346,7 @@ The tensor product structure of this \((4\times 4)\) matrix means that it is has
     \end{array}
   \right]
 \]
-where \(P,Q,R,S\) are \(2\times 2\) sized sub-matrices.
+where \(P,Q,R,S\) are \((2\times 2)\) sized sub-matrices.
 The two partial traces can then be evaluated as\footnote{Take any of the Bell states, write its \((4\times 4)\)-density matrix explicitly, and then trace over each qubit. In each case you should get the maximally mixed state.}
 \[
   \begin{aligned}
@@ -6506,7 +6524,7 @@ What does this non-unitary quantum evolution look like?
 
 Mathematically speaking\footnote{Recall that, given a pair of Hilbert spaces \(\mathcal{H}_{\mathcal{A}}\) and \(\mathcal{H}_{\mathcal{B}}\), we denote the set of (bounded) linear operators from \(\mathcal{H}_{\mathcal{A}}\) to \(\mathcal{H}_{\mathcal{B}}\) by \(\mathscr{B}(\mathcal{H}_{\mathcal{A}},\mathcal{H}_{\mathcal{B}})\). The shorthand \(\mathscr{B}(\mathcal{H})\) is used to denote \(\mathscr{B}(\mathcal{H},\mathcal{H})\). Thus an element of \(\mathscr{B}(\mathcal{H})\) is exactly a density operator on \(\mathcal{H}\).}, we want to characterise \textbf{physically admissible} maps
 \[
-  \mathcal{B}\colon \mathscr{B}(\mathcal{H}) \to \mathscr{B}(\mathcal{H}')
+  \mathcal{E}\colon \mathscr{B}(\mathcal{H}) \to \mathscr{B}(\mathcal{H}')
 \]
 that map density operators to density operators.
 We will call them \textbf{quantum channels}.
@@ -7097,10 +7115,9 @@ In practice it is more convenient to use the following formula (which holds for 
 \begin{idea}
 
 \[
- \operatorname{tr}\mathcal{E}(X)Y
- = \operatorname{tr}\widetilde{\mathcal{E}}(X^T\otimes Y)
+ \operatorname{tr}[\mathcal{E}(X)Y]
+ = \operatorname{tr}[\widetilde{\mathcal{E}}(X^T\otimes Y)]
 \]
-\textbf{!!!TODO!!! add some brackets here}
 
 \end{idea}
 

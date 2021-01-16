@@ -3,11 +3,6 @@
 > About quantum interference in disguise: **Hadamard, function evaluation, Hadamard**.
 > Also about the early quantum algorithms and how they deal with querying oracles, searching for a needle in a haystack, and estimating periodicity of certain functions.
 
-**!!!TODO!!!**
-
-
-## Quantum Boolean function evaluation
-
 Classical computers essentially evaluate functions: given $n$-bits of input they produce $m$-bits of output that are uniquely determined by the input; that is, they find the value of
 $$
   f\colon \{0,1\}^n \to \{0,1\}^m
@@ -17,6 +12,11 @@ A function with an $m$-bit value is equivalent to $m$ Boolean functions, each wi
 $$
   f\colon \{0,1\}^n \to  \{0,1\}.
 $$
+How can we adapt this to the world of quantum computing?
+
+
+## Quantum Boolean function evaluation
+
 _In quantum computation, all elementary operations are reversible_ (unitary), so we compute Boolean functions in a reversible fashion as
 $$
   \ket{x}\ket{y} \mapsto \ket{x}\ket{y\oplus f(x)}.
@@ -461,8 +461,7 @@ We are presented with an oracle that computes some unknown function $f\colon\{0,
 Our task is to find, using the fewest queries possible, an input $x\in\{0,1\}^n$ such that $f(x)=1$.
 :::
 
-Suppose that we know that, amongst the $N=2^n$ binary strings, there are $M$ which are "tagged", with $N\gg M$.
-**!!!TODO!!! explain what we mean by "tagged"**
+Suppose that we know that, amongst the $N=2^n$ binary strings, there are $M\ll N$ which are "tagged", i.e. on which $f$ evaluates to $1$.
 There is no structure in the database, and so any classical search requires around $N/M$ steps, i.e. the function $f$ must be evaluated roughly $N/M$ times.
 
 In contrast, there is a quantum search algorithm, implemented by the circuit below, that was proposed in 1996 by Lov Grover, and which requires only roughly $\sqrt{N/M}$ steps.
@@ -624,7 +623,7 @@ If these can be checked at a rate of, say, one million keys per second, then a c
 Here we will see the simplest quantum algorithm that shows an exponential speed-up compared to the best classical algorithm.
 
 ::: {.scenario data-latex=""}
-We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}^n$, but we are promised that $f$ satisfies^[This is equivalent to saying that $f$ is **two-to-one**: for any $y\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ with $f(x)=y$, there exists exactly one other $x'\neq x$ such that $f(x')=y$ as well.]
+We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}^n$, but we are promised that $f$ satisfies, for all $x\in\{0,1\}^n$,^[This is equivalent to saying that $f$ is **two-to-one**: for any $y\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ with $f(x)=y$, there exists exactly one other $x'\neq x$ such that $f(x')=y$ as well.]
 $$
   f(x) = f(x\oplus s)
 $$
@@ -709,7 +708,6 @@ $$
 $$
 
 Now, if we measure the second register _before_ applying the second Hadamard transform to the first, we obtain one of the $2^{n-1}$ possible values of $f(x)$, each equally likely.^[As we shall see in a moment, the actual measurement on the second register is not actually necessary.]
-**!!!TODO!!! have I understood this correctly?**
 
 Suppose that the outcome of the measurement is $f(a)$.
 Given that both $a$ and $a\oplus s$ are mapped to $f(a)$ by $f$, the first register then collapses to the state
