@@ -41,13 +41,7 @@ For any problems or queries regarding this site or its contents, please get in t
 ## To-do
 
 1. **only one footnote per paragraph**
-    + generally, **check all sidenotes**
-    + if they all look good, then can we switch back to `\en` in the latex version please?
     + **improve sidenote y-positioning using jquery**
         - find the previous `.footnote-ref` in the DOM and align with that
-1. replace links to sections with links named "Chapter 3", etc.
 1. pdf title page
-1. **pdf output**
-    + overlapping in the header (section/subsection names)
 1. **search for "TODO"**
-1. actually turn all the `\tr_A` into `\tr_{\mathcal{A}}`, the `\rho^A` into `\rho^{\mathcal{A}}`, the `\mathcal{H}_A` into `\mathcal{H}_{\mathcal{A}}`, etc.
