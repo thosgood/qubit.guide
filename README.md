@@ -30,6 +30,8 @@ Some excellent lecture notes on quantum information theory are
 A bit more idiosyncratic and fun to read, but still very informative, is
 > S. Aaronson. _Quantum Computing since Democritus_. Cambridge University Press, 2013. (Complementary lecture notes also available [here](https://www.scottaaronson.com/democritus/)).
 
+Finally, the Quantum Open Source Foundation has a big list of learning resources at [qosf.org/learn_quantum/](https://www.qosf.org/learn_quantum/).
+
 
 ## Contact
 
