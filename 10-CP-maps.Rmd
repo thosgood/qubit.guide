@@ -48,13 +48,13 @@ Consider a physical system, prepared in some input state $\ket{\psi}\in\mathcal{
 The two systems interact, and their joint unitary evolution $U$ produces, in general, an entangled state.
 The system itself, after discarding the environment, ends in an output state $\rho'$, which is given by taking a partial trace, as shown in Figure \@ref(fig:joint-system-discard-output).
 
-(ref:joint-system-discard-output-caption) The output (discarding what happens to the environment) is given by $\rho'=\tr_E \big(U\proj{\psi}\otimes\proj{e} U^\dagger\big)$.
+(ref:joint-system-discard-output-caption) The output (discarding what happens to the environment) is given by $\rho'=\tr_E \big(U\proj{\psi}\otimes\proj{e} U^\dagger\big)$. The arrow at the end of the second state's path represents discarding that state.
 
 ```{r joint-system-discard-output,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6,fig.cap='(ref:joint-system-discard-output-caption)'}
 \begin{equation*}
   \begin{quantikz}
     \lstick{input $\ket{\psi}$} & \gate[wires=2]{U} &\rstick{output $\rho'$} \qw
-  \\\lstick{fixed $\ket{e}$} &\hphantom{really wide} &\rstick{discard} \qw
+  \\\lstick{fixed $\ket{e}$} &\hphantom{really wide} &\trash{}
   \end{quantikz}
 \end{equation*}
 ```
@@ -79,19 +79,19 @@ This way of describing the action of a quantum channel is often called the **uni
 As mentioned above, the channel is completely defined by the unitary $U$ and the initial state of the environment $\ket{e}$, but note that, once the system and the environment cease to interact, any operation _on the environment alone_ has no effect on the state of the system.
 That is, the two diagrams in Figure \@ref(fig:environment-same-channel) define the same channel, or, in other words, the unitaries $U$ and $(\id\otimes R)U$, where $R$ acts only on $\mathcal{H}_E$, define the same channel.^[Consider $U$ and $U(\id\otimes R)$, where $R$ acts only on $\mathcal{H}_E$. Do these two unitaries also define the same quantum channel?]
 
-(ref:environment-same-channel-caption) The $\bullet$ here represents discarding the final state of the environment.
+(ref:environment-same-channel-caption) The two circuits here define the same quantum channel.
 
 ```{r environment-same-channel,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6,fig.cap='(ref:environment-same-channel-caption)'}
 \begin{equation*}
   \begin{quantikz}
     \lstick{$\rho$} & \gate[wires=2]{U} &\qw &\qw &\rstick{$\rho'$} \qw
-  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\qw &\qw &\rstick{$\bullet$} \qw
+  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\qw &\qw &\trash{}
   \end{quantikz}
 \end{equation*}
 \begin{equation*}
   \begin{quantikz}
     \lstick{$\rho$} & \gate[wires=2]{U} &\qw &\rstick{$\rho'$} \qw
-  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\gate{R} &\rstick{$\bullet$} \qw
+  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\gate{R} &\trash{}
   \end{quantikz}
 \end{equation*}
 ```
@@ -115,8 +115,7 @@ Firstly:
 \begin{equation*}
   \begin{quantikz}
     \lstick{$\rho$} &\gate[2]{U_A} &\rstick{$\rho'$} \qw & &\gate[2]{U_B} &\rstick{$\rho''$} \qw
-  \\\lstick{$\ket{e}$} &\qw &\qw &\qw &\qw & \ar[d,dash,thickness]\qw
-  \\& & & & &\bullet
+  \\\lstick{$\ket{e}$} &\qw &\qw &\qw &\qw & \trash{}
   \end{quantikz}
 \end{equation*}
 ```
@@ -130,8 +129,7 @@ Secondly:
 \begin{equation*}
   \begin{quantikz}
     \lstick{$\rho$} &\gate[2]{U_A} &\qw &\rstick{$\rho'$} \qw & &\qw &\gate[2]{U_B} &\rstick{$\rho''$} \qw
-  \\\lstick{$\ket{a}$} & &\qw \ar[d,dash,thickness]\qw & & & \lstick{$\ket{b}$} &\qw &\ar[d,dash,thickness]\qw
-  \\& &\bullet & & & & &\bullet
+  \\\lstick{$\ket{a}$} & &\trash{} & & & \lstick{$\ket{b}$} &\qw &\trash{}
   \end{quantikz}
 \end{equation*}
 ```
@@ -513,7 +511,7 @@ Since the square of $\texttt{SWAP}$ is the identity, its eigenvalues are $\pm1$;
 Thus the $\texttt{SWAP}$ matrix has negative eigenvalues, which means that $\mathcal{I}\otimes T$ does _not_ preserve positivity, and therefore $T$ is _not_ a completely positive map.
 If you prefer to see this more explicitly, then you can use the matrix representation of $\proj{\Omega}$, apply the partial transpose $\mathcal{I}\otimes T$, and inspect the resulting matrix:
 $$
-  \half\left[
+  \frac12\left[
   \begin{array}{cc|cc}
     1 & 0 & 0 & 1
   \\0 & 0 & 0 & 0\\
@@ -522,7 +520,7 @@ $$
   \\1 & 0 & 0 & 1
   \end{array}\right]
   \xmapsto{\mathcal{I}\otimes T}
-  \half\left[
+  \frac12\left[
   \begin{array}{cc|cc}
     1 & 0 & 0 & 0
   \\0 & 0 & 1 & 0\\
@@ -1223,7 +1221,7 @@ Another way to understand the freedom in the operator sum representation is to r
 \begin{equation*}
   \begin{quantikz}
     \lstick{input $\rho$} & \gate[wires=2]{U} &\qw &\rstick{output $\rho'$} \qw
-  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\gate{R} &\rstick{discard} \qw
+  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\gate{R} &\trash{}
   \end{quantikz}
 \end{equation*}
 ```
@@ -1305,8 +1303,7 @@ You can also check that the two channels can be implemented by the following two
     & \qw \rstick{$\mathcal{F}(\rho)$}
   \\\lstick{$\ket{0}$}
     & \targ \qw
-    & \ar[d,dash,thickness]\qw
-  \\& & \text{discard} &
+    & \trash{}
   \end{quantikz}
 \end{equation*}
 \begin{equation*}
@@ -1317,8 +1314,7 @@ You can also check that the two channels can be implemented by the following two
     & \qw\rstick{$\mathcal{E}(\rho)$}
   \\\lstick{$\ket{0}$}
     & \targ \qw &\gate{H}
-    & \ar[d,dash,thickness]\qw
-  \\& & & \text{discard} &
+    & \trash{}
   \end{quantikz}
 \end{equation*}
 ```
@@ -1348,7 +1344,7 @@ Let us step through the following simple circuit:
     & \qw \rstick{output $\rho'$}
   \\\lstick{$\ket{0}$}
     & \targ \qw
-    & \qw\rstick{discard}
+    & \trash{}
   \end{quantikz}
 \end{equation*}
 ```
