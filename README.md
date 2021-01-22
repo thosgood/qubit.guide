@@ -46,4 +46,5 @@ For any problems or queries regarding this site or its contents, please get in t
     + **improve sidenote y-positioning using jquery**
         - find the previous `.footnote-ref` in the DOM and align with that
 1. pdf title page
+1. `<p>` vertical padding in `.idea` divs (something caused by overflow?)
 1. **search for "TODO"**
