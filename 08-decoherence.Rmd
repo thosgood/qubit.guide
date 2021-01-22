@@ -57,19 +57,15 @@ This process is what we refer to as **decoherence**.
 
 Suppose the qubit undergoes the usual interference experiment, but, in between the two Hadamard gates, it is affected by **decoherence** (denoted by $\times$), which acts as described above (i.e. $\ket{0}\ket{e}\mapsto\ket{0}\ket{e_{00}}$ and $\ket{1}\ket{e}\mapsto\ket{1}\ket{e_{11}}$).
 
-```{r decoherence-interference,engine='tikz',fig.width=4,fig.cap='The usual interference experiment, but with decoherence.'}
-\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
-\tikzset{operator/.style={draw,fill=white}}
-\newcommand{\ket}[1]{|#1\rangle}
-\begin{tikzpicture}
-  \node (input) at (-2,0) {$\ket{0}$};
-  \node (output) at (3,0) {$\ket{1}$};
-  \draw (input) to node [operator] {$H$} (0,0);
-  \draw (0,0) to (1,0);
-  \draw (1,0) to node [operator] {$H$} (output);
-  \node [dot,label=above:{$\phi$}] at (0,0) {};
-  \node [fill=white,inner sep=0] at (0.75,0) {\Large$\times$};
-\end{tikzpicture}
+```{r decoherence-interference,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4.5,fig.cap='The usual interference experiment, but with decoherence.'}
+\begin{quantikz}
+  \lstick{$\ket{0}$} \qw
+  & \gate{H}
+  & \phase{\phi}
+  & \push{\times}
+  & \gate{H}
+  & \qw \rstick{$\ket{1}$}
+\end{quantikz}
 ```
 
 Let us step through the circuit in Figure \@ref(fig:decoherence-interference), keeping track of the state of the environment:

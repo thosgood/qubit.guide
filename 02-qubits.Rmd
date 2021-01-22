@@ -137,7 +137,7 @@ A two-state machine that we have just described in abstract terms is usually rea
 For example, state $\ket{0}$ may be chosen to be the lowest energy state of an atom (the **ground state**), and state $\ket{1}$ a higher energy state (the **excited state**).
 Pulses of light of appropriate frequency, duration, and intensity can take the atom back and forth between the basis states $\ket{0}$ and $\ket{1}$ (implementing logical $\texttt{NOT}$).
 
-```{r,engine='tikz',fig.width=3}
+```{r,engine='tikz',fig.width=2}
 \definecolor{primary}{RGB}{177,98,78}
 \tikzset{blob/.style args={#1}{circle,draw,fill={#1}}}
 \newcommand{\ket}[1]{|#1\rangle}
@@ -169,6 +169,7 @@ $$
     \\\alpha_1
     \end{bmatrix}
 $$
+which we can also draw graphically:
 
 ```{r,engine='tikz',fig.width=3}
 \definecolor{primary}{RGB}{177,98,78}
@@ -186,13 +187,13 @@ $$
   \draw [thick,primary,dashed] (0,0.85) to (0.51,0.85);
   \draw [-{Latex},thick,rotate=59,secondary] (0,0) to (1,0);
   \node at (0.7,1.05) {$\ket{\psi}$};
-  \node at (0.4,-0.15) {$\alpha_0$};
-  \node at (-0.15,0.65) {$\alpha_1$};
+  \node at (0.4,-0.17) {$\alpha_0$};
+  \node at (-0.17,0.65) {$\alpha_1$};
 \end{tikzpicture}
 ```
 
 ::: {.idea data-latex=""}
-A **qubit** is a quantum system in which the Boolean states $0$ and $1$ are represented by a prescribed pair of normalised and mutually orthogonal quantum states labelled as $\{\ket{0},\ket{1}\}$.
+A **qubit** is a quantum system in which the Boolean states $0$ and $1$ are represented by a prescribed pair of normalised and mutually orthogonal quantum states labelled by $\ket{0}$ and $\ket{1}$.
 The two states form a so-called **computational** (or **standard**) basis, and so any other state of an isolated qubit can be written as a coherent superposition
 $$
   \ket{\psi} = \alpha_0\ket{0} + \alpha_1\ket{1}
@@ -246,11 +247,10 @@ The **sizes** of the circuit is the number of gates it contains.
 
 Some unitary $U$ acting on a single qubit is represented diagrammatically as
 
-```{r,engine='tikz',fig.width=2.5}
-\tikzset{operator/.style={draw,fill=white}}
-\begin{tikzpicture}
-  \draw (-1.5,0) to node [operator] {$U$} (1.5,0);
-\end{tikzpicture}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=1}
+\begin{quantikz}
+  \qw & \gate{U} & \qw
+\end{quantikz}
 ```
 
 This diagram should be read from left to right.
@@ -259,11 +259,10 @@ We often call this line a **quantum wire**.
 The wire may describe translation in space (e.g. atoms travelling through cavities) or translation in time (e.g. a sequence of operations performed on a trapped ion).
 A sequence of two gates acting on the same qubit, say $U$ followed by $V$, is represented by
 
-```{r,engine='tikz',fig.width=2.5}
-\tikzset{operator/.style={draw,fill=white}}
-\begin{tikzpicture}
-  \draw (-1.5,0) to (-1,0) to node [operator] {$U$} (0,0) to node [operator] {$V$} (1,0) to (1.5,0);
-\end{tikzpicture}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=1.5}
+\begin{quantikz}
+  \qw & \gate{U} & \gate{V} & \qw
+\end{quantikz}
 ```
 
 and is described by the matrix product $VU$ (note the order in which we multiply the matrices).
@@ -283,21 +282,21 @@ It is typically constructed as a sequence of three elementary operations:
 
 We represent it graphically as
 
-```{r,engine='tikz',fig.width=2.5}
-\tikzset{operator/.style={draw,fill=white}}
-\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
-\begin{tikzpicture}
-  \draw (-1.5,0) to node [operator] {$H$} (0,0);
-  \draw (0,0) to node [operator] {$H$} (1.5,0);
-  \node [label=above:{$\varphi$},dot] at (0,0) {};
-\end{tikzpicture}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick{$\ket{0}$} \qw
+  & \gate{H}
+  & \phase{\varphi}
+  & \gate{H}
+  & \qw \rstick{$\cos\frac{\varphi}{2}\ket{0}-i\sin\frac{\varphi}{2}\ket{1}$}
+\end{quantikz}
 ```
 
 ::: {.idea data-latex=""}
-| | | | |
-| :- | :-: | :-: | :- |
-| Hadamard | $H$ | $\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\frac1{\sqrt{2}}(\ket{0}+\ket{1})\\\ket{1}&\longmapsto&\frac1{\sqrt{2}}(\ket{0}-\ket{1})\end{array}$ |
-| Phase-shift | $P_\varphi$ | $\begin{bmatrix}1&0\\0&e^{i\varphi}\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&e^{i\varphi}\ket{1}\end{array}$ |
+--------------- ------------------------------------------------------------- -------------------------------------------------------------------------------------------------------------------------------------------
+**Hadamard**    $H = \frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}$   $\begin{array}{lcr}\ket{0}&\longmapsto&\frac1{\sqrt{2}}(\ket{0}+\ket{1})\\\ket{1}&\longmapsto&\frac1{\sqrt{2}}(\ket{0}-\ket{1})\end{array}$
+**Phase-shift** $P_\varphi = \begin{bmatrix}1&0\\0&e^{i\varphi}\end{bmatrix}$ $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&e^{i\varphi}\ket{1}\end{array}$
+--------------- ------------------------------------------------------------- -------------------------------------------------------------------------------------------------------------------------------------------
 :::
 
 
@@ -464,12 +463,12 @@ Because a faithful physical model for it exists in nature!
 As well as the generic phase gate $P_\varphi$, let us mention three specific phase gates that will frequently pop up (two of which have rather confusing names, at first glance!).
 
 ::: {.idea data-latex=""}
-| | | | |
-| :- | :-: | :-: | :- |
-| Generic phase-shift | $P_\varphi$ | $\begin{bmatrix}1&0\\0&e^{i\varphi}\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&e^{i\varphi}\ket{1}\end{array}$ |
-| Phase-flip | $Z$ | $\begin{bmatrix}1&0\\0&-1\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&-\ket{1}\end{array}$ |
-| $\pi/4$-phase | $S$ | $\begin{bmatrix}1&0\\0&i\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&i\ket{1}\end{array}$ |
-| $\pi/8$-phase | $T$ | $\begin{bmatrix}1&0\\0&e^{i\frac{\pi}{4}}\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&e^{i\frac{\pi}{4}}\ket{1}\end{array}$ |
+----------------------- ------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------
+**Generic phase-shift** $P_\varphi = \begin{bmatrix}1&0\\0&e^{i\varphi}\end{bmatrix}$ $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&e^{i\varphi}\ket{1}\end{array}$
+**Phase-flip**          $Z = \begin{bmatrix}1&0\\0&-1\end{bmatrix}$                   $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&-\ket{1}\end{array}$
+**$\pi/4$-phase**       $S = \begin{bmatrix}1&0\\0&i\end{bmatrix}$                    $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&i\ket{1}\end{array}$
+**$\pi/8$-phase**       $T = \begin{bmatrix}1&0\\0&e^{i\frac{\pi}{4}}\end{bmatrix}$   $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&e^{i\frac{\pi}{4}}\ket{1}\end{array}$
+----------------------- ------------------------------------------------------------- ---------------------------------------------------------------------------------------------------------
 :::
 
 Note that the phase gate $P_\varphi$ is only defined up to a global phase factor^[In general, states differing only by a global phase are physically indistinguishable, and so it is physical experimentation that leads us to this mathematical choice of only defining things up to a global phase.], and so we can write its matrix either as
@@ -503,12 +502,12 @@ Adding to our collection of common single-qubit gates, we now look at the three 
 These three operators, combined with the identity, satisfy a lot of nice formal properties, which we shall examine briefly here, and then return to in more detail in [Chapter 3](#chapter3).
 
 ::: {.idea data-latex=""}
-| | | | |
-| :- | :-: | :-: | :- |
-| Identity | $\id$ | $\begin{bmatrix}1&0\\0&1\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&\ket{1}\end{array}$ |
-| Bit-flip | $X$ | $\begin{bmatrix}0&1\\1&0\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{1}\\\ket{1}&\longmapsto&\ket{0}\end{array}$ |
-| Bit-phase-flip | $Y$ | $\begin{bmatrix}0&-i\\i&0\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&i\ket{1}\\\ket{1}&\longmapsto&-i\ket{0}\end{array}$ |
-| Phase-flip | $Z$ | $\begin{bmatrix}1&0\\0&-1\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&-\ket{1}\end{array}$ |
+------------------ -------------------------------------------- ------------------------------------------------------------------------------------------
+**Identity**       $\id = \begin{bmatrix}1&0\\0&1\end{bmatrix}$ $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&\ket{1}\end{array}$
+**Bit-flip**       $X = \begin{bmatrix}0&1\\1&0\end{bmatrix}$   $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{1}\\\ket{1}&\longmapsto&\ket{0}\end{array}$
+**Bit-phase-flip** $Y = \begin{bmatrix}0&-i\\i&0\end{bmatrix}$  $\begin{array}{lcr}\ket{0}&\longmapsto&i\ket{1}\\\ket{1}&\longmapsto&-i\ket{0}\end{array}$
+**Phase-flip**     $Z = \begin{bmatrix}1&0\\0&-1\end{bmatrix}$  $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&-\ket{1}\end{array}$
+------------------ -------------------------------------------- ------------------------------------------------------------------------------------------
 :::
 
 The identity is just a quantum wire, and we have already seen the $X$ and $Z$ gates in [Phase gates galore], as the bit-flip and phase-flip (respectively).
@@ -539,25 +538,21 @@ They are so ubiquitous in quantum physics that they should certainly be memorise
 The Pauli $Z$ gate is a special case of a phase gate $P_\varphi$ with $\varphi=\pi$.
 When we insert it into the interference circuit we obtain
 
-```{r,engine='tikz',fig.width=5}
-\tikzset{operator/.style={draw,fill=white}}
-\begin{tikzpicture}
-  \draw (-2,0) to (-1.5,0) to node [operator] {$H$} (-0.5,0) to node [operator] {$Z$} (0.5,0) to node [operator] {$H$} (1.5,0) to (2,0);
-  \node at (2.5,0) {=};
-  \draw (3,0) to node [operator] {$X$} (4.5,0);
-\end{tikzpicture}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \qw & \gate{H} & \gate{Z} & \gate{H} & \push{\quad=\quad}
+  & \gate{X} & \qw
+\end{quantikz}
 ```
 
 If you wish to verify this, write the Hadamard gate as $H = (X+Z)/\sqrt{2}$ and use the properties of the Pauli operators.^[$\begin{aligned}HXH &= Z\\HZH &= X\\HYH &= -Y\end{aligned}$]
 So the Hadamard gate turns phase-flips into bit-flips, but it also turns bit-flips into phase-flips:
 
-```{r,engine='tikz',fig.width=5}
-\tikzset{operator/.style={draw,fill=white}}
-\begin{tikzpicture}
-  \draw (-2,0) to (-1.5,0) to node [operator] {$H$} (-0.5,0) to node [operator] {$Z$} (0.5,0) to node [operator] {$H$} (1.5,0) to (2,0);
-  \node at (2.5,0) {=};
-  \draw (3,0) to node [operator] {$X$} (4.5,0);
-\end{tikzpicture}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \qw & \gate{H} & \gate{X} & \gate{H} & \push{\quad=\quad}
+  & \gate{Z} & \qw
+\end{quantikz}
 ```
 
 Let us also add, for completeness, that $HYH=-Y$.
@@ -582,18 +577,10 @@ Any unitary operation on a qubit (up to an overall multiplicative phase factor) 
 
 (ref:universal-circuit-for-2-by-2-caption) The universal circuit for unitary $(2\times2)$ matrices.
 
-```{r universal-circuit-for-2-by-2,engine='tikz',fig.width=5,fig.cap='(ref:universal-circuit-for-2-by-2-caption)'}
-\tikzset{operator/.style={draw,fill=white}}
-\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
-\begin{tikzpicture}[xscale=2]
-  \node [dot,label=above:{$\alpha$}] (phase1) at (-1,0) {};
-  \node [dot,label=above:{$\varphi$}] (phase2) at (0,0) {};
-  \node [dot,label=above:{$\beta$}] (phase3) at (1,0) {};
-  \draw (-1.5,0) to (-1,0);
-  \draw (1,0) to (1.5,0);
-  \draw (phase1) to node [operator] {$H$} (phase2);
-  \draw (phase2) to node [operator] {$H$} (phase3);
-\end{tikzpicture}
+```{r universal-circuit-for-2-by-2,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4,fig.cap='(ref:universal-circuit-for-2-by-2-caption)'}
+\begin{quantikz}
+  \qw & \phase{\alpha} & \gate{H} & \phase{\varphi} & \gate{H} & \phase{\beta} & \qw
+\end{quantikz}
 ```
 
 If we multiply the matrices corresponding to each gate in the network (remember that the order of matrix multiplication is reversed) we obtain
@@ -751,19 +738,10 @@ We are now in a position understand the circuit in Figure \@ref(fig:universal-ci
 Recall that _any_ rotation in the Euclidean space can be performed as a sequence of three rotations: one about the $z$-axis, one about the $x$-axis, and one more about $z$-axis.
 The circuit does exactly this:
 
-```{r,engine='tikz',fig.width=5}
-\tikzset{operator/.style={draw,fill=white}}
-\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
-\begin{tikzpicture}[xscale=2]
-  \draw [fill=gray!40,rounded corners=2mm] (-0.75,-0.75) rectangle (0.75,0.75);
-  \node [dot,label=above:{$\alpha$}] (phase1) at (-1,0) {};
-  \node [dot,label=above:{$\varphi$}] (phase2) at (0,0) {};
-  \node [dot,label=above:{$\beta$}] (phase3) at (1,0) {};
-  \draw (-1.5,0) to (-1,0);
-  \draw (1,0) to (1.5,0);
-  \draw (phase1) to node [operator] {$H$} (phase2);
-  \draw (phase2) to node [operator] {$H$} (phase3);
-\end{tikzpicture}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=3.5}
+\begin{quantikz}
+  \qw & \phase{\alpha} & \gate{H}\gategroup[1,steps=3,background,style={fill=gray!20,rounded corners}]{} & \phase{\varphi} & \gate{H} & \phase{\beta} & \qw
+\end{quantikz}
 ```
 
 The first phase gate effects rotation by $\alpha$ about the $z$-axis, the second phase gate is sandwiched between the two Hadamard gates, and these three gates together effect rotation by $\varphi$ about the $x$-axis, and, finally, the third phase gates effects rotation by $\beta$ about the $z$-axis.
@@ -801,18 +779,15 @@ For more details on all the above, see [Chapter 3](#chapter3).
 
 ## Exercises
 
-1. Consider the usual quantum interference circuit
-    ```{r,engine='tikz',fig.width=3}
-    \tikzset{operator/.style={draw,fill=white}}
-    \tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
-    \newcommand{\ket}[1]{|#1\rangle}
-    \begin{tikzpicture}[xscale=2]
-      \node (input) at (-1,0) {$\ket{0}$};
-      \node (output) at (1,0) {$\ket{1}$};
-      \draw (input) to node [operator] {$H$} (0,0);
-      \draw (0,0) to node [operator] {$H$} (output);
-      \node [dot,label=above:{$\varphi$}] at (0,0) {};
-    \end{tikzpicture}
+1. Consider the usual quantum interference circuit:
+    ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=2.5}
+    \begin{quantikz}
+      \lstick{$\ket{0}$} \qw
+      & \gate{H}
+      & \phase{\varphi}
+      & \gate{H}
+      & \qw \rstick{$\ket{1}$}
+    \end{quantikz}
     ```
     Suppose you can control the input of the circuit and measure the output, but you do not know the phase shift $\varphi$ introduced by the phase gate.
     You prepare input $\ket{0}$ and register output $\ket{1}$.

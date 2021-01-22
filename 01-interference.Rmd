@@ -416,16 +416,14 @@ Atoms, trapped ions, molecules, nuclear spins and many other quantum objects wit
 There is no need to learn about physics behind these diverse technologies if all you want is to understand the basics of quantum theory.
 We may now conveniently forget about any specific experimental realisation of a qubit and represent a generic **single qubit interference** graphically as a **circuit diagram**:^[Do not confuse the interference diagrams of Figure \@ref(fig:ramsey-figure) and Figure \@ref(fig:interference-matrix) with the circuit diagram. In the circuit diagrams, which we will use a lot from now on, a single qubit is represented by a single line.]
 
-```{r,engine='tikz'}
-\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
-\newcommand{\ket}[1]{|#1\rangle}
-  \begin{tikzpicture}[xscale=1.5]
-    \node [label=left:{$\ket{0}$}] (input) at (-2,0) {};
-    \node [label=right:{$\cos\frac{\varphi}{2}\ket{0} - i\sin\frac{\varphi}{2}\ket{1}$}] (output) at (2,0) {};
-    \draw (input) to node [draw,fill=white] {$H$} (0,0);
-    \node [dot,label=above:{$\varphi$}] at (0,0) {};
-    \draw (0,0) to node [draw,fill=white] {$H$} (output);
-  \end{tikzpicture}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick{$\ket{0}$} \qw
+  & \gate{H}
+  & \phase{\varphi}
+  & \gate{H}
+  & \qw \rstick{$\cos\frac{\varphi}{2}\ket{0}-i\sin\frac{\varphi}{2}\ket{1}$}
+\end{quantikz}
 ```
 
 This diagram should be read from left to right.
@@ -522,7 +520,7 @@ p
 $$
 where the parameter $v$, called the **visibility** of the interference pattern, ranges from $0$ (the environment can perfectly distinguish between the two paths, total decoherence, no interference) to $1$ (the environment cannot distinguish between the two paths, no decoherence, full interference), with the values in between corresponding to partial decoherence.
 
-```{r,engine.opts=list(template="tikz2pdf.tex"),engine='tikz',fig.width=4}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
 \definecolor{secondary}{RGB}{91,132,177}
 \begin{tikzpicture}
   \begin{axis}[
@@ -682,7 +680,7 @@ For example, using the algorithm taught in elementary school, one can multiply t
 In contrast, the fastest-known method for the reverse operation --- factoring an $n$-digit integer into prime numbers --- takes a time that grows exponentially, roughly as $2^n$.
 That is considered inefficient.
 
-```{r,engine.opts=list(template="tikz2pdf.tex"),engine='tikz',fig.width=4}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \begin{tikzpicture}
@@ -1109,7 +1107,7 @@ Suppose a randomised algorithm solves a decision problem, returning $\texttt{yes
 It gets the answer wrong with a probability not greater than $\frac12-\delta$, where $\delta>0$ is a constant.^[This result is known as the **Chernoff bound**.].
 If we are willing to accept a probability of error no larger than $\epsilon$, then it suffices to run the computation $r$ times, where $r=O(\log 1/\epsilon)$.}
 
-```{r,engine.opts=list(template="tikz2pdf.tex"),engine='tikz',fig.width=4}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \begin{tikzpicture}

@@ -200,12 +200,12 @@ $$
 Recalling [Chapter 2](#chapter2), we see that beam-splitters give a physical way of constructing the square root of $\texttt{NOT}$.
 
 ::: {.idea data-latex=""}
-| $\texttt{NOT}$ | $\sqrt{\texttt{NOT}}$ |
-| :------------: | :-------------------: |
-| $X$ | $B$ |
-| $\begin{bmatrix}0&1\\1&0\end{bmatrix}$ | $\frac{1}{\sqrt2}\begin{bmatrix}1&i\\i&1\end{bmatrix}$ |
-| bit flip | beam-splitter |
+------------------ ------------------------------- --------------------------------------------------------
+**bit-flip**         $\texttt{NOT}\equiv X$             $\begin{bmatrix}0&1\\1&0\end{bmatrix}$
+**beam-splitter**   $\sqrt{\texttt{NOT}}\equiv B$   $\frac{1}{\sqrt2}\begin{bmatrix}1&i\\i&1\end{bmatrix}$
+------------------ ------------------------------- --------------------------------------------------------
 :::
+
 
 
 
@@ -286,7 +286,7 @@ The probability of being transmitted through any phase shifter is always $1$, he
 But the classical description is not correct, as the experiments show, whence the interference term $2TR\cos(\varphi_1-\varphi_0)$ in which the phase shifters play the essential role.
 Depending on the _relative_ phase $\varphi=\varphi_1-\varphi_0$ the probability that the detector $0$ "clicks" can vary from $(T-R)^2$, for $\varphi=0$, to $1$, for $\varphi=\pi$.
 
-```{r,engine.opts=list(template="tikz2pdf.tex"),engine='tikz',fig.width=4}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
 \definecolor{secondary}{RGB}{91,132,177}
 \begin{tikzpicture}[scale=0.8]
   \begin{axis}[
@@ -781,13 +781,14 @@ _In some of these exercises, we continue to study the $(3\times 3)$ real-valued 
 Although this may all seem tediously abstract, it is surprisingly useful.
 Take another look at the single qubit interference circuit
 
-```{r,engine='tikz',fig.width=3}
-\tikzset{operator/.style={draw,fill=white}}
-\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
-\begin{tikzpicture}[xscale=2]
-  \draw (-1,0) to node [operator] {$H$} (0,0) to node [operator] {$H$} (1,0);
-  \node [dot,label=above:{$\varphi$}] at (0,0) {};
-\end{tikzpicture}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick{$\ket{0}$} \qw
+  & \gate{H}
+  & \phase{\varphi}
+  & \gate{H}
+  & \qw \rstick{$\cos\frac{\varphi}{2}\ket{0}-i\sin\frac{\varphi}{2}\ket{1}$}
+\end{quantikz}
 ```
 
 and the corresponding sequence of unitary operations
@@ -810,19 +811,10 @@ The single qubit interference circuit has a simple geometrical meaning: it shows
 
 Now, take a look at this circuit:
 
-```{r,engine='tikz',fig.width=4}
-\tikzset{operator/.style={draw,fill=white}}
-\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
-\begin{tikzpicture}[xscale=2]
-  \draw [fill=gray!40,rounded corners=2mm] (-0.75,-0.75) rectangle (0.75,0.75);
-  \node [dot,label=above:{$\alpha$}] (phase1) at (-1,0) {};
-  \node [dot,label=above:{$\varphi$}] (phase2) at (0,0) {};
-  \node [dot,label=above:{$\beta$}] (phase3) at (1,0) {};
-  \draw (-1.5,0) to (-1,0);
-  \draw (1,0) to (1.5,0);
-  \draw (phase1) to node [operator] {$H$} (phase2);
-  \draw (phase2) to node [operator] {$H$} (phase3);
-\end{tikzpicture}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=3.5}
+\begin{quantikz}
+  \qw & \phase{\alpha} & \gate{H}\gategroup[1,steps=3,background,style={fill=gray!20,rounded corners}]{} & \phase{\varphi} & \gate{H} & \phase{\beta} & \qw
+\end{quantikz}
 ```
 
 What does it represent?
@@ -875,18 +867,17 @@ Thus once you are given a couple of Hadamard gates and an infinite supply of pha
 
 Consider the following circuit:
 
-```{r,engine='tikz',fig.width=4}
-\tikzset{operator/.style={draw,fill=white}}
-\begin{tikzpicture}
-  \draw (-3.5,0) to (-3,0);
-  \draw (-3,0) to node [operator,minimum size=18pt] {$A$} (-2,0);
-  \draw (-2,0) to node [operator,minimum size=18pt] {$Z$} (-1,0);
-  \draw (-1,0) to node [operator,minimum size=18pt] {$A^\dagger$} (0,0);
-  \draw (0,0) to node [operator,minimum size=18pt] {$B$} (1,0);
-  \draw (1,0) to node [operator,minimum size=18pt] {$Z$} (2,0);
-  \draw (2,0) to node [operator,minimum size=18pt] {$B^\dagger$} (3,0);
-  \draw (3,0) to (3.5,0);
-\end{tikzpicture}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5}
+\begin{quantikz}
+  \qw
+  & \gate{A}
+  & \gate{Z}
+  & \gate{A^\dagger}
+  & \gate{B}
+  & \gate{Z}
+  & \gate{B^\dagger}
+  & \qw
+\end{quantikz}
 ```
 
 where both $A$ and $B$ are unitary operations.
