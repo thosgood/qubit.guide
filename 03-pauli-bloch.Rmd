@@ -479,7 +479,9 @@ Note, however, that this does _not_ imply that e.g. $\tr(ABC)=\tr(ACB)$.
 
 
 
-## The Pauli matrices, geometrically
+## Unitaries as rotations
+
+Now we can finish off what we started in [Chapter 2](#chapter2): we know how single-qubit state vectors correspond to points on the Bloch sphere, but now we can study how $(2\times 2)$ unitary matrices correspond to _rotations_ of this sphere.
 
 Geometrically speaking, the group of unitaries $\mathrm{U}(2)$ is a three-dimensional sphere $S^3$ in $\mathbb{R}^4$.
 We often fix the determinant to be $+1$ and express $(2\times 2)$ unitaries as
@@ -505,7 +507,7 @@ $$
 $$
 is called the $\pi/8$ gate, because of its $\mathrm{SU}(2)$ form.
 
-Let us write any $(2\times 2)$ unitary, up to an overall phase factor, as
+So let us write any $(2\times 2)$ unitary, up to an overall phase factor, as
 $$
   U
   = u_0\id + i(u_x \sigma_x + u_y \sigma_y + u_z \sigma_z)
@@ -535,33 +537,10 @@ $$
 where $A$ is a Hermitian matrix.
 
 ::: {.idea data-latex=""}
-Writing unitary matrices in the form $e^{iA}$ is analogous to writing complex numbers of unit modulus as $e^{i\alpha}$ (the so-called polar form).
+Writing unitary matrices in the form $e^{iA}$ is analogous to writing complex numbers of unit modulus as $e^{i\alpha}$ (the so-called **polar form**).
 :::
 
-
-### Exercises
-
-1. Show that, if $A^2=\id$, then we can turn the power series expansion into a simple expression: for any real $\alpha$,
-    $$
-      e^{i\alpha A}
-      = (\cos\alpha)\id + (i\sin\alpha)A.
-    $$
-2. Using the previous exercise, or otherwise, show that any $(2\times 2)$ unitary matrix $U$ can be written, up to an overall multiplicative phase factor, as
-    $$
-      U
-      = e^{i \theta \vec{n}\cdot\vec{\sigma}}
-      = (\cos\theta)\id + (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
-    $$
-    (The argument here is the same as the argument that $e^{i\theta}=\cos\theta +i\sin\theta$).
-
-
-
-
-
-
-## Unitaries as rotations
-
-Here comes a remarkable connection between two-dimensional unitary matrices and ordinary three-dimensional rotations.
+Now comes a remarkable connection between two-dimensional unitary matrices and ordinary three-dimensional rotations:
 
 ::: {.idea data-latex=""}
 The unitary $U = e^{i\theta \vec{n}\cdot\vec{\sigma}}$ represents a clockwise rotation through the angle $2\theta$ about the axis defined by $\vec{n}$.
@@ -651,7 +630,11 @@ $$
   = U(\vec{s}\cdot\vec{\sigma})U^\dagger
 \tag{3.5.1}
 $$
-This is a linear map $\mathbb{R}^3\to\mathbb{R}^3$, and is thus given by some $(3\times 3)$ real-valued matrix $R$.
+This is a linear map $\mathbb{R}^3\to\mathbb{R}^3$, and is thus given by some $(3\times 3)$ real-valued matrix:
+$$
+  R_U\colon \mathbb{R}^3\to\mathbb{R}^3.
+\tag{3.5.2}
+$$
 We note that this map is an isometry (a distance preserving operation), since it preserves the scalar product in the Euclidean space: for any two vectors $\vec{s}$ and $\vec{v}$,
 $$
   \begin{aligned}
@@ -662,13 +645,20 @@ $$
   \\&= \vec{s}\cdot\vec{v}
   \end{aligned}
 $$
-(where $S=\vec{s}\cdot\vec{\sigma}$ and $V=\vec{v}\cdot\vec{\sigma}$), using the cyclic property of the trace.
-This means that matrix $R$ is _orthogonal_.^[Orthogonal transformations preserve the length of vectors as well as the angles between them.]
+(where $S=\vec{s}\cdot\vec{\sigma}$ and $V=\vec{v}\cdot\vec{\sigma}$) using the cyclic property of the trace.
+This means that the matrix $R_U$ is _orthogonal_.^[Orthogonal transformations preserve the length of vectors as well as the angles between them.]
 
-Furthermore, we can show^[We can also see that $\det R=1$ from the fact that any matrix in $\mathrm{U}(2)$ can be smoothly connected to the identity.] that $\det R=1$.
-The only isometries in three dimensional Euclidian space, which are described by orthogonal matrices $R$ with $\det R=1$, are rotations.
+Furthermore, we can show^[We can also see that $\det R_U=1$ from the fact that any matrix in $\mathrm{U}(2)$ can be smoothly connected to the identity.] that $\det R_U=1$.
+But the only isometries in three dimensional Euclidian space (which are described by orthogonal matrices with determinant $1$) are rotations.
 
-Thus, in the mathematical lingo, we have established a homomorphism^[Recall that a homomorphism is a structure-preserving map between two algebraic structures of the same type, in our case two groups. An isomorphism between algebraic structures of the same type is one-to-one homomorphism.] between $\mathrm{U}(2)$ and $\mathrm{SO}(3)$, where $\mathrm{SO}(3)$ stands for the special orthogonal group in three dimensions (the group of all rotations about the origin of three-dimensional Euclidean space $\mathbb{R}^3$ under the operation of composition).
+Thus, in the mathematical lingo, we have established a homomorphism^[Recall that a homomorphism is a structure-preserving map between two algebraic structures of the same type, in our case two groups. An isomorphism between algebraic structures of the same type is one-to-one homomorphism.]
+$$
+  \begin{aligned}
+    \mathrm{U}(2) &\longrightarrow \mathrm{SO}(3)
+  \\U &\longmapsto R_U
+  \end{aligned}
+$$
+where $\mathrm{SO}(3)$ stands for the special orthogonal group in three dimensions (the group of all rotations about the origin of three-dimensional Euclidean space $\mathbb{R}^3$ under the operation of composition).
 It is quite clear from Equation (3.5.1) that unitary matrices differing only by a global multiplicative phase factor (e.g. $U$ and $e^{i\gamma}U$) represent the same rotation.
 
 Physicists, however, usually prefer a more direct demonstration, which goes roughly like this.
@@ -705,17 +695,34 @@ which we recognise as a good old textbook formula for an infinitesimal clockwise
 
 ### Exercises
 
-_In some of these exercises, we continue to study the $(3\times 3)$ real-valued matrix $R$ described above._
+_In some of these exercises, we continue to study the $(3\times 3)$ real-valued matrix $R$ from Equation (3.5.2), but usually just refer to it as $R$, leaving the dependence on the choice of $U$ implicit._
 
-1. Show that $\tr \sigma_x\sigma_y\sigma_z = 2i$.
-2. Consider
+
+1. Show that, if $A^2=\id$, then we can manipulate the power series expansion of $e^{iA}$ into a simple expression: for any real $\alpha$,
+    $$
+      e^{i\alpha A}
+      = (\cos\alpha)\id + (i\sin\alpha)A.
+    $$
+
+2. Using the previous exercise, or otherwise, show that any $(2\times 2)$ unitary matrix $U$ can be written, up to an overall multiplicative phase factor, as
+    $$
+      U
+      = e^{i \theta \vec{n}\cdot\vec{\sigma}}
+      = (\cos\theta)\id + (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
+    $$
+    (The argument here is the same as the argument that $e^{i\theta}=\cos\theta +i\sin\theta$).
+
+3. Show that $\tr \sigma_x\sigma_y\sigma_z = 2i$.
+
+4. Consider
     $$
       U(\vec e_k\cdot\sigma_k)U^\dagger=U\sigma_kU^\dagger={\vec f_k}\cdot\vec\sigma.
     $$
     So $U$ maps the unit vectors $\vec e_x$, $\vec e_y$, and $\vec z_z$, (along the $x$-, $y$-, and $z$-axis, respectively), to new unit vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$.
     We already know that, in Euclidean space, this transformation is described by a $(3\times 3)$ orthogonal matrix $R$.
     How are the three vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$ related to the entries in matrix $R$?
-3. Show that
+
+5. Show that
     $$
       \begin{aligned}
         \tr \sigma_x\sigma_y\sigma_z
@@ -724,12 +731,14 @@ _In some of these exercises, we continue to study the $(3\times 3)$ real-valued 
       \end{aligned}
     $$
     (which implies that $\det R=1$).
-4. Make use of the orthonormality of the Pauli basis and Equation (3.5.1) to show that the elements of the matrix $R$ can be expressed in terms of those of the matrix $U$, in the form
+
+6. Make use of the orthonormality of the Pauli basis and Equation (3.5.1) to show that the elements of the matrix $R$ can be expressed in terms of those of the matrix $U$, in the form
     $$
       R_{ij}=\frac12\tr\left(\sigma_i U\sigma_j U^\dagger\right).
     $$
     Here, $i$ and $j$ take values in $\{1,2,3\}$, and $\sigma_1\equiv\sigma_x$, $\sigma_2\equiv\sigma_y$, $\sigma_3\equiv\sigma_z$.
-5. Show that the phase gate $P_\varphi =\diag{1}{e^{i\varphi}}$ represents an anticlockwise rotation about the $z$-axis through the angle $\varphi$.
+
+7. Show that the phase gate $P_\varphi =\diag{1}{e^{i\varphi}}$ represents an anticlockwise rotation about the $z$-axis through the angle $\varphi$.
     Note that it might be helpful to start with the $\mathrm{SU}(2)$ version of the phase gate:
     $$
       \begin{aligned}
@@ -748,7 +757,8 @@ _In some of these exercises, we continue to study the $(3\times 3)$ real-valued 
         \end{bmatrix}
       \end{aligned}
     $$
-6. Express the Hadamard gate $H$ in terms of $\vec{n}\cdot\vec{\sigma}$, and demonstrate that
+
+8. Express the Hadamard gate $H$ in terms of $\vec{n}\cdot\vec{\sigma}$, and demonstrate that
     $$
       \begin{aligned}
         HZH&=X
@@ -756,7 +766,8 @@ _In some of these exercises, we continue to study the $(3\times 3)$ real-valued 
       \\HYH&=-Y.
       \end{aligned}
     $$
-7. Show that the Hadamard gate $H$ turns rotations about the $x$-axis into rotations about the $z$-axis, and vice versa.
+
+9. Show that the Hadamard gate $H$ turns rotations about the $x$-axis into rotations about the $z$-axis, and vice versa.
     That is,
     $$
       \begin{gathered}
@@ -956,6 +967,8 @@ $$
   \end{aligned}
 $$
 which is a rotation with angular frequency $\omega$ about the axis defined by the unit vector $\vec n$.
+
+**!!!TODO!!! the Hamiltonian of two qubits (from the problem sheets)**
 
 **!!!TODO!!! the $4\pi$ world of qubits**
 

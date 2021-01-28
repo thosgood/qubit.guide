@@ -95,7 +95,7 @@
 
 \title{Lectures on Quantum Information Science}
 \author{Artur Ekert and Tim Hosgood}
-\date{Last updated: January 25, 2021}
+\date{Last updated: January 28, 2021}
 
 
 \begin{document}
@@ -1935,12 +1935,12 @@ In order to see that this construction does what it claims, let us explore an in
 Unitary operations on a single qubit form a group.
 More precisely, the set of all \((2\times 2)\) unitary matrices forms a non-abelian group under the matrix multiplication, denoted by \(\mathrm{U}(2)\).
 It turns out that compositions of single qubit unitaries behave pretty much the same as compositions of rotations in three dimensions.
-Technically speaking, \(\mathrm{U}(2)/\mathrm{U}(1)\cong \mathrm{SO}(3)\).\footnote{Note that \(\mathrm{U}(1)\cong\mathbb{C}^\times\), where \(\mathbb{C}^\times\) is the multiplicative group of unit elements of the complex numbers, i.e.~the set \(\mathbb{C}\setminus\{0\}\) with the group operation given by multiplication.}
+Technically speaking, we claim that \(\mathrm{U}(2)/\mathrm{U}(1)\cong \mathrm{SO}(3)\).\footnote{Note that \(\mathrm{U}(1)\cong\mathbb{C}^\times\), where \(\mathbb{C}^\times\) is the multiplicative group of unit elements of the complex numbers, i.e.~the set \(\mathbb{C}\setminus\{0\}\) with the group operation given by multiplication.}
 That is, \((2\times 2)\) unitaries, up to global phase, form a group which is isomorphic to the group of rotations in three dimensions, denoted by \(\mathrm{SO}(3)\).
-This isomorphism helps to visualise the actions of single qubit gates.
+This isomorphism helps to visualise the actions of single-qubit gates.
 
 There are many ways to introduce this isomorphism.
-Here we will first show how to represent single-qubit state vectors in terms of Euclidean vectors in three dimensions, and then relate unitary operations on state vectors to rotations in this Euclidean space.
+Here we will just show how to represent single-qubit state vectors in terms of Euclidean vectors in three dimensions; in \protect\hyperlink{chapter3}{Chapter 3} we will actually relate unitary operations on state vectors to rotations in this Euclidean space, demonstrating this isomorphism.\footnote{That is, we have the group \(\mathrm{U}(2)\) acting on the space of single-qubit state vectors, and we have the group \(\mathrm{SO}(3)\) acting on the unit sphere \(S^2\subset\mathbb{R}^3\). In this chapter we will discuss how to go from one \emph{space} (i.e.~the thing being acted upon by the group) to the other; in \protect\hyperlink{chapter3}{Chapter 3} we will discuss how to go from one \emph{group} (i.e.~the thing acting on the space) to the other.}
 
 Any single qubit state can be written as \(|\psi\rangle=\alpha|0\rangle+\beta|1\rangle\), constrained by the relation \(|\alpha|^2+|\beta|^2=1\).
 This suggests a more natural parametrisation as\footnote{There is a good reason to use \(\theta/2\) instead of \(\theta\), which we will explain later on.}
@@ -2005,6 +2005,8 @@ The Bloch vectors corresponding to the two eigenvectors of \(P_\alpha\), namely 
 As previously mentioned, the Pauli operator \(Z=\sigma_z\) is a special case of a phase gate, and represents rotation by \({180}^{\circ}\) (that is, \(\pi\) radians), about the \(z\)-axis.
 You can also verify that \(X=\sigma_x\), with eigenvectors \({(|0\rangle\pm|1\rangle)/\sqrt{2}}\), represents rotation by \({180}^{\circ}\) about the \(x\)-axis, and \(Y=\sigma_y\), with eigenvectors \({(|0\rangle\pm i|1\rangle)/\sqrt{2}}\), represents rotation by \({180}^{\circ}\) about the \(y\)-axis.
 
+\textbf{!!!TODO!!! points on the intersection of the axes with the Bloch sphere are exactly the eigenstates of the corresponding Pauli operator}
+
 How about the Hadamard gate?
 Like the Pauli operators, it squares to the identity (\(H^2=\mathbf{1}\)), which implies that its eigenvalues are \(\pm 1\).
 Thus it will correspond to a rotation by \({180}^{\circ}\).
@@ -2037,6 +2039,9 @@ By definition, we can find the parametrisation in terms of \(\theta\) and \(\var
 \item
   Draw the line going through the south-pole and the point \(p\). This will intersect the Bloch sphere in exactly one other point, and this is exactly the point corresponding to \(|\psi\rangle\).
 \end{enumerate}
+
+Note that this lets you \emph{draw} the point on the sphere, but doesn't (immediately) give you the \emph{coordinates} for it.
+That is, this method is nice for geometric visualisation, but the parametrisation method is much better when it comes to actually doing calculations.
 
 \hypertarget{composition-of-rotations}{%
 \subsection{Composition of rotations}\label{composition-of-rotations}}
@@ -2201,7 +2206,7 @@ There is no reason why probability theory (or any other \emph{a priori} mathemat
 In experimental reality, when the optical paths between the two beam-splitters are the same, the photon fired from input port \(|0\rangle\) \emph{always} strikes detector 1 and \emph{never} detector 0 (and the photon fired from input port \(|1\rangle\) \emph{always} strikes detector 0 and \emph{never} detector 1).
 Thus a beam-splitter acts as the square root of \(\texttt{NOT}\) gate.
 
-The action of the beam-splitter --- in fact, the action of any quantum device --- can be described by tabulating the amplitudes of transitions between its input and output ports.\footnote{Note that gate \(B\) is not the same square root of \(\texttt{NOT}\) as the one described in the first diagram in this section. There are infinitely many ways of implementing this ``impossible'' logical operation.}
+The action of the beam-splitter --- in fact, the action of any quantum device --- can be described by tabulating the amplitudes of transitions between its input and output ports.\footnote{Note that gate \(B\) is not the same square root of \(\texttt{NOT}\) as the one described previously. In fact, there are infinitely many ways of implementing this ``impossible'' logical operation.}
 \[
   B = 
   \begin{bmatrix}
@@ -2482,8 +2487,10 @@ Note, however, that this does \emph{not} imply that e.g.~\(\operatorname{tr}(ABC
   and show that the determinant of \(U\) is \(e^{i2\gamma}\) using this parametrisation.
 \end{enumerate}
 
-\hypertarget{the-pauli-matrices-geometrically}{%
-\subsection{The Pauli matrices, geometrically}\label{the-pauli-matrices-geometrically}}
+\hypertarget{unitaries-as-rotations}{%
+\subsection{Unitaries as rotations}\label{unitaries-as-rotations}}
+
+Now we can finish off what we started in \protect\hyperlink{chapter2}{Chapter 2}: we know how single-qubit state vectors correspond to points on the Bloch sphere, but now we can study how \((2\times 2)\) unitary matrices correspond to \emph{rotations} of this sphere.
 
 Geometrically speaking, the group of unitaries \(\mathrm{U}(2)\) is a three-dimensional sphere \(S^3\) in \(\mathbb{R}^4\).
 We often fix the determinant to be \(+1\) and express \((2\times 2)\) unitaries as
@@ -2509,7 +2516,7 @@ Still, sometimes the \(T\) gate
 \]
 is called the \(\pi/8\) gate, because of its \(\mathrm{SU}(2)\) form.
 
-Let us write any \((2\times 2)\) unitary, up to an overall phase factor, as
+So let us write any \((2\times 2)\) unitary, up to an overall phase factor, as
 \[
   U
   = u_0\mathbf{1}+ i(u_x \sigma_x + u_y \sigma_y + u_z \sigma_z)
@@ -2540,36 +2547,11 @@ where \(A\) is a Hermitian matrix.
 
 \begin{idea}
 
-Writing unitary matrices in the form \(e^{iA}\) is analogous to writing complex numbers of unit modulus as \(e^{i\alpha}\) (the so-called polar form).
+Writing unitary matrices in the form \(e^{iA}\) is analogous to writing complex numbers of unit modulus as \(e^{i\alpha}\) (the so-called \textbf{polar form}).
 
 \end{idea}
 
-\hypertarget{exercises-2}{%
-\subsubsection{Exercises}\label{exercises-2}}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Show that, if \(A^2=\mathbf{1}\), then we can turn the power series expansion into a simple expression: for any real \(\alpha\),
-  \[
-     e^{i\alpha A}
-     = (\cos\alpha)\mathbf{1}+ (i\sin\alpha)A.
-   \]
-\item
-  Using the previous exercise, or otherwise, show that any \((2\times 2)\) unitary matrix \(U\) can be written, up to an overall multiplicative phase factor, as
-  \[
-     U
-     = e^{i \theta \vec{n}\cdot\vec{\sigma}}
-     = (\cos\theta)\mathbf{1}+ (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
-   \]
-  (The argument here is the same as the argument that \(e^{i\theta}=\cos\theta +i\sin\theta\)).
-\end{enumerate}
-
-\hypertarget{unitaries-as-rotations}{%
-\subsection{Unitaries as rotations}\label{unitaries-as-rotations}}
-
-Here comes a remarkable connection between two-dimensional unitary matrices and ordinary three-dimensional rotations.
+Now comes a remarkable connection between two-dimensional unitary matrices and ordinary three-dimensional rotations:
 
 \begin{idea}
 
@@ -2635,7 +2617,11 @@ Now, \(U\in \mathrm{U}(2)\) acts on the Euclidean space of such matrices by \(S\
   = U(\vec{s}\cdot\vec{\sigma})U^\dagger
 \tag{3.5.1}
 \]
-This is a linear map \(\mathbb{R}^3\to\mathbb{R}^3\), and is thus given by some \((3\times 3)\) real-valued matrix \(R\).
+This is a linear map \(\mathbb{R}^3\to\mathbb{R}^3\), and is thus given by some \((3\times 3)\) real-valued matrix:
+\[
+  R_U\colon \mathbb{R}^3\to\mathbb{R}^3.
+\tag{3.5.2}
+\]
 We note that this map is an isometry (a distance preserving operation), since it preserves the scalar product in the Euclidean space: for any two vectors \(\vec{s}\) and \(\vec{v}\),
 \[
   \begin{aligned}
@@ -2646,13 +2632,20 @@ We note that this map is an isometry (a distance preserving operation), since it
   \\&= \vec{s}\cdot\vec{v}
   \end{aligned}
 \]
-(where \(S=\vec{s}\cdot\vec{\sigma}\) and \(V=\vec{v}\cdot\vec{\sigma}\)), using the cyclic property of the trace.
-This means that matrix \(R\) is \emph{orthogonal}.\footnote{Orthogonal transformations preserve the length of vectors as well as the angles between them.}
+(where \(S=\vec{s}\cdot\vec{\sigma}\) and \(V=\vec{v}\cdot\vec{\sigma}\)) using the cyclic property of the trace.
+This means that the matrix \(R_U\) is \emph{orthogonal}.\footnote{Orthogonal transformations preserve the length of vectors as well as the angles between them.}
 
-Furthermore, we can show\footnote{We can also see that \(\det R=1\) from the fact that any matrix in \(\mathrm{U}(2)\) can be smoothly connected to the identity.} that \(\det R=1\).
-The only isometries in three dimensional Euclidian space, which are described by orthogonal matrices \(R\) with \(\det R=1\), are rotations.
+Furthermore, we can show\footnote{We can also see that \(\det R_U=1\) from the fact that any matrix in \(\mathrm{U}(2)\) can be smoothly connected to the identity.} that \(\det R_U=1\).
+But the only isometries in three dimensional Euclidian space (which are described by orthogonal matrices with determinant \(1\)) are rotations.
 
-Thus, in the mathematical lingo, we have established a homomorphism\footnote{Recall that a homomorphism is a structure-preserving map between two algebraic structures of the same type, in our case two groups. An isomorphism between algebraic structures of the same type is one-to-one homomorphism.} between \(\mathrm{U}(2)\) and \(\mathrm{SO}(3)\), where \(\mathrm{SO}(3)\) stands for the special orthogonal group in three dimensions (the group of all rotations about the origin of three-dimensional Euclidean space \(\mathbb{R}^3\) under the operation of composition).
+Thus, in the mathematical lingo, we have established a homomorphism\footnote{Recall that a homomorphism is a structure-preserving map between two algebraic structures of the same type, in our case two groups. An isomorphism between algebraic structures of the same type is one-to-one homomorphism.}
+\[
+  \begin{aligned}
+    \mathrm{U}(2) &\longrightarrow \mathrm{SO}(3)
+  \\U &\longmapsto R_U
+  \end{aligned}
+\]
+where \(\mathrm{SO}(3)\) stands for the special orthogonal group in three dimensions (the group of all rotations about the origin of three-dimensional Euclidean space \(\mathbb{R}^3\) under the operation of composition).
 It is quite clear from Equation (3.5.1) that unitary matrices differing only by a global multiplicative phase factor (e.g.~\(U\) and \(e^{i\gamma}U\)) represent the same rotation.
 
 Physicists, however, usually prefer a more direct demonstration, which goes roughly like this.
@@ -2686,14 +2679,27 @@ that is,
 \]
 which we recognise as a good old textbook formula for an infinitesimal clockwise rotation of \(\vec{s}\) about the axis \(\vec{n}\) through the angle \(2\alpha\).
 
-\hypertarget{exercises-3}{%
-\subsubsection{Exercises}\label{exercises-3}}
+\hypertarget{exercises-2}{%
+\subsubsection{Exercises}\label{exercises-2}}
 
-\emph{In some of these exercises, we continue to study the \((3\times 3)\) real-valued matrix \(R\) described above.}
+\emph{In some of these exercises, we continue to study the \((3\times 3)\) real-valued matrix \(R\) from Equation (3.5.2), but usually just refer to it as \(R\), leaving the dependence on the choice of \(U\) implicit.}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\tightlist
+\item
+  Show that, if \(A^2=\mathbf{1}\), then we can manipulate the power series expansion of \(e^{iA}\) into a simple expression: for any real \(\alpha\),
+  \[
+     e^{i\alpha A}
+     = (\cos\alpha)\mathbf{1}+ (i\sin\alpha)A.
+   \]
+\item
+  Using the previous exercise, or otherwise, show that any \((2\times 2)\) unitary matrix \(U\) can be written, up to an overall multiplicative phase factor, as
+  \[
+     U
+     = e^{i \theta \vec{n}\cdot\vec{\sigma}}
+     = (\cos\theta)\mathbf{1}+ (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
+   \]
+  (The argument here is the same as the argument that \(e^{i\theta}=\cos\theta +i\sin\theta\)).
 \item
   Show that \(\operatorname{tr}\sigma_x\sigma_y\sigma_z = 2i\).
 \item
@@ -2852,8 +2858,8 @@ The resulting axis of rotation is perpendicular to the two axes about which rota
 \caption{Rotating by \(\alpha\) around the \(z\)-axis is the same as the composition of two rotations by \(180^\circ\) around axes which both lie in the \(xy\)-plane, with angle \(\alpha/2\) between them.}\label{fig:two-rotations-by-180}
 \end{figure}
 
-\hypertarget{exercises-4}{%
-\subsubsection{Exercises}\label{exercises-4}}
+\hypertarget{exercises-3}{%
+\subsubsection{Exercises}\label{exercises-3}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -2898,10 +2904,12 @@ Now, to relate this to the earlier parts of this chapter, we note that the Hamil
 \]
 which is a rotation with angular frequency \(\omega\) about the axis defined by the unit vector \(\vec n\).
 
+\textbf{!!!TODO!!! the Hamiltonian of two qubits (from the problem sheets)}
+
 \textbf{!!!TODO!!! the \(4\pi\) world of qubits}
 
-\hypertarget{exercises-5}{%
-\subsubsection{Exercises}\label{exercises-5}}
+\hypertarget{exercises-4}{%
+\subsubsection{Exercises}\label{exercises-4}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -3395,8 +3403,8 @@ As we increase \(\alpha\), the two states become more distinguishable, and, as w
 
 \textbf{!!!TODO!!!}
 
-\hypertarget{exercises-6}{%
-\subsection{Exercises}\label{exercises-6}}
+\hypertarget{exercises-5}{%
+\subsection{Exercises}\label{exercises-5}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
