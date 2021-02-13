@@ -134,7 +134,7 @@
 <li class="chapter" data-level="2.9" data-path="chapter2.html"><a href="chapter2.html#any-unitary-operation-on-a-single-qubit"><i class="fa fa-check"></i><b>2.9</b> Any unitary operation on a single qubit</a></li>
 <li class="chapter" data-level="2.10" data-path="chapter2.html"><a href="chapter2.html#the-bloch-sphere"><i class="fa fa-check"></i><b>2.10</b> The Bloch sphere</a>
 <ul>
-<li class="chapter" data-level="2.10.1" data-path="chapter2.html"><a href="chapter2.html#finding-the-point-on-the-bloch-sphere"><i class="fa fa-check"></i><b>2.10.1</b> Finding the point on the Bloch sphere</a></li>
+<li class="chapter" data-level="2.10.1" data-path="chapter2.html"><a href="chapter2.html#drawing-points-on-the-bloch-sphere"><i class="fa fa-check"></i><b>2.10.1</b> Drawing points on the Bloch sphere</a></li>
 </ul></li>
 <li class="chapter" data-level="2.11" data-path="chapter2.html"><a href="chapter2.html#composition-of-rotations"><i class="fa fa-check"></i><b>2.11</b> Composition of rotations</a></li>
 <li class="chapter" data-level="2.12" data-path="chapter2.html"><a href="chapter2.html#a-finite-set-of-universal-gates"><i class="fa fa-check"></i><b>2.12</b> A finite set of universal gates</a></li>
@@ -708,7 +708,8 @@ If these can be checked at a rate of, say, one million keys per second, then a c
 <eq env="displaymath">
   f(x) = f(x\oplus s)
 </eq>
-for some fixed <eq env="math">s\in\{0,1\}^n</eq>, which we call the <strong>period</strong> of <eq env="math">f</eq>.</p>
+for some fixed <eq env="math">s\in\{0,1\}^n</eq>, which we call the <strong>period</strong> of <eq env="math">f</eq>.
+So that the problem is non-trivial (i.e. so that <eq env="math">f</eq> really is two-to-one), we assume that <eq env="math">s</eq> is <em>not</em> the string of <eq env="math">n</eq> zeros.</p>
 <p>Our task is to determine, using the fewest queries possible, the value of the <eq env="math">n</eq>-bit string <eq env="math">s</eq>.</p>
 </div>
 <p>Classically, this problem is exponentially hard.
@@ -774,22 +775,23 @@ where the summation over <eq env="math">f(a)</eq> means summing over all binary 
 </eq>
 and, again, the measurement outcome is selected at random from all possible values of <eq env="math">y</eq> such that <eq env="math">s\cdot y=0</eq>.</p>
 <p>We are not quite done yet: we cannot infer <eq env="math">s</eq> from a <em>single</em> output <eq env="math">y</eq>.
-However, once we have found <eq env="math">n</eq> linearly independent<a href="#fn95" class="footnote-ref" id="fnref95"><sup>95</sup></a> strings <eq env="math">y_1,y_2,\ldots,y_n</eq>, we can solve the <eq env="math">n</eq> equations
+However, once we have found <eq env="math">n-1</eq> linearly independent<a href="#fn95" class="footnote-ref" id="fnref95"><sup>95</sup></a> strings <eq env="math">y_1,y_2,\ldots,y_{n-1}</eq>, we can solve the <eq env="math">n-1</eq> equations
 <eq env="displaymath">
   \begin{aligned}
     s\cdot y_1 &amp;= 0
   \\s\cdot y_2 &amp;= 0
   \\&amp;\,\,\,\vdots
-  \\s\cdot y_n &amp;= 0
+  \\s\cdot y_{n-1} &amp;= 0
   \end{aligned}
 </eq>
-to determine a unique value of <eq env="math">s</eq>.</p>
+to determine a unique value of <eq env="math">s</eq>.
+(Note that we only need <eq env="math">n-1</eq> values, and not <eq env="math">n</eq>, because <eq env="math">s=0</eq> will always be a solution, but we have explicitly assumed that this is not the case, and so it suffices to narrow down the space of possible solutions to consist of <em>two</em> elements, since then we know that we can just take the non-zero one.)</p>
 <p>So we run this algorithm repeatedly, each time obtaining another value of <eq env="math">y</eq> that satisfies <eq env="math">s\cdot y = 0</eq>.
 Every time we find some new value of <eq env="math">y</eq> that is linearly independent of all previous ones, we can discard half the potential candidates for <eq env="math">s</eq>.
-The probability that <eq env="math">y_1,\ldots,y_n</eq> are linearly independent is
+The probability that <eq env="math">y_1,\ldots,y_{n-1}</eq> are linearly independent is
 <eq env="displaymath">
-  \left( 1 - \frac{1}{2^n} \right)
   \left( 1 - \frac{1}{2^{n-1}} \right)
+  \left( 1 - \frac{1}{2^{n-2}} \right)
   \ldots
   \left( 1 - \frac{1}{2} \right).
 \tag{6.4.3.2}
@@ -799,15 +801,22 @@ Then these strings span a subspace of size <eq env="math">2^k</eq>, consisting o
 Now suppose we obtain some <eq env="math">y_{k+1}</eq>.
 It will be linearly independent from the <eq env="math">y_1,\ldots,y_k</eq> if and only if it lies <em>outside</em> the subspace spanned by the <eq env="math">y_1,\ldots,y_k</eq>, which occurs with probability <eq env="math">1-(2^k)/(2^n)</eq>.
 We can bound Equation (6.4.3.2) from below:<a href="#fn96" class="footnote-ref" id="fnref96"><sup>96</sup></a>
+the probability of obtaining a linearly independent set <eq env="math">\{y_1,\ldots,y_{n-1}\}</eq> by running the algorithm <eq env="math">n-1</eq> times (i.e. not having to discard any values and run again) is
 <eq env="displaymath">
+  \prod_{k=1}^{n-1}
+  \left(
+    1-\frac{1}{2^k}
+  \right)
+  \geqslant
   \left[
     1 -
     \left(
-      \frac{1}{2^n} + \frac{1}{2^{n-1}} + \ldots + \frac14
+      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac14
     \right)
   \right]
   \cdot \frac12
-  \geqslant\frac14.
+  &gt;
+  \frac14.
 </eq></p>
 <p>We conclude that we can determine <eq env="math">s</eq> with some constant probability of error after repeating the algorithm <eq env="math">O(n)</eq> times.
 The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.</p>
@@ -848,7 +857,7 @@ Exactly one half of the binary strings <eq env="math">x\in\{0,1\}^n</eq> give <e
 <li id="fn93"><p>We write <eq env="math">s^\perp</eq> to mean the set of all <eq env="math">y\in\{0,1\}^n</eq> such that <eq env="math">y\cdot s=0</eq>.<a href="chapter6.html#fnref93" class="footnote-back">↩︎</a></p></li>
 <li id="fn94"><p>Recall that the image of <eq env="math">f</eq> is the set of all <eq env="math">z\in\{0,1\}^n</eq> such that there exists some <eq env="math">x\in\{0,1\}^n</eq> satisfying <eq env="math">f(x)=z</eq>.<a href="chapter6.html#fnref94" class="footnote-back">↩︎</a></p></li>
 <li id="fn95"><p>Here, <strong>linearly independent</strong> means that no string in the set <eq env="math">\{y_1,\ldots,y_n\}</eq> can be expressed as the bitwise sum of some other strings in this set.<a href="chapter6.html#fnref95" class="footnote-back">↩︎</a></p></li>
-<li id="fn96"><p>Use the inequality <eq env="displaymath">\begin{aligned}(1-x)(1-y)&amp;= 1 - x - y - xy\\&amp;\geqslant 1 - (x+y)\end{aligned}</eq> which holds for any <eq env="math">x,y\in(0,1)</eq>.<a href="chapter6.html#fnref96" class="footnote-back">↩︎</a></p></li>
+<li id="fn96"><p>Use the inequality <eq env="displaymath">\begin{aligned}(1-x)(1-y)&amp;= 1 - x - y - xy\\&amp;\geqslant 1 - (x+y)\end{aligned}</eq> which holds for any <eq env="math">0&lt;x,y&lt;1</eq>.<a href="chapter6.html#fnref96" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <script type="text/javascript" src="../katex.min.js"></script>

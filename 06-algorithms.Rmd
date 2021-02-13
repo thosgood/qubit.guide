@@ -628,6 +628,7 @@ $$
   f(x) = f(x\oplus s)
 $$
 for some fixed $s\in\{0,1\}^n$, which we call the **period** of $f$.
+So that the problem is non-trivial (i.e. so that $f$ really is two-to-one), we assume that $s$ is _not_ the string of $n$ zeros.
 
 Our task is to determine, using the fewest queries possible, the value of the $n$-bit string $s$.
 :::
@@ -745,23 +746,24 @@ $$
 and, again, the measurement outcome is selected at random from all possible values of $y$ such that $s\cdot y=0$.
 
 We are not quite done yet: we cannot infer $s$ from a _single_ output $y$.
-However, once we have found $n$ linearly independent^[Here, **linearly independent** means that no string in the set $\{y_1,\ldots,y_n\}$ can be expressed as the bitwise sum of some other strings in this set.] strings $y_1,y_2,\ldots,y_n$, we can solve the $n$ equations
+However, once we have found $n-1$ linearly independent^[Here, **linearly independent** means that no string in the set $\{y_1,\ldots,y_n\}$ can be expressed as the bitwise sum of some other strings in this set.] strings $y_1,y_2,\ldots,y_{n-1}$, we can solve the $n-1$ equations
 $$
   \begin{aligned}
     s\cdot y_1 &= 0
   \\s\cdot y_2 &= 0
   \\&\,\,\,\vdots
-  \\s\cdot y_n &= 0
+  \\s\cdot y_{n-1} &= 0
   \end{aligned}
 $$
 to determine a unique value of $s$.
+(Note that we only need $n-1$ values, and not $n$, because $s=0$ will always be a solution, but we have explicitly assumed that this is not the case, and so it suffices to narrow down the space of possible solutions to consist of _two_ elements, since then we know that we can just take the non-zero one.)
 
 So we run this algorithm repeatedly, each time obtaining another value of $y$ that satisfies $s\cdot y = 0$.
 Every time we find some new value of $y$ that is linearly independent of all previous ones, we can discard half the potential candidates for $s$.
-The probability that $y_1,\ldots,y_n$ are linearly independent is
+The probability that $y_1,\ldots,y_{n-1}$ are linearly independent is
 $$
-  \left( 1 - \frac{1}{2^n} \right)
   \left( 1 - \frac{1}{2^{n-1}} \right)
+  \left( 1 - \frac{1}{2^{n-2}} \right)
   \ldots
   \left( 1 - \frac{1}{2} \right).
 \tag{6.4.3.2}
@@ -771,16 +773,23 @@ Indeed, suppose that we have $k$ linearly independent binary strings $y_1,\ldots
 Then these strings span a subspace of size $2^k$, consisting of all binary strings of the form $\bigoplus_{i=1}^k b_i y_i$, where $b_1,\ldots,b_k\in\{0,1\}$.
 Now suppose we obtain some $y_{k+1}$.
 It will be linearly independent from the $y_1,\ldots,y_k$ if and only if it lies _outside_ the subspace spanned by the $y_1,\ldots,y_k$, which occurs with probability $1-(2^k)/(2^n)$.
-We can bound Equation (6.4.3.2) from below:^[Use the inequality $$\begin{aligned}(1-x)(1-y)&= 1 - x - y - xy\\&\geq 1 - (x+y)\end{aligned}$$ which holds for any $x,y\in(0,1)$.]
+We can bound Equation (6.4.3.2) from below:^[Use the inequality $$\begin{aligned}(1-x)(1-y)&= 1 - x - y - xy\\&\geq 1 - (x+y)\end{aligned}$$ which holds for any $0<x,y<1$.]
+the probability of obtaining a linearly independent set $\{y_1,\ldots,y_{n-1}\}$ by running the algorithm $n-1$ times (i.e. not having to discard any values and run again) is
 $$
+  \prod_{k=1}^{n-1}
+  \left(
+    1-\frac{1}{2^k}
+  \right)
+  \geq
   \left[
     1 -
     \left(
-      \frac{1}{2^n} + \frac{1}{2^{n-1}} + \ldots + \frac14
+      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac14
     \right)
   \right]
   \cdot \frac12
-  \geq \frac14.
+  >
+  \frac14.
 $$
 
 We conclude that we can determine $s$ with some constant probability of error after repeating the algorithm $O(n)$ times.

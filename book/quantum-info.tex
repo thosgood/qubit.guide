@@ -95,7 +95,7 @@
 
 \title{Lectures on Quantum Information Science}
 \author{Artur Ekert and Tim Hosgood}
-\date{Last updated: January 28, 2021}
+\date{Last updated: February 13, 2021}
 
 
 \begin{document}
@@ -1977,7 +1977,8 @@ This is a very useful way to visualise quantum states of a single qubit and unit
 Any unitary action on the state vector will induce a rotation of the corresponding Bloch vector.
 But what kind of rotation?
 
-Note that any two orthogonal state vectors appear on the Bloch sphere as two Bloch vectors pointing in opposite directions.
+We give a complete answer to this question in \protect\hyperlink{chapter3}{Chapter 3}, but we might as well give some specific results here first, since some are easy enough to calculate ``by hand''.
+Note that \emph{any two orthogonal state vectors appear on the Bloch sphere as two Bloch vectors pointing in opposite directions}.
 Now, the two eigenvectors of a single-qubit unitary \(U\) must be orthogonal, and thus define an axis running through the centre of the Bloch sphere.
 This is the axis about which the Bloch vector is rotated when \(U\) acts on the corresponding state vector.
 The rotation angle \(\alpha\) is given by the eigenvalues of \(U\), which, up to a global phase factor, are of the form \(e^{\mp i\alpha/2}\).
@@ -2024,8 +2025,8 @@ One can show\footnote{Again, see \protect\hyperlink{chapter3}{Chapter 3}.} that 
 \]
 where \(s'_x\), \(s'_y\), and \(s'_z\) are the components of the rotated Bloch vector.
 
-\hypertarget{finding-the-point-on-the-bloch-sphere}{%
-\subsubsection{Finding the point on the Bloch sphere}\label{finding-the-point-on-the-bloch-sphere}}
+\hypertarget{drawing-points-on-the-bloch-sphere}{%
+\subsubsection{Drawing points on the Bloch sphere}\label{drawing-points-on-the-bloch-sphere}}
 
 We know that the state \(|0\rangle\) corresponds to the north pole of the Bloch sphere, and the state \(|1\rangle\) to the south, but what about an arbitrary state \(|\psi\rangle=\alpha|0\rangle+\beta|1\rangle\)?
 By definition, we can find the parametrisation in terms of \(\theta\) and \(\varphi\), but there is also a neat ``trick'' for finding the point on the Bloch sphere that corresponds to \(|\psi\rangle\), which goes as follows.
@@ -2593,7 +2594,7 @@ represent rotations by \(2\theta\) about the \(x\)-, \(y\)- and \(z\)-axis, resp
 \caption{\(e^{i\theta\vec{n}\cdot\vec{\sigma}}\) rotates the vector \(\vec{s}\) about \(\vec{n}\) by angle \(2\theta\), sending it to a point on the blue circle, whose centre is passed through by \(\vec{n}\).}\label{fig:unnamed-chunk-24}
 \end{figure}
 
-The Hadamard gate
+Now we can show that the Hadamard gate
 \[
   \begin{aligned}
     H
@@ -5217,6 +5218,7 @@ We are presented with an oracle that computes some unknown function \(f\colon\{0
   f(x) = f(x\oplus s)
 \]
 for some fixed \(s\in\{0,1\}^n\), which we call the \textbf{period} of \(f\).
+So that the problem is non-trivial (i.e.~so that \(f\) really is two-to-one), we assume that \(s\) is \emph{not} the string of \(n\) zeros.
 
 Our task is to determine, using the fewest queries possible, the value of the \(n\)-bit string \(s\).
 
@@ -5296,23 +5298,24 @@ The output of the algorithm is then
 and, again, the measurement outcome is selected at random from all possible values of \(y\) such that \(s\cdot y=0\).
 
 We are not quite done yet: we cannot infer \(s\) from a \emph{single} output \(y\).
-However, once we have found \(n\) linearly independent\footnote{Here, \textbf{linearly independent} means that no string in the set \(\{y_1,\ldots,y_n\}\) can be expressed as the bitwise sum of some other strings in this set.} strings \(y_1,y_2,\ldots,y_n\), we can solve the \(n\) equations
+However, once we have found \(n-1\) linearly independent\footnote{Here, \textbf{linearly independent} means that no string in the set \(\{y_1,\ldots,y_n\}\) can be expressed as the bitwise sum of some other strings in this set.} strings \(y_1,y_2,\ldots,y_{n-1}\), we can solve the \(n-1\) equations
 \[
   \begin{aligned}
     s\cdot y_1 &= 0
   \\s\cdot y_2 &= 0
   \\&\,\,\,\vdots
-  \\s\cdot y_n &= 0
+  \\s\cdot y_{n-1} &= 0
   \end{aligned}
 \]
 to determine a unique value of \(s\).
+(Note that we only need \(n-1\) values, and not \(n\), because \(s=0\) will always be a solution, but we have explicitly assumed that this is not the case, and so it suffices to narrow down the space of possible solutions to consist of \emph{two} elements, since then we know that we can just take the non-zero one.)
 
 So we run this algorithm repeatedly, each time obtaining another value of \(y\) that satisfies \(s\cdot y = 0\).
 Every time we find some new value of \(y\) that is linearly independent of all previous ones, we can discard half the potential candidates for \(s\).
-The probability that \(y_1,\ldots,y_n\) are linearly independent is
+The probability that \(y_1,\ldots,y_{n-1}\) are linearly independent is
 \[
-  \left( 1 - \frac{1}{2^n} \right)
   \left( 1 - \frac{1}{2^{n-1}} \right)
+  \left( 1 - \frac{1}{2^{n-2}} \right)
   \ldots
   \left( 1 - \frac{1}{2} \right).
 \tag{6.4.3.2}
@@ -5322,16 +5325,23 @@ Indeed, suppose that we have \(k\) linearly independent binary strings \(y_1,\ld
 Then these strings span a subspace of size \(2^k\), consisting of all binary strings of the form \(\bigoplus_{i=1}^k b_i y_i\), where \(b_1,\ldots,b_k\in\{0,1\}\).
 Now suppose we obtain some \(y_{k+1}\).
 It will be linearly independent from the \(y_1,\ldots,y_k\) if and only if it lies \emph{outside} the subspace spanned by the \(y_1,\ldots,y_k\), which occurs with probability \(1-(2^k)/(2^n)\).
-We can bound Equation (6.4.3.2) from below:\footnote{Use the inequality \[\begin{aligned}(1-x)(1-y)&= 1 - x - y - xy\\&\geqslant 1 - (x+y)\end{aligned}\] which holds for any \(x,y\in(0,1)\).}
+We can bound Equation (6.4.3.2) from below:\footnote{Use the inequality \[\begin{aligned}(1-x)(1-y)&= 1 - x - y - xy\\&\geqslant 1 - (x+y)\end{aligned}\] which holds for any \(0<x,y<1\).}
+the probability of obtaining a linearly independent set \(\{y_1,\ldots,y_{n-1}\}\) by running the algorithm \(n-1\) times (i.e.~not having to discard any values and run again) is
 \[
+  \prod_{k=1}^{n-1}
+  \left(
+    1-\frac{1}{2^k}
+  \right)
+  \geqslant
   \left[
     1 -
     \left(
-      \frac{1}{2^n} + \frac{1}{2^{n-1}} + \ldots + \frac14
+      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac14
     \right)
   \right]
   \cdot \frac12
-  \geqslant\frac14.
+  >
+  \frac14.
 \]
 
 We conclude that we can determine \(s\) with some constant probability of error after repeating the algorithm \(O(n)\) times.
@@ -5702,6 +5712,8 @@ It is clear that we want to avoid decoherence, or at least diminish its impact o
 For this we need \textbf{quantum error correction}: we encode the state of a single (logical) qubit across several (physical) qubits.
 
 \end{idea}
+
+\textbf{!!!TODO!!! generalised decoherence as controlled-\(U\) gate, varying from \(\mathbf{1}\) to controlled-\(\texttt{NOT}\)}
 
 \hypertarget{evolution-of-density-operators-under-decoherence}{%
 \subsection{Evolution of density operators under decoherence}\label{evolution-of-density-operators-under-decoherence}}
