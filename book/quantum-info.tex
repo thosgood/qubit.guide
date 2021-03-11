@@ -95,7 +95,7 @@
 
 \title{Lectures on Quantum Information Science}
 \author{Artur Ekert and Tim Hosgood}
-\date{Last updated: February 16, 2021}
+\date{Last updated: March 11, 2021}
 
 
 \begin{document}
@@ -593,8 +593,8 @@ Given that we can decompose the identity by choosing any orthonormal basis, it i
   \(\operatorname{tr}(ABC) = \operatorname{tr}(CAB) = \operatorname{tr}(BCA)\)
 \end{itemize}
 
-\hypertarget{part-budding}{%
-\part{Budding}\label{part-budding}}
+\hypertarget{part-foundations}{%
+\part{Foundations}\label{part-foundations}}
 
 \hypertarget{chapter1}{%
 \section{Quantum interference: an overview}\label{chapter1}}
@@ -4760,6 +4760,772 @@ The Schmidt decomposition is \emph{almost} unique.
 The ambiguity arises when we have two or more identical singular values, as, for example, in the case of the Bell states.
 Then any unitary transformation of the basis vectors corresponding to a degenerate singular value, both in \(\mathcal{H}_a\) and in \(\mathcal{H}_b\), generates another set of basis vectors.
 
+\hypertarget{chapter9}{%
+\section{Density matrices}\label{chapter9}}
+
+\begin{quote}
+About \textbf{density matrices}, and how they help to solve the problem introduced by entangled states, as well as how they let us talk about mixtures and subsystems.
+Also a first look at the \textbf{partial trace}.
+\end{quote}
+
+We cannot always assign a definite state vector to a quantum system.
+It may be that the system is part of a composite system that is in an entangled state, or it may be that our knowledge of the preparation of a particular system is insufficient to determine its state (for example, someone may prepare a particle in one of the states \(|\psi_1\rangle, |\psi_2\rangle, \ldots, |\psi_n\rangle\), with (respective) probabilities \(p_1, p_2, \ldots, p_n\)).
+Nevertheless, in either case we are able to make statistical predictions about the outcomes of measurements performed on the system using a more general description of quantum states.
+
+We have already mentioned that the existence of entangled states begs an obvious question: if we cannot attribute a state vectors to an individual quantum system then how shall we describe its quantum state?
+In this chapter we will introduce an alternate description of quantum states that can be applied both to a composite system and to any of its subsystems.
+Our new mathematical tool is called a \textbf{density operator}.\footnote{If we choose a particular basis, operators become matrices. Here I will use both terms (density \emph{operators} and density \emph{matrices}) interchangeably.}
+We will start with the density operator as a description of the mixture of quantum states, and will then discuss the partial trace, which is a unique operation that takes care of the reduction of a density operator of a composite system to density operators of its components.
+
+\hypertarget{definitions}{%
+\subsection{Definitions}\label{definitions}}
+
+If you are an impatient mathematically minded person, who feels more comfortable when things are properly defined right from the beginning, here is your definition:\footnote{A self-adjoint matrix \(M\) is said to be \textbf{non-negative}, or \textbf{positive semi-definite}, if \(\langle v|M|v\rangle\geqslant 0\) for any vector \(|v\rangle\), or if all of its eigenvalues are non-negative, or if here exists a matrix \(A\) such that \(M=A^\dagger A\). (This is called a \textbf{Cholesky factorization}.)}
+
+\begin{idea}
+
+A \textbf{density operator} \(\rho\) on a finite dimensional Hilbert space \(\mathcal{H}\) is any non-negative self-adjoint operator with trace equal to one.
+
+\end{idea}
+
+It follows that any such \(\rho\) can always be diagonalised, that the eigenvalues are all real and non-negative, and that the eigenvalues sum to one.
+Moreover, given two density operators \(\rho_1\) and \(\rho_2\), we can always construct another density operator as a convex sum of the two:
+\[
+  \rho = p_1\rho_1 + p_2\rho_2
+  \qquad\text{where}\quad
+  p_1, p_2 \geqslant 0
+  \text{ and }
+  p_1+p_2 = 1.
+\]
+You should check that \(\rho\) has all the defining properties of a density matrix, i.e.~that it is self-adjoint, non-negative, and that its trace is one.
+This means that density operators form a convex set.\footnote{A subset of a vector space is said to be \textbf{convex} if, for any two points in the subset, the straight line segment joining them is also entirely contained inside the subset.}
+
+An important example of a density operator is a rank one projector.\footnote{The \textbf{rank} of a matrix is the number of its non-zero eigenvalues.}
+Any quantum state that can be described by the state vector \(|\psi\rangle\), called a \textbf{pure state}, can be also described by the density operator \(\rho=|\psi\rangle\langle\psi|\).
+Pure states are the extremal points in the convex set of density operators: they cannot be expressed as a convex sum of other elements in the set.
+In contrast, all other states, called \textbf{mixed states}, can be always written as the convex sum of pure states: \(\sum_i p_i |\psi_i\rangle\langle\psi_i|\) (\(p_i\geqslant 0\) and \(\sum_i p_i=1\)).
+Now that we have cleared the mathematical essentials, we will turn to physical applications.
+
+\hypertarget{mixtures}{%
+\subsection{Mixtures}\label{mixtures}}
+
+Let us start with probability distributions over state vectors.
+Suppose Alice prepares a quantum system and hands it over to Bob who subsequently measures observable \(M\).
+If Alice's preparation is described by a state vector \(|\psi\rangle\), then, quantum theory declares, the average value of any observable \(M\) is given by \(\langle\psi|M|\psi\rangle\), which can be also written as\footnote{If \(M\) is one of the orthogonal projectors \(P_k\) describing the measurement, then the average \(\langle P_k\rangle\) is the probability of the outcome \(k\) associated with this projector.}
+\[
+  \langle M\rangle = \operatorname{tr}M|\psi\rangle\langle\psi|.
+\]
+This way of expressing the average value makes a clear separation between the contributions from the state preparation and from the choice of the measurement.
+We have two operators under the trace: one of them, \(|\psi\rangle\langle\psi|\), describes the state preparation, and the other one, \(M\), the measurement.
+Now, suppose Alice prepares the quantum system in one of the states \(|\psi_1\rangle,\ldots,|\psi_m\rangle\), choosing state \(|\psi_i\rangle\) with probability \(p_i\), and hands the system to Bob without telling him which state was chosen.
+The possible states \(|\psi_i\rangle\) are normalised but need not be orthogonal.
+We call this situation a \textbf{mixture of the states} \(|\psi_i\rangle\), or a \textbf{mixed state} for short.
+
+\begin{idea}
+
+Remember, a mixture of states is very different from a superposition of states: a superposition \emph{always} yields a definite state vector, whereas a mixture does \emph{not}, and so must be described by a density operator.
+
+\end{idea}
+
+Bob knows the ensemble of states \(|\psi_1\rangle,\ldots,|\psi_m\rangle\) and the corresponding probability distribution \(p_1,\ldots,p_m\), and can hence calculate \(\langle M\rangle\) as\footnote{A pure state can be seen as a special case of a mixed state, where all but one the probabilities \(p_i\) equal zero.}
+\[
+  \begin{aligned}
+    \langle M\rangle
+    &= \sum_i p_i\left( \operatorname{tr}M|\psi_i\rangle\langle\psi_i| \right)
+  \\&= \operatorname{tr}M \underbrace{\left( \sum_i p_i|\psi_i\rangle\langle\psi_i| \right)}_{\rho}
+  \\&=\operatorname{tr}M\rho.
+  \end{aligned}
+\]
+Again, we have two operators under the trace: \(\rho=\sum_i p_i|\psi_i\rangle\langle\psi_i|\), which pertains to the state preparation, and \(M\), which describes the measurement.
+We shall call the operator
+\[
+  \rho = \sum_i p_i |\psi_i\rangle\langle\psi_i|
+\]
+the \textbf{density operator}, since it has all the defining properties of the density operator (the convex sum of rank one projectors).
+It depends on the constituent states \(|\psi_i\rangle\) and their probabilities, and it describes our ignorance about the state preparation.
+
+Once we have \(\rho\) we can make statistical predictions: for any observable \(M\) we have
+\[
+  \langle M\rangle = \operatorname{tr}M\rho.
+\]
+We see that the exact composition of the mixture does not enter this formula: for computing the statistics associated with any observable property of a system, all that matters is the density operator itself, and not its decomposition into the mixture of states.
+This is important because any given density operator, with the remarkable exception of a pure state, can arise from many different mixtures of pure states.
+Consider, for example, the following three scenarios:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Alice flips a fair coin.
+  If the result is \(\texttt{Heads}\) then she prepares the qubit in the state \(|0\rangle\), and if the result is \(\texttt{Tails}\) then she prepares the qubit in the state \(|1\rangle\).
+  She gives Bob the qubit without revealing the result of the coin-flip.
+  Bob's knowledge of the qubit is described by the density matrix
+  \[
+     \frac12|0\rangle\langle 0| + \frac12|1\rangle\langle 1|
+     =
+     \begin{bmatrix}
+       \frac12 & 0
+     \\0 & \frac12
+     \end{bmatrix}.
+   \]
+\item
+  Suppose Alice flips a fair coin, as before, but now if the result is \(\texttt{Heads}\) then she prepares the qubit in the state \(|\bar{0}\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)\), and if the result is \(\texttt{Tails}\) then she prepares the qubit in the state \(|\bar{1}\rangle = \frac{1}{\sqrt{2}}(|0\rangle - |1\rangle)\).
+  Bob's knowledge of the qubit is now described by the density matrix
+  \[
+     \begin{aligned}
+       \frac12|\bar{0}\rangle\langle\bar{0}| + \frac12|\bar{1}\rangle\langle\bar{1}|
+       &=
+       \frac12
+       \begin{bmatrix}
+       \frac12 & \frac12
+       \\\frac12 & \frac12
+       \end{bmatrix}
+       +
+       \frac12
+       \begin{bmatrix}
+       \frac12 & -\frac12
+       \\-\frac12 & \frac12
+       \end{bmatrix}
+     \\&=
+       \begin{bmatrix}
+       \frac12 & 0
+       \\0 & \frac12
+       \end{bmatrix}.
+     \end{aligned}
+   \]
+\item
+  Suppose Alice picks up any pair of orthogonal states of a qubit and then flips the coin to chose one of them.
+  Any two orthonormal states of a qubit, \(|u_1\rangle\), \(|u_2\rangle\), form a complete basis, so the mixture \(\frac12|u_1\rangle\langle u_1|+\frac12|u_2\rangle\langle u_2|\) gives \(\frac12\mathbf{1}\).
+\end{enumerate}
+
+As you can see, these three different preparations yield precisely the same density matrix and are hence statistically indistinguishable.
+In general, two different mixtures can be distinguished (in a statistical sense) if and only if they yield different density matrices.
+In fact, the optimal way of distinguishing quantum states with different density operators is still an active area of research.
+
+\hypertarget{a-few-instructive-examples-and-some-less-instructive-remarks}{%
+\subsection{A few instructive examples, and some less instructive remarks}\label{a-few-instructive-examples-and-some-less-instructive-remarks}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  The density matrix corresponding to the state vector \(|\psi\rangle\) is the rank one projector \(|\psi\rangle\langle\psi|\).
+  Observe that there is no phase ambiguity, since \(|\psi\rangle\mapsto e^{i\phi}|\psi\rangle\) leaves the density matrix unchanged, and each \(|\psi\rangle\) gives rise to a distinct density matrix.
+\item
+  If Alice prepares a qubit in the state \(|\psi\rangle = \alpha|0\rangle + \beta|1\rangle\) then the corresponding density matrix is the projector
+  \[
+     |\psi\rangle\langle\psi|
+     =
+     \begin{bmatrix}
+       |\alpha|^2 & \alpha\beta^\star
+     \\\alpha^\star\beta & |\beta|^2
+     \end{bmatrix}.
+   \]
+\item
+  You are given a qubit and you are told that it was prepared either in state \(|0\rangle\) with probability \(|\alpha|^2\) or in state \(|1\rangle\) with probability \(|\beta|^2\).
+  In this case all you can say is that your qubit is in a mixed state described by the density matrix
+  \[
+     |\alpha|^2|0\rangle\langle 0| + |\beta|^2|1\rangle\langle 1|
+     =
+     \begin{bmatrix}
+       |\alpha|^2 & 0
+     \\0 & |\beta|^2
+     \end{bmatrix}.
+   \]
+  Diagonal density matrices correspond to classical probability distributions on the set of basis vectors.
+\item
+  Suppose you want to distinguish between preparations described by the density matrices in examples 2 and 3.
+  Assume that you are given sufficiently many identically prepared qubits described either by the density matrix in example 2 or by the density matrix in example 3.
+  Which of the two measurements would you choose: the measurement in the standard basis \(\{|0\rangle,|1\rangle\}\), or the measurement in the basis \(\{|\psi\rangle,|\psi_\perp\rangle\}\)?
+  One of the two measurements is completely useless.
+  Which one, and why?
+\item
+  In general, the diagonal entries of a density matrix describe the probability distributions on the set of basis vectors.
+  They must add up to one, which is why the trace of any density matrix is one.
+  The off-diagonal elements, often called \textbf{coherences}, signal departure from the classical probability distribution and quantify the degree to which a quantum system can interfere (we will discuss this in detail later on).
+  The process in which off-diagonal entries (the parameter \(\epsilon\) in the matrices below) go to zero is called \textbf{decoherence}.
+  \[
+     \begin{bmatrix}
+       |\alpha|^2 & \alpha\beta^\star
+     \\\alpha^\star\beta & |\beta|^2
+     \end{bmatrix}
+     \mapsto
+     \begin{bmatrix}
+       |\alpha|^2 & \epsilon
+     \\\epsilon^\star & |\beta|^2
+     \end{bmatrix}
+     \mapsto
+     \begin{bmatrix}
+       |\alpha|^2 & 0
+     \\0 & |\beta|^2
+     \end{bmatrix}
+   \]
+  For \(\epsilon = \alpha\beta^\star\) we have a pure quantum state (``full interference capability'') and for \(\epsilon=0\) we have a classical probability distribution over the standard basis (``no interference capability'').
+\item
+  Suppose it is equally likely that your qubit was prepared either in state \(\alpha|0\rangle + \beta|1\rangle\) or in state \(\alpha|0\rangle - \beta|1\rangle\).
+  This means that your qubit is in a mixed state described by the density matrix
+  \[
+     \frac12
+     \begin{bmatrix}
+       |\alpha|^2 & \alpha\beta^\star
+     \\\alpha^\star\beta & |\beta|^2
+     \end{bmatrix}
+     +
+     \frac12
+     \begin{bmatrix}
+       |\alpha|^2 & -\alpha\beta^\star
+     \\-\alpha^\star\beta & |\beta|^2
+     \end{bmatrix}
+     =
+     \begin{bmatrix}
+       |\alpha|^2 & 0
+     \\0 & |\beta|^2
+     \end{bmatrix}.
+   \]
+  You cannot tell the difference between the equally weighted mixture of \(\alpha|0\rangle\pm\beta|1\rangle\) and a mixture of \(|0\rangle\) and \(|1\rangle\) with (respective) probabilities \(|\alpha|^2\) and \(|\beta|^2\).
+\item
+  For any density matrix \(\rho\), the most natural mixture that yields \(\rho\) is its spectral decomposition: \(\rho=\sum_i p_i|u_i\rangle\langle u_i|\), with eigenvectors \(|u_i\rangle\) and eigenvalues \(p_i\).
+\item
+  If the states \(|u_1\rangle,\ldots,|u_m\rangle\) form an orthonormal basis, and each occurs with equal probability \(1/m\), then the resulting density matrix is proportional to the identity:
+  \[
+     \frac{1}{m}\sum_{i=1}^m |\psi_i\rangle\langle\psi_i|
+     = \frac{1}{m}\mathbf{1}.
+   \]
+  This is called the \textbf{maximally mixed state}.
+  For qubits, any pair of orthogonal states taken with equal probabilities gives the maximally mixed state \(\frac12\mathbf{1}\).
+  In maximally mixed states, outcomes of \emph{any} measurement are completely random.
+\item
+  It is often convenient to write density operators in terms of projectors on states which are not normalised, incorporating the probabilities into the length of the state vector:
+  \[
+     \rho = \sum_i|\widetilde\psi_i\rangle\langle\widetilde\psi_i|
+   \]
+  where \(|\widetilde\psi_i\rangle = \sqrt{p_i}|\psi_i\rangle\), i.e.~\(p_i=\langle\widetilde\psi_i|\widetilde\psi_i\rangle\).
+  This form is more compact, but you have to remember that the state vectors are \emph{not} normalised.
+  We tend to mark such states with the tilde, e.g.~\(|\widetilde\psi\rangle\), but you may have your own way to remember.
+\end{enumerate}
+
+\hypertarget{mixed-states-of-a-qubit-and-the-bloch-ball}{%
+\subsection{Mixed states of a qubit, and the Bloch ball}\label{mixed-states-of-a-qubit-and-the-bloch-ball}}
+
+We have already talked in some depth about the Bloch sphere in \protect\hypertarget{chapter2}{}{Chapter 2} and \protect\hypertarget{chapter3}{}{Chapter 3}, but now that we are considering density operators (which are strictly more general than state vectors), we are actually interested in the Bloch \emph{ball}, i.e.~not just the sphere of vectors of magnitude \(1\), but instead the ball of vectors of magnitude \emph{less than or equal to} \(1\).
+
+The most general Hermitian \((2\times 2)\) matrix has four real parameters and can be expanded in the basis composed of the identity and the three Pauli matrices: \(\{\mathbf{1}, \sigma_x, \sigma_y, \sigma_z\}\).
+Since the Pauli matrices are traceless, the coefficient of \(\mathbf{1}\) in the expansion of a density matrix \(\rho\) must be \(\frac12\), so that \(\operatorname{tr}\rho=1\).
+Thus \(\rho\) may be expressed as\footnote{Physicists usually still refer to the Bloch \emph{ball} as the Bloch \emph{sphere}, even though it really is a ball now, not a sphere.}
+\[
+  \begin{aligned}
+    \rho
+    &= \frac12\left( \mathbf{1}+\vec{s}\cdot\vec{\sigma} \right)
+  \\&= \frac12\left( \mathbf{1}+ s_x\sigma_x + s_y\sigma_y + s_z\sigma_z \right)
+  \\&= \frac12
+    \begin{bmatrix}
+      1 + s_z & s_x - is_y
+    \\s_x + is_y & 1 - s_z
+    \end{bmatrix}.
+  \end{aligned}
+\]
+The vector \(\vec{s}\) is called the \textbf{Bloch vector} for the density operator \(\rho\).
+Any real Bloch vector \(\vec{s}\) defines a trace one Hermitian operator \(\rho\), but in order for \(\rho\) to be a density operator it must also be non-negative.
+Which Bloch vectors yield legitimate density operators?
+
+Let us compute the eigenvalues of \(\rho\).
+The sum of the two eigenvalues of \(\rho\) is, of course, equal to one (\(\operatorname{tr}\rho=1\)) and the product is equal to the determinant of \(\rho\), which can be computed from the matrix form above:
+\[
+  \det\rho
+  = \frac{1}{4}(1-s^2)
+  = \frac12(1+s)\frac12(1-s)
+\]
+where \(s=|\vec{s}|\).
+It follows that the two eigenvalues of \(\rho\) are \(\frac12(1\pm s)\).
+They have to be non-negative, and so \(s\), the length of the Bloch vector, cannot exceed one.\footnote{One might hope that there is an equally nice visualisation of the density operators in higher dimensions. Unfortunately there isn't.}
+We can now visualise the convex set of \((2\times 2)\) density matrices as a unit ball in three-dimensional Euclidean space: the extremal points, which represent pure states, are the points on the boundary (\(s=1\)), i.e.~the surface of the ball; the maximally mixed state \(\mathbf{1}/2\) corresponds to \(s=0\), i.e.~the centre of the ball.
+In general, the length of the Bloch vector \(s\) can be thought of as a ``purity'' of a state.
+
+\hypertarget{subsystems-of-entangled-systems}{%
+\subsection{Subsystems of entangled systems}\label{subsystems-of-entangled-systems}}
+
+We have already trumpeted that one of the most important features of the density operator formalism is its ability to describe the quantum state of a subsystem of a composite system.
+Let me now show you how it works.
+
+Given a quantum state of the composite system \(\mathcal{AB}\), described by some density operator \(\rho^{\mathcal{AB}}\), we obtain reduced density operators \(\rho^{\mathcal{A}}\) and \(\rho^{\mathcal{B}}\) of subsystems \(\mathcal{A}\) and \(\mathcal{B}\), respectively, by the partial trace:
+\[
+  \begin{aligned}
+    \rho^{\mathcal{AB}}
+    &\longmapsto
+    \underbrace{\rho^\mathcal{A}=\operatorname{tr}_{\mathcal{B}}\rho^{\mathcal{AB}}}_{\mathrm{partial\,trace\,over}\,\mathcal{B}}\qquad
+  \\\rho^{\mathcal{AB}}
+    &\longmapsto
+    \underbrace{\rho^\mathcal{B}=\operatorname{tr}_{\mathcal{A}}\rho^{\mathcal{AB}}}_{\mathrm{partial\,trace\,over}\,\mathcal{A}}
+  \end{aligned}
+\]
+We define the partial trace over \(\mathcal{B}\), or \(\mathcal{A}\), first on a tensor product of two operators \(A\otimes B\) as
+\[
+  \begin{aligned}
+    \operatorname{tr}_{\mathcal{B}} (A\otimes B)
+    &= A(\operatorname{tr}B)
+  \\\operatorname{tr}_{\mathcal{A}} (A\otimes B)
+    &= (\operatorname{tr}A) B,
+  \end{aligned}
+\]
+and then extend to any operator on \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\) by linearity.
+
+Here is a simple example.
+Suppose a composite system \(\mathcal{AB}\) is in a pure entangled state, which we can always write as
+\[
+  |\psi_{\mathcal{AB}}\rangle
+  = \sum_{i} c_{i} |a_i\rangle\otimes|b_i\rangle,
+\]
+where \(|a_i\rangle\) and \(|b_j\rangle\) are two orthonormal bases (e.g.~the Schmidt bases), and where \(\sum_i |c_i|^2 = 1\) (due to the normalisation).
+The corresponding density operator of the composite system is the projector \(\rho^{\mathcal{AB}}= |\psi_{\mathcal{AB}}\rangle\langle\psi_{\mathcal{AB}}|\), which we can write as
+\[
+  \rho^{\mathcal{AB}}
+  = |\psi_{\mathcal{AB}}\rangle\langle\psi_{\mathcal{AB}}|
+  = \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j| \otimes |b_i\rangle\langle b_j|
+\]
+Let us compute the reduced density operator \(\rho^{\mathcal{A}}\) by taking the partial trace over \(\mathcal{B}\):
+\[
+  \begin{aligned}
+    \rho^\mathcal{A}
+    &= \operatorname{tr}_{\mathcal{B}}\rho^{\mathcal{AB}}
+  \\&= \operatorname{tr}_{\mathcal{B}} |\psi_{\mathcal{AB}}\rangle\langle\psi_{\mathcal{AB}}|
+  \\&= \operatorname{tr}_{\mathcal{B}} \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j| \otimes |b_i\rangle\langle b_j|
+  \\&= \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j|(\operatorname{tr}|b_i\rangle\langle b_j|)
+  \\&= \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j| \underbrace{\langle b_i|b_j\rangle}_{\delta_{ij}}
+  \\& = \sum_{i} |c_i|^2 |a_i\rangle\langle a_i|
+  \end{aligned}
+\]
+where we have used the fact that \(\operatorname{tr}|b_i\rangle\langle b_j| = \langle b_j|b_i\rangle=\delta_{ij}\).
+In the \(|a_i\rangle\) basis, the reduced density matrix \(\rho^{\mathcal{A}}\) is diagonal, with entries \(p_i=|c_i|^2\).
+We can also take the partial trace over \(\mathcal{A}\) and obtain \(\rho^\mathcal{B} = \sum_{i} |c_i|^2 |b_i\rangle\langle b_i|\).
+In particular, for the maximally entangled states in the \((d\times d)\)-dimensional Hilbert spaces \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\),
+\[
+  |\psi_{\mathcal{AB}}\rangle
+  = \frac{1}{\sqrt{d}} \sum_{i}^d |a_i\rangle|b_i\rangle,
+\]
+and the reduced density operators, \(\rho^\mathcal{A}\) and \(\rho^\mathcal{B}\), are the maximally mixed states: \(\rho^\mathcal{A}=\rho^\mathcal{B}=\frac{1}{d}\mathbf{1}\).
+It follows that the quantum states of individual qubits in any of the Bell states are maximally mixed: their density matrix is \(\frac12\mathbf{1}\).
+A state such as
+\[
+  \frac{1}{\sqrt 2} \left( |00\rangle + |11\rangle \right)
+\]
+guarantees perfect correlations when each qubit is measured in the standard basis: the two equally likely outcomes are (\(0\) and \(0\)) or (\(1\) and \(1\)), but any single qubit outcome, be it \(0\) or \(1\) or anything else, is completely random.
+
+\hypertarget{partial-trace-revisited}{%
+\subsection{Partial trace, revisited}\label{partial-trace-revisited}}
+
+If you are given a matrix you calculate the trace by summing its diagonal entries.
+How about the partial trace?
+Suppose someone writes down for you a density matrix of two qubits in the standard basis, \(\{|00\rangle, |01\rangle, |10\rangle, |11\rangle\}\), and asks you to find the reduced density matrices of the individual qubits.
+The tensor product structure of this \((4\times 4)\) matrix means that it is has a block form:
+\[
+  \rho^{\mathcal{AB}}
+  =
+  \left[
+    \begin{array}{c|c}
+      P & Q
+    \\\hline
+      R & S
+    \end{array}
+  \right]
+\]
+where \(P,Q,R,S\) are \((2\times 2)\) sized sub-matrices.
+The two partial traces can then be evaluated as\footnote{Take any of the Bell states, write its \((4\times 4)\)-density matrix explicitly, and then trace over each qubit. In each case you should get the maximally mixed state.}
+\[
+  \begin{aligned}
+    \rho^\mathcal{A}
+    &=
+    \operatorname{tr}_{B}\rho^{\mathcal{AB}}
+    =
+    \left[
+      \begin{array}{c|c}
+        \operatorname{tr}P & \operatorname{tr}Q
+      \\\hline
+        \operatorname{tr}R & \operatorname{tr}S
+      \end{array}
+    \right]
+  \\\rho^\mathcal{B}
+    &= \operatorname{tr}_{A}\rho^{\mathcal{AB}}
+    = P+S.
+  \end{aligned}
+\]
+The same holds for a general \(\rho^{\mathcal{AB}}\) on any \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\) with corresponding block form (\((m\times m)\) blocks of \((n\times n)\)-sized sub-matrices, where \(m\) and \(n\) are the dimensions of \(\mathcal{H}_{\mathcal{A}}\) and \(\mathcal{H}_{\mathcal{B}}\), respectively).
+
+\hypertarget{mixtures-and-subsystems}{%
+\subsection{Mixtures and subsystems}\label{mixtures-and-subsystems}}
+
+We have used the density operators to describe two distinct situations: the statistical properties of the mixtures of states, and the statistical properties of subsystems of composite systems.
+In order to see the relationship between the two, consider a joint state of a bipartite system \(\mathcal{AB}\), written in a product basis in \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\) as
+\[
+  \begin{aligned}
+    |\psi_{\mathcal{AB}}\rangle
+    &= \sum_{ij} c_{ij}|a_i\rangle\otimes|b_j\rangle
+  \\&= \sum_{j=1} |\widetilde\psi_j\rangle|b_j\rangle
+  \\&= \sum_{j=1} \sqrt{p_j}|\psi_j\rangle|b_j\rangle
+  \end{aligned}
+\tag{9.7.1}
+\]
+where \(|\widetilde\psi_j\rangle = \sum_i c_{ij}|a_i\rangle = \sqrt{p_j}|\psi_j\rangle\), and the vectors \(|\psi_j\rangle\) are the normalised versions of the \(|\widetilde\psi_j\rangle\).
+Note that \(p_j=\langle\widetilde\psi_j|\widetilde\psi_j\rangle\).
+
+Then the partial trace over \(\mathcal{B}\) gives the reduced density operator of subsystem \(\mathcal{A}\):
+\[
+  \begin{aligned}
+    \rho^{\mathcal{A}}
+    &=\operatorname{tr}_{\mathcal{B}} \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| \otimes |b_i\rangle\langle b_j|
+  \\&= \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| (\operatorname{tr}|b_i\rangle\langle b_j|)
+  \\&= \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| \langle b_j|b_i\rangle
+  \\&= \sum_{i} |\widetilde\psi_i\rangle\langle\widetilde\psi_i|
+    = \sum_{i} p_i |\psi_i\rangle\langle\psi_i|.
+  \end{aligned}
+\]
+
+Now, let us see how \(\rho^{\mathcal{A}}\) can be understood in terms of mixtures.
+Let us place subsystems \(\mathcal{A}\) and \(\mathcal{B}\) in separate labs, run by Alice and Bob, respectively.
+When Bob measures part \(\mathcal{B}\) in the \(|b_j\rangle\) basis and obtains result \(k\), which happens with the probability \(p_k\), he prepares subsystem \(\mathcal{A}\) in the state \(|\psi_k\rangle\):
+\[
+  \sum_{i=1} \sqrt{p_j}|\psi_i\rangle|b_i\rangle
+  \overset{\mathrm{outcome}\,k}{\longmapsto}
+  |\psi_k\rangle|b_k\rangle.
+\]
+Bob does not communicate the outcome of his measurement.
+Thus, from Alice's perspective, Bob prepares a mixture of \(|\psi_1\rangle,\ldots,|\psi_m\rangle\), with probabilities \(p_1,\ldots,p_m\), which means that Alice, who knows the joint state but not the outcomes of Bob's measurement, may associate density matrix \(\rho^\mathcal{A}=\sum_i p_i|\psi_i\rangle\langle\psi_i|\) with her subsystem \(\mathcal{A}\).
+This is the same \(\rho^{\mathcal{A}}\) which we obtained by the partial trace.
+
+But suppose Bob chooses to measure his subsystem in some other basis.
+Will it have any impact on Alice's statistical predictions?
+Measurement in the new basis will result in a different mixture, but Alice's density operator will not change.
+Suppose Bob chooses basis \(|d_i\rangle\) for his measurement.
+Any two orthonormal bases are connected by some unitary transformation, and so we can write \(|b_i\rangle = U|d_i\rangle\) for some unitary \(U\).
+In terms of components, \(|b_i\rangle = \sum_j U_{ij}|d_j\rangle\).
+The joint state can now be expressed as
+\[
+  \begin{aligned}
+    |\psi_{\mathcal{AB}}\rangle
+    &= \sum_{i} |\widetilde\psi_i\rangle|b_i\rangle
+  \\&= \sum_{i} |\widetilde\psi_i\rangle \left( \sum_j U_{ij}|d_j\rangle \right)
+  \\&= \sum_j \underbrace{\left( \sum_i U_{ij}|\widetilde\psi_i\rangle \right)}_{|\widetilde\phi_j\rangle}|d_j\rangle
+  \\&= \sum_j|\widetilde\phi_j\rangle|d_j\rangle.
+  \end{aligned}
+\]
+
+If Bob measures in the \(|d_i\rangle\) basis then he generates a new mixture of states \(|\phi_1\rangle,\ldots|\phi_m\rangle\), which are the normalised versions of \(|\widetilde\phi_1\rangle,\ldots|\widetilde\phi_m\rangle\), with each \(|\phi_k\rangle\) occurring with probability \(p_k=\langle\widetilde\phi_k|\widetilde\phi_k\rangle\).
+But this new mixture has exactly the same density operator as the previous one:\footnote{The \(U_{ij}\) are the components of a unitary matrix, hence \(\sum_k U_{ik}U^\star_{jk}=\delta_{ij}\).}
+\[
+  \begin{aligned}
+    \sum_j|\widetilde\phi_j\rangle\langle\widetilde\phi_j|
+    &= \sum_{ijl} U_{ij}|\widetilde\psi_i\rangle\langle\widetilde\psi_l|U^\star_{lj}
+  \\&= \sum_{il} \underbrace{\left(\sum_j U_{ij}U^\star_{lj}\right)}_{\delta_{il}}|\widetilde\psi_i\rangle\langle\widetilde\psi_l|
+  \\&= \sum_i|\widetilde\psi_j\rangle\langle\widetilde\psi_j|,
+  \end{aligned}
+\]
+which is exactly \(\rho^\mathcal{A}\).
+So does it really matter whether Bob performs the measurement or not?
+
+\emph{It does not.}
+
+After all, Alice and Bob may be miles away from each other, and if any of Bob's actions were to result in something that is physically detectable at the Alice's location that would amount to instantaneous communication between the two of them.
+
+From the operational point of view it does not really matter whether the density operator represents our ignorance of the actual state (mixtures) or provides the only description we can have after discarding one part of an entangled state (partial trace).\footnote{The two interpretations of density operators filled volumes of academic papers. The terms \textbf{proper mixtures} and \textbf{improper mixtures} are used, mostly by philosophers, to describe the statistical mixture and the partial trace approach, respectively.}
+In the former case, the system is in some definite pure state but we do not know which.
+In contrast, when the density operator arises from tracing out irrelevant, or unavailable, degrees of freedom, the individual system cannot be thought to be in some definite state of which we are ignorant.
+Philosophy aside, the fact that the two interpretations give exactly the same predictions is useful: switching back and forth between the two pictures often offers additional insights and may even simplify lengthy calculations.
+
+\hypertarget{partial-trace-yet-again}{%
+\subsection{Partial trace, yet again}\label{partial-trace-yet-again}}
+
+The partial trace is the only map \(\rho^{\mathcal{AB}}\mapsto\rho^{\mathcal{A}}\) such that\footnote{One can repeat the same argument for \(\rho^{\mathcal{AB}}\mapsto\rho^{\mathcal{B}}\): the partial trace is the unique map \(\rho^{\mathcal{AB}}\mapsto\rho^{\mathcal{B}}\) such that \(\rho^{\mathcal{B}}\) satisfies \(\operatorname{tr}[Y\rho^{\mathcal{B}}] = \operatorname{tr}[(1\otimes Y)\rho^{\mathcal{AB}}]\) for any observable \(Y\) on \(\mathcal{B}\).}
+\[
+  \operatorname{tr}[X\rho^{\mathcal{A}}] = \operatorname{tr}[(X\otimes\mathbf{1})\rho^{\mathcal{AB}}]
+\]
+holds for any observable \(X\) acting on \(\mathcal{A}\).
+This condition concerns the consistency of statistical predictions.
+Any observable \(X\) on \(\mathcal{A}\) can be viewed as an observable \(X\otimes\mathbf{1}\) on the composite system \(\mathcal{AB}\), where \(\mathbf{1}\) is the identity operator acting on \(\mathcal{B}\).
+When constructing \(\rho^{\mathcal{A}}\) we had better make sure that for any observable \(X\) the average value of \(X\) in the state \(\rho^\mathcal{A}\) is the same as the average value of \(X\otimes\mathbf{1}\) in the state \(\rho^{\mathcal{AB}}\).
+This is indeed the case for the partial trace.
+
+For example, let us go back to the state in Equation (9.7.1) and assume that Alice measures some observable \(X\) on her part of the system.
+Technically, such an observable can be expressed as \(X\otimes \mathbf{1}\), where \(\mathbf{1}\) is the identity operator acting on the subsystem \(\mathcal{B}\).
+The expected value of this observable in the state \(|\psi_{\mathcal{AB}}\rangle\) is \(\operatorname{tr}(X\otimes\mathbf{1})|\psi_{\mathcal{AB}}\rangle\langle\psi_{\mathcal{AB}}|\), i.e.
+\[
+  \begin{aligned}
+    \operatorname{tr}[(X\otimes \mathbf{1}) \rho^{\mathcal{AB}}]
+    &= \operatorname{tr}\left[
+        (X\otimes\mathbf{1}) \left(
+          \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| \otimes |b_i\rangle\langle b_j|
+        \right)
+      \right]
+  \\&= \sum_{ij} \left[
+        \operatorname{tr}\left(X |\widetilde\psi_i\rangle\langle\widetilde\psi_j|\right)
+      \right]
+      \underbrace{\left[\operatorname{tr}\left(|b_i\rangle\langle b_j|\right)\right]}_{\delta_{ij}}
+  \\&= \sum_i \operatorname{tr}\big[X |\widetilde\psi_i\rangle\langle\widetilde\psi_i|\big]
+  \\&= \operatorname{tr}\left[
+      X \underbrace{\sum_i p_i|\psi_i\rangle\langle\psi_i|}_{\rho^{\mathcal{A}} = \operatorname{tr}_{\mathcal{B}}\rho^{\mathcal{AB}}}
+    \right]
+  \\&= \operatorname{tr}[X\rho^{\mathcal{A}}]
+  \end{aligned}
+\]
+as required.
+
+\textbf{!!!TODO!!! The uniqueness of the partial trace, for now see Nielsen \& Chuang Box 2.6.}
+
+\hypertarget{notes-and-exercises}{%
+\subsection{Notes and exercises}\label{notes-and-exercises}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Show that an arbitrary mixed state \(\rho\) can be represented as the partial trace \(\operatorname{tr}|\psi\rangle\langle\psi|\) of a pure state of a larger system.
+  Such a \(|\psi\rangle\) is called a \textbf{purification} of \(\rho\).
+\item
+  Show that purification is unique up to unitary equivalence.
+  Let \(|\psi_1\rangle\) and \(|\psi_2\rangle\) in \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\) be two pure states such that \(\operatorname{tr}_{\mathcal{B}}|\psi_1\rangle\langle\psi_1| = \operatorname{tr}_{\mathcal{B}}|\psi_2\rangle\langle\psi_2|\).
+  Show that \(|\psi_1\rangle = \mathbf{1}\otimes U|\psi_2\rangle\) for some unitary operator \(U\) on \(\mathcal{H}_{\mathcal{B}}\).
+\item
+  Two qubits are in the state described by the density operator \(\rho = \rho^\mathcal{A}\otimes\rho^\mathcal{B}\).
+  What is the partial trace of \(\rho\) over each qubit?
+\item
+  Write the density matrix of two qubits corresponding to the mixture of the Bell state \(\frac{1}{\sqrt 2}\left(|00\rangle + |11\rangle\right)\) with probability \(\frac12\) and the maximally mixed state of two qubits (\((4\times 4)\) matrix in \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\)) with probability \(\frac12\).
+\item
+  \textbf{!!!TODO!!! Trace norm}
+\item
+  \textbf{!!!TODO!!! How to distinguish between two different density operators}
+\end{enumerate}
+
+\hypertarget{part-the-power-of-interference-and-entanglement}{%
+\part{The power of interference and entanglement}\label{part-the-power-of-interference-and-entanglement}}
+
+\hypertarget{chapter7}{%
+\section{Bell's theorem}\label{chapter7}}
+
+\begin{quote}
+About \textbf{quantum correlations}, which are stronger than any correlations allowed by classical physics, and about the \href{https://en.wikipedia.org/wiki/CHSH_inequality}{\textbf{CHSH inequality}} which demonstrates this fact, and which is a variant of \textbf{Bell's theorem}.
+\end{quote}
+
+Every now and then, it is nice to put down your lecture notes and go and see how things actually work in the real world.
+What is wonderful (and surprising) about quantum theory is that it turns up in many places that we might not expect it to, such as in the polarisation of light, where we stumble across an intriguing paradox.
+
+If we take two polarising filters, and place them on top of each other with their polarisations oriented at \(90^\circ\) to one another, then basically no light will pass through, since the only light passing through the first filter is orthogonally polarised with respect to the second filter, and is thus blocked.
+But then, if we take a third filter, and place it in between the other two, at an angle in the middle of both (i.e.~at \(45^\circ\)), then somehow \emph{more} light is let through than if the middle filter weren't there at all.\footnote{For the more visually inclined, there is a \href{https://www.youtube.com/watch?v=zcqZHYo7ONs}{video on YouTube by minutephysics} about this experiment, or you can play with a virtual version at \href{https://lab.quantumflytrap.com/lab/three-polarizer-paradox}{Quantum Flytrap}.}
+
+This is intrinsically linked to Bell's theorem, which proves the technical sounding statement that ``any local real hidden variable theory must satisfy certain statistical properties'', which is \emph{not} satisfied in reality, as many quantum mechanical experiments (such as the above) show!
+
+\hypertarget{quantum-correlations}{%
+\subsection{Quantum correlations}\label{quantum-correlations}}
+
+Consider two entangled qubits in the singlet state
+\[
+  |\psi\rangle
+  = \frac{1}{\sqrt 2} \left( |01\rangle-|10\rangle \right)
+\]
+and note that the projector \(|\psi\rangle\langle\psi|\) can be written as\footnote{There are other, more elementary, ways of deriving this result but here I want you to hone your skills. Now that you've learned about projectors, traces, and Pauli operators, why not put them to good use.}
+\[
+  |\psi\rangle\langle\psi|
+  = \frac{1}{4} \left(
+    \mathbf{1}\otimes\mathbf{1}- \sigma_x\otimes\sigma_x - \sigma_y\otimes\sigma_y - \sigma_z\otimes \sigma_z
+  \right).
+\]
+Any single qubit observable with values \(\pm 1\) can be represented by the operator
+\[
+  \vec{a}\cdot\vec\sigma
+  = a_x\sigma_x + a_y\sigma_y + a_z\sigma_z,
+\]
+where \(\vec{a}\) is a unit vector in the three-dimensional Euclidean space.
+Suppose Alice and Bob choose measurements defined by vectors \(\vec{a}\) and \(\vec{b}\), respectively.
+For example, if the two qubits are spin-half particles, they may measure the spin components along the directions \(\vec{a}\) and \(\vec{b}\).
+We write the corresponding observable as the tensor product
+\[
+  A\otimes B
+  = (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma).
+\]
+The eigenvalues of \(A\otimes B\) are the products of eigenvalues of \(A\) and \(B\).
+Thus \(A\otimes B\) has two eigenvalues: \(+1\), corresponding to the instances when Alice and Bob registered identical outcomes, i.e.~\((+1,+1)\) or \((-1,-1)\); and \(-1\), corresponding to the instances when Alice and Bob registered different outcomes, i.e.~\((+1,-1)\) or \((-1,-1)\).
+This means that the expected value of \(A\otimes B\), in any state, has a simple interpretation:
+\[
+    \langle A\otimes B\rangle = \Pr (\text{outcomes are the same}) - \Pr (\text{outcomes are different}).
+\]
+This expression can take any numerical value from \(-1\) (perfect anti-correlations) through \(0\) (no correlations) to \(+1\) (perfect correlations).
+We now evaluate the expectation value in the singlet state:
+\[
+\begin{aligned}
+  \langle\psi|A\otimes B|\psi\rangle
+  & = \operatorname{tr}\left[
+      (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma) |\psi\rangle\langle\psi|
+    \right]
+\\& = -\frac{1}{4} \operatorname{tr}\left[
+      (\vec{a}\cdot\vec\sigma)\sigma_x \otimes(\vec{a}\cdot\vec\sigma)\sigma_x
+      + (\vec{a}\cdot\vec\sigma)\sigma_y \otimes(\vec{a}\cdot\vec\sigma)\sigma_y
+      + (\vec{a}\cdot\vec\sigma)\sigma_z \otimes(\vec{a}\cdot\vec\sigma)\sigma_z
+    \right]
+\\& = -\frac{1}{4} \operatorname{tr}\left[
+      (a_x b_x + a_y b_y + a_z b_z) \mathbf{1}\otimes\mathbf{1}
+    \right]
+\\& = -\vec{a}\cdot\vec{b}
+\end{aligned}
+\]
+where we have used the fact that \(\operatorname{tr}(\vec{a}\cdot\vec\sigma)\sigma_k = a_k\) (\(k=x,y,z\)).
+So if Alice and Bob choose the same observable, \(\vec{a} = \vec{b}\), then their outcomes will be always opposite: whenever Alice registers \(+1\) (resp. \(-1\)) Bob is bound to register \(-1\) (resp. \(+1\)).
+
+\hypertarget{hidden-variables}{%
+\subsection{Hidden variables}\label{hidden-variables}}
+
+The story of ``hidden variables'' dates back to 1935 and grew out of Einstein's worries about the completeness of quantum theory.
+Consider, for example, a qubit.
+No quantum state of a qubit can be an eigenstate of two non-commuting operators, say \(\sigma_x\) and \(\sigma_z\).
+If the qubit has a definite value of \(\sigma_x\) its value of \(\sigma_z\) must be indeterminate, and vice versa.
+If we take quantum theory to be a complete description of the world, then we must accept that it is impossible for both \(\sigma_x\) and \(\sigma_z\) to have definite values for the same qubit at the same time.
+Einstein felt very uncomfortable about all this.
+He argued that quantum theory is incomplete, and that observables \(\sigma_x\) and \(\sigma_z\) may both have simultaneous definite values, although we only have knowledge of one of them at a time.
+This is the hypothesis of \textbf{hidden variables}.
+In this view, the indeterminacy found in quantum theory is merely due to our ignorance of these ``hidden variables'' that are present in nature but not accounted for in the theory.
+Einstein came up with a number of pretty good arguments for the existence of ``hidden variables''.
+Probably the most compelling one was described in his 1935 paper (known as the EPR paper), co-authored with his younger colleagues, Boris Podolsky and Nathan Rosen.
+It stood for almost three decades as the most significant challenge to the completeness of quantum theory.
+Then, in 1964, John Bell showed that the hidden variable hypothesis can be tested and refuted.
+
+\hypertarget{chsh-inequality}{%
+\subsection{CHSH inequality}\label{chsh-inequality}}
+
+\begin{quote}
+An upper bound on \textbf{classical} correlations.
+\end{quote}
+
+We will describe the most popular version of Bell's argument, introduced in 1969 by John Clauser, Michael Horne, Abner Shimony, and Richard Holt (CHSH).
+Let us assume that the results of any measurement on any individual system are predetermined.
+Any probabilities we may use to describe the system merely reflect our ignorance of these hidden variables.
+
+Now, imagine the following scenario.
+Alice and Bob, two characters with a predilection for wacky experiments, are equipped with appropriate measuring devices and sent to two distant locations.
+Somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob.
+Let us label the two qubits in each pair as \(\mathcal{A}\) and \(\mathcal{B}\) respectively, and let us assume that both Alice and Bob have well defined values of their observables.
+We ask Alice and Bob to measure one of the two pre-agreed observables.
+For each incoming qubit, Alice and Bob choose randomly, and independently from each other, which particular observable will be measured.
+Alice chooses between \(A_1\) and \(A_2\), and Bob between \(B_1\) and \(B_2\).
+Each observable has value \(+1\) or \(-1\), and so we are allowed to think about them as random variables \(A_k\) and \(B_k\), for \(k=1,2\), which take values \(\pm 1\).
+Let us define a new random variable, the \textbf{CHSH quantity} \(S\), as
+\[
+  S = A_1(B_1 - B_2) + A_2(B_1 + B_2).
+\]
+It is easy to see that one of the terms \(B_1\pm B_2\) must be equal to zero and the other to \(\pm 2\), hence \(S=\pm2\).
+The average value of \(S\) must lie somewhere in-between, i.e.
+\[
+  -2 < \langle S\rangle < 2.
+\]
+That's it!
+Such a simple and yet profound mathematical statement about correlations, which we refer simply to as the \textbf{CHSH inequality}.
+No quantum theory is involved because the CHSH inequality is not specific to quantum theory: it does not really matter what kind of physical process is behind the appearance of binary values of \(A_1\), \(A_2\), \(B_1\), and \(B_2\); it is a statement about correlations, and for all classical correlations we must have
+\[
+  |
+    \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
+  | < 2.
+\]
+
+There are essentially two two assumptions here:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Hidden variables.} Observables have definite values
+\item
+  \textbf{Locality.} Alice's choice of measurements (\(A_1\) or \(A_2\)) does not affect the outcomes of Bob's measurement, and vice versa.
+\end{enumerate}
+
+We will not discuss the locality assumption here in detail but let me comment on it briefly.
+In the hidden variable world a, statement such as ``if Bob were to measure \(B_1\) then he would register \(+1\)'' must be either true or false \emph{prior to Bob's measurement}.
+Without the locality hypothesis, such a statement is ambiguous, since the value of \(B_1\) could depend on whether \(A_1\) or \(A_2\) will be chosen by Alice.
+We do not want this for it implies the instantaneous communication.
+It means that, say, Alice by making a choice between \(A_1\) and \(A_2\), affects Bob's results.
+Bob can immediately ``see'' what Alice ``does''.
+
+\hypertarget{quantum-correlations-revisited}{%
+\subsection{Quantum correlations revisited}\label{quantum-correlations-revisited}}
+
+In quantum theory the observables \(A_1\), \(A_2\), \(B_1\), \(B_2\) become \(2\times 2\) Hermitian matrices with two eigenvalues \(\pm 1\), and \(\langle S\rangle\) becomes the expected value of the \((4\times 4)\) \textbf{CHSH matrix}
+\[
+  S
+  = A_1\otimes(B_1-B_2) + A_2\otimes(B_1+B_2).
+\]
+
+We can now evaluate \(\langle S\rangle\) using quantum theory.
+For example, if the two qubits are in the singlet state, then we know that
+\[
+  \langle A\otimes B\rangle = -\vec{a}\cdot\vec{b}.
+\]
+We choose vectors \(\vec{a}_1\), \(\vec{a}_2\), \(\vec{b}_1\), and \(\vec{b}_2\) as shown in Figure \ref{fig:choice-of-as-and-bs}, and then, with these choices,
+\[
+\begin{gathered}
+  \langle A_1\otimes B_1\rangle
+  = \langle A_2\otimes B_1\rangle
+  = \langle A_2\otimes B_2\rangle
+  = \frac{1}{\sqrt 2}
+\\\langle A_1\otimes B_2\rangle
+   = -\frac{1}{\sqrt 2}.
+\end{gathered}
+\]
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{quantum-info_files/figure-latex/choice-of-as-and-bs-1} 
+
+}
+
+\caption{The relative angle between the two perpendicular pairs is \(45^\circ\).}\label{fig:choice-of-as-and-bs}
+\end{figure}
+
+Thus
+\[
+  \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
+  = -2\sqrt{2},
+\]
+which obviously violates CHSH inequality.
+
+To be clear, this violation has been observed in a number of painstakingly careful experiments.
+The early efforts were truly heroic, and the experiments had many layers of complexity.
+Today, however, such experiments are routine.
+
+\begin{idea}
+
+The behaviour of entangled quantum systems cannot be explained by any local hidden variables.
+
+\end{idea}
+
+\hypertarget{tsirelsons-inequality}{%
+\subsection{Tsirelson's inequality}\label{tsirelsons-inequality}}
+
+\begin{quote}
+An upper bound on \textbf{quantum} correlations.
+\end{quote}
+
+One may ask if \(|\langle S\rangle|= 2\sqrt{2}\) is the maximal violation of the CHSH inequality, and the answer is ``yes, it is'': quantum correlations cannot achieve any value of \(|\langle S\rangle|\) larger than \(2\sqrt{2}\).
+This is because, for any state \(|\psi\rangle\), the expected value \(\langle S\rangle = \langle\psi|S|\psi\rangle\) cannot exceed the largest eigenvalue of \(S\), and we can put an upper bound on the largest eigenvalues of \(S\).
+To start with, the largest eigenvalue (in absolute value) of a Hermitian matrix \(M\), denoted by \(\|M\|\), is a matrix norm, and it has the following properties:
+\[
+\begin{aligned}
+  \|M\otimes N\|
+  & = \|M\| \|N\|
+\\\|MN\|
+  & \leqslant\|M\| \|N\|
+\\\|M+N\|
+  & \leqslant\|M\| + \|N\|
+\end{aligned}
+\]
+Given that \(\|A_i\|=1\) and \(\|B_j\|=1\) (\(i,j=1,2\)), it is easy to show that \(\|S\| < 4\).
+One can, however, derive a tighter bound.
+We can show (do it) that
+\[
+  S^2
+  = 4(\mathbf{1}\otimes\mathbf{1}) + [A_1,A_2]\otimes[B_1,B_2].
+\]
+The norm of each of the commutators (\(\|[A_1, A_2]\|\) and \(\|[B_1, B_2]\|\)) cannot exceed \(2\), and \(\|S^2\|=\|S\|^2\), which all together gives
+\[
+  \|S\|
+  < 2\sqrt{2}
+  \implies
+  |\langle S\rangle| < 2\sqrt{2}.
+\]
+This result is known as the \textbf{Tsirelson inequality}.
+
 \hypertarget{chapter6}{%
 \section{Quantum algorithms}\label{chapter6}}
 
@@ -5375,242 +6141,6 @@ The exponential separation that this algorithm demonstrates between quantum and 
   \textbf{!!!TODO!!! optimality of Grover}
 \end{enumerate}
 
-\hypertarget{part-flowering}{%
-\part{Flowering}\label{part-flowering}}
-
-\hypertarget{chapter7}{%
-\section{Bell's theorem}\label{chapter7}}
-
-\begin{quote}
-About \textbf{quantum correlations}, which are stronger than any correlations allowed by classical physics, and about the \href{https://en.wikipedia.org/wiki/CHSH_inequality}{\textbf{CHSH inequality}} which demonstrates this fact, and which is a variant of \textbf{Bell's theorem}.
-\end{quote}
-
-Every now and then, it is nice to put down your lecture notes and go and see how things actually work in the real world.
-What is wonderful (and surprising) about quantum theory is that it turns up in many places that we might not expect it to, such as in the polarisation of light, where we stumble across an intriguing paradox.
-
-If we take two polarising filters, and place them on top of each other with their polarisations oriented at \(90^\circ\) to one another, then basically no light will pass through, since the only light passing through the first filter is orthogonally polarised with respect to the second filter, and is thus blocked.
-But then, if we take a third filter, and place it in between the other two, at an angle in the middle of both (i.e.~at \(45^\circ\)), then somehow \emph{more} light is let through than if the middle filter weren't there at all.\footnote{For the more visually inclined, there is a \href{https://www.youtube.com/watch?v=zcqZHYo7ONs}{video on YouTube by minutephysics} about this experiment, or you can play with a virtual version at \href{https://lab.quantumflytrap.com/lab/three-polarizer-paradox}{Quantum Flytrap}.}
-
-This is intrinsically linked to Bell's theorem, which proves the technical sounding statement that ``any local real hidden variable theory must satisfy certain statistical properties'', which is \emph{not} satisfied in reality, as many quantum mechanical experiments (such as the above) show!
-
-\hypertarget{quantum-correlations}{%
-\subsection{Quantum correlations}\label{quantum-correlations}}
-
-Consider two entangled qubits in the singlet state
-\[
-  |\psi\rangle
-  = \frac{1}{\sqrt 2} \left( |01\rangle-|10\rangle \right)
-\]
-and note that the projector \(|\psi\rangle\langle\psi|\) can be written as\footnote{There are other, more elementary, ways of deriving this result but here I want you to hone your skills. Now that you've learned about projectors, traces, and Pauli operators, why not put them to good use.}
-\[
-  |\psi\rangle\langle\psi|
-  = \frac{1}{4} \left(
-    \mathbf{1}\otimes\mathbf{1}- \sigma_x\otimes\sigma_x - \sigma_y\otimes\sigma_y - \sigma_z\otimes \sigma_z
-  \right).
-\]
-Any single qubit observable with values \(\pm 1\) can be represented by the operator
-\[
-  \vec{a}\cdot\vec\sigma
-  = a_x\sigma_x + a_y\sigma_y + a_z\sigma_z,
-\]
-where \(\vec{a}\) is a unit vector in the three-dimensional Euclidean space.
-Suppose Alice and Bob choose measurements defined by vectors \(\vec{a}\) and \(\vec{b}\), respectively.
-For example, if the two qubits are spin-half particles, they may measure the spin components along the directions \(\vec{a}\) and \(\vec{b}\).
-We write the corresponding observable as the tensor product
-\[
-  A\otimes B
-  = (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma).
-\]
-The eigenvalues of \(A\otimes B\) are the products of eigenvalues of \(A\) and \(B\).
-Thus \(A\otimes B\) has two eigenvalues: \(+1\), corresponding to the instances when Alice and Bob registered identical outcomes, i.e.~\((+1,+1)\) or \((-1,-1)\); and \(-1\), corresponding to the instances when Alice and Bob registered different outcomes, i.e.~\((+1,-1)\) or \((-1,-1)\).
-This means that the expected value of \(A\otimes B\), in any state, has a simple interpretation:
-\[
-    \langle A\otimes B\rangle = \Pr (\text{outcomes are the same}) - \Pr (\text{outcomes are different}).
-\]
-This expression can take any numerical value from \(-1\) (perfect anti-correlations) through \(0\) (no correlations) to \(+1\) (perfect correlations).
-We now evaluate the expectation value in the singlet state:
-\[
-\begin{aligned}
-  \langle\psi|A\otimes B|\psi\rangle
-  & = \operatorname{tr}\left[
-      (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma) |\psi\rangle\langle\psi|
-    \right]
-\\& = -\frac{1}{4} \operatorname{tr}\left[
-      (\vec{a}\cdot\vec\sigma)\sigma_x \otimes(\vec{a}\cdot\vec\sigma)\sigma_x
-      + (\vec{a}\cdot\vec\sigma)\sigma_y \otimes(\vec{a}\cdot\vec\sigma)\sigma_y
-      + (\vec{a}\cdot\vec\sigma)\sigma_z \otimes(\vec{a}\cdot\vec\sigma)\sigma_z
-    \right]
-\\& = -\frac{1}{4} \operatorname{tr}\left[
-      (a_x b_x + a_y b_y + a_z b_z) \mathbf{1}\otimes\mathbf{1}
-    \right]
-\\& = -\vec{a}\cdot\vec{b}
-\end{aligned}
-\]
-where we have used the fact that \(\operatorname{tr}(\vec{a}\cdot\vec\sigma)\sigma_k = a_k\) (\(k=x,y,z\)).
-So if Alice and Bob choose the same observable, \(\vec{a} = \vec{b}\), then their outcomes will be always opposite: whenever Alice registers \(+1\) (resp. \(-1\)) Bob is bound to register \(-1\) (resp. \(+1\)).
-
-\hypertarget{hidden-variables}{%
-\subsection{Hidden variables}\label{hidden-variables}}
-
-The story of ``hidden variables'' dates back to 1935 and grew out of Einstein's worries about the completeness of quantum theory.
-Consider, for example, a qubit.
-No quantum state of a qubit can be an eigenstate of two non-commuting operators, say \(\sigma_x\) and \(\sigma_z\).
-If the qubit has a definite value of \(\sigma_x\) its value of \(\sigma_z\) must be indeterminate, and vice versa.
-If we take quantum theory to be a complete description of the world, then we must accept that it is impossible for both \(\sigma_x\) and \(\sigma_z\) to have definite values for the same qubit at the same time.
-Einstein felt very uncomfortable about all this.
-He argued that quantum theory is incomplete, and that observables \(\sigma_x\) and \(\sigma_z\) may both have simultaneous definite values, although we only have knowledge of one of them at a time.
-This is the hypothesis of \textbf{hidden variables}.
-In this view, the indeterminacy found in quantum theory is merely due to our ignorance of these ``hidden variables'' that are present in nature but not accounted for in the theory.
-Einstein came up with a number of pretty good arguments for the existence of ``hidden variables''.
-Probably the most compelling one was described in his 1935 paper (known as the EPR paper), co-authored with his younger colleagues, Boris Podolsky and Nathan Rosen.
-It stood for almost three decades as the most significant challenge to the completeness of quantum theory.
-Then, in 1964, John Bell showed that the hidden variable hypothesis can be tested and refuted.
-
-\hypertarget{chsh-inequality}{%
-\subsection{CHSH inequality}\label{chsh-inequality}}
-
-\begin{quote}
-An upper bound on \textbf{classical} correlations.
-\end{quote}
-
-We will describe the most popular version of Bell's argument, introduced in 1969 by John Clauser, Michael Horne, Abner Shimony, and Richard Holt (CHSH).
-Let us assume that the results of any measurement on any individual system are predetermined.
-Any probabilities we may use to describe the system merely reflect our ignorance of these hidden variables.
-
-Now, imagine the following scenario.
-Alice and Bob, two characters with a predilection for wacky experiments, are equipped with appropriate measuring devices and sent to two distant locations.
-Somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob.
-Let us label the two qubits in each pair as \(\mathcal{A}\) and \(\mathcal{B}\) respectively, and let us assume that both Alice and Bob have well defined values of their observables.
-We ask Alice and Bob to measure one of the two pre-agreed observables.
-For each incoming qubit, Alice and Bob choose randomly, and independently from each other, which particular observable will be measured.
-Alice chooses between \(A_1\) and \(A_2\), and Bob between \(B_1\) and \(B_2\).
-Each observable has value \(+1\) or \(-1\), and so we are allowed to think about them as random variables \(A_k\) and \(B_k\), for \(k=1,2\), which take values \(\pm 1\).
-Let us define a new random variable, the \textbf{CHSH quantity} \(S\), as
-\[
-  S = A_1(B_1 - B_2) + A_2(B_1 + B_2).
-\]
-It is easy to see that one of the terms \(B_1\pm B_2\) must be equal to zero and the other to \(\pm 2\), hence \(S=\pm2\).
-The average value of \(S\) must lie somewhere in-between, i.e.
-\[
-  -2 < \langle S\rangle < 2.
-\]
-That's it!
-Such a simple and yet profound mathematical statement about correlations, which we refer simply to as the \textbf{CHSH inequality}.
-No quantum theory is involved because the CHSH inequality is not specific to quantum theory: it does not really matter what kind of physical process is behind the appearance of binary values of \(A_1\), \(A_2\), \(B_1\), and \(B_2\); it is a statement about correlations, and for all classical correlations we must have
-\[
-  |
-    \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
-  | < 2.
-\]
-
-There are essentially two two assumptions here:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  \textbf{Hidden variables.} Observables have definite values
-\item
-  \textbf{Locality.} Alice's choice of measurements (\(A_1\) or \(A_2\)) does not affect the outcomes of Bob's measurement, and vice versa.
-\end{enumerate}
-
-We will not discuss the locality assumption here in detail but let me comment on it briefly.
-In the hidden variable world a, statement such as ``if Bob were to measure \(B_1\) then he would register \(+1\)'' must be either true or false \emph{prior to Bob's measurement}.
-Without the locality hypothesis, such a statement is ambiguous, since the value of \(B_1\) could depend on whether \(A_1\) or \(A_2\) will be chosen by Alice.
-We do not want this for it implies the instantaneous communication.
-It means that, say, Alice by making a choice between \(A_1\) and \(A_2\), affects Bob's results.
-Bob can immediately ``see'' what Alice ``does''.
-
-\hypertarget{quantum-correlations-revisited}{%
-\subsection{Quantum correlations revisited}\label{quantum-correlations-revisited}}
-
-In quantum theory the observables \(A_1\), \(A_2\), \(B_1\), \(B_2\) become \(2\times 2\) Hermitian matrices with two eigenvalues \(\pm 1\), and \(\langle S\rangle\) becomes the expected value of the \((4\times 4)\) \textbf{CHSH matrix}
-\[
-  S
-  = A_1\otimes(B_1-B_2) + A_2\otimes(B_1+B_2).
-\]
-
-We can now evaluate \(\langle S\rangle\) using quantum theory.
-For example, if the two qubits are in the singlet state, then we know that
-\[
-  \langle A\otimes B\rangle = -\vec{a}\cdot\vec{b}.
-\]
-We choose vectors \(\vec{a}_1\), \(\vec{a}_2\), \(\vec{b}_1\), and \(\vec{b}_2\) as shown in Figure \ref{fig:choice-of-as-and-bs}, and then, with these choices,
-\[
-\begin{gathered}
-  \langle A_1\otimes B_1\rangle
-  = \langle A_2\otimes B_1\rangle
-  = \langle A_2\otimes B_2\rangle
-  = \frac{1}{\sqrt 2}
-\\\langle A_1\otimes B_2\rangle
-   = -\frac{1}{\sqrt 2}.
-\end{gathered}
-\]
-
-
-
-\begin{figure}[H]
-
-{\centering \includegraphics{quantum-info_files/figure-latex/choice-of-as-and-bs-1} 
-
-}
-
-\caption{The relative angle between the two perpendicular pairs is \(45^\circ\).}\label{fig:choice-of-as-and-bs}
-\end{figure}
-
-Thus
-\[
-  \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
-  = -2\sqrt{2},
-\]
-which obviously violates CHSH inequality.
-
-To be clear, this violation has been observed in a number of painstakingly careful experiments.
-The early efforts were truly heroic, and the experiments had many layers of complexity.
-Today, however, such experiments are routine.
-
-\begin{idea}
-
-The behaviour of entangled quantum systems cannot be explained by any local hidden variables.
-
-\end{idea}
-
-\hypertarget{tsirelsons-inequality}{%
-\subsection{Tsirelson's inequality}\label{tsirelsons-inequality}}
-
-\begin{quote}
-An upper bound on \textbf{quantum} correlations.
-\end{quote}
-
-One may ask if \(|\langle S\rangle|= 2\sqrt{2}\) is the maximal violation of the CHSH inequality, and the answer is ``yes, it is'': quantum correlations cannot achieve any value of \(|\langle S\rangle|\) larger than \(2\sqrt{2}\).
-This is because, for any state \(|\psi\rangle\), the expected value \(\langle S\rangle = \langle\psi|S|\psi\rangle\) cannot exceed the largest eigenvalue of \(S\), and we can put an upper bound on the largest eigenvalues of \(S\).
-To start with, the largest eigenvalue (in absolute value) of a Hermitian matrix \(M\), denoted by \(\|M\|\), is a matrix norm, and it has the following properties:
-\[
-\begin{aligned}
-  \|M\otimes N\|
-  & = \|M\| \|N\|
-\\\|MN\|
-  & \leqslant\|M\| \|N\|
-\\\|M+N\|
-  & \leqslant\|M\| + \|N\|
-\end{aligned}
-\]
-Given that \(\|A_i\|=1\) and \(\|B_j\|=1\) (\(i,j=1,2\)), it is easy to show that \(\|S\| < 4\).
-One can, however, derive a tighter bound.
-We can show (do it) that
-\[
-  S^2
-  = 4(\mathbf{1}\otimes\mathbf{1}) + [A_1,A_2]\otimes[B_1,B_2].
-\]
-The norm of each of the commutators (\(\|[A_1, A_2]\|\) and \(\|[B_1, B_2]\|\)) cannot exceed \(2\), and \(\|S^2\|=\|S\|^2\), which all together gives
-\[
-  \|S\|
-  < 2\sqrt{2}
-  \implies
-  |\langle S\rangle| < 2\sqrt{2}.
-\]
-This result is known as the \textbf{Tsirelson inequality}.
-
 \hypertarget{chapter8}{%
 \section{Decoherence, and elements of quantum error correction}\label{chapter8}}
 
@@ -5956,535 +6486,8 @@ This gives an error correction scheme that allows us to protect against both typ
 If we want to preserve a quantum state for a long time without doing any computations, or if we want to send it through a noisy communications channel, we can just encode the state using a quantum code and decode it when we are done.
 Computation on encoded states using noisy gates requires few more tricks (to be completed).
 
-\hypertarget{chapter9}{%
-\section{Density matrices}\label{chapter9}}
-
-\begin{quote}
-About \textbf{density matrices}, and how they help to solve the problem introduced by entangled states, as well as how they let us talk about mixtures and subsystems.
-Also a first look at the \textbf{partial trace}.
-\end{quote}
-
-We cannot always assign a definite state vector to a quantum system.
-It may be that the system is part of a composite system that is in an entangled state, or it may be that our knowledge of the preparation of a particular system is insufficient to determine its state (for example, someone may prepare a particle in one of the states \(|\psi_1\rangle, |\psi_2\rangle, \ldots, |\psi_n\rangle\), with (respective) probabilities \(p_1, p_2, \ldots, p_n\)).
-Nevertheless, in either case we are able to make statistical predictions about the outcomes of measurements performed on the system using a more general description of quantum states.
-
-We have already mentioned that the existence of entangled states begs an obvious question: if we cannot attribute a state vectors to an individual quantum system then how shall we describe its quantum state?
-In this chapter we will introduce an alternate description of quantum states that can be applied both to a composite system and to any of its subsystems.
-Our new mathematical tool is called a \textbf{density operator}.\footnote{If we choose a particular basis, operators become matrices. Here I will use both terms (density \emph{operators} and density \emph{matrices}) interchangeably.}
-We will start with the density operator as a description of the mixture of quantum states, and will then discuss the partial trace, which is a unique operation that takes care of the reduction of a density operator of a composite system to density operators of its components.
-
-\hypertarget{definitions}{%
-\subsection{Definitions}\label{definitions}}
-
-If you are an impatient mathematically minded person, who feels more comfortable when things are properly defined right from the beginning, here is your definition:\footnote{A self-adjoint matrix \(M\) is said to be \textbf{non-negative}, or \textbf{positive semi-definite}, if \(\langle v|M|v\rangle\geqslant 0\) for any vector \(|v\rangle\), or if all of its eigenvalues are non-negative, or if here exists a matrix \(A\) such that \(M=A^\dagger A\). (This is called a \textbf{Cholesky factorization}.)}
-
-\begin{idea}
-
-A \textbf{density operator} \(\rho\) on a finite dimensional Hilbert space \(\mathcal{H}\) is any non-negative self-adjoint operator with trace equal to one.
-
-\end{idea}
-
-It follows that any such \(\rho\) can always be diagonalised, that the eigenvalues are all real and non-negative, and that the eigenvalues sum to one.
-Moreover, given two density operators \(\rho_1\) and \(\rho_2\), we can always construct another density operator as a convex sum of the two:
-\[
-  \rho = p_1\rho_1 + p_2\rho_2
-  \qquad\text{where}\quad
-  p_1, p_2 \geqslant 0
-  \text{ and }
-  p_1+p_2 = 1.
-\]
-You should check that \(\rho\) has all the defining properties of a density matrix, i.e.~that it is self-adjoint, non-negative, and that its trace is one.
-This means that density operators form a convex set.\footnote{A subset of a vector space is said to be \textbf{convex} if, for any two points in the subset, the straight line segment joining them is also entirely contained inside the subset.}
-
-An important example of a density operator is a rank one projector.\footnote{The \textbf{rank} of a matrix is the number of its non-zero eigenvalues.}
-Any quantum state that can be described by the state vector \(|\psi\rangle\), called a \textbf{pure state}, can be also described by the density operator \(\rho=|\psi\rangle\langle\psi|\).
-Pure states are the extremal points in the convex set of density operators: they cannot be expressed as a convex sum of other elements in the set.
-In contrast, all other states, called \textbf{mixed states}, can be always written as the convex sum of pure states: \(\sum_i p_i |\psi_i\rangle\langle\psi_i|\) (\(p_i\geqslant 0\) and \(\sum_i p_i=1\)).
-Now that we have cleared the mathematical essentials, we will turn to physical applications.
-
-\hypertarget{mixtures}{%
-\subsection{Mixtures}\label{mixtures}}
-
-Let us start with probability distributions over state vectors.
-Suppose Alice prepares a quantum system and hands it over to Bob who subsequently measures observable \(M\).
-If Alice's preparation is described by a state vector \(|\psi\rangle\), then, quantum theory declares, the average value of any observable \(M\) is given by \(\langle\psi|M|\psi\rangle\), which can be also written as\footnote{If \(M\) is one of the orthogonal projectors \(P_k\) describing the measurement, then the average \(\langle P_k\rangle\) is the probability of the outcome \(k\) associated with this projector.}
-\[
-  \langle M\rangle = \operatorname{tr}M|\psi\rangle\langle\psi|.
-\]
-This way of expressing the average value makes a clear separation between the contributions from the state preparation and from the choice of the measurement.
-We have two operators under the trace: one of them, \(|\psi\rangle\langle\psi|\), describes the state preparation, and the other one, \(M\), the measurement.
-Now, suppose Alice prepares the quantum system in one of the states \(|\psi_1\rangle,\ldots,|\psi_m\rangle\), choosing state \(|\psi_i\rangle\) with probability \(p_i\), and hands the system to Bob without telling him which state was chosen.
-The possible states \(|\psi_i\rangle\) are normalised but need not be orthogonal.
-We call this situation a \textbf{mixture of the states} \(|\psi_i\rangle\), or a \textbf{mixed state} for short.
-
-\begin{idea}
-
-Remember, a mixture of states is very different from a superposition of states: a superposition \emph{always} yields a definite state vector, whereas a mixture does \emph{not}, and so must be described by a density operator.
-
-\end{idea}
-
-Bob knows the ensemble of states \(|\psi_1\rangle,\ldots,|\psi_m\rangle\) and the corresponding probability distribution \(p_1,\ldots,p_m\), and can hence calculate \(\langle M\rangle\) as\footnote{A pure state can be seen as a special case of a mixed state, where all but one the probabilities \(p_i\) equal zero.}
-\[
-  \begin{aligned}
-    \langle M\rangle
-    &= \sum_i p_i\left( \operatorname{tr}M|\psi_i\rangle\langle\psi_i| \right)
-  \\&= \operatorname{tr}M \underbrace{\left( \sum_i p_i|\psi_i\rangle\langle\psi_i| \right)}_{\rho}
-  \\&=\operatorname{tr}M\rho.
-  \end{aligned}
-\]
-Again, we have two operators under the trace: \(\rho=\sum_i p_i|\psi_i\rangle\langle\psi_i|\), which pertains to the state preparation, and \(M\), which describes the measurement.
-We shall call the operator
-\[
-  \rho = \sum_i p_i |\psi_i\rangle\langle\psi_i|
-\]
-the \textbf{density operator}, since it has all the defining properties of the density operator (the convex sum of rank one projectors).
-It depends on the constituent states \(|\psi_i\rangle\) and their probabilities, and it describes our ignorance about the state preparation.
-
-Once we have \(\rho\) we can make statistical predictions: for any observable \(M\) we have
-\[
-  \langle M\rangle = \operatorname{tr}M\rho.
-\]
-We see that the exact composition of the mixture does not enter this formula: for computing the statistics associated with any observable property of a system, all that matters is the density operator itself, and not its decomposition into the mixture of states.
-This is important because any given density operator, with the remarkable exception of a pure state, can arise from many different mixtures of pure states.
-Consider, for example, the following three scenarios:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  Alice flips a fair coin.
-  If the result is \(\texttt{Heads}\) then she prepares the qubit in the state \(|0\rangle\), and if the result is \(\texttt{Tails}\) then she prepares the qubit in the state \(|1\rangle\).
-  She gives Bob the qubit without revealing the result of the coin-flip.
-  Bob's knowledge of the qubit is described by the density matrix
-  \[
-     \frac12|0\rangle\langle 0| + \frac12|1\rangle\langle 1|
-     =
-     \begin{bmatrix}
-       \frac12 & 0
-     \\0 & \frac12
-     \end{bmatrix}.
-   \]
-\item
-  Suppose Alice flips a fair coin, as before, but now if the result is \(\texttt{Heads}\) then she prepares the qubit in the state \(|\bar{0}\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)\), and if the result is \(\texttt{Tails}\) then she prepares the qubit in the state \(|\bar{1}\rangle = \frac{1}{\sqrt{2}}(|0\rangle - |1\rangle)\).
-  Bob's knowledge of the qubit is now described by the density matrix
-  \[
-     \begin{aligned}
-       \frac12|\bar{0}\rangle\langle\bar{0}| + \frac12|\bar{1}\rangle\langle\bar{1}|
-       &=
-       \frac12
-       \begin{bmatrix}
-       \frac12 & \frac12
-       \\\frac12 & \frac12
-       \end{bmatrix}
-       +
-       \frac12
-       \begin{bmatrix}
-       \frac12 & -\frac12
-       \\-\frac12 & \frac12
-       \end{bmatrix}
-     \\&=
-       \begin{bmatrix}
-       \frac12 & 0
-       \\0 & \frac12
-       \end{bmatrix}.
-     \end{aligned}
-   \]
-\item
-  Suppose Alice picks up any pair of orthogonal states of a qubit and then flips the coin to chose one of them.
-  Any two orthonormal states of a qubit, \(|u_1\rangle\), \(|u_2\rangle\), form a complete basis, so the mixture \(\frac12|u_1\rangle\langle u_1|+\frac12|u_2\rangle\langle u_2|\) gives \(\frac12\mathbf{1}\).
-\end{enumerate}
-
-As you can see, these three different preparations yield precisely the same density matrix and are hence statistically indistinguishable.
-In general, two different mixtures can be distinguished (in a statistical sense) if and only if they yield different density matrices.
-In fact, the optimal way of distinguishing quantum states with different density operators is still an active area of research.
-
-\hypertarget{a-few-instructive-examples-and-some-less-instructive-remarks}{%
-\subsection{A few instructive examples, and some less instructive remarks}\label{a-few-instructive-examples-and-some-less-instructive-remarks}}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  The density matrix corresponding to the state vector \(|\psi\rangle\) is the rank one projector \(|\psi\rangle\langle\psi|\).
-  Observe that there is no phase ambiguity, since \(|\psi\rangle\mapsto e^{i\phi}|\psi\rangle\) leaves the density matrix unchanged, and each \(|\psi\rangle\) gives rise to a distinct density matrix.
-\item
-  If Alice prepares a qubit in the state \(|\psi\rangle = \alpha|0\rangle + \beta|1\rangle\) then the corresponding density matrix is the projector
-  \[
-     |\psi\rangle\langle\psi|
-     =
-     \begin{bmatrix}
-       |\alpha|^2 & \alpha\beta^\star
-     \\\alpha^\star\beta & |\beta|^2
-     \end{bmatrix}.
-   \]
-\item
-  You are given a qubit and you are told that it was prepared either in state \(|0\rangle\) with probability \(|\alpha|^2\) or in state \(|1\rangle\) with probability \(|\beta|^2\).
-  In this case all you can say is that your qubit is in a mixed state described by the density matrix
-  \[
-     |\alpha|^2|0\rangle\langle 0| + |\beta|^2|1\rangle\langle 1|
-     =
-     \begin{bmatrix}
-       |\alpha|^2 & 0
-     \\0 & |\beta|^2
-     \end{bmatrix}.
-   \]
-  Diagonal density matrices correspond to classical probability distributions on the set of basis vectors.
-\item
-  Suppose you want to distinguish between preparations described by the density matrices in examples 2 and 3.
-  Assume that you are given sufficiently many identically prepared qubits described either by the density matrix in example 2 or by the density matrix in example 3.
-  Which of the two measurements would you choose: the measurement in the standard basis \(\{|0\rangle,|1\rangle\}\), or the measurement in the basis \(\{|\psi\rangle,|\psi_\perp\rangle\}\)?
-  One of the two measurements is completely useless.
-  Which one, and why?
-\item
-  In general, the diagonal entries of a density matrix describe the probability distributions on the set of basis vectors.
-  They must add up to one, which is why the trace of any density matrix is one.
-  The off-diagonal elements, often called \textbf{coherences}, signal departure from the classical probability distribution and quantify the degree to which a quantum system can interfere (we will discuss this in detail later on).
-  The process in which off-diagonal entries (the parameter \(\epsilon\) in the matrices below) go to zero is called \textbf{decoherence}.
-  \[
-     \begin{bmatrix}
-       |\alpha|^2 & \alpha\beta^\star
-     \\\alpha^\star\beta & |\beta|^2
-     \end{bmatrix}
-     \mapsto
-     \begin{bmatrix}
-       |\alpha|^2 & \epsilon
-     \\\epsilon^\star & |\beta|^2
-     \end{bmatrix}
-     \mapsto
-     \begin{bmatrix}
-       |\alpha|^2 & 0
-     \\0 & |\beta|^2
-     \end{bmatrix}
-   \]
-  For \(\epsilon = \alpha\beta^\star\) we have a pure quantum state (``full interference capability'') and for \(\epsilon=0\) we have a classical probability distribution over the standard basis (``no interference capability'').
-\item
-  Suppose it is equally likely that your qubit was prepared either in state \(\alpha|0\rangle + \beta|1\rangle\) or in state \(\alpha|0\rangle - \beta|1\rangle\).
-  This means that your qubit is in a mixed state described by the density matrix
-  \[
-     \frac12
-     \begin{bmatrix}
-       |\alpha|^2 & \alpha\beta^\star
-     \\\alpha^\star\beta & |\beta|^2
-     \end{bmatrix}
-     +
-     \frac12
-     \begin{bmatrix}
-       |\alpha|^2 & -\alpha\beta^\star
-     \\-\alpha^\star\beta & |\beta|^2
-     \end{bmatrix}
-     =
-     \begin{bmatrix}
-       |\alpha|^2 & 0
-     \\0 & |\beta|^2
-     \end{bmatrix}.
-   \]
-  You cannot tell the difference between the equally weighted mixture of \(\alpha|0\rangle\pm\beta|1\rangle\) and a mixture of \(|0\rangle\) and \(|1\rangle\) with (respective) probabilities \(|\alpha|^2\) and \(|\beta|^2\).
-\item
-  For any density matrix \(\rho\), the most natural mixture that yields \(\rho\) is its spectral decomposition: \(\rho=\sum_i p_i|u_i\rangle\langle u_i|\), with eigenvectors \(|u_i\rangle\) and eigenvalues \(p_i\).
-\item
-  If the states \(|u_1\rangle,\ldots,|u_m\rangle\) form an orthonormal basis, and each occurs with equal probability \(1/m\), then the resulting density matrix is proportional to the identity:
-  \[
-     \frac{1}{m}\sum_{i=1}^m |\psi_i\rangle\langle\psi_i|
-     = \frac{1}{m}\mathbf{1}.
-   \]
-  This is called the \textbf{maximally mixed state}.
-  For qubits, any pair of orthogonal states taken with equal probabilities gives the maximally mixed state \(\frac12\mathbf{1}\).
-  In maximally mixed states, outcomes of \emph{any} measurement are completely random.
-\item
-  It is often convenient to write density operators in terms of projectors on states which are not normalised, incorporating the probabilities into the length of the state vector:
-  \[
-     \rho = \sum_i|\widetilde\psi_i\rangle\langle\widetilde\psi_i|
-   \]
-  where \(|\widetilde\psi_i\rangle = \sqrt{p_i}|\psi_i\rangle\), i.e.~\(p_i=\langle\widetilde\psi_i|\widetilde\psi_i\rangle\).
-  This form is more compact, but you have to remember that the state vectors are \emph{not} normalised.
-  We tend to mark such states with the tilde, e.g.~\(|\widetilde\psi\rangle\), but you may have your own way to remember.
-\end{enumerate}
-
-\hypertarget{mixed-states-of-a-qubit-and-the-bloch-ball}{%
-\subsection{Mixed states of a qubit, and the Bloch ball}\label{mixed-states-of-a-qubit-and-the-bloch-ball}}
-
-We have already talked in some depth about the Bloch sphere in \protect\hypertarget{chapter2}{}{Chapter 2} and \protect\hypertarget{chapter3}{}{Chapter 3}, but now that we are considering density operators (which are strictly more general than state vectors), we are actually interested in the Bloch \emph{ball}, i.e.~not just the sphere of vectors of magnitude \(1\), but instead the ball of vectors of magnitude \emph{less than or equal to} \(1\).
-
-The most general Hermitian \((2\times 2)\) matrix has four real parameters and can be expanded in the basis composed of the identity and the three Pauli matrices: \(\{\mathbf{1}, \sigma_x, \sigma_y, \sigma_z\}\).
-Since the Pauli matrices are traceless, the coefficient of \(\mathbf{1}\) in the expansion of a density matrix \(\rho\) must be \(\frac12\), so that \(\operatorname{tr}\rho=1\).
-Thus \(\rho\) may be expressed as\footnote{Physicists usually still refer to the Bloch \emph{ball} as the Bloch \emph{sphere}, even though it really is a ball now, not a sphere.}
-\[
-  \begin{aligned}
-    \rho
-    &= \frac12\left( \mathbf{1}+\vec{s}\cdot\vec{\sigma} \right)
-  \\&= \frac12\left( \mathbf{1}+ s_x\sigma_x + s_y\sigma_y + s_z\sigma_z \right)
-  \\&= \frac12
-    \begin{bmatrix}
-      1 + s_z & s_x - is_y
-    \\s_x + is_y & 1 - s_z
-    \end{bmatrix}.
-  \end{aligned}
-\]
-The vector \(\vec{s}\) is called the \textbf{Bloch vector} for the density operator \(\rho\).
-Any real Bloch vector \(\vec{s}\) defines a trace one Hermitian operator \(\rho\), but in order for \(\rho\) to be a density operator it must also be non-negative.
-Which Bloch vectors yield legitimate density operators?
-
-Let us compute the eigenvalues of \(\rho\).
-The sum of the two eigenvalues of \(\rho\) is, of course, equal to one (\(\operatorname{tr}\rho=1\)) and the product is equal to the determinant of \(\rho\), which can be computed from the matrix form above:
-\[
-  \det\rho
-  = \frac{1}{4}(1-s^2)
-  = \frac12(1+s)\frac12(1-s)
-\]
-where \(s=|\vec{s}|\).
-It follows that the two eigenvalues of \(\rho\) are \(\frac12(1\pm s)\).
-They have to be non-negative, and so \(s\), the length of the Bloch vector, cannot exceed one.\footnote{One might hope that there is an equally nice visualisation of the density operators in higher dimensions. Unfortunately there isn't.}
-We can now visualise the convex set of \((2\times 2)\) density matrices as a unit ball in three-dimensional Euclidean space: the extremal points, which represent pure states, are the points on the boundary (\(s=1\)), i.e.~the surface of the ball; the maximally mixed state \(\mathbf{1}/2\) corresponds to \(s=0\), i.e.~the centre of the ball.
-In general, the length of the Bloch vector \(s\) can be thought of as a ``purity'' of a state.
-
-\hypertarget{subsystems-of-entangled-systems}{%
-\subsection{Subsystems of entangled systems}\label{subsystems-of-entangled-systems}}
-
-We have already trumpeted that one of the most important features of the density operator formalism is its ability to describe the quantum state of a subsystem of a composite system.
-Let me now show you how it works.
-
-Given a quantum state of the composite system \(\mathcal{AB}\), described by some density operator \(\rho^{\mathcal{AB}}\), we obtain reduced density operators \(\rho^{\mathcal{A}}\) and \(\rho^{\mathcal{B}}\) of subsystems \(\mathcal{A}\) and \(\mathcal{B}\), respectively, by the partial trace:
-\[
-  \begin{aligned}
-    \rho^{\mathcal{AB}}
-    &\longmapsto
-    \underbrace{\rho^\mathcal{A}=\operatorname{tr}_{\mathcal{B}}\rho^{\mathcal{AB}}}_{\mathrm{partial\,trace\,over}\,\mathcal{B}}\qquad
-  \\\rho^{\mathcal{AB}}
-    &\longmapsto
-    \underbrace{\rho^\mathcal{B}=\operatorname{tr}_{\mathcal{A}}\rho^{\mathcal{AB}}}_{\mathrm{partial\,trace\,over}\,\mathcal{A}}
-  \end{aligned}
-\]
-We define the partial trace over \(\mathcal{B}\), or \(\mathcal{A}\), first on a tensor product of two operators \(A\otimes B\) as
-\[
-  \begin{aligned}
-    \operatorname{tr}_{\mathcal{B}} (A\otimes B)
-    &= A(\operatorname{tr}B)
-  \\\operatorname{tr}_{\mathcal{A}} (A\otimes B)
-    &= (\operatorname{tr}A) B,
-  \end{aligned}
-\]
-and then extend to any operator on \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\) by linearity.
-
-Here is a simple example.
-Suppose a composite system \(\mathcal{AB}\) is in a pure entangled state, which we can always write as
-\[
-  |\psi_{\mathcal{AB}}\rangle
-  = \sum_{i} c_{i} |a_i\rangle\otimes|b_i\rangle,
-\]
-where \(|a_i\rangle\) and \(|b_j\rangle\) are two orthonormal bases (e.g.~the Schmidt bases), and where \(\sum_i |c_i|^2 = 1\) (due to the normalisation).
-The corresponding density operator of the composite system is the projector \(\rho^{\mathcal{AB}}= |\psi_{\mathcal{AB}}\rangle\langle\psi_{\mathcal{AB}}|\), which we can write as
-\[
-  \rho^{\mathcal{AB}}
-  = |\psi_{\mathcal{AB}}\rangle\langle\psi_{\mathcal{AB}}|
-  = \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j| \otimes |b_i\rangle\langle b_j|
-\]
-Let us compute the reduced density operator \(\rho^{\mathcal{A}}\) by taking the partial trace over \(\mathcal{B}\):
-\[
-  \begin{aligned}
-    \rho^\mathcal{A}
-    &= \operatorname{tr}_{\mathcal{B}}\rho^{\mathcal{AB}}
-  \\&= \operatorname{tr}_{\mathcal{B}} |\psi_{\mathcal{AB}}\rangle\langle\psi_{\mathcal{AB}}|
-  \\&= \operatorname{tr}_{\mathcal{B}} \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j| \otimes |b_i\rangle\langle b_j|
-  \\&= \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j|(\operatorname{tr}|b_i\rangle\langle b_j|)
-  \\&= \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j| \underbrace{\langle b_i|b_j\rangle}_{\delta_{ij}}
-  \\& = \sum_{i} |c_i|^2 |a_i\rangle\langle a_i|
-  \end{aligned}
-\]
-where we have used the fact that \(\operatorname{tr}|b_i\rangle\langle b_j| = \langle b_j|b_i\rangle=\delta_{ij}\).
-In the \(|a_i\rangle\) basis, the reduced density matrix \(\rho^{\mathcal{A}}\) is diagonal, with entries \(p_i=|c_i|^2\).
-We can also take the partial trace over \(\mathcal{A}\) and obtain \(\rho^\mathcal{B} = \sum_{i} |c_i|^2 |b_i\rangle\langle b_i|\).
-In particular, for the maximally entangled states in the \((d\times d)\)-dimensional Hilbert spaces \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\),
-\[
-  |\psi_{\mathcal{AB}}\rangle
-  = \frac{1}{\sqrt{d}} \sum_{i}^d |a_i\rangle|b_i\rangle,
-\]
-and the reduced density operators, \(\rho^\mathcal{A}\) and \(\rho^\mathcal{B}\), are the maximally mixed states: \(\rho^\mathcal{A}=\rho^\mathcal{B}=\frac{1}{d}\mathbf{1}\).
-It follows that the quantum states of individual qubits in any of the Bell states are maximally mixed: their density matrix is \(\frac12\mathbf{1}\).
-A state such as
-\[
-  \frac{1}{\sqrt 2} \left( |00\rangle + |11\rangle \right)
-\]
-guarantees perfect correlations when each qubit is measured in the standard basis: the two equally likely outcomes are (\(0\) and \(0\)) or (\(1\) and \(1\)), but any single qubit outcome, be it \(0\) or \(1\) or anything else, is completely random.
-
-\hypertarget{partial-trace-revisited}{%
-\subsection{Partial trace, revisited}\label{partial-trace-revisited}}
-
-If you are given a matrix you calculate the trace by summing its diagonal entries.
-How about the partial trace?
-Suppose someone writes down for you a density matrix of two qubits in the standard basis, \(\{|00\rangle, |01\rangle, |10\rangle, |11\rangle\}\), and asks you to find the reduced density matrices of the individual qubits.
-The tensor product structure of this \((4\times 4)\) matrix means that it is has a block form:
-\[
-  \rho^{\mathcal{AB}}
-  =
-  \left[
-    \begin{array}{c|c}
-      P & Q
-    \\\hline
-      R & S
-    \end{array}
-  \right]
-\]
-where \(P,Q,R,S\) are \((2\times 2)\) sized sub-matrices.
-The two partial traces can then be evaluated as\footnote{Take any of the Bell states, write its \((4\times 4)\)-density matrix explicitly, and then trace over each qubit. In each case you should get the maximally mixed state.}
-\[
-  \begin{aligned}
-    \rho^\mathcal{A}
-    &=
-    \operatorname{tr}_{B}\rho^{\mathcal{AB}}
-    =
-    \left[
-      \begin{array}{c|c}
-        \operatorname{tr}P & \operatorname{tr}Q
-      \\\hline
-        \operatorname{tr}R & \operatorname{tr}S
-      \end{array}
-    \right]
-  \\\rho^\mathcal{B}
-    &= \operatorname{tr}_{A}\rho^{\mathcal{AB}}
-    = P+S.
-  \end{aligned}
-\]
-The same holds for a general \(\rho^{\mathcal{AB}}\) on any \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\) with corresponding block form (\((m\times m)\) blocks of \((n\times n)\)-sized sub-matrices, where \(m\) and \(n\) are the dimensions of \(\mathcal{H}_{\mathcal{A}}\) and \(\mathcal{H}_{\mathcal{B}}\), respectively).
-
-\hypertarget{mixtures-and-subsystems}{%
-\subsection{Mixtures and subsystems}\label{mixtures-and-subsystems}}
-
-We have used the density operators to describe two distinct situations: the statistical properties of the mixtures of states, and the statistical properties of subsystems of composite systems.
-In order to see the relationship between the two, consider a joint state of a bipartite system \(\mathcal{AB}\), written in a product basis in \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\) as
-\[
-  \begin{aligned}
-    |\psi_{\mathcal{AB}}\rangle
-    &= \sum_{ij} c_{ij}|a_i\rangle\otimes|b_j\rangle
-  \\&= \sum_{j=1} |\widetilde\psi_j\rangle|b_j\rangle
-  \\&= \sum_{j=1} \sqrt{p_j}|\psi_j\rangle|b_j\rangle
-  \end{aligned}
-\tag{9.7.1}
-\]
-where \(|\widetilde\psi_j\rangle = \sum_i c_{ij}|a_i\rangle = \sqrt{p_j}|\psi_j\rangle\), and the vectors \(|\psi_j\rangle\) are the normalised versions of the \(|\widetilde\psi_j\rangle\).
-Note that \(p_j=\langle\widetilde\psi_j|\widetilde\psi_j\rangle\).
-
-Then the partial trace over \(\mathcal{B}\) gives the reduced density operator of subsystem \(\mathcal{A}\):
-\[
-  \begin{aligned}
-    \rho^{\mathcal{A}}
-    &=\operatorname{tr}_{\mathcal{B}} \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| \otimes |b_i\rangle\langle b_j|
-  \\&= \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| (\operatorname{tr}|b_i\rangle\langle b_j|)
-  \\&= \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| \langle b_j|b_i\rangle
-  \\&= \sum_{i} |\widetilde\psi_i\rangle\langle\widetilde\psi_i|
-    = \sum_{i} p_i |\psi_i\rangle\langle\psi_i|.
-  \end{aligned}
-\]
-
-Now, let us see how \(\rho^{\mathcal{A}}\) can be understood in terms of mixtures.
-Let us place subsystems \(\mathcal{A}\) and \(\mathcal{B}\) in separate labs, run by Alice and Bob, respectively.
-When Bob measures part \(\mathcal{B}\) in the \(|b_j\rangle\) basis and obtains result \(k\), which happens with the probability \(p_k\), he prepares subsystem \(\mathcal{A}\) in the state \(|\psi_k\rangle\):
-\[
-  \sum_{i=1} \sqrt{p_j}|\psi_i\rangle|b_i\rangle
-  \overset{\mathrm{outcome}\,k}{\longmapsto}
-  |\psi_k\rangle|b_k\rangle.
-\]
-Bob does not communicate the outcome of his measurement.
-Thus, from Alice's perspective, Bob prepares a mixture of \(|\psi_1\rangle,\ldots,|\psi_m\rangle\), with probabilities \(p_1,\ldots,p_m\), which means that Alice, who knows the joint state but not the outcomes of Bob's measurement, may associate density matrix \(\rho^\mathcal{A}=\sum_i p_i|\psi_i\rangle\langle\psi_i|\) with her subsystem \(\mathcal{A}\).
-This is the same \(\rho^{\mathcal{A}}\) which we obtained by the partial trace.
-
-But suppose Bob chooses to measure his subsystem in some other basis.
-Will it have any impact on Alice's statistical predictions?
-Measurement in the new basis will result in a different mixture, but Alice's density operator will not change.
-Suppose Bob chooses basis \(|d_i\rangle\) for his measurement.
-Any two orthonormal bases are connected by some unitary transformation, and so we can write \(|b_i\rangle = U|d_i\rangle\) for some unitary \(U\).
-In terms of components, \(|b_i\rangle = \sum_j U_{ij}|d_j\rangle\).
-The joint state can now be expressed as
-\[
-  \begin{aligned}
-    |\psi_{\mathcal{AB}}\rangle
-    &= \sum_{i} |\widetilde\psi_i\rangle|b_i\rangle
-  \\&= \sum_{i} |\widetilde\psi_i\rangle \left( \sum_j U_{ij}|d_j\rangle \right)
-  \\&= \sum_j \underbrace{\left( \sum_i U_{ij}|\widetilde\psi_i\rangle \right)}_{|\widetilde\phi_j\rangle}|d_j\rangle
-  \\&= \sum_j|\widetilde\phi_j\rangle|d_j\rangle.
-  \end{aligned}
-\]
-
-If Bob measures in the \(|d_i\rangle\) basis then he generates a new mixture of states \(|\phi_1\rangle,\ldots|\phi_m\rangle\), which are the normalised versions of \(|\widetilde\phi_1\rangle,\ldots|\widetilde\phi_m\rangle\), with each \(|\phi_k\rangle\) occurring with probability \(p_k=\langle\widetilde\phi_k|\widetilde\phi_k\rangle\).
-But this new mixture has exactly the same density operator as the previous one:\footnote{The \(U_{ij}\) are the components of a unitary matrix, hence \(\sum_k U_{ik}U^\star_{jk}=\delta_{ij}\).}
-\[
-  \begin{aligned}
-    \sum_j|\widetilde\phi_j\rangle\langle\widetilde\phi_j|
-    &= \sum_{ijl} U_{ij}|\widetilde\psi_i\rangle\langle\widetilde\psi_l|U^\star_{lj}
-  \\&= \sum_{il} \underbrace{\left(\sum_j U_{ij}U^\star_{lj}\right)}_{\delta_{il}}|\widetilde\psi_i\rangle\langle\widetilde\psi_l|
-  \\&= \sum_i|\widetilde\psi_j\rangle\langle\widetilde\psi_j|,
-  \end{aligned}
-\]
-which is exactly \(\rho^\mathcal{A}\).
-So does it really matter whether Bob performs the measurement or not?
-
-\emph{It does not.}
-
-After all, Alice and Bob may be miles away from each other, and if any of Bob's actions were to result in something that is physically detectable at the Alice's location that would amount to instantaneous communication between the two of them.
-
-From the operational point of view it does not really matter whether the density operator represents our ignorance of the actual state (mixtures) or provides the only description we can have after discarding one part of an entangled state (partial trace).\footnote{The two interpretations of density operators filled volumes of academic papers. The terms \textbf{proper mixtures} and \textbf{improper mixtures} are used, mostly by philosophers, to describe the statistical mixture and the partial trace approach, respectively.}
-In the former case, the system is in some definite pure state but we do not know which.
-In contrast, when the density operator arises from tracing out irrelevant, or unavailable, degrees of freedom, the individual system cannot be thought to be in some definite state of which we are ignorant.
-Philosophy aside, the fact that the two interpretations give exactly the same predictions is useful: switching back and forth between the two pictures often offers additional insights and may even simplify lengthy calculations.
-
-\hypertarget{partial-trace-yet-again}{%
-\subsection{Partial trace, yet again}\label{partial-trace-yet-again}}
-
-The partial trace is the only map \(\rho^{\mathcal{AB}}\mapsto\rho^{\mathcal{A}}\) such that\footnote{One can repeat the same argument for \(\rho^{\mathcal{AB}}\mapsto\rho^{\mathcal{B}}\): the partial trace is the unique map \(\rho^{\mathcal{AB}}\mapsto\rho^{\mathcal{B}}\) such that \(\rho^{\mathcal{B}}\) satisfies \(\operatorname{tr}[Y\rho^{\mathcal{B}}] = \operatorname{tr}[(1\otimes Y)\rho^{\mathcal{AB}}]\) for any observable \(Y\) on \(\mathcal{B}\).}
-\[
-  \operatorname{tr}[X\rho^{\mathcal{A}}] = \operatorname{tr}[(X\otimes\mathbf{1})\rho^{\mathcal{AB}}]
-\]
-holds for any observable \(X\) acting on \(\mathcal{A}\).
-This condition concerns the consistency of statistical predictions.
-Any observable \(X\) on \(\mathcal{A}\) can be viewed as an observable \(X\otimes\mathbf{1}\) on the composite system \(\mathcal{AB}\), where \(\mathbf{1}\) is the identity operator acting on \(\mathcal{B}\).
-When constructing \(\rho^{\mathcal{A}}\) we had better make sure that for any observable \(X\) the average value of \(X\) in the state \(\rho^\mathcal{A}\) is the same as the average value of \(X\otimes\mathbf{1}\) in the state \(\rho^{\mathcal{AB}}\).
-This is indeed the case for the partial trace.
-
-For example, let us go back to the state in Equation (9.7.1) and assume that Alice measures some observable \(X\) on her part of the system.
-Technically, such an observable can be expressed as \(X\otimes \mathbf{1}\), where \(\mathbf{1}\) is the identity operator acting on the subsystem \(\mathcal{B}\).
-The expected value of this observable in the state \(|\psi_{\mathcal{AB}}\rangle\) is \(\operatorname{tr}(X\otimes\mathbf{1})|\psi_{\mathcal{AB}}\rangle\langle\psi_{\mathcal{AB}}|\), i.e.
-\[
-  \begin{aligned}
-    \operatorname{tr}[(X\otimes \mathbf{1}) \rho^{\mathcal{AB}}]
-    &= \operatorname{tr}\left[
-        (X\otimes\mathbf{1}) \left(
-          \sum_{ij} |\widetilde\psi_i\rangle\langle\widetilde\psi_j| \otimes |b_i\rangle\langle b_j|
-        \right)
-      \right]
-  \\&= \sum_{ij} \left[
-        \operatorname{tr}\left(X |\widetilde\psi_i\rangle\langle\widetilde\psi_j|\right)
-      \right]
-      \underbrace{\left[\operatorname{tr}\left(|b_i\rangle\langle b_j|\right)\right]}_{\delta_{ij}}
-  \\&= \sum_i \operatorname{tr}\big[X |\widetilde\psi_i\rangle\langle\widetilde\psi_i|\big]
-  \\&= \operatorname{tr}\left[
-      X \underbrace{\sum_i p_i|\psi_i\rangle\langle\psi_i|}_{\rho^{\mathcal{A}} = \operatorname{tr}_{\mathcal{B}}\rho^{\mathcal{AB}}}
-    \right]
-  \\&= \operatorname{tr}[X\rho^{\mathcal{A}}]
-  \end{aligned}
-\]
-as required.
-
-\textbf{!!!TODO!!! The uniqueness of the partial trace, for now see Nielsen \& Chuang Box 2.6.}
-
-\hypertarget{notes-and-exercises}{%
-\subsection{Notes and exercises}\label{notes-and-exercises}}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  Show that an arbitrary mixed state \(\rho\) can be represented as the partial trace \(\operatorname{tr}|\psi\rangle\langle\psi|\) of a pure state of a larger system.
-  Such a \(|\psi\rangle\) is called a \textbf{purification} of \(\rho\).
-\item
-  Show that purification is unique up to unitary equivalence.
-  Let \(|\psi_1\rangle\) and \(|\psi_2\rangle\) in \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\) be two pure states such that \(\operatorname{tr}_{\mathcal{B}}|\psi_1\rangle\langle\psi_1| = \operatorname{tr}_{\mathcal{B}}|\psi_2\rangle\langle\psi_2|\).
-  Show that \(|\psi_1\rangle = \mathbf{1}\otimes U|\psi_2\rangle\) for some unitary operator \(U\) on \(\mathcal{H}_{\mathcal{B}}\).
-\item
-  Two qubits are in the state described by the density operator \(\rho = \rho^\mathcal{A}\otimes\rho^\mathcal{B}\).
-  What is the partial trace of \(\rho\) over each qubit?
-\item
-  Write the density matrix of two qubits corresponding to the mixture of the Bell state \(\frac{1}{\sqrt 2}\left(|00\rangle + |11\rangle\right)\) with probability \(\frac12\) and the maximally mixed state of two qubits (\((4\times 4)\) matrix in \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\)) with probability \(\frac12\).
-\item
-  \textbf{!!!TODO!!! Trace norm}
-\item
-  \textbf{!!!TODO!!! How to distinguish between two different density operators}
-\end{enumerate}
+\hypertarget{part-quantum-security}{%
+\part{Quantum security}\label{part-quantum-security}}
 
 \hypertarget{chapter10}{%
 \section{Quantum channels (or CP maps)}\label{chapter10}}
