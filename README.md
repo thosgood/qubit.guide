@@ -18,19 +18,11 @@ This means that it has some nice functionality to make reading more comfortable,
 
 ## Further reading
 
-The best textbook to pair with these lecture notes is probably
-> P. Kaye, R. Laflamme, and M. Mosca. _An Introduction to Quantum Computing_. Oxford University Press, 2007.
-
-Although it was published in 2000, and thus has a slightly dated treatment of some topics, the standard textbook in the field is
-> M. Nielsen and I. Chuang. _Quantum Computation and Quantum Information_. Cambridge University Press, 2000.
-
-Some excellent lecture notes on quantum information theory are
-> J. Preskill. _Ph219/CS219 Lecture Notes_. Available [here](http://theory.caltech.edu/~preskill/ph219/index.html#lecture).
-
-A bit more idiosyncratic and fun to read, but still very informative, is
-> S. Aaronson. _Quantum Computing since Democritus_. Cambridge University Press, 2013. (Complementary lecture notes also available [here](https://www.scottaaronson.com/democritus/)).
-
-Finally, the Quantum Open Source Foundation has a big list of learning resources at [qosf.org/learn_quantum/](https://www.qosf.org/learn_quantum/).
+- P. Kaye, R. Laflamme, and M. Mosca. _An Introduction to Quantum Computing_. Oxford University Press, 2007.
+- M. Nielsen and I. Chuang. _Quantum Computation and Quantum Information_. Cambridge University Press, 2000.
+- J. Preskill. [_Ph219/CS219 Lecture Notes_](http://theory.caltech.edu/~preskill/ph219/index.html#lecture).
+- S. Aaronson. _Quantum Computing since Democritus_. Cambridge University Press, 2013. ([Complementary lecture notes also available](https://www.scottaaronson.com/democritus/)).
+- Quantum Open Source Foundation. [_Learning Resources on Quantum Computing_](https://www.qosf.org/learn_quantum/).
 
 
 ## Contact
