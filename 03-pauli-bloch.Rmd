@@ -438,7 +438,7 @@ We also introduce the inner product of two matrices:
 ::: {.idea data-latex=""}
 The **Hilbert--Schmidt product**:^[The $\frac12$ coefficient here is simply the normalisation factor, which changes if we consider _multi-qubit_ Pauli operators.]
 $$
-  \langle A|B\rangle = \frac12 \tr A^\dagger B.
+  (A|B) = \frac12 \tr A^\dagger B.
 $$
 :::
 
@@ -451,28 +451,6 @@ $$
   \tr(ABC) = \tr(BCA) = \tr(CAB).
 $$
 Note, however, that this does _not_ imply that e.g. $\tr(ABC)=\tr(ACB)$.
-
-
-### Exercises
-
-1. Show that $\{\id,\sigma_x,\sigma_y,\sigma_z\}$ is an orthonormal basis with respect to the Hilbert-Schmidt product in the space of complex $(2\times 2)$ matrices.
-2. Show that the coefficients $a_k$ (for $k=x,y,z$) in Equation (3.3.1) are given by the inner product $a_k = (\sigma_k|A) = \frac12\tr\sigma_k A$.
-3. Show that $\frac12\tr(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}$.
-4. Show that any $\vec{n}\cdot\vec{\sigma}$ has eigenvalues are $\pm|\vec{n}|$.
-5. Show that, if $\vec{n}\cdot\vec{m}=0$, then the operators $\vec{n}\cdot\vec{\sigma}$ and $\vec{m}\cdot\vec{\sigma}$ anticommute.
-6. In these notes, we usually deal with matrices that are Hermitian ($A=A^\dagger$) or unitary ($AA^\dagger=\id$).
-    It is easy to see that, if $A$ is Hermitian, then $a_0$ and the three components of $\vec{a}$ are all real.
-    The $(2\times 2)$ unitaries are usually parametrised as
-    $$
-      U = e^{i\gamma}\Big(u_0\id + i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
-    $$
-    where $e^{i\gamma}$ is an overall multiplicative phase factor, with $\gamma$ real, and $u_0$ and the three components $u_x$, $u_y$, $u_z$ are all real numbers.
-
-    Show that the unitarity condition implies that
-    $$
-      u_0^2 + u_x^2 + u_y^2 + u_z^2 = 1,
-    $$
-    and show that the determinant of $U$ is $e^{i2\gamma}$ using this parametrisation.
 
 
 
@@ -693,97 +671,6 @@ $$
 which we recognise as a good old textbook formula for an infinitesimal clockwise rotation of $\vec{s}$ about the axis $\vec{n}$ through the angle $2\alpha$.
 
 
-### Exercises
-
-_In some of these exercises, we continue to study the $(3\times 3)$ real-valued matrix $R$ from Equation (3.5.2), but usually just refer to it as $R$, leaving the dependence on the choice of $U$ implicit._
-
-
-1. Show that, if $A^2=\id$, then we can manipulate the power series expansion of $e^{iA}$ into a simple expression: for any real $\alpha$,
-    $$
-      e^{i\alpha A}
-      = (\cos\alpha)\id + (i\sin\alpha)A.
-    $$
-
-2. Using the previous exercise, or otherwise, show that any $(2\times 2)$ unitary matrix $U$ can be written, up to an overall multiplicative phase factor, as
-    $$
-      U
-      = e^{i \theta \vec{n}\cdot\vec{\sigma}}
-      = (\cos\theta)\id + (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
-    $$
-    (The argument here is the same as the argument that $e^{i\theta}=\cos\theta +i\sin\theta$).
-
-3. Show that $\tr \sigma_x\sigma_y\sigma_z = 2i$.
-
-4. Consider
-    $$
-      U(\vec e_k\cdot\sigma_k)U^\dagger=U\sigma_kU^\dagger={\vec f_k}\cdot\vec\sigma.
-    $$
-    So $U$ maps the unit vectors $\vec e_x$, $\vec e_y$, and $\vec z_z$, (along the $x$-, $y$-, and $z$-axis, respectively), to new unit vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$.
-    We already know that, in Euclidean space, this transformation is described by a $(3\times 3)$ orthogonal matrix $R$.
-    How are the three vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$ related to the entries in matrix $R$?
-
-5. Show that
-    $$
-      \begin{aligned}
-        \tr \sigma_x\sigma_y\sigma_z
-        &= \tr({\vec f_x}\cdot\vec\sigma)( {\vec f_y}\cdot\vec\sigma)({\vec f_z}\cdot\vec\sigma)
-      \\&= 2i\det R
-      \end{aligned}
-    $$
-    (which implies that $\det R=1$).
-
-6. Make use of the orthonormality of the Pauli basis and Equation (3.5.1) to show that the elements of the matrix $R$ can be expressed in terms of those of the matrix $U$, in the form
-    $$
-      R_{ij}=\frac12\tr\left(\sigma_i U\sigma_j U^\dagger\right).
-    $$
-    Here, $i$ and $j$ take values in $\{1,2,3\}$, and $\sigma_1\equiv\sigma_x$, $\sigma_2\equiv\sigma_y$, $\sigma_3\equiv\sigma_z$.
-
-7. Show that the phase gate $P_\varphi =\diag{1}{e^{i\varphi}}$ represents an anticlockwise rotation about the $z$-axis through the angle $\varphi$.
-    Note that it might be helpful to start with the $\mathrm{SU}(2)$ version of the phase gate:
-    $$
-      \begin{aligned}
-        P_\varphi
-        &= e^{-i\frac{\varphi}{2}\sigma_z}
-      \\&= \begin{bmatrix}
-          e^{-i \frac{\varphi}{2}}& 0
-        \\0 & e^{i \frac{\varphi}{2}}
-        \end{bmatrix}
-        \quad\longrightarrow\quad
-        R
-      \\&= \begin{bmatrix}
-          \cos \varphi & -\sin \varphi & 0
-        \\\sin \varphi & \cos \varphi & 0
-        \\0 & 0 & 1
-        \end{bmatrix}
-      \end{aligned}
-    $$
-
-8. Express the Hadamard gate $H$ in terms of $\vec{n}\cdot\vec{\sigma}$, and demonstrate that
-    $$
-      \begin{aligned}
-        HZH&=X
-      \\HXH&=Z
-      \\HYH&=-Y.
-      \end{aligned}
-    $$
-
-9. Show that the Hadamard gate $H$ turns rotations about the $x$-axis into rotations about the $z$-axis, and vice versa.
-    That is,
-    $$
-      \begin{gathered}
-        H \left(
-          e^{-i\frac{\varphi}{2}Z}
-        \right) H
-        = e^{-i\frac{\varphi}{2}X}
-      \\\qquad \text{and} \qquad
-      \\H \left(
-          e^{-i\frac{\varphi}{2}X}
-        \right) H
-        = e^{-i\frac{\varphi}{2}Z}.
-      \end{gathered}
-    $$
-
-
 
 
 
@@ -925,14 +812,6 @@ The resulting axis of rotation is perpendicular to the two axes about which rota
 ```
 
 
-### Exercises
-
-1. In the Singapore Botanic Gardens, there is a sculpture by Ueli Fausch called "Swiss Granite Fountain".
-    It is a spherical granite ball which measures 80cm in diameter and weighs 700kg, and is kept afloat by strong water pressure directed through the basal block.
-    It is easy to set the ball in motion, and it keeps rotating in whatever way you start for a long time.
-    Suppose you are given access to this ball only near the top, so that you can push it to make it rotate around any horizontal axis, but you don't have enough of a grip to make it turn around the vertical axis.
-    Can you make it rotate around the vertical axis anyway?
-
 
 
 
@@ -968,22 +847,177 @@ $$
 $$
 which is a rotation with angular frequency $\omega$ about the axis defined by the unit vector $\vec n$.
 
-**!!!TODO!!! the Hamiltonian of two qubits (from the problem sheets)**
 
 **!!!TODO!!! the $4\pi$ world of qubits**
 
 
-### Exercises
 
-1. A qubit (spin one-half particle) initially in state $\ket{0}$ (spin up) is placed in a uniform magnetic field.
-    The interaction between the field and the qubit is described by the Hamiltonian
+
+
+
+## Remarks and Exercises
+
+
+### {}
+
+Show that $\{\id,\sigma_x,\sigma_y,\sigma_z\}$ is an orthonormal basis with respect to the Hilbert-Schmidt product in the space of complex $(2\times 2)$ matrices.
+
+
+### {}
+
+Show that the coefficients $a_k$ (for $k=x,y,z$) in Equation (3.3.1) are given by the inner product $a_k = (\sigma_k|A) = \frac12\tr\sigma_k A$.
+
+
+### {}
+
+1. Show that $\frac12\tr(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}$.
+
+2. Show that any $\vec{n}\cdot\vec{\sigma}$ has eigenvalues $\pm|\vec{n}|$.
+
+3. Show that, if $\vec{n}\cdot\vec{m}=0$, then the operators $\vec{n}\cdot\vec{\sigma}$ and $\vec{m}\cdot\vec{\sigma}$ anticommute.
+
+
+### {}
+
+In these notes, we usually deal with matrices that are Hermitian ($A=A^\dagger$) or unitary ($AA^\dagger=\id$).
+It is easy to see that, if $A$ is Hermitian, then $a_0$ and the three components of $\vec{a}$ are all real.
+The $(2\times 2)$ unitaries are usually parametrised as
+$$
+  U = e^{i\gamma}\Big(u_0\id + i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
+$$
+where $e^{i\gamma}$ is an overall multiplicative phase factor, with $\gamma$ real, and $u_0$ and the three components $u_x$, $u_y$, $u_z$ are all real numbers.
+
+Show that the unitarity condition implies that
+$$
+  u_0^2 + u_x^2 + u_y^2 + u_z^2 = 1,
+$$
+and show that the determinant of $U$ is $e^{i2\gamma}$ using this parametrisation.
+
+
+### {}
+
+1. Show that, if $A^2=\id$, then we can manipulate the power series expansion of $e^{iA}$ into a simple expression: for any real $\alpha$,
     $$
-      H
-      = \omega
-      \begin{bmatrix}
-        0 & - i
-      \\i & 0
-      \end{bmatrix}
+      e^{i\alpha A}
+      = (\cos\alpha)\id + (i\sin\alpha)A.
     $$
-    where $\omega$ is proportional to the strength of the field.^[In Earth's magnetic field, which is about $0.5$ gauss, the value of $\omega$ is of the order of $10^6$ cycles per second.]
-    What is the state of the qubit after time $t=\pi/4\omega$?
+
+2. Show that any $(2\times 2)$ unitary matrix $U$ can be written, up to an overall multiplicative phase factor, as
+    $$
+      U
+      = e^{i \theta \vec{n}\cdot\vec{\sigma}}
+      = (\cos\theta)\id + (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
+    $$
+    (The argument here is the same as the argument that $e^{i\theta}=\cos\theta +i\sin\theta$).
+
+
+### {}
+
+Show that $\tr\sigma_x\sigma_y\sigma_z = 2i$.
+
+
+### {}
+
+1. Consider
+    $$
+      U(\vec e_k\cdot\sigma_k)U^\dagger=U\sigma_kU^\dagger={\vec f_k}\cdot\vec\sigma.
+    $$
+    So $U$ maps the unit vectors $\vec e_x$, $\vec e_y$, and $\vec z_z$, (along the $x$-, $y$-, and $z$-axis, respectively), to new unit vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$.
+    We already know that, in Euclidean space, this transformation is described by a $(3\times 3)$ orthogonal matrix $R_U$.
+    How are the three vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$ related to the entries in matrix $R_U$?
+
+2. Show that
+    $$
+      \begin{aligned}
+        \tr \sigma_x\sigma_y\sigma_z
+        &= \tr({\vec f_x}\cdot\vec\sigma)( {\vec f_y}\cdot\vec\sigma)({\vec f_z}\cdot\vec\sigma)
+      \\&= 2i\det R_U
+      \end{aligned}
+    $$
+    (which implies that $\det R_U=1$).
+
+3. Make use of the orthonormality of the Pauli basis and Equation (3.5.1) to show that the elements of the matrix $R=R_U$ can be expressed in terms of those of the matrix $U$, in the form
+    $$
+      R_{ij}=\frac12\tr\left(\sigma_i U\sigma_j U^\dagger\right).
+    $$
+    Here, $i$ and $j$ take values in $\{1,2,3\}$, and $\sigma_1\equiv\sigma_x$, $\sigma_2\equiv\sigma_y$, $\sigma_3\equiv\sigma_z$.
+
+
+### {}
+
+Show that the phase gate
+$$
+  P_\varphi = \diag{1}{e^{i\varphi}}
+$$
+represents an anticlockwise rotation about the $z$-axis through the angle $\varphi$.
+
+**Hint.** It might be helpful to start with the $\mathrm{SU}(2)$ version of the phase gate:
+$$
+  \begin{aligned}
+    P_\varphi
+    &= e^{-i\frac{\varphi}{2}\sigma_z}
+  \\&= \begin{bmatrix}
+      e^{-i \frac{\varphi}{2}}& 0
+    \\0 & e^{i \frac{\varphi}{2}}
+    \end{bmatrix}
+    \quad\longrightarrow\quad
+    R
+  \\&= \begin{bmatrix}
+      \cos \varphi & -\sin \varphi & 0
+    \\\sin \varphi & \cos \varphi & 0
+    \\0 & 0 & 1
+    \end{bmatrix}
+  \end{aligned}
+$$
+
+
+### {}
+
+1. Express the Hadamard gate $H$ in terms of $\vec{n}\cdot\vec{\sigma}$, and show that
+$$
+  \begin{aligned}
+    HZH&=X
+  \\HXH&=Z
+  \\HYH&=-Y.
+  \end{aligned}
+$$
+
+2. Show that the Hadamard gate $H$ turns rotations about the $x$-axis into rotations about the $z$-axis, and vice versa.
+    That is,
+    $$
+      \begin{aligned}
+        H \left(
+          e^{-i\frac{\varphi}{2}Z}
+        \right) H
+        &= e^{-i\frac{\varphi}{2}X}
+      \\H \left(
+          e^{-i\frac{\varphi}{2}X}
+        \right) H
+        &= e^{-i\frac{\varphi}{2}Z}.
+      \end{aligned}
+    $$
+
+
+### Swiss Granite Fountain
+
+In the Singapore Botanic Gardens, there is a sculpture by Ueli Fausch called "Swiss Granite Fountain".
+It is a spherical granite ball which measures 80cm in diameter and weighs 700kg, and is kept afloat by strong water pressure directed through the basal block.
+It is easy to set the ball in motion, and it keeps rotating in whatever way you start for a long time.
+Suppose you are given access to this ball only near the top, so that you can push it to make it rotate around any horizontal axis, but you don't have enough of a grip to make it turn around the vertical axis.
+Can you make it rotate around the vertical axis anyway?
+
+
+### {}
+
+A qubit (spin one-half particle) initially in state $\ket{0}$ (spin up) is placed in a uniform magnetic field.
+The interaction between the field and the qubit is described by the Hamiltonian
+$$
+  H
+  = \omega
+  \begin{bmatrix}
+    0 & - i
+  \\i & 0
+  \end{bmatrix}
+$$
+where $\omega$ is proportional to the strength of the field.^[In Earth's magnetic field, which is about $0.5$ gauss, the value of $\omega$ is of the order of $10^6$ cycles per second.]
+What is the state of the qubit after time $t=\pi/4\omega$?
