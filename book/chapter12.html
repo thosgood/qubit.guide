@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Some mathematical preliminaries | Lectures on Quantum Information Science</title>
+  <title>Chapter 12 Further reading | Lectures on Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Some mathematical preliminaries | Lectures on Quantum Information Science" />
+  <meta property="og:title" content="Chapter 12 Further reading | Lectures on Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Some mathematical preliminaries | Lectures on Quantum Information Science" />
+  <meta name="twitter:title" content="Chapter 12 Further reading | Lectures on Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="chapter1.html"/>
+<link rel="prev" href="chapter11.html"/>
+
 <script src="libs/header-attrs-2.5.3/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -358,303 +358,148 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="some-mathematical-preliminaries" class="section level1 unnumbered">
-<h1>Some mathematical preliminaries</h1>
-<div id="euclidean-vectors" class="section level2" number="0.1">
-<h2><span class="header-section-number">0.1</span> Euclidean vectors</h2>
-<p>We assume that you are familiar with Euclidean vectors — those arrow-like geometric objects which are used to represent physical quantities, such as velocities, or forces.
-You know that any two velocities can be added to yield a third, and the multiplication of a “velocity vector” by a real number is another “velocity vector”.
-So a <strong>linear combination</strong> of vectors is another vector.
-Mathematicians have simply taken these properties and defined vectors as <em>anything</em> that we can add and multiply by numbers, as long as everything behaves in a nice enough way.
-This is basically what an Italian mathematician Giuseppe Peano (1858–1932) did in a chapter of his 1888 book with an impressive title: <em>Calcolo geometrico secondo l’Ausdehnungslehre di H. Grassmann preceduto dalle operazioni della logica deduttiva</em>.</p>
-</div>
-<div id="vector-spaces" class="section level2" number="0.2">
-<h2><span class="header-section-number">0.2</span> Vector spaces</h2>
-<p>Following Peano, we define a <strong>vector space</strong> as a mathematical structure in which the notion of linear combination “makes sense”.</p>
-<p>More formally, a <strong>complex vector space</strong> is a set <eq env="math">V</eq> such that, given any two <strong>vectors</strong> <eq env="math">a</eq> and <eq env="math">b</eq> (that is, any two elements of <eq env="math">V</eq>) and any two complex numbers <eq env="math">\alpha</eq> and <eq env="math">\beta</eq>, we can form the linear combination<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <eq env="math">\alpha a+\beta b</eq>, which is also a vector in <eq env="math">V</eq>.</p>
-<p>A <strong>subspace</strong> of <eq env="math">V</eq> is any subset of <eq env="math">V</eq> which is closed under vector addition and multiplication by complex numbers.
-Here we start using the Dirac bra-ket notation and write vectors in a somewhat fancy way as <eq env="math">|\text{label}\rangle</eq>, where the “label” is anything that serves to specify what the vector is.
-For example, <eq env="math">|\uparrow\rangle</eq> and <eq env="math">|\downarrow\rangle</eq> may refer to an electron with spin up or down along some prescribed direction and <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq> may describe a quantum bit (a “qubit”) holding either logical <eq env="math">0</eq> or <eq env="math">1</eq>.
-These are often called <strong>ket</strong> vectors, or simply <strong>kets</strong>.
-(We will deal with “bras” in a moment).
-A <strong>basis</strong> in <eq env="math">V</eq> is a collection of vectors <eq env="math">|e_1\rangle,|e_2\rangle,\ldots,|e_n\rangle</eq> such that every vector <eq env="math">|v\rangle</eq> in <eq env="math">V</eq> can be written (in <em>exactly</em> one way) as a linear combination of the basis vectors; <eq env="math">|v\rangle=\sum_i v_i|e_i\rangle</eq>.
-The number of elements in a basis is called the <strong>dimension</strong> of <eq env="math">V</eq>.
-(Showing that this definition is independent of the basis that we choose is a “fun” linear algebra exercise).
-The most common <eq env="math">n</eq>-dimensional complex vector space is the space of ordered <eq env="math">n</eq>-tuples of complex numbers, usually written as column vectors:
-<eq env="displaymath">
-  \begin{gathered}
-    |a\rangle
-    = \begin{bmatrix}a_1\\a_2\\\vdots\\a_n\end{bmatrix}
-    \qquad
-    |b\rangle
-    = \begin{bmatrix}b_1\\b_2\\\vdots\\b_n\end{bmatrix}
-  \\\alpha|a\rangle+\beta|b\rangle
-    = \begin{bmatrix}\alpha a_1+\beta b_1\\\alpha a_2+\beta b_2\\\vdots\\\alpha a_n+\beta b_n\end{bmatrix}
-  \end{gathered}
-</eq></p>
-<p>In fact, this is the space we will use most of the time.
-Throughout the course we will deal only with vector spaces of <em>finite</em> dimensions.
-This is sufficient for all our purposes and we will avoid many mathematical subtleties associated with infinite dimensional spaces, for which we would need to tools of <strong>functional analysis</strong>.</p>
-</div>
-<div id="bras-and-kets" class="section level2" number="0.3">
-<h2><span class="header-section-number">0.3</span> Bras and kets</h2>
-<p>An <strong>inner product</strong> on a vector space <eq env="math">V</eq> (over the complex numbers) is a function that assigns to each pair of vectors <eq env="math">|u\rangle,|v\rangle\in V</eq> a complex number <eq env="math">\langle u|v\rangle</eq>, and satisfies the following conditions:</p>
-<ul>
-<li><eq env="math">\langle u|v\rangle=\langle v|u\rangle^\star</eq>;</li>
-<li><eq env="math">\langle v|v\rangle\geqslant 0</eq> for all <eq env="math">|v\rangle</eq>;</li>
-<li><eq env="math">\langle v|v\rangle= 0</eq> if and only if <eq env="math">|v\rangle=0</eq>.</li>
-</ul>
-<p>The inner product must also be <em>linear</em> in the second argument but <em>antilinear</em> in the first argument:
-<eq env="displaymath">
-  \langle c_1u_1+c_2u_2|v\rangle = c_1^\star\langle u_1|v\rangle+c_2^\star\langle u_2|v\rangle
-</eq>
-for any complex constants <eq env="math">c_1</eq> and <eq env="math">c_2</eq>.</p>
-<p>With any physical system we associate a complex vector space with an inner product, known as a <strong>Hilbert space</strong><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> <eq env="math">\mathcal{H}</eq>.
-The inner product between vectors <eq env="math">|u\rangle</eq> and <eq env="math">|v\rangle</eq> in <eq env="math">{\mathcal{H}}</eq> is written as
-<eq env="displaymath">
-  \langle u|v\rangle.
-</eq></p>
-<p>For example, for column vectors <eq env="math">|u\rangle</eq> and <eq env="math">|v\rangle</eq> in <eq env="math">\mathbb{C}^n</eq> written as
-<eq env="displaymath">
-  |u\rangle
-  = \begin{bmatrix}u_1\\u_2\\\vdots\\u_n\end{bmatrix}
-  \qquad
-  |v\rangle
-  = \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
-</eq>
-their inner product is defined as
-<eq env="displaymath">
-  \langle u|v\rangle
-  = u_1^\star v_1 + u_2^\star v_2+\ldots + u_n^\star v_n.
-</eq>
-Following Dirac we may split the inner product into two ingredients
-<eq env="displaymath">
-  \langle u|v\rangle
-  \longrightarrow \langle u|\,|v\rangle.
-</eq>
-Here <eq env="math">|v\rangle</eq> is a ket vector, and <eq env="math">\langle u|</eq> is called a <strong>bra</strong> vector, or a <strong>bra</strong>, and can be represented by a row vector:
-<eq env="displaymath">
-  \langle u|
-  = \begin{bmatrix}u_1^\star,&amp;u_2^\star,&amp;\ldots,&amp;u_n^\star\end{bmatrix}.
-</eq>
-The inner product can now be viewed as the result of the matrix multiplication:
-<eq env="displaymath">
-  \begin{aligned}
-    \langle u|v\rangle
-    &amp;= \begin{bmatrix}u_1^\star,&amp;u_2^\star,&amp;\ldots,&amp;u_n^\star\end{bmatrix}
-    \cdot \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
-  \\&amp;= u_1^\star v_1 + u_2^\star v_2 + \ldots + u_n^\star v_n.
-  \end{aligned}
-</eq></p>
-<p>Bras are vectors: you can add them, and multiply them by scalars (which, here, are complex numbers), but they are vectors in the space <eq env="math">{\mathcal{H}}^\star</eq> which is <strong>dual</strong> to <eq env="math">\mathcal{H}</eq>.
-Elements of <eq env="math">{\mathcal{H}}^\star</eq> are <strong>linear functionals</strong>, that is, linear maps from <eq env="math">\mathcal{H}</eq> to <eq env="math">\mathbb{C}</eq>.
-A linear functional <eq env="math">\langle u|</eq> acting on a vector <eq env="math">|v\rangle</eq> in <eq env="math">\mathcal{H}</eq> gives a complex number <eq env="math">\langle u|v\rangle</eq>.</p>
-<div class="idea">
-<p>All Hilbert spaces of the same dimension are isomorphic, so the differences between quantum systems cannot be really understood without additional structure. This structure is provided by a specific algebra of operators acting on <eq env="math">\mathcal{H}</eq>.</p>
-</div>
-</div>
-<div id="daggers" class="section level2" number="0.4">
-<h2><span class="header-section-number">0.4</span> Daggers</h2>
-<p>Although <eq env="math">\mathcal{H}</eq> and <eq env="math">\mathcal{H}^\star</eq> are not identical spaces – the former is inhabited by kets, and the latter by bras – they are closely related.
-There is a bijective map from one to the other, <eq env="math">|v\rangle\leftrightarrow \langle v|</eq>, denoted by a <strong>dagger</strong>:<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>
-<eq env="displaymath">
-  \begin{aligned}
-    \langle v|
-    &amp;= (|v\rangle)^\dagger
-  \\|v\rangle
-    &amp;= (\langle v|)^\dagger.
-  \end{aligned}
-</eq>
-We usually omit the parentheses when it is obvious what the dagger operation applies to.</p>
-<p>The dagger operation, also known as <strong>Hermitian conjugation</strong>, is <em>antilinear</em>:
-<eq env="displaymath">
-  \begin{aligned}
-    (c_1|v_1\rangle+c_2|v_2\rangle)^\dagger
-    &amp;= c_1^\star\langle v_1| + c_2^\star\langle v_2|
-  \\(c_1\langle v_1|+c_2\langle v_2|)^\dagger
-    &amp;= c_1^\star|v_1\rangle + c_2^\star|v_2\rangle.
-  \end{aligned}
-</eq>
-Also, when applied twice, the dagger operation is the identity map.
-In the matrix representation,<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>
-<eq env="displaymath">
-  |v\rangle = \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
-  \overset{\dagger}{\longleftrightarrow}
-  \langle v| = \begin{bmatrix}v_1^\star,&amp;v_2^\star,&amp;\ldots,&amp;v_n^\star\end{bmatrix}.
-</eq></p>
-</div>
-<div id="geometry" class="section level2" number="0.5">
-<h2><span class="header-section-number">0.5</span> Geometry</h2>
-<p>The inner product brings geometry: the <strong>length</strong>, or <strong>norm</strong>, of <eq env="math">|v\rangle</eq> is given by <eq env="math">\|v\|=\sqrt{\langle v|v\rangle}</eq>, and we say that <eq env="math">|u\rangle</eq> and <eq env="math">|v\rangle</eq> are <strong>orthogonal</strong> if <eq env="math">\langle u|v\rangle=0</eq>.
-Any maximal set of pairwise orthogonal vectors of unit length<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> forms an orthonormal basis, and so any vector can be expressed as a linear combination of the basis vectors:
-<eq env="displaymath">
-  \begin{gathered}
-    |v\rangle
-    =\sum_i v_i|e_i\rangle
-  \\\text{where $v_i=\langle e_i|v\rangle$}.
-  \end{gathered}
-</eq>
-Then the bras <eq env="math">\langle e_i|</eq> form the <strong>dual basis</strong>
-<eq env="displaymath">
-  \begin{gathered}
-    \langle v|
-    =\sum_i v_i^\star\langle e_i|
-  \\\text{where $v_i^\star=\langle v|e_i\rangle$}.
-  \end{gathered}
-</eq></p>
-<p>To make the notation a bit less cumbersome, we will sometimes label the basis kets as <eq env="math">|i\rangle</eq> rather than <eq env="math">|e_i\rangle</eq>, and write
-<eq env="displaymath">
-  \begin{aligned}
-    |v\rangle
-    &amp;= \sum_i |i\rangle\langle i|v\rangle
-  \\\langle v|
-    &amp;= \sum_j \langle v|i\rangle\langle i|.
-  \end{aligned}
-</eq>
-But <em>do not confuse <eq env="math">|0\rangle</eq> with the zero vector</em>!
-We <em>never</em> write the zero vector as <eq env="math">|0\rangle</eq>, but only ever as <eq env="math">0</eq>, without any bra or ket decorations (so e.g. <eq env="math">|v\rangle+0=|v\rangle</eq>).</p>
-<div class="idea">
-<p>With any <em>isolated</em> quantum system, which can be prepared in <eq env="math">n</eq> <em>perfectly distinguishable</em> states, we can associate a Hilbert space <eq env="math">\mathcal{H}</eq> of dimension <eq env="math">n</eq> such that each vector <eq env="math">|v\rangle\in\mathcal{H}</eq> of unit length (i.e. <eq env="math">\langle v|v\rangle =1</eq>) represents a quantum state of the system.</p>
-<p>The overall phase of the vector has no physical significance: <eq env="math">|v\rangle</eq> and <eq env="math">e^{i\varphi}|v\rangle</eq> (for any real <eq env="math">\varphi</eq>) both describe the same state.</p>
-<p>The inner product <eq env="math">\langle u|v\rangle</eq> is the <em>probability amplitude</em> that a quantum system prepared in state <eq env="math">|v\rangle</eq> will be found in state <eq env="math">|u\rangle</eq> upon measurement.</p>
-<p>States corresponding to orthogonal vectors (i.e. <eq env="math">\langle u|v\rangle=0</eq>) are <em>perfectly distinguishable</em>, since, if we prepare the system in state <eq env="math">|v\rangle</eq>, then it will never be found in state <eq env="math">|u\rangle</eq>, and vice versa.
-In particular, states forming orthonormal bases are always perfectly distinguishable from each other.
-Choosing such states, as we shall see in a moment, is equivalent to choosing a particular quantum measurement.</p>
-</div>
-</div>
-<div id="operators" class="section level2" number="0.6">
-<h2><span class="header-section-number">0.6</span> Operators</h2>
-<p>A <strong>linear map</strong> between two vector spaces <eq env="math">\mathcal{H}</eq> and <eq env="math">\mathcal{K}</eq> is a function <eq env="math">A\colon\mathcal{H}\to\mathcal{K}</eq> that respects linear combinations:
-<eq env="displaymath">
-  A(c_1|v_1\rangle+c_2|v_2\rangle)=c_1 A|v_1\rangle+c_2 A|v_2\rangle
-</eq>
-for any vectors <eq env="math">|v_1\rangle,|v_2\rangle</eq> and any complex numbers <eq env="math">c_1,c_2</eq>.
-We will focus mostly on <strong>endomorphisms</strong>, that is, maps from <eq env="math">\mathcal{H}</eq> to <eq env="math">\mathcal{H}</eq>, and we will call them <strong>operators</strong>.
-The symbol <eq env="math">\mathbf{1}</eq> is reserved for the identity operator that maps every element of <eq env="math">\mathcal{H}</eq> to itself (i.e. <eq env="math">\mathbf{1}|v\rangle=|v\rangle</eq> for all <eq env="math">|v\rangle\in\mathcal{H}</eq>).
-The product <eq env="math">AB</eq> of two operators <eq env="math">A</eq> and <eq env="math">B</eq> is the operator obtained by first applying <eq env="math">B</eq> to some ket <eq env="math">|v\rangle</eq> and then <eq env="math">A</eq> to the ket which results from applying <eq env="math">B</eq>:
-<eq env="displaymath">
-  (AB)|v\rangle = A(B|v\rangle).
-</eq>
-The order <em>does</em> matter: in general, <eq env="math">AB\neq BA</eq>.
-In the exceptional case in which <eq env="math">AB=BA</eq>, one says that these two operators <strong>commute</strong>.
-The inverse of <eq env="math">A</eq>, written as <eq env="math">A^{-1}</eq>, is the operator that satisfies <eq env="math">AA^{-1}=\mathbf{1}=A^{-1}A</eq>.
-For finite-dimensional spaces, one only needs to check <em>one</em> of these two conditions, since any one of the two implies the other, whereas, on an infinite-dimensional space, <em>both</em> must be checked.
-Finally, given a particular basis, an operator <eq env="math">A</eq> is uniquely determined by the entries of its matrix, defined by <eq env="math">A_{ij}=\langle i|A|j\rangle</eq>.
-The <strong>adjoint</strong>, or <strong>Hermitian conjugate</strong>, of <eq env="math">A</eq>, denoted by <eq env="math">A^\dagger</eq>, is defined by the relation
-<eq env="displaymath">
-  \begin{gathered}
-    \langle i|A^\dagger|j\rangle
-    = \langle j|A|i\rangle^\star
-  \\\text{for all $|i\rangle,|j\rangle\in\mathcal{H}$}.
-  \end{gathered}
-</eq></p>
-<p>An operator <eq env="math">A</eq> is said to be</p>
-<ul>
-<li><strong>normal</strong> if <eq env="math">AA^\dagger = A^\dagger A</eq>,</li>
-<li><strong>unitary</strong> if <eq env="math">AA^\dagger = A^\dagger A = \mathbf{1}</eq>,</li>
-<li><strong>Hermitian</strong> (or <strong>self-adjoint</strong>) if <eq env="math">A^\dagger = A</eq>.</li>
-</ul>
-<p>Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.
-Note that unitary operators preserve the inner product: given a unitary operator <eq env="math">U</eq> and two kets <eq env="math">|a\rangle</eq> and <eq env="math">|b\rangle</eq>, and defining <eq env="math">|a'\rangle=U|a\rangle</eq> and <eq env="math">|b'\rangle=U|b\rangle</eq>, we have that
-<eq env="displaymath">
-  \begin{gathered}
-    \langle a'|=\langle a|U^\dagger
-  \\\langle b'|=\langle b|U^\dagger
-  \\\langle a'|b'\rangle=\langle a|U^\dagger U|b\rangle=\langle a|\mathbf{1}|b\rangle=\langle a|b\rangle.
-  \end{gathered}
-</eq>
-Preserving the inner product implies preserving the norm induced by this product, i.e. unit state vectors are mapped to unit state vectors, i.e. <em>unitary operations are the isometries of the Euclidean norm</em>.</p>
-</div>
-<div id="outer-products" class="section level2" number="0.7">
-<h2><span class="header-section-number">0.7</span> Outer products</h2>
-<p>Apart from the inner product <eq env="math">\langle u|v\rangle</eq>, which is a complex number, we can also form the <strong>outer product</strong> <eq env="math">|u\rangle\langle v|</eq>, which is a linear map (operator) on <eq env="math">\mathcal{H}</eq> (or on <eq env="math">\mathcal{H}^\star</eq>, depending how you look at it).
-This is what physicists like (and what mathematicians dislike!) about Dirac notation: a certain degree of healthy ambiguity.</p>
-<ul>
-<li>The result of <eq env="math">|u\rangle\langle v|</eq> acting on a ket <eq env="math">|x\rangle</eq> is <eq env="math">|u\rangle\langle v|x\rangle</eq>, i.e. the vector <eq env="math">|u\rangle</eq> multiplied by the complex number <eq env="math">\langle v|x\rangle</eq>.</li>
-<li>Similarly, the result of <eq env="math">|u\rangle\langle v|</eq> acting on a bra <eq env="math">\langle y|</eq> is <eq env="math">\langle y|u\rangle\langle v|</eq>, i.e. the functional <eq env="math">\langle v|</eq> multiplied by the complex number <eq env="math">\langle y|u\rangle</eq>.</li>
-</ul>
-<p>The product of two maps, <eq env="math">A=|a\rangle\langle b|</eq> followed by <eq env="math">B=|c\rangle\langle d|</eq>, is a linear map <eq env="math">BA</eq>, which can be written in Dirac notation as
-<eq env="displaymath">
-  BA = |c\rangle\langle d|a\rangle\langle b| = \langle d|a\rangle|c\rangle\langle b|
-</eq>
-i.e. the inner product (complex number) <eq env="math">\langle d|a\rangle</eq> times the outer product (linear map) <eq env="math">|c\rangle\langle b|</eq>.</p>
-<p>Any operator on <eq env="math">\mathcal{H}</eq> can be expressed as a sum of outer products. Given an orthonormal basis <eq env="math">\{|e_i\rangle\}</eq>, any operator which maps the basis vectors <eq env="math">|e_i\rangle</eq> to vectors <eq env="math">|f_i\rangle</eq> can be written as <eq env="math">\sum_i|f_i\rangle\langle e_i|</eq>, where the sum is over all the vectors in the orthonormal basis.
-If the vectors <eq env="math">\{|f_i\rangle\}</eq> also form an orthonormal basis then the operator simply “rotates” one orthonormal basis into another.
-These are unitary operators which preserve the inner product.
-In particular, if each <eq env="math">|e_i\rangle</eq> is mapped to <eq env="math">|e_i\rangle</eq>, then we obtain the identity operator:
-<eq env="displaymath">
-  \sum_i|e_i\rangle\langle e_i|=\mathbf{1}.
-</eq>
-This relation holds for <em>any</em> orthonormal basis, and it is one of the most ubiquitous and useful formulas in quantum theory.
-For example, for any vector <eq env="math">|v\rangle</eq> and for any orthonormal basis <eq env="math">\{|e_i\rangle\}</eq>, we have
-<eq env="displaymath">
-  \begin{aligned}
-    |v\rangle
-    &amp;= \mathbf{1}|v\rangle
-  \\&amp;= \sum_i |e_i\rangle\langle e_i|\;|v\rangle
-  \\&amp;= \sum_i |e_i\rangle\;\langle e_i|v\rangle
-  \\&amp;= \sum_i v_i|e_i\rangle,
-  \end{aligned}
-</eq>
-where <eq env="math">v_i=\langle e_i|v\rangle</eq> are the components of <eq env="math">|v\rangle</eq>.
-Finally, note that the adjoint of <eq env="math">|a\rangle\langle b|</eq> is <eq env="math">|b\rangle\langle a|</eq>.</p>
-</div>
-<div id="the-trace" class="section level2" number="0.8">
-<h2><span class="header-section-number">0.8</span> The trace</h2>
-<p>The <strong>trace</strong> is an operation which turns outer products into inner products,
-<eq env="displaymath">
-  \operatorname{tr}\colon |b\rangle\langle a| \longmapsto \langle a|b\rangle.
-</eq>
-We have just seen that any linear operator can be written as a sum of outer products, and so we can extend the definition of trace (by linearity) to any operator.
-Alternatively, for any square matrix <eq env="math">A</eq>, the trace of <eq env="math">A</eq> is defined to be the sum of its diagonal elements:
-<eq env="displaymath">
-  \operatorname{tr}A = \sum_k \langle e_k|A|e_k\rangle = \sum_k A_{kk}.
-</eq>
-You can show, using this definition or otherwise, that the trace is cyclic (i.e. <eq env="math">\operatorname{tr}(AB) = \operatorname{tr}(BA)</eq>) and linear (i.e. <eq env="math">\operatorname{tr}(\alpha A+\beta B) = \alpha\operatorname{tr}(A)+\beta\operatorname{tr}(B)</eq>, where <eq env="math">A</eq> and <eq env="math">B</eq> are square matrices and <eq env="math">\alpha</eq> and <eq env="math">\beta</eq> complex numbers).
-Moreover,
-<eq env="displaymath">
-  \begin{aligned}
-    \operatorname{tr}|b\rangle\langle a|
-    &amp;= \sum_k \langle e_k|b\rangle\langle a|e_k\rangle
-  \\&amp;= \sum_k \langle a|e_k\rangle\langle e_k|b\rangle
-  \\&amp;= \langle a|\mathbf{1}\rangle|b\rangle
-  \\&amp;= \langle a|b\rangle.
-  \end{aligned}
-</eq>
-Here, the second term can be viewed both as the sum of the diagonal elements of <eq env="math">|b\rangle\langle a|</eq> in the <eq env="math">|e_k\rangle</eq> basis, and as the sum of the products of two complex numbers <eq env="math">\langle e_k|b\rangle</eq> and <eq env="math">\langle a|e_k\rangle</eq>.
-We have used the decomposition of the identity, <eq env="math">\sum_k|e_k\rangle\langle e_k|=\mathbf{1}</eq>.
-Given that we can decompose the identity by choosing any orthonormal basis, it is clear that the trace does <em>not</em> depend on the choice of the basis.</p>
-</div>
-<div id="some-useful-identities" class="section level2" number="0.9">
-<h2><span class="header-section-number">0.9</span> Some useful identities</h2>
-<ul>
-<li><eq env="math">|a\rangle^\dagger = \langle a|</eq></li>
-<li><eq env="math">\langle a|^\dagger = |a\rangle</eq></li>
-<li><eq env="math">(\alpha|a\rangle+\beta|b\rangle)^\dagger = \alpha^\star\langle a|+\beta^\star\langle b|</eq></li>
-<li><eq env="math">(|a\rangle\langle b|)^\dagger = |b\rangle\langle a|</eq></li>
-<li><eq env="math">(AB)^\dagger=B^\dagger A^\dagger</eq></li>
-<li><eq env="math">(\alpha A+\beta B)^\dagger=\alpha^\star A^\dagger+\beta^\star B^\dagger</eq></li>
-<li><eq env="math">(A^\dagger)^\dagger=A</eq></li>
-<li><eq env="math">\operatorname{tr}(\alpha A+ \beta B) = \alpha \operatorname{tr}(A)+\beta\operatorname{tr}(B)</eq></li>
-<li><eq env="math">\operatorname{tr}|a\rangle\langle b| = \langle b|a\rangle</eq></li>
-<li><eq env="math">\operatorname{tr}(ABC) = \operatorname{tr}(CAB) = \operatorname{tr}(BCA)</eq></li>
-</ul>
+<div id="chapter12" class="section level1" number="12">
+<h1><span class="header-section-number">Chapter 12</span> Further reading</h1>
+<blockquote>
+<p>About … <strong>!!!TODO!!!</strong></p>
+</blockquote>
+<p><strong>!!!TODO!!! graphical calculus stuff, the philosophical problem of measurement, some history of experimental results</strong></p>
 
-</div>
 </div>
 
 
 
-<div class="footnotes">
-<hr />
-<ol start="1">
-<li id="fn1"><p>As we said, there are certain “nice properties” that these things must satisfy. Addition of vectors must be commutative and associative, with an identity (the zero vector, which will always be written as <eq env="math">\mathbf{0}</eq> ) and an inverse for each <eq env="math">v</eq> (written as <eq env="math">-v</eq>). Multiplication by complex numbers must obey the two distributive laws: <eq env="math">(\alpha+\beta)v = \alpha v+\beta v</eq> and <eq env="math">\alpha (v+w) = \alpha v+\alpha w</eq>.<a href="some-mathematical-preliminaries.html#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>The term “Hilbert space” used to be reserved for an infinite-dimensional inner product space that is <strong>complete</strong>, i.e. such that every Cauchy sequence in the space converges to an element in the space. Nowadays, as in these notes, the term includes finite-dimensional spaces, which automatically satisfy the condition of completeness.<a href="some-mathematical-preliminaries.html#fnref2" class="footnote-back">↩︎</a></p></li>
-<li id="fn3"><p>“Is this a <eq env="math">\dagger</eq> which I see before me…”<a href="some-mathematical-preliminaries.html#fnref3" class="footnote-back">↩︎</a></p></li>
-<li id="fn4"><p>Recall that the conjugate transpose, or the Hermitian conjugate, of an <eq env="math">(n\times m)</eq> matrix <eq env="math">A</eq> is an <eq env="math">(m\times n)</eq> matrix <eq env="math">A^\dagger</eq>, obtained by interchanging the rows and columns of <eq env="math">A</eq> and taking complex conjugates of each entry in <eq env="math">A</eq>, i.e. <eq env="math">A^\dagger_{ij}=A^\star_{ji}</eq>. In mathematics texts it is often denoted by <eq env="math">{}^\star</eq> rather than <eq env="math">{}^\dagger</eq>.<a href="some-mathematical-preliminaries.html#fnref4" class="footnote-back">↩︎</a></p></li>
-<li id="fn5"><p>That is, consider sets of vectors <eq env="math">|e_i\rangle</eq> such that <eq env="math">\langle e_i|e_j\rangle=\delta_{ij}</eq> (where the <strong>Kronecker delta</strong> <eq env="math">\delta_{ij}</eq> is <eq env="math">0</eq> if <eq env="math">i\neq j</eq>, and <eq env="math">1</eq> if <eq env="math">i=j</eq>.), and then pick any of the largest such sets (which must exist, since we assume our vector spaces to be finite dimensional).<a href="some-mathematical-preliminaries.html#fnref5" class="footnote-back">↩︎</a></p></li>
-</ol>
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script type="text/javascript" src="../katex.min.js"></script>
 <script type="text/javascript" src="../MathJax2KaTeX.js"></script>
 <script type="text/javascript" src="../sidenotes.js"></script>
@@ -680,8 +525,8 @@ Given that we can decompose the identity by choosing any orthonormal basis, it i
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="chapter1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="chapter11.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -720,7 +565,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/quantum-info/blob/master/index.Rmd",
+"link": "https://github.com/thosgood/quantum-info/blob/master/12-more.Rmd",
 "text": null
 },
 "download": ["quantum-info.pdf"],
