@@ -95,7 +95,7 @@
 
 \title{Lectures on Quantum Information Science}
 \author{Artur Ekert and Tim Hosgood}
-\date{Last updated: March 22, 2021}
+\date{Last updated: April 16, 2021}
 
 
 \begin{document}
@@ -5343,1221 +5343,8 @@ Write the density matrix of two qubits corresponding to the mixture of the Bell 
 
 \textbf{!!!TODO!!! How to distinguish between two different density operators}
 
-\hypertarget{part-the-power-of-interference-and-entanglement}{%
-\part{The power of interference and entanglement}\label{part-the-power-of-interference-and-entanglement}}
-
 \hypertarget{chapter7}{%
-\section{Bell's theorem}\label{chapter7}}
-
-\begin{quote}
-About \textbf{quantum correlations}, which are stronger than any correlations allowed by classical physics, and about the \href{https://en.wikipedia.org/wiki/CHSH_inequality}{\textbf{CHSH inequality}} which demonstrates this fact, and which is a variant of \textbf{Bell's theorem}.
-\end{quote}
-
-Every now and then, it is nice to put down your lecture notes and go and see how things actually work in the real world.
-What is wonderful (and surprising) about quantum theory is that it turns up in many places that we might not expect it to, such as in the polarisation of light, where we stumble across an intriguing paradox.
-
-If we take two polarising filters, and place them on top of each other with their polarisations oriented at \(90^\circ\) to one another, then basically no light will pass through, since the only light passing through the first filter is orthogonally polarised with respect to the second filter, and is thus blocked.
-But then, if we take a third filter, and place it in between the other two, at an angle in the middle of both (i.e.~at \(45^\circ\)), then somehow \emph{more} light is let through than if the middle filter weren't there at all.\footnote{For the more visually inclined, there is a \href{https://www.youtube.com/watch?v=zcqZHYo7ONs}{video on YouTube by minutephysics} about this experiment, or you can play with a virtual version at \href{https://lab.quantumflytrap.com/lab/three-polarizer-paradox}{Quantum Flytrap}.}
-
-This is intrinsically linked to Bell's theorem, which proves the technical sounding statement that ``any local real hidden variable theory must satisfy certain statistical properties'', which is \emph{not} satisfied in reality, as many quantum mechanical experiments (such as the above) show!
-
-\hypertarget{quantum-correlations}{%
-\subsection{Quantum correlations}\label{quantum-correlations}}
-
-Consider two entangled qubits in the singlet state
-\[
-  |\psi\rangle
-  = \frac{1}{\sqrt 2} \left( |01\rangle-|10\rangle \right)
-\]
-and note that the projector \(|\psi\rangle\langle\psi|\) can be written as\footnote{There are other, more elementary, ways of deriving this result but here I want you to hone your skills. Now that you've learned about projectors, traces, and Pauli operators, why not put them to good use.}
-\[
-  |\psi\rangle\langle\psi|
-  = \frac{1}{4} \left(
-    \mathbf{1}\otimes\mathbf{1}- \sigma_x\otimes\sigma_x - \sigma_y\otimes\sigma_y - \sigma_z\otimes \sigma_z
-  \right).
-\]
-Any single qubit observable with values \(\pm 1\) can be represented by the operator
-\[
-  \vec{a}\cdot\vec\sigma
-  = a_x\sigma_x + a_y\sigma_y + a_z\sigma_z,
-\]
-where \(\vec{a}\) is a unit vector in the three-dimensional Euclidean space.
-Suppose Alice and Bob choose measurements defined by vectors \(\vec{a}\) and \(\vec{b}\), respectively.
-For example, if the two qubits are spin-half particles, they may measure the spin components along the directions \(\vec{a}\) and \(\vec{b}\).
-We write the corresponding observable as the tensor product
-\[
-  A\otimes B
-  = (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma).
-\]
-The eigenvalues of \(A\otimes B\) are the products of eigenvalues of \(A\) and \(B\).
-Thus \(A\otimes B\) has two eigenvalues: \(+1\), corresponding to the instances when Alice and Bob registered identical outcomes, i.e.~\((+1,+1)\) or \((-1,-1)\); and \(-1\), corresponding to the instances when Alice and Bob registered different outcomes, i.e.~\((+1,-1)\) or \((-1,-1)\).
-This means that the expected value of \(A\otimes B\), in any state, has a simple interpretation:
-\[
-    \langle A\otimes B\rangle = \Pr (\text{outcomes are the same}) - \Pr (\text{outcomes are different}).
-\]
-This expression can take any numerical value from \(-1\) (perfect anti-correlations) through \(0\) (no correlations) to \(+1\) (perfect correlations).
-We now evaluate the expectation value in the singlet state:
-\[
-\begin{aligned}
-  \langle\psi|A\otimes B|\psi\rangle
-  & = \operatorname{tr}\left[
-      (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma) |\psi\rangle\langle\psi|
-    \right]
-\\& = -\frac{1}{4} \operatorname{tr}\left[
-      (\vec{a}\cdot\vec\sigma)\sigma_x \otimes(\vec{a}\cdot\vec\sigma)\sigma_x
-      + (\vec{a}\cdot\vec\sigma)\sigma_y \otimes(\vec{a}\cdot\vec\sigma)\sigma_y
-      + (\vec{a}\cdot\vec\sigma)\sigma_z \otimes(\vec{a}\cdot\vec\sigma)\sigma_z
-    \right]
-\\& = -\frac{1}{4} \operatorname{tr}\left[
-      (a_x b_x + a_y b_y + a_z b_z) \mathbf{1}\otimes\mathbf{1}
-    \right]
-\\& = -\vec{a}\cdot\vec{b}
-\end{aligned}
-\]
-where we have used the fact that \(\operatorname{tr}(\vec{a}\cdot\vec\sigma)\sigma_k = a_k\) (\(k=x,y,z\)).
-So if Alice and Bob choose the same observable, \(\vec{a} = \vec{b}\), then their outcomes will be always opposite: whenever Alice registers \(+1\) (resp. \(-1\)) Bob is bound to register \(-1\) (resp. \(+1\)).
-
-\hypertarget{hidden-variables}{%
-\subsection{Hidden variables}\label{hidden-variables}}
-
-The story of ``hidden variables'' dates back to 1935 and grew out of Einstein's worries about the completeness of quantum theory.
-Consider, for example, a qubit.
-No quantum state of a qubit can be an eigenstate of two non-commuting operators, say \(\sigma_x\) and \(\sigma_z\).
-If the qubit has a definite value of \(\sigma_x\) its value of \(\sigma_z\) must be indeterminate, and vice versa.
-If we take quantum theory to be a complete description of the world, then we must accept that it is impossible for both \(\sigma_x\) and \(\sigma_z\) to have definite values for the same qubit at the same time.
-Einstein felt very uncomfortable about all this.
-He argued that quantum theory is incomplete, and that observables \(\sigma_x\) and \(\sigma_z\) may both have simultaneous definite values, although we only have knowledge of one of them at a time.
-This is the hypothesis of \textbf{hidden variables}.
-In this view, the indeterminacy found in quantum theory is merely due to our ignorance of these ``hidden variables'' that are present in nature but not accounted for in the theory.
-Einstein came up with a number of pretty good arguments for the existence of ``hidden variables''.
-Probably the most compelling one was described in his 1935 paper (known as the EPR paper), co-authored with his younger colleagues, Boris Podolsky and Nathan Rosen.
-It stood for almost three decades as the most significant challenge to the completeness of quantum theory.
-Then, in 1964, John Bell showed that the hidden variable hypothesis can be tested and refuted.
-
-\hypertarget{chsh-inequality}{%
-\subsection{CHSH inequality}\label{chsh-inequality}}
-
-\begin{quote}
-An upper bound on \textbf{classical} correlations.
-\end{quote}
-
-We will describe the most popular version of Bell's argument, introduced in 1969 by John Clauser, Michael Horne, Abner Shimony, and Richard Holt (CHSH).
-Let us assume that the results of any measurement on any individual system are predetermined.
-Any probabilities we may use to describe the system merely reflect our ignorance of these hidden variables.
-
-Now, imagine the following scenario.
-Alice and Bob, two characters with a predilection for wacky experiments, are equipped with appropriate measuring devices and sent to two distant locations.
-Somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob.
-Let us label the two qubits in each pair as \(\mathcal{A}\) and \(\mathcal{B}\) respectively, and let us assume that both Alice and Bob have well defined values of their observables.
-We ask Alice and Bob to measure one of the two pre-agreed observables.
-For each incoming qubit, Alice and Bob choose randomly, and independently from each other, which particular observable will be measured.
-Alice chooses between \(A_1\) and \(A_2\), and Bob between \(B_1\) and \(B_2\).
-Each observable has value \(+1\) or \(-1\), and so we are allowed to think about them as random variables \(A_k\) and \(B_k\), for \(k=1,2\), which take values \(\pm 1\).
-Let us define a new random variable, the \textbf{CHSH quantity} \(S\), as
-\[
-  S = A_1(B_1 - B_2) + A_2(B_1 + B_2).
-\]
-It is easy to see that one of the terms \(B_1\pm B_2\) must be equal to zero and the other to \(\pm 2\), hence \(S=\pm2\).
-The average value of \(S\) must lie somewhere in-between, i.e.
-\[
-  -2 < \langle S\rangle < 2.
-\]
-That's it!
-Such a simple and yet profound mathematical statement about correlations, which we refer simply to as the \textbf{CHSH inequality}.
-No quantum theory is involved because the CHSH inequality is not specific to quantum theory: it does not really matter what kind of physical process is behind the appearance of binary values of \(A_1\), \(A_2\), \(B_1\), and \(B_2\); it is a statement about correlations, and for all classical correlations we must have
-\[
-  |
-    \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
-  | < 2.
-\]
-
-There are essentially two two assumptions here:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  \textbf{Hidden variables.} Observables have definite values
-\item
-  \textbf{Locality.} Alice's choice of measurements (\(A_1\) or \(A_2\)) does not affect the outcomes of Bob's measurement, and vice versa.
-\end{enumerate}
-
-We will not discuss the locality assumption here in detail but let me comment on it briefly.
-In the hidden variable world a, statement such as ``if Bob were to measure \(B_1\) then he would register \(+1\)'' must be either true or false \emph{prior to Bob's measurement}.
-Without the locality hypothesis, such a statement is ambiguous, since the value of \(B_1\) could depend on whether \(A_1\) or \(A_2\) will be chosen by Alice.
-We do not want this for it implies the instantaneous communication.
-It means that, say, Alice by making a choice between \(A_1\) and \(A_2\), affects Bob's results.
-Bob can immediately ``see'' what Alice ``does''.
-
-\hypertarget{quantum-correlations-revisited}{%
-\subsection{Quantum correlations revisited}\label{quantum-correlations-revisited}}
-
-In quantum theory the observables \(A_1\), \(A_2\), \(B_1\), \(B_2\) become \(2\times 2\) Hermitian matrices with two eigenvalues \(\pm 1\), and \(\langle S\rangle\) becomes the expected value of the \((4\times 4)\) \textbf{CHSH matrix}
-\[
-  S
-  = A_1\otimes(B_1-B_2) + A_2\otimes(B_1+B_2).
-\]
-
-We can now evaluate \(\langle S\rangle\) using quantum theory.
-For example, if the two qubits are in the singlet state, then we know that
-\[
-  \langle A\otimes B\rangle = -\vec{a}\cdot\vec{b}.
-\]
-We choose vectors \(\vec{a}_1\), \(\vec{a}_2\), \(\vec{b}_1\), and \(\vec{b}_2\) as shown in Figure \ref{fig:choice-of-as-and-bs}, and then, with these choices,
-\[
-\begin{gathered}
-  \langle A_1\otimes B_1\rangle
-  = \langle A_2\otimes B_1\rangle
-  = \langle A_2\otimes B_2\rangle
-  = \frac{1}{\sqrt 2}
-\\\langle A_1\otimes B_2\rangle
-   = -\frac{1}{\sqrt 2}.
-\end{gathered}
-\]
-
-
-
-\begin{figure}[H]
-
-{\centering \includegraphics{quantum-info_files/figure-latex/choice-of-as-and-bs-1} 
-
-}
-
-\caption{The relative angle between the two perpendicular pairs is \(45^\circ\).}\label{fig:choice-of-as-and-bs}
-\end{figure}
-
-Thus
-\[
-  \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
-  = -2\sqrt{2},
-\]
-which obviously violates CHSH inequality.
-
-To be clear, this violation has been observed in a number of painstakingly careful experiments.
-The early efforts were truly heroic, and the experiments had many layers of complexity.
-Today, however, such experiments are routine.
-
-\begin{idea}
-
-The behaviour of entangled quantum systems cannot be explained by any local hidden variables.
-
-\end{idea}
-
-\hypertarget{tsirelsons-inequality}{%
-\subsection{Tsirelson's inequality}\label{tsirelsons-inequality}}
-
-\begin{quote}
-An upper bound on \textbf{quantum} correlations.
-\end{quote}
-
-One may ask if \(|\langle S\rangle|= 2\sqrt{2}\) is the maximal violation of the CHSH inequality, and the answer is ``yes, it is'': quantum correlations cannot achieve any value of \(|\langle S\rangle|\) larger than \(2\sqrt{2}\).
-This is because, for any state \(|\psi\rangle\), the expected value \(\langle S\rangle = \langle\psi|S|\psi\rangle\) cannot exceed the largest eigenvalue of \(S\), and we can put an upper bound on the largest eigenvalues of \(S\).
-To start with, the largest eigenvalue (in absolute value) of a Hermitian matrix \(M\), denoted by \(\|M\|\), is a matrix norm, and it has the following properties:
-\[
-\begin{aligned}
-  \|M\otimes N\|
-  & = \|M\| \|N\|
-\\\|MN\|
-  & \leqslant\|M\| \|N\|
-\\\|M+N\|
-  & \leqslant\|M\| + \|N\|
-\end{aligned}
-\]
-Given that \(\|A_i\|=1\) and \(\|B_j\|=1\) (\(i,j=1,2\)), it is easy to show that \(\|S\| < 4\).
-One can, however, derive a tighter bound.
-We can show (do it) that
-\[
-  S^2
-  = 4(\mathbf{1}\otimes\mathbf{1}) + [A_1,A_2]\otimes[B_1,B_2].
-\]
-The norm of each of the commutators (\(\|[A_1, A_2]\|\) and \(\|[B_1, B_2]\|\)) cannot exceed \(2\), and \(\|S^2\|=\|S\|^2\), which all together gives
-\[
-  \|S\|
-  < 2\sqrt{2}
-  \implies
-  |\langle S\rangle| < 2\sqrt{2}.
-\]
-This result is known as the \textbf{Tsirelson inequality}.
-
-\hypertarget{remarks-and-exercises-6}{%
-\subsection{Remarks and Exercises}\label{remarks-and-exercises-6}}
-
-\textbf{!!!TODO!!!}
-
-\hypertarget{chapter8}{%
-\section{Quantum algorithms}\label{chapter8}}
-
-\begin{quote}
-About quantum interference in disguise: \textbf{Hadamard, function evaluation, Hadamard}.
-Also about the early quantum algorithms and how they deal with querying oracles, searching for a needle in a haystack, and estimating periodicity of certain functions.
-\end{quote}
-
-Classical computers essentially evaluate functions: given \(n\)-bits of input they produce \(m\)-bits of output that are uniquely determined by the input; that is, they find the value of
-\[
-  f\colon \{0,1\}^n \to \{0,1\}^m
-\]
-for a particular specified \(n\)-bit argument.
-A function with an \(m\)-bit value is equivalent to \(m\) Boolean functions, each with a one-bit value, so we may just as well say that the basic task performed by a computer is the evaluation of Boolean functions
-\[
-  f\colon \{0,1\}^n \to  \{0,1\}.
-\]
-How can we adapt this to the world of quantum computing?
-
-\hypertarget{quantum-boolean-function-evaluation}{%
-\subsection{Quantum Boolean function evaluation}\label{quantum-boolean-function-evaluation}}
-
-\emph{In quantum computation, all elementary operations are reversible} (unitary), so we compute Boolean functions in a reversible fashion as
-\[
-  |x\rangle|y\rangle \mapsto |x\rangle|y\oplus f(x)\rangle.
-\]
-
-The corresponding circuit diagram (for \(n=3\)) is shown in Figure \ref{fig:n-equals-3-circuit-diagram}.
-
-
-
-\begin{figure}[H]
-
-{\centering \includegraphics{quantum-info_files/figure-latex/n-equals-3-circuit-diagram-1} 
-
-}
-
-\caption{Computing some \(f\colon\{0,1\}^3\to\{0,1\}\) in a quantum manner.}\label{fig:n-equals-3-circuit-diagram}
-\end{figure}
-
-Here we use two registers: the first one (counting from the top to the bottom of the circuit diagram) stores the arguments \(x\), and the second one the values \(f(x)\).
-More precisely, the value \(f(x)\) is added bit-wise to the pre-existing binary value \(y\) of the second register.
-We usually set \(y=0\) to get
-\[
-  |x\rangle|0\rangle \mapsto |x\rangle|f(x)\rangle.
-\]
-
-Quantum Boolean function evaluation is a special case of the generalised \(x\)-controlled-\(U\) on two registers:
-\[
-  \sum_x |x\rangle\langle x|\otimes U_x
-\]
-where \(U_x\) is either the identity \(\mathbf{1}\) (when \(f(x)=0\)) or the bit-flip\footnote{Do not confuse the capital \(X\), which is the Pauli flip operator \(\sigma_x\), with the small \(x\), which is a binary string stored in the first register and the argument of our Boolean function \(f\).} \(X\) (when \(f(x)=1\)).
-We may also write this as
-\[
-  \sum_x |x\rangle\langle x|\otimes X^{f(x)}.
-\]
-
-\hypertarget{example}{%
-\subsubsection{Example}\label{example}}
-
-Consider the Boolean function \(f\colon\{0,1\}^2\to\{0,1\}\) given by
-\[
-  f(x)
-  =
-  \begin{cases}
-    1 &\text{if $x=01$,}
-  \\0 &\text{otherwise.}
-  \end{cases}
-\]
-The evaluation \(|x\rangle|y\rangle \mapsto |x\rangle|y\oplus f(x)\rangle\) can be tabulated explicitly as
-\[
-  \begin{array}{cc}
-    |00\rangle|0\rangle \mapsto |00\rangle|0\rangle
-    & |00\rangle|1\rangle \mapsto |00\rangle|1\rangle
-  \\|01\rangle|0\rangle \mapsto |01\rangle|1\rangle
-    & |01\rangle|1\rangle \mapsto |01\rangle|0\rangle
-  \\|10\rangle|0\rangle \mapsto |10\rangle|0\rangle
-    & |10\rangle|1\rangle \mapsto |10\rangle|1\rangle
-  \\|11\rangle|0\rangle \mapsto |11\rangle|0\rangle
-    & |11\rangle|1\rangle \mapsto |11\rangle|1\rangle
-  \end{array}
-\]
-and the expression \(\sum_x |x\rangle\langle x|\otimes X^{f(x)}\) becomes
-\[
-  \begin{aligned}
-    &|00\rangle\langle 00| \otimes \mathbf{1}
-  \\+ &|01\rangle\langle 01| \otimes X
-  \\+ &|10\rangle\langle 10| \otimes \mathbf{1}
-  \\+ &|11\rangle\langle 11| \otimes \mathbf{1}.
-  \end{aligned}
-\]
-Finally, the matrix form looks like
-\[
-  \left[
-  \,
-    \begin{array}{c|c|c|c}
-      \begin{matrix}1&0\\0&1\end{matrix}
-      & \begin{matrix}0&0\\0&0\end{matrix}
-      & \begin{matrix}0&0\\0&0\end{matrix}
-      & \begin{matrix}0&0\\0&0\end{matrix}
-    \\\hline
-    \begin{matrix}0&0\\0&0\end{matrix}
-      & \begin{matrix}0&1\\1&0\end{matrix}
-      & \begin{matrix}0&0\\0&0\end{matrix}
-      & \begin{matrix}0&0\\0&0\end{matrix}
-    \\\hline
-    \begin{matrix}0&0\\0&0\end{matrix}
-      & \begin{matrix}0&0\\0&0\end{matrix}
-      & \begin{matrix}1&0\\0&1\end{matrix}
-      & \begin{matrix}0&0\\0&0\end{matrix}
-    \\\hline
-    \begin{matrix}0&0\\0&0\end{matrix}
-      & \begin{matrix}0&0\\0&0\end{matrix}
-      & \begin{matrix}0&0\\0&0\end{matrix}
-      & \begin{matrix}1&0\\0&1\end{matrix}
-    \end{array}
-  \,
-  \right]
-\]
-As you can see, this is a diagonal block matrix: a \((4\times 4)\) matrix with \((2\times 2)\) matrices as entries.
-The rows and the columns of the \((4\times 4)\) matrix are labelled by the binary strings \(00, 01, 10, 11\), and the \((2\times 2)\) matrices on the diagonal represent operations applied to the qubit in the second register.
-Here all of them are the identity \(\mathbf{1}\) except the \((01, 01)\) entry, which represents the bit-flip \(X\).
-This is because \(f(01)=1\), and \(f(x)=0\) for all other binary strings \(x\).
-
-\hypertarget{more-phase-kick-back}{%
-\subsection{More phase kick-back}\label{more-phase-kick-back}}
-
-What makes the quantum evaluation of Boolean functions really interesting is its action on a superposition of different inputs \(x\).
-For example,
-\[
-  \sum_{x}|x\rangle|0\rangle
-  \longmapsto
-  \sum_{x}|x\rangle|f(x)\rangle
-\]
-produces \(f(x)\) for \emph{all} \(x\) in a \emph{single} run (note that we have dropped the normalisation factor).
-It is more instructive to see the effect of the function evaluation when the qubit in the second register is prepared in the state \(|-\rangle = \frac{1}{\sqrt 2}(|0\rangle - |1\rangle\), since then
-\[
-  \sum_x|x\rangle|-\rangle
-  \longmapsto
-  \sum_x (-1)^{f(x)}|x\rangle|-\rangle
-\]
-(as shown in Figure \ref{fig:n-equals-3-minus-circuit-diagram}).
-Whenever \(f(x)=1\), the bit flip \(X\) is applied to the qubit in the second register.
-
-
-
-\begin{figure}[H]
-
-{\centering \includegraphics{quantum-info_files/figure-latex/n-equals-3-minus-circuit-diagram-1} 
-
-}
-
-\caption{Computing some \(f\colon\{0,1\}^3\to\{0,1\}\) with the second-register qubit in state \(|-\rangle\).}\label{fig:n-equals-3-minus-circuit-diagram}
-\end{figure}
-
-The reason for defining the state \(|-\rangle\) as we do is that it is the eigenstate of \(X\) with eigenvalue \(-1\).
-So, due the phase kick-back, whenever \(f(x)=1\), the phase factor \(-1\) appears in front of the corresponding term \(|x\rangle\).
-As you can see, the second register stays in state \(|-\rangle\) all the way through the computation --- it is the first register where things happen.
-Let us now see how quantum Boolean function evaluation introduces phase shifts in quantum interference experiments, and how such experiments can be viewed as computations.
-
-\hypertarget{oracles-and-query-complexity}{%
-\subsection{Oracles and query complexity}\label{oracles-and-query-complexity}}
-
-The computational power of quantum interference was discovered by counting how many times certain Boolean functions have to be evaluated in order to find the answer to a given problem.
-Imagine a ``black box'' (also called an \textbf{oracle}) that computes some fixed Boolean function, but whose inner workings are unknown to us, and a scenario in which one wants to learn about a given property of the Boolean function but has to ``pay'' (in energy, or in money!) for each use (often referred to as a \textbf{query}) of the box.
-In such a setting, the objective is to minimise number of queries to the oracle while finding out as much information as possible about the function computed by the oracle.
-For this purpose, we ignore everything that happens inside the black box: the Boolean function evaluation counts as just \emph{one} computational step.
-
-\hypertarget{deutschs-algorithm}{%
-\subsubsection{Deutsch's algorithm}\label{deutschs-algorithm}}
-
-We start, once more, with the simplest quantum interference circuit:
-
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-51-1} \end{center}
-
-Suppose you can prepare the input, you can read the output, you \emph{cannot} see the phase shifter, \emph{but} you are promised that the phase shifter is set to either \(\varphi=0\) or \(\varphi=\pi\).
-Can you tell which value \(\varphi\) has been set to?
-
-Of course you can!
-
-One way of doing it is to set your input to \(|0\rangle\) and check the output: for \(\varphi=0\) the output is always \(|0\rangle\), and for \(\varphi=\pi\) it is always \(|1\rangle\).
-A single run of the interference experiment is sufficient to determine the difference.
-The first quantum algorithm, proposed by David Deutsch in 1985, is very much related to this effect, but where the phase setting is determined by the Boolean function evaluation via the phase kick-back.
-
-\begin{scenario}
-
-We are presented with an oracle that computes some unknown function \(f\colon\{0,1\}\to\{0,1\}\).
-Note that there are only four possibilities for what \(f\) can be: it could be one of two constant functions (i.e.~those where \(f(0)=f(1)\)), or one of two ``balanced'' functions (i.e.~those where \(f(0)\neq f(1)\)).
-
-\begin{longtable}[]{@{}rcc@{}}
-\toprule
-& \(f(0)\) & \(f(1)\)\tabularnewline
-\midrule
-\endhead
-constant & \(\begin{matrix}0\\1\end{matrix}\) & \(\begin{matrix}0\\1\end{matrix}\)\tabularnewline
-balanced & \(\begin{matrix}0\\1\end{matrix}\) & \(\begin{matrix}1\\0\end{matrix}\)\tabularnewline
-\bottomrule
-\end{longtable}
-
-Our task is to determine, using the fewest queries possible, whether the function computed by the oracle is constant or balanced.
-
-\end{scenario}
-
-Note that we are \emph{not} asked for the particular values \(f(0)\) and \(f(1)\), but \emph{only whether the two values are the same or different}.
-Classical intuition tells us that we have to evaluate both \(f(0)\) and \(f(1)\) and compare them, which involves evaluating \(f\) \emph{twice}.
-But, in the quantum setting, we can solve this problem with a \emph{single} function evaluation, using the following circuit.
-
-\begin{circuit}
-
-(Deutsch's).
-
-\emph{First register: \(1\) qubit. Second register: \(1\) qubit.}
-
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-52-1} \end{center}
-
-\end{circuit}
-
-During the function evaluation, the second register ``kicks back'' the phase factor \((-1)^{f(x)}\) in front of \(|x\rangle\), but the state of the second register remains unchanged; the first register is modified as follows:
-\[
-  \begin{aligned}
-    |0\rangle
-    &\overset{H}{\longmapsto}
-    |0\rangle+|1\rangle
-  \\&\overset{f}{\longmapsto}
-    (-1)^{f(0)}|0\rangle + (-1)^{f(1)}|1\rangle
-  \\&\quad\equiv
-    |0\rangle + (-1)^{f(0)\oplus f(1)}|1\rangle
-  \\&\overset{H}{\longmapsto}
-    |f(0)\oplus f(1)\rangle.
-  \end{aligned}
-\]
-
-This evolution can be represented by the circuit diagram
-
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-53-1} \end{center}
-
-where the relative phase is \(\varphi = (-1)^{f(0)\oplus f(1)}\).
-The first qubit ends in state \(|0\rangle\) if the function \(f\) is constant, and in state \(|1\rangle\) if the function is balanced, and the standard measurement distinguishes these two cases with certainty.\footnote{The original Deutsch algorithm provides the correct answer with probability 50\%. Here we have presented a modified/improved version.}
-
-Deutsch's result laid the foundation for the new field of quantum computation, and was followed by several other quantum algorithms for various problems.
-They all seem to rest on the same generic sequence: a Hadamard transform, followed by a function evaluation, followed by another Hadamard (or Fourier) transform.\footnote{The Hadamard transform is a special case of the Fourier transform over the group \(\mathbb{Z}_2^n\).}
-As we shall see in a moment, in some cases (such as in Grover's search algorithm) this sequence is repeated several times.
-Let me now take you through the three early quantum algorithms, each one offering a higher-order speed-up when compared to their classical analogues than the last.
-
-\hypertarget{three-more-quantum-algorithms}{%
-\subsection{Three more quantum algorithms}\label{three-more-quantum-algorithms}}
-
-Along with Deutsch's algorithm, there are three more fundamental quantum algorithms that we will study here.
-Each one was designed to solve a different specific problem, but they all share some similarity: this omnipresent sequence of Hadamard, function evaluation, Hadamard.
-
-\hypertarget{the-bernstein-vazirani-algorithm}{%
-\subsubsection{The Bernstein-Vazirani algorithm}\label{the-bernstein-vazirani-algorithm}}
-
-\begin{scenario}
-
-We are presented with an oracle that computes some unknown function \(f\colon\{0,1\}^n\to\{0,1\}\), but we are promised that \(f\) is of the form
-\[
-  f(x) = a\cdot x
-  \equiv (a_1\cdot x_1) \oplus \ldots \oplus (a_n\cdot x_n)
-\]
-for some fixed \(a\in\{0,1\}^n\).
-
-Our task is to determine, using the fewest queries possible, the value of the \(n\)-bit string \(a\).
-
-\end{scenario}
-
-It's quite easy to see how to do this classically: if we input the value \(x=00\ldots010\ldots0\), with the \(1\) in the \(m\)-th bit, then \(f(x)\) is simply the \(m\)-th bit of \(a\); after \(n\) such calls, we can evaluate every bit value.
-It is also clear that there cannot exist a better classical algorithm: each call to the oracle teaches us exactly one bit of information, and since we must learn \(n\) bits, we must query it \(n\) times.
-
-In contrast, by running the circuit below, it is possible to determine the value of \(a\) with a \emph{single} (!) call to the oracle.
-
-\begin{circuit}
-
-(Bernstein-Vazirani).
-
-\emph{First register: \(n\) qubits. Second register: \(1\) qubit.}
-
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-54-1} \end{center}
-
-\end{circuit}
-
-N.B. The ``\(\ldots\)'' in the circuit means ``there are more wires here but they are identical (apart from the numbering) to the ones above''.
-You might also see other notation to denote this, such as
-
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-55-1} \end{center}
-
-or even simply
-
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-56-1} \end{center}
-
-Stepping through the execution of the circuit (and ignoring the second register, which remains in state \(|-\rangle\) throughout), we obtain
-\[
-  \begin{aligned}
-    |0\rangle
-    &\overset{H}{\longmapsto}
-    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} |x\rangle
-  \\&\overset{f}{\longmapsto}
-    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} (-1)^{a\cdot x}|x\rangle
-  \\&\overset{H}{\longmapsto}
-    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n}
-    \left[
-      (-1)^{a\cdot x} \left(\frac{1}{\sqrt2}\right)^n
-      \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x} |y\rangle
-    \right]
-  \\&\quad= \left(\frac12\right)^n \sum_{y\in\{0,1\}^n}
-    \left[
-      \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
-    \right]
-    |y\rangle
-  \\&\quad=|a\rangle
-  \end{aligned}
-\]
-where we write the second Hadamard transform as
-\[
-  |x\rangle
-  \mapsto
-  \left(\frac{1}{\sqrt2}\right)^n \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x}|y\rangle
-\]
-and where we have used the fact (which you should prove!) that, for any \(y\in\{0,1\}^n\),
-\[
-  \sum_{x\in\{0,1\}^n} (-1)^{x\cdot y}
-  =
-  \begin{cases}
-    0 &\text{if $y\neq0$}
-  \\2^n &\text{if $y=0$}
-  \end{cases}
-\]
-
-This lets us write\footnote{Even if you don't immediately see how this sum works for \(z\neq a\) (writing \(|z\rangle\) to mean the output), you can first calculate the probability that the output is \(z=a\). In this case it is easy to see that the sum is \(2^n\), and that in the final state \(\sum_z\alpha_z|z\rangle\) the term \(z=a\) has amplitude \(1\). Thus, by normalisation, all the other terms must be equal to \(0\).}
-\[
-  \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
-  =
-  \begin{cases}
-    0 &\text{if $y\neq a$}
-  \\2^n &\text{if $y=a$.}
-  \end{cases}
-\]
-If you take the sum over \(x\), then all the terms always cancel out \emph{unless} \(a\oplus y = 00\ldots0\), i.e.~\emph{unless \(y=a\)}.
-Thus the standard bit-by-bit measurement of the first register gives the value of \(a\) and solves the problem with a single call to the oracle.
-
-Note that the algorithm follows the same pattern as Deutsch's algorithm: Hadamard, function evaluation, Hadamard, i.e.~a generic quantum interference pattern.
-
-\hypertarget{grovers-search-algorithm}{%
-\subsubsection{Grover's search algorithm}\label{grovers-search-algorithm}}
-
-The next algorithm we will study aims to solve the problem of searching for a specific item in an \emph{unsorted} database.
-Think about an old-fashioned phone book: the entries are typically sorted alphabetically, by the name of the person that you want to find.
-However, what if you were in the opposite situation: you had a phone number and wanted to find the corresponding person's name?
-The phone book is not sorted in that way, and to find the number (and hence name) with, say, 50\% probability, you would need to search through, on average, 50\% of the entries.
-In a large phone book, this would take a long time.
-
-While this might seem like a rather contrived problem (a computer database should always maintain an index on any searchable field), many problems in computer science can be cast in this form, i.e.~that of an \textbf{unstructured search}.
-
-\begin{scenario}
-
-We are presented with an oracle that computes some unknown function \(f\colon\{0,1\}^n\to\{0,1\}\).
-
-Our task is to find, using the fewest queries possible, an input \(x\in\{0,1\}^n\) such that \(f(x)=1\).
-
-\end{scenario}
-
-Suppose that we know that, amongst the \(N=2^n\) binary strings, there are \(M\ll N\) which are ``tagged'', i.e.~on which \(f\) evaluates to \(1\).
-There is no structure in the database, and so any classical search requires around \(N/M\) steps, i.e.~the function \(f\) must be evaluated roughly \(N/M\) times.
-
-In contrast, there is a quantum search algorithm, implemented by the circuit below, that was proposed in 1996 by Lov Grover, and which requires only roughly \(\sqrt{N/M}\) steps.
-
-\begin{circuit}
-
-(Grover's search).
-
-\emph{First register: \(n\) qubits. Second register: \(1\) qubit.}
-
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-57-1} \end{center}
-
-where \(f_0\) tags the binary string of \(n\) zeros: \(f_0(x)=1\) if \(x=00\ldots0\), and \(f_0(x)=0\) otherwise.
-
-\end{circuit}
-
-We can recognise the typical Hadamard, function evaluation, Hadamard sequence, and we can see that the second register (the bottom qubit, in state \(|-\rangle\)) plays an auxiliary role: the real action takes place in the first register.
-However, unlike the previous algorithms, a single call to the oracle does not do very much, and we have to build up the quantum interference in the first register through repeated calls to the oracle (without any intermediate measurements!).
-
-Here, the basic step is the \textbf{Grover iteration operator \(G\)}, which is the boxed part of the circuit that we repeat over and over.
-After \(O(2^{n/2})\) applications of \(G\), we measure the first register bit-by-bit and obtain the value of \(|z\rangle\), which is such that, \emph{with ``high'' probability}, \(f(z)=1\).
-In order to actually \emph{see} how this algorithm works, and to justify our claim that it gives what we are searching for ``with high probability'', we can take a more geometric approach.
-
-First, we define two orthonormal vectors in the Hilbert space of the first register:\footnote{In fact, we shall completely ignore the second register from now on.}
-\[
-  \begin{aligned}
-    |a\rangle
-    &= \frac{1}{\sqrt{N-M}} \sum_{x\in f^{-1}(0)} \!\!\!\!|x\rangle
-  \\|b\rangle
-    &= \frac{1}{\sqrt{M}} \sum_{x\in f^{-1}(1)} \!\!\!\!|x\rangle
-  \end{aligned}
-\]
-where \(f^{-1}(i) = \{x\in\{0,1\}^n \mid f(x)=i\}\).
-These two vectors span a two-dimensional subspace in which the search will take place.
-
-This subspace contains the equally-weighted superposition \(|s\rangle\) of all binary strings of length \(n\):\footnote{We often omit from our notation the fact that the sum is over all \(x\in\{0,1\}^n\), leaving it (hopefully) implicitly understood from the context.}
-\[
-  \begin{aligned}
-    |s\rangle
-    &= \frac{1}{\sqrt{N}} \sum_x|x\rangle
-  \\&= \sqrt{\frac{N-M}{N}}|a\rangle + \sqrt{\frac{M}{N}}|b\rangle
-  \\&= (\cos\alpha)|a\rangle + (\sin\alpha)|b\rangle
-  \end{aligned}
-\]
-where we have parametrised \(\sqrt{\frac{N-M}{N}}\) as \(\cos\alpha\), and \(\sqrt{\frac{M}{N}}\) as \(\sin\alpha\), with \(\alpha\approx\sqrt{\frac{M}{N}}\), since \(N\gg M\).
-
-The state \(|s\rangle\) is our starting input for our sequence of Grover iterations, and we will show that, applying \(G\), when restricting to the plane spanned by \(|a\rangle\) and \(|b\rangle\), amounts to applying a rotation by angle \(2\alpha\).
-Grover's search algorithm can then be understood as a sequence of rotations which take the input state \(|s\rangle\) towards the target state \(|b\rangle\).
-
-To see this, note that the oracle induces the unitary transformation
-\[
-  f\colon |x\rangle \mapsto (-1)^{f(x)}|x\rangle
-\]
-which we shall write as \(I_a = 2|a\rangle\langle a|-\mathbf{1}\), and interpret as a reflection through the \(|a\rangle\)-axis.
-In particular, evaluation of \(f_0\) can be written as \(2|0\rangle\langle 0|-\mathbf{1}\), and thus thought of as a reflection through the \(|0\rangle\)-axis.
-If we sandwich \(f_0\) in between two Hadamards then we obtain \(I_s = 2|s\rangle\langle s|-\mathbf{1}\), which is reflection through the \(|s\rangle\)-axis.
-The Grover iteration operator \(G\) is the composition
-\[
-  G = I_s I_a.
-\]
-Note also that \(I_a = 2|a\rangle\langle a|-\mathbf{1}= \mathbf{1}-2|b\rangle\langle b|\).
-
-Now recall the purely geometric fact that (working in \(2\)-dimensional Euclidean space), if we have two intersecting lines \(L_1\) and \(L_2\), meeting with angle \(\theta\), then reflecting an object through \(L_1\) and then reflecting the resulting image through \(L_2\) is the same as simply rotating the original object around the point of intersection \(L_1\cap L_2\) by \(2\theta\).
-
-The angle between \(|a\rangle\) and \(|s\rangle\) is \(\alpha\), and so, each time \(G\) is applied, the vector is rotated (around the origin) by \(2\alpha\) towards the \(|b\rangle\)-axis.
-We just have to choose the right number \(r\) of steps such that we end up as close to the \(|b\rangle\)-axis as possible.
-The state \(|s\rangle\) starts at angle \(\alpha\) to \(|a\rangle\), and we should perform our final (and only) measurement when this angle is \(\pi/2\), i.e.~when \((2r+1)\alpha = \pi/2\), which gives
-\[
-  r \approx \frac{\pi}{4}\sqrt{\frac{N}{M}}.
-\]
-
-\begin{figure}[H]
-
-{\centering \includegraphics{quantum-info_files/figure-latex/grover-search-geometrically-1} 
-
-}
-
-\caption{Understanding the Grover search algorithm geometrically.}\label{fig:grover-search-geometrically}
-\end{figure}
-
-So the quantum algorithm searches an unsorted list of \(N\) items in roughly \(\sqrt{N}\) steps: it offers a \emph{quadratic} speed-up when compared to classical search, which can be of immense practical importance.
-For example, cracking some of the popular ciphers, such as AES (Advanced Encryption Standard), essentially requires a search among \emph{many} binary strings (called \textbf{keys}).
-If these can be checked at a rate of, say, one million keys per second, then a classical computer would need over a thousand years to find the correct key, while a quantum computer using Grover's algorithm would find it in less than four minutes.
-
-\hypertarget{simons-problem}{%
-\subsubsection{Simon's problem}\label{simons-problem}}
-
-Here we will see the simplest quantum algorithm that shows an exponential speed-up compared to the best classical algorithm.
-
-\begin{scenario}
-
-We are presented with an oracle that computes some unknown function \(f\colon\{0,1\}^n\to\{0,1\}^n\), but we are promised that \(f\) satisfies, for all \(x\in\{0,1\}^n\),
-\[
-  f(x) = f(x\oplus s)
-\]
-for some fixed \(s\in\{0,1\}^n\), which we call the \textbf{period} of \(f\).\footnote{This is equivalent to saying that \(f\) is \textbf{two-to-one}: for any \(y\in\{0,1\}^n\) such that there exists some \(x\in\{0,1\}^n\) with \(f(x)=y\), there exists exactly one other \(x'\neq x\) such that \(f(x')=y\) as well.}
-So that the problem is non-trivial (i.e.~so that \(f\) really is two-to-one), we assume that \(s\) is \emph{not} the string of \(n\) zeros.
-
-Our task is to determine, using the fewest queries possible, the value of the \(n\)-bit string \(s\).
-
-\end{scenario}
-
-Classically, this problem is exponentially hard.
-We will not go through a detailed proof of this fact, but the intuition is reasonably simple: since there is no structure in the function \(f\) that would help us find its period \(s\), the best we can do is evaluate \(f\) on random inputs and hope that we find some distinct \(x\) and \(x'\) such that \(f(x)=f(x')\), and then we know that \(s=x\oplus y\).
-After having made \(m\) queries to the oracle, we have a list of \(m\) values of the tuple \((x,f(x))\); there are \(m(m-1)/2\) possible pairs which could match within this list, and the probability that a randomly chosen pair match is \(1/2^{n-1}\).
-This means that the probability of there being at least one matching pair within the list of \(m\) tuples is less than \(m^2/2^n\).
-Clearly, the chance of finding a matching pair is negligible if the oracle is queried on fewer than \(\sqrt{2^n}\) inputs.
-
-The quantum case, on the other hand, gives a result with high probability within a \emph{linear} number of steps.
-The circuit that solves this problem, shown below, has a familiar Hadamard--function--Hadamard structure, but the second register has been expanded to \(n\) qubits.
-
-\begin{circuit}
-
-(Simon's problem).
-
-\emph{First register: \(n\) qubits. Second register: \(n\) qubits.}
-
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-58-1} \end{center}
-
-\end{circuit}
-
-Let's follow the evolution of the two registers in this circuit.
-We start off by preparing the equally-weighted superposition of all \(n\)-bit strings, and then query the oracle:
-\[
-  \begin{aligned}
-    |0^n\rangle|0^n\rangle
-    &\longmapsto
-    \frac{1}{\sqrt{2^n}} \sum_x |x\rangle|0^n\rangle
-  \\&\longmapsto
-    \frac{1}{\sqrt{2^n}} \sum_x |x\rangle|f(x)\rangle.
-  \end{aligned}
-\]
-The second Hadamard transform on the first register then yields the final output state:
-\[
-  \frac{1}{2^n} \sum_{x,y} (-1)^{x\cdot y} |y\rangle|f(x)\rangle.
-\tag{6.4.3.1}
-\]
-
-Now, if we measure the second register \emph{before} applying the second Hadamard transform to the first, we obtain one of the \(2^{n-1}\) possible values of \(f(x)\), each equally likely.\footnote{As we shall see in a moment, the actual measurement on the second register is not actually necessary.}
-
-Suppose that the outcome of the measurement is \(f(a)\).
-Given that both \(a\) and \(a\oplus s\) are mapped to \(f(a)\) by \(f\), the first register then collapses to the state
-\[
-  \frac{1}{\sqrt{2}}\big( |a\rangle + |a\oplus s\rangle \big).
-\]
-
-The subsequent Hadamard transform on the first register then gives us the final state\footnote{We write \(s^\perp\) to mean the set of all \(y\in\{0,1\}^n\) such that \(y\cdot s=0\).}
-\[
-  \frac{1}{\sqrt{2^{n+1}}} \sum_y (-1)^{a\cdot y}
-    \Big( 1 + (-1)^{s\cdot y} \Big) |y\rangle|f(a)\rangle
-  =
-  \frac{1}{\sqrt{2^{n-1}}} \sum_{y\in s^\perp}
-    (-1)^{a\cdot y} |y\rangle|f(a)\rangle
-\]
-where we have used the fact that \((a\oplus s)\cdot y = (a\cdot y)\oplus(s\cdot y)\), and that \(1+(-1)^{s\cdot y}\) can have only two values: either \(2\) (when \(s\cdot y = 0\)), or \(0\) (when \(s\cdot y = 1\)).
-Now we measure the first register: the outcome is selected at random from all possible values of \(y\) such that \(a\cdot y = 0\), each occurring with probability \(1/(2^{n-1})\).
-
-In fact, we do not have to measure the second register at all: it was a mathematical shortcut, simply taken for pedagogical purposes.
-Instead of collapsing the state to just one term in a superposition, we can express Equation (6.4.3.1) as\footnote{Recall that the image of \(f\) is the set of all \(z\in\{0,1\}^n\) such that there exists some \(x\in\{0,1\}^n\) satisfying \(f(x)=z\).}
-\[
-  \frac{1}{2^n} \sum_{y,f(a)}
-    \Big( (-1)^{a\cdot y} + (-1)^{(a\oplus s)\cdot y} \Big) |y\rangle|f(a)\rangle
-  =
-  \frac{1}{2^n} \sum_{y,f(a)} (-1)^{a\cdot y}
-    \Big( 1 + (-1)^{s\cdot y} \Big) |y\rangle|f(a)\rangle
-\]
-where the summation over \(f(a)\) means summing over all binary strings in the image of \(f\).
-
-The output of the algorithm is then
-\[
-  \frac{1}{2^{n-1}} \sum_{y\in s^\perp} |y\rangle
-    \sum_{f(a)} (-1)^{a\cdot y} |f(a)\rangle
-\]
-and, again, the measurement outcome is selected at random from all possible values of \(y\) such that \(s\cdot y=0\).
-
-We are not quite done yet: we cannot infer \(s\) from a \emph{single} output \(y\).
-However, once we have found \(n-1\) linearly independent\footnote{Here, \textbf{linearly independent} means that no string in the set \(\{y_1,\ldots,y_n\}\) can be expressed as the bitwise sum of some other strings in this set.} strings \(y_1,y_2,\ldots,y_{n-1}\), we can solve the \(n-1\) equations
-\[
-  \left\{
-  \begin{aligned}
-    s\cdot y_1 &= 0
-  \\s\cdot y_2 &= 0
-  \\&\,\,\,\vdots
-  \\s\cdot y_{n-1} &= 0
-  \end{aligned}
-  \right\}
-\]
-to determine a unique value of \(s\).
-(Note that we only need \(n-1\) values, and not \(n\), because \(s=0\) will always be a solution, but we have explicitly assumed that this is not the case, and so it suffices to narrow down the space of possible solutions to consist of \emph{two} elements, since then we know that we can just take the non-zero one.)
-
-So we run this algorithm repeatedly, each time obtaining another value of \(y\) that satisfies \(s\cdot y = 0\).
-Every time we find some new value of \(y\) that is linearly independent of all previous ones, we can discard half the potential candidates for \(s\).
-The probability that \(y_1,\ldots,y_{n-1}\) are linearly independent is
-\[
-  \left( 1 - \frac{1}{2^{n-1}} \right)
-  \left( 1 - \frac{1}{2^{n-2}} \right)
-  \ldots
-  \left( 1 - \frac{1}{2} \right).
-\tag{6.4.3.2}
-\]
-
-Indeed, suppose that we have \(k\) linearly independent binary strings \(y_1,\ldots,y_k\).
-Then these strings span a subspace of size \(2^k\), consisting of all binary strings of the form \(\bigoplus_{i=1}^k b_i y_i\), where \(b_1,\ldots,b_k\in\{0,1\}\).
-Now suppose we obtain some \(y_{k+1}\).
-It will be linearly independent from the \(y_1,\ldots,y_k\) if and only if it lies \emph{outside} the subspace spanned by the \(y_1,\ldots,y_k\), which occurs with probability \(1-(2^k)/(2^n)\).
-We can bound Equation (6.4.3.2) from below:\footnote{Use the inequality \[\begin{aligned}(1-x)(1-y)&= 1 - x - y - xy\\&\geqslant 1 - (x+y)\end{aligned}\] which holds for any \(0<x,y<1\).}
-the probability of obtaining a linearly independent set \(\{y_1,\ldots,y_{n-1}\}\) by running the algorithm \(n-1\) times (i.e.~not having to discard any values and run again) is
-\[
-  \prod_{k=1}^{n-1}
-  \left(
-    1-\frac{1}{2^k}
-  \right)
-  \geqslant
-  \left[
-    1 -
-    \left(
-      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac14
-    \right)
-  \right]
-  \cdot \frac12
-  >
-  \frac14.
-\]
-
-We conclude that we can determine \(s\) with some constant probability of error after repeating the algorithm \(O(n)\) times.
-The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.
-
-
-
-\begin{figure}[H]
-
-{\centering \includegraphics{quantum-info_files/figure-latex/simons-diagramatically-1} 
-
-}
-
-\caption{Picture all possible binary strings as dots, but with the string \(s\) denoted by a star. Every linearly independent \(y_{k+1}\) lets us ``zoom in'' twice as close towards \(s\).}\label{fig:simons-diagramatically}
-\end{figure}
-
-\hypertarget{remarks-and-exercises-7}{%
-\subsection{Remarks and exercises}\label{remarks-and-exercises-7}}
-
-\hypertarget{section-40}{%
-\subsubsection{}\label{section-40}}
-
-Consider the Boolean function \(f\colon\{0,1\}^n\to\{0,1\}\) defined by \(f(x) = a\cdot x\) for some fixed \(a\in\{0,1\}^n\).
-Exactly one half of the binary strings \(x\in\{0,1\}^n\) give \(f(x)=0\), and the other half give \(f(x)=1\).
-
-\hypertarget{section-41}{%
-\subsubsection{}\label{section-41}}
-
-\textbf{!!!TODO!!! implementing reflections}
-
-\hypertarget{section-42}{%
-\subsubsection{}\label{section-42}}
-
-\textbf{!!!TODO!!! optimality of Grover}
-
-\hypertarget{chapter9}{%
-\section{Decoherence, and elements of quantum error correction}\label{chapter9}}
-
-\begin{quote}
-About the one big problem that hinders us from physically implementing everything that we've learnt so far, namely \textbf{decoherence}, as well as how we can start to deal with it via some elementary \textbf{error correction}.
-\end{quote}
-
-In principle we know how to build a quantum computer: we can start with simple quantum logic gates and try to integrate them together into quantum networks.
-However, if we keep on putting quantum gates together into networks we will quickly run into some serious practical problems.
-The more interacting qubits involved, the harder it is to prevent them from getting entangled with the environment.
-This unwelcome entanglement, also known as \textbf{decoherence}, destroys the interference, and thus the power, of quantum computing.
-
-\hypertarget{decoherence-simplified}{%
-\subsection{Decoherence simplified}\label{decoherence-simplified}}
-
-Consider the following qubit-environment interaction:
-\[
-  \begin{aligned}
-    |0\rangle|e\rangle &\longmapsto |0\rangle|e_{00}\rangle
-  \\|1\rangle|e\rangle &\longmapsto |1\rangle|e_{11}\rangle
-  \end{aligned}
-\]
-where \(|e\rangle\), \(|e_{00}\rangle\), and \(|e_{11}\rangle\) are the states of the environment, which not need to be orthogonal.\footnote{The reason we use two indices in \(|e_{00}\rangle\) and \(|e_{11}\rangle\) will become clear in a moment, when we consider more general interaction with the environment.}
-Let \(|\psi\rangle = \alpha|0\rangle + \beta|1\rangle\) be the initial state of the qubit.
-The environment is essentially trying to \emph{measure} the qubit and, as the result, the two get entangled:
-\[
-  \Big( \alpha|0\rangle + \beta|1\rangle \Big) |e\rangle
-  \longmapsto
-  \alpha |0\rangle|e_{00}\rangle + \beta |1\rangle |e_{11}\rangle.
-\]
-This state can also be written as
-\[
-  \begin{aligned}
-    \Big( \alpha|0\rangle + \beta|1\rangle \Big) |e\rangle
-    \longmapsto
-    & \Big( \alpha|0\rangle + \beta|1\rangle \Big) \frac{|e_{00}\rangle+|e_{11}\rangle}{2}
-  \\+& \Big( \alpha|0\rangle - \beta|1\rangle \Big) \frac{|e_{00}\rangle-|e_{11}\rangle}{2}.
-  \end{aligned}
-\]
-or as
-\[
-  |\psi\rangle|e\rangle
-  \longmapsto
-  \mathbf{1}|\psi\rangle|e_{\mathbf{1}}\rangle + Z|\psi\rangle|e_Z\rangle,
-\]
-where \(|e_{\mathbf{1}}\rangle = \frac12(|e_{00}\rangle + |e_{11}\rangle)\) and \(|e_Z\rangle = \frac12(|e_{00}\rangle - |e_{11}\rangle)\).
-We may interpret this expression by saying that two things can happen to the qubit: nothing \(\mathbf{1}\) (first term), or phase-flip \(Z\) (second term).
-\emph{This, however, should not be taken literally unless the states of the environment, \(|e_{\mathbf{1}}\rangle\) and \(|e_Z\rangle\), are orthogonal.}\footnote{Why not?}
-
-This process is what we refer to as \textbf{decoherence}.
-
-\hypertarget{decoherence-and-interference}{%
-\subsection{Decoherence and interference}\label{decoherence-and-interference}}
-
-Suppose the qubit undergoes the usual interference experiment, but, in between the two Hadamard gates, it is affected by \textbf{decoherence} (denoted by \(\times\)), which acts as described above (i.e.~\(|0\rangle|e\rangle\mapsto|0\rangle|e_{00}\rangle\) and \(|1\rangle|e\rangle\mapsto|1\rangle|e_{11}\rangle\)).
-
-\begin{figure}[H]
-
-{\centering \includegraphics{quantum-info_files/figure-latex/decoherence-interference-1} 
-
-}
-
-\caption{The usual interference experiment, but with decoherence.}\label{fig:decoherence-interference}
-\end{figure}
-
-Let us step through the circuit in Figure \ref{fig:decoherence-interference}, keeping track of the state of the environment:
-\[
-  \begin{aligned}
-    |0\rangle|e\rangle
-    & \overset{H}{\longmapsto} \Big( |0\rangle + |1\rangle \Big) |e\rangle
-  \\& \overset{\phi}{\longmapsto} \Big( |0\rangle + e^{i\phi}|1\rangle \Big) |e\rangle
-  \\& \overset{\times}{\longmapsto} |0\rangle|e_{00}\rangle + e^{i\phi}|1\rangle|e_{11}\rangle
-  \\& \overset{H}{\longmapsto} |0\rangle\Big( |e_{00}\rangle + e^{i\phi}|e_{11}\rangle \Big) + |1\rangle\Big( |e_{00}\rangle - e^{i\phi}|e_{11}\rangle \Big).
-  \end{aligned}
-\]
-If we write \(\langle e_{00}|e_{11}\rangle = ve^{i\alpha}\), then the final probabilities of \(0\) and \(1\) oscillate with \(\phi\) as
-\[
-  \begin{aligned}
-    P_{0}(\phi) &= \frac12\big(1 + v\cos(\phi + \alpha)\big),
-  \\P_{1}(\phi) &= \frac12\big(1 - v\cos(\phi + \alpha)\big).
-  \end{aligned}
-\]
-
-\begin{figure}[H]
-
-{\centering \includegraphics{quantum-info_files/figure-latex/visibility-suppression-1} 
-
-}
-
-\caption{Visibility suppression.}\label{fig:visibility-suppression}
-\end{figure}
-
-As we can see in Figure \ref{fig:visibility-suppression}, the interference pattern is suppressed by a factor \(v\), which we call the \textbf{visibility}.
-As \(v=|\langle e_{00}|e_{11}\rangle|\) decreases, we lose all the advantages of quantum interference.
-For example, in Deutsch's algorithm we obtain the correct answer with probability at most \(\frac12(1+v)\).
-For \(\langle e_{00}|e_{11}\rangle = 0\), the \textbf{perfect decoherence} case, the network outputs \(0\) or \(1\) with equal probabilities, i.e.~\emph{it is useless as a computing device}.
-
-\begin{idea}
-
-It is clear that we want to avoid decoherence, or at least diminish its impact on our computing device.
-For this we need \textbf{quantum error correction}: we encode the state of a single (logical) qubit across several (physical) qubits.
-
-\end{idea}
-
-\textbf{!!!TODO!!! generalised decoherence as controlled-\(U\) gate, varying from \(\mathbf{1}\) to controlled-\(\texttt{NOT}\)}
-
-\hypertarget{evolution-of-density-operators-under-decoherence}{%
-\subsection{Evolution of density operators under decoherence}\label{evolution-of-density-operators-under-decoherence}}
-
-In terms of density operators, the qubit alone evolves from the pure state \(|\psi\rangle\langle\psi|\) to a mixed state, which can be obtained by tracing over the environment.
-We start with the evolution of the state vector \(|\psi\rangle=\alpha|0\rangle+\beta|1\rangle\), which is given by
-\[
-  \left( \alpha|0\rangle +\beta |1\rangle\right)|e\rangle \longmapsto
-  \alpha |0\rangle|e_{00}\rangle +\beta |1\rangle |e_{11}\rangle,
-\]
-Then we write it as the evolution of the projector \(|\psi\rangle\langle\psi|\), and trace over the environment to obtain
-\[
-  \begin{aligned}
-    |\psi\rangle\langle\psi| \longmapsto & |\alpha|^2|0\rangle\langle 0| \langle e_{00}|e_{00}\rangle+ \alpha\beta^\star |0\rangle\langle 1|\langle e_{11}|e_{00}\rangle
-  \\+ &\alpha^\star\beta |1\rangle\langle 0|\langle e_{00}|e_{11}\rangle  + |\beta|^2|1\rangle\langle 1|\langle e_{11}|e_{11}\rangle.
-  \end{aligned}
-\]
-Written in the matrix form, this is
-\[
-  \begin{bmatrix}
-    |\alpha|^2 & \alpha\beta^\ast
-  \\\alpha^\ast\beta & |\beta|^2
-  \end{bmatrix}
-  \longmapsto
-  \begin{bmatrix}
-    |\alpha|^2 & \alpha\beta^\ast \langle e_{11}|e_{00}\rangle
-    \\\alpha^\ast\beta \langle e_{00}|e_{11}\rangle & |\beta|^2
-  \end{bmatrix}.
-\]
-The off-diagonal elements, originally called \textbf{coherences}, vanish as \(\langle e_{00}|e_{11}\rangle\) approaches zero.
-This is why this particular interaction is called decoherence.
-
-Notice that
-\[
-|\psi\rangle|e\rangle \longmapsto \mathbf{1}|\psi\rangle|e_{\mathbf{1}}\rangle+Z|\psi\rangle|e_Z\rangle,
-\]
-implies
-\[
-|\psi\rangle\langle\psi|\longmapsto \mathbf{1}|\psi\rangle\langle\psi| \mathbf{1}\langle e_{\mathbf{1}}|e_{\mathbf{1}}\rangle +Z|\psi\rangle\langle\psi| Z\langle e_Z|e_Z\rangle,
-\]
-\emph{only} when \(\langle e_{\mathbf{1}}|e_Z\rangle=0\) (otherwise you would have additional cross terms \(\mathbf{1}|\psi\rangle\langle\psi| Z\) and \(Z|\psi\rangle\langle\psi| \mathbf{1}\)).
-In this case we can indeed say that, with probability \(\langle e_{\mathbf{1}}|e_{\mathbf{1}}\rangle\), nothing happens, and, with probability \(\langle e_Z|e_Z\rangle\), the qubit undergoes the phase-flip \(Z\).
-
-\hypertarget{quantum-errors}{%
-\subsection{Quantum errors}\label{quantum-errors}}
-
-The most general qubit-environment interaction
-\[
-  \begin{aligned}
-    |0\rangle|e\rangle &\longmapsto |0\rangle|e_{00}\rangle + |1\rangle|e_{01}\rangle,
-  \\|1\rangle|e\rangle &\longmapsto |1\rangle|e_{10}\rangle + |0\rangle|e_{11}\rangle,
-  \end{aligned}
-\]
-where the states of the environment are neither normalised nor orthogonal, leads to decoherence
-\[
-  \begin{aligned}
-    \Big( \alpha|0\rangle + \beta|1\rangle \Big) |e\rangle \longmapsto
-    & \Big( \alpha|0\rangle + \beta|1\rangle \Big) \frac{|e_{00}\rangle+|e_{11}\rangle}{2}
-  \\+& \Big( \alpha|0\rangle - \beta|1\rangle \Big) \frac{|e_{00}\rangle-|e_{11}\rangle}{2}
-  \\+& \Big( \alpha|1\rangle + \beta|0\rangle \Big) \frac{|e_{01}\rangle+|e_{10}\rangle}{2}
-  \\+& \Big( \alpha|1\rangle - \beta|0\rangle \Big) \frac{|e_{01}\rangle-|e_{10}\rangle}{2}.
-  \end{aligned}
-\]
-We can also write this as
-\[
-|\psi\rangle|e\rangle \longmapsto  \mathbf{1}|\psi\rangle|e_{\mathbf{1}}\rangle + Z|\psi\rangle |e_Z\rangle +X|\psi\rangle |e_X\rangle + Y|\psi\rangle |e_Y\rangle.
-\]
-The intuition behind this expression is that four things can happen to the qubit:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  nothing (\(\mathbf{1}\)),
-\item
-  phase-flip (\(Z\)),
-\item
-  bit-flip (\(X\)), or
-\item
-  both bit-flip and phase-flip (\(Y\)).
-\end{enumerate}
-
-This is certainly the case when the states \(|e_{\mathbf{1}}\rangle, |e_X\rangle, |e_Y\rangle\) and \(|e_Z\rangle\) are mutually orthogonal, otherwise we cannot perfectly distinguish between the four alternatives.
-
-\begin{idea}
-
-What is important here is the discretisation of errors, and the fact that we can reduce quantum errors to \emph{two types}: bit-flip errors \(X\), and phase-flip errors \(Z\).
-
-\end{idea}
-
-In general, given \(n\) qubits in state \(|\psi\rangle\) and the environment in state \(|e\rangle\) the joint evolution can be expanded as
-\[
-|\psi\rangle|e\rangle \longmapsto \sum_i E_i|\psi\rangle|e_i\rangle,
-\]
-where the \(E_i\) are the \(n\)-fold tensor products of the Pauli operators and the \(|e_i\rangle\) are the corresponding states of the environment, which are not assumed to be normalised or mutually orthogonal.
-A typical operator \(E_i\) acting on five qubits may look like this,
-\[
-  X\otimes Z \otimes \mathbf{1}\otimes \mathbf{1}\otimes Y
-  \equiv XZ\mathbf{1}\mathbf{1}Y.
-\]
-We can say that \(E_i\) represents an error consisting of the bit (\(X\)) error on the first qubit, phase (\(Z\)) error on the second qubit and both bit and phase (\(Y\)) error on the fifth qubit.
-Again, \emph{this is not quite accurate if the corresponding states of the environment are not mutually orthogonal}, but it gives the right kind of intuition nonetheless.
-Here the index \(i\) in \(E_i\) ranges from \(1\) to \(4^5=1024\), because there are \(4^5\) different Pauli operators acting on \(5\) qubits.
-
-\hypertarget{same-evolution-different-errors}{%
-\subsection{Same evolution, different errors}\label{same-evolution-different-errors}}
-
-We can always pick up an orthonormal basis \(|u_i\rangle\) in the environment and express the system--environment evolution as
-\[
-  \begin{aligned}
-    |\psi\rangle|e\rangle
-    \longmapsto &\sum_{ij} E_i|\psi\rangle|u_j\rangle\langle u_j|e_i\rangle
-    \\&= \sum_{j}\Big( \sum_i \langle u_j|e_i\rangle E_i\Big)|\psi\rangle|u_j\rangle
-    \\&= \sum_j M_j|\psi\rangle|u_j\rangle.
-  \end{aligned}
-\]
-The new ``error'' operators \(M_j\) satisfy \(\sum_j M_j^\dagger M_j =\mathbf{1}\) and, in general, they are \emph{not} unitary.
-Now, the evolution of the density operator \(|\psi\rangle\langle\psi|\) can be written as
-\[
-  |\psi\rangle\langle\psi|\longmapsto \sum_j M_j|\psi\rangle\langle\psi| M_j^\dagger.
-\]
-Which particular errors you choose depends of your choice of the basis in the environment.
-If, instead of \(|u_j\rangle\), you pick up a different basis, say \(|v_k\rangle\), then
-\[
-  \begin{aligned}
-    |\psi\rangle|e\rangle
-    \longmapsto &\sum_j M_j|\psi\rangle|u_j\rangle
-  \\&= \sum_j M_j |\psi\rangle\sum_k|v_k\rangle\langle v_k|u_j\rangle
-  \\&= \sum_k \Big(\sum_j \langle v_k|u_j\rangle M_j \Big)|\psi\rangle|v_k\rangle
-  \\&= \sum_k N_k|\psi\rangle|v_k\rangle,
-  \end{aligned}
-\]
-and, consequently,
-\[
-  |\psi\rangle\langle\psi|\longmapsto \sum_k N_k|\psi\rangle\langle\psi| N_k^\dagger.
-\]
-The new ``errors'' satisfy \(\sum_k N_k^\dagger N_k = \mathbf{1}\), and the error operators \(N_k\) and \(M_j\) are related by the unitary matrix \(U_{kj}=\langle v_k|u_j\rangle\).
-
-\hypertarget{some-errors-can-be-corrected-on-some-states}{%
-\subsection{Some errors can be corrected on some states}\label{some-errors-can-be-corrected-on-some-states}}
-
-Alice prepares a quantum object in some state \(|\psi\rangle\) and sends it to Bob.
-The object is intercepted by a malicious Eve who changes its state by applying one of the prescribed unitary operations \(U_1,\ldots, U_n\), with probabilities \(p_1,\ldots, p_n\), respectively.
-Alice and Bob know the set of possible unitaries (errors), and the associated probabilities, but they do not know which particular unitary operation was chosen by Eve.
-Can Bob reconstruct the state \(|\psi\rangle\)?
-The answer is affirmative, at least for \emph{some states} \(|\psi\rangle\).
-
-Let \(\mathcal{H}\) be the Hilbert space pertaining to the object, and let \(\mathcal{C}\) be a subspace of \(\mathcal{H}\).
-Suppose \(|\psi\rangle\in\mathcal{C}\), and that, for each vector in \(\mathcal{C}\), we have
-\[
-  \langle\psi|U^\dagger_i U_j|\psi\rangle = \delta_{ij}
-\]
-Any error \(U_k\) transforms the subspace \(\mathcal{C}\) into the subspace \(\mathcal{C}_k\), which is orthogonal to \(\mathcal{C}\) and also to any other subspace \(\mathcal{C}_j\) for \(j\neq k\).
-All Bob has to do is
-- perform a measurement, defined by projectors on the subspaces \(\mathcal{C}_j\) for \(j=1,\ldots n\),
-- identify \(k\), and
-- apply \(U_k^\dagger\).
-
-As an example, consider an object composed of three qubits and the subspace \(\mathcal{C}\) spanned by the two basis vectors \(|000\rangle\) and \(|111\rangle\).
-Suppose Eve applies one of the following four unitary operations: \(U_0=\mathbf{1}\otimes\mathbf{1}\otimes \mathbf{1}\), \(U_1 =X\otimes\mathbf{1}\otimes \mathbf{1}\), \(U_2 =\mathbf{1}\otimes X\otimes \mathbf{1}\), and \(U_3=\mathbf{1}\otimes\mathbf{1}\otimes X\).
-That is, the identity, or bit-flip on the first, second, or third qubit.
-Each operation is chosen randomly with the same probability of \(1/4\).
-It is easy to see that the four operations generate four subspaces:
-\[
-  \begin{aligned}
-    \mathcal{C} = \Big\langle|000\rangle,|111\rangle\Big\rangle &\qquad \mathcal{C}_1 = \Big\langle|100\rangle,|011\rangle\Big\rangle
-  \\\mathcal{C}_2 = \Big\langle|010\rangle,|101\rangle\Big\rangle& \qquad \mathcal{C}_3 = \Big\langle|001\rangle,|110\rangle\Big\rangle.
-  \end{aligned}
-\]
-The eight dimensional Hilbert space of the three qubits is then decomposed into the sum of orthogonal subspaces
-\[
-\mathcal{C} \oplus \mathcal{C}_1 \oplus\mathcal{C}_2 \oplus \mathcal{C}_3
-\]
-So suppose Alice prepares \(|\psi\rangle=\alpha|000\rangle+\beta|111\rangle\) and Eve applies the bit-flip to the third qubit.
-This generates the state \(\mathbf{1}\otimes\mathbf{1}\otimes X|\psi\rangle=\alpha|001\rangle+\beta|110\rangle\in \mathcal{C}_3\).
-The projective measurement on these subspaces tells Bob that the new state is in the subspace \(\mathcal{C}_3\), and hence the original state can be recovered by the operation \(\mathbf{1}\otimes\mathbf{1}\otimes X\).
-
-\hypertarget{repetition-codes}{%
-\subsection{Repetition codes}\label{repetition-codes}}
-
-In order to give a sense of how quantum error correction actually works, let us begin with a \emph{classical} example of a repetition code.
-Suppose a transmission channel flips each bit in transit with probability \(p\).
-If this error rate is considered too high then it can be decreased by encoding each bit into, say, three bits:
-\[
-  \begin{aligned}
-    0 &\mapsto 000
-  \\1 &\mapsto 111.
-  \end{aligned}
-\]
-That is, each time we want to send logical \(0\), we send three physical bits, all in state \(0\); each time we want to send logical \(1\), we send three physical bits, all in state \(1\).
-The receiver decodes the bit value by a ``majority vote'' of the three bits.
-If only one error occurs, then this error correction procedure is foolproof.
-In general, the net probability of error is just the likelihood that two or three errors occur, which is \(3p^2(1-p) + p^3 < p\).
-Thus the three bit code improves the reliability of the information transfer.
-The \emph{quantum} case, however, is more complicated, because we have both bit-flip \emph{and} phase-flip errors.
-
-\hypertarget{quantum-error-correction}{%
-\subsection{Quantum error correction}\label{quantum-error-correction}}
-
-In order to protect a qubit against bit-flips (incoherent \(X\) rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
-We take a qubit in some unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), introduce two auxiliary qubits, and encode it into three qubits as
-
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-59-1} \end{center}
-
-Suppose that at most one qubit is then flipped (say, the second one).
-The encoded state then becomes \(\alpha|010\rangle + \beta|101\rangle\).
-Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
-Instead we introduce another two additional qubits, both in state \(|0\rangle\), and apply the following network:
-
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-60-1} \end{center}
-
-We measure the two auxiliary qubits, also known as \textbf{ancilla bits}, and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code.
-The theory behind this network runs as follows.
-
-If qubits one and two (counting from the top) are the same, then the first ancilla is in the \(|0\rangle\) state.
-Similarly, if qubits two and three are the same, then the second ancilla is in the \(|0\rangle\) state.
-However, if they are different, then the corresponding ancilla is in the \(|1\rangle\) state.
-Hence, the four possible error syndromes --- \(|00\rangle\), \(|01\rangle\), \(|10\rangle\), and \(|11\rangle\) --- each indicate a different possibility: no errors, an error in the third, first, or second qubits (respectively).
-In our example, we would measure \(|11\rangle\), revealing that both qubits 1 and 2, and qubits 2 and 3, are different.
-Thus it is qubit 2 that has an error.
-Knowing the error, we can go back and fix it, simply by applying \(X\) to qubit 2.
-The net result is the state \(\alpha|000\rangle + \beta|111\rangle\), which is then turned into \((\alpha|0\rangle + \beta|1\rangle)|0\rangle|0\rangle\) by running the mirror image of the encoding network.
-
-\hypertarget{turning-bit-flips-into-phase-flips}{%
-\subsection{Turning bit-flips into phase-flips}\label{turning-bit-flips-into-phase-flips}}
-
-The three-qubit code that we have just demonstrated is sufficient to protect a qubit against single bit-flips, but not phase-flips.
-But this is good enough.
-Recall that \(HZH=X\), and so it is enough to sandwich the decoherence area in between the Hadamard gates: they will turn phase flips into bit flips, and we already know hot to protect our qubits against \(Z\)-errors.
-The encoded state \(\alpha|0\rangle + \beta|1\rangle\) now reads \(\alpha|+++\rangle+\beta|---\rangle\), where \(|\pm\rangle=|0\rangle\pm|1\rangle\).
-
-\hypertarget{dealing-with-bit-flip-and-phase-flip-errors}{%
-\subsection{Dealing with bit-flip and phase-flip errors}\label{dealing-with-bit-flip-and-phase-flip-errors}}
-
-We can now put the bit-flip and phase-flip codes together: first we encode the qubit using the phase-flip code, and then we encode each of the three qubits of the code using the bit-flip code.
-This gives an error correction scheme that allows us to protect against both types of error, thus yielding a code that encodes a single logical qubit across nine physical qubits, protecting against a single quantum error on any of the nine qubits.
-
-If we want to preserve a quantum state for a long time without doing any computations, or if we want to send it through a noisy communications channel, we can just encode the state using a quantum code and decode it when we are done.
-Computation on encoded states using noisy gates requires few more tricks (to be completed).
-
-\hypertarget{remarks-and-exercises-8}{%
-\subsection{Remarks and Exercises}\label{remarks-and-exercises-8}}
-
-\textbf{!!!TODO!!!}
-
-\hypertarget{part-quantum-security}{%
-\part{Quantum security}\label{part-quantum-security}}
-
-\hypertarget{chapter10}{%
-\section{Quantum channels, or CP maps}\label{chapter10}}
+\section{Quantum channels, or CP maps}\label{chapter7}}
 
 \begin{quote}
 About the linear transformations --- often called \textbf{quantum channels}, \textbf{quantum operations}, or \textbf{superoperators} --- that map density operators to density operators. Mathematically, such objects are known as \textbf{completely positive trace-preserving maps}. Be prepared for some name dropping; you will hear about Karl Kraus, Woody Stinespring, Andrzej Jamiołkowski, and Man-Duen Choi. To be sure, knowing names will not give you more insights, but at least you will not be intimidated when you hear about the \textbf{Stinespring} and the \textbf{Kraus representations}, the \textbf{Jamiołkowski isomorphism}, or the \textbf{Choi matrix}.
@@ -6668,14 +5455,14 @@ Compare, for example, the following two versions of a process in which the syste
 
 Firstly:
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-61-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-51-1} \end{center}
 
 Here, the environment is not discarded after the first unitary evolution \(U_A\) --- it carries on and participates in the second unitary evolution \(U_B\).
 In this case, the evolutions \(\rho\mapsto\rho'\) and \(\rho\mapsto\rho''\) \emph{are} well-defined quantum channels, but the evolution \(\rho'\mapsto\rho''\) is \emph{not}; it falls outside the remit of our formalism for the input state of the system and the state of the environment are not independent.
 
 Secondly:
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-62-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-52-1} \end{center}
 
 In contrast to the previous process, here we discard the environment after the first unitary, and start the second unitary evolution in a fresh tensor product state with a \emph{new} environment --- the two stages involve independent environments.
 In this case, all three evolutions (\(\rho\mapsto\rho'\), \(\rho'\mapsto\rho''\), and \(\rho\mapsto\rho''\)) are well-defined quantum channels, and can be composed.\footnote{Unitary evolutions form a group; quantum channels form a \href{https://en.wikipedia.org/wiki/Semigroup}{\emph{semigroup}}. Quantum channels are invertible only if they are unitary operations or simple isometric embeddings, such as including the environment in some fixed state and then discarding it right away, without any intermediate interaction.}
@@ -7019,7 +5806,7 @@ That is, for any bipartite state \(\rho_{\mathcal{A}\mathcal{B}}\) of a composed
 
 We can represent this construction of \(\rho'_{AB}\) diagrammatically\footnote{In fact, a \emph{lot} (if not \emph{all}) of quantum information theory can be converted into similar looking diagrams, using the formalism of \href{https://arxiv.org/pdf/1510.05468.pdf}{\textbf{string diagrams in monoidal categories}}. Another graphical formalism is that of \href{https://zxcalculus.com/intro.html}{\textbf{ZX-calculus}}. Both of these topics can lead into very deep rabbit holes very quickly, so beware!} as follows:
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-63-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-53-1} \end{center}
 
 Now this is a stronger property than mere positivity; now we are asking for something called \textbf{complete positivity}.
 You may naively think that such trivial extensions of positive maps must be also positive, but this is not the case: the positivity of \(\mathcal{E}\) does \emph{not} imply the positivity of its extension \(\mathcal{I}\otimes\mathcal{E}\).
@@ -7099,11 +5886,11 @@ Any such pure bipartite state \(|\Psi\rangle\) can be written as \((A\otimes\mat
 
 \begin{figure}[H]
 
-{\centering \includegraphics{quantum-info_files/figure-latex/unnamed-chunk-64-1} 
+{\centering \includegraphics{quantum-info_files/figure-latex/unnamed-chunk-54-1} 
 
 }
 
-\caption{All three of these operations are equal.}\label{fig:unnamed-chunk-64}
+\caption{All three of these operations are equal.}\label{fig:unnamed-chunk-54}
 \end{figure}
 
 Given that the map \(\mathcal{E}\) acts only on the subsystem \(\mathcal{B}\), we have that
@@ -7117,11 +5904,11 @@ and if \((\mathcal{I}\otimes\mathcal{E})(|\Omega\rangle\langle\Omega|)\) is posi
 
 \begin{figure}[H]
 
-{\centering \includegraphics{quantum-info_files/figure-latex/unnamed-chunk-65-1} 
+{\centering \includegraphics{quantum-info_files/figure-latex/unnamed-chunk-55-1} 
 
 }
 
-\caption{All three of these operations are also equal.}\label{fig:unnamed-chunk-65}
+\caption{All three of these operations are also equal.}\label{fig:unnamed-chunk-55}
 \end{figure}
 
 \hypertarget{the-choi-matrix}{%
@@ -7139,13 +5926,13 @@ The \textbf{Choi matrix \(\widetilde{\mathcal{E}}\)} of \(\mathcal{E}\) is defin
 \]
 where \(|\Omega\rangle=\sum_i|i\rangle|i\rangle\) is a maximally entangled state.
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-66-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-56-1} \end{center}
 
 \end{idea}
 
 The Choi matrix is a neat way of tabulating all possible values of \(\mathcal{E}(|i\rangle\langle j|)\), since the \((i,j)\)-th block entry of \(\widetilde{\mathcal{E}}\) is the \((d'\times d')\)-matrix \(\mathcal{E}(|i\rangle\langle j|)\):
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-67-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-57-1} \end{center}
 
 Of course, once we know how \(\mathcal{E}\) acts on the \(d^2\) basis matrices \(|i\rangle\langle j|\), we know how it acts on any \((d\times d)\) matrix \(X=\sum_{ij}X_{ij}|i\rangle\langle j|\), since \(\mathcal{E}(X) = \sum_{ij}X_{ij}\mathcal{E}(|i\rangle\langle j|)\), where \(i,j=1,\ldots, d\).
 This can be written as follows:
@@ -7401,10 +6188,10 @@ If we apply the partial transpose \(\mathbf{1}\otimes T\) to this state, and che
 Note that the implication ``if separable then the partial transpose is positive'' does not imply the converse: there exist entangled states for which the partial transpose is positive, and they are known as the \textbf{entangled PPT states}\footnote{``PPT'' stands for \emph{positive partial transpose}.}
 However, for \emph{two} qubits, the PPT states are exactly the separable states.
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-68-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-58-1} \end{center}
 
-\hypertarget{remarks-and-exercises-9}{%
-\subsection{Remarks and exercises}\label{remarks-and-exercises-9}}
+\hypertarget{remarks-and-exercises-6}{%
+\subsection{Remarks and exercises}\label{remarks-and-exercises-6}}
 
 \hypertarget{depolarising-channel}{%
 \subsubsection{The depolarising channel}\label{depolarising-channel}}
@@ -7547,8 +6334,8 @@ Here are few useful tricks involving a maximally entangled state.
     \]
 \end{itemize}
 
-\hypertarget{section-43}{%
-\subsubsection{}\label{section-43}}
+\hypertarget{section-40}{%
+\subsubsection{}\label{section-40}}
 
 Define the map \(\mathcal{E}\) on a single qubit via
 \[
@@ -7649,8 +6436,8 @@ Here the partial trace is over the second system in our definition of \(\widetil
 
 \textbf{Hint.} Show that \(\operatorname{tr}[\mathcal{E}(|i\rangle\langle j|)]=\delta_{ij}\), and then consider Figure \ref{fig:visualising-partial-trace}.
 
-\hypertarget{section-44}{%
-\subsubsection{}\label{section-44}}
+\hypertarget{section-41}{%
+\subsubsection{}\label{section-41}}
 
 Mathematically speaking, Kraus operators \(E_k\) are vectors in a \((dd')\)-dimensional Hilbert space, with the Hilbert--Schmidt inner product given by \(\operatorname{tr}E_k^\dagger E_l\).
 Thus, our intuition tells us, in order to describe any quantum channel with \(\dim\mathcal{H}=\dim\mathcal{H}'=d\), we should need no more than \(d^2\) Kraus operators.
@@ -7671,7 +6458,7 @@ We can then unitarily ``rotate'' our operator basis, and use \(C_k=\sum_j U_{jk}
 
 Another way to understand the freedom in the Kraus representation is to realise that any unitary operation \emph{on the environment alone} does not affect the principal system, i.e.~the quantum channel \(\mathcal{E}\) is not affected by the choice of the unitary \(R\) in the diagram below.
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-69-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-59-1} \end{center}
 
 This is true, even though the Kraus operators \(E_k=\langle e_k|U|e\rangle\) have now changed to
 \[
@@ -7696,8 +6483,8 @@ and the subsequent trace over the environment gives
   \end{aligned}
 \]
 
-\hypertarget{section-45}{%
-\subsubsection{}\label{section-45}}
+\hypertarget{section-42}{%
+\subsubsection{}\label{section-42}}
 
 Consider two single-qubit channels
 \[
@@ -7742,7 +6529,7 @@ Indeed, you can check that \(E_1=(F_1+F_2)/\sqrt{2}\) and \(E_2=(F_1-F_2)/\sqrt{
 \]
 You can also check that the two channels can be implemented by the following two circuits:
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-70-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-60-1} \end{center}
 
 The \(\texttt{c-NOT}\) gate appears here as the measurement gate.
 The target qubit measures the control qubit in either the standard basis (the operation \(\mathcal{F}\)) or in the Hadamard basis (the operation \(\mathcal{E}\)).
@@ -7761,7 +6548,7 @@ where is \(X\) is the Pauli operator \(\sigma_x\), i.e.~the \(\texttt{NOT}\) gat
 
 Let us step through the following simple circuit:
 
-\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-71-1} \end{center}
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-61-1} \end{center}
 
 The control qubit will be our system, and the target qubit, initially in a fixed state \(|e\rangle\equiv|0\rangle\), will play the role of the environment.
 Let the \(\{|e_1\rangle,|e_2\rangle\}\) basis be the standard basis of the target qubit \(\{|0\rangle,|1\rangle\}\).
@@ -7825,6 +6612,1216 @@ or, in matrix form, by
 \]
 As we can see, the diagonal elements of \(\rho\) survive, and the off-diagonal elements (i.e.~the coherences) disappear.
 You may think about this operation as being equivalent to measuring the system qubit in the standard basis and then forgetting the result.
+
+\hypertarget{part-applications}{%
+\part{Applications}\label{part-applications}}
+
+\hypertarget{chapter8}{%
+\section{Bell's theorem}\label{chapter8}}
+
+\begin{quote}
+About \textbf{quantum correlations}, which are stronger than any correlations allowed by classical physics, and about the \href{https://en.wikipedia.org/wiki/CHSH_inequality}{\textbf{CHSH inequality}} which demonstrates this fact, and which is a variant of \textbf{Bell's theorem}.
+\end{quote}
+
+Every now and then, it is nice to put down your lecture notes and go and see how things actually work in the real world.
+What is wonderful (and surprising) about quantum theory is that it turns up in many places that we might not expect it to, such as in the polarisation of light, where we stumble across an intriguing paradox.
+
+If we take two polarising filters, and place them on top of each other with their polarisations oriented at \(90^\circ\) to one another, then basically no light will pass through, since the only light passing through the first filter is orthogonally polarised with respect to the second filter, and is thus blocked.
+But then, if we take a third filter, and place it in between the other two, at an angle in the middle of both (i.e.~at \(45^\circ\)), then somehow \emph{more} light is let through than if the middle filter weren't there at all.\footnote{For the more visually inclined, there is a \href{https://www.youtube.com/watch?v=zcqZHYo7ONs}{video on YouTube by minutephysics} about this experiment, or you can play with a virtual version at \href{https://lab.quantumflytrap.com/lab/three-polarizer-paradox}{Quantum Flytrap}.}
+
+This is intrinsically linked to Bell's theorem, which proves the technical sounding statement that ``any local real hidden variable theory must satisfy certain statistical properties'', which is \emph{not} satisfied in reality, as many quantum mechanical experiments (such as the above) show!
+
+\hypertarget{quantum-correlations}{%
+\subsection{Quantum correlations}\label{quantum-correlations}}
+
+Consider two entangled qubits in the singlet state
+\[
+  |\psi\rangle
+  = \frac{1}{\sqrt 2} \left( |01\rangle-|10\rangle \right)
+\]
+and note that the projector \(|\psi\rangle\langle\psi|\) can be written as\footnote{There are other, more elementary, ways of deriving this result but here I want you to hone your skills. Now that you've learned about projectors, traces, and Pauli operators, why not put them to good use.}
+\[
+  |\psi\rangle\langle\psi|
+  = \frac{1}{4} \left(
+    \mathbf{1}\otimes\mathbf{1}- \sigma_x\otimes\sigma_x - \sigma_y\otimes\sigma_y - \sigma_z\otimes \sigma_z
+  \right).
+\]
+Any single qubit observable with values \(\pm 1\) can be represented by the operator
+\[
+  \vec{a}\cdot\vec\sigma
+  = a_x\sigma_x + a_y\sigma_y + a_z\sigma_z,
+\]
+where \(\vec{a}\) is a unit vector in the three-dimensional Euclidean space.
+Suppose Alice and Bob choose measurements defined by vectors \(\vec{a}\) and \(\vec{b}\), respectively.
+For example, if the two qubits are spin-half particles, they may measure the spin components along the directions \(\vec{a}\) and \(\vec{b}\).
+We write the corresponding observable as the tensor product
+\[
+  A\otimes B
+  = (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma).
+\]
+The eigenvalues of \(A\otimes B\) are the products of eigenvalues of \(A\) and \(B\).
+Thus \(A\otimes B\) has two eigenvalues: \(+1\), corresponding to the instances when Alice and Bob registered identical outcomes, i.e.~\((+1,+1)\) or \((-1,-1)\); and \(-1\), corresponding to the instances when Alice and Bob registered different outcomes, i.e.~\((+1,-1)\) or \((-1,-1)\).
+This means that the expected value of \(A\otimes B\), in any state, has a simple interpretation:
+\[
+    \langle A\otimes B\rangle = \Pr (\text{outcomes are the same}) - \Pr (\text{outcomes are different}).
+\]
+This expression can take any numerical value from \(-1\) (perfect anti-correlations) through \(0\) (no correlations) to \(+1\) (perfect correlations).
+We now evaluate the expectation value in the singlet state:
+\[
+\begin{aligned}
+  \langle\psi|A\otimes B|\psi\rangle
+  & = \operatorname{tr}\left[
+      (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma) |\psi\rangle\langle\psi|
+    \right]
+\\& = -\frac{1}{4} \operatorname{tr}\left[
+      (\vec{a}\cdot\vec\sigma)\sigma_x \otimes(\vec{a}\cdot\vec\sigma)\sigma_x
+      + (\vec{a}\cdot\vec\sigma)\sigma_y \otimes(\vec{a}\cdot\vec\sigma)\sigma_y
+      + (\vec{a}\cdot\vec\sigma)\sigma_z \otimes(\vec{a}\cdot\vec\sigma)\sigma_z
+    \right]
+\\& = -\frac{1}{4} \operatorname{tr}\left[
+      (a_x b_x + a_y b_y + a_z b_z) \mathbf{1}\otimes\mathbf{1}
+    \right]
+\\& = -\vec{a}\cdot\vec{b}
+\end{aligned}
+\]
+where we have used the fact that \(\operatorname{tr}(\vec{a}\cdot\vec\sigma)\sigma_k = a_k\) (\(k=x,y,z\)).
+So if Alice and Bob choose the same observable, \(\vec{a} = \vec{b}\), then their outcomes will be always opposite: whenever Alice registers \(+1\) (resp. \(-1\)) Bob is bound to register \(-1\) (resp. \(+1\)).
+
+\hypertarget{hidden-variables}{%
+\subsection{Hidden variables}\label{hidden-variables}}
+
+The story of ``hidden variables'' dates back to 1935 and grew out of Einstein's worries about the completeness of quantum theory.
+Consider, for example, a qubit.
+No quantum state of a qubit can be an eigenstate of two non-commuting operators, say \(\sigma_x\) and \(\sigma_z\).
+If the qubit has a definite value of \(\sigma_x\) its value of \(\sigma_z\) must be indeterminate, and vice versa.
+If we take quantum theory to be a complete description of the world, then we must accept that it is impossible for both \(\sigma_x\) and \(\sigma_z\) to have definite values for the same qubit at the same time.
+Einstein felt very uncomfortable about all this.
+He argued that quantum theory is incomplete, and that observables \(\sigma_x\) and \(\sigma_z\) may both have simultaneous definite values, although we only have knowledge of one of them at a time.
+This is the hypothesis of \textbf{hidden variables}.
+In this view, the indeterminacy found in quantum theory is merely due to our ignorance of these ``hidden variables'' that are present in nature but not accounted for in the theory.
+Einstein came up with a number of pretty good arguments for the existence of ``hidden variables''.
+Probably the most compelling one was described in his 1935 paper (known as the EPR paper), co-authored with his younger colleagues, Boris Podolsky and Nathan Rosen.
+It stood for almost three decades as the most significant challenge to the completeness of quantum theory.
+Then, in 1964, John Bell showed that the hidden variable hypothesis can be tested and refuted.
+
+\hypertarget{chsh-inequality}{%
+\subsection{CHSH inequality}\label{chsh-inequality}}
+
+\begin{quote}
+An upper bound on \textbf{classical} correlations.
+\end{quote}
+
+We will describe the most popular version of Bell's argument, introduced in 1969 by John Clauser, Michael Horne, Abner Shimony, and Richard Holt (CHSH).
+Let us assume that the results of any measurement on any individual system are predetermined.
+Any probabilities we may use to describe the system merely reflect our ignorance of these hidden variables.
+
+Now, imagine the following scenario.
+Alice and Bob, two characters with a predilection for wacky experiments, are equipped with appropriate measuring devices and sent to two distant locations.
+Somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob.
+Let us label the two qubits in each pair as \(\mathcal{A}\) and \(\mathcal{B}\) respectively, and let us assume that both Alice and Bob have well defined values of their observables.
+We ask Alice and Bob to measure one of the two pre-agreed observables.
+For each incoming qubit, Alice and Bob choose randomly, and independently from each other, which particular observable will be measured.
+Alice chooses between \(A_1\) and \(A_2\), and Bob between \(B_1\) and \(B_2\).
+Each observable has value \(+1\) or \(-1\), and so we are allowed to think about them as random variables \(A_k\) and \(B_k\), for \(k=1,2\), which take values \(\pm 1\).
+Let us define a new random variable, the \textbf{CHSH quantity} \(S\), as
+\[
+  S = A_1(B_1 - B_2) + A_2(B_1 + B_2).
+\]
+It is easy to see that one of the terms \(B_1\pm B_2\) must be equal to zero and the other to \(\pm 2\), hence \(S=\pm2\).
+The average value of \(S\) must lie somewhere in-between, i.e.
+\[
+  -2 < \langle S\rangle < 2.
+\]
+That's it!
+Such a simple and yet profound mathematical statement about correlations, which we refer simply to as the \textbf{CHSH inequality}.
+No quantum theory is involved because the CHSH inequality is not specific to quantum theory: it does not really matter what kind of physical process is behind the appearance of binary values of \(A_1\), \(A_2\), \(B_1\), and \(B_2\); it is a statement about correlations, and for all classical correlations we must have
+\[
+  |
+    \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
+  | < 2.
+\]
+
+There are essentially two two assumptions here:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Hidden variables.} Observables have definite values
+\item
+  \textbf{Locality.} Alice's choice of measurements (\(A_1\) or \(A_2\)) does not affect the outcomes of Bob's measurement, and vice versa.
+\end{enumerate}
+
+We will not discuss the locality assumption here in detail but let me comment on it briefly.
+In the hidden variable world a, statement such as ``if Bob were to measure \(B_1\) then he would register \(+1\)'' must be either true or false \emph{prior to Bob's measurement}.
+Without the locality hypothesis, such a statement is ambiguous, since the value of \(B_1\) could depend on whether \(A_1\) or \(A_2\) will be chosen by Alice.
+We do not want this for it implies the instantaneous communication.
+It means that, say, Alice by making a choice between \(A_1\) and \(A_2\), affects Bob's results.
+Bob can immediately ``see'' what Alice ``does''.
+
+\hypertarget{quantum-correlations-revisited}{%
+\subsection{Quantum correlations revisited}\label{quantum-correlations-revisited}}
+
+In quantum theory the observables \(A_1\), \(A_2\), \(B_1\), \(B_2\) become \(2\times 2\) Hermitian matrices with two eigenvalues \(\pm 1\), and \(\langle S\rangle\) becomes the expected value of the \((4\times 4)\) \textbf{CHSH matrix}
+\[
+  S
+  = A_1\otimes(B_1-B_2) + A_2\otimes(B_1+B_2).
+\]
+
+We can now evaluate \(\langle S\rangle\) using quantum theory.
+For example, if the two qubits are in the singlet state, then we know that
+\[
+  \langle A\otimes B\rangle = -\vec{a}\cdot\vec{b}.
+\]
+We choose vectors \(\vec{a}_1\), \(\vec{a}_2\), \(\vec{b}_1\), and \(\vec{b}_2\) as shown in Figure \ref{fig:choice-of-as-and-bs}, and then, with these choices,
+\[
+\begin{gathered}
+  \langle A_1\otimes B_1\rangle
+  = \langle A_2\otimes B_1\rangle
+  = \langle A_2\otimes B_2\rangle
+  = \frac{1}{\sqrt 2}
+\\\langle A_1\otimes B_2\rangle
+   = -\frac{1}{\sqrt 2}.
+\end{gathered}
+\]
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{quantum-info_files/figure-latex/choice-of-as-and-bs-1} 
+
+}
+
+\caption{The relative angle between the two perpendicular pairs is \(45^\circ\).}\label{fig:choice-of-as-and-bs}
+\end{figure}
+
+Thus
+\[
+  \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
+  = -2\sqrt{2},
+\]
+which obviously violates CHSH inequality.
+
+To be clear, this violation has been observed in a number of painstakingly careful experiments.
+The early efforts were truly heroic, and the experiments had many layers of complexity.
+Today, however, such experiments are routine.
+
+\begin{idea}
+
+The behaviour of entangled quantum systems cannot be explained by any local hidden variables.
+
+\end{idea}
+
+\hypertarget{tsirelsons-inequality}{%
+\subsection{Tsirelson's inequality}\label{tsirelsons-inequality}}
+
+\begin{quote}
+An upper bound on \textbf{quantum} correlations.
+\end{quote}
+
+One may ask if \(|\langle S\rangle|= 2\sqrt{2}\) is the maximal violation of the CHSH inequality, and the answer is ``yes, it is'': quantum correlations cannot achieve any value of \(|\langle S\rangle|\) larger than \(2\sqrt{2}\).
+This is because, for any state \(|\psi\rangle\), the expected value \(\langle S\rangle = \langle\psi|S|\psi\rangle\) cannot exceed the largest eigenvalue of \(S\), and we can put an upper bound on the largest eigenvalues of \(S\).
+To start with, the largest eigenvalue (in absolute value) of a Hermitian matrix \(M\), denoted by \(\|M\|\), is a matrix norm, and it has the following properties:
+\[
+\begin{aligned}
+  \|M\otimes N\|
+  & = \|M\| \|N\|
+\\\|MN\|
+  & \leqslant\|M\| \|N\|
+\\\|M+N\|
+  & \leqslant\|M\| + \|N\|
+\end{aligned}
+\]
+Given that \(\|A_i\|=1\) and \(\|B_j\|=1\) (\(i,j=1,2\)), it is easy to show that \(\|S\| < 4\).
+One can, however, derive a tighter bound.
+We can show (do it) that
+\[
+  S^2
+  = 4(\mathbf{1}\otimes\mathbf{1}) + [A_1,A_2]\otimes[B_1,B_2].
+\]
+The norm of each of the commutators (\(\|[A_1, A_2]\|\) and \(\|[B_1, B_2]\|\)) cannot exceed \(2\), and \(\|S^2\|=\|S\|^2\), which all together gives
+\[
+  \|S\|
+  < 2\sqrt{2}
+  \implies
+  |\langle S\rangle| < 2\sqrt{2}.
+\]
+This result is known as the \textbf{Tsirelson inequality}.
+
+\hypertarget{remarks-and-exercises-7}{%
+\subsection{Remarks and Exercises}\label{remarks-and-exercises-7}}
+
+\textbf{!!!TODO!!!}
+
+\hypertarget{chapter9}{%
+\section{Quantum algorithms}\label{chapter9}}
+
+\begin{quote}
+About quantum interference in disguise: \textbf{Hadamard, function evaluation, Hadamard}.
+Also about the early quantum algorithms and how they deal with querying oracles, searching for a needle in a haystack, and estimating periodicity of certain functions.
+\end{quote}
+
+Classical computers essentially evaluate functions: given \(n\)-bits of input they produce \(m\)-bits of output that are uniquely determined by the input; that is, they find the value of
+\[
+  f\colon \{0,1\}^n \to \{0,1\}^m
+\]
+for a particular specified \(n\)-bit argument.
+A function with an \(m\)-bit value is equivalent to \(m\) Boolean functions, each with a one-bit value, so we may just as well say that the basic task performed by a computer is the evaluation of Boolean functions
+\[
+  f\colon \{0,1\}^n \to  \{0,1\}.
+\]
+How can we adapt this to the world of quantum computing?
+
+\hypertarget{quantum-boolean-function-evaluation}{%
+\subsection{Quantum Boolean function evaluation}\label{quantum-boolean-function-evaluation}}
+
+\emph{In quantum computation, all elementary operations are reversible} (unitary), so we compute Boolean functions in a reversible fashion as
+\[
+  |x\rangle|y\rangle \mapsto |x\rangle|y\oplus f(x)\rangle.
+\]
+
+The corresponding circuit diagram (for \(n=3\)) is shown in Figure \ref{fig:n-equals-3-circuit-diagram}.
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{quantum-info_files/figure-latex/n-equals-3-circuit-diagram-1} 
+
+}
+
+\caption{Computing some \(f\colon\{0,1\}^3\to\{0,1\}\) in a quantum manner.}\label{fig:n-equals-3-circuit-diagram}
+\end{figure}
+
+Here we use two registers: the first one (counting from the top to the bottom of the circuit diagram) stores the arguments \(x\), and the second one the values \(f(x)\).
+More precisely, the value \(f(x)\) is added bit-wise to the pre-existing binary value \(y\) of the second register.
+We usually set \(y=0\) to get
+\[
+  |x\rangle|0\rangle \mapsto |x\rangle|f(x)\rangle.
+\]
+
+Quantum Boolean function evaluation is a special case of the generalised \(x\)-controlled-\(U\) on two registers:
+\[
+  \sum_x |x\rangle\langle x|\otimes U_x
+\]
+where \(U_x\) is either the identity \(\mathbf{1}\) (when \(f(x)=0\)) or the bit-flip\footnote{Do not confuse the capital \(X\), which is the Pauli flip operator \(\sigma_x\), with the small \(x\), which is a binary string stored in the first register and the argument of our Boolean function \(f\).} \(X\) (when \(f(x)=1\)).
+We may also write this as
+\[
+  \sum_x |x\rangle\langle x|\otimes X^{f(x)}.
+\]
+
+\hypertarget{example}{%
+\subsubsection{Example}\label{example}}
+
+Consider the Boolean function \(f\colon\{0,1\}^2\to\{0,1\}\) given by
+\[
+  f(x)
+  =
+  \begin{cases}
+    1 &\text{if $x=01$,}
+  \\0 &\text{otherwise.}
+  \end{cases}
+\]
+The evaluation \(|x\rangle|y\rangle \mapsto |x\rangle|y\oplus f(x)\rangle\) can be tabulated explicitly as
+\[
+  \begin{array}{cc}
+    |00\rangle|0\rangle \mapsto |00\rangle|0\rangle
+    & |00\rangle|1\rangle \mapsto |00\rangle|1\rangle
+  \\|01\rangle|0\rangle \mapsto |01\rangle|1\rangle
+    & |01\rangle|1\rangle \mapsto |01\rangle|0\rangle
+  \\|10\rangle|0\rangle \mapsto |10\rangle|0\rangle
+    & |10\rangle|1\rangle \mapsto |10\rangle|1\rangle
+  \\|11\rangle|0\rangle \mapsto |11\rangle|0\rangle
+    & |11\rangle|1\rangle \mapsto |11\rangle|1\rangle
+  \end{array}
+\]
+and the expression \(\sum_x |x\rangle\langle x|\otimes X^{f(x)}\) becomes
+\[
+  \begin{aligned}
+    &|00\rangle\langle 00| \otimes \mathbf{1}
+  \\+ &|01\rangle\langle 01| \otimes X
+  \\+ &|10\rangle\langle 10| \otimes \mathbf{1}
+  \\+ &|11\rangle\langle 11| \otimes \mathbf{1}.
+  \end{aligned}
+\]
+Finally, the matrix form looks like
+\[
+  \left[
+  \,
+    \begin{array}{c|c|c|c}
+      \begin{matrix}1&0\\0&1\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+    \\\hline
+    \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&1\\1&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+    \\\hline
+    \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}1&0\\0&1\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+    \\\hline
+    \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}0&0\\0&0\end{matrix}
+      & \begin{matrix}1&0\\0&1\end{matrix}
+    \end{array}
+  \,
+  \right]
+\]
+As you can see, this is a diagonal block matrix: a \((4\times 4)\) matrix with \((2\times 2)\) matrices as entries.
+The rows and the columns of the \((4\times 4)\) matrix are labelled by the binary strings \(00, 01, 10, 11\), and the \((2\times 2)\) matrices on the diagonal represent operations applied to the qubit in the second register.
+Here all of them are the identity \(\mathbf{1}\) except the \((01, 01)\) entry, which represents the bit-flip \(X\).
+This is because \(f(01)=1\), and \(f(x)=0\) for all other binary strings \(x\).
+
+\hypertarget{more-phase-kick-back}{%
+\subsection{More phase kick-back}\label{more-phase-kick-back}}
+
+What makes the quantum evaluation of Boolean functions really interesting is its action on a superposition of different inputs \(x\).
+For example,
+\[
+  \sum_{x}|x\rangle|0\rangle
+  \longmapsto
+  \sum_{x}|x\rangle|f(x)\rangle
+\]
+produces \(f(x)\) for \emph{all} \(x\) in a \emph{single} run (note that we have dropped the normalisation factor).
+It is more instructive to see the effect of the function evaluation when the qubit in the second register is prepared in the state \(|-\rangle = \frac{1}{\sqrt 2}(|0\rangle - |1\rangle\), since then
+\[
+  \sum_x|x\rangle|-\rangle
+  \longmapsto
+  \sum_x (-1)^{f(x)}|x\rangle|-\rangle
+\]
+(as shown in Figure \ref{fig:n-equals-3-minus-circuit-diagram}).
+Whenever \(f(x)=1\), the bit flip \(X\) is applied to the qubit in the second register.
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{quantum-info_files/figure-latex/n-equals-3-minus-circuit-diagram-1} 
+
+}
+
+\caption{Computing some \(f\colon\{0,1\}^3\to\{0,1\}\) with the second-register qubit in state \(|-\rangle\).}\label{fig:n-equals-3-minus-circuit-diagram}
+\end{figure}
+
+The reason for defining the state \(|-\rangle\) as we do is that it is the eigenstate of \(X\) with eigenvalue \(-1\).
+So, due the phase kick-back, whenever \(f(x)=1\), the phase factor \(-1\) appears in front of the corresponding term \(|x\rangle\).
+As you can see, the second register stays in state \(|-\rangle\) all the way through the computation --- it is the first register where things happen.
+Let us now see how quantum Boolean function evaluation introduces phase shifts in quantum interference experiments, and how such experiments can be viewed as computations.
+
+\hypertarget{oracles-and-query-complexity}{%
+\subsection{Oracles and query complexity}\label{oracles-and-query-complexity}}
+
+The computational power of quantum interference was discovered by counting how many times certain Boolean functions have to be evaluated in order to find the answer to a given problem.
+Imagine a ``black box'' (also called an \textbf{oracle}) that computes some fixed Boolean function, but whose inner workings are unknown to us, and a scenario in which one wants to learn about a given property of the Boolean function but has to ``pay'' (in energy, or in money!) for each use (often referred to as a \textbf{query}) of the box.
+In such a setting, the objective is to minimise number of queries to the oracle while finding out as much information as possible about the function computed by the oracle.
+For this purpose, we ignore everything that happens inside the black box: the Boolean function evaluation counts as just \emph{one} computational step.
+
+\hypertarget{deutschs-algorithm}{%
+\subsubsection{Deutsch's algorithm}\label{deutschs-algorithm}}
+
+We start, once more, with the simplest quantum interference circuit:
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-62-1} \end{center}
+
+Suppose you can prepare the input, you can read the output, you \emph{cannot} see the phase shifter, \emph{but} you are promised that the phase shifter is set to either \(\varphi=0\) or \(\varphi=\pi\).
+Can you tell which value \(\varphi\) has been set to?
+
+Of course you can!
+
+One way of doing it is to set your input to \(|0\rangle\) and check the output: for \(\varphi=0\) the output is always \(|0\rangle\), and for \(\varphi=\pi\) it is always \(|1\rangle\).
+A single run of the interference experiment is sufficient to determine the difference.
+The first quantum algorithm, proposed by David Deutsch in 1985, is very much related to this effect, but where the phase setting is determined by the Boolean function evaluation via the phase kick-back.
+
+\begin{scenario}
+
+We are presented with an oracle that computes some unknown function \(f\colon\{0,1\}\to\{0,1\}\).
+Note that there are only four possibilities for what \(f\) can be: it could be one of two constant functions (i.e.~those where \(f(0)=f(1)\)), or one of two ``balanced'' functions (i.e.~those where \(f(0)\neq f(1)\)).
+
+\begin{longtable}[]{@{}rcc@{}}
+\toprule
+& \(f(0)\) & \(f(1)\)\tabularnewline
+\midrule
+\endhead
+constant & \(\begin{matrix}0\\1\end{matrix}\) & \(\begin{matrix}0\\1\end{matrix}\)\tabularnewline
+balanced & \(\begin{matrix}0\\1\end{matrix}\) & \(\begin{matrix}1\\0\end{matrix}\)\tabularnewline
+\bottomrule
+\end{longtable}
+
+Our task is to determine, using the fewest queries possible, whether the function computed by the oracle is constant or balanced.
+
+\end{scenario}
+
+Note that we are \emph{not} asked for the particular values \(f(0)\) and \(f(1)\), but \emph{only whether the two values are the same or different}.
+Classical intuition tells us that we have to evaluate both \(f(0)\) and \(f(1)\) and compare them, which involves evaluating \(f\) \emph{twice}.
+But, in the quantum setting, we can solve this problem with a \emph{single} function evaluation, using the following circuit.
+
+\begin{circuit}
+
+(Deutsch's).
+
+\emph{First register: \(1\) qubit. Second register: \(1\) qubit.}
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-63-1} \end{center}
+
+\end{circuit}
+
+During the function evaluation, the second register ``kicks back'' the phase factor \((-1)^{f(x)}\) in front of \(|x\rangle\), but the state of the second register remains unchanged; the first register is modified as follows:
+\[
+  \begin{aligned}
+    |0\rangle
+    &\overset{H}{\longmapsto}
+    |0\rangle+|1\rangle
+  \\&\overset{f}{\longmapsto}
+    (-1)^{f(0)}|0\rangle + (-1)^{f(1)}|1\rangle
+  \\&\quad\equiv
+    |0\rangle + (-1)^{f(0)\oplus f(1)}|1\rangle
+  \\&\overset{H}{\longmapsto}
+    |f(0)\oplus f(1)\rangle.
+  \end{aligned}
+\]
+
+This evolution can be represented by the circuit diagram
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-64-1} \end{center}
+
+where the relative phase is \(\varphi = (-1)^{f(0)\oplus f(1)}\).
+The first qubit ends in state \(|0\rangle\) if the function \(f\) is constant, and in state \(|1\rangle\) if the function is balanced, and the standard measurement distinguishes these two cases with certainty.\footnote{The original Deutsch algorithm provides the correct answer with probability 50\%. Here we have presented a modified/improved version.}
+
+Deutsch's result laid the foundation for the new field of quantum computation, and was followed by several other quantum algorithms for various problems.
+They all seem to rest on the same generic sequence: a Hadamard transform, followed by a function evaluation, followed by another Hadamard (or Fourier) transform.\footnote{The Hadamard transform is a special case of the Fourier transform over the group \(\mathbb{Z}_2^n\).}
+As we shall see in a moment, in some cases (such as in Grover's search algorithm) this sequence is repeated several times.
+Let me now take you through the three early quantum algorithms, each one offering a higher-order speed-up when compared to their classical analogues than the last.
+
+\hypertarget{three-more-quantum-algorithms}{%
+\subsection{Three more quantum algorithms}\label{three-more-quantum-algorithms}}
+
+Along with Deutsch's algorithm, there are three more fundamental quantum algorithms that we will study here.
+Each one was designed to solve a different specific problem, but they all share some similarity: this omnipresent sequence of Hadamard, function evaluation, Hadamard.
+
+\hypertarget{the-bernstein-vazirani-algorithm}{%
+\subsubsection{The Bernstein-Vazirani algorithm}\label{the-bernstein-vazirani-algorithm}}
+
+\begin{scenario}
+
+We are presented with an oracle that computes some unknown function \(f\colon\{0,1\}^n\to\{0,1\}\), but we are promised that \(f\) is of the form
+\[
+  f(x) = a\cdot x
+  \equiv (a_1\cdot x_1) \oplus \ldots \oplus (a_n\cdot x_n)
+\]
+for some fixed \(a\in\{0,1\}^n\).
+
+Our task is to determine, using the fewest queries possible, the value of the \(n\)-bit string \(a\).
+
+\end{scenario}
+
+It's quite easy to see how to do this classically: if we input the value \(x=00\ldots010\ldots0\), with the \(1\) in the \(m\)-th bit, then \(f(x)\) is simply the \(m\)-th bit of \(a\); after \(n\) such calls, we can evaluate every bit value.
+It is also clear that there cannot exist a better classical algorithm: each call to the oracle teaches us exactly one bit of information, and since we must learn \(n\) bits, we must query it \(n\) times.
+
+In contrast, by running the circuit below, it is possible to determine the value of \(a\) with a \emph{single} (!) call to the oracle.
+
+\begin{circuit}
+
+(Bernstein-Vazirani).
+
+\emph{First register: \(n\) qubits. Second register: \(1\) qubit.}
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-65-1} \end{center}
+
+\end{circuit}
+
+N.B. The ``\(\ldots\)'' in the circuit means ``there are more wires here but they are identical (apart from the numbering) to the ones above''.
+You might also see other notation to denote this, such as
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-66-1} \end{center}
+
+or even simply
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-67-1} \end{center}
+
+Stepping through the execution of the circuit (and ignoring the second register, which remains in state \(|-\rangle\) throughout), we obtain
+\[
+  \begin{aligned}
+    |0\rangle
+    &\overset{H}{\longmapsto}
+    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} |x\rangle
+  \\&\overset{f}{\longmapsto}
+    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} (-1)^{a\cdot x}|x\rangle
+  \\&\overset{H}{\longmapsto}
+    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n}
+    \left[
+      (-1)^{a\cdot x} \left(\frac{1}{\sqrt2}\right)^n
+      \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x} |y\rangle
+    \right]
+  \\&\quad= \left(\frac12\right)^n \sum_{y\in\{0,1\}^n}
+    \left[
+      \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
+    \right]
+    |y\rangle
+  \\&\quad=|a\rangle
+  \end{aligned}
+\]
+where we write the second Hadamard transform as
+\[
+  |x\rangle
+  \mapsto
+  \left(\frac{1}{\sqrt2}\right)^n \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x}|y\rangle
+\]
+and where we have used the fact (which you should prove!) that, for any \(y\in\{0,1\}^n\),
+\[
+  \sum_{x\in\{0,1\}^n} (-1)^{x\cdot y}
+  =
+  \begin{cases}
+    0 &\text{if $y\neq0$}
+  \\2^n &\text{if $y=0$}
+  \end{cases}
+\]
+
+This lets us write\footnote{Even if you don't immediately see how this sum works for \(z\neq a\) (writing \(|z\rangle\) to mean the output), you can first calculate the probability that the output is \(z=a\). In this case it is easy to see that the sum is \(2^n\), and that in the final state \(\sum_z\alpha_z|z\rangle\) the term \(z=a\) has amplitude \(1\). Thus, by normalisation, all the other terms must be equal to \(0\).}
+\[
+  \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
+  =
+  \begin{cases}
+    0 &\text{if $y\neq a$}
+  \\2^n &\text{if $y=a$.}
+  \end{cases}
+\]
+If you take the sum over \(x\), then all the terms always cancel out \emph{unless} \(a\oplus y = 00\ldots0\), i.e.~\emph{unless \(y=a\)}.
+Thus the standard bit-by-bit measurement of the first register gives the value of \(a\) and solves the problem with a single call to the oracle.
+
+Note that the algorithm follows the same pattern as Deutsch's algorithm: Hadamard, function evaluation, Hadamard, i.e.~a generic quantum interference pattern.
+
+\hypertarget{grovers-search-algorithm}{%
+\subsubsection{Grover's search algorithm}\label{grovers-search-algorithm}}
+
+The next algorithm we will study aims to solve the problem of searching for a specific item in an \emph{unsorted} database.
+Think about an old-fashioned phone book: the entries are typically sorted alphabetically, by the name of the person that you want to find.
+However, what if you were in the opposite situation: you had a phone number and wanted to find the corresponding person's name?
+The phone book is not sorted in that way, and to find the number (and hence name) with, say, 50\% probability, you would need to search through, on average, 50\% of the entries.
+In a large phone book, this would take a long time.
+
+While this might seem like a rather contrived problem (a computer database should always maintain an index on any searchable field), many problems in computer science can be cast in this form, i.e.~that of an \textbf{unstructured search}.
+
+\begin{scenario}
+
+We are presented with an oracle that computes some unknown function \(f\colon\{0,1\}^n\to\{0,1\}\).
+
+Our task is to find, using the fewest queries possible, an input \(x\in\{0,1\}^n\) such that \(f(x)=1\).
+
+\end{scenario}
+
+Suppose that we know that, amongst the \(N=2^n\) binary strings, there are \(M\ll N\) which are ``tagged'', i.e.~on which \(f\) evaluates to \(1\).
+There is no structure in the database, and so any classical search requires around \(N/M\) steps, i.e.~the function \(f\) must be evaluated roughly \(N/M\) times.
+
+In contrast, there is a quantum search algorithm, implemented by the circuit below, that was proposed in 1996 by Lov Grover, and which requires only roughly \(\sqrt{N/M}\) steps.
+
+\begin{circuit}
+
+(Grover's search).
+
+\emph{First register: \(n\) qubits. Second register: \(1\) qubit.}
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-68-1} \end{center}
+
+where \(f_0\) tags the binary string of \(n\) zeros: \(f_0(x)=1\) if \(x=00\ldots0\), and \(f_0(x)=0\) otherwise.
+
+\end{circuit}
+
+We can recognise the typical Hadamard, function evaluation, Hadamard sequence, and we can see that the second register (the bottom qubit, in state \(|-\rangle\)) plays an auxiliary role: the real action takes place in the first register.
+However, unlike the previous algorithms, a single call to the oracle does not do very much, and we have to build up the quantum interference in the first register through repeated calls to the oracle (without any intermediate measurements!).
+
+Here, the basic step is the \textbf{Grover iteration operator \(G\)}, which is the boxed part of the circuit that we repeat over and over.
+After \(O(2^{n/2})\) applications of \(G\), we measure the first register bit-by-bit and obtain the value of \(|z\rangle\), which is such that, \emph{with ``high'' probability}, \(f(z)=1\).
+In order to actually \emph{see} how this algorithm works, and to justify our claim that it gives what we are searching for ``with high probability'', we can take a more geometric approach.
+
+First, we define two orthonormal vectors in the Hilbert space of the first register:\footnote{In fact, we shall completely ignore the second register from now on.}
+\[
+  \begin{aligned}
+    |a\rangle
+    &= \frac{1}{\sqrt{N-M}} \sum_{x\in f^{-1}(0)} \!\!\!\!|x\rangle
+  \\|b\rangle
+    &= \frac{1}{\sqrt{M}} \sum_{x\in f^{-1}(1)} \!\!\!\!|x\rangle
+  \end{aligned}
+\]
+where \(f^{-1}(i) = \{x\in\{0,1\}^n \mid f(x)=i\}\).
+These two vectors span a two-dimensional subspace in which the search will take place.
+
+This subspace contains the equally-weighted superposition \(|s\rangle\) of all binary strings of length \(n\):\footnote{We often omit from our notation the fact that the sum is over all \(x\in\{0,1\}^n\), leaving it (hopefully) implicitly understood from the context.}
+\[
+  \begin{aligned}
+    |s\rangle
+    &= \frac{1}{\sqrt{N}} \sum_x|x\rangle
+  \\&= \sqrt{\frac{N-M}{N}}|a\rangle + \sqrt{\frac{M}{N}}|b\rangle
+  \\&= (\cos\alpha)|a\rangle + (\sin\alpha)|b\rangle
+  \end{aligned}
+\]
+where we have parametrised \(\sqrt{\frac{N-M}{N}}\) as \(\cos\alpha\), and \(\sqrt{\frac{M}{N}}\) as \(\sin\alpha\), with \(\alpha\approx\sqrt{\frac{M}{N}}\), since \(N\gg M\).
+
+The state \(|s\rangle\) is our starting input for our sequence of Grover iterations, and we will show that, applying \(G\), when restricting to the plane spanned by \(|a\rangle\) and \(|b\rangle\), amounts to applying a rotation by angle \(2\alpha\).
+Grover's search algorithm can then be understood as a sequence of rotations which take the input state \(|s\rangle\) towards the target state \(|b\rangle\).
+
+To see this, note that the oracle induces the unitary transformation
+\[
+  f\colon |x\rangle \mapsto (-1)^{f(x)}|x\rangle
+\]
+which we shall write as \(I_a = 2|a\rangle\langle a|-\mathbf{1}\), and interpret as a reflection through the \(|a\rangle\)-axis.
+In particular, evaluation of \(f_0\) can be written as \(2|0\rangle\langle 0|-\mathbf{1}\), and thus thought of as a reflection through the \(|0\rangle\)-axis.
+If we sandwich \(f_0\) in between two Hadamards then we obtain \(I_s = 2|s\rangle\langle s|-\mathbf{1}\), which is reflection through the \(|s\rangle\)-axis.
+The Grover iteration operator \(G\) is the composition
+\[
+  G = I_s I_a.
+\]
+Note also that \(I_a = 2|a\rangle\langle a|-\mathbf{1}= \mathbf{1}-2|b\rangle\langle b|\).
+
+Now recall the purely geometric fact that (working in \(2\)-dimensional Euclidean space), if we have two intersecting lines \(L_1\) and \(L_2\), meeting with angle \(\theta\), then reflecting an object through \(L_1\) and then reflecting the resulting image through \(L_2\) is the same as simply rotating the original object around the point of intersection \(L_1\cap L_2\) by \(2\theta\).
+
+The angle between \(|a\rangle\) and \(|s\rangle\) is \(\alpha\), and so, each time \(G\) is applied, the vector is rotated (around the origin) by \(2\alpha\) towards the \(|b\rangle\)-axis.
+We just have to choose the right number \(r\) of steps such that we end up as close to the \(|b\rangle\)-axis as possible.
+The state \(|s\rangle\) starts at angle \(\alpha\) to \(|a\rangle\), and we should perform our final (and only) measurement when this angle is \(\pi/2\), i.e.~when \((2r+1)\alpha = \pi/2\), which gives
+\[
+  r \approx \frac{\pi}{4}\sqrt{\frac{N}{M}}.
+\]
+
+\begin{figure}[H]
+
+{\centering \includegraphics{quantum-info_files/figure-latex/grover-search-geometrically-1} 
+
+}
+
+\caption{Understanding the Grover search algorithm geometrically.}\label{fig:grover-search-geometrically}
+\end{figure}
+
+So the quantum algorithm searches an unsorted list of \(N\) items in roughly \(\sqrt{N}\) steps: it offers a \emph{quadratic} speed-up when compared to classical search, which can be of immense practical importance.
+For example, cracking some of the popular ciphers, such as AES (Advanced Encryption Standard), essentially requires a search among \emph{many} binary strings (called \textbf{keys}).
+If these can be checked at a rate of, say, one million keys per second, then a classical computer would need over a thousand years to find the correct key, while a quantum computer using Grover's algorithm would find it in less than four minutes.
+
+\hypertarget{simons-problem}{%
+\subsubsection{Simon's problem}\label{simons-problem}}
+
+Here we will see the simplest quantum algorithm that shows an exponential speed-up compared to the best classical algorithm.
+
+\begin{scenario}
+
+We are presented with an oracle that computes some unknown function \(f\colon\{0,1\}^n\to\{0,1\}^n\), but we are promised that \(f\) satisfies, for all \(x\in\{0,1\}^n\),
+\[
+  f(x) = f(x\oplus s)
+\]
+for some fixed \(s\in\{0,1\}^n\), which we call the \textbf{period} of \(f\).\footnote{This is equivalent to saying that \(f\) is \textbf{two-to-one}: for any \(y\in\{0,1\}^n\) such that there exists some \(x\in\{0,1\}^n\) with \(f(x)=y\), there exists exactly one other \(x'\neq x\) such that \(f(x')=y\) as well.}
+So that the problem is non-trivial (i.e.~so that \(f\) really is two-to-one), we assume that \(s\) is \emph{not} the string of \(n\) zeros.
+
+Our task is to determine, using the fewest queries possible, the value of the \(n\)-bit string \(s\).
+
+\end{scenario}
+
+Classically, this problem is exponentially hard.
+We will not go through a detailed proof of this fact, but the intuition is reasonably simple: since there is no structure in the function \(f\) that would help us find its period \(s\), the best we can do is evaluate \(f\) on random inputs and hope that we find some distinct \(x\) and \(x'\) such that \(f(x)=f(x')\), and then we know that \(s=x\oplus y\).
+After having made \(m\) queries to the oracle, we have a list of \(m\) values of the tuple \((x,f(x))\); there are \(m(m-1)/2\) possible pairs which could match within this list, and the probability that a randomly chosen pair match is \(1/2^{n-1}\).
+This means that the probability of there being at least one matching pair within the list of \(m\) tuples is less than \(m^2/2^n\).
+Clearly, the chance of finding a matching pair is negligible if the oracle is queried on fewer than \(\sqrt{2^n}\) inputs.
+
+The quantum case, on the other hand, gives a result with high probability within a \emph{linear} number of steps.
+The circuit that solves this problem, shown below, has a familiar Hadamard--function--Hadamard structure, but the second register has been expanded to \(n\) qubits.
+
+\begin{circuit}
+
+(Simon's problem).
+
+\emph{First register: \(n\) qubits. Second register: \(n\) qubits.}
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-69-1} \end{center}
+
+\end{circuit}
+
+Let's follow the evolution of the two registers in this circuit.
+We start off by preparing the equally-weighted superposition of all \(n\)-bit strings, and then query the oracle:
+\[
+  \begin{aligned}
+    |0^n\rangle|0^n\rangle
+    &\longmapsto
+    \frac{1}{\sqrt{2^n}} \sum_x |x\rangle|0^n\rangle
+  \\&\longmapsto
+    \frac{1}{\sqrt{2^n}} \sum_x |x\rangle|f(x)\rangle.
+  \end{aligned}
+\]
+The second Hadamard transform on the first register then yields the final output state:
+\[
+  \frac{1}{2^n} \sum_{x,y} (-1)^{x\cdot y} |y\rangle|f(x)\rangle.
+\tag{6.4.3.1}
+\]
+
+Now, if we measure the second register \emph{before} applying the second Hadamard transform to the first, we obtain one of the \(2^{n-1}\) possible values of \(f(x)\), each equally likely.\footnote{As we shall see in a moment, the actual measurement on the second register is not actually necessary.}
+
+Suppose that the outcome of the measurement is \(f(a)\).
+Given that both \(a\) and \(a\oplus s\) are mapped to \(f(a)\) by \(f\), the first register then collapses to the state
+\[
+  \frac{1}{\sqrt{2}}\big( |a\rangle + |a\oplus s\rangle \big).
+\]
+
+The subsequent Hadamard transform on the first register then gives us the final state\footnote{We write \(s^\perp\) to mean the set of all \(y\in\{0,1\}^n\) such that \(y\cdot s=0\).}
+\[
+  \frac{1}{\sqrt{2^{n+1}}} \sum_y (-1)^{a\cdot y}
+    \Big( 1 + (-1)^{s\cdot y} \Big) |y\rangle|f(a)\rangle
+  =
+  \frac{1}{\sqrt{2^{n-1}}} \sum_{y\in s^\perp}
+    (-1)^{a\cdot y} |y\rangle|f(a)\rangle
+\]
+where we have used the fact that \((a\oplus s)\cdot y = (a\cdot y)\oplus(s\cdot y)\), and that \(1+(-1)^{s\cdot y}\) can have only two values: either \(2\) (when \(s\cdot y = 0\)), or \(0\) (when \(s\cdot y = 1\)).
+Now we measure the first register: the outcome is selected at random from all possible values of \(y\) such that \(a\cdot y = 0\), each occurring with probability \(1/(2^{n-1})\).
+
+In fact, we do not have to measure the second register at all: it was a mathematical shortcut, simply taken for pedagogical purposes.
+Instead of collapsing the state to just one term in a superposition, we can express Equation (6.4.3.1) as\footnote{Recall that the image of \(f\) is the set of all \(z\in\{0,1\}^n\) such that there exists some \(x\in\{0,1\}^n\) satisfying \(f(x)=z\).}
+\[
+  \frac{1}{2^n} \sum_{y,f(a)}
+    \Big( (-1)^{a\cdot y} + (-1)^{(a\oplus s)\cdot y} \Big) |y\rangle|f(a)\rangle
+  =
+  \frac{1}{2^n} \sum_{y,f(a)} (-1)^{a\cdot y}
+    \Big( 1 + (-1)^{s\cdot y} \Big) |y\rangle|f(a)\rangle
+\]
+where the summation over \(f(a)\) means summing over all binary strings in the image of \(f\).
+
+The output of the algorithm is then
+\[
+  \frac{1}{2^{n-1}} \sum_{y\in s^\perp} |y\rangle
+    \sum_{f(a)} (-1)^{a\cdot y} |f(a)\rangle
+\]
+and, again, the measurement outcome is selected at random from all possible values of \(y\) such that \(s\cdot y=0\).
+
+We are not quite done yet: we cannot infer \(s\) from a \emph{single} output \(y\).
+However, once we have found \(n-1\) linearly independent\footnote{Here, \textbf{linearly independent} means that no string in the set \(\{y_1,\ldots,y_n\}\) can be expressed as the bitwise sum of some other strings in this set.} strings \(y_1,y_2,\ldots,y_{n-1}\), we can solve the \(n-1\) equations
+\[
+  \left\{
+  \begin{aligned}
+    s\cdot y_1 &= 0
+  \\s\cdot y_2 &= 0
+  \\&\,\,\,\vdots
+  \\s\cdot y_{n-1} &= 0
+  \end{aligned}
+  \right\}
+\]
+to determine a unique value of \(s\).
+(Note that we only need \(n-1\) values, and not \(n\), because \(s=0\) will always be a solution, but we have explicitly assumed that this is not the case, and so it suffices to narrow down the space of possible solutions to consist of \emph{two} elements, since then we know that we can just take the non-zero one.)
+
+So we run this algorithm repeatedly, each time obtaining another value of \(y\) that satisfies \(s\cdot y = 0\).
+Every time we find some new value of \(y\) that is linearly independent of all previous ones, we can discard half the potential candidates for \(s\).
+The probability that \(y_1,\ldots,y_{n-1}\) are linearly independent is
+\[
+  \left( 1 - \frac{1}{2^{n-1}} \right)
+  \left( 1 - \frac{1}{2^{n-2}} \right)
+  \ldots
+  \left( 1 - \frac{1}{2} \right).
+\tag{6.4.3.2}
+\]
+
+Indeed, suppose that we have \(k\) linearly independent binary strings \(y_1,\ldots,y_k\).
+Then these strings span a subspace of size \(2^k\), consisting of all binary strings of the form \(\bigoplus_{i=1}^k b_i y_i\), where \(b_1,\ldots,b_k\in\{0,1\}\).
+Now suppose we obtain some \(y_{k+1}\).
+It will be linearly independent from the \(y_1,\ldots,y_k\) if and only if it lies \emph{outside} the subspace spanned by the \(y_1,\ldots,y_k\), which occurs with probability \(1-(2^k)/(2^n)\).
+We can bound Equation (6.4.3.2) from below:\footnote{Use the inequality \[\begin{aligned}(1-x)(1-y)&= 1 - x - y - xy\\&\geqslant 1 - (x+y)\end{aligned}\] which holds for any \(0<x,y<1\).}
+the probability of obtaining a linearly independent set \(\{y_1,\ldots,y_{n-1}\}\) by running the algorithm \(n-1\) times (i.e.~not having to discard any values and run again) is
+\[
+  \prod_{k=1}^{n-1}
+  \left(
+    1-\frac{1}{2^k}
+  \right)
+  \geqslant
+  \left[
+    1 -
+    \left(
+      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac14
+    \right)
+  \right]
+  \cdot \frac12
+  >
+  \frac14.
+\]
+
+We conclude that we can determine \(s\) with some constant probability of error after repeating the algorithm \(O(n)\) times.
+The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{quantum-info_files/figure-latex/simons-diagramatically-1} 
+
+}
+
+\caption{Picture all possible binary strings as dots, but with the string \(s\) denoted by a star. Every linearly independent \(y_{k+1}\) lets us ``zoom in'' twice as close towards \(s\).}\label{fig:simons-diagramatically}
+\end{figure}
+
+\hypertarget{remarks-and-exercises-8}{%
+\subsection{Remarks and exercises}\label{remarks-and-exercises-8}}
+
+\hypertarget{section-43}{%
+\subsubsection{}\label{section-43}}
+
+Consider the Boolean function \(f\colon\{0,1\}^n\to\{0,1\}\) defined by \(f(x) = a\cdot x\) for some fixed \(a\in\{0,1\}^n\).
+Exactly one half of the binary strings \(x\in\{0,1\}^n\) give \(f(x)=0\), and the other half give \(f(x)=1\).
+
+\hypertarget{section-44}{%
+\subsubsection{}\label{section-44}}
+
+\textbf{!!!TODO!!! implementing reflections}
+
+\hypertarget{section-45}{%
+\subsubsection{}\label{section-45}}
+
+\textbf{!!!TODO!!! optimality of Grover}
+
+\hypertarget{chapter10}{%
+\section{Decoherence and basic quantum error correction}\label{chapter10}}
+
+\begin{quote}
+About the one big problem that hinders us from physically implementing everything that we've learnt so far, namely \textbf{decoherence}, as well as how we can start to deal with it via some elementary \textbf{error correction}.
+\end{quote}
+
+In principle we know how to build a quantum computer: we can start with simple quantum logic gates and try to integrate them together into quantum networks.
+However, if we keep on putting quantum gates together into networks we will quickly run into some serious practical problems.
+The more interacting qubits involved, the harder it is to prevent them from getting entangled with the environment.
+This unwelcome entanglement, also known as \textbf{decoherence}, destroys the interference, and thus the power, of quantum computing.
+
+\hypertarget{decoherence-simplified}{%
+\subsection{Decoherence simplified}\label{decoherence-simplified}}
+
+Consider the following qubit-environment interaction:
+\[
+  \begin{aligned}
+    |0\rangle|e\rangle &\longmapsto |0\rangle|e_{00}\rangle
+  \\|1\rangle|e\rangle &\longmapsto |1\rangle|e_{11}\rangle
+  \end{aligned}
+\]
+where \(|e\rangle\), \(|e_{00}\rangle\), and \(|e_{11}\rangle\) are the states of the environment, which not need to be orthogonal.\footnote{The reason we use two indices in \(|e_{00}\rangle\) and \(|e_{11}\rangle\) will become clear in a moment, when we consider more general interaction with the environment.}
+Let \(|\psi\rangle = \alpha|0\rangle + \beta|1\rangle\) be the initial state of the qubit.
+The environment is essentially trying to \emph{measure} the qubit and, as the result, the two get entangled:
+\[
+  \Big( \alpha|0\rangle + \beta|1\rangle \Big) |e\rangle
+  \longmapsto
+  \alpha |0\rangle|e_{00}\rangle + \beta |1\rangle |e_{11}\rangle.
+\]
+This state can also be written as
+\[
+  \begin{aligned}
+    \Big( \alpha|0\rangle + \beta|1\rangle \Big) |e\rangle
+    \longmapsto
+    & \Big( \alpha|0\rangle + \beta|1\rangle \Big) \frac{|e_{00}\rangle+|e_{11}\rangle}{2}
+  \\+& \Big( \alpha|0\rangle - \beta|1\rangle \Big) \frac{|e_{00}\rangle-|e_{11}\rangle}{2}.
+  \end{aligned}
+\]
+or as
+\[
+  |\psi\rangle|e\rangle
+  \longmapsto
+  \mathbf{1}|\psi\rangle|e_{\mathbf{1}}\rangle + Z|\psi\rangle|e_Z\rangle,
+\]
+where \(|e_{\mathbf{1}}\rangle = \frac12(|e_{00}\rangle + |e_{11}\rangle)\) and \(|e_Z\rangle = \frac12(|e_{00}\rangle - |e_{11}\rangle)\).
+We may interpret this expression by saying that two things can happen to the qubit: nothing \(\mathbf{1}\) (first term), or phase-flip \(Z\) (second term).
+\emph{This, however, should not be taken literally unless the states of the environment, \(|e_{\mathbf{1}}\rangle\) and \(|e_Z\rangle\), are orthogonal.}\footnote{Why not?}
+
+This process is what we refer to as \textbf{decoherence}.
+
+\hypertarget{decoherence-and-interference}{%
+\subsection{Decoherence and interference}\label{decoherence-and-interference}}
+
+Suppose the qubit undergoes the usual interference experiment, but, in between the two Hadamard gates, it is affected by \textbf{decoherence} (denoted by \(\times\)), which acts as described above (i.e.~\(|0\rangle|e\rangle\mapsto|0\rangle|e_{00}\rangle\) and \(|1\rangle|e\rangle\mapsto|1\rangle|e_{11}\rangle\)).
+
+\begin{figure}[H]
+
+{\centering \includegraphics{quantum-info_files/figure-latex/decoherence-interference-1} 
+
+}
+
+\caption{The usual interference experiment, but with decoherence.}\label{fig:decoherence-interference}
+\end{figure}
+
+Let us step through the circuit in Figure \ref{fig:decoherence-interference}, keeping track of the state of the environment:
+\[
+  \begin{aligned}
+    |0\rangle|e\rangle
+    & \overset{H}{\longmapsto} \Big( |0\rangle + |1\rangle \Big) |e\rangle
+  \\& \overset{\phi}{\longmapsto} \Big( |0\rangle + e^{i\phi}|1\rangle \Big) |e\rangle
+  \\& \overset{\times}{\longmapsto} |0\rangle|e_{00}\rangle + e^{i\phi}|1\rangle|e_{11}\rangle
+  \\& \overset{H}{\longmapsto} |0\rangle\Big( |e_{00}\rangle + e^{i\phi}|e_{11}\rangle \Big) + |1\rangle\Big( |e_{00}\rangle - e^{i\phi}|e_{11}\rangle \Big).
+  \end{aligned}
+\]
+If we write \(\langle e_{00}|e_{11}\rangle = ve^{i\alpha}\), then the final probabilities of \(0\) and \(1\) oscillate with \(\phi\) as
+\[
+  \begin{aligned}
+    P_{0}(\phi) &= \frac12\big(1 + v\cos(\phi + \alpha)\big),
+  \\P_{1}(\phi) &= \frac12\big(1 - v\cos(\phi + \alpha)\big).
+  \end{aligned}
+\]
+
+\begin{figure}[H]
+
+{\centering \includegraphics{quantum-info_files/figure-latex/visibility-suppression-1} 
+
+}
+
+\caption{Visibility suppression.}\label{fig:visibility-suppression}
+\end{figure}
+
+As we can see in Figure \ref{fig:visibility-suppression}, the interference pattern is suppressed by a factor \(v\), which we call the \textbf{visibility}.
+As \(v=|\langle e_{00}|e_{11}\rangle|\) decreases, we lose all the advantages of quantum interference.
+For example, in Deutsch's algorithm we obtain the correct answer with probability at most \(\frac12(1+v)\).
+For \(\langle e_{00}|e_{11}\rangle = 0\), the \textbf{perfect decoherence} case, the network outputs \(0\) or \(1\) with equal probabilities, i.e.~\emph{it is useless as a computing device}.
+
+\begin{idea}
+
+It is clear that we want to avoid decoherence, or at least diminish its impact on our computing device.
+For this we need \textbf{quantum error correction}: we encode the state of a single (logical) qubit across several (physical) qubits.
+
+\end{idea}
+
+\textbf{!!!TODO!!! generalised decoherence as controlled-\(U\) gate, varying from \(\mathbf{1}\) to controlled-\(\texttt{NOT}\)}
+
+\hypertarget{evolution-of-density-operators-under-decoherence}{%
+\subsection{Evolution of density operators under decoherence}\label{evolution-of-density-operators-under-decoherence}}
+
+In terms of density operators, the qubit alone evolves from the pure state \(|\psi\rangle\langle\psi|\) to a mixed state, which can be obtained by tracing over the environment.
+We start with the evolution of the state vector \(|\psi\rangle=\alpha|0\rangle+\beta|1\rangle\), which is given by
+\[
+  \left( \alpha|0\rangle +\beta |1\rangle\right)|e\rangle \longmapsto
+  \alpha |0\rangle|e_{00}\rangle +\beta |1\rangle |e_{11}\rangle,
+\]
+Then we write it as the evolution of the projector \(|\psi\rangle\langle\psi|\), and trace over the environment to obtain
+\[
+  \begin{aligned}
+    |\psi\rangle\langle\psi| \longmapsto & |\alpha|^2|0\rangle\langle 0| \langle e_{00}|e_{00}\rangle+ \alpha\beta^\star |0\rangle\langle 1|\langle e_{11}|e_{00}\rangle
+  \\+ &\alpha^\star\beta |1\rangle\langle 0|\langle e_{00}|e_{11}\rangle  + |\beta|^2|1\rangle\langle 1|\langle e_{11}|e_{11}\rangle.
+  \end{aligned}
+\]
+Written in the matrix form, this is
+\[
+  \begin{bmatrix}
+    |\alpha|^2 & \alpha\beta^\ast
+  \\\alpha^\ast\beta & |\beta|^2
+  \end{bmatrix}
+  \longmapsto
+  \begin{bmatrix}
+    |\alpha|^2 & \alpha\beta^\ast \langle e_{11}|e_{00}\rangle
+    \\\alpha^\ast\beta \langle e_{00}|e_{11}\rangle & |\beta|^2
+  \end{bmatrix}.
+\]
+The off-diagonal elements, originally called \textbf{coherences}, vanish as \(\langle e_{00}|e_{11}\rangle\) approaches zero.
+This is why this particular interaction is called decoherence.
+
+Notice that
+\[
+|\psi\rangle|e\rangle \longmapsto \mathbf{1}|\psi\rangle|e_{\mathbf{1}}\rangle+Z|\psi\rangle|e_Z\rangle,
+\]
+implies
+\[
+|\psi\rangle\langle\psi|\longmapsto \mathbf{1}|\psi\rangle\langle\psi| \mathbf{1}\langle e_{\mathbf{1}}|e_{\mathbf{1}}\rangle +Z|\psi\rangle\langle\psi| Z\langle e_Z|e_Z\rangle,
+\]
+\emph{only} when \(\langle e_{\mathbf{1}}|e_Z\rangle=0\) (otherwise you would have additional cross terms \(\mathbf{1}|\psi\rangle\langle\psi| Z\) and \(Z|\psi\rangle\langle\psi| \mathbf{1}\)).
+In this case we can indeed say that, with probability \(\langle e_{\mathbf{1}}|e_{\mathbf{1}}\rangle\), nothing happens, and, with probability \(\langle e_Z|e_Z\rangle\), the qubit undergoes the phase-flip \(Z\).
+
+\hypertarget{quantum-errors}{%
+\subsection{Quantum errors}\label{quantum-errors}}
+
+The most general qubit-environment interaction
+\[
+  \begin{aligned}
+    |0\rangle|e\rangle &\longmapsto |0\rangle|e_{00}\rangle + |1\rangle|e_{01}\rangle,
+  \\|1\rangle|e\rangle &\longmapsto |1\rangle|e_{10}\rangle + |0\rangle|e_{11}\rangle,
+  \end{aligned}
+\]
+where the states of the environment are neither normalised nor orthogonal, leads to decoherence
+\[
+  \begin{aligned}
+    \Big( \alpha|0\rangle + \beta|1\rangle \Big) |e\rangle \longmapsto
+    & \Big( \alpha|0\rangle + \beta|1\rangle \Big) \frac{|e_{00}\rangle+|e_{11}\rangle}{2}
+  \\+& \Big( \alpha|0\rangle - \beta|1\rangle \Big) \frac{|e_{00}\rangle-|e_{11}\rangle}{2}
+  \\+& \Big( \alpha|1\rangle + \beta|0\rangle \Big) \frac{|e_{01}\rangle+|e_{10}\rangle}{2}
+  \\+& \Big( \alpha|1\rangle - \beta|0\rangle \Big) \frac{|e_{01}\rangle-|e_{10}\rangle}{2}.
+  \end{aligned}
+\]
+We can also write this as
+\[
+|\psi\rangle|e\rangle \longmapsto  \mathbf{1}|\psi\rangle|e_{\mathbf{1}}\rangle + Z|\psi\rangle |e_Z\rangle +X|\psi\rangle |e_X\rangle + Y|\psi\rangle |e_Y\rangle.
+\]
+The intuition behind this expression is that four things can happen to the qubit:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  nothing (\(\mathbf{1}\)),
+\item
+  phase-flip (\(Z\)),
+\item
+  bit-flip (\(X\)), or
+\item
+  both bit-flip and phase-flip (\(Y\)).
+\end{enumerate}
+
+This is certainly the case when the states \(|e_{\mathbf{1}}\rangle, |e_X\rangle, |e_Y\rangle\) and \(|e_Z\rangle\) are mutually orthogonal, otherwise we cannot perfectly distinguish between the four alternatives.
+
+\begin{idea}
+
+What is important here is the discretisation of errors, and the fact that we can reduce quantum errors to \emph{two types}: bit-flip errors \(X\), and phase-flip errors \(Z\).
+
+\end{idea}
+
+In general, given \(n\) qubits in state \(|\psi\rangle\) and the environment in state \(|e\rangle\) the joint evolution can be expanded as
+\[
+|\psi\rangle|e\rangle \longmapsto \sum_i E_i|\psi\rangle|e_i\rangle,
+\]
+where the \(E_i\) are the \(n\)-fold tensor products of the Pauli operators and the \(|e_i\rangle\) are the corresponding states of the environment, which are not assumed to be normalised or mutually orthogonal.
+A typical operator \(E_i\) acting on five qubits may look like this,
+\[
+  X\otimes Z \otimes \mathbf{1}\otimes \mathbf{1}\otimes Y
+  \equiv XZ\mathbf{1}\mathbf{1}Y.
+\]
+We can say that \(E_i\) represents an error consisting of the bit (\(X\)) error on the first qubit, phase (\(Z\)) error on the second qubit and both bit and phase (\(Y\)) error on the fifth qubit.
+Again, \emph{this is not quite accurate if the corresponding states of the environment are not mutually orthogonal}, but it gives the right kind of intuition nonetheless.
+Here the index \(i\) in \(E_i\) ranges from \(1\) to \(4^5=1024\), because there are \(4^5\) different Pauli operators acting on \(5\) qubits.
+
+\hypertarget{same-evolution-different-errors}{%
+\subsection{Same evolution, different errors}\label{same-evolution-different-errors}}
+
+We can always pick up an orthonormal basis \(|u_i\rangle\) in the environment and express the system--environment evolution as
+\[
+  \begin{aligned}
+    |\psi\rangle|e\rangle
+    \longmapsto &\sum_{ij} E_i|\psi\rangle|u_j\rangle\langle u_j|e_i\rangle
+    \\&= \sum_{j}\Big( \sum_i \langle u_j|e_i\rangle E_i\Big)|\psi\rangle|u_j\rangle
+    \\&= \sum_j M_j|\psi\rangle|u_j\rangle.
+  \end{aligned}
+\]
+The new ``error'' operators \(M_j\) satisfy \(\sum_j M_j^\dagger M_j =\mathbf{1}\) and, in general, they are \emph{not} unitary.
+Now, the evolution of the density operator \(|\psi\rangle\langle\psi|\) can be written as
+\[
+  |\psi\rangle\langle\psi|\longmapsto \sum_j M_j|\psi\rangle\langle\psi| M_j^\dagger.
+\]
+Which particular errors you choose depends of your choice of the basis in the environment.
+If, instead of \(|u_j\rangle\), you pick up a different basis, say \(|v_k\rangle\), then
+\[
+  \begin{aligned}
+    |\psi\rangle|e\rangle
+    \longmapsto &\sum_j M_j|\psi\rangle|u_j\rangle
+  \\&= \sum_j M_j |\psi\rangle\sum_k|v_k\rangle\langle v_k|u_j\rangle
+  \\&= \sum_k \Big(\sum_j \langle v_k|u_j\rangle M_j \Big)|\psi\rangle|v_k\rangle
+  \\&= \sum_k N_k|\psi\rangle|v_k\rangle,
+  \end{aligned}
+\]
+and, consequently,
+\[
+  |\psi\rangle\langle\psi|\longmapsto \sum_k N_k|\psi\rangle\langle\psi| N_k^\dagger.
+\]
+The new ``errors'' satisfy \(\sum_k N_k^\dagger N_k = \mathbf{1}\), and the error operators \(N_k\) and \(M_j\) are related by the unitary matrix \(U_{kj}=\langle v_k|u_j\rangle\).
+
+\hypertarget{some-errors-can-be-corrected-on-some-states}{%
+\subsection{Some errors can be corrected on some states}\label{some-errors-can-be-corrected-on-some-states}}
+
+Alice prepares a quantum object in some state \(|\psi\rangle\) and sends it to Bob.
+The object is intercepted by a malicious Eve who changes its state by applying one of the prescribed unitary operations \(U_1,\ldots, U_n\), with probabilities \(p_1,\ldots, p_n\), respectively.
+Alice and Bob know the set of possible unitaries (errors), and the associated probabilities, but they do not know which particular unitary operation was chosen by Eve.
+Can Bob reconstruct the state \(|\psi\rangle\)?
+The answer is affirmative, at least for \emph{some states} \(|\psi\rangle\).
+
+Let \(\mathcal{H}\) be the Hilbert space pertaining to the object, and let \(\mathcal{C}\) be a subspace of \(\mathcal{H}\).
+Suppose \(|\psi\rangle\in\mathcal{C}\), and that, for each vector in \(\mathcal{C}\), we have
+\[
+  \langle\psi|U^\dagger_i U_j|\psi\rangle = \delta_{ij}
+\]
+Any error \(U_k\) transforms the subspace \(\mathcal{C}\) into the subspace \(\mathcal{C}_k\), which is orthogonal to \(\mathcal{C}\) and also to any other subspace \(\mathcal{C}_j\) for \(j\neq k\).
+All Bob has to do is
+- perform a measurement, defined by projectors on the subspaces \(\mathcal{C}_j\) for \(j=1,\ldots n\),
+- identify \(k\), and
+- apply \(U_k^\dagger\).
+
+As an example, consider an object composed of three qubits and the subspace \(\mathcal{C}\) spanned by the two basis vectors \(|000\rangle\) and \(|111\rangle\).
+Suppose Eve applies one of the following four unitary operations: \(U_0=\mathbf{1}\otimes\mathbf{1}\otimes \mathbf{1}\), \(U_1 =X\otimes\mathbf{1}\otimes \mathbf{1}\), \(U_2 =\mathbf{1}\otimes X\otimes \mathbf{1}\), and \(U_3=\mathbf{1}\otimes\mathbf{1}\otimes X\).
+That is, the identity, or bit-flip on the first, second, or third qubit.
+Each operation is chosen randomly with the same probability of \(1/4\).
+It is easy to see that the four operations generate four subspaces:
+\[
+  \begin{aligned}
+    \mathcal{C} = \Big\langle|000\rangle,|111\rangle\Big\rangle &\qquad \mathcal{C}_1 = \Big\langle|100\rangle,|011\rangle\Big\rangle
+  \\\mathcal{C}_2 = \Big\langle|010\rangle,|101\rangle\Big\rangle& \qquad \mathcal{C}_3 = \Big\langle|001\rangle,|110\rangle\Big\rangle.
+  \end{aligned}
+\]
+The eight dimensional Hilbert space of the three qubits is then decomposed into the sum of orthogonal subspaces
+\[
+\mathcal{C} \oplus \mathcal{C}_1 \oplus\mathcal{C}_2 \oplus \mathcal{C}_3
+\]
+So suppose Alice prepares \(|\psi\rangle=\alpha|000\rangle+\beta|111\rangle\) and Eve applies the bit-flip to the third qubit.
+This generates the state \(\mathbf{1}\otimes\mathbf{1}\otimes X|\psi\rangle=\alpha|001\rangle+\beta|110\rangle\in \mathcal{C}_3\).
+The projective measurement on these subspaces tells Bob that the new state is in the subspace \(\mathcal{C}_3\), and hence the original state can be recovered by the operation \(\mathbf{1}\otimes\mathbf{1}\otimes X\).
+
+\hypertarget{repetition-codes}{%
+\subsection{Repetition codes}\label{repetition-codes}}
+
+In order to give a sense of how quantum error correction actually works, let us begin with a \emph{classical} example of a repetition code.
+Suppose a transmission channel flips each bit in transit with probability \(p\).
+If this error rate is considered too high then it can be decreased by encoding each bit into, say, three bits:
+\[
+  \begin{aligned}
+    0 &\mapsto 000
+  \\1 &\mapsto 111.
+  \end{aligned}
+\]
+That is, each time we want to send logical \(0\), we send three physical bits, all in state \(0\); each time we want to send logical \(1\), we send three physical bits, all in state \(1\).
+The receiver decodes the bit value by a ``majority vote'' of the three bits.
+If only one error occurs, then this error correction procedure is foolproof.
+In general, the net probability of error is just the likelihood that two or three errors occur, which is \(3p^2(1-p) + p^3 < p\).
+Thus the three bit code improves the reliability of the information transfer.
+The \emph{quantum} case, however, is more complicated, because we have both bit-flip \emph{and} phase-flip errors.
+
+\hypertarget{quantum-error-correction}{%
+\subsection{Quantum error correction}\label{quantum-error-correction}}
+
+In order to protect a qubit against bit-flips (incoherent \(X\) rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
+We take a qubit in some unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), introduce two auxiliary qubits, and encode it into three qubits as
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-70-1} \end{center}
+
+Suppose that at most one qubit is then flipped (say, the second one).
+The encoded state then becomes \(\alpha|010\rangle + \beta|101\rangle\).
+Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
+Instead we introduce another two additional qubits, both in state \(|0\rangle\), and apply the following network:
+
+\begin{center}\includegraphics{quantum-info_files/figure-latex/unnamed-chunk-71-1} \end{center}
+
+We measure the two auxiliary qubits, also known as \textbf{ancilla bits}, and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code.
+The theory behind this network runs as follows.
+
+If qubits one and two (counting from the top) are the same, then the first ancilla is in the \(|0\rangle\) state.
+Similarly, if qubits two and three are the same, then the second ancilla is in the \(|0\rangle\) state.
+However, if they are different, then the corresponding ancilla is in the \(|1\rangle\) state.
+Hence, the four possible error syndromes --- \(|00\rangle\), \(|01\rangle\), \(|10\rangle\), and \(|11\rangle\) --- each indicate a different possibility: no errors, an error in the third, first, or second qubits (respectively).
+In our example, we would measure \(|11\rangle\), revealing that both qubits 1 and 2, and qubits 2 and 3, are different.
+Thus it is qubit 2 that has an error.
+Knowing the error, we can go back and fix it, simply by applying \(X\) to qubit 2.
+The net result is the state \(\alpha|000\rangle + \beta|111\rangle\), which is then turned into \((\alpha|0\rangle + \beta|1\rangle)|0\rangle|0\rangle\) by running the mirror image of the encoding network.
+
+\hypertarget{turning-bit-flips-into-phase-flips}{%
+\subsection{Turning bit-flips into phase-flips}\label{turning-bit-flips-into-phase-flips}}
+
+The three-qubit code that we have just demonstrated is sufficient to protect a qubit against single bit-flips, but not phase-flips.
+But this is good enough.
+Recall that \(HZH=X\), and so it is enough to sandwich the decoherence area in between the Hadamard gates: they will turn phase flips into bit flips, and we already know hot to protect our qubits against \(Z\)-errors.
+The encoded state \(\alpha|0\rangle + \beta|1\rangle\) now reads \(\alpha|+++\rangle+\beta|---\rangle\), where \(|\pm\rangle=|0\rangle\pm|1\rangle\).
+
+\hypertarget{dealing-with-bit-flip-and-phase-flip-errors}{%
+\subsection{Dealing with bit-flip and phase-flip errors}\label{dealing-with-bit-flip-and-phase-flip-errors}}
+
+We can now put the bit-flip and phase-flip codes together: first we encode the qubit using the phase-flip code, and then we encode each of the three qubits of the code using the bit-flip code.
+This gives an error correction scheme that allows us to protect against both types of error, thus yielding a code that encodes a single logical qubit across nine physical qubits, protecting against a single quantum error on any of the nine qubits.
+
+If we want to preserve a quantum state for a long time without doing any computations, or if we want to send it through a noisy communications channel, we can just encode the state using a quantum code and decode it when we are done.
+Computation on encoded states using noisy gates requires few more tricks (to be completed).
+
+\hypertarget{remarks-and-exercises-9}{%
+\subsection{Remarks and Exercises}\label{remarks-and-exercises-9}}
+
+\textbf{!!!TODO!!!}
 
 \hypertarget{chapter11}{%
 \section{Quantum error correction and fault tolerance}\label{chapter11}}
