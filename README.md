@@ -34,6 +34,7 @@ For any problems or queries regarding this site or its contents, please get in t
 
 ## To-do
 
+1. explain lecture videos (in an html-only div)
 1. **only one footnote per paragraph**
     + **improve sidenote y-positioning using jquery**
         - find the previous `.footnote-ref` in the DOM and align with that
