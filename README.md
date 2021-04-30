@@ -16,6 +16,14 @@ This means that it has some nice functionality to make reading more comfortable,
 5. Open the PDF version of the book.
 
 
+## Lecture videos
+
+Complementary to the lecture notes, there are also lecture videos covering the same topics (but in a slightly different order), which can be found on YouTube.
+These are embedded in the web version of the book, but can also be watched separately as a standalone series.
+
+<div style="text-align: center;margin: 2em"><a href="https://www.youtube.com/c/ArturEkert/playlists" style="padding: 1em;border: 1px solid black;border-radius: 5px;">Watch the videos</a></div>
+
+
 ## Further reading
 
 - P. Kaye, R. Laflamme, and M. Mosca. _An Introduction to Quantum Computing_. Oxford University Press, 2007.
