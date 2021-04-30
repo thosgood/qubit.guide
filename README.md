@@ -1,5 +1,3 @@
-# Introduction to Quantum Information Science
-
 ## Lecture notes
 
 For the past however-many years, [Artur Ekert](https://www.arturekert.com/) has been teaching the masters course "Introduction to Quantum Information" at the University of Oxford.
