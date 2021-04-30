@@ -1,3 +1,5 @@
+## Lecture notes
+
 For the past however-many years, [Artur Ekert](https://www.arturekert.com/) has been teaching the masters course "Introduction to Quantum Information" at the University of Oxford.
 During this time, many versions of accompanying lecture notes have come and gone, with constant improvements and changes being made.
 The version that you will find on this website has been carefully edited by [Tim Hosgood](https://thosgood.com) into a cohesive "book", containing additional exercises and topics.
