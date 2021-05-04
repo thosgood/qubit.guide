@@ -49,6 +49,7 @@ For any problems or queries regarding this site or its contents, please get in t
     + improve sidenote y-positioning using jquery
         - find the previous `.footnote-ref` in the DOM and align with that
 1. pdf title page
+1. change `View source` icon
 1. embed youtube videos
     + [`lite-youtube-embed`](https://github.com/paulirish/lite-youtube-embed)
 1. **search for "TODO"**
