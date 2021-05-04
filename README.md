@@ -46,10 +46,9 @@ For any problems or queries regarding this site or its contents, please get in t
 
 1. explain lecture videos (in an html-only div)
 1. **only one footnote per paragraph**
-    + **improve sidenote y-positioning using jquery**
+    + improve sidenote y-positioning using jquery
         - find the previous `.footnote-ref` in the DOM and align with that
 1. pdf title page
-1. embed youtube videos (**but not into PDF output!**)
-    + "_To use privacy-enhanced mode, change the domain for the embed URL in your HTML from `https://www.youtube.com` to `https://www.youtube-nocookie.com`_"
+1. embed youtube videos
+    + [`lite-youtube-embed`](https://github.com/paulirish/lite-youtube-embed)
 1. **search for "TODO"**
-1. add all questions from problem sheets
