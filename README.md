@@ -4,7 +4,7 @@ For the past however-many years, [Artur Ekert](https://www.arturekert.com/) has 
 During this time, many versions of accompanying lecture notes have come and gone, with constant improvements and changes being made.
 The version that you will find on this website has been carefully edited by [Tim Hosgood](https://thosgood.com) into a cohesive "book", containing additional exercises and topics.
 
-<div style="text-align: center;margin: 2em"><a href="book/" style="padding: 1em;border: 1px solid black;border-radius: 5px;">Read the book</a></div>
+<div style="text-align:center;margin:2em"><a href="book/" style="padding:1em;border:1px solid black;border-radius:5px;">Read the book</a></div>
 
 <!-- The online book is built using (the [Bookdown](https://github.com/rstudio/bookdown/) fork of) Gitbook.
 This means that it has some nice functionality to make reading more comfortable, with most options being accessed through the toolbar at the top (as explained below).
@@ -23,14 +23,14 @@ This means that it has some nice functionality to make reading more comfortable,
 Complementary to the lecture notes, there are also lecture videos covering the same topics (but in a slightly different order), which can be found on YouTube.
 These are embedded in the web version of the book, but can also be watched separately as a standalone series.
 
-1. [Lecture 1](https://www.youtube.com/playlist?list=PLkespgaZN4gltsEv7Iwwk_rZ8Wqnci4HN)
-2. [Lecture 2](https://www.youtube.com/playlist?list=PLkespgaZN4gkDIRRgucAqU1t0fn3sX-15)
-3. [Lecture 3](https://www.youtube.com/playlist?list=PLkespgaZN4gmlzjcUzHXMOB-aWqM3OHiP)
-4. [Lecture 4](https://www.youtube.com/playlist?list=PLkespgaZN4gmk4FD0-nfqP87JGXSODmbu)
-5. [Lecture 5](https://www.youtube.com/playlist?list=PLkespgaZN4glNfpIC8tT_8B1FmCE5l32P)
-6. [Lecture 6](https://www.youtube.com/playlist?list=PLkespgaZN4gm6tZLD8rnsiENRrg6pXX4q)
-7. [Lecture 7](https://www.youtube.com/playlist?list=PLkespgaZN4gk-LV6zRXvlm_NteZad8KIV)
-8. [Lecture 8](https://www.youtube.com/playlist?list=PLkespgaZN4gk6HipxnfzTOKoP5XIekoLI)
+- <a href="https://www.youtube.com/playlist?list=PLkespgaZN4gltsEv7Iwwk_rZ8Wqnci4HN" style="padding:0.5em;border:1px solid black;border-radius:5px;">Lecture 1</a>
+- <a href="https://www.youtube.com/playlist?list=PLkespgaZN4gkDIRRgucAqU1t0fn3sX-15" style="padding:0.5em;border:1px solid black;border-radius:5px;">Lecture 2</a>
+- <a href="https://www.youtube.com/playlist?list=PLkespgaZN4gmlzjcUzHXMOB-aWqM3OHiP" style="padding:0.5em;border:1px solid black;border-radius:5px;">Lecture 3</a>
+- <a href="https://www.youtube.com/playlist?list=PLkespgaZN4gmk4FD0-nfqP87JGXSODmbu" style="padding:0.5em;border:1px solid black;border-radius:5px;">Lecture 4</a>
+- <a href="https://www.youtube.com/playlist?list=PLkespgaZN4glNfpIC8tT_8B1FmCE5l32P" style="padding:0.5em;border:1px solid black;border-radius:5px;">Lecture 5</a>
+- <a href="https://www.youtube.com/playlist?list=PLkespgaZN4gm6tZLD8rnsiENRrg6pXX4q" style="padding:0.5em;border:1px solid black;border-radius:5px;">Lecture 6</a>
+- <a href="https://www.youtube.com/playlist?list=PLkespgaZN4gk-LV6zRXvlm_NteZad8KIV" style="padding:0.5em;border:1px solid black;border-radius:5px;">Lecture 7</a>
+- <a href="https://www.youtube.com/playlist?list=PLkespgaZN4gk6HipxnfzTOKoP5XIekoLI" style="padding:0.5em;border:1px solid black;border-radius:5px;">Lecture 8</a>
 
 
 ## Further reading
