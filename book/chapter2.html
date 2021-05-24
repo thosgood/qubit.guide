@@ -32,7 +32,7 @@
   
 <link rel="prev" href="chapter1.html"/>
 <link rel="next" href="chapter3.html"/>
-<script src="libs/header-attrs-2.5.3/header-attrs.js"></script>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,8 +50,6 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 
@@ -818,12 +816,13 @@ This isomorphism helps to visualise the actions of single-qubit gates.</p>
 <p>There are many ways to introduce this isomorphism.
 Here we will just show how to represent single-qubit state vectors in terms of Euclidean vectors in three dimensions; in <a href="chapter3.html#chapter3">Chapter 3</a> we will actually relate unitary operations on state vectors to rotations in this Euclidean space, demonstrating this isomorphism.<a href="#fn39" class="footnote-ref" id="fnref39"><sup>39</sup></a></p>
 <p>Any single qubit state can be written as <eq env="math">|\psi\rangle=\alpha|0\rangle+\beta|1\rangle</eq>, constrained by the relation <eq env="math">|\alpha|^2+|\beta|^2=1</eq>.
-This suggests a more natural parametrisation as<a href="#fn40" class="footnote-ref" id="fnref40"><sup>40</sup></a>
+This suggests a more natural parametrisation as
 <eq env="displaymath">
   |\psi\rangle =
   \cos\frac{\theta}{2}e^{i\varphi_0}|0\rangle
-  + \sin\frac{\theta}{2}e^{i\varphi_1}|1\rangle.
+  + \sin\frac{\theta}{2}e^{i\varphi_1}|1\rangle
 </eq>
+(note that there is a good reason to use <eq env="math">\theta/2</eq> instead of <eq env="math">\theta</eq>, and we we will explain why later on).
 We can then factor out a global phase:
 <eq env="displaymath">
   |\psi\rangle =
@@ -840,7 +839,7 @@ and even remove it completely, since states that are identical up to a global ph
 Figure 2.3: The Bloch sphere, with the point <eq env="math">\vec{s}</eq> corresponding to <eq env="math">|\psi\rangle</eq> marked.
 </p>
 </div>
-<p>We call this sphere the <strong>Bloch sphere</strong>, and the unit vector <eq env="math">\vec{s}</eq> defined by <eq env="math">\theta</eq> and <eq env="math">\varphi</eq> the <strong>Bloch vector</strong>.<a href="#fn41" class="footnote-ref" id="fnref41"><sup>41</sup></a>
+<p>We call this sphere the <strong>Bloch sphere</strong>, and the unit vector <eq env="math">\vec{s}</eq> defined by <eq env="math">\theta</eq> and <eq env="math">\varphi</eq> the <strong>Bloch vector</strong>.<a href="#fn40" class="footnote-ref" id="fnref40"><sup>40</sup></a>
 This is a very useful way to visualise quantum states of a single qubit and unitary operations that we perform on it.
 Any unitary action on the state vector will induce a rotation of the corresponding Bloch vector.
 But what kind of rotation?</p>
@@ -876,7 +875,7 @@ This time, rather than finding eigenvectors of <eq env="math">H</eq>, we notice 
 The Hadamard gate must then represent rotation by <eq env="math">{180}^{\circ}</eq> about the diagonal <eq env="math">(x+z)</eq>-axis.
 You may also notice that, after this rotation, the <eq env="math">y</eq>-axis points in the opposite direction, which seems to be related to another identity: <eq env="math">HYH=-Y</eq>.
 This is not a coincidence.</p>
-<p>One can show<a href="#fn42" class="footnote-ref" id="fnref42"><sup>42</sup></a> that the effect of the rotation represented by unitary <eq env="math">U</eq> on the Bloch vector with components <eq env="math">s_x</eq>, <eq env="math">s_y</eq>, <eq env="math">s_z</eq> is summarised in the formula
+<p>One can show<a href="#fn41" class="footnote-ref" id="fnref41"><sup>41</sup></a> that the effect of the rotation represented by unitary <eq env="math">U</eq> on the Bloch vector with components <eq env="math">s_x</eq>, <eq env="math">s_y</eq>, <eq env="math">s_z</eq> is summarised in the formula
 <eq env="displaymath">
   U (s_x X + s_y Y + s_z Z) U^\dagger
   = s'_x X+ s'_y Y + s'_z Z,
@@ -910,7 +909,7 @@ So we can implement any unitary <eq env="math">U</eq> by choosing the three phas
 <p><lite-youtube videoid="0bQ2P7npuUA" playlabel="Play: Approximating unitaries"></lite-youtube></p>
 <p>The Hadamard gate and the phase gates, with adjustable phases, allow us to implement an arbitrary single-qubit unitary <em>exactly</em>.
 The tacit assumption here is that we have here <em>infinitely many</em> phase gates: one gate for each phase.
-In fact, we can pick just one phase gate, namely any phase gate <eq env="math">P_\alpha</eq> with the phase <eq env="math">\alpha</eq> that is incommensurate<a href="#fn43" class="footnote-ref" id="fnref43"><sup>43</sup></a> with <eq env="math">\pi</eq>.
+In fact, we can pick just one phase gate, namely any phase gate <eq env="math">P_\alpha</eq> with the phase <eq env="math">\alpha</eq> that is incommensurate<a href="#fn42" class="footnote-ref" id="fnref42"><sup>42</sup></a> with <eq env="math">\pi</eq>.
 It is clear that repeated iteration of <eq env="math">P_\alpha</eq> can be used to approximate any other phase gate to arbitrary accuracy: indeed, rotate the Bloch sphere by <eq env="math">\alpha</eq> about the <eq env="math">z</eq>-axis sufficiently many times and you end up as close as you please to any other rotation about the <eq env="math">z</eq>-axis.</p>
 <p>If you want to be <eq env="math">\epsilon</eq>-close to the desired angle of rotation, then you may need to repeat the rotation by <eq env="math">\alpha</eq> roughly <eq env="math">1/\epsilon</eq> times.
 Indeed, within <eq env="math">n</eq> applications (for <eq env="math">n\alpha\gg 2\pi</eq>) of <eq env="math">P_\alpha</eq>, we expect the accessible angles to be approximately evenly distributed within the range <eq env="math">[0,2\pi]</eq>, i.e. any angle of rotation can be achieved to an accuracy of <eq env="math">\epsilon=2\pi/n</eq> by using up to <eq env="math">n\approx 1/\epsilon</eq> applications of <eq env="math">P_\alpha</eq>.
@@ -996,10 +995,9 @@ The rest is rather straightforward:
 <li id="fn37"><p>Unitaries, such as <eq env="math">H</eq>, that take the three Pauli operators to the Pauli operators via conjugation form the so-called <strong>Clifford group</strong>, which we will meet later on. Which phase gate is in the Clifford group of a single qubit?<a href="chapter2.html#fnref37" class="footnote-back">↩︎</a></p></li>
 <li id="fn38"><p>Note that <eq env="math">\mathrm{U}(1)\cong\mathbb{C}^\times</eq>, where <eq env="math">\mathbb{C}^\times</eq> is the multiplicative group of unit elements of the complex numbers, i.e. the set <eq env="math">\mathbb{C}\setminus\{0\}</eq> with the group operation given by multiplication.<a href="chapter2.html#fnref38" class="footnote-back">↩︎</a></p></li>
 <li id="fn39"><p>That is, we have the group <eq env="math">\mathrm{U}(2)</eq> acting on the space of single-qubit state vectors, and we have the group <eq env="math">\mathrm{SO}(3)</eq> acting on the unit sphere <eq env="math">S^2\subset\mathbb{R}^3</eq>. In this chapter we will discuss how to go from one <em>space</em> (i.e. the thing being acted upon by the group) to the other; in <a href="chapter3.html#chapter3">Chapter 3</a> we will discuss how to go from one <em>group</em> (i.e. the thing acting on the space) to the other.<a href="chapter2.html#fnref39" class="footnote-back">↩︎</a></p></li>
-<li id="fn40"><p>There is a good reason to use <eq env="math">\theta/2</eq> instead of <eq env="math">\theta</eq>, which we will explain later on.<a href="chapter2.html#fnref40" class="footnote-back">↩︎</a></p></li>
-<li id="fn41"><p>We will revisit this construction again in more detail, and from a slightly different point of view, in <a href="chapter3.html#chapter3">Chapter 3</a>.<a href="chapter2.html#fnref41" class="footnote-back">↩︎</a></p></li>
-<li id="fn42"><p>Again, see <a href="chapter3.html#chapter3">Chapter 3</a>.<a href="chapter2.html#fnref42" class="footnote-back">↩︎</a></p></li>
-<li id="fn43"><p>That is, there do <em>not</em> exist any <eq env="math">m,n\in\mathbb{Z}</eq> such that <eq env="math">m\alpha=n\pi</eq>. For example, it suffices to take <eq env="math">\alpha</eq> to be rational.<a href="chapter2.html#fnref43" class="footnote-back">↩︎</a></p></li>
+<li id="fn40"><p>We will revisit this construction again in more detail, and from a slightly different point of view, in <a href="chapter3.html#chapter3">Chapter 3</a>.<a href="chapter2.html#fnref40" class="footnote-back">↩︎</a></p></li>
+<li id="fn41"><p>Again, see <a href="chapter3.html#chapter3">Chapter 3</a>.<a href="chapter2.html#fnref41" class="footnote-back">↩︎</a></p></li>
+<li id="fn42"><p>That is, there do <em>not</em> exist any <eq env="math">m,n\in\mathbb{Z}</eq> such that <eq env="math">m\alpha=n\pi</eq>. For example, it suffices to take <eq env="math">\alpha</eq> to be rational.<a href="chapter2.html#fnref42" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <script type="text/javascript" src="../katex.min.js"></script>
