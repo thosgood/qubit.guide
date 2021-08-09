@@ -1,1 +1,1 @@
-This site has moved: go to https://www.arturekert.org/iqis
+This site has moved: go to [arturekert.org/iqis](https://www.arturekert.org/iqis)
