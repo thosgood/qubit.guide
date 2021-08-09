@@ -16,7 +16,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         run: |
@@ -30,7 +32,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: r-${{ hashFiles('DESCRIPTION') }}
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
 
       - name: Setup Pandoc
         uses: r-lib/actions/setup-pandoc@v1
