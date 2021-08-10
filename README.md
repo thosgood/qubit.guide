@@ -11,3 +11,4 @@
     + [`lite-youtube-embed`](https://github.com/paulirish/lite-youtube-embed)
 1. **search for "TODO"**
 1. add more questions from problem sheets
+1. move all css and js files into a folder (just to make things look neater)
