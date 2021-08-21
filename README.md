@@ -2,6 +2,8 @@
 
 1. general styling
     + e.g. author names on homepage, etc.
+    + favicon
+    + banner image below homepage title?
 1. explain lecture videos (in an html-only div)
     + **some way of hiding/showing all videos on a page?**
 1. **only one footnote per paragraph**
