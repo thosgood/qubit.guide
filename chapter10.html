@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 10 Quantum algorithms | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
-  <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 10 Quantum algorithms | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
@@ -33,6 +33,7 @@
 <link rel="prev" href="chapter9.html"/>
 <link rel="next" href="chapter11.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -40,7 +41,6 @@
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
-
 
 
 
@@ -771,11 +771,15 @@ Given that both <eq env="math">a</eq> and <eq env="math">a\oplus s</eq> are mapp
 </eq></p>
 <p>The subsequent Hadamard transform on the first register then gives us the final state<a href="#fn124" class="footnote-ref" id="fnref124"><sup>124</sup></a>
 <eq env="displaymath">
-  \frac{1}{\sqrt{2^{n+1}}} \sum_y (-1)^{a\cdot y}
-    \Big( 1 + (-1)^{s\cdot y} \Big) |y\rangle|f(a)\rangle
-  =
-  \frac{1}{\sqrt{2^{n-1}}} \sum_{y\in s^\perp}
-    (-1)^{a\cdot y} |y\rangle|f(a)\rangle
+  \begin{aligned}
+    \frac{1}{\sqrt{2^{n+1}}} \sum_y \Big((-1)^{a\cdot y}+(-1)^{(a\oplus s)\cdot y}\Big) |y\rangle|f(a)\rangle
+    &amp;=
+    \frac{1}{\sqrt{2^{n+1}}} \sum_y (-1)^{a\cdot y}
+      \Big( 1 + (-1)^{s\cdot y} \Big) |y\rangle|f(a)\rangle
+  \\&amp;=
+    \frac{1}{\sqrt{2^{n-1}}} \sum_{y\in s^\perp}
+      (-1)^{a\cdot y} |y\rangle|f(a)\rangle
+  \end{aligned}
 </eq>
 where we have used the fact that <eq env="math">(a\oplus s)\cdot y = (a\cdot y)\oplus(s\cdot y)</eq>, and that <eq env="math">1+(-1)^{s\cdot y}</eq> can have only two values: either <eq env="math">2</eq> (when <eq env="math">s\cdot y = 0</eq>), or <eq env="math">0</eq> (when <eq env="math">s\cdot y = 1</eq>).
 Now we measure the first register: the outcome is selected at random from all possible values of <eq env="math">y</eq> such that <eq env="math">a\cdot y = 0</eq>, each occurring with probability <eq env="math">1/(2^{n-1})</eq>.</p>
@@ -928,7 +932,6 @@ Figure 10.4: Picture all possible binary strings as dots, but with the string <e
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -969,7 +972,7 @@ gitbook.start({
 },
 "download": ["iqis-book.pdf"],
 "search": {
-"engine": "lunr",
+"engine": "fuse",
 "options": null
 },
 "toc": {
