@@ -1,0 +1,80 @@
+name: Deploy preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  bookdown:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache Yarn packages
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libcurl4-openssl-dev imagemagick libmagick++-dev libpoppler-cpp-dev
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@master
+
+      - name: Cache R packages
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
+
+      - name: Setup Pandoc
+        uses: r-lib/actions/setup-pandoc@v1
+
+      - name: Setup TinyTeX
+        uses: r-lib/actions/setup-tinytex@v1
+
+      - name: Install R packages
+        run: |
+          R -e "install.packages('bookdown')"
+          R -e "install.packages('magick')"
+          R -e "install.packages('pdftools')"
+
+      - name: Build site
+        run: |
+          R -e "bookdown::render_book('index.Rmd','bookdown::gitbook',output_dir = 'book',config_file = '_bookdown.yml')"
+          R -e "bookdown::render_book('index.Rmd','bookdown::pdf_book',output_dir = 'book',config_file = '_bookdown.yml')"
+      
+      - name: Netlify
+        uses: netlify/actions/cli@master
+        id: netlify
+        with:
+          args: deploy --dir=public --functions=functions
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      
+      - name: Find PR comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: preview
+
+      - name: Create or update PR comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ✨ [Click here for a preview](${{ steps.netlify.outputs.NETLIFY_URL }}/blog/) ✨
+            (Built from the commit made at ${{ github.event.pull_request.updated_at }})
+          edit-mode: replace
