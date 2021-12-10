@@ -21,3 +21,35 @@ A typical combination of these operations is shown in the following diagram:
   & \rstick{$\rho'$ output } \qw
 \end{quantikz}
 ```
+
+First, we prepare our system of interest in an input state $\rho$.
+Then we dilate the system by "adding" (or "taking into account") an auxiliary system^[Depending on the context, the auxiliary system is either called the **ancilla** (usually when we can control it) or the **environment** (usually when we cannot control it).] which is large enough to include everything our system will interact with, and also large enough to be in a pure state $\ket{a}$.
+Mathematically, we do this by tensoring the input state $\rho$ with $\proj{a}$ to obtain $\proj{a}\otimes\rho$ (here we place the auxiliary system first and our system of interest second).
+The dilated system is assumed to be closed so that it undergoes some unitary evolution $U$.
+After all the interactions have taken place, we *trace out* the auxiliary system, turning the joint state $U\proj{a}\otimes\rho U^\dagger$ of the dilated system into the final state of our system of interest: the output state $\rho'$.
+The net effect of this composition, as we shall see in a moment, is the input-output transformation which can be written, as long as the initial state of the auxiliary system in *not* correlated with the input state, in a nice compact way:
+$$
+  \rho\longmapsto\rho' = \sum_i E_i\rho E_i^\dagger
+$$
+where the $E_i$ are some operators that satisfy $\sum_i E_i^\dagger E_i=\id$.
+This linear map is called a **completely positive trace preserving map**, or, in the parlance of quantum information science, a **quantum channel**.
+We will elaborate on the mathematics behind quantum channels shortly, but for now let us only check the essential properties, i.e. that this map preserves both trace and positivity (as its name suggests).
+
+- Trace preserving: since the trace is linear, invariant under cyclic permutations of operators, and we ask that $\sum_i E_i^\dagger E_i=\id$, we see that
+    $$
+      \tr \left(\sum_k E_k\rho E_k^\dagger\right)
+      = \tr \left(\sum_k E^\dagger_k E_k \rho\right)
+      = \tr\rho.
+    $$
+- Positivity preserving: since $\rho$ is a positive^[Recall that an operator is positive if and only if it can be written in the form $XX^\dagger$ for some $X$ (here $X=E_k\sqrt{\rho}$). Also, the sum of positive operators is again a positive operator.] (semi-definite) operator, and so is $\sqrt{\rho}$, we see that
+    $$
+      \sum_k E_k\rho E_k^\dagger
+      = \sum_k (E_k\sqrt{\rho})(\sqrt{\rho} E_k^\dagger).
+    $$
+
+These conditions are certainly *necessary* if we want to map density operators into legal density operators. but we shall see in a moment that they are not *sufficient*: quantum channels are not just positive maps, they are **completely** positive maps.
+We will discuss their special properties, describe the most common examples, and, last but not least, specify when the action of quantum quantum channels can be reversed, or corrected, so that we can recover the original input state.
+This will set the stage for our subsequent discussion of quantum error correction.
+
+
+## Random unitaries
