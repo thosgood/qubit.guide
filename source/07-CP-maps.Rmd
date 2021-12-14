@@ -198,7 +198,7 @@ Bob can now simply apply $V_2^\dagger$ and obtain $\ket{\psi}$.
 Just in case you are curious (as you should be!), below is a diagram of how the four isometries are implemented.
 How would you reverse these operations?
 
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
 \[
   V_1 =
   \begin{quantikz}[ampersand replacement=\&]
@@ -305,12 +305,14 @@ This normalisation conditions guarantees that the trace is preserved.
 ::: {.idea data-latex=""}
 In summary, we can think about a quantum evolution of subsystem $\mathcal{B}$ as a sequence of the three distinct operations:
 $$
-  \rho
-  \longmapsto \underbrace{\proj{k}\otimes\rho}_{\text{add ancilla}}
-  \longmapsto \underbrace{U(\proj{k}\otimes\rho) U^\dagger}_{\text{unitary evolution}}
-  \longmapsto \underbrace{\tr_\mathcal{A} \left[U(\proj{k}\otimes\rho) U^\dagger\right]}_{\text{discard ancilla}}
-  = \sum_i B_{i}\rho B_{i}^\dagger
-  =\rho'.
+  \begin{aligned}
+    \rho
+    \longmapsto &\underbrace{\proj{k}\otimes\rho}_{\text{add ancilla}}
+  \\\longmapsto &\underbrace{U(\proj{k}\otimes\rho) U^\dagger}_{\text{unitary evolution}}
+  \\\longmapsto &\underbrace{\tr_\mathcal{A} \left[U(\proj{k}\otimes\rho) U^\dagger\right]}_{\text{discard ancilla}}
+    = \sum_i B_{i}\rho B_{i}^\dagger
+    =\rho'.
+  \end{aligned}
 $$
 :::
 
@@ -321,7 +323,7 @@ In summary:
 - After the unitary evolution takes place, we discard the ancilla and focus on the system alone. In fact we do not have to discard exactly what we added: we can discard only part of the ancilla, or any other part of the dilated system.
 - The output system in this scenario does not have to be the original input system, but usually it is.
 
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=3}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=2.25}
 \begin{quantikz}
   & \lstick{$\ket{k}$} & \gate[wires=2]{U} & \rstick{discard} \qw
 \\& \lstick{$\rho$} & \qw & \hphantom{}\qw & \qw\rstick{$\rho'$}
@@ -335,5 +337,3 @@ It is adding (i.e. tensoring) the auxiliary system in a fixed state, and then di
 
 
 ## Stinespring's dilation and Kraus's ambiguity
-
-Once we start playing with adding physical systems and increasing the dimension of the underlying Hilbert space it is convenient to switch from unitaries to isometries.
