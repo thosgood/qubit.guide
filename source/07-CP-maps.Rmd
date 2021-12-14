@@ -100,3 +100,49 @@ $$
 where $\rho$ and $\rho'$ are the input and the output states, respectively.
 We may think about this input-output relation as a mathematical representation of a quantum communication channel in which an input qubit is bit-flipped (via the operator $X$) with some prescribed probability.
 But we may also take a more "global" view and see the action of the channel as arising from a unitary evolution on a larger (dilated) system, here composed of two qubits.
+
+Our discussion can easily be extended beyond the qubits to cover any conditional dynamics of the type
+$$
+  U
+  = \sum_i \proj{i}\otimes U_i
+  =
+  \begin{bmatrix}
+    U_1 & 0 & 0 & \ldots
+  \\0 & U_2 & 0 & \ldots
+  \\0 & 0 & U_3 & \ldots
+  \\\vdots & \vdots &\vdots & \ddots
+  \end{bmatrix}
+$$
+where the vectors $\ket{i}$ form an orthonormal basis in the Hilbert space associated with a control system, and the $U_i$ are the corresponding unitary operations performed on a target system.
+If the control system is prepared in state $\sum_i\alpha_i\ket{i}$ and the target in state $\ket{\psi}$, then the final state of the two systems is
+$$
+  \sum_i \alpha_i\ket{i}\otimes U_i\ket{\psi}
+$$
+and, by the same sequence of arguments as before, we obtain the evolution of the target system alone, and express it as
+$$
+  \rho\longmapsto
+  \rho' = \sum_{i=1} p_i U_i \rho U^\dagger_i
+$$
+where $p_i=|\alpha_i|^2$.
+That is, the state of the target system is modified by the unitary $U_i$, chosen randomly with probability $p_i$.
+
+The reason we are paying a particular attention to the random unitaries is that each unitary is invertible, and, as such, they offer a sliver of hope for reversing the action of the channel.
+If we can learn, post factum, which particular unitary operation $U_i$ was chosen then we can simply apply the inverse of that unitary and recover the original state.
+For example, if we can measure the control system in the $\ket{i}$ basis, then measuring the outcome to be $k$ tells us that we have to apply $U_k^\dagger$ to the target to recover its input state.
+However, if we do not have access to the control system, then there is very little we can do: *we cannot figure out which particular unitary was applied by inspecting the target system alone*.
+In this case the best we can do is to apply the inverse of the most likely unitary, which will then recover the input state, *but only with some probability of success*.
+In order to do better than that we have to look at slightly different channels.
+
+
+### Example
+
+A **single qubit Pauli channel** applies one of the Pauli operators, $X$, $Y$ or $Z$, chosen randomly with some prescribed probabilities $p_x$, $p_y$ and $p_z$, giving
+$$
+  \rho\longmapsto
+  p_0 \id \rho\id + p_x X\rho X+ p_y Y\rho Y+  p_z Z\rho Z.
+$$
+The Pauli operators represent **quantum errors**: bit-flip $X$, phase-flip $Z$, and the composition of the two $Y=iXZ$.
+
+
+
+## Random isometries
