@@ -1,4 +1,4 @@
-# Quantum channels, or CP maps {#chapter7}
+# Quantum channels {#chapter7}
 
 > Quantum evolution of any *isolated* system is unitary but its constituent parts may evolve in a more complicated way. In this chapter we will go beyond unitary evolutions and describe physically realisable transformations of density operators, called quantum channels. Be prepared for some name dropping; you will hear about Karl Kraus, Woody Stinespring, Andrzej Jamiołkowski and Man-Duen Choi. To be sure, knowing names will not give you more insights, but at least you will not be intimidated when you hear about the **Stinespring** and the **Kraus representations**, the **Jamiołkowski isomorphism**, or the **Choi matrix**.
 
@@ -47,9 +47,56 @@ We will elaborate on the mathematics behind quantum channels shortly, but for no
       = \sum_k (E_k\sqrt{\rho})(\sqrt{\rho} E_k^\dagger).
     $$
 
-These conditions are certainly *necessary* if we want to map density operators into legal density operators. but we shall see in a moment that they are not *sufficient*: quantum channels are not just positive maps, they are **completely** positive maps.
+These conditions are certainly *necessary* if we want to map density operators into legal density operators, but we shall see in a moment that they are not *sufficient*: quantum channels are not just positive maps, they are **completely** positive maps.
 We will discuss their special properties, describe the most common examples, and, last but not least, specify when the action of quantum quantum channels can be reversed, or corrected, so that we can recover the original input state.
 This will set the stage for our subsequent discussion of quantum error correction.
 
 
 ## Random unitaries
+
+As a first step toward understanding the quantum description of an evolving open system, consider a "two-qubit universe" in which we observe *only one* of the qubits.
+Let us revisit the controlled-$\texttt{NOT}$ gate, in which two qubits undergo the unitary transformation
+$$
+  U
+  = \proj{0}\otimes\id +\proj{1}\otimes X
+  = \diag{\id}{X}
+$$
+and let us focus on the transformation of the target qubit alone.
+We know that it depends on the state of the control qubit:
+
+- if the input state of the control qubit is $\ket{0}$, the target qubit evolves unitarily according to the identity operator $\id$;
+- if the input state of the control qubit is $\ket{1}$, the target qubit evolves unitarily according to the bit flip operator $X$;
+- but for input states of the control that are superpositions of $\ket{0}$ and $\ket{1}$ the evolution of the target qubit is *not* unitary.
+
+To justify this last point, note that, if the control qubit is in the state $\alpha_0\ket{0}+\alpha_1\ket{1}$ and the target qubit is in some state $\ket{\psi}$, then the output state can be written as
+$$
+  \alpha_0\ket{0}\otimes\id\ket{\psi} + \alpha_1\ket{1}\otimes X\ket{\psi}
+$$
+which shows that the control and the target become entangled.
+The target qubit alone ends up in the statistical mixture of states $\ket{\psi}$ (with probability $|\alpha_0|^2$) and $X\ket{\psi}$ (with probability $|\alpha_1|^2$).
+This can be easily verified by expressing the above output state of the two qubits as the density matrix
+$$
+  \begin{aligned}
+    & |\alpha_0|^2\proj{0}\otimes \id\proj{\psi}\id
+    + |\alpha_1|^2\proj{1}\otimes X\proj{\psi}X
+  \\+& \alpha_0\alpha_1^\star\ket{0}\bra{1} \otimes \id\proj{\psi}X
+    + \alpha_0^\star\alpha_1\ket{1}\bra{0} \otimes X\proj{\psi}\id
+  \end{aligned}
+$$
+and then tracing over the control qubit, which gives^[Recall that, for the basis states, $\tr\ket{i}\bra{j}=\braket{i}{j}=\delta_{ij}$.]
+$$
+  |\alpha_0|^2 \id\proj{\psi}\id
+  + |\alpha_1|^2 X\proj{\psi} X. 
+$$
+We can then say that the input state of the target qubit evolves either according to the identity operator (with probability $|\alpha_0|^2$) or according to the operator $X$ (with probability $|\alpha_1|^2$).
+
+This argument works even if the target qubit is initially in a mixed state, since we are dealing with a linear transformation, and any mixed state can be expressed as a statistical ensemble of pure states (via the convex decomposition of a density matrix).
+Thus, in general, we can express the evolution of the target qubit as^[We can also focus on the evolution of the control qubit: see the examples and exercises section **!!!TO-DO!!!**. In fact, we can choose any subset of qubits for our inputs and outputs. For example, our input could be the control qubit, and the output could be both the control and the target qubits.]
+
+$$
+  \rho\longmapsto
+  \rho'= |\alpha_0|^2 \id\rho\id + |\alpha_1|^2 X\rho X
+$$
+where $\rho$ and $\rho'$ are the input and the output states, respectively.
+We may think about this input-output relation as a mathematical representation of a quantum communication channel in which an input qubit is bit-flipped (via the operator $X$) with some prescribed probability.
+But we may also take a more "global" view and see the action of the channel as arising from a unitary evolution on a larger (dilated) system, here composed of two qubits.
