@@ -199,32 +199,38 @@ Just in case you are curious (as you should be!), below is a diagram of how the 
 How would you reverse these operations?
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
-\begin{align*}
-  V_1 &=
-  \begin{quantikz}
-    \lstick{$\ket{\psi}$} & \ctrl{1} & \ctrl{2} & \qw & \qw
-  \\\lstick{$\ket{0}$} & \targ{} & \qw & \qw & \qw
-  \\\lstick{$\ket{0}$} & \qw & \targ{} & \qw & \qw
+\[
+  V_1 =
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \hphantomgate{X}\qw \& \qw
+  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
   \end{quantikz}
-\\V_2 &=
-  \begin{quantikz}
-    \lstick{$\ket{\psi}$} & \ctrl{1} & \ctrl{2} & \gate{X} & \qw
-  \\\lstick{$\ket{0}$} & \targ{} & \qw & \qw & \qw
-  \\\lstick{$\ket{0}$} & \qw & \targ{} & \qw & \qw\\
+\]
+\[
+  V_2 =
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \gate{X} \& \qw
+  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
   \end{quantikz}
-\\V_3 &=
-  \begin{quantikz}
-    \lstick{$\ket{\psi}$} & \ctrl{1} & \ctrl{2} & \qw & \qw
-  \\\lstick{$\ket{0}$} & \targ{} & \qw & \gate{X} & \qw
-  \\\lstick{$\ket{0}$} & \qw & \targ{} & \qw & \qw
+\]
+\[
+  V_3 =
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \gate{X} \& \qw
+  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
   \end{quantikz}
-\\V_4 &=
-  \begin{quantikz}
-    \lstick{$\ket{\psi}$} & \ctrl{1} & \ctrl{2} & \qw & \qw
-  \\\lstick{$\ket{0}$} & \targ{} & \qw & \qw & \qw
-  \\\lstick{$\ket{0}$} & \qw & \targ{} & \gate{X} & \qw
+\]
+\[
+  V_4 =
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \gate{X} \& \qw
   \end{quantikz}
-\end{align*}
+\]
 ```
 
 Single unitaries or isometries apart, it turns out that the only reversible, or **correctable** channels (i.e. channels in which the input state can be recovered) are exactly the mixtures of mutually orthogonal isometries $V^\dagger_i V_j=\delta_{ij}\id$.
@@ -238,11 +244,11 @@ Needless to say, there is more to evolutions of open systems than random isometr
 Consider two interacting systems, $\mathcal{A}$ and $\mathcal{B}$, but this time we do *not* assume that their interacting dynamics admits a control-target interpretation.
 We will view $\mathcal{A}$ as an auxiliary system, i.e. an ancilla, and focus on^[As a small notational remark, for now, when we write tensor products, we will place the ancilla first and the system of interest second: $\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$. This is for pedagogical purposes, simply because block matrices on tensor products are easier to interpret when written in this particular order. Later on we will revert to the more common convention in which the system of interest is placed first.] the evolution of system $\mathcal{B}$.
 
-Let us pick an orthonormal basis $\ket{i}$ of the Hilbert space $\mcH_A$ associated with the ancilla.
-Any unitary transformation of the combined system $\mcA\mcB$ can then be written as
+Let us pick an orthonormal basis $\ket{i}$ of the Hilbert space $\mathcal{H}_\mathcal{A}$ associated with the ancilla.
+Any unitary transformation of the combined system $\mathcal{AB}$ can then be written as
 $$
   U
-  = \sum_{i,j}\ket{i}\bra{j}\otimes B_{ij}
+  = \sum_{ij}\ket{i}\bra{j}\otimes B_{ij}
   =
   \begin{bmatrix}
     B_{11} & B_{12} & B_{13} & \ldots
@@ -251,3 +257,83 @@ $$
   \\\vdots & \vdots & \vdots & \ddots
   \end{bmatrix}
 $$
+where the $B_{ij}$ are operators acting on the the Hilbert space $\mathcal{H}_\mathcal{B}$ associated with system $\mathcal{B}$.
+Note that the $B_{ij}$ do *not* need to be unitary, but, for the overall transformation $U$ to be unitary^[$U^\dagger U = UU^\dagger = \id_{AB}$.], they must satisfy
+$$
+  \begin{aligned}
+    \sum_i B_{ik}^\dagger B_{il}
+    &= \delta_{kl} \id_B
+  \\\sum_i B_{ki}B_{li}^\dagger
+    &= \delta_{kl} \id_B
+  \end{aligned}
+$$
+where $\id_{AB}$ and $\id_B$ are the identity operators on $\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$ and $\mathcal{H}_\mathcal{B}$, respectively.
+These two conditions correspond to the requirement that both column and row vectors must be orthonormal for a matrix to be unitary , except that here $U$ is a block matrix, and the entries $B_{ij}$ are complex matrices rather than complex numbers, so some care must be taken with the order of multiplication.
+Again, the evolution of the system $\mathcal{B}$ depends on both $U$ *and* on the initial state of the auxiliary system $\mathcal{A}$.
+
+Without any loss of generality, we may assume that system $\mathcal{A}$ is in a pure state^[If $\mathcal{A}$ were initially in a mixed state, we could always regard $\mathcal{A}$ as a subsystem of some larger $\widetilde{\mathcal{A}}$ that is in an entangled pure state.] which can be chosen to be one of the basis states $\ket{i}$, say $\ket{k}$.
+In this case, $U$ acts by
+$$
+  U\colon \ket{k}\otimes\ket{\psi} \longmapsto
+  \sum_i \ket{i}\otimes B_{ik}\ket{\psi}
+$$
+for an arbitrary state $\ket{\psi}$ of $\mathcal{B}$.
+The resulting density operator for $\mathcal{B}$ is found by taking the density operator of the output state of $\mathcal{AB}$, which is
+$$
+  \sum_{ij} \ket{i}\bra{j}\otimes B_{ik}\proj{\psi}B_{jk}^\dagger
+$$
+and then tracing out $\mathcal{A}$, obtaining
+$$
+  \begin{aligned}
+    \tr_\mathcal{A} \left(
+      \sum_{ij} \ket{i}\bra{j}\otimes B_{ik}\proj{\psi}B_{jk}^\dagger
+    \right)
+    &= \sum_{ij} \braket{i}{j}\cdot B_{ik}\proj{\psi}B_{jk}^\dagger
+  \\&= \sum_i B_{ik}\proj{\psi}B_{ik}^\dagger
+  \end{aligned}
+$$
+where we have used the fact that $\braket{i}{j}=\delta_{ij}$.
+In general, for any input state $\rho$, we obtain the map
+$$
+  \rho\longmapsto
+  \rho'= \sum_i B_{ik}\rho B^\dagger_{ik} \equiv \sum_i B_{i}\rho B^\dagger_{i}
+$$
+where, in the last expression on the right-hand size, we have dropped index $k$ (remember, it was there only to remind us about the initial state of the ancilla).
+Since the overall transformation $U$ is unitary, recall that the $B_i$ satisfy $\sum_i B_i^\dagger B_i=\id$.
+This normalisation conditions guarantees that the trace is preserved.
+
+::: {.idea data-latex=""}
+In summary, we can think about a quantum evolution of subsystem $\mathcal{B}$ as a sequence of the three distinct operations:
+$$
+  \rho
+  \longmapsto \underbrace{\proj{k}\otimes\rho}_{\text{add ancilla}}
+  \longmapsto \underbrace{U(\proj{k}\otimes\rho) U^\dagger}_{\text{unitary evolution}}
+  \longmapsto \underbrace{\tr_\mathcal{A} \left[U(\proj{k}\otimes\rho) U^\dagger\right]}_{\text{discard ancilla}}
+  = \sum_i B_{i}\rho B_{i}^\dagger
+  =\rho'.
+$$
+:::
+
+In summary:
+
+- First we pick up a system of interest which, in general, can be in a mixed state $\rho$. It may be the case that this system is entangled with some other degrees of freedom or with some other physical systems, but these other entities will remain passive and will not enter any subsequent dynamics.
+- Then we dilate the system: we add an ancilla which is large enough to include everything our system will interact with, and also large enough to be in a pure state. The expansion ends when the composed system is (for all practical purposes) isolated and follows a unitary evolution $U$.
+- After the unitary evolution takes place, we discard the ancilla and focus on the system alone. In fact we do not have to discard exactly what we added: we can discard only part of the ancilla, or any other part of the dilated system.
+- The output system in this scenario does not have to be the original input system, but usually it is.
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=3}
+\begin{quantikz}
+  & \lstick{$\ket{k}$} & \gate[wires=2]{U} & \rstick{discard} \qw
+\\& \lstick{$\rho$} & \qw & \hphantom{}\qw & \qw\rstick{$\rho'$}
+\\\lstick{} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
+\\\lstick{} & & \qw &\qw &\qw
+\end{quantikz}
+```
+
+It is adding (i.e. tensoring) the auxiliary system in a fixed state, and then discarding it (via the partial trace), that is responsible for the *non-unitary* character of this evolution.
+
+
+
+## Stinespring's dilation and Kraus's ambiguity
+
+Once we start playing with adding physical systems and increasing the dimension of the underlying Hilbert space it is convenient to switch from unitaries to isometries.
