@@ -78,9 +78,9 @@ This can be easily verified by expressing the above output state of the two qubi
 $$
   \begin{aligned}
     & |\alpha_0|^2\proj{0}\otimes \id\proj{\psi}\id
-    + |\alpha_1|^2\proj{1}\otimes X\proj{\psi}X
-  \\+& \alpha_0\alpha_1^\star\ket{0}\bra{1} \otimes \id\proj{\psi}X
-    + \alpha_0^\star\alpha_1\ket{1}\bra{0} \otimes X\proj{\psi}\id
+    \quad+\quad |\alpha_1|^2\proj{1}\otimes X\proj{\psi}X
+  \\+\,& \alpha_0\alpha_1^\star\ket{0}\bra{1} \otimes \id\proj{\psi}X
+    \quad+\quad \alpha_0^\star\alpha_1\ket{1}\bra{0} \otimes X\proj{\psi}\id
   \end{aligned}
 $$
 and then tracing over the control qubit, which gives^[Recall that, for the basis states, $\tr\ket{i}\bra{j}=\braket{i}{j}=\delta_{ij}$.]
@@ -199,86 +199,32 @@ Just in case you are curious (as you should be!), below is a diagram of how the 
 How would you reverse these operations?
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
-V_1 =
-\begin{quantikz}
-  \lstick{$\ket{\psi}$}
-  & \ctrl{1}
-  & \ctrl{2}
-  & \qw
-  & \qw
-  \\
-  \lstick{$\ket{0}$}
-  & \targ{}
-  & \qw
-  & \qw
-  & \qw
-  \\
-  \lstick{$\ket{0}$}
-  & \qw
-  & \targ{}
-  & \qw
-  & \qw
-\end{quantikz}
-V_2 =
-\begin{quantikz}
-  \lstick{$\ket{\psi}$}
-  & \ctrl{1}
-  & \ctrl{2}
-  & \gate{X}
-  & \qw
-  \\
-  \lstick{$\ket{0}$}
-  & \targ{}
-  & \qw
-  & \qw
-  & \qw
-  \\
-  \lstick{$\ket{0}$}
-  & \qw
-  & \targ{}
-  & \qw
-  & \qw\\
-\end{quantikz}
-V_3 =
-\begin{quantikz}
-  \lstick{$\ket{\psi}$}
-  & \ctrl{1}
-  & \ctrl{2}
-  & \qw
-  & \qw
-  \\
-  \lstick{$\ket{0}$}
-  & \targ{}
-  & \qw
-  & \gate{X}
-  & \qw
-  \\
-  \lstick{$\ket{0}$}
-  & \qw
-  & \targ{}
-  & \qw
-  & \qw
-\end{quantikz}
-V_4 =
-\begin{quantikz}
-  \lstick{$\ket{\psi}$}
-  & \ctrl{1}
-  & \ctrl{2}
-  & \qw
-  & \qw
-  \\
-  \lstick{$\ket{0}$}
-  & \targ{}
-  & \qw
-  & \qw
-  & \qw
-  \\
-  \lstick{$\ket{0}$}
-  & \qw
-  & \targ{}
-  & \gate{X}
-  & \qw
-\end{quantikz}
+\begin{align*}
+  V_1 &=
+  \begin{quantikz}
+    \lstick{$\ket{\psi}$} & \ctrl{1} & \ctrl{2} & \qw & \qw
+  \\\lstick{$\ket{0}$} & \targ{} & \qw & \qw & \qw
+  \\\lstick{$\ket{0}$} & \qw & \targ{} & \qw & \qw
+  \end{quantikz}
+\\V_2 &=
+  \begin{quantikz}
+    \lstick{$\ket{\psi}$} & \ctrl{1} & \ctrl{2} & \gate{X} & \qw
+  \\\lstick{$\ket{0}$} & \targ{} & \qw & \qw & \qw
+  \\\lstick{$\ket{0}$} & \qw & \targ{} & \qw & \qw\\
+  \end{quantikz}
+\\V_3 &=
+  \begin{quantikz}
+    \lstick{$\ket{\psi}$} & \ctrl{1} & \ctrl{2} & \qw & \qw
+  \\\lstick{$\ket{0}$} & \targ{} & \qw & \gate{X} & \qw
+  \\\lstick{$\ket{0}$} & \qw & \targ{} & \qw & \qw
+  \end{quantikz}
+\\V_4 &=
+  \begin{quantikz}
+    \lstick{$\ket{\psi}$} & \ctrl{1} & \ctrl{2} & \qw & \qw
+  \\\lstick{$\ket{0}$} & \targ{} & \qw & \qw & \qw
+  \\\lstick{$\ket{0}$} & \qw & \targ{} & \gate{X} & \qw
+  \end{quantikz}
+\end{align*}
 ```
 
 Single unitaries or isometries apart, it turns out that the only reversible, or **correctable** channels (i.e. channels in which the input state can be recovered) are exactly the mixtures of mutually orthogonal isometries $V^\dagger_i V_j=\delta_{ij}\id$.
@@ -290,4 +236,18 @@ We shall return to these channels later on.
 
 Needless to say, there is more to evolutions of open systems than random isometries, and what follows is the most general scenario we will discuss.
 Consider two interacting systems, $\mathcal{A}$ and $\mathcal{B}$, but this time we do *not* assume that their interacting dynamics admits a control-target interpretation.
-We will view $\mathcal{A}$ as an auxiliary system, i.e. an ancilla, and focus on the evolution of system $\mathcal{B}$.
+We will view $\mathcal{A}$ as an auxiliary system, i.e. an ancilla, and focus on^[As a small notational remark, for now, when we write tensor products, we will place the ancilla first and the system of interest second: $\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$. This is for pedagogical purposes, simply because block matrices on tensor products are easier to interpret when written in this particular order. Later on we will revert to the more common convention in which the system of interest is placed first.] the evolution of system $\mathcal{B}$.
+
+Let us pick an orthonormal basis $\ket{i}$ of the Hilbert space $\mcH_A$ associated with the ancilla.
+Any unitary transformation of the combined system $\mcA\mcB$ can then be written as
+$$
+  U
+  = \sum_{i,j}\ket{i}\bra{j}\otimes B_{ij}
+  =
+  \begin{bmatrix}
+    B_{11} & B_{12} & B_{13} & \ldots
+  \\B_{21} & B_{22} & B_{23} & \ldots
+  \\B_{31} & B_{32} & B_{33} & \ldots
+  \\\vdots & \vdots & \vdots & \ddots
+  \end{bmatrix}
+$$
