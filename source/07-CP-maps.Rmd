@@ -146,3 +146,148 @@ The Pauli operators represent **quantum errors**: bit-flip $X$, phase-flip $Z$, 
 
 
 ## Random isometries
+
+There is another invertible operation in quantum theory: an **isometry**, which is a combination of adding another quantum system and then applying a unitary transformation to the resulting composite system.
+So let us take a quick look at a simple generalisation of random unitaries, namely random isometries $V_i$, which give
+$$
+  \rho\longmapsto
+  \rho' = \sum_{i=1} p_i V_i \rho V^\dagger_i.
+$$
+An isometry $V$ is similar to a unitary operator except that it maps states in the Hilbert space $\mathcal{H}$ to states in a larger Hilbert space $\mathcal{H}'$ (cf. the supplementary material on isometries **!!!TO-DO!!!**).
+Here $\mathcal{H}$ is associated with the input and $\mathcal{H}'=\mathcal{H}_\mathcal{A}\otimes\mathcal{H}$ with the dilated system (i.e. the ancilla $\mathcal{A}$ plus our system of interest).
+Isometries satisfy $V^\dagger V=\id$, and they are usually implemented by adding an ancilla in a fixed state and then applying a unitary operation to the resulting composed system.
+They can be then reversed by applying the inverse of that unitary and discarding the ancilla.
+
+Now, if $\mathcal{H}'$ is sufficiently larger than $\mathcal{H}$, and if the images $\mathcal{H}'_i$ of $\mathcal{H}$ in $\mathcal{H}'$ under the different isometries $V_i$ do not overlap^[That is, if the subspaces $\mathcal{H}'_i$ are mutually orthogonal.], then we can reverse the action of the channel:
+we can, at least in principle, perform a measurement on $\mathcal{H}'$, defined by the partition $\mathcal{H}'=\mathcal{H}'_1\oplus\mathcal{H}'_2\oplus\ldots$, and find out which subspace contains the output state;
+once we know which subspace the input was sent to, we know which particular isometry $V_k$ was applied by the channel;
+then we simply apply $V^\dagger_k$.
+
+In order to see this consider the following simple, but important, example, which we will revisit several times in different disguises.
+
+
+### Example
+
+Alice constructs a quantum channel which is a mixture of four isometries.
+The input is a single qubit, and the output is a dilated system composed of three qubits.
+She prepares the input qubit in a state^[Our arguments here can be easily extended to any mixed state $\rho$, but for simplicity we consider the case of a pure state.] $\ket{\psi}$ and then combines it with the two ancillary qubits which are in a fixed state $\ket{0}\ket{0}$.
+Then she applies one of the four, randomly chosen, unitary operations to the three qubits, to generate the following four isometries:
+$$
+  \begin{aligned}
+    V_1 &= \ket{000}\bra{0} + \ket{111}\bra{1}
+  \\V_2 &= \ket{001}\bra{0} + \ket{110}\bra{1}
+  \\V_3 &= \ket{010}\bra{0} + \ket{101}\bra{1}
+  \\V_4 &= \ket{100}\bra{0} + \ket{011}\bra{1}.
+  \end{aligned}
+$$
+
+The three qubits, which form the output of the channel, are given to Bob, whose task is to recover the original state $\ket{\psi}$ of the input qubit.
+In this scenario, Bob, who knows the four isometries, can find out which particular isometry was applied.
+He knows that^[**!!!TO-DO!!! picture**]
+
+- $V_1$ maps $\mathcal{H}$ to $\mathcal{H}'_1$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{000}$ and $\ket{111}$;
+- $V_2$ maps $\mathcal{H}$ to $\mathcal{H}'_2$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{001}$ and $\ket{110}$;
+- $V_3$ maps $\mathcal{H}$ to $\mathcal{H}'_3$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{010}$ and $\ket{101}$;
+- $V_4$ maps $\mathcal{H}$ to $\mathcal{H}'_4$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{100}$ and $\ket{011}$.
+
+Given that these subspaces are mutually orthogonal, and $\mathcal{H}'=\mathcal{H}'_1\oplus\mathcal{H}'_2\oplus\mathcal{H}'_3\oplus\mathcal{H}'_4$, Bob can perform a measurement defined by the projectors on these subspaces.
+For example, if Alice randomly picked $V_2$, then the input state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$ will be mapped to the output state $\alpha_0\ket{001}+\alpha_1\ket{110}$ in the $\mathcal{H}'_2$ subspace.
+Bob's measurement will then detect $\mathcal{H}'_2$ as the subspace where the output state resides, but the measurement (i.e. the corresponding projection) will not affect any state in that subspace.
+Bob can now simply apply $V_2^\dagger$ and obtain $\ket{\psi}$.
+
+Just in case you are curious (as you should be!), below is a diagram of how the four isometries are implemented.
+How would you reverse these operations?
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+V_1 =
+\begin{quantikz}
+  \lstick{$\ket{\psi}$}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \qw
+  & \qw
+  \\
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \qw
+  & \qw
+  & \qw
+  \\
+  \lstick{$\ket{0}$}
+  & \qw
+  & \targ{}
+  & \qw
+  & \qw
+\end{quantikz}
+V_2 =
+\begin{quantikz}
+  \lstick{$\ket{\psi}$}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \gate{X}
+  & \qw
+  \\
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \qw
+  & \qw
+  & \qw
+  \\
+  \lstick{$\ket{0}$}
+  & \qw
+  & \targ{}
+  & \qw
+  & \qw\\
+\end{quantikz}
+V_3 =
+\begin{quantikz}
+  \lstick{$\ket{\psi}$}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \qw
+  & \qw
+  \\
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \qw
+  & \gate{X}
+  & \qw
+  \\
+  \lstick{$\ket{0}$}
+  & \qw
+  & \targ{}
+  & \qw
+  & \qw
+\end{quantikz}
+V_4 =
+\begin{quantikz}
+  \lstick{$\ket{\psi}$}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \qw
+  & \qw
+  \\
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \qw
+  & \qw
+  & \qw
+  \\
+  \lstick{$\ket{0}$}
+  & \qw
+  & \targ{}
+  & \gate{X}
+  & \qw
+\end{quantikz}
+```
+
+Single unitaries or isometries apart, it turns out that the only reversible, or **correctable** channels (i.e. channels in which the input state can be recovered) are exactly the mixtures of mutually orthogonal isometries $V^\dagger_i V_j=\delta_{ij}\id$.
+We shall return to these channels later on.
+
+
+
+## Evolution of open systems
+
+Needless to say, there is more to evolutions of open systems than random isometries, and what follows is the most general scenario we will discuss.
+Consider two interacting systems, $\mathcal{A}$ and $\mathcal{B}$, but this time we do *not* assume that their interacting dynamics admits a control-target interpretation.
+We will view $\mathcal{A}$ as an auxiliary system, i.e. an ancilla, and focus on the evolution of system $\mathcal{B}$.
