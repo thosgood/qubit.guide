@@ -86,7 +86,7 @@ $$
 and then tracing over the control qubit, which gives^[Recall that, for the basis states, $\tr\ket{i}\bra{j}=\braket{i}{j}=\delta_{ij}$.]
 $$
   |\alpha_0|^2 \id\proj{\psi}\id
-  + |\alpha_1|^2 X\proj{\psi} X. 
+  + |\alpha_1|^2 X\proj{\psi} X.
 $$
 We can then say that the input state of the target qubit evolves either according to the identity operator (with probability $|\alpha_0|^2$) or according to the operator $X$ (with probability $|\alpha_1|^2$).
 
@@ -257,6 +257,7 @@ $$
 $$
 where the $B_{ij}$ are operators acting on the the Hilbert space $\mathcal{H}_\mathcal{B}$ associated with system $\mathcal{B}$.
 Note that the $B_{ij}$ do *not* need to be unitary, but, for the overall transformation $U$ to be unitary^[$U^\dagger U = UU^\dagger = \id_{AB}$.], they must satisfy
+**!!!to-do: fix label!!!**
 $$
 \begin{equation}
   \begin{split}
@@ -274,6 +275,7 @@ Again, the evolution of the system $\mathcal{B}$ depends on both $U$ *and* on th
 
 Without any loss of generality, we may assume that system $\mathcal{A}$ is in a pure state^[If $\mathcal{A}$ were initially in a mixed state, we could always regard $\mathcal{A}$ as a subsystem of some larger $\widetilde{\mathcal{A}}$ that is in an entangled pure state.] which can be chosen to be one of the basis states $\ket{i}$, say $\ket{k}$.
 In this case, $U$ acts by
+**!!!to-do: fix label!!!**
 $$
 \begin{equation}
   U\colon \ket{k}\otimes\ket{\psi} \longmapsto
@@ -345,12 +347,38 @@ It is adding (i.e. tensoring) the auxiliary system in a fixed state, and then di
 
 Once we start playing with adding physical systems and increasing the dimension of the underlying Hilbert space, it is convenient to switch from unitaries to isometries.
 This is more for mathematical simplicity than physical insight, but it is always good to declutter our equations a bit if we can.
-Note that when we fix the initial state of system $\mathcal{A}$ to be $\ket{k}$, we can use Equation \@ref(eq:unitary-rep) to define an isometry $V$ from $\mathcal{H}_\mathcal{B}$ to $\mathcal{H}_\mathcal{A}\otimes \mathcal{H}_\mathcal{B}$, by
+Note that when we fix the initial state of system $\mathcal{A}$ to be $\ket{k}$, we can use Equation \@ref(eq:unitary-rep) **!!!to-do: fix ref!!!** to define an isometry $V$ from $\mathcal{H}_\mathcal{B}$ to $\mathcal{H}_\mathcal{A}\otimes \mathcal{H}_\mathcal{B}$, by
 $$
   V\colon \ket{\psi}
   \longmapsto \sum_i\ket{i}\otimes E_i\ket{\psi}
 $$
-where $E_i\equiv B_{ik}$ and, according to Equation \@ref(eq:subconditions), $\sum_i E_i^\dagger E_i=\id$ (here the identity operator acts on $\mathcal{H}_\mathcal{B}$).^[Recall that a map $V$ is an isometry if $V^\dagger V=\id$. For example, adding a system in state $\ket{k}$ gives an isometry $V\colon\ket{\psi}\mapsto\ket{k}\otimes\ket{\psi}$, and the combination of adding a system in a fixed state followed by a unitary evolution of the combined system is also an isometry. Isometries preserve inner products, and therefore also preserve both the norm and the metric based upon the norm.]
+where $E_i\equiv B_{ik}$ and, according to Equation \@ref(eq:subconditions) **!!!to-do: fix ref!!!**, $\sum_i E_i^\dagger E_i=\id$ (here the identity operator acts on $\mathcal{H}_\mathcal{B}$).^[Recall that a map $V$ is an isometry if $V^\dagger V=\id$. For example, adding a system in state $\ket{k}$ gives an isometry $V\colon\ket{\psi}\mapsto\ket{k}\otimes\ket{\psi}$, and the combination of adding a system in a fixed state followed by a unitary evolution of the combined system is also an isometry. Isometries preserve inner products, and therefore also preserve both the norm and the metric based upon the norm.]
 The matrix representation of an isometry is a rectangular matrix given by selecting only a few of the columns from a unitary matrix;
-here, with $\ket{k}$ fixed, it is only the $k$-th column of the block matrix $U$ that determines the evolution of $\mathcal{B}$.
-For example, for $k=2$, the second block column is selected:
+here, with $\ket{k}$ fixed, it is only the $k$-th column of the block matrix $U$ that determines the evolution of $\mathcal{B}$, as shown in \@ref(fig:unitary-isometry).
+
+(ref:unitary-isometry-caption) For $k=2$, the second block column is selected.
+
+```{r unitary-isometry,engine='tikz',fig.width=4,fig.cap='(ref:unitary-isometry-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+U=
+\left[\,
+  \setlength\arraycolsep{0.4em}
+  \begin{array}{cccc}
+    B_{11}& \cellcolor{primary!20}B_{12} &  B_{13} &\ldots
+  \\B_{21} &  \cellcolor{primary!20}B_{22} & B_{23} & \ldots
+  \\B_{31} & \cellcolor{primary!20}B_{32} &  B_{33} &\ldots
+  \\\vdots & \cellcolor{primary!20}\vdots & \vdots & \ddots
+  \end{array}
+\right]
+\longmapsto
+V= \left[\,
+  \setlength\arraycolsep{0.4em}
+  \begin{array}{c}
+    \cellcolor{primary!20}E_{1}
+  \\\cellcolor{primary!20}E_{2}
+  \\\cellcolor{primary!20}E_{3}
+  \\ \cellcolor{primary!20}\vdots
+  \end{array}
+ \right]
+```

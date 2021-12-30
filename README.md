@@ -13,6 +13,7 @@
     + **include update date**
 1. **embed youtube videos for lecture 8 (and 7?)**
     + [`lite-youtube-embed`](https://github.com/paulirish/lite-youtube-embed)
-1. **search for TO-DO**
+1. **search for TO-DO and to-do**
 1. add more questions from problem sheets
 1. TOC spacing in pdf (e.g. the §11.10 number overlaps with the subsection title)
+1. **search for ?? and fix equation labels**
