@@ -309,7 +309,7 @@ where, in the last expression on the right-hand size, we have dropped index $k$ 
 Since the overall transformation $U$ is unitary, recall that the $B_i$ satisfy $\sum_i B_i^\dagger B_i=\id$.
 This normalisation conditions guarantees that the trace is preserved.
 
-::: {.idea data-latex=""}
+::: {.idea latex=""}
 In summary, we can think about a quantum evolution of subsystem $\mathcal{B}$ as a sequence of the three distinct operations:
 $$
   \begin{aligned}
@@ -348,17 +348,23 @@ It is adding (i.e. tensoring) the auxiliary system in a fixed state, and then di
 Once we start playing with adding physical systems and increasing the dimension of the underlying Hilbert space, it is convenient to switch from unitaries to isometries.
 This is more for mathematical simplicity than physical insight, but it is always good to declutter our equations a bit if we can.
 Note that when we fix the initial state of system $\mathcal{A}$ to be $\ket{k}$, we can use Equation \@ref(eq:unitary-rep) **!!!to-do: fix ref!!!** to define an isometry $V$ from $\mathcal{H}_\mathcal{B}$ to $\mathcal{H}_\mathcal{A}\otimes \mathcal{H}_\mathcal{B}$, by
+
+**!!!to-do: fix label!!!**
 $$
+\begin{equation}
   V\colon \ket{\psi}
   \longmapsto \sum_i\ket{i}\otimes E_i\ket{\psi}
+(\#eq:isometry-definition)
+\end{equation}
 $$
+
 where $E_i\equiv B_{ik}$ and, according to Equation \@ref(eq:subconditions) **!!!to-do: fix ref!!!**, $\sum_i E_i^\dagger E_i=\id$ (here the identity operator acts on $\mathcal{H}_\mathcal{B}$).^[Recall that a map $V$ is an isometry if $V^\dagger V=\id$. For example, adding a system in state $\ket{k}$ gives an isometry $V\colon\ket{\psi}\mapsto\ket{k}\otimes\ket{\psi}$, and the combination of adding a system in a fixed state followed by a unitary evolution of the combined system is also an isometry. Isometries preserve inner products, and therefore also preserve both the norm and the metric based upon the norm.]
 The matrix representation of an isometry is a rectangular matrix given by selecting only a few of the columns from a unitary matrix;
 here, with $\ket{k}$ fixed, it is only the $k$-th column of the block matrix $U$ that determines the evolution of $\mathcal{B}$, as shown in Figure \@ref(fig:unitary-isometry).
 
 (ref:unitary-isometry-caption) For $k=2$, the second block column is selected. The matrix representation of the isometry $V$ on the right-hand side look like a column vector, but remember that the entries $E_i$ are *matrices*.
 
-```{r unitary-isometry,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5,fig.cap='(ref:unitary-isometry-caption)'}
+```{r unitary-isometry,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7,fig.cap='(ref:unitary-isometry-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \begin{equation*}
@@ -402,18 +408,18 @@ $$
 where $\sum_iE_i^\dagger E_i=\id$, and we allowed the input states $\rho$ of $\mathcal{B}$ to be mixed (since they can always be expressed as statistical mixtures of pure states $\ket{\psi}$).
 This expression shows two different ways of looking at quantum evolutions, and both even have names associated with them.
 
-::: {.idea data-latex=""}
-- **Stinespring^[[William Forrest "Woody" Stinespring](https://en.wikipedia.org/wiki/W._Forrest_Stinespring) (1929--2012) was an American mathematician specialising in operator theory.] dilation.**
-    Any quantum channel $\mathcal{E}$ can be thought of as arising from a unitary evolution on a dilated system.
-    When we combine tensoring and the unitary evolution into an isometry $V$, we can express the action of the channel $\mathcal{E}$ as 
+::: {.idea latex=""}
+- **Stinespring**^[[William Forrest "Woody" Stinespring](https://en.wikipedia.org/wiki/W.%5FForrest%5FStinespring) (1929--2012) was an American mathematician specialising in operator theory.] **dilation.**
+    Any quantum channel $\mathcal{E}$ can be thought of as arising from a *unitary* evolution on a *dilated* system.
+    When we combine tensoring and the unitary evolution into an isometry $V$, we can express the action of the channel $\mathcal{E}$ as
     $$
-      \rho \longmapsto \rho'= \tr_A V\rho V^\dagger,
+      \rho \longmapsto \rho'= \tr_\mathcal{A} V\rho V^\dagger,
     $$
     where we trace out a suitably chosen ancilla $\mathcal{A}$.
-    In quantum information science we often refer to this approach as "the Church of the Larger Hilbert Space".
+    In quantum information science we often refer to this approach as *"the Church of the Larger Hilbert Space"*.
 <!--  -->
 
-- **Kraus^[[Karl Kraus](https://en.wikipedia.org/wiki/Karl_Kraus_(physicist)) (1938--1988) was a German physicist known for his contributions to the mathematical foundations of quantum theory. His book *States, effects, and operations* (Lecture Notes in Physics, Vol. **190**, Springer-Verlag, Berlin 1983) is an early account of the notion of complete positivity in physics.] representation** (a.k.a. **operator-sum decomposition**).
+- **Kraus**^[[Karl Kraus](https://en.wikipedia.org/wiki/Karl%5FKraus%5F(physicist)) (1938--1988) was a German physicist known for his contributions to the mathematical foundations of quantum theory. His book *States, effects, and operations* (Lecture Notes in Physics, Vol. **190**, Springer-Verlag, Berlin 1983) is an early account of the notion of complete positivity in physics.] **representation** (a.k.a. **operator-sum decomposition**).
     It is often more convenient to not deal with a larger Hilbert space, but to instead work with operators between the input and output Hilbert spaces
     $$
       \rho \longmapsto \rho'= \sum_i E_i\rho E_i^\dagger.
@@ -423,4 +429,54 @@ This expression shows two different ways of looking at quantum evolutions, and b
     The Kraus operators must satisfy the normalisation condition $\sum_i E^\dagger_iE_i=\id$, also known as the **completeness relation**.
 :::
 
-We can easily switch between these two equivalent representations.
+We can easily switch between these two equivalent representations:
+
+- We have already seen how to go from a unitary evolution $U$ on a larger system, to an isometry $V$, and then to a map on density operators represented by a set of Kraus operators $E_i$ (as in Figure \@ref(fig:unitary-isometry)).
+- Conversely, once we have an operator-sum representation of the channel with a set of Kraus operators $E_i$, we can introduce an ancilla of dimension equal to the number of Kraus operators, and use the orthonormal basis $\ket{i}$ to form the isometry $V=\sum_i\ket{i}\otimes E_i$.
+    In terms of matrices, this corresponds to simply "stacking up" the matrices $E_i$ to form the block column (as shown in Figure \@ref(fig:unitary-isometry)), which gives us the matrix representation of $V$.
+    If we want to go further, from an isometry $V$ to a unitary $U$, then the next step is somewhat arbitrary: we can choose all the remaining block columns of $U$ however we please, *as long as* we end up with a unitary matrix $U$.
+
+In summary:
+
+::: {.idea latex=""}
+All linear transformations of density operators that can be written in the Stinespring (or, equivalently, Kraus) form represent *physically realisable operations*, and we call them **quantum channels**.^[Quantum channels are also known as **superoperators** --- this way physicists remind themselves that these transformations take operators to operators.]
+:::
+
+We note again that the Kraus decomposition is *not unique*: the operators $V_i$ in Equation \@ref(eq:isometry-definition) depend on the choice of the ancilla basis.
+Indeed, let $\ket{e_i}$ and $\ket{f_j}$ be two orthonormal bases in the Hilbert space associated with the ancilla.
+Then $V$ can be expressed as
+$$
+  \begin{aligned}
+    V
+    &= \sum_i\ket{e_i}\otimes E_i
+  \\&= \sum _{ij} \ket{f_j}\braket{f_j}{e_i}\otimes E_i
+  \\&= \sum_{j} \ket{f_j} \otimes \sum_i \underbrace{\braket{f_j}{e_i}}_{R_{ji}} E_i
+  \\&= \sum_{j} \ket{f_j} \otimes F_j
+  \end{aligned}
+$$
+where we have used the fact that $\sum_j \proj{f_j}=\id$, and where $R_{ji}=\braket{f_j}{e_i}$ is a unitary matrix connecting the two orthonormal bases (and also the two sets of the Kraus operators) via $F_j=\sum_i R_{ji} E_i$.
+So we have a set of Kraus operators $E_i$ associated with basis $\ket{e_i}$ and another, unitarily related, set of Kraus operators associated with basis $\ket{f_j}$, and the two sets describe the same isometry, and hence the same quantum channel.
+This correspondence goes both ways: if two channels $\mathcal{E}$ and $\mathcal{F}$ have their Kraus operators related by some unitary $R_{ji}$, then the two channels are identical:
+$$
+  \begin{aligned}
+    \mathcal{F}(\rho)
+    &= \sum_j F_j\rho F^\dagger_j
+  \\&= \sum_{ijk} R_{ji}E_i \rho E^\dagger_k R^\star_{jk}
+  \\&=\sum_{ik} \underbrace{\left(\sum_j R_{jk}^\star R_{ji}\right)}_{\delta_{ki}} E_i\rho E^\dagger_k
+  \\&= \sum_i E_i\rho E^\dagger_i
+  \\&= \mathcal{E}(\rho).
+  \end{aligned}
+$$
+
+In summary:
+
+::: {.idea latex=""}
+Suppose $E_1,\ldots,E_n$ and $F_1,\ldots,F_m$ are Kraus operators associated with quantum channels $\mathcal{E}$ and $\mathcal{F}$, respectively.
+We can append zero operators to the shorter list^[If you wish, instead of appending zeros, you may view $R_{ji}$ as an isometry from the the smaller to the larger set of Kraus operators.] to ensure that $n=m$.
+Then *$\mathcal{E}$ and $\mathcal{F}$ describe the same channel if and only if $F_j=\sum_i R_{ji} E_i$ for some unitary $R$*.
+:::
+
+In particular, this unitary equivalence of the Kraus operators implies that the identity channel $\rho\mapsto\rho'=\id\rho\id$ can only have Kraus operators that are proportional to the identity.
+
+
+## Single qubit channels
