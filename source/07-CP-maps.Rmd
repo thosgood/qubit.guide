@@ -425,7 +425,7 @@ This expression shows two different ways of looking at quantum evolutions, and b
       \rho \longmapsto \rho'= \sum_i E_i\rho E_i^\dagger.
     $$
     Here we avoid dragging in the ancilla, which can be a good thing, since ancillas typically represent environments that can be very large and complex.
-    This operator–sum decomposition is not unique, since the operators $E_i$ (known as the **Kraus operators** or "effects") depend on the choice of basis in the ancilla.
+    This operator–sum decomposition is not unique, since the operators $E_i$ (known as the **Kraus operators** or **effects**) depend on the choice of basis in the ancilla.
     The Kraus operators must satisfy the normalisation condition $\sum_i E^\dagger_iE_i=\id$, also known as the **completeness relation**.
 :::
 
@@ -494,4 +494,53 @@ $$
 where $\vec{s}$ is the Bloch vector of the qubit with components $(s_x, s_y, s_z)$, and $X$, $Y$, and $Z$ are the Pauli operators.
 Recall that unitary operations rotate the Bloch sphere.
 In particular the $X$, $Y$, and $Z$ --- viewed as unitary transformations --- rotate the Bloch sphere by $180^\circ$ around the $x$, $y$, and $z$ axes, respectively.
-Quantum channels may deform it further, into spheroids with a displaced centre.
+General quantum channels, however, may deform it further, into spheroids with a displaced centre, as the following examples show.
+
+- *A bit-flip with probability $p$*, given by $\mathcal{E}(\rho)=(1-p)\rho+pX\rho X$.
+    The Kraus operators are $\sqrt{1-p}\id$ and $\sqrt{p}X$;
+    the original Bloch sphere shrinks into a prolate spheroid aligned with the $x$-axis;
+    for the specific case of $p=\frac{1}{2}$, the Bloch sphere degenerates to the $[-1,1]$ interval on the $x$-axis.
+
+- *A phase-flip with probability $p$*, given by $\mathcal{E}(\rho)=(1-p)\rho+pZ\rho Z$.
+    The Kraus operators are $\sqrt{1-p}\id$ and $\sqrt{p}Z$;
+    the original Bloch sphere shrinks into a prolate spheroid aligned with the $z$-axis;
+    for the specific case of $p=\frac{1}{2}$, the Bloch sphere degenerates to the $[-1,1]$ interval on the $z$-axis.
+
+- *The depolarising channel*, given by
+    $$
+      \rho\longmapsto (1-p)\rho + \frac{p}{3}\left(X\rho X+Y\rho Y+Z\rho Z\right)
+    $$
+    Here the qubit remains intact with probability $1-p$, while a quantum error occurs with probability $p$.
+    The error can be of any one of three types: bit-flip $X$, phase-flip $Z$, or and both bit- and phase-flip $Y$; each type of error is equally likely.
+    For $p<\frac{3}{4}$, the original Bloch sphere contracts uniformly under the action of the channel, and the Bloch vector shrinks by the factor $1-\frac{4}{3}p$;
+    for the specific case of $p=\frac{3}{4}$, the Bloch sphere degenerates to the point at the centre of the sphere;
+    for $p>\frac{3}{4}$, the Bloch sphere is flipped, and the Bloch vector starts pointing in the opposite direction increasing the magnitude up to $\frac{1}{3}$ (which occurs for $p=1$).
+
+There are two interesting points that must be mentioned here.
+The first one is about the interpretation of the action of the channel in terms of Kraus operators: our narrative may change when we switch to a different set of effects.
+For example, take the phase-flip channel with $p=\frac{1}{2}$ and switch from the effects
+$$
+  E_1 = \frac{1}{\sqrt{2}}\id
+  \qquad
+  E_2 = \frac{1}{\sqrt{2}}Z
+$$
+to
+$$
+  F_1=\frac{1}{\sqrt{2}}(E_1+E_2)=\proj{0}
+  \qquad
+  F_2=\frac{1}{\sqrt{2}}(E_1-E_2)=\proj{1}.
+$$
+These two sets of Kraus operators $\{E_1,E_2\}$ and $\{F_1,F_2\}$ describe the same channel, but the *narrative* is different.
+The first set of effects tells us that the channel chooses randomly, with the same probability, between the two options: let the qubit pass undisturbed or apply the phase-flip $Z$;
+the second set tells us that channel essentially performs the measurement in the standard basis, but the outcome of the measurement is not revealed.
+
+::: {.idea latex=""}
+Describing actions of quantum channels in terms of their effects can be ambiguous.
+:::
+
+The second interesting point is that not *all* transformations of the Bloch sphere into spheroids are possible.
+For example, we cannot deform the Bloch sphere into a pancake-like oblate spheroid.
+This is due to *complete* positivity (instead of just "positivity") of quantum channels, which we will explain shortly.
+
+
+## Composition quantum channels
