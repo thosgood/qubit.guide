@@ -669,7 +669,302 @@ Then the (sequential) composition $\mathcal{E}_3\circ\mathcal{E}_2\circ\mathcal{
 \end{quantikz}
 ```
 
-For more on this, see the **!!TO-DO: supplementary material on the Markov approximation.!!**
+For more on this, see [the appendix on Markov approximation](#markov-approximation).
+
 
 
 ## Completely positive trace-preserving maps
+
+**!!TO-DO!!**
+
+
+
+## State--channel duality
+
+**!!TO-DO!!**
+
+
+
+## The mathematics of "can" and "cannot"
+
+**!!TO-DO!!**
+
+
+
+## Kraus operators, revisited
+
+**!!TO-DO!!**
+
+
+
+## Correctable channels
+
+**!!TO-DO!!**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Appendix: Isometries
+
+**!!TO-DO!!**
+
+
+
+## Appendix: The Markov approximation {#markov-approximation}
+
+**!!TO-DO!!**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Appendix: What are positive maps good for?
+
+Positive maps that are not completely positive are not completely useless.
+True, they cannot describe any quantum dynamics, but still they have useful applications --- for example, they can help us to determine if a given state is entangled or not.
+
+Recall: a quantum state of a bipartite system $\mathcal{AB}$ described by the density matrix $\varrho^{\mathcal{AB}}$ is said to be **separable** if $\varrho^{\mathcal{AB}}$ is of the form
+$$
+  \varrho^{\mathcal{AB}}
+  = \sum_k p_k \rho^{\mathcal{A}}_k \otimes\rho^{\mathcal{B}}_k
+$$
+where $p_k \geq 0$ and $\sum_{k=1} p_k=1$; otherwise $\varrho^{\mathcal{AB}}$ is said to be **entangled**.
+If we apply the partial transpose $\id\otimes T$ to this state, then it remains separable, since, as we have seen, the transpose $\rho^B$ is a legal density matrix.
+
+::: {.idea data-latex=""}
+Positive maps, such as the transpose, can be quite deceptive: you have to include other systems in order to detect their unphysical character.
+:::
+
+In separable states, one subsystem does not really know about the existence of the other, and so applying a positive map to one part produces a proper density operator, and thus does _not_ reveal the unphysical character of the map.
+So, for _any separable state_ $\rho$, we have $(\id\otimes T)\rho\geq 0$.
+
+As an example, consider a quantum state of two qubits which is a mixture of the maximally entangled state $\ket{\psi} = \frac{1}{\sqrt 2}(\ket{00} + \ket{11})$ and the maximally mixed state described by the density matrix
+$$
+  \rho_p
+  = p\proj{\psi} + \frac{(1-p)}{4}\id\otimes\id,
+$$
+where $p\in [0,1]$.
+If we apply the partial transpose $\id\otimes T$ to this state, and check for which values of $p$ the resulting matrix is a density matrix, we see that, for all $p\in[\frac{1}{3},1]$, the density operator $\rho$ describes an entangled state.
+
+Note that the implication "if separable then the partial transpose is positive" does not imply the converse: there exist entangled states for which the partial transpose is positive, and they are known as the **entangled PPT states**^["PPT" stands for _positive partial transpose_.]
+However, for _two_ qubits, the PPT states are exactly the separable states.
+
+```{r,engine='tikz',fig.width=2}
+\begin{tikzpicture}
+  \node at (0,0) {{\small\textsf{SEP}}};
+  \node at (0,0.7) {{\small\textsf{PPT}}};
+  \node at (0,1.3) {{\small\textsf{all other states}}};
+  \draw (0,0) circle (0.5cm);
+  \draw (0,0) circle (1cm);
+  \draw (0,0) circle (1.8cm);
+\end{tikzpicture}
+```
+
+
+
+### Appendix: The Choi--Jamiołkowski isomorphism {#choi-jamiolkowski}
+
+The correspondence between linear maps $\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H'})$ and operators in $\mathscr{B}(\mathcal{H}\otimes\mathcal{H'})$, known as the **Choi--Jamiołkowski isomorphism**^[It is slightly confusing at first, but the **Choi isomorphism**, the **Jamiołkowski isomorphism**, and the **Choi--Jamiołkowski** isomorphism are really three distinct things: [the first](https://en.wikipedia.org/wiki/Choi%27s_theorem_on_completely_positive_maps) is very nice, but non-canonical (i.e. is dependent on the choice of basis); the second (for which I have no nice citation, but is basically given by considering $\sum\ket{j}\bra{i}\otimes\mathcal{E}(\ket{i}\bra{j})$ instead of $\sum\ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})$) is canonical, but doesn't always map CP maps to positive semidefinite matrices; [the third](https://en.wikipedia.org/wiki/Choi%E2%80%93Jamio%C5%82kowski_isomorphism) brings together the two similar, but distinct, results by the respective authors. However, people often say "Choi--Jamiołkowski" to mean any one of the three. Such is life.] or **channel--state duality**, is another example of a well known correspondence between vectors in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ and operators $\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})$ or $\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})$.
+
+Take a tensor product vector in $\ket{a}\otimes\ket{b}\in \mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$.
+Then it defines natural maps in $\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})$ and $\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})$, via
+$$
+  \begin{aligned}
+    \bra{x}
+    &\longmapsto \braket{x}{a}\ket{b}
+  \\\bra{y}
+    &\longmapsto \ket{a}\braket{y}{b}
+  \end{aligned}
+$$
+for any linear forms $\bra{x}\in\mathcal{H}^\star_A$ and $\bra{y}\in\mathcal{H}^\star_B$.
+We then extend this construction (by linearity) to any vector in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$.
+These isomorphisms are **canonical**: they do not depend on the choice of any bases in the vectors spaces involved.
+
+However, some care must be taken when we want to define correspondence between vectors in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ and operators in $\mathscr{B}(\mathcal{H}_{\mathcal{A}},\mathcal{H}_{\mathcal{B}})$ or $\mathscr{B}(\mathcal{H}_{\mathcal{B}},\mathcal{H}_{\mathcal{A}})$.
+For example, physicists like to "construct" $\mathscr{B}(\mathcal{H}_{\mathcal{B}},\mathcal{H}_{\mathcal{A}})$ in a deceptively simple way:
+$$
+  \ket{a}\ket{b} \longleftrightarrow \ket{a}\bra{b}.
+$$
+(where we have simply omitted the tensor product symbol).
+Flipping $\ket{b}$ and switching from $\mathcal{H}_{\mathcal{B}}$ to $\mathcal{H}^\star_B$ is an _anti-linear_ operation (since it involves complex conjugation).
+This is fine _when we stick to a specific basis $\ket{i}\ket{j}$ and use the ket-flipping approach only for the basis vectors_.
+This means that, for $\ket{b}=\sum_j\beta_j\ket{j}$, the correspondence looks like
+$$
+  \ket{i}\ket{b} \longleftrightarrow \sum_j \beta_j \ket{i}\bra{j}
+$$
+and _not_ like
+$$
+  \ket{i}\ket{b} \longleftrightarrow \ket{i}\bra{b}
+  = \sum_j \beta^\star_j \ket{i}\bra{j}.
+$$
+This isomorphism is **non-canonical**: it depends on the choice of the basis.
+But it is still a pretty useful isomorphism!
+The Choi--Jamiołkowski isomorphism is of this kind (i.e. non-canonical) --- it works in the basis in which you express a maximally entangled state $\ket{\Omega}=\sum_i\ket{i}\ket{i}$.
+
+
+## Appendix: Block matrices and partial "things"
+
+### Partial trace
+
+For any matrix $M$ in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ _that is written in the tensor product basis_, the partial trace over the first subsystem (here $\mathcal{A}$) is the sum of the diagonal block matrices, and the partial trace over the second subsystem (here $\mathcal{B}$) is a matrix in which the block sub-matrices are replaced by their traces.
+You can visualise this as in Figure \@ref(fig:visualising-partial-trace).
+
+(ref:visualising-partial-trace-caption) Visualising the two partial traces of a matrix _written in the tensor product basis_.
+
+```{r visualising-partial-trace,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8,fig.cap='(ref:visualising-partial-trace-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\providecommand{\mqty}[1]{\begin{matrix}#1\end{matrix}}
+\providecommand{\tr}{\operatorname{tr}}
+\begin{equation*}
+  \begin{array}{c}
+    \left[
+      \,
+      \setlength\arraycolsep{0.4em}
+      \begin{array}{c|c|c}
+        \cellcolor{primary!20}\mqty{\cdot&\cdot\\\cdot&\cdot}
+        & \mqty{\cdot&\cdot\\\cdot&\cdot}
+        & \mqty{\cdot&\cdot\\\cdot&\cdot}
+        \\\hline
+        \mqty{\cdot&\cdot\\\cdot&\cdot}
+        & \cellcolor{primary!20}\mqty{\cdot&\cdot\\\cdot&\cdot}
+        & \mqty{\cdot&\cdot\\\cdot&\cdot}
+        \\\hline
+        \mqty{\cdot&\cdot\\\cdot&\cdot}
+        & \mqty{\cdot&\cdot\\\cdot&\cdot}
+        & \cellcolor{primary!20}\mqty{\cdot&\cdot\\\cdot&\cdot}
+      \end{array}
+      \,
+    \right]
+    \\ \\
+    \tr_{\mathcal{A}} M
+  \end{array}
+  \qquad
+  \begin{array}{c}
+    \left[
+      \,
+      \setlength\arraycolsep{0.4em}
+      \begin{array}{c|c|c}
+        \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
+        & \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
+        & \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
+      \\\hline
+        \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
+        & \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
+        & \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
+      \\\hline
+        \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
+        &\mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
+        & \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
+      \end{array}
+      \,
+    \right]
+    \\ \\
+    \tr_{\mathcal{B}} M
+  \end{array}
+\end{equation*}
+```
+
+For example, for any $M$ in the tensor product space associated with two qubits, written in the standard basis $\{\ket{00},\ket{01},\ket{10},\ket{11}\}$ in block form as
+$$
+  M =
+  \left[
+    \begin{array}{c|c}
+      P & Q
+    \\\hline
+      R & S
+    \end{array}
+  \right]
+$$
+where $P$, $Q$, $R$, and $S$ are all $(2\times 2)$ sized sub-matrices, we have that
+$$
+  \begin{aligned}
+    \tr_{\mathcal{A}} M
+    &= P+S
+  \\\tr_{\mathcal{B}} M
+    &=
+  \left[
+    \begin{array}{c|c}
+      \tr P & \tr Q
+    \\\hline
+      \tr R & \tr S
+    \end{array}
+  \right]
+  \end{aligned}
+$$
+
+The same holds for general $M$ in any $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ with such a block form (i.e. $m\times m$ blocks of $(n\times n)$ sized sub-matrices, where $m=\dim\mathcal{H}_{\mathcal{A}}$ and $n=\dim\mathcal{H}_{\mathcal{B}}$).
+
+
+### Partial inner product
+
+The tensor product structure brings with it the possibility to do "partial things", such as partial traces and partial inner products.
+Given $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$, any vector $\ket{x}\in\mathcal{H}_{\mathcal{A}}$ defines an anti-linear map $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\to\mathcal{H}_{\mathcal{B}}$ called the **partial inner product with $\ket{x}$.**
+It is first defined on the product vectors $\ket{a}\otimes\ket{b}$ by the formula
+$$
+  \ket{a}\otimes\ket{b}
+  \longmapsto \braket{x}{a}\ket{b}
+$$
+and then extended to other vectors in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ by linearity.
+Similarly, any $\ket{y}\in\mathcal{H}_{\mathcal{B}}$ defines a map $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\to\mathcal{H}_{\mathcal{A}}$ via
+$$
+  \ket{a}\otimes\ket{b}
+  \longmapsto \ket{a}\braket{y}{b}
+$$
+
+For example, the partial inner product of
+$$
+  \ket{\psi}=c_{00}\ket{00}+c_{01}\ket{01}+c_{10}\ket{10}+c_{11}\ket{11}\in\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}
+$$
+with of $\ket{0}\in\mathcal{H}_{\mathcal{A}}$ is
+$$
+  \braket{0}{\psi} = c_{00}\ket{0} + c_{01}\ket{1}
+$$
+and the partial inner product of the same $\ket{\psi}$ with $\ket{1}\in\mathcal{H}_{\mathcal{B}}$ is
+$$
+  \braket{1}{\psi} = c_{01}\ket{0} + c_{11}\ket{1}.
+$$
+
+
+
+## Remarks and exercises
+
+**!!TO-DO!!**
