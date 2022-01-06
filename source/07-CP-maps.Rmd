@@ -32,7 +32,7 @@ $$
   \rho\longmapsto\rho' = \sum_i E_i\rho E_i^\dagger
 $$
 where the $E_i$ are some operators that satisfy $\sum_i E_i^\dagger E_i=\id$.
-This linear map is called a **completely positive trace preserving map**, or, in the parlance of quantum information science, a **quantum channel**.
+This linear map is called a **completely positive trace-preserving map**, or, in the parlance of quantum information science, a **quantum channel**.
 We will elaborate on the mathematics behind quantum channels shortly, but for now let us only check the essential properties, i.e. that this map preserves both trace and positivity (as its name suggests).
 
 - Trace preserving: since the trace is linear, invariant under cyclic permutations of operators, and we ask that $\sum_i E_i^\dagger E_i=\id$, we see that
@@ -599,3 +599,77 @@ For consistency let us note that each of these operations admits an operator sum
     $$
     where the vectors $\ket{i}$ form an orthonormal basis in the Hilbert space associated with the auxiliary system.
     Again, we can check that the Kraus operators $E_i=\bra{i}\otimes\id$ satisfy the completeness relation $\sum_i E^\dagger_i E_i =\id\otimes\id$ (using the fact that $\sum_i\proj{i}=\id$).
+
+Any *sequential* composition of two quantum channels $\mathcal{E}$ and $\mathcal{F}$ with Kraus operators $\{A_i\}_{i\in I}$ and $\{B_j\}_{j\in J}$ (respectively) is another quantum channel^[Here we have tacitly assumed that the dimensions agree, i.e. that the output of $\mathcal{E}$ and the input of $\mathcal{F}$ are of the same dimension, so that the composition makes sense.] described by the Kraus operators $\{B_jA_i\}_{i\in I,j\in J}$.
+Showing this is rather straightforward, at least in the operator sum representation: let 
+$$
+  \begin{aligned}
+    \mathcal{E} &= \sum_i A_i\cdot A^\dagger_i
+  \\\mathcal{F} &= \sum_j B_j\cdot B^\dagger_j
+  \end{aligned}
+$$
+where $\sum_i A^\dagger_i A_i=\sum_j B^\dagger_j B_j=\id$;
+then the sequential composition of $\mathcal{E}$ followed by $\mathcal{F}$ can be written as 
+$$
+  \mathcal{F} \circ\mathcal{E}
+  = \sum_{ij} (B_jA_i) \cdot (B_jA_i)^\dagger
+$$
+so that the $B_jA_i$ are the Kraus operators associated with the new channel $\mathcal{F}\circ\mathcal{E}$, where the normalisation condition (or completeness relation) follows from
+$$
+  \begin{aligned}
+    \sum_{ij} (B_jA_i)^\dagger (B_jA_i)
+    &= \sum_i A_i^\dagger\left(\sum_j B_j^\dagger B_j\right)A_i 
+  \\&= \sum_i A_i^\dagger A_i
+  \\&= \id.
+  \end{aligned}
+$$
+
+You might wonder why we explicitly called the above composition "sequential" --- isn't this how we always compose functions?
+In actual fact, since we have access to tensor products, there is another sort of composition, namely **parallel** composition: if we have systems $\mathcal{A}$ and $\mathcal{B}$ with channels $\mathcal{E}_\mathcal{A}$ acting on $\mathcal{A}$ and $\mathcal{E}_\mathcal{B}$ acting on $\mathcal{B}$, then the parallel composition is denoted by $\mathcal{E}_\mathcal{A}\otimes\mathcal{E}_\mathcal{B}$, acting on the joint system $\mathcal{A}\otimes\mathcal{B}$, and with Kraus operators given by the $A_i\otimes B_j$.
+The normalisation condition again follows from a simple calculation:
+$$
+  \begin{aligned}
+    \sum_{ij} (A_i\otimes B_j)^\dagger (A_i\otimes B_j)
+    &= \sum_{ij} A_i^\dagger A_i \otimes B_j^\dagger B_j 
+  \\&= \id_A\otimes\id_B.
+  \end{aligned}
+$$
+
+Now that we know how to compose quantum channels in terms of Kraus operators, we can see that the Stinespring representation is perfectly consistent with the Kraus representation: the three basic operations that we are allowed to use to build channels in the Stinespring representation (i.e. adding a system, unitary evolution, and discarding a system) are all themselves quantum channels, in that they admit a Kraus decomposition.
+
+Before moving on, we make a small (but important) remark:
+
+::: {.idea latex=""}
+When we compose quantum channels, each channel needs its own independent ancilla;
+*do not share ancillas between different channels*.
+:::
+
+For example, say we have three channels, $\mathcal{E}_1$, $\mathcal{E}_2$, and $\mathcal{E}_3$, with $\mathcal{E}_i$ defined by the unitary $U_i$ and the state $\ket{a_i}$ of its ancilla.
+Then the (sequential) composition $\mathcal{E}_3\circ\mathcal{E}_2\circ\mathcal{E}_1$ is given by
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick{$\ket{a_1}$}
+  & \gate[2]{U_1}
+  & \qw
+  & & & \lstick{$\ket{a_2}$}
+  & \gate[2]{U_2}
+  & \qw
+  & & & \lstick{$\ket{a_3}$}
+  & \gate[2]{U_3}
+  &\qw
+\\\lstick{$\rho$}
+  & &\qw
+  & \qw \rstick{$\rho'_1$}
+  & & \qw
+  & & \qw
+  & \qw \rstick{$\rho'_2$}
+  & & \qw
+  & & \rstick{$\rho'_3$} \qw
+\end{quantikz}
+```
+
+For more on this, see the **!!TO-DO: supplementary material on the Markov approximation.!!**
+
+
+## Completely positive trace-preserving maps
