@@ -968,13 +968,13 @@ An empty room will let light go from the input to the output ports unaffected, w
 
 (ref:bomb-detecting-scenario-caption) _Left_ --- the passage of a photon through an empty room. _Right_ --- the passage of a photon through a room containing a bomb.
 
-```{r bomb-detecting-scenario,engine='tikz',fig.cap='(ref:bomb-detecting-scenario-caption)',fig.width=6.5}
+```{r bomb-detecting-scenario,engine='tikz',fig.cap='(ref:bomb-detecting-scenario-caption)'}
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{shapes}
 \definecolor{secondary}{RGB}{91,132,177}
-\begin{minipage}{0.4\textwidth}
-  \centering
-  \begin{tikzpicture}[scale=0.2]
+\centering
+\begin{tikzpicture}[scale=0.2]
+  \begin{scope}
     \draw [thick,fill=gray!40] (0,0) rectangle (13,8);
     \draw [thick,fill=white] (1,1) rectangle (12,7);
     \draw [white,fill=white] (-0.1,3.5) rectangle (13.1,4.5);
@@ -984,11 +984,8 @@ An empty room will let light go from the input to the output ports unaffected, w
     \draw [thick] (12,4.5) -- (13,4.5);
     \draw [-Latex,thick] (-3,4) to (16,4);
     \node at (6.5,2.5) {empty room};
-  \end{tikzpicture}
-\end{minipage}
-\hfill
-\begin{minipage}{0.4\textwidth}
-  \begin{tikzpicture}[scale=0.2]
+  \end{scope}
+  \begin{scope}[shift={(25,0)}]
     \node [draw,star,star points=11,minimum size=5cm,thick,fill=yellow] at (6.5,4) {};
     \node [draw,star,star points=11,minimum size=4cm,thick,fill=orange] at (6.5,4) {};
     \node [draw,star,star points=11,minimum size=3cm,thick,fill=red] at (6.5,4) {};
@@ -1003,8 +1000,8 @@ An empty room will let light go from the input to the output ports unaffected, w
     \draw [-Latex,thick] (-3,4) to (4,4);
     \node at (16,4) {};
     \node at (6.5,4) {\color{white}\large\sc bomb};
-  \end{tikzpicture}
-\end{minipage}
+  \end{scope}
+\end{tikzpicture}
 ```
     
 Your task is to find a way of determining whether a room has a bomb in it without blowing it up, so that specialised (limited and expensive) equipment can be devoted to defusing that particular room.
@@ -1111,7 +1108,7 @@ Again, this is a very loose analogue of $f \geqslant g$.
 ### {}
 
 There exists a randomised algorithm which tests whether a given number $N$ is prime.^[Primality used to be given as the classic example of a problem in $\texttt{BPP}$ but not $\texttt{P}$. However, in 2002 a deterministic polynomial time test for primality was proposed by Manindra Agrawal, Neeraj Kayal, and Nitin Saxena. Thus, since 2002, primality has been in $\texttt{P}$.]
-The algorithm always returns $\texttt{yes}$ when $N$ is prime, and the probability it returns $\texttt{yes}$ when $N$ is not prime is $\epsilon$, which is never greater than a half (independently, each time you run the algorithm).
+The algorithm always returns $\texttt{yes}$ when $N$ is prime, and the probability it returns $\texttt{yes}$ when $N$ is not prime is $\epsilon$, where $\epsilon$ is never greater than a half (independently, each time you run the algorithm).
 You run this algorithm (for the same $N$) $r$ times and each time the algorithm returns $\texttt{yes}$.
 What is the probability that $N$ is not prime?
 
