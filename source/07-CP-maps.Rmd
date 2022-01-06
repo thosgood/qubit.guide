@@ -399,11 +399,11 @@ $$
   V\proj{\psi}V^\dagger
   = \sum_{ij} \ket{i}\bra{j} \otimes E_i\proj{\psi} E_j^\dagger.
 $$$
-We trace out $\mathcal{A}$, recall that $\tr \ket{i}\bra{j} = \braket{i}{j}=\delta_{ij}$, and express the evolution of system $\mathcal{B}$ as
+We trace out $\mathcal{A}$, recall that $\tr\ket{i}\bra{j} = \braket{i}{j}=\delta_{ij}$, and express the evolution of system $\mathcal{B}$ as
 $$
   \rho
   \longmapsto
-  \rho' = \tr_A V\rho V^\dagger =\sum_i E_i\rho E_i^\dagger,
+  \rho' = \tr_\mathcal{A} V\rho V^\dagger =\sum_i E_i\rho E_i^\dagger,
 $$
 where $\sum_iE_i^\dagger E_i=\id$, and we allowed the input states $\rho$ of $\mathcal{B}$ to be mixed (since they can always be expressed as statistical mixtures of pure states $\ket{\psi}$).
 This expression shows two different ways of looking at quantum evolutions, and both even have names associated with them.
@@ -561,3 +561,41 @@ We mentioned that quantum channels are combinations of
 3. and unitary transformations.
 
 For consistency let us note that each of these operations admits an operator sum decomposition. This is obvious for unitary evolution ($\rho\mapsto U\rho U^\dagger$), but perhaps less so for the other two operations.
+
+- **Adding a system.**
+    Any quantum system can be expanded by bringing in an auxiliary system in a fixed state $\ket{a}$.
+    This transformation takes vectors in the Hilbert space associated with the original system and tensors them with a fixed vector $\ket{a}$ in the Hilbert space associated with the auxiliary system:
+    $$
+      \ket{\psi}
+      \longmapsto \ket{a}\otimes\ket{\psi}
+      = (\ket{a}\otimes\id) \ket{\psi}.
+    $$
+    In terms of density operators, we write this "expansion" transformation as
+    $$
+      \begin{aligned}
+        \rho
+        \longmapsto \rho'
+        &= \proj{a}\otimes\rho
+      \\&= (\ket{a}\otimes\id)\rho (\bra{a}\otimes\id)
+      \\&= V\rho V^\dagger
+      \end{aligned}
+    $$
+    where $V=\id\otimes\ket{a}$.
+    We note that $V^\dagger V = \id\otimes\braket{a|a} =\id$ is the identity in the Hilbert space associated with the system, and so $V$ is an isometry.
+    Indeed, this transformation is an *isometric embedding*.
+
+- **Discarding a system.**
+    Conversely, given a composite system in state $\rho$, we can discard one of its subsystems.
+    The partial trace over an auxiliary system can be written in the Kraus representation as
+    $$
+      \begin{aligned}
+        \rho
+        \longmapsto \rho'
+        &= \tr_\mathcal{A}\rho
+      \\&= (\tr\otimes\id)\rho
+      \\&= \sum_i (\bra{i}\otimes\id)\rho(\ket{i}\otimes\id)
+      \\&= \sum_i E_i\rho E^\dagger_i
+      \end{aligned}
+    $$
+    where the vectors $\ket{i}$ form an orthonormal basis in the Hilbert space associated with the auxiliary system.
+    Again, we can check that the Kraus operators $E_i=\bra{i}\otimes\id$ satisfy the completeness relation $\sum_i E^\dagger_i E_i =\id\otimes\id$ (using the fact that $\sum_i\proj{i}=\id$).
