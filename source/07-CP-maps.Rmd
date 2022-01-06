@@ -52,7 +52,10 @@ We will discuss their special properties, describe the most common examples, and
 This will set the stage for our subsequent discussion of quantum error correction.
 
 
-## Random unitaries
+
+## Random evolution
+
+### Random unitaries
 
 As a first step toward understanding the quantum description of an evolving open system, consider a "two-qubit universe" in which we observe *only one* of the qubits.
 Let us revisit the controlled-$\texttt{NOT}$ gate, in which two qubits undergo the unitary transformation
@@ -91,7 +94,7 @@ $$
 We can then say that the input state of the target qubit evolves either according to the identity operator (with probability $|\alpha_0|^2$) or according to the operator $X$ (with probability $|\alpha_1|^2$).
 
 This argument works even if the target qubit is initially in a mixed state, since we are dealing with a linear transformation, and any mixed state can be expressed as a statistical ensemble of pure states (via the convex decomposition of a density matrix).
-Thus, in general, we can express the evolution of the target qubit as^[We can also focus on the evolution of the control qubit: see the examples and exercises section **!!!TO-DO!!!**. In fact, we can choose any subset of qubits for our inputs and outputs. For example, our input could be the control qubit, and the output could be both the control and the target qubits.]
+Thus, in general, we can express the evolution of the target qubit as^[We can also focus on the evolution of the control qubit: see the examples and exercises section **!!!to-do!!!**. In fact, we can choose any subset of qubits for our inputs and outputs. For example, our input could be the control qubit, and the output could be both the control and the target qubits.]
 
 $$
   \rho\longmapsto
@@ -133,10 +136,7 @@ However, if we do not have access to the control system, then there is very litt
 In this case the best we can do is to apply the inverse of the most likely unitary, which will then recover the input state, *but only with some probability of success*.
 In order to do better than that we have to look at slightly different channels.
 
-
-### Example
-
-A **single qubit Pauli channel** applies one of the Pauli operators, $X$, $Y$ or $Z$, chosen randomly with some prescribed probabilities $p_x$, $p_y$ and $p_z$, giving
+First though, a fundamental example of a random unitary evolution: a **single qubit Pauli channel** applies one of the Pauli operators, $X$, $Y$ or $Z$, chosen randomly with some prescribed probabilities $p_x$, $p_y$ and $p_z$, giving
 $$
   \rho\longmapsto
   p_0 \id \rho\id + p_x X\rho X+ p_y Y\rho Y+  p_z Z\rho Z.
@@ -145,7 +145,7 @@ The Pauli operators represent **quantum errors**: bit-flip $X$, phase-flip $Z$, 
 
 
 
-## Random isometries
+### Random isometries
 
 There is another invertible operation in quantum theory: an **isometry**, which is a combination of adding another quantum system and then applying a unitary transformation to the resulting composite system.
 So let us take a quick look at a simple generalisation of random unitaries, namely random isometries $V_i$, which give
@@ -153,7 +153,7 @@ $$
   \rho\longmapsto
   \rho' = \sum_{i=1} p_i V_i \rho V^\dagger_i.
 $$
-An isometry $V$ is similar to a unitary operator except that it maps states in the Hilbert space $\mathcal{H}$ to states in a larger Hilbert space $\mathcal{H}'$ (cf. the supplementary material on isometries **!!!TO-DO!!!**).
+An isometry $V$ is similar to a unitary operator except that it maps states in the Hilbert space $\mathcal{H}$ to states in a larger Hilbert space $\mathcal{H}'$ (cf. {the appendix on isometries}(#isometries)).
 Here $\mathcal{H}$ is associated with the input and $\mathcal{H}'=\mathcal{H}_\mathcal{A}\otimes\mathcal{H}$ with the dilated system (i.e. the ancilla $\mathcal{A}$ plus our system of interest).
 Isometries satisfy $V^\dagger V=\id$, and they are usually implemented by adding an ancilla in a fixed state and then applying a unitary operation to the resulting composed system.
 They can be then reversed by applying the inverse of that unitary and discarding the ancilla.
@@ -164,9 +164,6 @@ once we know which subspace the input was sent to, we know which particular isom
 then we simply apply $V^\dagger_k$.
 
 In order to see this consider the following simple, but important, example, which we will revisit several times in different disguises.
-
-
-### Example
 
 Alice constructs a quantum channel which is a mixture of four isometries.
 The input is a single qubit, and the output is a dilated system composed of three qubits.
@@ -183,7 +180,7 @@ $$
 
 The three qubits, which form the output of the channel, are given to Bob, whose task is to recover the original state $\ket{\psi}$ of the input qubit.
 In this scenario, Bob, who knows the four isometries, can find out which particular isometry was applied.
-He knows that^[**!!!TO-DO!!! picture**]
+He knows that^[**!!!to-do!!! picture**]
 
 - $V_1$ maps $\mathcal{H}$ to $\mathcal{H}'_1$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{000}$ and $\ket{111}$;
 - $V_2$ maps $\mathcal{H}$ to $\mathcal{H}'_2$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{001}$ and $\ket{110}$;
@@ -647,7 +644,7 @@ When we compose quantum channels, each channel needs its own independent ancilla
 For example, say we have three channels, $\mathcal{E}_1$, $\mathcal{E}_2$, and $\mathcal{E}_3$, with $\mathcal{E}_i$ defined by the unitary $U_i$ and the state $\ket{a_i}$ of its ancilla.
 Then the (sequential) composition $\mathcal{E}_3\circ\mathcal{E}_2\circ\mathcal{E}_1$ is given by
 
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5}
 \begin{quantikz}
   \lstick{$\ket{a_1}$}
   & \gate[2]{U_1}
@@ -675,31 +672,31 @@ For more on this, see [the appendix on Markov approximation](#markov-approximati
 
 ## Completely positive trace-preserving maps
 
-**!!TO-DO!!**
+**!!to-do!!**
 
 
 
 ## State--channel duality
 
-**!!TO-DO!!**
+**!!to-do!!**
 
 
 
 ## The mathematics of "can" and "cannot"
 
-**!!TO-DO!!**
+**!!to-do!!**
 
 
 
 ## Kraus operators, revisited
 
-**!!TO-DO!!**
+**!!to-do!!**
 
 
 
 ## Correctable channels
 
-**!!TO-DO!!**
+**!!to-do!!**
 
 
 
@@ -732,15 +729,15 @@ For more on this, see [the appendix on Markov approximation](#markov-approximati
 
 
 
-## Appendix: Isometries
+## Appendix: Isometries {#isometries}
 
-**!!TO-DO!!**
+**!!to-do!!**
 
 
 
 ## Appendix: The Markov approximation {#markov-approximation}
 
-**!!TO-DO!!**
+**!!to-do!!**
 
 
 
@@ -757,7 +754,7 @@ For more on this, see [the appendix on Markov approximation](#markov-approximati
 
 
 
-## Appendix: What are positive maps good for?
+## Appendix: What use are positive maps?
 
 Positive maps that are not completely positive are not completely useless.
 True, they cannot describe any quantum dynamics, but still they have useful applications --- for example, they can help us to determine if a given state is entangled or not.
@@ -967,4 +964,4 @@ $$
 
 ## Remarks and exercises
 
-**!!TO-DO!!**
+**!!to-do!!**
