@@ -598,7 +598,7 @@ For consistency let us note that each of these operations admits an operator sum
     Again, we can check that the Kraus operators $E_i=\bra{i}\otimes\id$ satisfy the completeness relation $\sum_i E^\dagger_i E_i =\id\otimes\id$ (using the fact that $\sum_i\proj{i}=\id$).
 
 Any *sequential* composition of two quantum channels $\mathcal{E}$ and $\mathcal{F}$ with Kraus operators $\{A_i\}_{i\in I}$ and $\{B_j\}_{j\in J}$ (respectively) is another quantum channel^[Here we have tacitly assumed that the dimensions agree, i.e. that the output of $\mathcal{E}$ and the input of $\mathcal{F}$ are of the same dimension, so that the composition makes sense.] described by the Kraus operators $\{B_jA_i\}_{i\in I,j\in J}$.
-Showing this is rather straightforward, at least in the operator sum representation: let 
+Showing this is rather straightforward, at least in the operator sum representation: let
 $$
   \begin{aligned}
     \mathcal{E} &= \sum_i A_i\cdot A^\dagger_i
@@ -606,7 +606,7 @@ $$
   \end{aligned}
 $$
 where $\sum_i A^\dagger_i A_i=\sum_j B^\dagger_j B_j=\id$;
-then the sequential composition of $\mathcal{E}$ followed by $\mathcal{F}$ can be written as 
+then the sequential composition of $\mathcal{E}$ followed by $\mathcal{F}$ can be written as
 $$
   \mathcal{F} \circ\mathcal{E}
   = \sum_{ij} (B_jA_i) \cdot (B_jA_i)^\dagger
@@ -615,7 +615,7 @@ so that the $B_jA_i$ are the Kraus operators associated with the new channel $\m
 $$
   \begin{aligned}
     \sum_{ij} (B_jA_i)^\dagger (B_jA_i)
-    &= \sum_i A_i^\dagger\left(\sum_j B_j^\dagger B_j\right)A_i 
+    &= \sum_i A_i^\dagger\left(\sum_j B_j^\dagger B_j\right)A_i
   \\&= \sum_i A_i^\dagger A_i
   \\&= \id.
   \end{aligned}
@@ -627,7 +627,7 @@ The normalisation condition again follows from a simple calculation:
 $$
   \begin{aligned}
     \sum_{ij} (A_i\otimes B_j)^\dagger (A_i\otimes B_j)
-    &= \sum_{ij} A_i^\dagger A_i \otimes B_j^\dagger B_j 
+    &= \sum_{ij} A_i^\dagger A_i \otimes B_j^\dagger B_j
   \\&= \id_A\otimes\id_B.
   \end{aligned}
 $$
@@ -672,11 +672,98 @@ For more on this, see [the appendix on Markov approximation](#markov-approximati
 
 ## Completely positive trace-preserving maps
 
-**!!to-do!!**
+It is easy to verify that quantum channels preserve positivity and trace, but the converse is not true!
+You may find it surprising, but there are linear maps that preserve positivity and the trace, but which are *not* quantum channels.
+The matrix transpose operation $\rho\mapsto\rho'=\rho^T$ is a good example of such an unphysical operation: it preserves both trace and positivity, and if $\rho$ is a density matrix then so too is $\rho'=\rho^T$, but the transpose *cannot* be written in the Stinespring (or the Kraus) form;
+it is not induced by a unitary operation on some larger Hilbert space, and it cannot be implemented.
+So, we then ask, *what is* the class of physically admissible maps?
+
+Mathematically speaking, a quantum channel $\mathcal{E}$ is represented by a map
+^[Recall that, given a pair of Hilbert spaces $\mathcal{H}$ and $\mathcal{H}'$, we denote the set of (bounded) linear operators from $\mathcal{H}$ to $\mathcal{H}'$ by $\mathcal{B}(\mathcal{H},\mathcal{H}')$. We write $\mathcal{B}(\mathcal{H})$ as shorthand for $\mathcal{B(H,H)}$]
+$$
+  \mathcal{E}\colon \mathcal{B}(\mathcal{H}) \to \mathcal{B}(\mathcal{H}')
+$$
+mapping states (i.e. density operators) on some Hilbert space $\mathcal{H}$ to states on some, possibly different, Hilbert space $\mathcal{H}'$.
+But we are not interested in just any such maps, of course --- the statistical interpretation of quantum theory imposes certain properties on the subset of maps in which we are interested.
+
+- Firstly, for such a map $\mathcal{E}$ to be a channel it must *respect the mixing of states*.
+    Consider an ensemble of systems, with a fraction $p_1$ of them in the state $\rho_1$, and the remaining $p_2$ of them in the state $\rho_2$.
+    The overall ensemble is described by $\rho=p_1\rho_1+p_2\rho_2$.
+    If we apply $\mathcal{E}$ to each member of the ensemble individually, then the overall ensemble will be described by the density operator $\rho'=\mathcal{E}(\rho)$, which is given by $\rho'=p_1\mathcal{E}(\rho_1)+p_2\mathcal{E}(\rho_2)$.
+    We conclude that $\mathcal{E}$ must be a *linear map*.
+
+- Next, since $\mathcal{E}$ must *map density operators to density operators* it must be both *positive* ($\mathcal{E}(\rho)\geq0$ whenever $\rho\geq0$) and *trace preserving* ($\tr\mathcal{E}(\rho)=\tr\rho$ for all $\rho$).
+
+- Finally comes a subtle point.
+    It turns out that being positive is not good enough;
+    we must further require that the map $\mathcal{E}$ *remains positive even when extended to act on a part of a larger system*.
+    Suppose that Alice and Bob share a bipartite system $\mathcal{AB}$ in an entangled state $\rho_\mathcal{AB}$, and, whilst Alice does nothing, Bob applies the local operation $\mathcal{E}$ to his subsystems, and his subsystems only.
+    Then the resulting map on the whole bipartite system is given by $\id\otimes\mathcal{E}$, and this must give a proper density operator $\rho'_\mathcal{AB}$ of the composed system.
+    It turns out that this is a strictly stronger property than mere positivity;
+    we are asking for something called **complete positivity**.
+    Needless to say, complete positivity of $\mathcal{E}$ implies positivity, but the converse does not hold: there are maps which are positive but not completely positive.
+    The matrix transpose operation $\rho\rightarrow \rho'=\rho^T$ is a classic example of such a map.
+
+In fact, we can study the matrix transpose a bit further.
+Consider the transpose operation on a single qubit: $T\colon(\ket{i}\bra{j})\mapsto\ket{j}\bra{i}$ (for $i,j\in\{0,1\}$).
+It preserves both trace and positivity, and if $\rho$ is a density matrix then so too is $\rho'=\rho^T$.
+However, if the input qubit is part of a two qubit system, initially in the entangled state $\ket{\Omega}=\frac{1}{\sqrt{2}}(\ket{0}\ket{0}+\ket{1}\ket{1})$, and the transpose is applied to *only one* of the two qubits (say, the second one), then the density matrix of the two qubits evolves under the action of the partial transpose $\id\otimes T$ as
+$$
+  \begin{aligned}
+    \proj{\Omega}
+    = \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes \ket{i}\bra{j}
+    &\xmapsto{\id\otimes T}
+    \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes T( \ket{i}\bra{j})
+  \\&= \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes \ket{j}\bra{i}.
+  \end{aligned}
+$$
+The output is the $\texttt{SWAP}$ matrix, since it describes the $\texttt{SWAP}$ operation: $\ket{j}\ket{i}\mapsto\ket{i}\ket{j}$.
+Since this operation squares to the identity, we know that its eigenvalues must be either $\pm1$: states which are symmetric under interchange of the two qubits have eigenvalue $1$, while antisymmetric states have eigenvalue $-1$.
+So the $\texttt{SWAP}$ matrix has negative eigenvalues, which means that $\id\otimes T$ does *not* preserve positivity, and therefore $T$ is *not* a completely positive map.
+If you prefer to see this more explicitly, then you can use the matrix representation of $\proj{\Omega}$, apply the partial transpose $\id\otimes T$, and then inspect the resulting matrix:
+$$
+  \frac12\left[
+  \begin{array}{cc|cc}
+    1 & 0 & 0 & 1
+  \\0 & 0 & 0 & 0
+  \\\hline
+    0 & 0 & 0 & 0
+  \\1 & 0 & 0 & 1
+  \end{array}\right]
+  \xmapsto{\id\otimes T}
+  \frac12\left[
+  \begin{array}{cc|cc}
+    1 & 0 & 0 & 0
+  \\0 & 0 & 1 & 0
+  \\\hline
+    0 & 1 & 0 & 0
+  \\0 & 0 & 0 & 1
+  \end{array}\right].
+$$
+That is, the partial transpose $\id\otimes T$ maps the density matrix of a maximally entangled state $\proj{\Omega}$ to the $\texttt{SWAP}$ matrix, which has one negative eigenvalue ($-1$) and thus is not a density matrix.
+
+So we have seen that, at the very least, we want to be considering *completely positive trace-preserving* maps, but how do we know whether or not there are any restrictions left to impose?
+Needless to say, here is where mathematics alone cannot guide us, since we are trying to characterise maps which are *physically admissible*, and mathematics knows nothing about the reality of our universe!
+However, one thing that we can do is compare our abstract approach with the derivations of quantum channels defined in terms of the Stinespring (or the Kraus) representation.
+As it happens, we can show that a map is completely positive and trace preserving if and only if it can be written in the Stinespring (or the Kraus) form.
+In other words:
+
+::: {.idea latex=""}
+Quantum channels are exactly the completely positive trace-preserving (CPTP) maps.
+:::
+
+One direction of this claim is much simpler than the other.
+Any channel $\mathcal{E}$ must be completely positive, since the Kraus decomposition guarantees positivity of both $\mathcal{E}$ *and* the extended map $\id\otimes\mathcal{E}$: if $\mathcal{E}$ has the Kraus decomposition $\sum_i E_i\cdotE_i^\dagger$, then the extended channel $\id\otimes\mathcal{E}$ has the Kraus decomposition $\sum_i(\id\otimes E_i)\cdot(\id\otimes E_i^\dagger)$, which means that $\id\otimes\mathcal{E}$ is also a positive map, and so $\mathcal{E}$ is completely positive.
+Showing that CPTP maps are quantum channels is less obvious, and, in order to prove this, we will introduce a very convenient tool called the **Choi matrix**^[Man-Duen Choi was brought up in Hong Kong. He received his Ph.D. degree under the guidance of Chandler Davis at Toronto. He taught at the University of California, Berkeley, from 1973 to 1976, and has worked since then at the University of Toronto. His research has been mainly in operator algebras, operator theory, and polynomial rings. He is particularly interested in examples/counterexamples and two-by-two matrix manipulations.], which is yet another way to characterise linear maps between operators.
+
+::: {.tim}
+- **!!to-do: tim footnote: here we work only with finite dimensional spaces, and if $X$ is f.d. then every linear operator $f\colon X\to Y$ between normed vector spaces is continuous (and thus bounded)!!**
+- talk about [unbounded operators](https://en.wikipedia.org/wiki/Hilbert_space#Unbounded_operators)
+:::
 
 
 
-## State--channel duality
+## State-channel duality
 
 **!!to-do!!**
 
@@ -802,7 +889,7 @@ However, for _two_ qubits, the PPT states are exactly the separable states.
 
 ### The Choi--Jamiołkowski isomorphism {#choi-jamiolkowski}
 
-The correspondence between linear maps $\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H'})$ and operators in $\mathscr{B}(\mathcal{H}\otimes\mathcal{H'})$, known as the **Choi--Jamiołkowski isomorphism**^[It is slightly confusing at first, but the **Choi isomorphism**, the **Jamiołkowski isomorphism**, and the **Choi--Jamiołkowski** isomorphism are really three distinct things: [the first](https://en.wikipedia.org/wiki/Choi%27s_theorem_on_completely_positive_maps) is very nice, but non-canonical (i.e. is dependent on the choice of basis); the second (for which I have no nice citation, but is basically given by considering $\sum\ket{j}\bra{i}\otimes\mathcal{E}(\ket{i}\bra{j})$ instead of $\sum\ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})$) is canonical, but doesn't always map CP maps to positive semidefinite matrices; [the third](https://en.wikipedia.org/wiki/Choi%E2%80%93Jamio%C5%82kowski_isomorphism) brings together the two similar, but distinct, results by the respective authors. However, people often say "Choi--Jamiołkowski" to mean any one of the three. Such is life.] or **channel--state duality**, is another example of a well known correspondence between vectors in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ and operators $\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})$ or $\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})$.
+The correspondence between linear maps $\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H'})$ and operators in $\mathscr{B}(\mathcal{H}\otimes\mathcal{H'})$, known as the **Choi--Jamiołkowski isomorphism**^[**!!to-do: maybe this should be a "tim" note?!!**It is slightly confusing at first, but the **Choi isomorphism**, the **Jamiołkowski isomorphism**, and the **Choi--Jamiołkowski** isomorphism are really three distinct things: [the first](https://en.wikipedia.org/wiki/Choi%27s_theorem_on_completely_positive_maps) is very nice, but non-canonical (i.e. is dependent on the choice of basis); the second (for which I have no nice citation, but is basically given by considering $\sum\ket{j}\bra{i}\otimes\mathcal{E}(\ket{i}\bra{j})$ instead of $\sum\ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})$) is canonical, but doesn't always map CP maps to positive semidefinite matrices; [the third](https://en.wikipedia.org/wiki/Choi%E2%80%93Jamio%C5%82kowski_isomorphism) brings together the two similar, but distinct, results by the respective authors. However, people often say "Choi--Jamiołkowski" to mean any one of the three. Such is life.] or **channel--state duality**, is another example of a well known correspondence between vectors in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ and operators $\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})$ or $\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})$.
 
 Take a tensor product vector in $\ket{a}\otimes\ket{b}\in \mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$.
 Then it defines natural maps in $\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})$ and $\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})$, via
