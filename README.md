@@ -4,6 +4,7 @@
     + e.g. author names on homepage, etc.
     + favicon
     + banner image below homepage title?
+1. `\mapsto` -> `\longmapsto` in display mode (and similar for `\to`/`\rightarrow`)
 1. explain lecture videos (in an html-only div)
     + **some way of hiding/showing all videos on a page?**
 1. explain gitbook buttons (in an html-only div)
