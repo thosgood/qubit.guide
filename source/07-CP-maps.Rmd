@@ -753,7 +753,7 @@ Quantum channels are exactly the completely positive trace-preserving (CPTP) map
 :::
 
 One direction of this claim is much simpler than the other.
-Any channel $\mathcal{E}$ must be completely positive, since the Kraus decomposition guarantees positivity of both $\mathcal{E}$ *and* the extended map $\id\otimes\mathcal{E}$: if $\mathcal{E}$ has the Kraus decomposition $\sum_i E_i\cdotE_i^\dagger$, then the extended channel $\id\otimes\mathcal{E}$ has the Kraus decomposition $\sum_i(\id\otimes E_i)\cdot(\id\otimes E_i^\dagger)$, which means that $\id\otimes\mathcal{E}$ is also a positive map, and so $\mathcal{E}$ is completely positive.
+Any channel $\mathcal{E}$ must be completely positive, since the Kraus decomposition guarantees positivity of both $\mathcal{E}$ *and* the extended map $\id\otimes\mathcal{E}$: if $\mathcal{E}$ has the Kraus decomposition $\sum_i E_i\cdot E_i^\dagger$, then the extended channel $\id\otimes\mathcal{E}$ has the Kraus decomposition $\sum_i(\id\otimes E_i)\cdot(\id\otimes E_i^\dagger)$, which means that $\id\otimes\mathcal{E}$ is also a positive map, and so $\mathcal{E}$ is completely positive.
 Showing that CPTP maps are quantum channels is less obvious, and, in order to prove this, we will introduce a very convenient tool called the **Choi matrix**^[Man-Duen Choi was brought up in Hong Kong. He received his Ph.D. degree under the guidance of Chandler Davis at Toronto. He taught at the University of California, Berkeley, from 1973 to 1976, and has worked since then at the University of Toronto. His research has been mainly in operator algebras, operator theory, and polynomial rings. He is particularly interested in examples/counterexamples and two-by-two matrix manipulations.], which is yet another way to characterise linear maps between operators.
 
 ::: {.tim}
@@ -773,40 +773,47 @@ $$
   \mathcal{E}(\rho)
   = \mathcal{E}\left(\sum_{ij}\rho_{ij} \ket{i}\bra{j}\right)
   = \sum_i\rho_{ij}\mathcal{E}(\ket{i}\bra{j}).
-\label{eq:rhodecomp}
 \end{equation}
 (\#eq:subconditions)
 $$
 We can now tabulate all the $(d'\times d')$ matrices $\mathcal{E}(\ket{i}\bra{j})$ in $\mathcal{H}'$ by forming a bigger $(dd'\times dd')$ block matrix in $\mathcal{H}\otimes\mathcal{H}'$:
-$$
-  \tilde{\mathcal{E}}
-  = \frac{1}{d}
-  \begin{bmatrix}
-    \mathcal{E}(\ket{1}\bra{1})
-    & \mathcal{E}(\ket{1}\bra{2})
-    & \mathcal{E}(\ket{1}\bra{3})
-    & \ldots
-  \\\mathcal{E}(\ket{2}\bra{1})
-    & \mathcal{E}(\ket{2}\bra{2})
-    & \mathcal{E}(\ket{2}\bra{3})
-    & \ldots
-  \\\mathcal{E}(\ket{3}\bra{1})
-    & \mathcal{E}(\ket{3}\bra{2})
-    & \mathcal{E}(\ket{3}\bra{3})
-    & \ldots
-  \\\vdots
-    & \vdots
-    & \vdots
-    & \ddots
-  \end{bmatrix}
-$$
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{equation*}
+  \widetilde{\mathcal{E}} =
+  \left[\,
+  \setlength\arraycolsep{0.4em}
+  \def\arraystretch{1.5}
+    \begin{array}{cccc}
+      \cellcolor{secondary!20}\mathcal{E}(\ket{0}\bra{0})
+      & \mathcal{E}(\ket{0}\bra{1})
+      & \cellcolor{secondary!20}\mathcal{E}(\ket{0}\bra{2})
+      & \cdots
+    \\\mathcal{E}(\ket{1}\bra{0})
+      & \cellcolor{secondary!20}\mathcal{E}(\ket{1}\bra{1})
+      & \mathcal{E}(\ket{1}\bra{0})
+      & \cdots
+    \\\cellcolor{secondary!20} \mathcal{E}(\ket{2}\bra{0})
+      & \mathcal{E}(\ket{2}\bra{1})
+      & \cellcolor{secondary!20}\mathcal{E}(\ket{2}\bra{2})
+      & \cdots
+    \\\vdots
+      & \vdots
+      & \vdots
+      & \ddots
+    \end{array}
+  \,\right].
+\end{equation*}
+```
+
 We call this block matrix $\widetilde{\mathcal{E}}\in\mathcal{B}(\mathcal{H}\otimes\mathcal{H}')$ the **Choi matrix** of $\mathcal{E}$.
 
 The Choi matrix is essentially another way of representing a linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$: if you are given the Choi matrix $\widetilde{\mathcal{E}}$ of $\mathcal{E}$ and you want to evaluate $\mathcal{E}(\rho)$, then you simply follow Equation \@ref(eq:rhodecomp), taking the values of $\mathcal{E}(\ket{i}\bra{j})$ from the Choi matrix.
 This can be formally written as
 
-::: {.idea}
-**State-channel duality**:
+::: {.idea latex=""}
 $$
   \mathcal{E}(\rho)
   = d(\tr\otimes\id)\left[(\rho^T\otimes\id)\widetilde{\cal{E}}\right]
@@ -814,9 +821,55 @@ $$
 for $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$, and where $d=\dim\mathcal{H}$.
 :::
 
+The expression above may look baffling to an untrained eye, but this is often the case when we turn something conceptually obvious into a precise and compact mathematical notation.
+In order to gain some intuition here, recall that, for matrices $A$ and $B$,
+$$
+  \tr A^T B = \sum_{ij} A_{ij}B_{ij}.
+$$
+Then take $A$ and $B$ to be the block matrices $\rho\otimes\id$ and $\widetilde{\mathcal{E}}$, respectively; we can show that
+$$
+  (\tr\otimes\id)\left[(\rho^T\otimes\id)\widetilde{\mathcal{E}}\right]
+  = \frac{1}{d}\sum_i\rho_{ij}\mathcal{E}(\ket{i}\bra{j}).
+$$
+
+This state-channel duality thus gives us a one-to-one correspondence between linear maps $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ and matrices $\widetilde{\mathcal{E}}$ acting on the tensor product $\mathcal{H}\otimes\mathcal{H}'$.
+This correspondence is sometimes called the **Choi--Jamiołkowski isomorphism**, and we discuss it further in [the appendix of the same name](#choi-jamiolkowski).
+
+Mathematically, it is not too surprising that the matrix elements of an operator on a tensor product can be reorganised and reinterpreted as the matrix elements of an operator between operator spaces.
+What is interesting, and perhaps not so obvious, however, is that the positivity conditions for maps correspond exactly to conditions on their Choi matrices under this correspondence.
+In order to see this, let us express the Choi matrix as the result of $\id\otimes\mathcal{E}$ acting on the maximally entangled state in $\mathcal{H}\otimes\mathcal{H}$:
+
+::: {.idea latex=""}
+The Choi matrix $\widetilde{\mathcal{E}}$ of a linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$ is given by
+$$
+  \widetilde{\mathcal{E}}
+  = (\id\otimes\mathcal{E})\proj{\Omega}
+  = \frac{1}{d} \sum_{ij} \ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})
+$$
+where $ket{\Omega}=\frac{1}{\sqrt d}\sum_{i=1}^d\ket{i}\otimes\ket{i}$ is the maximally entangled state in $\mathcal{H}\otimes\mathcal{H}$, and $d=\dim\mathcal{H}$.
+:::
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\dim\mathcal{H}=d$}&&\qw &\gate{\mathcal{I}} &\qw &\qw\rstick{$\dim\mathcal{H}=d$}
+  \\\lstick{$\Omega$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
+  \\\lstick{$\dim\mathcal{H}=d$}&&\qw &\gate{\mathcal{E}} &\qw &\qw\rstick{$\dim\mathcal{H}'=d'$}
+  \end{quantikz}
+\end{equation*}
+```
+
+In this form, the Choi--Jamiołkowski isomorphism gives us a simple necessary and sufficient condition for a linear map to be a quantum channel:
+
+::: {.idea latex=""}
+**State-channel duality**: $\mathcal{E}$ is a quantum channel if and only if $\widetilde{\mathcal{E}}$ is a density matrix.
+:::
+
+One direction of this claim is immediate: we already know that any quantum channel $\mathcal{E}$ is, in particular, a completely positive map, and so $\id\otimes\mathcal{E}$ maps density matrices to density matrices, whence $\widetilde{\mathcal{E}}=(\id\otimes\mathcal{E})\ket{\Omega}\bra{\Omega}$ is a density matrix, since $\ket{\Omega}\bra{\Omega}$ is a density matrix.
+The other direction is less obvious.
 
 
-**!!to-do: link to [the appendix](#choi-jamiolkowski)!!**
+
 
 **!!to-do!!**
 
