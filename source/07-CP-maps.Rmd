@@ -1838,7 +1838,7 @@ $$
 $$
 That is, the reduced density operator $\rho_\mathcal{A}=\tr_\mathcal{B} \rho$ is not affected by $R$.
 
-(Hint: show this for operators $\rho$ which are tensor products $\rho=A\otimes B$ and then extend the result to any operator $\rho$).
+(Hint: show this for operators $\rho$ which are tensor products $\rho=A\otimes B$ and then extend the result to any operator $\rho$.)
 
 
 ### {}
@@ -1910,6 +1910,96 @@ $$
 $$
 where $x$, $y$, $z$ are some fixed real numbers.
 Using the Choi matrix of $\mathcal{E}$, determine the range of $x$, $y$, $z$ for which the map $\mathcal{E}$ is *positive*, and the range for which it is *completely positive*.
+
+
+### Toffoli gate
+
+Consider the Toffoli gate
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{input $\rho$}
+    & \ctrl{2}
+    & \qw \rstick{discard}
+    \\
+    \lstick{$\ket{1}$}
+    & \ctrl{1} \qw
+    & \qw \rstick[wires=2]{$\rho'$ output}
+    \\
+    \lstick{$\ket{1}$}
+    & \targ \qw
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+Express $\rho'$ as a function of $\rho$ in the Kraus representation.
+
+
+### {}
+
+We say that $\mathcal{E}^\star$ is the **dual** of $\mathcal{E}$ if
+$$
+  \tr \mathcal{E}^\star (X)Y = \tr X\mathcal{E}(Y)
+$$
+for any operators $X$ and $Y$.
+
+1. Show that, if $\mathcal{E}$ is trace preserving, then $\mathcal{E}^\star$ is unital.
+1. Show that, if $\mathcal{E}=\sum_i E_i\cdot E_i^\dagger$, then $\sum_i E^\dagger_i\cdot E_i$ is an operator-sum decomposition of $\mathcal{E}^\star$.
+
+
+### {}
+
+Let $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$, and let $d=\dim\mathcal{H}$ and $d'=\dim\mathcal{H}'$.
+Show that, for any $(d\times d)$ matrix $X$ and any $(d'\times d')$ matrix $Y$,
+$$
+  \tr\mathcal{E}(X)Y
+  = \tr\widetilde{\mathcal{E}} (X^T\otimes Y).
+$$
+
+(For example, if we are interested in the component $\mathcal{E}(X)_{ij}=\bra{i}\mathcal{E}(X)\ket{j}$, then we can take $Y=\ket{j}\bra{i}$.)
+
+
+### Purifications and isometries
+
+All purifications of a density operator are related by an isometry acting on the purifying system.
+That is, if $\rho$ is a density operator on $\mathcal{H}$, and $\ket{\psi_A}\in \mathcal{H}\otimes\mathcal{H}_\mathcal{A}$ and $\ket{\psi_B}\in\mathcal{H}\otimes\mathcal{H}_B$ ($\dim\mathcal{H}_\mathcal{A}\leq\dim\mathcal{H}_\mathcal{B}$) are two purifications of $\rho$, then
+$$
+  \ket{\psi_B}=(\id\otimes V)\ket{\psi_A}.
+$$
+
+To show this, we start with the spectral decomposition of $\rho$
+$$
+  \rho = \sum_i p_i\proj{i}
+$$
+and note that
+$$
+  \begin{aligned}
+    \ket{\psi_A}
+    &= \sum_i \sqrt{p_i} \ket{i}\otimes\ket{a_i}
+  \\\ket{\psi_B}
+    &= \sum_i \sqrt{p_i} \ket{i}\otimes\ket{b_i}
+  \end{aligned}
+$$
+define an isometry $V=\sum_i \ket{b_i}\bra{a_i}$ satisfying the desired equation.
+
+This observation leads to a way of relating *all* convex decompositions of a given density operator: let $\{p_k,\ket{\psi_k}\}$ and $\{q_l,\ket{\phi_l}\}$ be convex decompositions of a density operator $\rho$;
+then there exists an isometry $V$ such that these two decompositions
+$$
+  \rho
+  = \sum_{k=1}^n\proj{\widetilde{\psi}_k}
+  = \sum_{l=1}^m\proj{\widetilde{\phi}_l},
+$$
+(where $n\geq m$, and $\ket{\widetilde{\psi}_k}=\sqrt{p_k}\ket{\psi_k}$ and $\ket{\widetilde{ \phi}_l}=\sqrt{q_l}\ket{\phi_l}$) are related:
+$$
+  \ket{\widetilde{\psi}_k} = \sum_{l} V_{kl} \ket{\widetilde{\phi}_l}.
+$$
+
+
+
+
+
 
 
 
