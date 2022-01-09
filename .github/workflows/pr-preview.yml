@@ -54,13 +54,12 @@ jobs:
           R -e "bookdown::render_book('index.Rmd','bookdown::gitbook',output_dir = 'book',config_file = '_bookdown.yml')"
       
       - name: Netlify
-        uses: netlify/actions/cli@master
-        id: netlify
+        uses: South-Paw/action-netlify-deploy@v1.2.0
         with:
-          args: deploy --dir=book --functions=functions
-        env:
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
+          build-dir: './book'
       
       - name: Find PR comment
         uses: peter-evans/find-comment@v1
@@ -76,6 +75,6 @@ jobs:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            ✨ [Click here for a preview](${{ steps.netlify.outputs.NETLIFY_URL }}) ✨
+            ✨ [Click here for a preview](${{ steps.netlify.outputs.preview-url }}) ✨
             (Built from the commit made at ${{ github.event.pull_request.updated_at }})
           edit-mode: replace
