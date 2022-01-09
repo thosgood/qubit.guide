@@ -1838,7 +1838,7 @@ $$
 $$
 That is, the reduced density operator $\rho_\mathcal{A}=\tr_\mathcal{B} \rho$ is not affected by $R$.
 
-(Hint: show this for operators $\rho$ which are tensor products $\rho=A\otimes B$ and then extend the result to any operator $\rho$.)
+*(Hint: show this for operators $\rho$ which are tensor products $\rho=A\otimes B$ and then extend the result to any operator $\rho$.)*
 
 
 ### {}
@@ -1857,7 +1857,7 @@ $$
 $$
 
 
-### Depolarising channel
+### Depolarising channel {#depolarising-channel}
 
 The most "popular" Pauli channel is the **depolarising channel**
 $$
@@ -1997,12 +1997,83 @@ $$
 $$
 
 
+### Tricks with a maximally entangled state
+
+A maximally entangled state of a bipartite system can be written, using the Schmidt decomposition, as
+$$
+  \begin{aligned}
+    \ket{\Omega}
+    &= \frac{1}{\sqrt d}\sum_i \ket{i}\ket{i}
+  \\\proj{\Omega}
+    &= \frac{1}{d} \sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{j}
+  \end{aligned}
+$$
+Each subsystem is of dimension $d$, and all the Schmidt coefficients are equal.
+Here are few useful tricks involving a maximally entangled state.
+
+- If we take the transpose in the Schmidt basis of $\ket{\Omega}$, then
+    $$
+      \bra{\Omega}A\otimes B\ket{\Omega} = \frac{1}{d}\tr(A^T B).
+    $$
+
+- Any pure state of the bipartite system $\ket{\psi}=\sum_{ij} c_{ij}\ket{i}\ket{j}$ can be written as
+    $$
+      (C\otimes\id)\ket{\Omega} = (\id\otimes C^T)\ket{\Omega}.
+    $$
+    This implies that
+    $$
+      (U\otimes\overline{U})\ket{\Omega}=\ket{\Omega}
+    $$
+    (where $\overline{U}$ denotes the matrix given by taking the complex conjugate, entry-wise, of $U$, i.e. _without_ also taking the transpose).
+
+- The swap operation, $S\colon\ket{i}\ket{j}\mapsto\ket{j}\ket{i}$, can be expressed as^[We write $X^{T_{\mathcal{A}}}$ to mean the partial transpose over $\mathcal{A}$, i.e. $T\otimes\mathcal{I}$.]
+    $$
+      \begin{aligned}
+        S
+        &= d \proj{\Omega}^{T_{\mathcal{A}}}
+      \\&= d \sum_{ij} \big(\ket{i}\bra{j}\big)^T\otimes\ket{i}\bra{j}
+      \\&= d \sum_{ij} \ket{j}\bra{i}\otimes\ket{i}\bra{j}.
+      \end{aligned}
+    $$
+    This implies that
+    $$
+      \tr[(A\otimes B)S] = \tr AB
+    $$
+    and that
+    $$
+      (A\otimes\id)S = S(\id\otimes A).
+    $$
 
 
+### {}
+
+Show that $\mathcal{E}$ is trace preserving if and only if $\tr_\mathcal{B}\widetilde{\mathcal{E}} = d\id$.
+(Here the partial trace is over the second system in our definition $\widetilde{\mathcal{E}} =\mathcal{I}\otimes\mathcal{E}\proj{\Omega}$).
+
+*(Hint: show that $\tr\mathcal{E}(\ket{i}\bra{j}=\delta_{ij}$.)*
 
 
+### {}
+
+Mathematically speaking, Kraus operators $E_k$ are vectors in a $dd'$-dimensional Hilbert space, with the Hilbert--Schmidt inner product $\tr E^\dagger_k E_l$.
+So, our intuition tells us, in order to describe any quantum channel with $\dim\mathcal{H}=\dim\mathcal{H}'=d$, we should need no more than $d^2$ Kraus operators.
+We can pick an orthonormal basis of operators $\{B_i\}$ and express each Kraus vector in this basis as $E_k=\sum c_{ki} B_i$ (where $i=1,\ldots,d^2$ and $k=1,\ldots,n$, with $n$ possibly much larger than $d^2$).
+This gives us 
+$$
+  \begin{aligned}
+    \rho
+    \longmapsto
+    \sum_{ij} B_i\rho B^\dagger_j \left(\sum _k c_{ki}c^\star_{kj}\right)
+  \\=& \sum_{ij} B_i\rho B^\dagger_j  C_{ij}
+  \end{aligned}
+$$
+The matrix $C_{ij}$ is positive semidefinite, and hence unitarily diagonalisable: $C_{ij}=\sum_k U_{ik} d_k U^\dagger_{kj}$ for some unitary $U$ and some $d_k\geq0$.
+We can then unitarily "rotate" our operator basis and use the $C_k=\sum_j U_{jk}B_j \sqrt{d_k}$ as our new Kraus operators.
 
 
+### No pancakes
 
+Consider a single qubit operation which causes the $z$-component of the Bloch vector to shrink while preserving the values of the $x$- and $y$-components.
+Under such an operation, the Bloch sphere is mapped to an oblate spheroid which touches the Bloch sphere along its equator.
 
-**!!to-do!!**
+Explain why we cannot physically implement such a map.
