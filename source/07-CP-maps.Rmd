@@ -891,7 +891,7 @@ $$
   \begin{aligned}
     \widetilde{\mathcal{E}}
     &= \sum_k\proj{\widetilde{\psi}_k}
-  \\&= \sum_k  (\id\otimes E_k)\proj{\Omega} (\id\otimes E^\dagger_k) 
+  \\&= \sum_k  (\id\otimes E_k)\proj{\Omega} (\id\otimes E^\dagger_k)
   \\&= \frac{1}{d} \sum_{ij} \ket{i}\bra{j}\otimes\underbrace{\sum_k E_k(\ket{i}\bra{j}) E^\dagger_k}_{\mathcal{E}(\ket{i}\bra{j})}.
   \end{aligned}
 $$
@@ -940,38 +940,80 @@ All together this gives us the reverse implication: *if the Choi matrix $\wideti
 
 ## The mathematics of "can" and "cannot"
 
-**!!to-do!!**
+So what is state-channel duality good for?
+To start with, it can be used to asses whether or not a given map $\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ can actually be implemented, i.e. if it is a physically realisable CPTP map.
+Indeed, all we have to do is to check if the corresponding Choi matrix is a density matrix.
+Let's look at a simple example.
 
+Consider the map
+$$
+  \mathcal{E}\colon \ket{i}\bra{j}
+  \longmapsto p\ket{j}\bra{i}+(1-p)\delta_{ij} \frac{1}{2}\ket{i}\bra{j}
+$$
+where $0\leq p\leq1$ is some fixed parameter.
+This map acts on a density operator $\rho$ via
+$$
+  \rho
+  \longmapsto \rho'
+  = p\rho^T +(1-p) \frac{1}{2}\id
+$$
+where $\rho^T$ is the transpose of $\rho$.
 
+But is this map a quantum channel?
+That is, *does it represent a physical process that can be implemented in a lab*?
 
+The expression for $\mathcal{E}$, i.e. the convex sum on the right-hand side, can be interpreted as follows: take the input state $\rho$ and either (i) apply the transpose, or (ii) replace it with the maximally mixed state (with probabilities $p$ and $1-p$, respectively).
+This is fine, except that the transpose operation is not completely positive, and, as such, *is not physically admissible* --- it cannot be implemented.
+But does it mean that the map $\mathcal{E}$ itself cannot be implemented?
+Not necessarily!
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+In fact, the answer depends on the value of $p$.
+The case $p=0$ corresponds to just replacing the input with the maximally mixed state, which is something that can be easily implemented.
+However, as $p$ increases from $0$ to $1$, at some critical point the map switches from *completely positive* to merely *positive*.
+In order to find this critical value of $p$, we first calculate the $\mathcal{E} (\ket{i}\bra{j})$, as follows:
+$$
+  \begin{aligned}
+    \ket{0}\bra{0}
+    &= \begin{bmatrix}1&0\\0&0\end{bmatrix}
+    \longmapsto
+    \begin{bmatrix}\frac{1+p}{2}&0\\0&\frac{1-p}{2}\end{bmatrix}
+  \\\ket{0}\bra{1}
+    &= \begin{bmatrix}0&1\\0&0\end{bmatrix}
+    \longmapsto
+    \begin{bmatrix}0&0\\p&0\end{bmatrix},
+  \\\ket{1}\bra{0}
+    &= \begin{bmatrix}0&0\\1&0\end{bmatrix}
+    \longmapsto
+    \begin{bmatrix}0&p\\0&0\end{bmatrix}
+  \\\ket{1}\bra{1}
+    &= \begin{bmatrix}0&0\\0&1\end{bmatrix}
+    \longmapsto
+    \begin{bmatrix}\frac{1-p}{2}&0\\0&\frac{1+p}{2}\end{bmatrix},
+  \end{aligned}
+$$
+We can then write down the Choi matrix:
+$$
+  \widetilde{\mathcal{E}}
+  = \frac12
+  \begin{bmatrix}
+    \mathcal{E}(\ket{0}\bra{0})
+    & \mathcal{E}(\ket{0}\bra{1})
+  \\\mathcal{E}(\ket{1}\bra{0})
+    & \mathcal{E}(\ket{1}\bra{1}) 
+  \end{bmatrix}
+  = \frac{1}{2}
+  \left[
+    \begin{array}{cc|cc}
+    \frac{1+p}{2} & 0 & 0 & 0
+  \\0 & \frac{1-p}{2} & p & 0
+  \\\hline
+    0 & p & \frac{1-p}{2} & 0
+  \\0 & 0 & 0 & \frac{1+p}{2}
+   \end{array}
+  \right]
+$$
+which lets us apply state-channel duality: *$\mathcal{E}$ is completely positive (and hence physically realisable) if and only if $\widetilde{\mathcal{E}}\geq0$*;
+the latter is true only when $p\leq\frac13$ (note that the eigenvalues of $\widetilde{\mathcal{E}}$ are $\frac{1}{4}(1+p)$ and $\frac{1}{4}(1-3p)$).
 
 
 
@@ -1016,7 +1058,7 @@ All together this gives us the reverse implication: *if the Choi matrix $\wideti
 
 
 
-## Appendices
+## *Appendices*
 
 ### Isometries {#isometries}
 
