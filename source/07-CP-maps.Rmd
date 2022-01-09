@@ -1049,7 +1049,7 @@ $$
     \braket{\widetilde{v}_k |\widetilde{v}_l}
     &= \bra{\Omega}(\id\otimes E_k^\dagger)(\id\otimes E_l)\ket{\Omega}
   \\&= \tr(\id\otimes E_k^\dagger E_l)\proj{\Omega}
-  \\&= \frac{1}{d}\tr\sum_{ij}\ket{i}\!\bra{j}\otimes E_k^\dagger E_l \ket{i}\bra{j}
+  \\&= \frac{1}{d}\tr\sum_{ij}\ket{i}\bra{j}\otimes E_k^\dagger E_l \ket{i}\bra{j}
   \end{aligned}
 $$
 (using the fact that we can substitute $\frac{1}{d}\sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{j}$ for $\proj{\Omega}$).
@@ -1273,6 +1273,72 @@ $$
 $$
   V^\dagger V =\id.
 $$
+
+
+An example which we will later return to is that of the **three-qubit code**.
+Take a qubit in some pure state $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, introduce two auxiliary qubits in a fixed state $\ket{0}\ket{0}$, and apply a unitary operation to the three qubits, namely two controlled-$\texttt{NOT}$ gates:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\alpha\ket{0}+\beta\ket{1}$}
+    & \ctrl{1}
+    & \ctrl{2}
+    & \qw
+    & \qw
+    \rstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+    \\
+    \lstick{$\ket{0}$}
+    & \targ{}
+    & \qw
+    & \qw
+    & \qw
+    \\
+    \lstick{$\ket{0}$}
+    & \qw
+    & \targ{}
+    & \qw
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+The result is the isometric embedding of the $2$-dimensional Hilbert space of the first qubit (spanned by $\ket{0}$ and $\ket{1}$) into the $2$-dimensional subspace (spanned by $\ket{000}$ and $\ket{111}$) of the $8$-dimensional Hilbert space of the three qubits.
+The isometric operator  
+$$
+  V = \ket{000}\bra{0} + \ket{111}\bra{1}
+$$
+acts via
+$$
+  \alpha\ket{0}+\beta\ket{1}
+  \longmapsto \alpha\ket{000}+\beta\ket{111}.
+$$
+This three qubit-encoding can be reversed by the mirror image circuit:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+    & \ctrl{2}
+    & \ctrl{1}
+    & \qw
+    & \qw
+    \rstick{$\alpha\ket{0}+\beta\ket{1}$}
+    \\
+    & \qw
+    & \targ{}
+    & \qw
+    & \qw
+    \rstick{$\ket{0}$}
+    \\
+    & \targ{}
+    & \qw
+    & \qw
+    & \qw
+    \rstick{$\ket{0}$}
+  \end{quantikz}
+\end{equation*}
+```
 
 
 
