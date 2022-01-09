@@ -1194,23 +1194,85 @@ An **isometry** is a linear map $V\colon\mathcal{H}\to\mathcal{H}'$ such that $V
 Isometries preserve inner products, and therefore also the norm and the metric induced by the norm.
 :::
 
-**!!to-do!!**
+An isometry $V\colon\mathcal{H}\to\mathcal{H}'$ maps the *whole* Hilbert space $\mathcal{H}$ onto a *subspace* of $\mathcal{H}'$.
+As a consequence, the matrix representation of an isometry is a rectangular matrix formed by selecting only a few of the columns from a unitary matrix.
+For example, given a unitary $U$ we can construct an isometry $V$ as follows:
 
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
+\definecolor{primary}{RGB}{177,98,78}
+\begin{equation*}
+  U =
+  \left[
+    \setlength\arraycolsep{0.4em}
+    \begin{array}{cccc}
+      U_{11}
+      & \cellcolor{primary!20}U_{12}
+      & U_{13}
+      & \cellcolor{primary!20}U_{14}
+    \\U_{21}
+      & \cellcolor{primary!20}U_{22}
+      & U_{23}
+      & \cellcolor{primary!20} U_{24}
+    \\U_{31}
+      & \cellcolor{primary!20}U_{32}
+      & U_{33}
+      & \cellcolor{primary!20}U_{34} 
+    \\U_{41}
+      & \cellcolor{primary!20}U_{42}
+      & U_{43}
+      & \cellcolor{primary!20}U_{44}
+    \end{array}
+  \right]
+  \longmapsto
+  V =
+  \left[
+    \setlength\arraycolsep{0.4em}
+    \begin{array}{cc}
+      \cellcolor{primary!20}U_{12}
+      & \cellcolor{primary!20}U_{14}
+    \\\cellcolor{primary!20}U_{22}
+      & \cellcolor{primary!20}U_{24}
+    \\\cellcolor{primary!20}U_{32}
+      & \cellcolor{primary!20}U_{34}
+    \\\cellcolor{primary!20}U_{42}
+      & \cellcolor{primary!20} U_{44}
+    \end{array}
+  \right]
+\end{equation*}
+```
 
+The fact that an isometry $V$ preserves the inner products comes from the fact that we require $V^\dagger V=\id_{\mathcal{H}}$;
+we do *not* require $VV^\dagger=\id_{\mathcal{H'}}$.
+Indeed, if we required both of these, then that would be equivalent to asking for $V$ to be *unitary*.
+The operator $VV^\dagger$ is a projector operator acting on $\mathcal{H}'$, which projects onto the image of $\mathcal{H}$ under the isometry $V$, as we can see by expressing the $V$ in Dirac notation:
+$$
+  V = \sum_i \ket{b_i}\bra{a_i},
+$$
+where the $\ket{a_i}$ form an orthonormal basis in $\mathcal{H}$, and the $\ket{b_i}$ are just orthonormal vectors in $\mathcal{H}'$;
+in the special case where $V$ is unitary, the orthonormal vectors $\ket{b_i}$ form an orthonormal basis in $\mathcal{H}'$.
+Writing $V$ in this form, it is clear that $V^\dagger V=\sum_i \ket{a_i}\bra{a_i}=\id$, and that $VV^\dagger = \sum_i \ket{b_i}\bra{b_i}$ projects on the subspace spanned by $\ket{b_i}$.
 
+The reason that we care about this more general notion of isometry (instead of specifically unitaries) is that *isometries represent physically admissible operations*: they can be implemented by bringing two systems together (via tensoring) and then applying unitary transformations to the composite system.
+That is, take some system $\mathcal{A}$ in state $\ket{\psi}$, and bring in another system $\mathcal{B}$ in some fixed state $\ket{b}$;
+applying some unitary $U$ to the combined system $\mathcal{A}\mathcal{B}$ then gives an isometry from $\mathcal{H}=\mathcal{H}_\mathcal{A}$ to $\mathcal{H}'=\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$, i.e. the result is a linear map $V$ defined by
+$$
+  V\colon
+  \ket{\psi}
+  \longmapsto
+  \ket{\psi}\ket{b}
+  \longmapsto
+  U(\ket{\psi}\ket{b}
+$$
+for any vector $\ket{\psi}\in\mathcal{H}_\mathcal{A}$.
 
-
-
-
-
-
-
-
-
-
-
-
-
+Any isometry is a quantum channel, since any quantum state described by the state vector $\ket{\psi}$ (or by a density operator $\rho$) is transformed as
+$$
+  \ket{\psi}\longmapsto V\ket{\psi}
+$$
+(or as $\rho\mapsto V\rho V^\dagger$), and the normalisation condition is exactly the defining property of isometries:
+$$
+  V^\dagger V =\id.
+$$
 
 
 
