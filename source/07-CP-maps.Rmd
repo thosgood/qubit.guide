@@ -1604,7 +1604,7 @@ $$
 $$
 
 
-### {}
+### The control part of controlled-$\texttt{Not}$ {#control-controlled-NOT}
 
 Consider a single-qubit channel induced by the action of the $\texttt{c-NOT}$ gate.
 Recall that the unitary operator associated with the $\texttt{c-NOT}$ gate can be written as
@@ -1619,11 +1619,13 @@ Let us step through the following simple circuit:
   \begin{quantikz}
     \lstick{input $\rho$}
     & \ctrl{1}
-    & \qw \rstick{$\rho'$ output}
+    & \qw
+      \rstick{$\rho'$ output}
     \\
     \lstick{$\ket{0}$}
     & \targ \qw
-    & \qw\rstick{discard}
+    & \qw
+      \rstick{discard}
   \end{quantikz}
 \end{equation*}
 ```
@@ -1693,25 +1695,221 @@ The two Kraus operators, $A_0=\proj{0}$ and $A_1=\proj{1}$, define the measureme
 
 ### {}
 
+Let us now compare two single qubit quantum channels: $\mathcal{A}(\rho)=\sum_k A_k\rho A^\dagger_k$, defined by the Kraus operators
+$$
+  \begin{aligned}
+    A_1 = \proj{0}
+    &= \begin{bmatrix}1&0\\0&0\end{bmatrix}
+  \\A_2 = \proj{1}
+  &= \begin{bmatrix}0&0\\0&1\end{bmatrix}
+  \end{aligned}
+$$
+and $\mathcal{B}(\rho)=\sum_k B_k\rho B^\dagger_k$, defined by the Kraus operators
+$$
+  \begin{aligned}
+    B_1 = \frac{\id}{\sqrt{2}}
+    &= \frac{1}{\sqrt{2}}\begin{bmatrix}1&0\\0&1\end{bmatrix}
+  \\B_2 = \frac{Z}{\sqrt{2}}
+    &= \frac{1}{\sqrt{2}}\begin{bmatrix}1&0\\0&-1\end{bmatrix}.
+  \end{aligned}
+$$
+
+We are familiar with the first channel from [the previous example](#control-controlled-NOT): it performs the measurement in the standard basis, but doesn't reveal the outcome of the measurement.
+The second channel chooses randomly, with equal probability, between two options: it will either let the qubit pass undisturbed, or apply the phase-flip $Z$.
+
+These two apparently very different physical processes correspond to the same quantum channel: $\mathcal{A}(\rho)=\mathcal{B}(\rho)$ for any $\rho$.
+Indeed, you can check that $B_1=(A_1+A_2)/\sqrt{2}$ and $B_2=(A_1-A_2)/\sqrt{2}$, whence
+$$
+  \begin{aligned}
+    \mathcal{B}(\rho)
+    &= B_1\rho B_1^\dagger + B_2\rho B_2^\dagger
+  \\&= \frac{1}{2} (A_1+A_2)\rho (A_1+A_2)^\dagger + \frac{1}{2} (A_1-A_2)\rho (A_1-A_2)^\dagger
+  \\&=  A_1\rho A_1^\dagger + A_2\rho A_2^\dagger
+  \\&= \mathcal{A}(\rho).
+  \end{aligned}
+$$
+
+You can also check that the two channels can be implemented by the following two circuits:
+
+(ref:two-channels-caption) The $\texttt{c-NOT}$ gate appears here as the measurement gate. The target qubit measures the control qubit in the standard basis (operation $\mathcal{A}$ on the left) or in the Hadamard basis (operation $\mathcal{B}$ on the right). The extra Hadamard gate on the target qubit has no effect on the control qubit.
+
+```{r two-channels,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8,fig.cap='(ref:two-channels-caption)'}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\rho$}
+    & \ctrl{1}
+    & \qw
+      \rstick{$\mathcal{A}(\rho)$}
+    \\
+    \lstick{$\ket{0}$}
+    & \targ \qw
+    & \ar[d,dash,thickness] \qw
+    \\
+    & & \text{discard} &
+  \end{quantikz}
+  \qquad
+  \begin{quantikz}
+    \lstick{$\rho$}
+    & \ctrl{1}
+    & \qw
+    & \qw
+      \rstick{$\mathcal{B}(\rho)$}
+    \\
+    \lstick{$\ket{0}$}
+    & \targ \qw
+    & \gate{H}
+    & \ar[d,dash,thickness] \qw
+    \\
+    & & & \text{discard} &
+  \end{quantikz}
+\end{equation*}
+```
 
 
+### {}
+
+Another way to understand the freedom in the operator-sum representation is to realise that, once the system and the ancilla cease to interact, any operation on the ancilla alone has no effect on the state of the system.
+
+(ref:operators-sum-freedom-caption) The quantum channel $\rho\mapsto\rho'$ is not affected by the choice of a unitary $R$.
+
+```{r operators-sum-freedom,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8,fig.cap='(ref:operators-sum-freedom-caption)'}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{input $\rho$}
+    & \gate[wires=2]{U}
+    & \rstick{$\rho'$ output} \qw
+    \\
+    \lstick{$\ket{e}$}
+    & \hphantom{really wide}
+    & \rstick{discard} \qw
+  \end{quantikz}
+  \qquad
+  \begin{quantikz}
+   \lstick{input $\rho$}
+    & \gate[wires=2]{U}
+    & \qw
+    & \rstick{$\rho'$ output} \qw
+  \\
+    \lstick{$\ket{e}$}
+    & \hphantom{really wide}
+    & \gate{R}
+    & \rstick{discard} \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+That is, the two unitaries $U$ and $(\id\otimes R)U$ (where $R$ acts only on the ancilla) describe the same channel, even though the Kraus operators $E_k=\bra{e_k}U\ket{e}$ for the latter are
+$$
+  \begin{aligned}
+    F_k
+    &= \bra{e_k}(\id\otimes R)U\ket{e}
+  \\&= \sum_j \bra{e_k}R\proj{e_j}U\ket{e}
+  \\&= \sum_j R_{kj}E_j
+  \end{aligned}
+$$
+Indeed, the unitary evolution $(\id\otimes R) U$ gives
+$$
+  \rho\otimes\proj{e}
+  \longmapsto
+  \sum_{kl} E_k \rho E_l^\dagger \otimes R\ket{e_k}\bra{e_l} R^\dagger
+$$
+and the subsequent trace over the environment gives
+$$
+  \begin{aligned}
+    \tr_E \sum_{kl} E_k \rho E_l^\dagger \otimes R\ket{e_k}\bra{e_l} R^\dagger
+    &= \sum_{kl} E_k \rho E_l^\dagger \bra{e_l} R^\dagger R\ket{e_k}
+  \\&= \sum_{k} E_k \rho E_k^\dagger.
+  \end{aligned}
+$$
 
 
+### {}
+
+We can show that the process of cooling a qubit to its ground state, described the map $\mathcal{E}(\rho)=\proj{0}$, is a quantum channel.
+Indeed, the set of Kraus operators is $\proj{0}$ and $\ket{0}\bra{1}$, and all Bloch vectors are mapped to the Bloch vector representing state $\proj{0}$.
 
 
+### {}
+
+Show that, for any operator $\rho$ on $\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$, and, for any operator $R$ on $\mathcal{H}_\mathcal{B}$, we have
+$$
+  \tr_\mathcal{B} \left[(\id\otimes R) \rho (\id\otimes R^\dagger)\right]
+  = \tr_\mathcal{B} \rho.
+$$
+That is, the reduced density operator $\rho_\mathcal{A}=\tr_\mathcal{B} \rho$ is not affected by $R$.
+
+(Hint: show this for operators $\rho$ which are tensor products $\rho=A\otimes B$ and then extend the result to any operator $\rho$).
 
 
+### {}
+
+We know that, given a fixed state of the environment, the unitaries $U$ and $(\id\otimes R)U$, where $R$ acts only on the environment, define the same quantum channel.
+Is the same true for $U$ and $U(\id\otimes R)$?
+That is, do these two unitaries define the same quantum channel as one another?
 
 
+### Pauli twirl {#pauli-twirl}
+
+Show that randomly applying the Pauli operators $\id$, $X$, $Y$, and $Z$, with uniform probability, to any density operator $\rho$ of a single qubit results in the maximally mixed state
+$$
+  \frac{1}{4} \id\rho\id +\frac{1}{4} X\rho X + \frac{1}{4} Y\rho Y + \frac{1}{4} X\rho Z
+  = \frac{1}{2}\id.
+$$
 
 
+### Depolarising channel
+
+The most "popular" Pauli channel is the **depolarising channel**
+$$
+  \rho\longmapsto (1-p)\rho + \frac{p}{3}\left(X\rho X+Y\rho Y+Z\rho Z\right).
+$$
+In the depolarising channel, a qubit in state $\rho$ remains intact with probability $1-p$, or is otherwise transformed with one of the Pauli operators $X$, $Y$, and $Z$, each chosen randomly with probability $p/3$.
+Show, using the [Pauli twirl](#puali-twirl) or otherwise, that we can rewrite the depolarising channel as
+$$
+  \rho \longmapsto \rho'
+  = \left(1-\frac{4}{3} p\right) \rho + \frac{4}{3}p\frac{1}{2}\id.
+$$
+
+(For $p\leq\frac{3}{4}$ we can thus say that the channel either does nothing or, with probability $\frac{4}{3}p$, throws away the initial quantum state and replaces it by the maximally mixed state.)
 
 
+### Depolarising channel and the Bloch sphere
+
+It is also instructive to see how the depolarising channel acts on the Bloch sphere.
+An arbitrary density matrix for a single qubit can be written as
+$$
+  \frac{1}{2}(\id +\vec{s}\cdot\vec{\sigma}),
+$$
+where $\vec{s}$ is the Bloch vector, and $\vec{\sigma}=(\sigma_x,\sigma_y,\sigma_z)$ is the vector of Pauli matrices.
+The depolarising channel maps this state to
+$$
+  \frac{1}{2}\left[
+    \id + \left(1-\frac{4}{3}p\right)\vec{s}\cdot\vec{\sigma}
+  \right].
+$$
+The Bloch vector shrinks by a factor of $1-\frac{4}{3}p$.
+This means that, for $p\leq\frac{3}{4}$, the Bloch sphere contracts uniformly under the action of the channel;
+for $p=\frac{3}{4}$, the sphere is contracted to a single point at its centre;
+and for $\frac{3}{4}\leq p\leq1$, the Bloch vector is flipped, and starts pointing in the opposite direction.
 
 
+### {}
 
-
-
+Let $\mathcal{E}$ be the linear map on single a qubit defined by
+$$
+  \begin{aligned}
+    \mathcal{E}(\id)
+    &= \id
+    \mathcal{E}(\sigma_x)
+  \\&= x\sigma_x
+    \mathcal{E}(\sigma_y)
+  \\&= y\sigma_y
+    \mathcal{E}(\sigma_z)
+  \\&= z\sigma_z
+  \end{aligned}
+$$
+where $x$, $y$, $z$ are some fixed real numbers.
+Using the Choi matrix of $\mathcal{E}$, determine the range of $x$, $y$, $z$ for which the map $\mathcal{E}$ is *positive*, and the range for which it is *completely positive*.
 
 
 
