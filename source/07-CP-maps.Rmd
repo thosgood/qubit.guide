@@ -1,414 +1,609 @@
-# Quantum channels, or CP maps {#chapter7}
+# Quantum channels {#chapter7}
 
-> About the linear transformations --- often called **quantum channels**, **quantum operations**, or **superoperators** --- that map density operators to density operators. Mathematically, such objects are known as **completely positive trace-preserving maps**. Be prepared for some name dropping; you will hear about Karl Kraus, Woody Stinespring, Andrzej Jamiołkowski, and Man-Duen Choi. To be sure, knowing names will not give you more insights, but at least you will not be intimidated when you hear about the **Stinespring** and the **Kraus representations**, the **Jamiołkowski isomorphism**, or the **Choi matrix**.
+> Quantum evolution of any *isolated* system is unitary but its constituent parts may evolve in a more complicated way. In this chapter we will go beyond unitary evolutions and describe physically realisable transformations of density operators, called quantum channels. Be prepared for some name dropping; you will hear about Karl Kraus, Woody Stinespring, Andrzej Jamiołkowski and Man-Duen Choi. To be sure, knowing names will not give you more insights, but at least you will not be intimidated when you hear about the **Stinespring** and the **Kraus representations**, the **Jamiołkowski isomorphism**, or the **Choi matrix**.
 
-In quantum information science (and in life) we often divide the world into two parts: things we can control and everything else.
-Things we can control (at least with some precision), such as a bunch of ions in an ion trap, will now acquire a generic name --- the **system** --- and the "everything else" part will be called the **environment**.
-The joint evolution of the system and the environment is unitary, but the system _alone_ may deviate from the unitary evolution due to the entangling interactions with the environment.
-What does this non-unitary quantum evolution look like?
+We discussed how entanglement forced us to describe quantum states of open quantum systems (ones which are part of a larger system) in terms of density operators.
+In this chapter we will describe how open systems evolve.
+The question we are asking here is: what are the most general physically admissible transformations of density operators?
+At the fundamental level --- and this should be your quantum mantra^[...there is only one unitary evolution, there is only one unitary evolution, there only one unitary evolution... ...and everything else is cheating] --- there is *only one* unitary evolution, and if there is any other evolution then it has to be derived from a unitary evolution.
+From this perspective, any non-unitary evolution of an open system is induced by a unitary evolution of a larger system.
+But how?
+The short answer is: by adding (tensoring) and removing (partial trace) physical systems.
+A typical combination of these operations is shown in the following diagram:
 
-Mathematically speaking^[Recall that, given a pair of Hilbert spaces $\mathcal{H}_{\mathcal{A}}$ and $\mathcal{H}_{\mathcal{B}}$, we denote the set of (bounded) linear operators from $\mathcal{H}_{\mathcal{A}}$ to $\mathcal{H}_{\mathcal{B}}$ by $\mathscr{B}(\mathcal{H}_{\mathcal{A}},\mathcal{H}_{\mathcal{B}})$. The shorthand $\mathscr{B}(\mathcal{H})$ is used to denote $\mathscr{B}(\mathcal{H},\mathcal{H})$. Thus an element of $\mathscr{B}(\mathcal{H})$ is exactly a density operator on $\mathcal{H}$.], we want to characterise **physically admissible** maps
-$$
-  \mathcal{E}\colon \mathscr{B}(\mathcal{H}) \to \mathscr{B}(\mathcal{H}')
-$$
-that map density operators to density operators.
-We will call them **quantum channels**.
-Here, $\mathcal{H}$ and $\mathcal{H}'$ are the Hilbert spaces associated with the input and the output, respectively (these two spaces may be of different dimensions: $\dim\mathcal{H}=d$ and $\dim\mathcal{H}'=d'$, with $d$ not necessarily equal to $d'$).
-It is not a trivial task, since some operations (such as the matrix transpose) turn density matrices into seemingly legal density matrices, and yet they are _not_ physically admissible.
-We want to understand why.
-
-There are essentially two approaches to characterising quantum channels. Let us call them **constructive** and **axiomatic**.
-
-- In the constructive approach (much favoured by physicists) we assume that, in the quantum world, there are only unitary evolutions, and that _non_-unitary evolutions of subsystems are induced by unitary evolutions of _larger_ systems.
-We can view them as the result of adding or removing physical systems that participate in unitary evolutions.
-In particular, _any_ quantum channel can be constructed by taking a physical system in state $\rho$, combining it with an auxiliary system (e.g. the environment) in some fixed quantum state, applying a unitary transformation to the combined system, and then discarding everything that is of no interest to us.
-
-- In the axiomatic approach we proceed as mathematicians usually do.
-We refer to quantum theory for inspiration, scratch our heads, and list all the desired properties that a map should have in order to be called an admissible quantum operation.
-This way we define **completely positive trace-preserving** (CPTP) maps.
-
-In the end, you will be relieved to learn, the two approaches are equivalent, leading to the same mathematical formalism.
-This equivalence is often goes by the name of the [**Stinespring dilation theorem**](https://en.wikipedia.org/wiki/Stinespring_factorization_theorem)^[[William Forrest "Woody" Stinespring](https://en.wikipedia.org/wiki/W._Forrest_Stinespring) (1929--2012) was an American mathematician specialising in operator theory.], which says that _CPTP maps are exactly the maps that can be constructed from unitary evolutions by adding and removing subsystems_.
-
-
-
-
-
-
-## The constructive approach
-
-### Unitary evolution is all there is...
-
-Here we consider the constructive approach described above.
-So we know that any evolution of any _isolated_ system is always unitary, since, at the fundamental level, this is the only evolution that is offered by quantum theory.
-Anything else that is not unitary has to be, somehow, derived from a unitary evolution of the whole, and it is easy to see that a unitary evolution of the whole does not imply unitary evolutions of its constituent parts.
-The question is: _what kind of sub-evolutions can be induced on subsystems by a global unitary evolution?_
-
-Consider a physical system, prepared in some input state $\ket{\psi}\in\mathcal{H}$, which is then combined with another system (here, the environment) that is initially in state $\ket{e}\in\mathcal{H}_E$.
-The two systems interact, and their joint unitary evolution $U$ produces, in general, an entangled state.
-The system itself, after discarding the environment, ends in an output state $\rho'$, which is given by taking a partial trace, as shown in Figure \@ref(fig:joint-system-discard-output).
-
-(ref:joint-system-discard-output-caption) The output (discarding what happens to the environment) is given by $\rho'=\tr_E \big(U\proj{\psi}\otimes\proj{e} U^\dagger\big)$. The arrow at the end of the second quantum wire represents discarding that state.
-
-```{r joint-system-discard-output,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6,fig.cap='(ref:joint-system-discard-output-caption)'}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick{input $\ket{\psi}$} & \gate[wires=2]{U} &\rstick{output $\rho'$} \qw
-  \\\lstick{fixed $\ket{e}$} &\hphantom{really wide} &\trash{}
-  \end{quantikz}
-\end{equation*}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=3}
+\begin{quantikz}
+  \lstick{fixed state $\ket{a}$}
+  & \gate[wires=2]{U}
+  & \rstick{discard} \qw
+\\\lstick{input $\rho$}
+  &
+  & \rstick{$\rho'$ output } \qw
+\end{quantikz}
 ```
 
-The requirement that the environment start in a pure state is not very restrictive: if it were initially in a mixed state, then we could always regard the environment as a sub-environment of some larger environment in an entangled pure state.
-It _is_ important, however, that the system and its environment _initially have no correlation with each other_: they are in a product state $\ket{\psi}\otimes\ket{e}$.
-Then, if we fix the initial state of the environment $\ket{e}$ and the unitary $U$, the final state of the system depends _only_ on its initial state $\ket{\psi}$.
-In fact, the initial state of the system can be a mixed state, described by some density operator $\rho$.
-This is because any mixed state can be interpreted as a statistical mixture of pure states, and any linear process respects such a mixture.
-Thus, by fixing $U$ and $\ket{e}$, we have constructed a well defined linear map $\mathcal{E}\colon\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H})$ that transforms the input state $\rho$ into the output state $\rho'=\mathcal{E}(\rho)$.
+First, we prepare our system of interest in an input state $\rho$.
+Then we dilate the system by "adding" (or "taking into account") an auxiliary system^[Depending on the context, the auxiliary system is either called the **ancilla** (usually when we can control it) or the **environment** (usually when we cannot control it).] which is large enough to include everything our system will interact with, and also large enough to be in a pure state $\ket{a}$.
+Mathematically, we do this by tensoring the input state $\rho$ with $\proj{a}$ to obtain $\proj{a}\otimes\rho$ (here we place the auxiliary system first and our system of interest second).
+The dilated system is assumed to be closed so that it undergoes some unitary evolution $U$.
+After all the interactions have taken place, we *trace out* the auxiliary system, turning the joint state $U\proj{a}\otimes\rho U^\dagger$ of the dilated system into the final state of our system of interest: the output state $\rho'$.
+The net effect of this composition, as we shall see in a moment, is the input-output transformation which can be written, as long as the initial state of the auxiliary system in *not* correlated with the input state, in a nice compact way:
+$$
+  \rho\longmapsto\rho' = \sum_i E_i\rho E_i^\dagger
+$$
+where the $E_i$ are some operators that satisfy $\sum_i E_i^\dagger E_i=\id$.
+This linear map is called a **completely positive trace-preserving map**, or, in the parlance of quantum information science, a **quantum channel**.
+We will elaborate on the mathematics behind quantum channels shortly, but for now let us only check the essential properties, i.e. that this map preserves both trace and positivity (as its name suggests).
 
-::: {.idea data-latex=""}
+- Trace preserving: since the trace is linear, invariant under cyclic permutations of operators, and we ask that $\sum_i E_i^\dagger E_i=\id$, we see that
+    $$
+      \tr \left(\sum_k E_k\rho E_k^\dagger\right)
+      = \tr \left(\sum_k E^\dagger_k E_k \rho\right)
+      = \tr\rho.
+    $$
+- Positivity preserving: since $\rho$ is a positive^[Recall that an operator is positive if and only if it can be written in the form $XX^\dagger$ for some $X$ (here $X=E_k\sqrt{\rho}$). Also, the sum of positive operators is again a positive operator.] (semi-definite) operator, and so is $\sqrt{\rho}$, we see that
+    $$
+      \sum_k E_k\rho E_k^\dagger
+      = \sum_k (E_k\sqrt{\rho})(\sqrt{\rho} E_k^\dagger).
+    $$
+
+These conditions are certainly *necessary* if we want to map density operators into legal density operators, but we shall see in a moment that they are not *sufficient*: quantum channels are not just positive maps, they are **completely** positive maps.
+We will discuss their special properties, describe the most common examples, and, last but not least, specify when the action of quantum quantum channels can be reversed, or corrected, so that we can recover the original input state.
+This will set the stage for our subsequent discussion of quantum error correction.
+
+
+
+## Random evolution
+
+
+### Random unitaries
+
+As a first step toward understanding the quantum description of an evolving open system, consider a "two-qubit universe" in which we observe *only one* of the qubits.
+Let us revisit the controlled-$\texttt{NOT}$ gate, in which two qubits undergo the unitary transformation
+$$
+  U
+  = \proj{0}\otimes\id +\proj{1}\otimes X
+  = \diag{\id}{X}
+$$
+and let us focus on the transformation of the target qubit alone.
+We know that it depends on the state of the control qubit:
+
+- if the input state of the control qubit is $\ket{0}$, the target qubit evolves unitarily according to the identity operator $\id$;
+- if the input state of the control qubit is $\ket{1}$, the target qubit evolves unitarily according to the bit flip operator $X$;
+- but for input states of the control that are superpositions of $\ket{0}$ and $\ket{1}$ the evolution of the target qubit is *not* unitary.
+
+To justify this last point, note that, if the control qubit is in the state $\alpha_0\ket{0}+\alpha_1\ket{1}$ and the target qubit is in some state $\ket{\psi}$, then the output state can be written as
+$$
+  \alpha_0\ket{0}\otimes\id\ket{\psi} + \alpha_1\ket{1}\otimes X\ket{\psi}
+$$
+which shows that the control and the target become entangled.
+The target qubit alone ends up in the statistical mixture of states $\ket{\psi}$ (with probability $|\alpha_0|^2$) and $X\ket{\psi}$ (with probability $|\alpha_1|^2$).
+This can be easily verified by expressing the above output state of the two qubits as the density matrix
 $$
   \begin{aligned}
-    \mathcal{E}\colon \mathscr{B}(\mathcal{H}) &\longrightarrow \mathscr{B}(\mathcal{H})
-  \\\rho &\longmapsto \rho'=\tr_E \big(U\proj{\psi}\otimes\proj{e} U^\dagger\big)
+    |\alpha_0|^2\proj{0}\otimes \id\proj{\psi}\id
+    \quad &+\quad |\alpha_1|^2\proj{1}\otimes X\proj{\psi}X
+  \\+\, \alpha_0\alpha_1^\star\ket{0}\bra{1} \otimes \id\proj{\psi}X
+    \quad &+\quad \alpha_0^\star\alpha_1\ket{1}\bra{0} \otimes X\proj{\psi}\id
+  \end{aligned}
+$$
+and then tracing over the control qubit, which gives^[Recall that, for the basis states, $\tr\ket{i}\bra{j}=\braket{i}{j}=\delta_{ij}$.]
+$$
+  |\alpha_0|^2 \id\proj{\psi}\id
+  + |\alpha_1|^2 X\proj{\psi} X.
+$$
+We can then say that the input state of the target qubit evolves either according to the identity operator (with probability $|\alpha_0|^2$) or according to the operator $X$ (with probability $|\alpha_1|^2$).
+
+This argument works even if the target qubit is initially in a mixed state, since we are dealing with a linear transformation, and any mixed state can be expressed as a statistical ensemble of pure states (via the convex decomposition of a density matrix).
+Thus, in general, we can express the evolution of the target qubit^[We can also focus on the evolution of the control qubit: see [the examples and exercises section](#control-controlled-NOT). In fact, we can choose any subset of qubits for our inputs and outputs. For example, our input could be the control qubit, and the output could be *both* the control *and* the target qubits.] as
+
+$$
+  \rho\longmapsto
+  \rho'= |\alpha_0|^2 \id\rho\id + |\alpha_1|^2 X\rho X
+$$
+where $\rho$ and $\rho'$ are the input and the output states, respectively.
+We may think about this input-output relation as a mathematical representation of a quantum communication channel in which an input qubit is bit-flipped (via the operator $X$) with some prescribed probability.
+But we may also take a more "global" view and see the action of the channel as arising from a unitary evolution on a larger (dilated) system, here composed of two qubits.
+
+Our discussion can easily be extended beyond the qubits to cover any conditional dynamics of the type
+$$
+  U
+  = \sum_i \proj{i}\otimes U_i
+  =
+  \begin{bmatrix}
+    U_1 & 0 & 0 & \ldots
+  \\0 & U_2 & 0 & \ldots
+  \\0 & 0 & U_3 & \ldots
+  \\\vdots & \vdots &\vdots & \ddots
+  \end{bmatrix}
+$$
+where the vectors $\ket{i}$ form an orthonormal basis in the Hilbert space associated with a control system, and the $U_i$ are the corresponding unitary operations performed on a target system.
+If the control system is prepared in state $\sum_i\alpha_i\ket{i}$ and the target in state $\ket{\psi}$, then the final state of the two systems is
+$$
+  \sum_i \alpha_i\ket{i}\otimes U_i\ket{\psi}
+$$
+and, by the same sequence of arguments as before, we obtain the evolution of the target system alone, and express it as
+$$
+  \rho\longmapsto
+  \rho' = \sum_{i=1} p_i U_i \rho U^\dagger_i
+$$
+where $p_i=|\alpha_i|^2$.
+That is, the state of the target system is modified by the unitary $U_i$, chosen randomly with probability $p_i$.
+
+The reason we are paying a particular attention to the random unitaries is that each unitary is invertible, and, as such, they offer a sliver of hope for reversing the action of the channel.
+If we can learn, post factum, which particular unitary operation $U_i$ was chosen then we can simply apply the inverse of that unitary and recover the original state.
+For example, if we can measure the control system in the $\ket{i}$ basis, then measuring the outcome to be $k$ tells us that we have to apply $U_k^\dagger$ to the target to recover its input state.
+However, if we do not have access to the control system, then there is very little we can do: *we cannot figure out which particular unitary was applied by inspecting the target system alone*.
+In this case the best we can do is to apply the inverse of the most likely unitary, which will then recover the input state, *but only with some probability of success*.
+In order to do better than that we have to look at slightly different channels.
+
+First though, a fundamental example of a random unitary evolution: a **single qubit Pauli channel** applies one of the Pauli operators, $X$, $Y$ or $Z$, chosen randomly with some prescribed probabilities $p_x$, $p_y$ and $p_z$, giving
+$$
+  \rho\longmapsto
+  p_0 \id \rho\id + p_x X\rho X+ p_y Y\rho Y+  p_z Z\rho Z.
+$$
+The Pauli operators represent **quantum errors**: bit-flip $X$, phase-flip $Z$, and the composition of the two $Y=iXZ$.
+
+
+
+### Random isometries
+
+There is another invertible operation in quantum theory: an **isometry**, which is a combination of adding another quantum system and then applying a unitary transformation to the resulting composite system.
+So let us take a quick look at a simple generalisation of random unitaries, namely random isometries $V_i$, which give
+$$
+  \rho\longmapsto
+  \rho' = \sum_{i=1} p_i V_i \rho V^\dagger_i.
+$$
+An isometry $V$ is similar to a unitary operator except that it maps states in the Hilbert space $\mathcal{H}$ to states in a larger Hilbert space $\mathcal{H}'$ (cf. {the appendix on isometries}(#isometries)).
+Here $\mathcal{H}$ is associated with the input and $\mathcal{H}'=\mathcal{H}_\mathcal{A}\otimes\mathcal{H}$ with the dilated system (i.e. the ancilla $\mathcal{A}$ plus our system of interest).
+Isometries satisfy $V^\dagger V=\id$, and they are usually implemented by adding an ancilla in a fixed state and then applying a unitary operation to the resulting composed system.
+They can be then reversed by applying the inverse of that unitary and discarding the ancilla.
+
+Now, if $\mathcal{H}'$ is sufficiently larger than $\mathcal{H}$, and if the images $\mathcal{H}'_i$ of $\mathcal{H}$ in $\mathcal{H}'$ under the different isometries $V_i$ do not overlap^[That is, if the subspaces $\mathcal{H}'_i$ are mutually orthogonal.], then we can reverse the action of the channel:
+we can, at least in principle, perform a measurement on $\mathcal{H}'$, defined by the partition $\mathcal{H}'=\mathcal{H}'_1\oplus\mathcal{H}'_2\oplus\ldots$, and find out which subspace contains the output state;
+once we know which subspace the input was sent to, we know which particular isometry $V_k$ was applied by the channel;
+then we simply apply $V^\dagger_k$.
+
+In order to see this consider the following simple, but important, example, which we will revisit several times in different disguises.
+
+Alice constructs a quantum channel which is a mixture of four isometries.
+The input is a single qubit, and the output is a dilated system composed of three qubits.
+She prepares the input qubit in a state^[Our arguments here can be easily extended to any mixed state $\rho$, but for simplicity we consider the case of a pure state.] $\ket{\psi}$ and then combines it with the two ancillary qubits which are in a fixed state $\ket{0}\ket{0}$.
+Then she applies one of the four, randomly chosen, unitary operations to the three qubits, to generate the following four isometries:
+$$
+  \begin{aligned}
+    V_1 &= \ket{000}\bra{0} + \ket{111}\bra{1}
+  \\V_2 &= \ket{001}\bra{0} + \ket{110}\bra{1}
+  \\V_3 &= \ket{010}\bra{0} + \ket{101}\bra{1}
+  \\V_4 &= \ket{100}\bra{0} + \ket{011}\bra{1}.
+  \end{aligned}
+$$
+
+The three qubits, which form the output of the channel, are given to Bob, whose task is to recover the original state $\ket{\psi}$ of the input qubit.
+In this scenario, Bob, who knows the four isometries, can find out which particular isometry was applied.
+He knows that^[**!!!to-do!!! picture**]
+
+- $V_1$ maps $\mathcal{H}$ to $\mathcal{H}'_1$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{000}$ and $\ket{111}$;
+- $V_2$ maps $\mathcal{H}$ to $\mathcal{H}'_2$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{001}$ and $\ket{110}$;
+- $V_3$ maps $\mathcal{H}$ to $\mathcal{H}'_3$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{010}$ and $\ket{101}$;
+- $V_4$ maps $\mathcal{H}$ to $\mathcal{H}'_4$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{100}$ and $\ket{011}$.
+
+Given that these subspaces are mutually orthogonal, and $\mathcal{H}'=\mathcal{H}'_1\oplus\mathcal{H}'_2\oplus\mathcal{H}'_3\oplus\mathcal{H}'_4$, Bob can perform a measurement defined by the projectors on these subspaces.
+For example, if Alice randomly picked $V_2$, then the input state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$ will be mapped to the output state $\alpha_0\ket{001}+\alpha_1\ket{110}$ in the $\mathcal{H}'_2$ subspace.
+Bob's measurement will then detect $\mathcal{H}'_2$ as the subspace where the output state resides, but the measurement (i.e. the corresponding projection) will not affect any state in that subspace.
+Bob can now simply apply $V_2^\dagger$ and obtain $\ket{\psi}$.
+
+Just in case you are curious (as you should be!), below is a diagram of how the four isometries are implemented.
+How would you reverse these operations?
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
+\[
+  V_1 =
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \hphantomgate{X}\qw \& \qw
+  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
+  \end{quantikz}
+  \qquad\qquad
+  V_2 =
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \gate{X} \& \qw
+  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
+  \end{quantikz}
+\]
+\[
+  V_3 =
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \gate{X} \& \qw
+  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
+  \end{quantikz}
+  \qquad\qquad
+  V_4 =
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \gate{X} \& \qw
+  \end{quantikz}
+\]
+```
+
+Single unitaries or isometries apart, it turns out that the only reversible, or **correctable** channels (i.e. channels in which the input state can be recovered) are exactly the mixtures of mutually orthogonal isometries $V^\dagger_i V_j=\delta_{ij}\id$.
+We shall return to these channels later on.
+
+
+
+## Evolution of open systems
+
+Needless to say, there is more to evolutions of open systems than random isometries, and what follows is the most general scenario we will discuss.
+Consider two interacting systems, $\mathcal{A}$ and $\mathcal{B}$, but this time we do *not* assume that their interacting dynamics admits a control-target interpretation.
+We will view $\mathcal{A}$ as an auxiliary system, i.e. an ancilla, and focus on^[As a small notational remark, for now, when we write tensor products, we will place the ancilla first and the system of interest second: $\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$. This is for pedagogical purposes, simply because block matrices on tensor products are easier to interpret when written in this particular order. Later on we will revert to the more common convention in which the system of interest is placed first.] the evolution of system $\mathcal{B}$.
+
+Let us pick an orthonormal basis $\ket{i}$ of the Hilbert space $\mathcal{H}_\mathcal{A}$ associated with the ancilla.
+Any unitary transformation of the combined system $\mathcal{AB}$ can then be written as
+$$
+  U
+  = \sum_{ij}\ket{i}\bra{j}\otimes B_{ij}
+  =
+  \begin{bmatrix}
+    B_{11} & B_{12} & B_{13} & \ldots
+  \\B_{21} & B_{22} & B_{23} & \ldots
+  \\B_{31} & B_{32} & B_{33} & \ldots
+  \\\vdots & \vdots & \vdots & \ddots
+  \end{bmatrix}
+$$
+where the $B_{ij}$ are operators acting on the the Hilbert space $\mathcal{H}_\mathcal{B}$ associated with system $\mathcal{B}$.
+Note that the $B_{ij}$ do *not* need to be unitary, but, for the overall transformation $U$ to be unitary^[$U^\dagger U = UU^\dagger = \id_{AB}$.], they must satisfy
+$$
+  \begin{aligned}
+    \sum_i B_{ik}^\dagger B_{il}
+    &= \delta_{kl} \id_\mathcal{AB}
+  \\\sum_i B_{ki}B_{li}^\dagger
+    &= \delta_{kl} \id_\mathcal{B}
+  \end{aligned}
+  \tag{$\star$}
+$$
+where $\id_\mathcal{AB}$ and $\id_\mathcal{B}$ are the identity operators on $\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$ and $\mathcal{H}_\mathcal{B}$, respectively.
+These two conditions correspond to the requirement that both column and row vectors must be orthonormal for a matrix to be unitary, except that here $U$ is a block matrix, and the entries $B_{ij}$ are complex matrices rather than complex numbers, so some care must be taken with the order of multiplication.
+Again, the evolution of the system $\mathcal{B}$ depends on both $U$ *and* on the initial state of the auxiliary system $\mathcal{A}$.
+
+Without any loss of generality, we may assume that system $\mathcal{A}$ is in a pure state^[If $\mathcal{A}$ were initially in a mixed state, we could always regard $\mathcal{A}$ as a subsystem of some larger $\widetilde{\mathcal{A}}$ that is in an entangled pure state.] which can be chosen to be one of the basis states $\ket{i}$, say $\ket{k}$.
+In this case, $U$ acts by
+$$
+  U\colon \ket{k}\otimes\ket{\psi} \longmapsto
+  \sum_i \ket{i}\otimes B_{ik}\ket{\psi}
+\tag{$\ddagger$}
+\end{equation}
+$$
+for an arbitrary state $\ket{\psi}$ of $\mathcal{B}$.
+
+The resulting density operator for $\mathcal{B}$ is found by taking the density operator of the output state of $\mathcal{AB}$, which is
+$$
+  \sum_{ij} \ket{i}\bra{j}\otimes B_{ik}\proj{\psi}B_{jk}^\dagger
+$$
+and then tracing out $\mathcal{A}$, obtaining
+$$
+  \begin{aligned}
+    \tr_\mathcal{A} \left(
+      \sum_{ij} \ket{i}\bra{j}\otimes B_{ik}\proj{\psi}B_{jk}^\dagger
+    \right)
+    &= \sum_{ij} \braket{i}{j}\cdot B_{ik}\proj{\psi}B_{jk}^\dagger
+  \\&= \sum_i B_{ik}\proj{\psi}B_{ik}^\dagger
+  \end{aligned}
+$$
+where we have used the fact that $\braket{i}{j}=\delta_{ij}$.
+In general, for any input state $\rho$, we obtain the map
+$$
+  \rho\longmapsto
+  \rho'= \sum_i B_{ik}\rho B^\dagger_{ik} \equiv \sum_i B_{i}\rho B^\dagger_{i}
+$$
+where, in the last expression on the right-hand size, we have dropped index $k$ (remember, it was there only to remind us about the initial state of the ancilla).
+Since the overall transformation $U$ is unitary, recall that the $B_i$ satisfy $\sum_i B_i^\dagger B_i=\id$.
+This normalisation conditions guarantees that the trace is preserved.
+
+::: {.idea latex=""}
+In summary, we can think about a quantum evolution of subsystem $\mathcal{B}$ as a sequence of the three distinct operations:
+$$
+  \begin{aligned}
+    \rho
+    \longmapsto &\underbrace{\proj{k}\otimes\rho}_{\text{add ancilla}}
+  \\\longmapsto &\underbrace{U(\proj{k}\otimes\rho) U^\dagger}_{\text{unitary evolution}}
+  \\\longmapsto &\underbrace{\tr_\mathcal{A} \left[U(\proj{k}\otimes\rho) U^\dagger\right]}_{\text{discard ancilla}}
+    = \sum_i B_{i}\rho B_{i}^\dagger
+    =\rho'.
   \end{aligned}
 $$
 :::
 
-This way of describing the action of a quantum channel is often called the **unitary representation** of a channel.
-As mentioned above, the channel is completely defined by the unitary $U$ and the initial state of the environment $\ket{e}$, but note that, once the system and the environment cease to interact, any operation _on the environment alone_ has no effect on the state of the system.
-That is, the two diagrams in Figure \@ref(fig:environment-same-channel) define the same channel, or, in other words, the unitaries $U$ and $(\id\otimes R)U$, where $R$ acts only on $\mathcal{H}_E$, define the same channel.^[Consider $U$ and $U(\id\otimes R)$, where $R$ acts only on $\mathcal{H}_E$. Do these two unitaries also define the same quantum channel?]
+In summary:
 
-(ref:environment-same-channel-caption) The two circuits here define the same quantum channel.
+- First we pick up a system of interest which, in general, can be in a mixed state $\rho$. It may be the case that this system is entangled with some other degrees of freedom or with some other physical systems, but these other entities will remain passive and will not enter any subsequent dynamics.
+- Then we dilate the system: we add an ancilla which is large enough to include everything our system will interact with, and also large enough to be in a pure state. The expansion ends when the composed system is (for all practical purposes) isolated and follows a unitary evolution $U$.
+- After the unitary evolution takes place, we discard the ancilla and focus on the system alone. In fact we do not have to discard exactly what we added: we can discard only part of the ancilla, or any other part of the dilated system.
+- The output system in this scenario does not have to be the original input system, but usually it is.
 
-```{r environment-same-channel,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6,fig.cap='(ref:environment-same-channel-caption)'}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick{$\rho$} & \gate[wires=2]{U} &\qw &\qw &\rstick{$\rho'$} \qw
-  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\qw &\qw &\trash{}
-  \end{quantikz}
-\end{equation*}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick{$\rho$} & \gate[wires=2]{U} &\qw &\rstick{$\rho'$} \qw
-  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\gate{R} &\trash{}
-  \end{quantikz}
-\end{equation*}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=2}
+\begin{quantikz}
+  & \lstick{$\ket{k}$} & \gate[wires=2]{U} & \rstick{discard} \qw
+\\& \lstick{$\rho$} & \qw & \hphantom{}\qw & \qw\rstick{$\rho'$}
+\\\lstick{} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
+\\\lstick{} & & \qw &\qw &\qw
+\end{quantikz}
 ```
 
-Note that, for any operator $\tilde{\rho}$ on $\mathcal{H}\otimes\mathcal{H}_E$, and for any operator $R$ on $\mathcal{H}_E$, we have that
+It is adding (i.e. tensoring) the auxiliary system in a fixed state, and then discarding it (via the partial trace), that is responsible for the *non-unitary* character of this evolution.
+
+
+
+## Stinespring's dilation and Kraus's ambiguity
+
+Once we start playing with adding physical systems and increasing the dimension of the underlying Hilbert space, it is convenient to switch from unitaries to isometries.
+This is more for mathematical simplicity than physical insight, but it is always good to declutter our equations a bit if we can.
+Note that when we fix the initial state of system $\mathcal{A}$ to be $\ket{k}$, we can use Equation ($\ddagger$) to define an isometry $V$ from $\mathcal{H}_\mathcal{B}$ to $\mathcal{H}_\mathcal{A}\otimes \mathcal{H}_\mathcal{B}$, by
 $$
-  \tr_E\left[
-    (\id\otimes R) \tilde{\rho} (\id\otimes R^\dagger)
-  \right] = \tr_E \tilde{\rho}.
+\begin{equation}
+  V\colon \ket{\psi}
+  \longmapsto \sum_i\ket{i}\otimes E_i\ket{\psi}
+\end{equation}
 $$
-The reduced density operator $\rho=\tr_E\tilde{\rho}$ is not affected by $R$.
-We can easily prove this for operators $\tilde{\rho}$ that are tensor products $\tilde{\rho}=X\otimes Y$ (a good exercise to try yourself), and then, by linearity, extend the result to any operator $\tilde{\rho}$.
+where $E_i\equiv B_{ik}$ and, according to Equation ($\star$), $\sum_i E_i^\dagger E_i=\id$ (here the identity operator acts on $\mathcal{H}_\mathcal{B}$).^[Recall that a map $V$ is an isometry if $V^\dagger V=\id$. For example, adding a system in state $\ket{k}$ gives an isometry $V\colon\ket{\psi}\mapsto\ket{k}\otimes\ket{\psi}$, and the combination of adding a system in a fixed state followed by a unitary evolution of the combined system is also an isometry. Isometries preserve inner products, and therefore also preserve both the norm and the metric based upon the norm.]
+The matrix representation of an isometry is a rectangular matrix given by selecting only a few of the columns from a unitary matrix;
+here, with $\ket{k}$ fixed, it is only the $k$-th column of the block matrix $U$ that determines the evolution of $\mathcal{B}$, as shown in Figure \@ref(fig:unitary-isometry).
 
-We must point out that our construction of quantum channels does not capture all possible quantum evolutions.
-The assumption that the system and the environment are not initially correlated is crucial, and it does impose some restrictions on the applicability of our formalism.
-Compare, for example, the following two versions of a process in which the system, initially in state $\rho$, undergoes two stages of evolution.
+(ref:unitary-isometry-caption) For $k=2$, the second block column is selected. The matrix representation of the isometry $V$ on the right-hand side look like a column vector, but remember that the entries $E_i$ are *matrices*.
 
-Firstly:
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+```{r unitary-isometry,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7,fig.cap='(ref:unitary-isometry-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
 \begin{equation*}
-  \begin{quantikz}
-    \lstick{$\rho$} &\gate[2]{U_A} &\rstick{$\rho'$} \qw & &\gate[2]{U_B} &\rstick{$\rho''$} \qw
-  \\\lstick{$\ket{e}$} &\qw &\qw &\qw &\qw & \trash{}
-  \end{quantikz}
-\end{equation*}
-```
-
-Here, the environment is not discarded after the first unitary evolution $U_A$ --- it carries on and participates in the second unitary evolution $U_B$.
-In this case, the evolutions $\rho\mapsto\rho'$ and $\rho\mapsto\rho''$ _are_ well-defined quantum channels, but the evolution $\rho'\mapsto\rho''$ is _not_; it falls outside the remit of our formalism for the input state of the system and the state of the environment are not independent.
-
-Secondly:
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick{$\rho$} &\gate[2]{U_A} &\qw &\rstick{$\rho'$} \qw & &\qw &\gate[2]{U_B} &\rstick{$\rho''$} \qw
-  \\\lstick{$\ket{a}$} & &\trash{} & & & \lstick{$\ket{b}$} &\qw &\trash{}
-  \end{quantikz}
-\end{equation*}
-```
-
-In contrast to the previous process, here we discard the environment after the first unitary, and start the second unitary evolution in a fresh tensor product state with a _new_ environment --- the two stages involve independent environments.
-In this case, all three evolutions ($\rho\mapsto\rho'$, $\rho'\mapsto\rho''$, and $\rho\mapsto\rho''$) are well-defined quantum channels, and can be composed.^[Unitary evolutions form a group; quantum channels form a [_semigroup_](https://en.wikipedia.org/wiki/Semigroup). Quantum channels are invertible only if they are unitary operations or simple isometric embeddings, such as including the environment in some fixed state and then discarding it right away, without any intermediate interaction.]
-If $\mathcal{E}_A$ describes the evolution from $\rho$ to $\rho'$, and $\mathcal{E}_B$ the evolution from $\rho'$ to $\rho''$, then the composition $\mathcal{E}_B\mathcal{E}_A$ describes the evolution from $\rho$ to $\rho''$.
-
-In practice, we often deal with complex environments that have internal dynamics that "hide" any entanglement with the system as quickly as it arises.
-For example, let our system be an atom, surrounded by electromagnetic field (which serves as the environment), and let the field start in the vacuum state.
-If the atom emits a photon into the environment, then the photon quickly propagates away, and the immediate vicinity of the atom appears to be empty, i.e. it resets to the vacuum state.
-In this approximation, we assume that the environment quickly forgets about its state resulting from any previous evolution.
-This is known as the **Markov approximation**, and, in the quantum Markov process^[[Andrey Markov](https://en.wikipedia.org/wiki/Andrey_Markov) (1929--2012) was a Russian mathematician best known for his work on stochastic processes.], the environment has essentially no memory.
-
-
-
-
-
-
-### Kraus operators
-
-The unitary representation of a quantum channel is usually too general to be of any practical use, at least for our purposes.
-We will find it convenient, as you will see when we start discussing quantum error correction, to choose an orthonormal basis $\{\ket{e_k}\}$ of $\mathcal{H}_E$, and express the joint (i.e. "system plus environment") unitary evolution $U$ as
-$$
-  U(\ket{\psi}\otimes\ket{e})
-  = \sum_k E_k\ket{\psi}\otimes\ket{e_k}
-$$
-where $E_k$ is an operator on $\mathcal{H}$ defined by
-$$
-  E_k\ket{\psi}
-  = \bra{e_k}U(\ket{\psi}\otimes\ket{e})
-$$
-for any vector $\ket{\psi}\in\mathcal{H}$
-Think about $\bra{e_k}U(\ket{\psi}\otimes\ket{e})$ as a "partial inner product"^[Given $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$, the **partial inner product** of $\ket{x}\in \mathcal{H}_{\mathcal{A}}$ and $\ket{a}\otimes\ket{b}\in\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ is first defined by the formula $$\bra{x}(\ket{a}\otimes\ket{b}) = \braket{x}{a}\ket{b}$$ and then extended to other (non-direct tensor product) vectors in  $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ by linearity. We discuss this further in the exercises.] of $\ket{e_k}\in\mathcal{H}_E$ and  $U\ket{\psi}\ket{e}\in \mathcal{H}\otimes\mathcal{H}_E$.
-In analogy with classical communication channels we sometimes refer to the operators $E_k$ as **quantum errors**, but they are more generally referred to as **Kraus operators**.
-
-The intuition behind the expression
-$$
-  \ket{\psi}\otimes\ket{e}
-  \longmapsto \sum_k E_k\ket{\psi}\otimes\ket{e_k}
-$$
-is that the operation $E_k$ (which changes the state of the system as $\ket{\psi}\mapsto E_k\ket{\psi}$) occurs with the probability $p_k=\bra{\psi}E^\dagger_k E_k\ket{\psi}$.
-The probabilities sum up to one, i.e. $\sum_k p_k=\bra{\psi}E^\dagger_k E_k\ket{\psi} =1$ for any state $\ket{\psi}$, and so the operators $E_k$ must satisfy the completeness relation
-$$
-  \sum_k E^\dagger_k E_k=\id.
-$$
-
-Note that the matrix $U$ acts on the tensor product space, which gives it a natural partition into blocks of sub-matrices, such as $E_k=\bra{e_k}U\ket{e}$.
-In order to visualise $E_k=\bra{e_k}U\ket{e}$, write $U$ as a matrix on $\mathcal{H}_E\otimes\mathcal{H}$ rather than $\mathcal{H}\otimes\mathcal{H}_E$ (i.e. place the environment first and the system second).
-Then, in a tensor product basis in which $\ket{e}\equiv\ket{e_1}$, the $(d\times d)$ matrices $E_k$ form the first block column:
-$$
 U=
-  \left[
-  \,
-    \begin{array}{c|c|c}
-        E_1
-      & \cdots
-      & \cdot
-    \\\hline
-      E_2
-      & \cdots
-      & \cdot
-    \\\hline
-       \vdots
-      & \ddots
-      & \vdots
-    \\\hline
-      E_n
-      & \cdots
-      & \cdot
-    \end{array}
-  \,
-  \right].
-$$
-The remaining entries of $U$ are irrelevant for the purpose of describing our sub-dynamics, since we have fixed the initial state of the environment.
-If we had chosen $\ket{e}\equiv\ket{e_2}$ instead, then we would have been looking at the matrices in the _second_ block column, and all other entries would be irrelevant.
-You see the pattern, right?
-Here, the $k$ in $E_k$ ranges from $1$ to some $n\leq D$, if we discount zero matrices.
-Finally, to be clear, reversing the order of the system and the environment does not affect the physical description _as long as we remember which part is which_.
-We changed the order just for pedagogical purposes; you can stick to the original order if you wish, but then the entries of $E_k$ will be dispersed all over the matrix $U$.
+\left[\,
+  \setlength\arraycolsep{0.4em}
+  \begin{array}{cccc}
+    B_{11} & \cellcolor{primary!20}B_{12} & B_{13} & \ldots
+  \\B_{21} & \cellcolor{primary!20}B_{22} & B_{23} & \ldots
+  \\B_{31} & \cellcolor{primary!20}B_{32} & B_{33} & \ldots
+  \\\vdots & \cellcolor{primary!20}\vdots & \vdots & \ddots
+  \end{array}
+\right]
+\longmapsto
+V= \left[\,
+  \setlength\arraycolsep{0.4em}
+  \begin{array}{c}
+    \cellcolor{primary!20}E_{1}
+  \\\cellcolor{primary!20}E_{2}
+  \\\cellcolor{primary!20}E_{3}
+  \\ \cellcolor{primary!20}\vdots
+  \end{array}
+\right]
+\end{equation*}
+```
 
-Now, if we express the system-plus-environment evolution in terms of density operators
-$$
-  \proj{\psi}\otimes\proj{e}
-  \longmapsto \sum_{k,l} E_k\proj{\psi} E^\dagger_l\otimes\ket{e_k}\bra{e_l}
-$$
-and trace over the environment, then we can write the evolution of the system alone as
+Let us now rephrase our derivation of the evolution of system $\mathcal{B}$ using isometries.
+Note that the isometry $V$ in Figure \@ref(fig:unitary-isometry) acts by
 $$
   \proj{\psi}
-  \longmapsto \sum_k E_k\proj{\psi} E^\dagger_k.
+  \longmapsto
+  V\proj{\psi}V^\dagger
+  = \sum_{ij} \ket{i}\bra{j} \otimes E_i\proj{\psi} E_j^\dagger.
 $$
-Recall that any density operator can be represented as a statistical mixture of pure states, and so:
+We trace out $\mathcal{A}$, recall that $\tr\ket{i}\bra{j} = \braket{i}{j}=\delta_{ij}$, and express the evolution of system $\mathcal{B}$ as
+$$
+  \rho
+  \longmapsto
+  \rho' = \tr_\mathcal{A} V\rho V^\dagger =\sum_i E_i\rho E_i^\dagger,
+$$
+where $\sum_iE_i^\dagger E_i=\id$, and we allowed the input states $\rho$ of $\mathcal{B}$ to be mixed (since they can always be expressed as statistical mixtures of pure states $\ket{\psi}$).
+This expression shows two different ways of looking at quantum evolutions, and both even have names associated with them.
 
-::: {.idea data-latex=""}
-The above equation can be generalised and written as
-$$\rho\longrightarrow \sum_k E_k\rho E^\dagger_k$$
-where $\rho$ is any state of the system, pure or mixed.
+::: {.idea latex=""}
+- **Stinespring**^[[William Forrest "Woody" Stinespring](https://en.wikipedia.org/wiki/W.%5FForrest%5FStinespring) (1929--2012) was an American mathematician specialising in operator theory.] **dilation.**
+    Any quantum channel $\mathcal{E}$ can be thought of as arising from a *unitary* evolution on a *dilated* system.
+    When we combine tensoring and the unitary evolution into an isometry $V$, we can express the action of the channel $\mathcal{E}$ as
+    $$
+      \rho \longmapsto \rho'= \tr_\mathcal{A} V\rho V^\dagger,
+    $$
+    where we trace out a suitably chosen ancilla $\mathcal{A}$.
+    In quantum information science we often refer to this approach as *"the Church of the Larger Hilbert Space"*.
+<!--  -->
 
-It turns out that _all_ quantum channels can be represented in this way, which is known as the **Kraus representation**, or the **operator sum representation**.
-In this context, the operators $E_k$ are referred to as the **Kraus operators**.^[[Karl Kraus](https://en.wikipedia.org/wiki/Karl_Kraus_(physicist)) (1938--1988) was a German physicist.]
+- **Kraus**^[[Karl Kraus](https://en.wikipedia.org/wiki/Karl%5FKraus%5F(physicist)) (1938--1988) was a German physicist known for his contributions to the mathematical foundations of quantum theory. His book *States, effects, and operations* (Lecture Notes in Physics, Vol. **190**, Springer-Verlag, Berlin 1983) is an early account of the notion of complete positivity in physics.] **representation** (a.k.a. **operator-sum decomposition**).
+    It is often more convenient to not deal with a larger Hilbert space, but to instead work with operators between the input and output Hilbert spaces
+    $$
+      \rho \longmapsto \rho'= \sum_i E_i\rho E_i^\dagger.
+    $$
+    Here we avoid dragging in the ancilla, which can be a good thing, since ancillas typically represent environments that can be very large and complex.
+    This operator–sum decomposition is not unique, since the operators $E_i$ (known as the **Kraus operators** or **effects**) depend on the choice of basis in the ancilla.
+    The Kraus operators must satisfy the normalisation condition $\sum_i E^\dagger_iE_i=\id$, also known as the **completeness relation**.
 :::
 
-The Kraus representation follows from the unitary representation once we choose an orthonormal basis in $\mathcal{H}_E$.
-Conversely, given a Kraus representation $E_k\in\mathscr{B}(\mathcal{H})$ of the channel $\mathcal{E}$, we can always view it as an operation resulting from a unitary map acting on some extended system: we just introduce an auxiliary system, the environment, which has dimension equal to the number of Kraus operators, and then choose an orthonormal basis $\ket{e_k}$.
-We then define $U$ via $U\ket{\psi}\ket{e}\mapsto\sum_k E_k\ket{\psi}\ket{e_k}$.
-It is convenient to choose $\ket{e}\equiv\ket{e_1}$; in this case the operators $E_k$ form the first block column of $U$.
-All other entries can be chosen as you please (as long as $U$ remains unitary).
+We can easily switch between these two equivalent representations:
 
-By now it should be clear that a Kraus representation of a given quantum channel is _not_ unique: once we fix $U$ and $\ket{e}$, and hence define a quantum channel, we may still choose the basis vectors $\ket{e_k}$ in $\mathcal{H}_E$ as we please.
-This means that the Kraus operators $E_k=\bra{e_k}U\ket{e}$ and $F_k=\bra{f_k}U\ket{e}$, where $\{\ket{e_k}\}$ and $\{\ket{f_k}\}$ are two orthonormal bases, describe the same quantum channel.
-They are unitarily related:
+- We have already seen how to go from a unitary evolution $U$ on a larger system, to an isometry $V$, and then to a map on density operators represented by a set of Kraus operators $E_i$ (as in Figure \@ref(fig:unitary-isometry)).
+- Conversely, once we have an operator-sum representation of the channel with a set of Kraus operators $E_i$, we can introduce an ancilla of dimension equal to the number of Kraus operators, and use the orthonormal basis $\ket{i}$ to form the isometry $V=\sum_i\ket{i}\otimes E_i$.
+    In terms of matrices, this corresponds to simply "stacking up" the matrices $E_i$ to form the block column (as shown in Figure \@ref(fig:unitary-isometry)), which gives us the matrix representation of $V$.
+    If we want to go further, from an isometry $V$ to a unitary $U$, then the next step is somewhat arbitrary: we can choose all the remaining block columns of $U$ however we please, *as long as* we end up with a unitary matrix $U$.
+
+In summary:
+
+::: {.idea latex=""}
+All linear transformations of density operators that can be written in the Stinespring (or, equivalently, Kraus) form represent *physically realisable operations*, and we call them **quantum channels**.^[Quantum channels are also known as **superoperators** --- this way physicists remind themselves that these transformations take operators to operators.]
+:::
+
+We note again that the Kraus decomposition is *not unique*: the operators $E_i$ depend on the choice of the ancilla basis.
+Indeed, let $\ket{e_i}$ and $\ket{f_j}$ be two orthonormal bases in the Hilbert space associated with the ancilla.
+Then $V$ can be expressed as
 $$
   \begin{aligned}
-    F_k
-    &=\bra{f_k} U\ket{e}
-  \\&=\sum_l\braket{f_k}{e_l}\bra{e_l}U\ket{e}
-  \\&=\sum_l \braket{f_k}{e_l} E_l
-  \\&=\sum_l R_{kl} E_l
+    V
+    &= \sum_i\ket{e_i}\otimes E_i
+  \\&= \sum _{ij} \ket{f_j}\braket{f_j}{e_i}\otimes E_i
+  \\&= \sum_{j} \ket{f_j} \otimes \sum_i \underbrace{\braket{f_j}{e_i}}_{R_{ji}} E_i
+  \\&= \sum_{j} \ket{f_j} \otimes F_j
   \end{aligned}
 $$
-where $R_{kl}=\braket{f_k }{e_l}$ is a unitary matrix, and we have used the decomposition of the identity $\sum_l\proj{e_l}=\id_E$.
-In fact, the converse holds true as well:
-
-::: {.idea data-latex=""}
-Suppose that $E_1,\ldots,E_n$ and $F_1,\ldots,F_m$ are Kraus operators associated to the quantum channels $\mathcal{E}$ and $\mathcal{F}$, respectively.
-Let us append zero operators to the shorter list to ensure that $n=m$.
-
-_Then $\mathcal{E}$ and $\mathcal{F}$ describe the same channel if and only if $F_k=\sum_l R_{kl} E_l$ for some unitary $R$._
-:::
-
-It is easy to see the reverse implication:
+where we have used the fact that $\sum_j \proj{f_j}=\id$, and where $R_{ji}=\braket{f_j}{e_i}$ is a unitary matrix connecting the two orthonormal bases (and also the two sets of the Kraus operators) via $F_j=\sum_i R_{ji} E_i$.
+So we have a set of Kraus operators $E_i$ associated with basis $\ket{e_i}$ and another, unitarily related, set of Kraus operators associated with basis $\ket{f_j}$, and the two sets describe the same isometry, and hence the same quantum channel.
+This correspondence goes both ways: if two channels $\mathcal{E}$ and $\mathcal{F}$ have their Kraus operators related by some unitary $R_{ji}$, then the two channels are identical:
 $$
   \begin{aligned}
     \mathcal{F}(\rho)
-    &=\sum_k F_k\rho F^\dagger_k
-  \\&= \sum_{ijk} R_{ki}E_i \rho E^\dagger_j R^\star_{jk}
-  \\&=\sum_{ij} \underbrace{\left(\sum_k R_{jk}^\star R_{ki}\right)}_{\delta_{ij}} E_i\rho E^\dagger_j
-  \\&= \sum_j E_j\rho E^\dagger_j
-  \\&= \mathcal{E} (\rho).
+    &= \sum_j F_j\rho F^\dagger_j
+  \\&= \sum_{ijk} R_{ji}E_i \rho E^\dagger_k R^\star_{jk}
+  \\&=\sum_{ik} \underbrace{\left(\sum_j R_{jk}^\star R_{ji}\right)}_{\delta_{ki}} E_i\rho E^\dagger_k
+  \\&= \sum_i E_i\rho E^\dagger_i
+  \\&= \mathcal{E}(\rho).
   \end{aligned}
 $$
 
-Without any restrictions on the operators $E_k$, any map of the form $U\mapsto\sum_k E_k U E_k^\dagger$ preserves Hermiticity and positivity.^[Prove this!]
-If we additionally require the completeness relation $\sum_k E_k^\dagger E_k=\id$, then the map becomes trace-preserving:
+In summary:
+
+::: {.idea latex=""}
+Suppose $E_1,\ldots,E_n$ and $F_1,\ldots,F_m$ are Kraus operators associated with quantum channels $\mathcal{E}$ and $\mathcal{F}$, respectively.
+We can append zero operators to the shorter list^[If you wish, instead of appending zeros, you may view $R_{ji}$ as an isometry from the the smaller to the larger set of Kraus operators.] to ensure that $n=m$.
+Then *$\mathcal{E}$ and $\mathcal{F}$ describe the same channel if and only if $F_j=\sum_i R_{ji} E_i$ for some unitary $R$*.
+:::
+
+In particular, this unitary equivalence of the Kraus operators implies that the identity channel $\rho\mapsto\rho'=\id\rho\id$ can only have Kraus operators that are proportional to the identity.
+
+
+## Single qubit channels
+
+The best way to familiarise ourselves with the concept of a quantum channel is to study a few examples, and we will start with the simplest case: **single qubit channels**.
+The single qubit case is special since we can visualise the action of the channel by looking at the corresponding deformation of the Bloch sphere.
+Recall that an arbitrary density matrix for a single qubit can be written in the form
 $$
   \begin{aligned}
-    \tr\mathcal{E}(\rho)
-    &= \tr\sum_k E_k\rho E_k^\dagger
-  \\&= \tr\left[\underbrace{\left(\sum_k E^\dagger_k E_k\right)}_{\id} \rho\right]
-  \\&= \tr\rho
-  \\&= 1.
+    \rho
+    &= \frac{1}{2}\left(\id +\vec{s}\cdot \vec\sigma\right)
+  \\&= \frac{1}{2}\left(\id  +s_x X+ s_y Y + s_z Z\right)
   \end{aligned}
 $$
+where $\vec{s}$ is the Bloch vector of the qubit with components $(s_x, s_y, s_z)$, and $X$, $Y$, and $Z$ are the Pauli operators.
+Recall that unitary operations rotate the Bloch sphere.
+In particular the $X$, $Y$, and $Z$ --- viewed as unitary transformations --- rotate the Bloch sphere by $180^\circ$ around the $x$, $y$, and $z$ axes, respectively.
+General quantum channels, however, may deform it further, into spheroids with a displaced centre, as the following examples show.
 
-Any unitary evolution of a density operator
-$$
-  \rho \longmapsto U\rho U^\dagger
-$$
-is a trivial example of the Kraus representation, with just one Kraus operator $U$.
-Next we may consider a probability distribution on a finite set of unitary operations $U_1,\ldots, U_m$.
-In this scenario, $U_k$ will be chosen at random according to the probability distribution $p_1\ldots p_k \ldots p_m$, and applied to $\rho$.
-If this is all that is known about the procedure, then the resulting transformation of $\rho$ can be written as
+- *A bit-flip with probability $p$:*
+    $$
+      \rho \longmapsto (1-p)\rho+pX\rho X.
+    $$
+    The Kraus operators are $\sqrt{1-p}\id$ and $\sqrt{p}X$;
+    the original Bloch sphere shrinks into a prolate spheroid aligned with the $x$-axis;
+    for the specific case of $p=\frac{1}{2}$, the Bloch sphere degenerates to the $[-1,1]$ interval on the $x$-axis.
+
+- *A phase-flip with probability $p$:*
+    $$
+      \rho \longmapsto (1-p)\rho+pZ\rho Z.
+    $$
+    The Kraus operators are $\sqrt{1-p}\id$ and $\sqrt{p}Z$;
+    the original Bloch sphere shrinks into a prolate spheroid aligned with the $z$-axis;
+    for the specific case of $p=\frac{1}{2}$, the Bloch sphere degenerates to the $[-1,1]$ interval on the $z$-axis.
+
+- *The depolarising channel:*
+    $$
+      \rho\longmapsto (1-p)\rho + \frac{p}{3}\left(X\rho X+Y\rho Y+Z\rho Z\right).
+    $$
+    Here the qubit remains intact with probability $1-p$, while a quantum error occurs with probability $p$.
+    The error can be of any one of three types: bit-flip $X$, phase-flip $Z$, or and both bit- and phase-flip $Y$; each type of error is equally likely.
+    For $p<\frac{3}{4}$, the original Bloch sphere contracts uniformly under the action of the channel, and the Bloch vector shrinks by the factor $1-\frac{4}{3}p$;
+    for the specific case of $p=\frac{3}{4}$, the Bloch sphere degenerates to the point at the centre of the sphere;
+    for $p>\frac{3}{4}$, the Bloch sphere is flipped, and the Bloch vector starts pointing in the opposite direction increasing the magnitude up to $\frac{1}{3}$ (which occurs for $p=1$).
+
+There are two interesting points that must be mentioned here.
+The first one is about the interpretation of the action of the channel in terms of Kraus operators: our narrative may change when we switch to a different set of effects.
+For example, take the phase-flip channel with $p=\frac{1}{2}$ and switch from the effects
 $$
   \begin{aligned}
-    \rho\longmapsto
-    &\sum_k p_k U_k\rho U_k^\dagger
-  \\=&\sum_k  \underbrace{\sqrt{p_k} U_k}_{E_k}  \rho \underbrace{U_k^\dagger\sqrt{p_k}}_{E_k^\dagger}
-  \\=&\sum_k E_k\rho E^\dagger_k.
+    E_1 &= \frac{1}{\sqrt{2}}\id
+  \\E_2 &= \frac{1}{\sqrt{2}}Z
   \end{aligned}
 $$
-In this case,
+to
 $$
-  \rho\longmapsto \sum_k E_k\rho E_k^\dagger
+  \begin{aligned}
+    F_1 &= \frac{1}{\sqrt{2}}(E_1+E_2)=\proj{0}
+  \\F_2 &= \frac{1}{\sqrt{2}}(E_1-E_2)=\proj{1}.
+  \end{aligned}
 $$
-where $\sum_k E_k^\dagger E_k = \sum_k E_k E^\dagger_k =\id$.
-This is an example of a **unital channel**, i.e. one for which $\sum_k E_k E^\dagger_k =\id$; such a channel sends maximally mixed inputs to maximally mixed outputs (if $\rho \propto \id$, then so too is $\rho'$).
+These two sets of Kraus operators $\{E_1,E_2\}$ and $\{F_1,F_2\}$ describe the same channel, but the *narrative* is different.
+The first set of effects tells us that the channel chooses randomly, with the same probability, between the two options: let the qubit pass undisturbed or apply the phase-flip $Z$;
+the second set tells us that channel essentially performs the measurement in the standard basis, but the outcome of the measurement is not revealed.
+In general:
 
-In particular, if we restrict our attention to qubits, and choose the unitaries to be the identity and the three Pauli operators, then we construct what is known as a **Pauli channel**:
-$$
-  \rho
-  \longmapsto p_0 \id\rho\id + p_x X\rho X + p_y Y\rho Y + p_z Z\rho Z.
-$$
+::: {.idea latex=""}
+Describing actions of quantum channels purely in terms of their effects (i.e. Kraus operators) can be ambiguous.
+:::
 
-The most popular Pauli channel is the **depolarising channel**
-$$
-  \rho_p
-  \longmapsto (1-p) \id\rho\id + \frac{p}{3} (X\rho X + Y\rho Y + Z\rho Z)
-$$
-for $0\leq p\leq1$.
-In the depolarising channel, a qubit in state $\rho_p$ remains intact with probability $1-p$, or is otherwise transformed under one of the Pauli operators $X$, $Y$, or $Z$, each chosen randomly with probability $p/3$.
-We study this channel in more detail [in the exercises](#depolarising-channel).
+The second interesting point is that not *all* transformations of the Bloch sphere into spheroids are possible.
+For example, we cannot deform the Bloch sphere into a pancake-like oblate spheroid.
+This is due to *complete* positivity (instead of mere positivity) of quantum channels, which we will explain shortly.
 
 
+## Composition of quantum channels
 
+We mentioned that quantum channels are combinations of
 
+1. adding a physical system in a fixed state (via tensoring),
+2. discarding a physical system (taking a partial trace),
+3. and unitary transformations.
 
+For consistency let us note that each of these operations admits an operator-sum decomposition. This is obvious for unitary evolution ($\rho\mapsto U\rho U^\dagger$), but perhaps less so for the other two operations.
 
-### Expand, evolve, and discard
-
-We shall now discuss two important operations: _adding_ and _discarding_ subsystems.
-You need to pay attention to the dimensions of the Hilbert spaces involved, for they are different.
-Given a system $\mathcal{A}$, we can bring in another system $\mathcal{B}$ to form the combined system $\mathcal{AB}$.
-This will be described by a map (**expansion**)
-$$
-  \mathscr{B}(\mathcal{H}_{\mathcal{A}})
-  \longrightarrow \mathscr{B}(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}).
-$$
-Conversely, given a composite system $\mathcal{AB}$, we can discard subsystem $\mathcal{B}$, which is described by a map (**reduction**)
-$$
-  \mathscr{B}(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}})
-  \longrightarrow \mathscr{B}(\mathcal{H}_{\mathcal{A}}).
-$$
-We will show now that the two operations can be written in the Kraus representation.
-For consistency with the rest of the exposition, we will choose $\mathcal{A}$ to be the system and $\mathcal{B}$ the environment.
-
-- **Expansion.**
-    Any quantum system can be expanded by bringing in an auxiliary system (here, the environment) in a fixed state.
-    This is described by the **isometric embedding**
+- **Adding a system.**
+    Any quantum system can be expanded by bringing in an auxiliary system in a fixed state $\ket{a}$.
+    This transformation takes vectors in the Hilbert space associated with the original system and tensors them with a fixed vector $\ket{a}$ in the Hilbert space associated with the auxiliary system:
     $$
       \ket{\psi}
-      \longmapsto \ket{\psi}\otimes\ket{e}
-      = (\id\otimes\ket{e}) \ket{\psi}.
+      \longmapsto \ket{a}\otimes\ket{\psi}
+      = (\ket{a}\otimes\id) \ket{\psi}.
     $$
-    It takes vectors in the Hilbert space associated with the original system, $\mathcal{H}$ (where $\dim\mathcal{H}=d$) and tensors them with a fixed vector $\ket{e}$ in the Hilbert space associated with the environment, $\mathcal{H}_E$ (where $\dim\mathcal{H}_E=d_E$).
-    So it _embeds_ the structure of $\mathcal{H}$ into a larger Hilbert space $\mathcal{H}\otimes\mathcal{H}_E$ (where $\dim\mathcal{H}\otimes\mathcal{H}_{\mathcal{A}}=d\cdot d_E$).
-    In terms of density operators, we write the expansion as
+    In terms of density operators, we write this "expansion" transformation as
     $$
       \begin{aligned}
         \rho
-        \longmapsto &\rho\otimes\proj{e}
-      \\=& (\id\otimes\ket{e})\rho (\id\otimes\bra{e})
-      \\=& E\rho E^\dagger
+        \longmapsto \rho'
+        &= \proj{a}\otimes\rho
+      \\&= (\ket{a}\otimes\id)\rho (\bra{a}\otimes\id)
+      \\&= V\rho V^\dagger
       \end{aligned}
     $$
-    where $E=\id\otimes\ket{e}$ can be represented by a $(d\times(d\cdot d_E))$ matrix.
-    We note that $E^\dagger E=\id\otimes\braket{e}{e}=\id$ is the identity in $\mathcal{H}$.
+    where $V=\id\otimes\ket{a}$.
+    We note that $V^\dagger V = \id\otimes\braket{a|a} =\id$ is the identity in the Hilbert space associated with the system, and so $V$ is an isometry.
+    Indeed, this transformation is an *isometric embedding*.
 
-- **Reduction.**
-    We can also discard a part of a composed system.
-    If $\rho\in\mathscr{B}(\mathcal{H}\otimes\mathcal{H}_E)$ is a joint state of the system and the environment (the two may be entangled), then we can neglect or discard the environment by tracing over it:
+- **Discarding a system.**
+    Conversely, given a composite system in state $\rho$, we can discard one of its subsystems.
+    The partial trace over an auxiliary system can be written in the Kraus representation as
     $$
       \begin{aligned}
         \rho
-        &\longmapsto \tr_E\rho
-      \\=&\sum_k (\id\otimes\bra{e_k}) \rho (\id\otimes\ket{e_k})
-      \\=& \sum_k E_k \rho E^\dagger_k
+        \longmapsto \rho'
+        &= \tr_\mathcal{A}\rho
+      \\&= (\tr\otimes\id)\rho
+      \\&= \sum_i (\bra{i}\otimes\id)\rho(\ket{i}\otimes\id)
+      \\&= \sum_i E_i\rho E^\dagger_i
       \end{aligned}
     $$
-    where $E_k=\id\otimes\bra{e_k}$ and can be represented by a $(d\cdot d_E)\times d$ matrices.
-    Again, we note that $\sum_k E_k^\dagger E_k=\id\otimes\sum_k\proj{e_k}=\id\otimes\id_E$ is the identity in $\mathcal{H}\otimes\mathcal{H}_E$.
+    where the vectors $\ket{i}$ form an orthonormal basis in the Hilbert space associated with the auxiliary system.
+    Again, we can check that the Kraus operators $E_i=\bra{i}\otimes\id$ satisfy the completeness relation $\sum_i E^\dagger_i E_i =\id\otimes\id$ (using the fact that $\sum_i\proj{i}=\id$).
 
-So both expansion and reduction can be expressed in the Kraus representation as $\rho\mapsto\sum_k E_k\rho E_k^\dagger$, where $\sum_k E_k^\dagger E_k=\id$.
-Here, the identity operator acts on the Hilbert space associated with the original density operator $\rho$, that is, $\mathcal{H}$ for the expansion and $\mathcal{H}\otimes\mathcal{H}_E$ for the reduction.
-Note that we do _not_ require that $\sum_k E_k E^\dagger_k =\id$.
-
-The next thing to notice is that we can compose quantum channels.
-This is straightforward in the Kraus representation: if
+Any *sequential* composition of two quantum channels $\mathcal{E}$ and $\mathcal{F}$ with Kraus operators $\{A_i\}_{i\in I}$ and $\{B_j\}_{j\in J}$ (respectively) is another quantum channel^[Here we have tacitly assumed that the dimensions agree, i.e. that the output of $\mathcal{E}$ and the input of $\mathcal{F}$ are of the same dimension, so that the composition makes sense.] described by the Kraus operators $\{B_jA_i\}_{i\in I,j\in J}$.
+Showing this is rather straightforward, at least in the operator-sum representation: let
 $$
-  \begin{gathered}
-    \mathcal{E}_A\colon \rho
-    \longmapsto\sum_i A_i\rho A^\dagger_i
-  \\\text{where $\sum_i A^\dagger_i A_i=\id$}
-  \end{gathered}
+  \begin{aligned}
+    \mathcal{E} &= \sum_i A_i\cdot A^\dagger_i
+  \\\mathcal{F} &= \sum_j B_j\cdot B^\dagger_j
+  \end{aligned}
 $$
-and
+where $\sum_i A^\dagger_i A_i=\sum_j B^\dagger_j B_j=\id$;
+then the sequential composition of $\mathcal{E}$ followed by $\mathcal{F}$ can be written as
 $$
-  \begin{gathered}
-    \mathcal{E}_B\colon \rho
-    \longmapsto\sum_j B_j\rho B^\dagger_j
-  \\\text{where $\sum_j B^\dagger_j B_j=\id$}
-  \end{gathered}
+  \mathcal{F} \circ\mathcal{E}
+  = \sum_{ij} (B_jA_i) \cdot (B_jA_i)^\dagger
 $$
-then
-$$
-  \mathcal{E}_B\mathcal{E}_A\colon \rho
-  \longmapsto \sum_{ij} (B_jA_i) \rho (B_jA_i)^\dagger
-$$
-where the $B_jA_i$ are the Kraus operators associated with the new channel $\mathcal{E}_B\mathcal{E}_A$.
-We can verify that
+so that the $B_jA_i$ are the Kraus operators associated with the new channel $\mathcal{F}\circ\mathcal{E}$, where the normalisation condition (or completeness relation) follows from
 $$
   \begin{aligned}
     \sum_{ij} (B_jA_i)^\dagger (B_jA_i)
@@ -418,232 +613,160 @@ $$
   \end{aligned}
 $$
 
-::: {.idea data-latex=""}
-We now postulate that _any quantum channel is a composition of the three elementary operations_:
+You might wonder why we explicitly called the above composition "sequential" --- isn't this how we always compose functions?
+In actual fact, since we have access to tensor products, there is another sort of composition, namely **parallel** composition: if we have systems $\mathcal{A}$ and $\mathcal{B}$ with channels $\mathcal{E}_\mathcal{A}$ acting on $\mathcal{A}$ and $\mathcal{E}_\mathcal{B}$ acting on $\mathcal{B}$, then the parallel composition is denoted by $\mathcal{E}_\mathcal{A}\otimes\mathcal{E}_\mathcal{B}$, acting on the joint system $\mathcal{A}\otimes\mathcal{B}$, and with Kraus operators given by the $A_i\otimes B_j$.
+The normalisation condition again follows from a simple calculation:
+$$
+  \begin{aligned}
+    \sum_{ij} (A_i\otimes B_j)^\dagger (A_i\otimes B_j)
+    &= \sum_{ij} A_i^\dagger A_i \otimes B_j^\dagger B_j
+  \\&= \id_A\otimes\id_B.
+  \end{aligned}
+$$
 
-1. **expansion**, i.e. bringing in another physical system in a fixed state (via an isometric embedding);
-2. **unitary evolution** of the _whole_ system; and
-3. **reduction**, i.e. discarding everything we do not care about (via the partial trace).
+Now that we know how to compose quantum channels in terms of Kraus operators, we can see that the Stinespring representation is perfectly consistent with the Kraus representation: the three basic operations that we are allowed to use to build channels in the Stinespring representation (i.e. adding a system, unitary evolution, and discarding a system) are all themselves quantum channels, in that they admit a Kraus decomposition.
+
+Before moving on, we make a small (but important) remark:
+
+::: {.idea latex=""}
+When we compose quantum channels, each channel needs its own independent ancilla;
+*do not share ancillas between different channels*.
 :::
 
-Given that any unitary evolution $\rho\mapsto U\rho U^\dagger$ can be explicitly expressed in the operator sum form, the typical sequence "expand -- unitary -- reduce", which is the composition of three quantum channels, also admits an Kraus representation.
+For example, say we have three channels, $\mathcal{E}_1$, $\mathcal{E}_2$, and $\mathcal{E}_3$, with $\mathcal{E}_i$ defined by the unitary $U_i$ and the state $\ket{a_i}$ of its ancilla.
+Then the (sequential) composition $\mathcal{E}_3\circ\mathcal{E}_2\circ\mathcal{E}_1$ is given by
 
-From a _mathematical_ perspective, we have extended the class of quantum evolutions from
-$$
-  \rho
-  \longmapsto U\rho U^\dagger
-  \quad\text{with $U^\dagger U=\id$}
-$$
-to
-$$
-  \rho
-  \longmapsto \sum_k E_k\rho E^\dagger_k
-  \quad\text{with $\sum_k E^\dagger_k E_k=\id$.}
-$$
-
-To be clear, we are not claiming here that the Kraus representation has any fundamental significance: it simply follows from a unitary evolution of a larger quantum system, and it is a convenient mathematical shortcut when we deal with subsystems of that larger system.
-
-
-
-
-
-
-## The axiomatic approach
-
-### Completely positive maps
-
-Let us now turn to the axiomatic approach.
-What are the most general transformations that map density operators to density operators?
-
-The first thing to notice is that any such a transformation $\mathcal{E}$ must respect the mixing of states.
-Consider an ensemble of systems, with a fraction $p_1$ of them in the state $\rho_1$, and the remaining $p_2$ of them in the state $\rho_2$.
-The overall ensemble is described by $\rho=p_1\rho_1+p_2\rho_2$.
-If we apply $\mathcal{E}$ to each member of the ensemble, then the overall ensemble will be described by the density operator $\rho'=\mathcal{E}(\rho)$, which is $\rho'=p_1 \mathcal{E}(\rho_1)+p_2 \mathcal{E}(\rho_2)$.
-We conclude that $\mathcal{E}$ must be a _linear_ map^[More precisely, we require that $\mathcal{E}$ be an _affine_ map.] on density operators: $\mathcal{E}\colon\mathscr{B}(\mathcal{H})\mapsto \mathscr{B}(\mathcal{H}')$.
-Moreover, since $\mathcal{E}$ maps density operators to density operators, it must be **positive** ($\mathcal{E}(\rho)\geq0$ whenever $\rho\geq0$) and **trace preserving** ($\tr \mathcal{E}(\rho)=\tr\rho$ for all $\rho\in\mathscr{B}(\mathcal{H})$).
-Can we stop here and conclude that quantum channels are described by linear, positive, trace-preserving maps?
-
-It turns out that there is one more property which must added to the list: we must require that the map remains positive even when it acts on a part of a larger system.
-That is, for any bipartite state $\rho_{\mathcal{A}\mathcal{B}}$ of a composed system $\mathcal{A}\mathcal{B}$, the extended map $\mathcal{I}\otimes\mathcal{E}$ (meaning "apply $\mathcal{E}$ to either one of the subsystems (it does not matter which one; here we have chosen subsystem $\mathcal{B}$), and do nothing (i.e. apply the identity map $\mathcal{I}$) to the remaining subsystem")^[Note the difference between $\id$ and $\mathcal{I}$. They are both identity maps, but $\id$ is the identity operator on $\mathcal{H}$, i.e. the (unitary) identity matrix; $\mathcal{I}$ is the identity _superoperator_ (or quantum channel), i.e. the identity superoperator that acts on operators on $\mathcal{H}$.] gives a proper density operator $\rho'_{AB}$:
-$$
-  \rho'_{AB} = (\mathcal{I}\otimes\mathcal{E})(\rho_{\mathcal{A}\mathcal{B}}) \geq 0.
-$$
-
-We can represent this construction of $\rho'_{AB}$ diagrammatically^[In fact, a _lot_ (if not _all_) of quantum information theory can be converted into similar looking diagrams, using the formalism of [**string diagrams in monoidal categories**](https://arxiv.org/pdf/1510.05468.pdf). Another graphical formalism is that of [**ZX-calculus**](https://zxcalculus.com/intro.html). Both of these topics can lead into very deep rabbit holes very quickly, so beware!] as follows:
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
-\begin{equation*}
-  \begin{quantikz}
-    &&\qw &\gate{\mathcal{I}} &\qw &\qw
-  \\\lstick{$\rho_{\mathcal{A}\mathcal{B}}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]&&&&& \rstick{$\rho'_{AB}$}&
-  \\&&\qw &\gate{\mathcal{E}} &\qw &\qw
-  \end{quantikz}
-\end{equation*}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5}
+\begin{quantikz}
+  \lstick{$\ket{a_1}$}
+  & \gate[2]{U_1}
+  & \qw
+  & & & \lstick{$\ket{a_2}$}
+  & \gate[2]{U_2}
+  & \qw
+  & & & \lstick{$\ket{a_3}$}
+  & \gate[2]{U_3}
+  &\qw
+\\\lstick{$\rho$}
+  & &\qw
+  & \qw \rstick{$\rho'_1$}
+  & & \qw
+  & & \qw
+  & \qw \rstick{$\rho'_2$}
+  & & \qw
+  & & \rstick{$\rho'_3$} \qw
+\end{quantikz}
 ```
 
-Now this is a stronger property than mere positivity; now we are asking for something called **complete positivity**.
-You may naively think that such trivial extensions of positive maps must be also positive, but this is not the case: the positivity of $\mathcal{E}$ does _not_ imply the positivity of its extension $\mathcal{I}\otimes\mathcal{E}$.
+For more on this, see [the appendix on Markov approximation](#markov-approximation).
 
-::: {.idea data-latex=""}
-_Positivity does not imply complete positivity!_
-Why?
-_Because physical systems do not exist in isolation_; applying $\mathcal{E}$ to a part of the whole and doing nothing (i.e. applying the identity) to the rest may mess up the state of the whole in an unacceptable way.
-:::
 
-This is a very quantum phenomenon, and is another consequence of quantum entanglement between parts of the composite system.
 
-A simple example of a positive map that is not completely positive is the transpose.
-Consider the transpose operation on a single qubit: $T\colon\ket{i}\bra{j}\mapsto\ket{j}\bra{i}$ (for $i,j=0,1$).
-It preserves both trace and positivity, and, if $\rho$ is a density matrix, then so is $\rho'=\rho^T$.
-However, if the input qubit is part of a _two-qubit_ system, initially in the entangled state $\ket{\Omega}=\frac{1}{\sqrt{2}}(\ket{0}\ket{0}+\ket{1}\ket{1})$, and the transpose is applied to _only one_ of the two qubits, (say, the second one) then, under the action of the partial transpose $\mathcal{I}\otimes T$, the density matrix of the two qubits becomes
+## Completely positive trace-preserving maps
+
+It is easy to verify that quantum channels preserve positivity and trace, but the converse is not true!
+You may find it surprising, but there are linear maps that preserve positivity and the trace, but which are *not* quantum channels.
+The matrix transpose operation $\rho\mapsto\rho'=\rho^T$ is a good example of such an unphysical operation: it preserves both trace and positivity, and if $\rho$ is a density matrix then so too is $\rho'=\rho^T$, but the transpose *cannot* be written in the Stinespring (or the Kraus) form;
+it is not induced by a unitary operation on some larger Hilbert space, and it cannot be implemented.
+So, we then ask, *what is* the class of physically admissible maps?
+
+Mathematically speaking, a quantum channel $\mathcal{E}$ is represented by a map
+^[Recall that, given a pair of Hilbert spaces $\mathcal{H}$ and $\mathcal{H}'$, we denote the set of (bounded) linear operators from $\mathcal{H}$ to $\mathcal{H}'$ by $\mathcal{B}(\mathcal{H},\mathcal{H}')$. We write $\mathcal{B}(\mathcal{H})$ as shorthand for $\mathcal{B(H,H)}$]
+$$
+  \mathcal{E}\colon \mathcal{B}(\mathcal{H}) \to \mathcal{B}(\mathcal{H}')
+$$
+mapping states (i.e. density operators) on some Hilbert space $\mathcal{H}$ to states on some, possibly different, Hilbert space $\mathcal{H}'$.
+But we are not interested in just any such maps, of course --- the statistical interpretation of quantum theory imposes certain properties on the subset of maps in which we are interested.
+
+- Firstly, for such a map $\mathcal{E}$ to be a channel it must *respect the mixing of states*.
+    Consider an ensemble of systems, with a fraction $p_1$ of them in the state $\rho_1$, and the remaining $p_2$ of them in the state $\rho_2$.
+    The overall ensemble is described by $\rho=p_1\rho_1+p_2\rho_2$.
+    If we apply $\mathcal{E}$ to each member of the ensemble individually, then the overall ensemble will be described by the density operator $\rho'=\mathcal{E}(\rho)$, which is given by $\rho'=p_1\mathcal{E}(\rho_1)+p_2\mathcal{E}(\rho_2)$.
+    We conclude that $\mathcal{E}$ must be a *linear map*.
+
+- Next, since $\mathcal{E}$ must *map density operators to density operators* it must be both *positive* ($\mathcal{E}(\rho)\geq0$ whenever $\rho\geq0$) and *trace preserving* ($\tr\mathcal{E}(\rho)=\tr\rho$ for all $\rho$).
+
+- Finally comes a subtle point.
+    It turns out that being positive is not good enough;
+    we must further require that the map $\mathcal{E}$ *remains positive even when extended to act on a part of a larger system*.
+    Suppose that Alice and Bob share a bipartite system $\mathcal{AB}$ in an entangled state $\rho_\mathcal{AB}$, and, whilst Alice does nothing, Bob applies the local operation $\mathcal{E}$ to his subsystems, and his subsystems only.
+    Then the resulting map on the whole bipartite system is given by $\id\otimes\mathcal{E}$, and this must give a proper density operator $\rho'_\mathcal{AB}$ of the composed system.
+    It turns out that this is a strictly stronger property than mere positivity;
+    we are asking for something called **complete positivity**.
+    Needless to say, complete positivity of $\mathcal{E}$ implies positivity, but the converse does not hold: there are maps which are positive but not completely positive.
+    The matrix transpose operation $\rho\rightarrow \rho'=\rho^T$ is a classic example of such a map.
+
+In fact, we can study the matrix transpose a bit further.
+Consider the transpose operation on a single qubit: $T\colon(\ket{i}\bra{j})\mapsto\ket{j}\bra{i}$ (for $i,j\in\{0,1\}$).
+It preserves both trace and positivity, and if $\rho$ is a density matrix then so too is $\rho'=\rho^T$.
+However, if the input qubit is part of a two qubit system, initially in the entangled state $\ket{\Omega}=\frac{1}{\sqrt{2}}(\ket{0}\ket{0}+\ket{1}\ket{1})$, and the transpose is applied to *only one* of the two qubits (say, the second one), then the density matrix of the two qubits evolves under the action of the partial transpose $\id\otimes T$ as
 $$
   \begin{aligned}
     \proj{\Omega}
-    =& \frac12\sum_{ij} \ket{i}\bra{j} \otimes\ket{i}\bra{j}
-  \\\xmapsto{\mathcal{I}\otimes T}& \frac12\sum_{ij} \ket{i}\bra{j} \otimes T(\ket{i}\bra{j})
-  \\=& \frac12\sum_{ij} \ket{i}\bra{j} \otimes\ket{j}\bra{i}.
+    = \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes \ket{i}\bra{j}
+    &\xmapsto{\id\otimes T}
+    \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes T( \ket{i}\bra{j})
+  \\&= \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes \ket{j}\bra{i}.
   \end{aligned}
 $$
 The output is the $\texttt{SWAP}$ matrix, since it describes the $\texttt{SWAP}$ operation: $\ket{j}\ket{i}\mapsto\ket{i}\ket{j}$.
-Since the square of $\texttt{SWAP}$ is the identity, its eigenvalues are $\pm1$; states which are symmetric under interchange of the two qubits have eigenvalue $1$, while antisymmetric states have eigenvalue $-1$.
-Thus the $\texttt{SWAP}$ matrix has negative eigenvalues, which means that $\mathcal{I}\otimes T$ does _not_ preserve positivity, and therefore $T$ is _not_ a completely positive map.
-If you prefer to see this more explicitly, then you can use the matrix representation of $\proj{\Omega}$, apply the partial transpose $\mathcal{I}\otimes T$, and inspect the resulting matrix:
+Since this operation squares to the identity, we know that its eigenvalues must be either $\pm1$: states which are symmetric under interchange of the two qubits have eigenvalue $1$, while antisymmetric states have eigenvalue $-1$.
+So the $\texttt{SWAP}$ matrix has negative eigenvalues, which means that $\id\otimes T$ does *not* preserve positivity, and therefore $T$ is *not* a completely positive map.
+If you prefer to see this more explicitly, then you can use the matrix representation of $\proj{\Omega}$, apply the partial transpose $\id\otimes T$, and then inspect the resulting matrix:
 $$
   \frac12\left[
   \begin{array}{cc|cc}
     1 & 0 & 0 & 1
-  \\0 & 0 & 0 & 0\\
-  \hline
-  0 & 0 & 0 & 0
+  \\0 & 0 & 0 & 0
+  \\\hline
+    0 & 0 & 0 & 0
   \\1 & 0 & 0 & 1
   \end{array}\right]
-  \xmapsto{\mathcal{I}\otimes T}
+  \xmapsto{\id\otimes T}
   \frac12\left[
   \begin{array}{cc|cc}
     1 & 0 & 0 & 0
-  \\0 & 0 & 1 & 0\\
-  \hline
- 0 & 1 & 0 & 0
+  \\0 & 0 & 1 & 0
+  \\\hline
+    0 & 1 & 0 & 0
   \\0 & 0 & 0 & 1
   \end{array}\right].
 $$
-The partial transpose maps the density matrix of a maximally entangled state $\proj{\Omega}$ to the $\texttt{SWAP}$ matrix, which has one negative eigenvalue (namely $-1$), and so is not a density matrix.
+That is, the partial transpose $\id\otimes T$ maps the density matrix of a maximally entangled state $\proj{\Omega}$ to the $\texttt{SWAP}$ matrix, which has one negative eigenvalue ($-1$) and thus is not a density matrix.
 
-So how can we tell if a given map $\mathcal{E}$ is completely positive or not?
-The answer is "in pretty much the same way we discovered that the transpose is not a completely positive map".
-It suffices to apply $\mathcal{I}\otimes\mathcal{E}$ (or $\mathcal{E}\otimes\mathcal{I}$) to the maximally entangled state of two subsystems and check if the result is a legal density matrix.
-In fact, it works both ways:
+So we have seen that, at the very least, we want to be considering *completely positive trace-preserving* maps, but how do we know whether or not there are any restrictions left to impose?
+Needless to say, here is where mathematics alone cannot guide us, since we are trying to characterise maps which are *physically admissible*, and mathematics knows nothing about the reality of our universe!
+However, one thing that we can do is compare our abstract approach with the derivations of quantum channels defined in terms of the Stinespring (or the Kraus) representation.
+As it happens, we can show that a map is completely positive and trace preserving if and only if it can be written in the Stinespring (or the Kraus) form.
+In other words:
 
-::: {.idea data-latex=""}
-A linear map $\mathcal{E}\colon B(\mathcal{H}) \to B(\mathcal{H}')$ is completely positive if and only if $(\mathcal{I}\otimes\mathcal{E})(\proj{\Omega})\geq0$, where $\ket{\Omega}$ is a maximally entangled state of dimension $d=\dim{\mathcal{H}}$.
+::: {.idea latex=""}
+Quantum channels are exactly the completely positive trace-preserving (CPTP) maps.
 :::
 
-(ref:cp-test-caption) Test for complete positivity: apply the map $\mathcal{E}$ to half of a maximally entangled state and check if the resulting bipartite operator is a density operator.
+One direction of this claim is much simpler than the other.
+Any channel $\mathcal{E}$ must be completely positive, since the Kraus decomposition guarantees positivity of both $\mathcal{E}$ *and* the extended map $\id\otimes\mathcal{E}$: if $\mathcal{E}$ has the Kraus decomposition $\sum_i E_i\cdot E_i^\dagger$, then the extended channel $\id\otimes\mathcal{E}$ has the Kraus decomposition $\sum_i(\id\otimes E_i)\cdot(\id\otimes E_i^\dagger)$, which means that $\id\otimes\mathcal{E}$ is also a positive map, and so $\mathcal{E}$ is completely positive.
+Showing that CPTP maps are quantum channels is less obvious, and, in order to prove this, we will introduce a very convenient tool called the **Choi matrix**^[Man-Duen Choi was brought up in Hong Kong. He received his Ph.D. degree under the guidance of Chandler Davis at Toronto. He taught at the University of California, Berkeley, from 1973 to 1976, and has worked since then at the University of Toronto. His research has been mainly in operator algebras, operator theory, and polynomial rings. He is particularly interested in examples/counterexamples and two-by-two matrix manipulations.], which is yet another way to characterise linear maps between operators.
 
-```{r cp-test,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7,fig.cap='(ref:cp-test-caption)'}
-\newcommand{\id}{\mathbf{1}}
-\begin{equation*}
-  \begin{quantikz}
-    &&\qw &\gate{\mathcal{I}} &\qw &\qw
-  \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness] &&&&&\rstick{$\geq0$?}
-  \\&&\qw &\gate{\mathcal{E}} &\qw &\qw
-  \end{quantikz}
-\end{equation*}
-```
-
-Clearly, if $\mathcal{E}$ is completely positive, then, from the definition, $(\mathcal{I}\otimes\mathcal{E})(\proj{\Omega})\geq0$.
-Conversely, in order to check if $(\mathcal{I}\otimes\mathcal{E})(\rho_{\mathcal{A}\mathcal{B}})\geq0$ holds for any bipartite state $\rho_{\mathcal{A}\mathcal{B}}$, it is sufficient to consider only pure states, e.g. the states that appear in the spectral decomposition of $\rho_{\mathcal{A}\mathcal{B}}$.
-Any such pure bipartite state $\ket{\Psi}$ can be written as $(A\otimes\id)\ket{\Omega}$ or $(\id\otimes B)\ket{\Omega}$, for some linear operators $A$ and $B$, on subsystems $\mathcal{A}$ or $\mathcal{B}$, respectively:^[The state $\ket{\Psi}$ has the Schmidt decomposition $\sum_k\lambda_k\ket{k}\ket{k}$, where $\lambda^2_k$ are the eigenvalues of the reduced density operators $\sigma_A$ and $\sigma_B$. Thus $\ket{\Psi}$ can be written as $(\sqrt{d\sigma_A}\otimes\id)\ket{\Omega}$ or $(\id\otimes\sqrt{d\sigma_B})\ket{\Omega}$, where $d$ is the Schmidt rank.]
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=14,fig.cap='All three of these operations are equal.'}
-\newcommand{\id}{\mathbf{1}}
-\begin{equation*}
-  \begin{quantikz}
-    &&\qw &\gate{\id} &\qw &\qw
-  \\\lstick{$\ket{\Psi}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
-  \\&&\qw &\gate{\id} &\qw &\qw
-  \end{quantikz}
-\end{equation*}
-\begin{equation*}
-  \begin{quantikz}
-    &&\qw &\gate{A} &\qw &\qw
-  \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
-  \\&&\qw &\gate{\id} &\qw &\qw
-  \end{quantikz}
-  \quad
-  \begin{quantikz}
-    &&\qw &\gate{\id} &\qw &\qw
-  \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
-  \\&&\qw &\gate{B} &\qw &\qw
-  \end{quantikz}
-\end{equation*}
-```
-
-Given that the map $\mathcal{E}$ acts only on the subsystem $\mathcal{B}$, we have that
-$$
-  \begin{gathered}
-    (\mathcal{I}\otimes\mathcal{E})[(A\otimes\id)\proj{\Omega}(A^\dagger\otimes\id)]
-  \\= (A\otimes\id)[(\mathcal{I}\otimes\mathcal{E})(\proj{\Omega})](A^\dagger\otimes\id),
-  \end{gathered}
-$$
-and if $(\mathcal{I}\otimes\mathcal{E})(\proj{\Omega})$ is positive semidefinite, then so too is $(A\otimes\id)[(\mathcal{I}\otimes\mathcal{E})(\proj{\Omega})](A^\dagger\otimes\id)$.
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=14,fig.cap='All three of these operations are also equal.'}
-\newcommand{\id}{\mathbf{1}}
-\definecolor{primary}{RGB}{177,98,78}
-\tikzset{slice/.append style={primary}}
-\begin{equation*}
-  \begin{quantikz}
-    &&\qw &\gate{\mathcal{I}} &\qw &\qw
-  \\\lstick{$\ket{\Psi}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
-  \\&&\qw &\gate{\mathcal{E}} &\qw &\qw
-  \end{quantikz}
-\end{equation*}
-\begin{equation*}
-  \begin{quantikz}
-    &&\gate{A}\slice\qw &\gate{\mathcal{I}} &\qw
-  \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
-  \\&&\gate{\id} &\gate{\mathcal{E}} &\qw
-  \end{quantikz}
-  \quad
-  \begin{quantikz}
-    &&\gate{\mathcal{I}}\slice\qw &\gate{A} &\qw
-  \\\lstick{$\ket{\Omega}$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
-  \\&&\gate{\mathcal{E}} &\gate{\id} &\qw
-  \end{quantikz}
-\end{equation*}
-```
-
-
-
-
-
-
-### The Choi matrix
-
-If we choose bases of $\mathcal{H}$ and $\mathcal{H}'$ (where $\dim\mathcal{H}=d$ and $\dim\mathcal{H}'=d'$), then any linear map $\mathcal{E}\colon\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H'})$ can be completely characterised by its action on the $d^2$ basis matrices $\ket{i}\bra{j}$, where $i,j=1,2\ldots,d$.
-
-::: {.idea data-latex=""}
-The **Choi matrix $\widetilde{\mathcal{E}}$** of $\mathcal{E}$ is defined by
-$$
-  \widetilde{\mathcal{E}}
-  = (\mathcal{I}\otimes\mathcal{E})\proj{\Omega}
-  =\frac{1}{d}\sum_{i,j}\ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})
-$$
-where $\ket{\Omega}=\sum_i\ket{i}\ket{i}$ is a maximally entangled state.
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick{$\dim\mathcal{H}=d$}&&\qw &\gate{\mathcal{I}} &\qw &\qw\rstick{$\dim\mathcal{H}=d$}
-  \\\lstick{$\Omega$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
-  \\\lstick{$\dim\mathcal{H}=d$}&&\qw &\gate{\mathcal{E}} &\qw &\qw\rstick{$\dim\mathcal{H}'=d'$}
-  \end{quantikz}
-\end{equation*}
-```
+::: {.tim}
+- **!!to-do: tim footnote: here we work only with finite dimensional spaces, and if $X$ is f.d. then every linear operator $f\colon X\to Y$ between normed vector spaces is continuous (and thus bounded)!!**
+- talk about [unbounded operators](https://en.wikipedia.org/wiki/Hilbert_space#Unbounded_operators)
 :::
 
-The Choi matrix is a neat way of tabulating all possible values of $\mathcal{E}(\ket{i}\bra{j})$, since the $(i,j)$-th block entry of $\widetilde{\mathcal{E}}$ is the $(d'\times d')$-matrix $\mathcal{E}(\ket{i}\bra{j})$:
+
+
+## State-channel duality
+
+Suppose that $\mathcal{H}$ is of dimension $d$ and $\mathcal{H}'$ is of dimension $d'$, and pick a basis for each space.
+Then any linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$ can be completely characterised by its action on the $d^2$-many basis matrices $\ket{i}\bra{j}$ of $\mathcal{B}(\mathcal{H})$, where $i,j\in\{1,2\ldots,d\}$, i.e. for any density operator $\rho$ on $\mathcal{H}$ we have
+**!!to-do: fix label!!**
+$$
+  \mathcal{E}(\rho)
+  = \mathcal{E}\left(\sum_{ij}\rho_{ij} \ket{i}\bra{j}\right)
+  = \sum_i\rho_{ij}\mathcal{E}(\ket{i}\bra{j}).
+\tag{$\natural$}
+$$
+We can now tabulate all the $(d'\times d')$ matrices $\mathcal{E}(\ket{i}\bra{j})$ in $\mathcal{H}'$ by forming a bigger $(dd'\times dd')$ block matrix in $\mathcal{H}\otimes\mathcal{H}'$:
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
 \definecolor{primary}{RGB}{177,98,78}
@@ -675,215 +798,581 @@ The Choi matrix is a neat way of tabulating all possible values of $\mathcal{E}(
 \end{equation*}
 ```
 
-Of course, once we know how $\mathcal{E}$ acts on the $d^2$ basis matrices $\ket{i}\bra{j}$, we know how it acts on any $(d\times d)$ matrix $X=\sum_{ij}X_{ij}\ket{i}\bra{j}$, since $\mathcal{E}(X) = \sum_{ij}X_{ij}\mathcal{E}(\ket{i}\bra{j})$, where $i,j=1,\ldots, d$.
-This can be written as follows:
+We call this block matrix $\widetilde{\mathcal{E}}\in\mathcal{B}(\mathcal{H}\otimes\mathcal{H}')$ the **Choi matrix** of $\mathcal{E}$.
 
-::: {.idea data-latex=""}
+The Choi matrix is essentially another way of representing a linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$: if you are given the Choi matrix $\widetilde{\mathcal{E}}$ of $\mathcal{E}$ and you want to evaluate $\mathcal{E}(\rho)$, then you simply follow Equation ($\natural$), taking the values of $\mathcal{E}(\ket{i}\bra{j})$ from the Choi matrix.
+This can be formally written as
+
+::: {.idea latex=""}
+If $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$, then
 $$
-  \mathcal{E}(X) =  d \tr_{\mathcal{A}} [(X^T\otimes\id)\widetilde{\mathcal{E}}]
+  \mathcal{E}(\rho)
+  = d(\tr\otimes\id)\left[(\rho^T\otimes\id)\widetilde{\cal{E}}\right]
 $$
+where $d=\dim\mathcal{H}$.
 :::
 
-where the partial trace is taken over the "first half" of the entangled state, the part to which we did not apply $\mathcal{E}$ in our construction of $\widetilde{\mathcal{E}}$.
-
-In practice it is more convenient to use the following formula (which holds for any $(d\times d)$ matrix $X$ and any $(d'\times d')$ matrix $Y$):
-
-::: {.idea data-latex=""}
+The expression above may look baffling to an untrained eye, but this is often the case when we turn something conceptually obvious into a precise and compact mathematical notation.
+In order to gain some intuition here, recall that, for matrices $A$ and $B$,
 $$
- \tr[\mathcal{E}(X)Y]
- = \tr[\widetilde{\mathcal{E}}(X^T\otimes Y)]
+  \tr A^T B = \sum_{ij} A_{ij}B_{ij}.
 $$
-:::
+If we take $A$ and $B$ to be the block matrices $\rho\otimes\id$ and $\widetilde{\mathcal{E}}$, respectively, then we can use this to show that
+$$
+  (\tr\otimes\id)\left[(\rho^T\otimes\id)\widetilde{\mathcal{E}}\right]
+  = \frac{1}{d}\sum_i\rho_{ij}\mathcal{E}(\ket{i}\bra{j}).
+$$
 
-For example, if we are interested in the component $\mathcal{E}(X)_{ij}= \bra{i}\mathcal{E}(X)\ket{j}$, then we take $Y=\ket{j}\bra{i}$.
+This state-channel duality thus gives us a one-to-one correspondence between linear maps $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ and matrices $\widetilde{\mathcal{E}}$ acting on the tensor product $\mathcal{H}\otimes\mathcal{H}'$.
+This correspondence is sometimes called the **Choi--Jamiołkowski isomorphism**, and we discuss it further in [the appendix of the same name](#choi-jamiolkowski).
 
-::: {.idea data-latex=""}
-The Choi matrix $\widetilde{\mathcal{E}}$ in $\mathscr{B}(\mathcal{H}\otimes\mathcal{H'})$ is essentially another way of representing the linear map $\mathcal{E}\colon\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H'})$.
-One can express all properties of $\mathcal{E}$ in terms of properties of $\widetilde{\mathcal{E}}$, e.g.
+Mathematically, it is not too surprising that the matrix elements of an operator on a tensor product can be reorganised and reinterpreted as the matrix elements of an operator between operator spaces.
+What is interesting, and perhaps not so obvious, however, is that the positivity conditions for maps correspond exactly to conditions on their Choi matrices under this correspondence.
+In order to see this, let us express the Choi matrix as the result of $\id\otimes\mathcal{E}$ acting on the maximally entangled state in $\mathcal{H}\otimes\mathcal{H}$:
 
-- $\mathcal{E}$ is completely positive if and only if $\widetilde{\mathcal{E}}\geq0$;
-- $\mathcal{E}$ is trace preserving if and only if $\tr_{\mathcal{B}}\widetilde{\mathcal{E}}=d\id$".
-:::
-
-We now claim that _all quantum channels are described by completely positive trace preserving (CPTP) maps_.
-This is simply because we cannot think of any further restrictions we should be imposing on the linear maps $\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H'})$ to make them physically admissible.
-Needless to say, mathematics alone cannot tell us what is and what is not physically admissible, but we can certainly compare this axiomatic approach with the constructive one.
-As it happens, our claims makes sense, since we can show that a map is completely positive if and only if it can be written in the operator sum form.
-In other words, _quantum channels are exactly completely positive trace-preserving (CPTP) maps_.
-We will prove this in the next section
-
-As a closing remark before moving on, note that the equivalence of linear maps $\mathscr{B}(\mathcal{H})\to \mathscr{B}(\mathcal{H'})$ and matrices in $\mathscr{B}(\mathcal{H}\otimes\mathcal{H'})$ is well known.
-In the context of quantum channels it is often referred to as the **Choi--Jamiołkowski isomorphism**, or as **channel--state duality** (which we explain in more detail [later on](#choi-jamiolkowski)).
-For CPTP maps, the Choi matrix is a density matrix, also known as the **Jamiołkowski state**, and the correspondence is referred to as the **channel-state duality**.
-Mathematically, it is hardly surprising that the matrix elements of an operator on a tensor product can be reorganised and reinterpreted as the matrix elements of an operator between operator spaces.
-What _is_ interesting, and perhaps not so obvious, is that the positivity conditions for maps and their Choi matrices match up exactly under this correspondence.
-
-### An example
-
-Any linear map $\mathcal{E}$ acting on a qubit can be completely characterised by its action on the four basis matrices $\ket{i}\bra{j}$ (for $i,j=0,1$) and thus represented as the $(4\times 4)$ Choi matrix
+::: {.idea latex=""}
+The Choi matrix $\widetilde{\mathcal{E}}$ of a linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$ is given by
 $$
   \widetilde{\mathcal{E}}
-  = \frac12
-  \left[
-    \begin{array}{c|c}
-      \mathcal{E}(\ket{0}\bra{0}) & \mathcal{E}(\ket{0}\bra{1})
-    \\\hline
-      \mathcal{E}(\ket{1}\bra{0}))  & \mathcal{E}(\ket{1}\bra{1})
-    \end{array}
-  \right].
+  = (\id\otimes\mathcal{E})\proj{\Omega}
+  = \frac{1}{d} \sum_{ij} \ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})
 $$
-
-As an example, consider the following map:
-$$
-  \mathcal{E}_p\colon \ket{i}\bra{j}
-  \longmapsto p \ket{j}\bra{i}+ \delta_{ij}\frac{(1-p)}{2}\ket{i}\bra{j},
-$$
-where $0\leq p\leq 1$ is a real parameter.
-Its action on the four basis matrices is
-$$
-  \begin{aligned}
-    \ket{0}\bra{0} = \begin{bmatrix}1&0\\0&0\end{bmatrix}
-    &\longmapsto \begin{bmatrix}\frac{1+p}{2}&0\\0&\frac{1-p}{2}\end{bmatrix}
-  \\\ket{0}\bra{1} = \begin{bmatrix}0&1\\0&0\end{bmatrix}
-    &\longmapsto \begin{bmatrix}0&0\\p&0\end{bmatrix},
-  \\\ket{1}\bra{0} = \begin{bmatrix}0&0\\1&0\end{bmatrix}
-    &\longmapsto \begin{bmatrix}0&p\\0&0\end{bmatrix}
-  \\\ket{1}\bra{1} = \begin{bmatrix}0&0\\0&1\end{bmatrix}
-    &\longmapsto \begin{bmatrix}\frac{1-p}{2}&0\\0&\frac{1+p}{2}\end{bmatrix}
-  \end{aligned}
-$$
-which we can neatly collect and tabulate in the corresponding Choi matrix:
-$$
-  \widetilde{\mathcal{E}_p}
-  = \frac12
-  \left[
-    \begin{array}{cc|cc}
-      \frac{1+p}{2} & 0 & 0 & 0
-    \\0 & \frac{1-p}{2} & p & 0
-    \\\hline
-      0 & p & \frac{1-p}{2} & 0
-    \\0 & 0 & 0 & \frac{1+p}{2}
-    \end{array}
-  \right].
-$$
-This matrix contains _all_ the information concerning the map $\mathcal{E}_p$.
-For example, $\mathcal{E}_p$ is completely positive if and only if $\widetilde{\mathcal{E}_p}\geq0$, which happens for $p\leq\frac{1}{3}$ (the eigenvalues of $\widetilde{\mathcal{E}_p}$ are $\frac{1}{4}(1+p)$ and $\frac{1}{4}(1-3p)$).
-
-Now the map $\mathcal{E}_p$ sends a density operator $\rho$ to
-$$
-  \rho \longmapsto p\rho^T + \frac{(1-p)}{2}\id,
-$$
-where $\rho^T$ is the transpose of $\rho$.
-Is this map a quantum channel?
-That is, does it represent a physical process that can be implemented in a lab?
-In the expression above, the convex sum on the right hand side can be interpreted as follows: take the input state $\rho$ and either apply the transpose or replace it with the maximally mixed state, with probabilities $p$ and $1-p$ respectively.
-This is fine, except that the transpose operation is _not_ completely positive, and as such it is not physically admissible; it cannot be implemented.
-Does it mean that this map cannot be implemented?
-No, it does not: it just depends on the value of $p$.
-The case $p=0$ corresponds to just replacing the input with the maximally mixed state, which is something that can be easily implemented.
-However, as $p$ increases from $0$ to $1$, at some critical point the map switches from completely positive to positive. We know from the previous example that this critical point corresponds to $p=\frac{1}{3}$.
-
-
-
-
-
-
-## Comparing the two approaches
-
-The one remaining thing (well, almost) left to do is to bring the Kraus representation approach and the completely positive trace-preserving maps approach together, and show that they are essentially the same thing.
-
-::: {.idea data-latex=""}
-A linear map $\mathcal{E}\colon\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H}')$ is completely positive if and only if it admits a Kraus decomposition of the form
-$$
-  \mathcal{E}(\rho) = \sum_k E_k\rho E^\dagger_k.
-$$
-
-When this is the case, the above decomposition has the following properties:
-
-- $\mathcal{E}$ is trace preserving if and only if $\sum_k E^\dagger_kE_k=\id$.
-- Two sets of Kraus operators $\{E_k\}$ and $\{F_l\}$ represent the same map $\mathcal{E}$ if and only if there is a unitary $R$ such that $E_k =\sum_l R_{kl}F_l$, where the smaller set of the Kraus operators is padded with zeros.
-- For _any_ $\mathcal{E}\colon\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H}')$, there is _always_ a representation with at most $dd'$ mutually orthogonal Kraus operators: $\tr E_i^\dagger E_j\propto\delta_{ij}$.
+where $\ket{\Omega}=\frac{1}{\sqrt d}\sum_{i=1}^d\ket{i}\ket{i}$ is the maximally entangled state in $\mathcal{H}\otimes\mathcal{H}$, and where $d=\dim\mathcal{H}$.
 :::
 
-Any map $\mathcal{E}$ written in the Kraus form is completely positive, since its Choi matrix $\widetilde{\mathcal{E}}$ is positive semidefinite:
-^[Here, the Choi matrix is of the form $\sum_k\proj{v_k}$, where $\ket{v_k}=(\id\otimes E_k)\ket{\Omega}$. This is a positive semidefinite matrix since, for any vector $\ket{\Psi}$, the expression $\sum_k \braket{\Psi }{v_k}\braket{v_k}{\Psi}$ is non-negative.]
-$$
-  \begin{aligned}
-    \widetilde{\mathcal{E}}
-    &= \id \otimes\mathcal{E} \proj{\Omega}
-  \\&= \sum_k (\id\otimes E_k) \proj{\Omega} (\id\otimes E^\dagger_k)
-  \\&\geq 0.
-  \end{aligned}
-$$
-Conversely, if $\mathcal{E}$ is completely positive, then its Choi matrix is positive semidefinite, which means that it can be written as a mixture of pure states $\proj{\psi_k}$ with probabilities $p_k$:
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\dim\mathcal{H}=d$}&&\qw &\gate{\mathcal{I}} &\qw &\qw\rstick{$\dim\mathcal{H}=d$}
+  \\\lstick{$\Omega$} \ar[dr,dash,thickness] \ar[ur,dash,thickness]
+  \\\lstick{$\dim\mathcal{H}=d$}&&\qw &\gate{\mathcal{E}} &\qw &\qw\rstick{$\dim\mathcal{H}'=d'$}
+  \end{quantikz}
+\end{equation*}
+```
+
+In this form, the Choi--Jamiołkowski isomorphism gives us a simple necessary and sufficient condition for a linear map to be a quantum channel:
+
+::: {.idea latex=""}
+**State-channel duality**: $\mathcal{E}$ is a quantum channel if and only if $\widetilde{\mathcal{E}}$ is a density matrix.
+:::
+
+One direction of this claim is immediate: we already know that any quantum channel $\mathcal{E}$ is, in particular, a completely positive map, and so $\id\otimes\mathcal{E}$ maps density matrices to density matrices, whence $\widetilde{\mathcal{E}}=(\id\otimes\mathcal{E})\ket{\Omega}\bra{\Omega}$ is a density matrix, since $\ket{\Omega}\bra{\Omega}$ is a density matrix.
+The other direction is less obvious.
+If $\widetilde{\mathcal{E}}$ is a density matrix, then it can be written as a mixture of pure states $\proj{\psi_k}$ with probabilities $p_k$:
 $$
   \widetilde{\mathcal{E}}
-  = \sum_k\proj{\widetilde{\psi_k}}
+  = \sum_k\proj{\widetilde{\psi}_k},
 $$
-where $\ket{\widetilde{\psi_k}}=\sqrt{p_k}\ket{\psi_k}$ are (non-normalised) vectors, and any such vector can be written as
+where $\ket{\widetilde{ \psi}_k}=\sqrt{p_k}\ket{\psi_k}$ are (non-normalised) vectors, and any such vector can be written as
 $$
-  \ket{\widetilde{\psi_k}} = (\id\otimes E_k)\ket{\Omega}
-  \tag{10.3.1}
+  \ket{\widetilde{ \psi}_k} = (\id\otimes E_k)\ket{\Omega}
 $$
 for some operator $E_k$.
-Hence
+
+Now, any vector $\ket{\psi}$ in $\mathcal{H}\otimes\mathcal{H}'$ can be written as^[**Exercise.** Prove this!]
+$$
+  \ket{\psi}=\id\otimes V\ket{\Omega}
+$$
+where $V=\sum_{ij}V_{ij}\ket{j}\bra{i}$ is an operator from $\mathcal{H}$ to $\mathcal{H}'$, and $\ket{\Omega}=\frac{1}{d}\sum_i\ket{i}\ket{i}$ is a maximally entangled state in $\mathcal{H}\otimes\mathcal{H}$.
+(Here, the vectors $\ket{i}$ and $\ket{j}$ form orthonormal bases in $\mathcal{H}$ and $\mathcal{H}'$, respectively).
+Using this, we see that
 $$
   \begin{aligned}
     \widetilde{\mathcal{E}}
-    &= \sum_k\proj{\widetilde{\psi_k}}
-  \\&= \sum_k (\id\otimes E_k)\proj{\Omega} (\id\otimes E^\dagger_k)
-  \\&= \frac{1}{d} \sum_{ij} \ket{i}\bra{j} \otimes\underbrace{\sum_k E_k(\ket{i}\bra{j}) E^\dagger_k}_{\mathcal{E}(\ket{i}\bra{j})}.
+    &= \sum_k\proj{\widetilde{\psi}_k}
+  \\&= \sum_k  (\id\otimes E_k)\proj{\Omega} (\id\otimes E^\dagger_k)
+  \\&= \frac{1}{d} \sum_{ij} \ket{i}\bra{j}\otimes\underbrace{\sum_k E_k(\ket{i}\bra{j}) E^\dagger_k}_{\mathcal{E}(\ket{i}\bra{j})}.
   \end{aligned}
 $$
-Comparing the last expression on the right with the definition of $\widetilde{\mathcal{E}}$, we conclude that
+Comparing the last expression on the right-hand size with the definition of $\widetilde{\mathcal{E}}$, or using the Choi--Jamiołkowski isomorphism, we conclude that $\mathcal{E}$ is of the form
 $$
   \mathcal{E}(\rho)
   = \sum_k E_k \rho E^\dagger_k.
 $$
+Moreover, $\tr\widetilde{\mathcal{E}}=1$ implies that^[**Exercise.** Prove this!] $\sum_k E^\dagger_kE_k=\id$.
+So if $\widetilde{\mathcal{E}}$ is a density operator, then the map $\mathcal{E}$ can be expressed in the Kraus form.
+Thus $\mathcal{E}$ is a quantum channel, and, therefore, also a CPTP map.
+We have now established the desired isomorphism between *states* and *channels*.
 
-The unitary freedom of choosing the Kraus operators is directly related to the unitary freedom of choosing the statistical ensemble for $\widetilde{\mathcal{E}}$.
-We know that two mixtures $\{p_k,\ket{\psi_k}\}$ and $\{q_l,\ket{\phi_l}\}$ described by the same density operator
+The equations
+$$
+  \mathcal{E}(\rho)
+  = d(\tr\otimes\id)\left[(\rho^T\otimes\id)\widetilde{\cal{E}}\right].
+$$
+and
 $$
   \widetilde{\mathcal{E}}
-  = \sum_k\proj{\widetilde{\psi_k}}
-  = \sum_l\proj{\widetilde{\phi_l}},
+  = (\id\otimes\mathcal{E})\proj{\Omega}
+  = \frac{1}{d} \sum_{ij} \ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})
 $$
-where $\ket{\widetilde{\psi_k}}=\sqrt{p_k}\ket{\psi_k}$ and $\ket{\widetilde{\phi_l}}=\sqrt{q_l}\ket{\phi_l}$ are related via
-$$
-  \ket{\widetilde{\psi_k}} = \sum_{l} R_{kl} \ket{\widetilde{\phi_l}},
-$$
-for some unitary $R$. Given the correspondence in Equation (10.3.1), this implies the same unitary freedom in choosing the Kraus operators.
-The number of vectors contributing to each mixture, and hence the number of corresponding Kraus operators, may be different, so we simply extend the smaller set to the required size by adding zero operators.
+tell us how to obtain the state $\widetilde{\mathcal{E}}$ from the channel $\mathcal{E}$, and vice versa.
+We have also shown that quantum channels are exactly the completely positive trace-preserving maps.
 
-We can also see that the minimal number of Kraus operators needed to express $\mathcal{E}$ in the Kraus form is given by the rank of its Choi matrix $\widetilde{\mathcal{E}}$, and so we need no more than $dd'$ such operators.^[Indeed, any "square root" of the Choi matrix (i.e. a matrix $B$ such that $B^\dagger B=\widetilde{\mathcal{E}}$) gives a set of Kraus operators by reading off the column vectors of $B$.]
-This minimal set of Kraus operators corresponds to the spectral decomposition of $\widetilde{\mathcal{E}}$.
-Indeed, if $\widetilde{\mathcal{E}}=\sum_k \proj{\widetilde{v_k}}$ and $\ket{\widetilde{v_k}} = (\id\otimes E_k)\ket{\Omega}$, then the orthogonality of $\ket{\widetilde{v_k}}$ and $\ket{\widetilde{v_l}}$ implies the orthogonality, in the Hilbert-Schmidt sense, of the corresponding Kraus operators $E_k$ and $E_l$.
-In order to see this, we express $\braket{\widetilde{v_k}}{\widetilde{v_l}}$ as
+We summarise the flow of implications in the following diagram:
+$$
+\begin{CD}
+  \mathcal{E} @>{\widetilde{E}=(\id\otimes\mathcal{E})\ket{\Omega}\bra{\Omega}}>> \widetilde{\mathcal{E}}
+\\@VVV @VVV
+\\E_k\cdot E_k^\dagger @<<{\ket{\widetilde{\psi}_k}=(\id\otimes E_k)\ket{\Omega}}< \ket{\widetilde{\psi}_k}\bra{\widetilde{\psi}_k}
+\end{CD}
+$$
+We start in the top left corner with a quantum channel $\mathcal{E}$.
+This channel is a CPTP map, which means that $\id\otimes\mathcal{E}$ takes a maximally entangled state $\ket{\Omega}$ to a density matrix $\widetilde{\mathcal{E}}$.
+This is our first implication: *if $\mathcal{E}$ is a quantum channel, then its Choi matrix $\widetilde{\mathcal{E}}$ is a density matrix*.
+The reverse implication goes as follows.
+The density matrix $\widetilde{\mathcal{E}}$ can be expressed as a mixture of pure states, $\proj{\widetilde\psi_k}$ (and this takes us to the bottom right corner in the diagram).
+We use this mixture decomposition when we construct map the $\mathcal{E}$ from the Choi matrix $\widetilde{\mathcal{E}}$, via the Choi-Jamiolkowski isomorphism.
+We notice that $\mathcal{E}$ admits the operator-sum representation, and that each of the pure states in the mixture is associated with a Kraus operator, with $\ket{\widetilde{\psi}_k} = (\id\otimes E_k)\ket{\Omega}$.
+All together this gives us the reverse implication: *if the Choi matrix $\widetilde{\mathcal{E}}$ is a density matrix, then $\mathcal{E}$ is a quantum channel.*
+
+
+
+## The mathematics of "can" and "cannot"
+
+So what is state-channel duality good for?
+To start with, it can be used to asses whether or not a given map $\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ can actually be implemented, i.e. if it is a physically realisable CPTP map.
+Indeed, all we have to do is to check if the corresponding Choi matrix is a density matrix.
+Let's look at a simple example.
+
+Consider the map
+$$
+  \mathcal{E}\colon \ket{i}\bra{j}
+  \longmapsto p\ket{j}\bra{i}+(1-p)\delta_{ij} \frac{1}{2}\ket{i}\bra{j}
+$$
+where $0\leq p\leq1$ is some fixed parameter.
+This map acts on a density operator $\rho$ via
+$$
+  \rho
+  \longmapsto \rho'
+  = p\rho^T +(1-p) \frac{1}{2}\id
+$$
+where $\rho^T$ is the transpose of $\rho$.
+
+But is this map a quantum channel?
+That is, *does it represent a physical process that can be implemented in a lab*?
+
+The expression for $\mathcal{E}$, i.e. the convex sum, can be interpreted as follows: take the input state $\rho$ and either (i) apply the transpose, or (ii) replace it with the maximally mixed state (with probabilities $p$ and $1-p$, respectively).
+This is fine, except that the transpose operation is not completely positive, and, as such, *is not physically admissible* --- it cannot be implemented.
+But does it mean that the map $\mathcal{E}$ itself cannot be implemented?
+Not necessarily!
+
+In fact, the answer depends on the value of $p$.
+The case $p=0$ corresponds to just replacing the input with the maximally mixed state, which is something that can be easily implemented.
+However, as $p$ increases from $0$ to $1$, at some critical point the map switches from *completely positive* to merely *positive*.
+In order to find this critical value of $p$, we first calculate the $\mathcal{E} (\ket{i}\bra{j})$, as follows:
 $$
   \begin{aligned}
-    \braket{\widetilde{v_k} }{\widetilde{v_l}}
-    &= \bra{\Omega} ( \id\otimes E_k^\dagger)(\id\otimes E_l)\ket{\Omega}
-  \\&= \tr\big[(\id\otimes E_k^\dagger E_l)\proj{\Omega}\big]
-  \\&= \frac{1}{d} \tr \sum_{ij} \ket{i}\bra{j}\otimes E_k^\dagger E_l \ket{i}\bra{j}
+    \ket{0}\bra{0}
+    &= \begin{bmatrix}1&0\\0&0\end{bmatrix}
+    \longmapsto
+    \begin{bmatrix}\frac{1+p}{2}&0\\0&\frac{1-p}{2}\end{bmatrix}
+  \\\ket{0}\bra{1}
+    &= \begin{bmatrix}0&1\\0&0\end{bmatrix}
+    \longmapsto
+    \begin{bmatrix}0&0\\p&0\end{bmatrix},
+  \\\ket{1}\bra{0}
+    &= \begin{bmatrix}0&0\\1&0\end{bmatrix}
+    \longmapsto
+    \begin{bmatrix}0&p\\0&0\end{bmatrix}
+  \\\ket{1}\bra{1}
+    &= \begin{bmatrix}0&0\\0&1\end{bmatrix}
+    \longmapsto
+    \begin{bmatrix}\frac{1-p}{2}&0\\0&\frac{1+p}{2}\end{bmatrix},
   \end{aligned}
 $$
-where we have substituted $\frac{1}{d}\sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{j}$ for $\proj{\Omega}$.
-The trace of the tensor product of two matrices is the product of their traces, whence
+We can then write down the Choi matrix:
+$$
+  \widetilde{\mathcal{E}}
+  = \frac12
+  \begin{bmatrix}
+    \mathcal{E}(\ket{0}\bra{0})
+    & \mathcal{E}(\ket{0}\bra{1})
+  \\\mathcal{E}(\ket{1}\bra{0})
+    & \mathcal{E}(\ket{1}\bra{1})
+  \end{bmatrix}
+  = \frac{1}{2}
+  \left[
+    \begin{array}{cc|cc}
+    \frac{1+p}{2} & 0 & 0 & 0
+  \\0 & \frac{1-p}{2} & p & 0
+  \\\hline
+    0 & p & \frac{1-p}{2} & 0
+  \\0 & 0 & 0 & \frac{1+p}{2}
+   \end{array}
+  \right]
+$$
+which lets us apply state-channel duality: *$\mathcal{E}$ is completely positive (and hence physically realisable) if and only if $\widetilde{\mathcal{E}}\geq0$*;
+the latter is true only when $p\leq\frac13$ (note that the eigenvalues of $\widetilde{\mathcal{E}}$ are $\frac{1}{4}(1+p)$ and $\frac{1}{4}(1-3p)$).
+
+
+
+## Kraus operators, revisited
+
+One thing that is very important is that *state-channel duality gives us more than just a one-to-one correspondence* between states $\widetilde{\mathcal{E}}$ and channels $\mathcal{E}$ --- it *also* gives a one-to-one correspondence between vectors in the statistical ensemble $\widetilde{\mathcal{E}}$ and the Kraus operators in the decomposition of $\mathcal{E}$.
+From this viewpoint, we see that the freedom to choose the Kraus operators representing a channel in many different ways is really the same thing as the freedom to choose the ensemble of pure states representing a density operator in many different ways.
+
+We already know that two mixtures $\{p_k, \ket{\psi_k}\}$ and $\{q_l, \ket{\phi_l}\}$ described by the same density operator
+$$
+  \widetilde{\mathcal{E}}
+  = \sum_k\proj{\widetilde\psi_k}
+  = \sum_l\proj{\widetilde\phi_l},
+$$
+(where $\ket{\widetilde \psi_k}=\sqrt{p_k}\ket{\psi_k}$ and $\ket{\widetilde \phi_l}=\sqrt{q_l}\ket{\phi_l}$) are related: there exists some unitary $R$ such that
+$$
+  \ket{\widetilde \psi_k}
+  = \sum_{l} R_{kl} \ket{\widetilde \phi_l}.
+$$
+Using the aforementioned fact that any vector $\ket{\psi}$ in $\mathcal{H}\otimes\mathcal{H}'$ can be written as $\ket{\psi}=\id\otimes V\ket{\Omega}$, this implies the same unitary freedom in choosing the Kraus operators.^[The number of vectors contributing to each mixture (and hence the number of corresponding Kraus operators) may be different, so we simply extend the smaller set to the required size by adding zero operators.]
+
+How many Kraus operators do we really need?
+State-channel duality tells us that the *minimal* number of Kraus operators needed to express $\mathcal{E}$ in the operator-sum form is given by the rank of its Choi matrix $\widetilde{\mathcal{E}}$, and so we need no more than $dd'$ such operators.
+In fact, this minimal set of Kraus operators corresponds to the spectral decomposition of $\widetilde{\mathcal{E}}$.
+Indeed, if $\widetilde{\mathcal{E}}=\sum_k\proj{\widetilde{v}_k}$ and $\ket{\widetilde{v}_k}=(\id\otimes E_k)\ket{\Omega}$, then the orthogonality of $\ket{\widetilde{v}_k}$ and $\ket{\widetilde{v}_l}$ implies the orthogonality (in the Hilbert--Schmidt sense^[Recall that the Hilbert--Schmidt product $(A|B)$ of two operators $A$ and $B$ is defined by $(A|B)=\frac12\tr A^\dagger B$.]) of the corresponding Kraus operators, $E_k$ and $E_l$.
+In order to see this, we write $\braket{\widetilde{v}_k}{\widetilde{v}_l}$ as
 $$
   \begin{aligned}
-    \braket{\widetilde{v_k}}{\widetilde{v_l}}
-    &= \frac{1}{d}\sum_{ij} \braket{i}{j} \tr E_k^\dagger E_l \ket{i}\bra{j}
+    \braket{\widetilde{v}_k |\widetilde{v}_l}
+    &= \bra{\Omega}(\id\otimes E_k^\dagger)(\id\otimes E_l)\ket{\Omega}
+  \\&= \tr(\id\otimes E_k^\dagger E_l)\proj{\Omega}
+  \\&= \frac{1}{d}\tr\sum_{ij}\ket{i}\bra{j}\otimes E_k^\dagger E_l \ket{i}\bra{j}
+  \end{aligned}
+$$
+(using the fact that we can substitute $\frac{1}{d}\sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{j}$ for $\proj{\Omega}$).
+Now, the trace of the tensor product of two matrices is the product of their traces, hence
+$$
+  \begin{aligned}
+    \braket{\widetilde{v}_k}{\widetilde{v}_l}
+    &= \frac{1}{d}\sum_{ij} \braket{i}{j}\tr E_k^\dagger E_l \ket{i}\bra{j}
   \\&= \frac{1}{d} \tr E_k^\dagger E_l
   \end{aligned}
 $$
-for $\braket{i}{j}=\delta_{ij}$ and $\sum_i\proj{i}=\id$.
-That is, $\braket{\widetilde{v_k}}{\widetilde{v_l}}=0$ implies that $\tr E_k^\dagger E_l=0$.
+(using the fact that $\braket{i}{j}=\delta_{ij}$ and $\sum_i\proj{i}=\id$).
+In summary then, *$\braket{\widetilde{v}_k}{\widetilde{v}_l}=0$ implies that $\tr E_k^\dagger E_l=0$*.
+
+::: {.idea latex=""}
+A linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ is completely positive if and only if it admits an operator-sum decomposition of the form
+$$
+  \mathcal{E}(\rho) = \sum_k E_k\rho E^\dagger_k.
+$$
+
+If this is the case, then this decomposition has the following properties:
+
+- $\mathcal{E}$ is trace preserving if and only if $\sum_k E^\dagger_kE_k=\id$.
+- Two sets of Kraus operators $\{E_k\}$ and $\{F_l\}$ represent the same map $\mathcal{E}$ if and only if there exists a unitary $R$ such that $E_k =\sum_l R_{kl}F_l$ (where the smaller set of the Kraus operators is padded with zeros, if necessary).
+:::
+
+Note that, for *any* $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$, there always exists a representation with *at most* $dd'$ mutually orthogonal Kraus operators: $\tr E^\dagger_iE_j\propto\delta_{ij}$.
 
 
 
+## Correctable channels
+
+Another question that we might ask ourselves is if we can *reverse the action of a quantum channel, recovering the input state*.
+Let us first make precise what we mean by this.
+
+::: {.idea latex=""}
+We say that a quantum channel $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ is **correctable** if there exists a **recovery channel** $\mathcal{R}\colon\mathcal{B}(\mathcal{H}')\to\mathcal{B}(\mathcal{H})$ such that the composition $\mathcal{R}\circ\mathcal{E}$ is the identity channel.
+:::
+
+The action of any unitary operation $U$ can, of course, be reversed by simply applying the inverse operation, $U^\dagger$;
+the same holds for any isometry $V$, because $V^\dagger V=\id$.
+For example, the process of first adding an auxiliary system in a fixed state and then applying a unitary $U$ to the composite system can be reversed by first applying $U^\dagger$ to the composed system and then discarding the auxiliary system.
+So how about a statistical mixture of unitaries?
+Or, in general, a statistical mixture of isometries?
+
+If all we know is that an isometry $V_i$ is chosen randomly according to some distribution $\{p_i\}_{i\in I}$, then the best we can do in an attempt to reverse the random process is to apply $V_k^\dagger$, where $k\in I$ is such that $p_k$ is the largest of all the $p_i$.
+Clearly, this approach succeeds in reversing the action of the channel with probability $p_k$.
+However, if there were a way to determine, post factum, which particular isometry was chosen, then, of course, we could perfectly reverse the action of the channel.
+
+Consider a channel $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ given by
+$$
+  \mathcal{E}\colon\rho
+  \longmapsto \rho'
+  =\sum_i p_i V_i\rho V^\dagger_i
+$$
+in which the isometries $V_i$ are mutually orthogonal (i.e. $V_i^\dagger V_j =\delta_{ij}\id$).
+Let $\mathcal{H}'_i$ be the image of $\mathcal{H}$ under $V_i$;
+these images are subspaces in $\mathcal{H}'$, and they are mutually orthogonal. Indeed, for any vector $\ket{v}$ in $\mathcal{H}$, the vectors $V_i\ket{v}\in \mathcal{H}'_i$ and $V_j\ket{v}\in \mathcal{H}'_j$ are orthogonal:
+$$
+  \bra{v}V_i^\dagger V_j\ket{v}
+  = \delta_{ij} \bra{v}\id\ket{v}
+  = \delta_{ij}.
+$$
+We can now perform a measurement defined by the projections onto these mutually orthogonal subspaces $\mathcal{H}'_i$, and find out which particular isometry was chosen (and then perfectly reverse its action by applying the inverse isometry).
+
+Note that, for a measurement on $\mathcal{H}'$ to be well defined, we need to decompose $\mathcal{H}'$ into mutually orthogonal subspaces.
+That is, the direct sum $\bigoplus_i\mathcal{H}'_i$ might not "fill up" the space $\mathcal{H}'$, so we might need to pad out with whatever is "left over" in order to obtain the decomposition of the whole $\mathcal{H}'$ into mutually orthogonal subspaces.
+That extra subspace with which we pad out the direct sum is *not* in the image of the channel: we will never see the result of the measurement corresponding to the projection onto that subspace.
+However, we *need* to add it in order to obtain a complete decomposition of $\mathcal{H}'$.
+Here the Kraus operators $E_i=\sqrt{p_i}V_i$ satisfy
+$$
+  E^\dagger_i E_j
+  = \sqrt{p_i p_j}\delta_{ij}\id
+$$
+but remember that *the operator-sum decomposition is not unique*, and so the same channel can be described by another, unitarily related, set of Kraus operators, $K_i = \sum_k U_{ik}E_k$, which then satisfy
+$$
+  \begin{aligned}
+    K_i^\dagger K_j
+    &= \sum_{kl} U^\star_{ik} E^\dagger_k E_l U_{jl}
+  \\&= \sum_{kl} U^\star_{ik} (\sqrt{p_k p_l}\delta_{kl}\id) U_{jl}
+  \\&= \sum_{k} U^\star_{ik} p_k U_{jk}\id
+  \\&= \sigma_{ij}\id
+  \end{aligned}
+$$
+where $\sigma_{ij}$ are elements of a density matrix with eigenvalues $p_i$.
+If this condition is satisfied, then the action of the channel can be reversed, and the original state $\rho$ can be recovered.
+
+Conversely, if the channel $\mathcal{E}$ is correctable, then the above condition above holds.
+Indeed, in terms of Kraus representations for $\mathcal{E}$ and $\mathcal{R}$, we require that
+$$
+  \mathcal{R}\circ\mathcal{E}(\rho)
+  = \sum_{lj} R_l E_j \rho R^\dagger_l E^\dagger_j
+  = \rho
+$$
+for any state $\rho$.
+This means that identity channel $\mathcal{R}\circ\mathcal{E}=\id$ must have all the Kraus operators proportional to the identity:
+$$
+  R_lE_j=\lambda_{lj}\id
+$$
+for some complex numbers $\lambda_{lj}$ such that^[This is the normalisation condition for the Kraus operators $R_lE_j$] $\sum_{lj} |\lambda_{lj}|^2=1$.
+Then we can write
+$$
+  \begin{aligned}
+    \sum_l E_i^\dagger R_l^\dagger R_l E_j
+    &= E_i^\dagger E_j
+  \\&=\sum_l \lambda^*_{il}\lambda_{jl}\id
+  \\&=\sigma_{ij}\id
+  \end{aligned}
+$$
+where $\sigma_{ij} = \sum_l \lambda^*_{il}\lambda_{jl}$.
+Clearly, $\sigma_{ij}$ is a positive matrix such that $\tr(\sigma_{ij})=1$ and $\sum_i\sigma_{ii}=\sum_{il}|\lambda_{il}|^2=1$.
+So the condition $E_i^\dagger E_j = \sigma_{ij}\id$ is both necessary *and* sufficient in order for the channel $\mathcal{E}$ to be correctable.
+In summary:
+
+::: {.idea latex=""}
+Let $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ be a quantum channel with Kraus decomposition $\mathcal{E}(\rho)=\sum_i E_i\rho E^\dagger_i$.
+Then the following statements are equivalent:
+
+1. $\mathcal{E}$ is correctable;
+2. $E_i^\dagger E_j = \sigma_{ij}\id$ for some density matrix $\sigma_{ij}$;
+3. there exists a set of orthogonal isometries $\{V_i\}$ and a probability distribution $\{p_i\}$ such that
+    $$
+    \mathcal{E} (\rho) = \sum_i p_i V_i\rho V^\dagger_i
+    $$
+    for every state $\rho$.
+:::
 
 
-## What are positive maps good for?
+
+## *Appendices*
+
+### Isometries {#isometries}
+
+In many applications, including quantum communication and quantum error correction, it is useful to encode a quantum state of one system into a quantum state of a larger system.
+Such operations are described by *isometries*.^[The word isometric (like pretty much most of the fancy words you come across in this course) comes from Greek, meaning "of the same measures": *isos* means "equal", and *metron* means "a measure", and so an "isometry" is a transformation that preserves distances.]
+You may think about isometries as a generalisation of unitaries: like unitaries, they preserve inner products; unlike unitaries, they are maps between spaces of *different* dimensions.
+
+::: {.idea latex=""}
+Let $\mathcal{H}$ and $\mathcal{H}'$ be Hilbert spaces such that $\dim\mathcal{H}\leq\dim\mathcal{H}'$.
+An **isometry** is a linear map $V\colon\mathcal{H}\to\mathcal{H}'$ such that $V^\dagger V=\id_{\mathcal{H}}$
+
+Isometries preserve inner products, and therefore also the norm and the metric induced by the norm.
+:::
+
+An isometry $V\colon\mathcal{H}\to\mathcal{H}'$ maps the *whole* Hilbert space $\mathcal{H}$ onto a *subspace* of $\mathcal{H}'$.
+As a consequence, the matrix representation of an isometry is a rectangular matrix formed by selecting only a few of the columns from a unitary matrix.
+For example, given a unitary $U$ we can construct an isometry $V$ as follows:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
+\definecolor{primary}{RGB}{177,98,78}
+\begin{equation*}
+  U =
+  \left[
+    \setlength\arraycolsep{0.4em}
+    \begin{array}{cccc}
+      U_{11}
+      & \cellcolor{primary!20}U_{12}
+      & U_{13}
+      & \cellcolor{primary!20}U_{14}
+    \\U_{21}
+      & \cellcolor{primary!20}U_{22}
+      & U_{23}
+      & \cellcolor{primary!20} U_{24}
+    \\U_{31}
+      & \cellcolor{primary!20}U_{32}
+      & U_{33}
+      & \cellcolor{primary!20}U_{34}
+    \\U_{41}
+      & \cellcolor{primary!20}U_{42}
+      & U_{43}
+      & \cellcolor{primary!20}U_{44}
+    \end{array}
+  \right]
+  \longmapsto
+  V =
+  \left[
+    \setlength\arraycolsep{0.4em}
+    \begin{array}{cc}
+      \cellcolor{primary!20}U_{12}
+      & \cellcolor{primary!20}U_{14}
+    \\\cellcolor{primary!20}U_{22}
+      & \cellcolor{primary!20}U_{24}
+    \\\cellcolor{primary!20}U_{32}
+      & \cellcolor{primary!20}U_{34}
+    \\\cellcolor{primary!20}U_{42}
+      & \cellcolor{primary!20} U_{44}
+    \end{array}
+  \right]
+\end{equation*}
+```
+
+The fact that an isometry $V$ preserves the inner products comes from the fact that we require $V^\dagger V=\id_{\mathcal{H}}$;
+we do *not* require $VV^\dagger=\id_{\mathcal{H'}}$.
+Indeed, if we required both of these, then that would be equivalent to asking for $V$ to be *unitary*.
+The operator $VV^\dagger$ is a projector operator acting on $\mathcal{H}'$, which projects onto the image of $\mathcal{H}$ under the isometry $V$, as we can see by expressing the $V$ in Dirac notation:
+$$
+  V = \sum_i \ket{b_i}\bra{a_i},
+$$
+where the $\ket{a_i}$ form an orthonormal basis in $\mathcal{H}$, and the $\ket{b_i}$ are just orthonormal vectors in $\mathcal{H}'$;
+in the special case where $V$ is unitary, the orthonormal vectors $\ket{b_i}$ form an orthonormal basis in $\mathcal{H}'$.
+Writing $V$ in this form, it is clear that $V^\dagger V=\sum_i \ket{a_i}\bra{a_i}=\id$, and that $VV^\dagger = \sum_i \ket{b_i}\bra{b_i}$ projects on the subspace spanned by $\ket{b_i}$.
+
+The reason that we care about this more general notion of isometry (instead of specifically unitaries) is that *isometries represent physically admissible operations*: they can be implemented by bringing two systems together (via tensoring) and then applying unitary transformations to the composite system.
+That is, take some system $\mathcal{A}$ in state $\ket{\psi}$, and bring in another system $\mathcal{B}$ in some fixed state $\ket{b}$;
+applying some unitary $U$ to the combined system $\mathcal{A}\mathcal{B}$ then gives an isometry from $\mathcal{H}=\mathcal{H}_\mathcal{A}$ to $\mathcal{H}'=\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$, i.e. the result is a linear map $V$ defined by
+$$
+  V\colon
+  \ket{\psi}
+  \longmapsto
+  \ket{\psi}\ket{b}
+  \longmapsto
+  U(\ket{\psi}\ket{b}
+$$
+for any vector $\ket{\psi}\in\mathcal{H}_\mathcal{A}$.
+
+Any isometry is a quantum channel, since any quantum state described by the state vector $\ket{\psi}$ (or by a density operator $\rho$) is transformed as
+$$
+  \ket{\psi}\longmapsto V\ket{\psi}
+$$
+(or as $\rho\mapsto V\rho V^\dagger$), and the normalisation condition is exactly the defining property of isometries:
+$$
+  V^\dagger V =\id.
+$$
+
+
+An example which we will later return to is that of the **three-qubit code**.
+Take a qubit in some pure state $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, introduce two auxiliary qubits in a fixed state $\ket{0}\ket{0}$, and apply a unitary operation to the three qubits, namely two controlled-$\texttt{NOT}$ gates:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\alpha\ket{0}+\beta\ket{1}$}
+    & \ctrl{1}
+    & \ctrl{2}
+    & \qw
+    & \qw
+    \rstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+    \\
+    \lstick{$\ket{0}$}
+    & \targ{}
+    & \qw
+    & \qw
+    & \qw
+    \\
+    \lstick{$\ket{0}$}
+    & \qw
+    & \targ{}
+    & \qw
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+The result is the isometric embedding of the $2$-dimensional Hilbert space of the first qubit (spanned by $\ket{0}$ and $\ket{1}$) into the $2$-dimensional subspace (spanned by $\ket{000}$ and $\ket{111}$) of the $8$-dimensional Hilbert space of the three qubits.
+The isometric operator
+$$
+  V = \ket{000}\bra{0} + \ket{111}\bra{1}
+$$
+acts via
+$$
+  \alpha\ket{0}+\beta\ket{1}
+  \longmapsto \alpha\ket{000}+\beta\ket{111}.
+$$
+This three qubit-encoding can be reversed by the mirror image circuit:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+    & \ctrl{2}
+    & \ctrl{1}
+    & \qw
+    & \qw
+    \rstick{$\alpha\ket{0}+\beta\ket{1}$}
+    \\
+    & \qw
+    & \targ{}
+    & \qw
+    & \qw
+    \rstick{$\ket{0}$}
+    \\
+    & \targ{}
+    & \qw
+    & \qw
+    & \qw
+    \rstick{$\ket{0}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+
+
+### The Markov approximation {#markov-approximation}
+
+Composition of quantum channels^[Unitary evolutions form a group; quantum channels form a semigroup. Quantum operations are invertible only if they are either unitary operations or simple isometric embeddings (such as the process of bringing in the environment in some fixed state and then *immediately* discarding it, without any intermediate interaction).] in the Kraus representation is rather straightforward, but do not be deceived by its mathematical simplicity!
+We must remember that *quantum channels do not capture all possible quantum evolutions*: the assumption that the system and the environment are *not initially correlated* is crucial, and it does impose some restrictions on the applicability of our formalism.
+Compare, for example, the following two scenarios.
+
+Firstly:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\rho$} &\gate[2]{U_A} &\rstick{$\rho'$} \qw & &\gate[2]{U_B} &\rstick{$\rho''$} \qw
+  \\\lstick{$\ket{e}$} &\qw &\qw &\qw &\qw & \trash{}
+  \end{quantikz}
+\end{equation*}
+```
+
+Here the system, initially in state $\rho$, undergoes two stages of evolution, and the environment is *not* discarded after the first unitary evolution $U_A$; the environment persists and participates in the second unitary evolution $U_B$.
+In this case the evolutions $\rho\mapsto\rho'$ and $\rho\mapsto\rho''$ are both well defined quantum channels, but the evolution $\rho'\mapsto\rho''$ is *not*: it falls outside the remit of our formalism because the input state of the system and the state of the environment are *not independent*.
+
+Secondly:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\rho$} &\gate[2]{U_A} &\qw &\rstick{$\rho'$} \qw & &\qw &\gate[2]{U_B} &\rstick{$\rho''$} \qw
+  \\\lstick{$\ket{a}$} & &\trash{} & & & \lstick{$\ket{b}$} &\qw &\trash{}
+  \end{quantikz}
+\end{equation*}
+```
+
+Here we have two stages of evolution, as before, but we *discard* the environment after the first unitary, and start the second unitary evolution in a fresh tensor-product state, with a *new* environment;
+the two stages involve *independent environments*.
+In this case^[A **quantum Markov process**! [Andrey Markov](https://en.wikipedia.org/wiki/Andrey_Markov) (1929--2012) was a Russian mathematician best known for his work on stochastic processes.] all three evolutions ($\rho\mapsto\rho'$, $\rho'\mapsto\rho''$, and $\rho\mapsto\rho''$) are well defined quantum channels, and they compose: if $\mathcal{E}_\mathcal{A}$ describes the evolution from $\rho$ to $\rho'$, and $\mathcal{E}_\mathcal{B}$ from $\rho'$ to $\rho''$, then the composition $\mathcal{E}_\mathcal{B}\circ\mathcal{E}_\mathcal{A}$ describes the evolution from $\rho$ to $\rho''$.
+
+In practice we often deal with complex environments that have internal dynamics that "hides" any entanglement with the system as quickly as it arises.
+For example, suppose that our system is an atom, surrounded by the electromagnetic field (which serves as the environment).
+Let the field start in the vacuum state.
+If the atom emits a photon into the environment, then the photon quickly propagates away, and the immediate vicinity of the atom appears to be empty, i.e. resets to the vacuum state.
+In this approximate model, we assume that the environment quickly forgets about the state resulting from any previous evolution.
+This is known as the **Markov approximation**;
+in a quantum Markov process the environment has essentially no memory.
+
+
+
+### What use are positive maps?
 
 Positive maps that are not completely positive are not completely useless.
 True, they cannot describe any quantum dynamics, but still they have useful applications --- for example, they can help us to determine if a given state is entangled or not.
@@ -927,25 +1416,17 @@ However, for _two_ qubits, the PPT states are exactly the separable states.
 
 
 
-
-
-
-## Remarks and exercises
-
-### The depolarising channel {#depolarising-channel}
-
-Show that the action of the depolarising channel
-$$
-  \rho_p
-  \longmapsto (1-p) \id\rho\id + \frac{p}{3} (X\rho X + Y\rho Y + Z\rho Z)
-$$
-is equivalent to the following operation: _with probability $p$, the input state is thrown away and replaced with the maximally mixed state, and with probability $(1-p)$ the input state survives without any disturbance_.
-
-**Hint.** Use the Bloch sphere approach, and show that the depolarising channel uniformly contracts the sphere by the factor $1-\frac{4}{3}p$.
-
 ### The Choi--Jamiołkowski isomorphism {#choi-jamiolkowski}
 
-The correspondence between linear maps $\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H'})$ and operators in $\mathscr{B}(\mathcal{H}\otimes\mathcal{H'})$, known as the **Choi--Jamiołkowski isomorphism**^[It is slightly confusing at first, but the **Choi isomorphism**, the **Jamiołkowski isomorphism**, and the **Choi--Jamiołkowski** isomorphism are really three distinct things: [the first](https://en.wikipedia.org/wiki/Choi%27s_theorem_on_completely_positive_maps) is very nice, but non-canonical (i.e. is dependent on the choice of basis); the second (for which I have no nice citation, but is basically given by considering $\sum\ket{j}\bra{i}\otimes\mathcal{E}(\ket{i}\bra{j})$ instead of $\sum\ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})$) is canonical, but doesn't always map CP maps to positive semidefinite matrices; [the third](https://en.wikipedia.org/wiki/Choi%E2%80%93Jamio%C5%82kowski_isomorphism) brings together the two similar, but distinct, results by the respective authors. However, people often say "Choi--Jamiołkowski" to mean any one of the three. Such is life.] or **channel--state duality**, is another example of a well known correspondence between vectors in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ and operators $\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})$ or $\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})$.
+The correspondence between linear maps $\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H'})$ and operators in $\mathscr{B}(\mathcal{H}\otimes\mathcal{H'})$, known as the **Choi--Jamiołkowski isomorphism** or **channel--state duality**, is another example of a well known correspondence between vectors in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ and operators $\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})$ or $\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})$.
+
+::: {.tim}
+It is slightly confusing at first, but the **Choi isomorphism**, the **Jamiołkowski isomorphism**, and the **Choi--Jamiołkowski** isomorphism are really three distinct things:
+
+1. [the first](https://en.wikipedia.org/wiki/Choi%27s_theorem_on_completely_positive_maps) is very nice, but non-canonical (i.e. is dependent on the choice of basis);
+2. the second (for which I have no nice citation, but is basically given by considering $\sum\ket{j}\bra{i}\otimes\mathcal{E}(\ket{i}\bra{j})$ instead of $\sum\ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})$) is canonical, but doesn't always map CP maps to positive semidefinite matrices;
+3. [the third](https://en.wikipedia.org/wiki/Choi%E2%80%93Jamio%C5%82kowski_isomorphism) brings together the two similar, but distinct, results by the respective authors. However, people often say "Choi--Jamiołkowski" to mean any one of the three. Such is life.
+:::
 
 Take a tensor product vector in $\ket{a}\otimes\ket{b}\in \mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$.
 Then it defines natural maps in $\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})$ and $\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})$, via
@@ -983,110 +1464,7 @@ But it is still a pretty useful isomorphism!
 The Choi--Jamiołkowski isomorphism is of this kind (i.e. non-canonical) --- it works in the basis in which you express a maximally entangled state $\ket{\Omega}=\sum_i\ket{i}\ket{i}$.
 
 
-### Any bipartite state from a maximally entangled state
-
-Any vector $\ket{\psi}$ in $\mathcal{H}\otimes\mathcal{H}$ can be written as
-$$
-  \begin{aligned}
-    \ket{\psi}
-    &= \sum_{ij} C_{ij}\ket{i}\otimes\ket{j}
-  \\&= \sum_{j}\underbrace{\left(\sum_i C_{ij}\ket{i}\right)}_{C\ket{j}}\otimes\ket{j}
-  \\&= \sum_{i} \ket{i}\otimes\underbrace{ \left(\sum_j C_{ij}\ket{j}\right)}_{C^T\ket{i}}
-  \end{aligned}
-$$
-which we can write as
-$$
-  \begin{aligned}
-    \ket{\psi}
-    &= (C\otimes\id)\ket{\Omega}
-  \\&= (\id\otimes C^T)\ket{\Omega}.
-  \end{aligned}
-$$
-
-The normalisation factor $\frac{1}{\sqrt d}$ can be incorporated into the matrix $C$, or you can just remember that it should be added at the end.
-Here
-$$
-  \begin{aligned}
-    C\ket{j}
-    &= \sum_i \proj{i}C\ket{j}
-  \\&= \sum_i C_{ij}\ket{i}
-  \end{aligned}
-$$
-$$
-  \begin{aligned}
-    C^T\ket{i}
-    &= \sum_j \proj{j}C^T\ket{i}
-  \\&= \sum_j C_{ij}\ket{j}.
-  \end{aligned}
-$$
-
-
-### Tricks with a maximally entangled state
-
-A maximally entangled state of a bipartite system can be written, using the Schmidt decomposition, as
-$$
-  \begin{aligned}
-    \ket{\Omega}
-    &= \frac{1}{\sqrt d}\sum_i \ket{i}\ket{i}
-  \\\proj{\Omega}
-    &= \frac{1}{d} \sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{j}
-  \end{aligned}
-$$
-Each subsystem is of dimension $d$, and all the Schmidt coefficients are equal.
-Here are few useful tricks involving a maximally entangled state.
-
-- If we take the transpose in the Schmidt basis of $\ket{\Omega}$, then
-    $$
-      \bra{\Omega}A\otimes B\ket{\Omega} = \frac{1}{d}\tr(A^T B).
-    $$
-
-- Any pure state of the bipartite system $\ket{\psi}=\sum_{ij} c_{ij}\ket{i}\ket{j}$ can be written as
-    $$
-      (C\otimes\id)\ket{\Omega} = (\id\otimes C^T)\ket{\Omega}.
-    $$
-    This implies that
-    $$
-      (U\otimes\overline{U})\ket{\Omega}=\ket{\Omega}
-    $$
-    (where $\overline{U}$ denotes the matrix given by taking the complex conjugate, entry-wise, of $U$, i.e. _without_ also taking the transpose).
-
-- The swap operation, $S\colon\ket{i}\ket{j}\mapsto\ket{j}\ket{i}$, can be expressed as^[We write $X^{T_{\mathcal{A}}}$ to mean the partial transpose over $\mathcal{A}$, i.e. $T\otimes\mathcal{I}$.]
-    $$
-      \begin{aligned}
-        S
-        &= d \proj{\Omega}^{T_{\mathcal{A}}}
-      \\&= d \sum_{ij} \big(\ket{i}\bra{j}\big)^T\otimes\ket{i}\bra{j}
-      \\&= d \sum_{ij} \ket{j}\bra{i}\otimes\ket{i}\bra{j}.
-      \end{aligned}
-    $$
-    This implies that
-    $$
-      \tr[(A\otimes B)S] = \tr AB
-    $$
-    and that
-    $$
-      (A\otimes\id)S = S(\id\otimes A).
-    $$
-
-
-### {}
-
-Define the map $\mathcal{E}$ on a single qubit via
-$$
-  \begin{aligned}
-    \mathcal{E}\colon
-    \id &\longmapsto \id
-  \\\sigma_x &\longmapsto x\sigma_x
-  \\\sigma_y &\longmapsto y\sigma_y
-  \\\sigma_z &\longmapsto z\sigma_z
-  \end{aligned}
-$$
-where $x$, $y$, and $z$ are some fixed real numbers.
-
-Using the Choi matrix of $\mathcal{E}$, determine the values of $x$, $y$, and $z$ for which the map $\mathcal{E}$ is positive, and the range for which it is completely positive.
-
-
-### Block matrices and the partial trace
+### Block matrices and partial trace
 
 For any matrix $M$ in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ _that is written in the tensor product basis_, the partial trace over the first subsystem (here $\mathcal{A}$) is the sum of the diagonal block matrices, and the partial trace over the second subsystem (here $\mathcal{B}$) is a matrix in which the block sub-matrices are replaced by their traces.
 You can visualise this as in Figure \@ref(fig:visualising-partial-trace).
@@ -1177,9 +1555,13 @@ $$
 The same holds for general $M$ in any $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ with such a block form (i.e. $m\times m$ blocks of $(n\times n)$ sized sub-matrices, where $m=\dim\mathcal{H}_{\mathcal{A}}$ and $n=\dim\mathcal{H}_{\mathcal{B}}$).
 
 
+
+## *Remarks and exercises*
+
+
 ### Partial inner product
 
-The tensor product structure brings with it the possibility to do "partial things", such as partial traces and partial inner products.
+The tensor product structure brings with it the possibility to do "partial things" beyond just the partial trace.
 Given $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$, any vector $\ket{x}\in\mathcal{H}_{\mathcal{A}}$ defines an anti-linear map $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\to\mathcal{H}_{\mathcal{B}}$ called the **partial inner product with $\ket{x}$.**
 It is first defined on the product vectors $\ket{a}\otimes\ket{b}$ by the formula
 $$
@@ -1207,45 +1589,201 @@ $$
 $$
 
 
-### {#tp-iff-choi-condition}
+### The control part of controlled-$\texttt{Not}$ {#control-controlled-NOT}
 
-Show that $\mathcal{E}$ is trace preserving if and only if $\tr_{\mathcal{B}}\widetilde{\mathcal{E}}=d\id$.
-Here the partial trace is over the second system in our definition of $\widetilde{\mathcal{E}}$ as $(\mathcal{I}\otimes\mathcal{E})\proj{\Omega}$.
-
-**Hint.** Show that $\tr[\mathcal{E}(\ket{i}\bra{j})]=\delta_{ij}$, and then consider Figure \@ref(fig:visualising-partial-trace).
-
-
-### {}
-
-Mathematically speaking, Kraus operators $E_k$ are vectors in a $(dd')$-dimensional Hilbert space, with the Hilbert--Schmidt inner product given by $\tr E_k^\dagger E_l$.
-Thus, our intuition tells us, in order to describe any quantum channel with $\dim\mathcal{H}=\dim\mathcal{H}'=d$, we should need no more than $d^2$ Kraus operators.
-We can pick any orthonormal basis of operators $\{B_i\}$ and express each Kraus vector in this basis as $E_k=\sum c_{ki} B_i$ (where $i=1,\ldots,d^2$, $k=1,\ldots,n$, and $n$ can be much larger than $d^2$).
-This gives us
+Consider a single-qubit channel induced by the action of the $\texttt{c-NOT}$ gate.
+Recall that the unitary operator associated with the $\texttt{c-NOT}$ gate can be written as
 $$
-  \begin{aligned}
-    \rho
-    \longmapsto &\sum_{ij} B_i\rho B^\dagger_j \left(\sum _k c_{ki}c^\star_{kj}\right)
-  \\= &\sum_{ij} B_i\rho B^\dagger_j  C_{ij}
-  \end{aligned}
+  U = \proj{0}\otimes\id + \proj{1}\otimes X
 $$
-where the matrix $C_{ij}$ is positive semidefinite, and hence unitarily diagonalisable: $C_{ij}=\sum_k U_{ik} d_k U_{kj}^\dagger$ for some unitary $U$ and some real $d_k\geq 0$.
-We can then unitarily "rotate" our operator basis, and use $C_k=\sum_j U_{jk}B_j \sqrt{d_k}$ as our new Krauss operators.
-
-
-### Operator sum freedom
-
-Another way to understand the freedom in the Kraus representation is to realise that any unitary operation _on the environment alone_ does not affect the principal system, i.e. the quantum channel $\mathcal{E}$ is not affected by the choice of the unitary $R$ in the diagram below.
+where is $X$ is the Pauli $\sigma_x$ gate (i.e. the $\texttt{NOT}$ gate).
+Let us step through the following simple circuit:
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
 \begin{equation*}
   \begin{quantikz}
-    \lstick{input $\rho$} & \gate[wires=2]{U} &\qw &\rstick{output $\rho'$} \qw
-  \\\lstick{$\ket{e}$} &\hphantom{really wide} &\gate{R} &\trash{}
+    \lstick{input $\rho$}
+    & \ctrl{1}
+    & \qw
+      \rstick{$\rho'$ output}
+    \\
+    \lstick{$\ket{0}$}
+    & \targ \qw
+    & \qw
+      \rstick{discard}
   \end{quantikz}
 \end{equation*}
 ```
 
-This is true, even though the Kraus operators $E_k=\bra{e_k}U\ket{e}$ have now changed to
+This time we are interested in the evolution of the control qubit: the control qubit will be our system, and the target qubit, initially in a fixed state $\ket{0}$, will play the role of an ancilla.
+
+We can calculate the Kraus operators
+$$
+  A_i = (\id\otimes\bra{i}) U (\id\otimes\ket{0})
+$$
+which we simply write as $A_i=\bra{i}U\ket{0}$, for $i=0,1$.
+We see that
+$$
+  \begin{aligned}
+    A_i = \bra{i}U\ket{0}
+    &= \bra{i} (\proj{0}\otimes\id + \proj{1}\otimes X) \ket{0}
+  \\&= \proj{0}\bra{i}\id\ket{0} + \proj{1}\bra{i}X\ket{0}
+  \\&= \proj{i}
+\end{aligned}
+$$
+We can also check the normalisation condition:
+$$
+  A_0^\dagger A_0 + A_1^\dagger A_1
+  = \proj{0} + \proj{1}
+  =\id.
+$$
+
+The unitary action of the gate when the state of the target qubit is fixed at $\ket{0}$ can be written as
+$$
+  \begin{aligned}
+    \ket{\psi}\ket{0}
+    \longmapsto
+    & A_0\ket{\psi}\ket{0} + A_1\ket{\psi}\ket{1}
+  \\=& \proj{0}\ket{\psi}\ket{0} + \proj{1}\ket{\psi}\ket{1}
+  \\=& \braket{0|\psi}\ket{0}\ket{0} + \braket{1|\psi}\ket{1}\ket{1}
+  \end{aligned}
+$$
+which is a familiar $\texttt{c-NOT}$ entangling process: if $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$ then $\ket{\psi}\ket{0}$ becomes $\alpha_0\ket{0}\ket{0}+\alpha_1\ket{1}\ket{1}$.
+
+The evolution of the control qubit alone can be expressed in the Kraus form as
+$$
+  \begin{aligned}
+    \rho \longmapsto \rho'
+    &= A_0\rho A_0^\dagger + A_1\rho A_1^\dagger
+  \\&= \proj{0}\rho\proj{0} + \proj{1}\rho\proj{1}
+  \\&= \rho_{00}\proj{0} + \rho_{11}\proj{1}.
+  \end{aligned}
+$$
+Then, in the matrix form, if the initial state of the control qubit is $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$, we get
+$$
+  \begin{bmatrix}
+    |\alpha|_0^2 & \alpha_0\alpha_0^\star
+  \\\alpha_0^\star\alpha_1 & |\alpha_1|^2
+  \end{bmatrix}
+  = \rho
+  \longmapsto
+  \rho' =
+  \begin{bmatrix}
+    |\alpha_0|^2 & 0
+  \\0 & |\alpha_1|^2
+  \end{bmatrix}.
+$$
+
+As we can see, the diagonal elements of $\rho$ survive, and the off-diagonal elements (the **coherences**) disappear.
+The two Kraus operators, $A_0=\proj{0}$ and $A_1=\proj{1}$, define the measurement in the standard basis, and so you may think about this operation as being equivalent to *measuring the control qubit in the standard basis and then just forgetting the result*.
+
+
+### {}
+
+Let us now compare two single qubit quantum channels: $\mathcal{A}(\rho)=\sum_k A_k\rho A^\dagger_k$, defined by the Kraus operators
+$$
+  \begin{aligned}
+    A_1 = \proj{0}
+    &= \begin{bmatrix}1&0\\0&0\end{bmatrix}
+  \\A_2 = \proj{1}
+  &= \begin{bmatrix}0&0\\0&1\end{bmatrix}
+  \end{aligned}
+$$
+and $\mathcal{B}(\rho)=\sum_k B_k\rho B^\dagger_k$, defined by the Kraus operators
+$$
+  \begin{aligned}
+    B_1 = \frac{\id}{\sqrt{2}}
+    &= \frac{1}{\sqrt{2}}\begin{bmatrix}1&0\\0&1\end{bmatrix}
+  \\B_2 = \frac{Z}{\sqrt{2}}
+    &= \frac{1}{\sqrt{2}}\begin{bmatrix}1&0\\0&-1\end{bmatrix}.
+  \end{aligned}
+$$
+
+We are familiar with the first channel from [the previous example](#control-controlled-NOT): it performs the measurement in the standard basis, but doesn't reveal the outcome of the measurement.
+The second channel chooses randomly, with equal probability, between two options: it will either let the qubit pass undisturbed, or apply the phase-flip $Z$.
+
+These two apparently very different physical processes correspond to the same quantum channel: $\mathcal{A}(\rho)=\mathcal{B}(\rho)$ for any $\rho$.
+Indeed, you can check that $B_1=(A_1+A_2)/\sqrt{2}$ and $B_2=(A_1-A_2)/\sqrt{2}$, whence
+$$
+  \begin{aligned}
+    \mathcal{B}(\rho)
+    &= B_1\rho B_1^\dagger + B_2\rho B_2^\dagger
+  \\&= \frac{1}{2} (A_1+A_2)\rho (A_1+A_2)^\dagger + \frac{1}{2} (A_1-A_2)\rho (A_1-A_2)^\dagger
+  \\&=  A_1\rho A_1^\dagger + A_2\rho A_2^\dagger
+  \\&= \mathcal{A}(\rho).
+  \end{aligned}
+$$
+
+You can also check that the two channels can be implemented by the following two circuits:
+
+(ref:two-channels-caption) The $\texttt{c-NOT}$ gate appears here as the measurement gate. The target qubit measures the control qubit in the standard basis (operation $\mathcal{A}$ on the left) or in the Hadamard basis (operation $\mathcal{B}$ on the right). The extra Hadamard gate on the target qubit has no effect on the control qubit.
+
+```{r two-channels,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8,fig.cap='(ref:two-channels-caption)'}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\rho$}
+    & \ctrl{1}
+    & \qw
+      \rstick{$\mathcal{A}(\rho)$}
+    \\
+    \lstick{$\ket{0}$}
+    & \targ \qw
+    & \ar[d,dash,thickness] \qw
+    \\
+    & & \text{discard} &
+  \end{quantikz}
+  \qquad
+  \begin{quantikz}
+    \lstick{$\rho$}
+    & \ctrl{1}
+    & \qw
+    & \qw
+      \rstick{$\mathcal{B}(\rho)$}
+    \\
+    \lstick{$\ket{0}$}
+    & \targ \qw
+    & \gate{H}
+    & \ar[d,dash,thickness] \qw
+    \\
+    & & & \text{discard} &
+  \end{quantikz}
+\end{equation*}
+```
+
+
+### {}
+
+Another way to understand the freedom in the operator-sum representation is to realise that, once the system and the ancilla cease to interact, any operation on the ancilla alone has no effect on the state of the system.
+
+(ref:operators-sum-freedom-caption) The quantum channel $\rho\mapsto\rho'$ is not affected by the choice of a unitary $R$.
+
+```{r operators-sum-freedom,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8,fig.cap='(ref:operators-sum-freedom-caption)'}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{input $\rho$}
+    & \gate[wires=2]{U}
+    & \rstick{$\rho'$ output} \qw
+    \\
+    \lstick{$\ket{e}$}
+    & \hphantom{really wide}
+    & \rstick{discard} \qw
+  \end{quantikz}
+  \qquad
+  \begin{quantikz}
+   \lstick{input $\rho$}
+    & \gate[wires=2]{U}
+    & \qw
+    & \rstick{$\rho'$ output} \qw
+  \\
+    \lstick{$\ket{e}$}
+    & \hphantom{really wide}
+    & \gate{R}
+    & \rstick{discard} \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+That is, the two unitaries $U$ and $(\id\otimes R)U$ (where $R$ acts only on the ancilla) describe the same channel, even though the Kraus operators $E_k=\bra{e_k}U\ket{e}$ for the latter are
 $$
   \begin{aligned}
     F_k
@@ -1257,13 +1795,14 @@ $$
 Indeed, the unitary evolution $(\id\otimes R) U$ gives
 $$
   \rho\otimes\proj{e}
-  \longmapsto \sum_{kl} E_k \rho E_l^\dagger \otimes R\ket{e_k}\bra{e_l} R^\dagger,
+  \longmapsto
+  \sum_{kl} E_k \rho E_l^\dagger \otimes R\ket{e_k}\bra{e_l} R^\dagger
 $$
 and the subsequent trace over the environment gives
 $$
   \begin{aligned}
     \tr_E \sum_{kl} E_k \rho E_l^\dagger \otimes R\ket{e_k}\bra{e_l} R^\dagger
-    &= \sum_{kl} E_k \rho E_l^\dagger \bra{e_l}R^\dagger R\ket{e_k}
+    &= \sum_{kl} E_k \rho E_l^\dagger \bra{e_l} R^\dagger R\ket{e_k}
   \\&= \sum_{k} E_k \rho E_k^\dagger.
   \end{aligned}
 $$
@@ -1271,162 +1810,255 @@ $$
 
 ### {}
 
-Consider two single-qubit channels
+We can show that the process of cooling a qubit to its ground state, described the map $\mathcal{E}(\rho)=\proj{0}$, is a quantum channel.
+Indeed, the set of Kraus operators is $\proj{0}$ and $\ket{0}\bra{1}$, and all Bloch vectors are mapped to the Bloch vector representing state $\proj{0}$.
+
+
+### {}
+
+Show that, for any operator $\rho$ on $\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$, and, for any operator $R$ on $\mathcal{H}_\mathcal{B}$, we have
+$$
+  \tr_\mathcal{B} \left[(\id\otimes R) \rho (\id\otimes R^\dagger)\right]
+  = \tr_\mathcal{B} \rho.
+$$
+That is, the reduced density operator $\rho_\mathcal{A}=\tr_\mathcal{B} \rho$ is not affected by $R$.
+
+*(Hint: show this for operators $\rho$ which are tensor products $\rho=A\otimes B$ and then extend the result to any operator $\rho$.)*
+
+
+### {}
+
+We know that, given a fixed state of the environment, the unitaries $U$ and $(\id\otimes R)U$, where $R$ acts only on the environment, define the same quantum channel.
+Is the same true for $U$ and $U(\id\otimes R)$?
+That is, do these two unitaries define the same quantum channel as one another?
+
+
+### Pauli twirl {#pauli-twirl}
+
+Show that randomly applying the Pauli operators $\id$, $X$, $Y$, and $Z$, with uniform probability, to any density operator $\rho$ of a single qubit results in the maximally mixed state
+$$
+  \frac{1}{4} \id\rho\id +\frac{1}{4} X\rho X + \frac{1}{4} Y\rho Y + \frac{1}{4} X\rho Z
+  = \frac{1}{2}\id.
+$$
+
+
+### Depolarising channel {#depolarising-channel}
+
+The most "popular" Pauli channel is the **depolarising channel**
+$$
+  \rho\longmapsto (1-p)\rho + \frac{p}{3}\left(X\rho X+Y\rho Y+Z\rho Z\right).
+$$
+In the depolarising channel, a qubit in state $\rho$ remains intact with probability $1-p$, or is otherwise transformed with one of the Pauli operators $X$, $Y$, and $Z$, each chosen randomly with probability $p/3$.
+Show, using the [Pauli twirl](#puali-twirl) or otherwise, that we can rewrite the depolarising channel as
+$$
+  \rho \longmapsto \rho'
+  = \left(1-\frac{4}{3} p\right) \rho + \frac{4}{3}p\frac{1}{2}\id.
+$$
+
+(For $p\leq\frac{3}{4}$ we can thus say that the channel either does nothing or, with probability $\frac{4}{3}p$, throws away the initial quantum state and replaces it by the maximally mixed state.)
+
+
+### Depolarising channel and the Bloch sphere
+
+It is also instructive to see how the depolarising channel acts on the Bloch sphere.
+An arbitrary density matrix for a single qubit can be written as
+$$
+  \frac{1}{2}(\id +\vec{s}\cdot\vec{\sigma}),
+$$
+where $\vec{s}$ is the Bloch vector, and $\vec{\sigma}=(\sigma_x,\sigma_y,\sigma_z)$ is the vector of Pauli matrices.
+The depolarising channel maps this state to
+$$
+  \frac{1}{2}\left[
+    \id + \left(1-\frac{4}{3}p\right)\vec{s}\cdot\vec{\sigma}
+  \right].
+$$
+The Bloch vector shrinks by a factor of $1-\frac{4}{3}p$.
+This means that, for $p\leq\frac{3}{4}$, the Bloch sphere contracts uniformly under the action of the channel;
+for $p=\frac{3}{4}$, the sphere is contracted to a single point at its centre;
+and for $\frac{3}{4}\leq p\leq1$, the Bloch vector is flipped, and starts pointing in the opposite direction.
+
+
+### {}
+
+Let $\mathcal{E}$ be the linear map on single a qubit defined by
 $$
   \begin{aligned}
-    \mathcal{E}\colon \rho
-    &\longmapsto \sum_k E_k\rho E_k^\dagger
-  \\\mathcal{F}\colon \rho
-    &\longmapsto \sum_k F_k\rho F_k^\dagger
+    \mathcal{E}(\id)
+    &= \id
+    \mathcal{E}(\sigma_x)
+  \\&= x\sigma_x
+    \mathcal{E}(\sigma_y)
+  \\&= y\sigma_y
+    \mathcal{E}(\sigma_z)
+  \\&= z\sigma_z
   \end{aligned}
 $$
-defined by their respective Kraus operators
-$$
-  \begin{aligned}
-    E_1
-    &= \frac{1}{\sqrt{2}}\id
-    = \frac{1}{\sqrt{2}}\bmqty{1&0\\0&1}
-  \\E_2
-    &= \frac{1}{\sqrt{2}}Z
-    = \frac{1}{\sqrt{2}}\bmqty{1&0\\0&-1}
-  \\F_1
-    &= \proj{0}
-    = \bmqty{1&0\\0&0}
-  \\F_2
-    &= \proj{1}
-    = \bmqty{0&0\\0&1}.
-  \end{aligned}
-$$
-
-The first channel chooses randomly, with equal probability, between the two options: it will either let the qubit pass undisturbed, or apply the phase flip.
-The second channel essentially performs the measurement in the standard basis, but the outcome of the measurement is not revealed.
-These two apparently very different physical processes correspond to the _same_ quantum channel: $\mathcal{E}(\rho)=\mathcal{F}(\rho)$ for any $\rho$.
-
-Indeed, you can check that $E_1=(F_1+F_2)/\sqrt{2}$ and $E_2=(F_1-F_2)/\sqrt{2}$, whence
-$$
-  \begin{aligned}
-    E(\rho)
-    &= E_1\rho E_1^\dagger + E_2\rho E_2^\dagger
-  \\&= \frac12(F_1+F_2)\rho(F_1+F_2)^\dagger + \frac12(F_1-F_2)\rho(F_1-F_2)^\dagger
-  \\&= F_1\rho F_1^\dagger + F_2\rho F_2^\dagger
-  \\&= F(\rho).
-  \end{aligned}
-$$
-You can also check that the two channels can be implemented by the following two circuits:
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick{$\rho$}
-    & \ctrl{1}
-    & \qw \rstick{$\mathcal{F}(\rho)$}
-  \\\lstick{$\ket{0}$}
-    & \targ \qw
-    & \trash{}
-  \end{quantikz}
-\end{equation*}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick{$\rho$}
-    & \ctrl{1}
-    & \qw
-    & \qw\rstick{$\mathcal{E}(\rho)$}
-  \\\lstick{$\ket{0}$}
-    & \targ \qw &\gate{H}
-    & \trash{}
-  \end{quantikz}
-\end{equation*}
-```
-
-The $\texttt{c-NOT}$ gate appears here as the measurement gate.
-The target qubit measures the control qubit in either the standard basis (the operation $\mathcal{F}$) or in the Hadamard basis (the operation $\mathcal{E}$).
-The extra Hadamard gate on the target qubit has no effect on the control qubit.
+where $x$, $y$, $z$ are some fixed real numbers.
+Using the Choi matrix of $\mathcal{E}$, determine the range of $x$, $y$, $z$ for which the map $\mathcal{E}$ is *positive*, and the range for which it is *completely positive*.
 
 
-### C-NOT, again
+### Toffoli gate
 
-We can study the above example more generally, as follows.
-Let us consider a single-qubit channel induced by the action of the $\texttt{c-NOT}$ gate.
-Recall that the unitary operator associated with the $\texttt{c-NOT}$ gate can be written as
-$$
-  U=\proj{0}\otimes\id + \proj{1}\otimes X
-$$
-where is $X$ is the Pauli operator $\sigma_x$, i.e. the $\texttt{NOT}$ gate.
+Consider the Toffoli gate
 
-Let us step through the following simple circuit:
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
 \begin{equation*}
   \begin{quantikz}
     \lstick{input $\rho$}
-    & \ctrl{1}
-    & \qw \rstick{output $\rho'$}
-  \\\lstick{$\ket{0}$}
+    & \ctrl{2}
+    & \qw \rstick{discard}
+    \\
+    \lstick{$\ket{1}$}
+    & \ctrl{1} \qw
+    & \qw \rstick[wires=2]{$\rho'$ output}
+    \\
+    \lstick{$\ket{1}$}
     & \targ \qw
-    & \trash{}
+    & \qw
   \end{quantikz}
 \end{equation*}
 ```
 
-The control qubit will be our system, and the target qubit, initially in a fixed state $\ket{e}\equiv\ket{0}$, will play the role of the environment.
-Let the $\{\ket{e_1},\ket{e_2}\}$ basis be the standard basis of the target qubit $\{\ket{0},\ket{1}\}$.
-In this case we have^[Be careful here, the proliferation of $\ket{0}$ and $\ket{1}$ can be confusing. Make sure you do indeed apply $\bra{0}\square\ket{0}$ and $\bra{1}\square\ket{0}$ _only to the environment_, i.e. to the second term in the tensor products.]
-$$
-  \begin{aligned}
-    E_1
-    &= \bra{e_1}U\ket{e}
-  \\&= \bra{0}U\ket{0}
-  \\&= \bra{0} \big(\proj{0}\otimes\id+\proj{1}\otimes X\big) \ket{0}
-  \\&= \proj{0}\bra{0}\id\ket{0} + \proj{1}\bra{0}X\ket{0}
-  \\&= \proj{0}
-  \end{aligned}
-$$
-and
-$$
-  \begin{aligned}
-    E_2
-    &= \bra{e_2}U\ket{e}
-  \\&= \bra{1}U\ket{0}
-  \\&= \bra{1} \big(\proj{0}\otimes\id+\proj{1}\otimes X\big) \ket{0}
-  \\&= \proj{0}\bra{1}\id\ket{0} + \proj{1}\bra{1}X\ket{0}
-  \\&= \proj{1}
-  \end{aligned}
-$$
-It is then easy to see that $E_1^\dagger E_1 + E_2^\dagger E_2=\proj{0}+\proj{1}=\id$.
+Express $\rho'$ as a function of $\rho$ in the Kraus representation.
 
-The unitary part of the evolution
-$$
-  \begin{aligned}
-    \ket{\psi}\ket{e}
-    \longmapsto & E_1\ket{\psi}\ket{e_1}+E_2\ket{\psi}\ket{e_2}
-    \\= &\ket{0}\braket{0}{\psi}\ket{0}+\ket{1}\braket{1}{\psi}\ket{1}
-    \\= &\braket{0}{\psi}\ket{0}\ket{0}+ \braket{1}{\psi}\ket{1}\ket{1}
-  \end{aligned}
-$$
-is a familiar $\texttt{c-NOT}$ entangling process: if $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, then $\ket{\psi}\ket{0}$ becomes $\alpha\ket{0}\ket{0}+\beta\ket{1}\ket{1}$.
 
-The final state of the system qubit, the output, is given by
+### {}
+
+We say that $\mathcal{E}^\star$ is the **dual** of $\mathcal{E}$ if
+$$
+  \tr \mathcal{E}^\star (X)Y = \tr X\mathcal{E}(Y)
+$$
+for any operators $X$ and $Y$.
+
+1. Show that, if $\mathcal{E}$ is trace preserving, then $\mathcal{E}^\star$ is unital.
+1. Show that, if $\mathcal{E}=\sum_i E_i\cdot E_i^\dagger$, then $\sum_i E^\dagger_i\cdot E_i$ is an operator-sum decomposition of $\mathcal{E}^\star$.
+
+
+### {}
+
+Let $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$, and let $d=\dim\mathcal{H}$ and $d'=\dim\mathcal{H}'$.
+Show that, for any $(d\times d)$ matrix $X$ and any $(d'\times d')$ matrix $Y$,
+$$
+  \tr\mathcal{E}(X)Y
+  = \tr\widetilde{\mathcal{E}} (X^T\otimes Y).
+$$
+
+(For example, if we are interested in the component $\mathcal{E}(X)_{ij}=\bra{i}\mathcal{E}(X)\ket{j}$, then we can take $Y=\ket{j}\bra{i}$.)
+
+
+### Purifications and isometries
+
+All purifications of a density operator are related by an isometry acting on the purifying system.
+That is, if $\rho$ is a density operator on $\mathcal{H}$, and $\ket{\psi_A}\in \mathcal{H}\otimes\mathcal{H}_\mathcal{A}$ and $\ket{\psi_B}\in\mathcal{H}\otimes\mathcal{H}_B$ ($\dim\mathcal{H}_\mathcal{A}\leq\dim\mathcal{H}_\mathcal{B}$) are two purifications of $\rho$, then
+$$
+  \ket{\psi_B}=(\id\otimes V)\ket{\psi_A}.
+$$
+
+To show this, we start with the spectral decomposition of $\rho$
+$$
+  \rho = \sum_i p_i\proj{i}
+$$
+and note that
 $$
   \begin{aligned}
-    \rho'
-    &= E_1\rho E_1^\dagger + E_2\rho E_2^\dagger
-  \\&= \proj{0}\rho\proj{0} + \proj{1}\rho\proj{1}
-  \\&= \rho_{00}\proj{0}+\rho_{11}\proj{1}
+    \ket{\psi_A}
+    &= \sum_i \sqrt{p_i} \ket{i}\otimes\ket{a_i}
+  \\\ket{\psi_B}
+    &= \sum_i \sqrt{p_i} \ket{i}\otimes\ket{b_i}
   \end{aligned}
 $$
-or, in matrix form, by
+define an isometry $V=\sum_i \ket{b_i}\bra{a_i}$ satisfying the desired equation.
+
+This observation leads to a way of relating *all* convex decompositions of a given density operator: let $\{p_k,\ket{\psi_k}\}$ and $\{q_l,\ket{\phi_l}\}$ be convex decompositions of a density operator $\rho$;
+then there exists an isometry $V$ such that these two decompositions
 $$
-  \begin{bmatrix}
-    |\alpha|^2 & \alpha\beta^\star
-  \\\alpha^\star\beta & |\beta|^2
-  \end{bmatrix}
-  =\rho
-  \longmapsto
-  \rho'=
-  \begin{bmatrix}
-    |\alpha|^2 & 0
-  \\0 & |\beta|^2
-  \end{bmatrix}.
+  \rho
+  = \sum_{k=1}^n\proj{\widetilde{\psi}_k}
+  = \sum_{l=1}^m\proj{\widetilde{\phi}_l},
 $$
-As we can see, the diagonal elements of $\rho$ survive, and the off-diagonal elements (i.e. the coherences) disappear.
-You may think about this operation as being equivalent to measuring the system qubit in the standard basis and then forgetting the result.
+(where $n\geq m$, and $\ket{\widetilde{\psi}_k}=\sqrt{p_k}\ket{\psi_k}$ and $\ket{\widetilde{ \phi}_l}=\sqrt{q_l}\ket{\phi_l}$) are related:
+$$
+  \ket{\widetilde{\psi}_k} = \sum_{l} V_{kl} \ket{\widetilde{\phi}_l}.
+$$
+
+
+### Tricks with a maximally entangled state
+
+A maximally entangled state of a bipartite system can be written, using the Schmidt decomposition, as
+$$
+  \begin{aligned}
+    \ket{\Omega}
+    &= \frac{1}{\sqrt d}\sum_i \ket{i}\ket{i}
+  \\\proj{\Omega}
+    &= \frac{1}{d} \sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{j}
+  \end{aligned}
+$$
+Each subsystem is of dimension $d$, and all the Schmidt coefficients are equal.
+Here are few useful tricks involving a maximally entangled state.
+
+- If we take the transpose in the Schmidt basis of $\ket{\Omega}$, then
+    $$
+      \bra{\Omega}A\otimes B\ket{\Omega} = \frac{1}{d}\tr(A^T B).
+    $$
+
+- Any pure state of the bipartite system $\ket{\psi}=\sum_{ij} c_{ij}\ket{i}\ket{j}$ can be written as
+    $$
+      (C\otimes\id)\ket{\Omega} = (\id\otimes C^T)\ket{\Omega}.
+    $$
+    This implies that
+    $$
+      (U\otimes\overline{U})\ket{\Omega}=\ket{\Omega}
+    $$
+    (where $\overline{U}$ denotes the matrix given by taking the complex conjugate, entry-wise, of $U$, i.e. _without_ also taking the transpose).
+
+- The swap operation, $S\colon\ket{i}\ket{j}\mapsto\ket{j}\ket{i}$, can be expressed as^[We write $X^{T_{\mathcal{A}}}$ to mean the partial transpose over $\mathcal{A}$, i.e. $T\otimes\mathcal{I}$.]
+    $$
+      \begin{aligned}
+        S
+        &= d \proj{\Omega}^{T_{\mathcal{A}}}
+      \\&= d \sum_{ij} \big(\ket{i}\bra{j}\big)^T\otimes\ket{i}\bra{j}
+      \\&= d \sum_{ij} \ket{j}\bra{i}\otimes\ket{i}\bra{j}.
+      \end{aligned}
+    $$
+    This implies that
+    $$
+      \tr[(A\otimes B)S] = \tr AB
+    $$
+    and that
+    $$
+      (A\otimes\id)S = S(\id\otimes A).
+    $$
+
+
+### {}
+
+Show that $\mathcal{E}$ is trace preserving if and only if $\tr_\mathcal{B}\widetilde{\mathcal{E}} = d\id$.
+(Here the partial trace is over the second system in our definition $\widetilde{\mathcal{E}} =\mathcal{I}\otimes\mathcal{E}\proj{\Omega}$).
+
+*(Hint: show that $\tr\mathcal{E}(\ket{i}\bra{j}=\delta_{ij}$.)*
+
+
+### {}
+
+Mathematically speaking, Kraus operators $E_k$ are vectors in a $dd'$-dimensional Hilbert space, with the Hilbert--Schmidt inner product $\tr E^\dagger_k E_l$.
+So, our intuition tells us, in order to describe any quantum channel with $\dim\mathcal{H}=\dim\mathcal{H}'=d$, we should need no more than $d^2$ Kraus operators.
+We can pick an orthonormal basis of operators $\{B_i\}$ and express each Kraus vector in this basis as $E_k=\sum c_{ki} B_i$ (where $i=1,\ldots,d^2$ and $k=1,\ldots,n$, with $n$ possibly much larger than $d^2$).
+This gives us 
+$$
+  \begin{aligned}
+    \rho
+    \longmapsto
+    \sum_{ij} B_i\rho B^\dagger_j \left(\sum _k c_{ki}c^\star_{kj}\right)
+  \\=& \sum_{ij} B_i\rho B^\dagger_j  C_{ij}
+  \end{aligned}
+$$
+The matrix $C_{ij}$ is positive semidefinite, and hence unitarily diagonalisable: $C_{ij}=\sum_k U_{ik} d_k U^\dagger_{kj}$ for some unitary $U$ and some $d_k\geq0$.
+We can then unitarily "rotate" our operator basis and use the $C_k=\sum_j U_{jk}B_j \sqrt{d_k}$ as our new Kraus operators.
+
+
+### No pancakes
+
+Consider a single qubit operation which causes the $z$-component of the Bloch vector to shrink while preserving the values of the $x$- and $y$-components.
+Under such an operation, the Bloch sphere is mapped to an oblate spheroid which touches the Bloch sphere along its equator.
+
+Explain why we cannot physically implement such a map.

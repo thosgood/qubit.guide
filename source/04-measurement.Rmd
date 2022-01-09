@@ -32,7 +32,7 @@ $$
 $$
 As a result:
 
-::: {.idea data-latex=""}
+::: {.idea latex=""}
 A **complete** measurement in quantum theory is determined by the choice of an orthonormal basis $\{\ket{e_i}\}$ in $\mathcal{H}$, and every such basis (in principle) represents a possible complete measurement.
 :::
 
@@ -42,7 +42,7 @@ A **complete** measurement in quantum theory is determined by the choice of an o
 
 ## Back to qubits; complete measurements
 
-::: {.idea data-latex=""}
+::: {.idea latex=""}
 A **projector** is any Hermitian operator $P=P^\dagger$ which is idempotent ($P^2=P$).
 The rank of $P$ is evaluated using $\tr(P)$.
 In the Dirac notation, $\proj{e}$ is a rank one projector on the subspace spanned by the unit vector $\ket{e}$, and it acts on any vector $\ket{v}$ as $(\proj{e})\ket{v} = \ket{e}\braket{e}{v}$.
@@ -135,7 +135,7 @@ We will discuss this more later on, but for now let us accept a "collapse" as a 
 
 So far we have identified measurements with orthonormal bases, or, if you wish, with a set of orthonormal projectors on the basis vectors.
 
-::: {.idea data-latex=""}
+::: {.idea latex=""}
 - The **orthonormality** condition:
     $$
       \braket{e_k}{e_l} = \delta_{kl}
@@ -171,13 +171,13 @@ For example, a complete measurement in a four-dimensional Hilbert space will hav
 In other words, we might be trying to distinguish one _subspace_ from another, without separating vectors that lie in the same subspace.
 Such measurements (said to be **incomplete**) are indeed possible, and they can be less disruptive than the complete measurements.
 
-::: {.idea data-latex=""}
+::: {.idea latex=""}
 Intuitively, an incomplete measurement has fewer outcomes and is hence less informative, but the state after such a measurement is usually less disturbed.
 :::
 
 In general, instead of projecting on one dimensional subspaces spanned by vectors from an orthonormal basis, we can decompose our Hilbert space into mutually orthogonal subspaces of various dimensions and project on them.
 
-::: {.idea data-latex=""}
+::: {.idea latex=""}
 - The orthogonality conditions for projectors:
     $$
       P_k P_l = P_k\delta_{kl}
@@ -282,7 +282,7 @@ $$
 $$
 where $\lambda_k$ is now the eigenvalue corresponding to the eigenvector $\ket{e_k}$, or the projector $P_k$.
 
-::: {.idea data-latex=""}
+::: {.idea latex=""}
 Recall the following types of operator:
 
 | | |
@@ -301,7 +301,7 @@ For example, the standard measurement on a single qubit is often called the **$Z
 The two outcomes, $\ket{0}$ and $\ket{1}$, are now labelled as $+1$ and $-1$, respectively.
 Using the same association we also have the $X$- and the $Y$-measurements, defined by the Pauli $X$ and $Y$ operators, respectively.
 
-::: {.idea data-latex=""}
+::: {.idea latex=""}
 The outcomes can be labelled by any symbols of your choice; it is the _decomposition_ of the Hilbert space into _mutually orthogonal subspaces_ that defines a measurement, not the labels.
 :::
 
@@ -327,7 +327,7 @@ Note that when $A$ is a projector then $\braket{\psi}{A|\psi}$ is the probabilit
 
 ## Compatible observables and the uncertainty relation
 
-**!!!TODO!!!**
+**!!!TO-DO!!!**
 
 
 
@@ -365,7 +365,7 @@ $$
 $$
 which is the probability that signal state $\ket{s_k}$ is selected (here equal to $1/N$, since all the signal states are equally likely) times the probability that the selected signal state is correctly identified by Bob (which is $\braket{s_k}{P_k|s_k}$), and we sum over all signal states.
 
-::: {.idea data-latex=""}
+::: {.idea latex=""}
 We have the following **trace identities**:
 
 - $\tr(ABC) = \tr(BCA) = \tr(CAB)$
@@ -420,7 +420,7 @@ So if Alice encodes $N$ equally likely messages as states in a quantum system th
 If the number $N$ of possible signals exceeds the dimension $d$, then Bob will not be able to reliably distinguish between the signals by any measurement.
 In particular:
 
-::: {.idea data-latex=""}
+::: {.idea latex=""}
 In this setting^[There is something called [**superdense coding**](https://en.wikipedia.org/wiki/Superdense_coding), where one qubit can actually store _two_ classical bits, but this relies on Alice and Bob both having access to a shared entangled state right from the very start of the experiment.], one qubit can store _at most_ one bit of information that can _reliably_ be read by a measurement.
 :::
 
@@ -547,14 +547,120 @@ As we increase $\alpha$, the two states become more distinguishable, and, as we 
 
 ## Wiesner's quantum money
 
-**!!!TODO!!!**
+**!!!TO-DO!!!**
 
 
 
 
 
 
-## Remarks and Exercises
+
+## Quantum theory, formally
+
+
+
+Even though multiplying and adding probability amplitudes is essentially all there is to quantum theory, we hardly ever multiply and add amplitudes in a pedestrian way.
+Instead, as we have seen, we neatly tabulate the amplitudes into vectors and matrices and let the matrix multiplication take care of multiplication and addition of amplitudes corresponding to different alternatives.
+Thus vectors and matrices appear naturally as our bookkeeping tools: we use vectors to describe quantum states, and matrices (operators) to describe quantum evolutions and measurements.
+This leads to a convenient mathematical setting for quantum theory, which is a complex vector space with an inner product, often referred to as a Hilbert space.
+It turns out, somewhat miraculously, that this pure mathematical construct is exactly what we need to formalise quantum theory.
+It gives us a precise language which is appropriate for making empirically testable predictions.
+At a very instrumental level, quantum theory is a set of rules designed to answer questions such as "given a specific preparation and a subsequent evolution, how can we compute probabilities for the outcomes of such-and-such measurement".
+Here is how we represent preparations, evolutions and measurements in mathematical terms, and how we get probabilities.
+
+Note that we have already said much of the below, but we are summarising it again now in a more precise way, formally defining the mathematical framework of quantum theory that we use.
+
+We also need to point out that a vital part of the formalism of quantum theory is missing from the following description, namely the idea of **tensor products**.
+To talk about this, we need to introduce the notion of **entanglement**, and this will be the subject of [Chapter 5](#chapter5).
+
+
+### Quantum states
+
+With any isolated quantum system which can be prepared in $n$ perfectly distinguishable states, we can associate a Hilbert space $\mathcal{H}$ of dimension $n$ such that each vector $\ket{v}\in\mathcal{H}$ of unit length ($\braket{v}{v} =1$) represents a quantum state of the system.
+The overall phase of the vector has no physical significance: $\ket{v}$ and $e^{i\varphi}\ket{v}$, for any real $\varphi$, describe the same state.
+The inner product $\braket{u}{v}$ is the probability amplitude that a quantum system prepared in state $\ket{v}$ will be found in state $\ket{u}$.
+States corresponding to orthogonal vectors, $\braket{u}{v}=0$, are perfectly distinguishable, since the system prepared in state $\ket{v}$ will never be found in state $\ket{u}$, and vice versa.
+In particular, states forming orthonormal bases are always perfectly distinguishable from each other.
+
+
+### Quantum evolutions
+
+::: {.idea latex=""}
+Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.
+:::
+
+Unitary operators describing evolutions of quantum systems are usually derived from the **Schrödinger equation**.^[Recall our previous discussion of this equation in [Chapter 3](#chapter3).]
+$$
+  \frac{\mathrm{d}}{\mathrm{d}t} \ket{\psi(t)}
+  = -\frac{i}{\hbar} H \ket{\psi(t)}
+$$
+where $H$ is a Hermitian operator called the Hamiltonian.
+
+This equation contains a complete specification of all interactions both within the system and between the system and the external potentials.
+For time independent Hamiltonians, the formal solution of the Schrödinger equation reads
+$$
+  \begin{gathered}
+    \ket{\psi(t)} = U(t) \ket{\psi(0)}
+  \\\text{where}\quad U(t) = e^{-\frac{i}{\hbar}Ht}.
+  \end{gathered}
+$$
+Any unitary matrix can be represented^[We ignore convergence issues.] as the exponential of some Hermitian matrix $H$ and some real coefficient $t$:
+$$
+  \begin{aligned}
+    e^{-itH}
+    &\equiv \id - itH + \frac{(-it)^2}{2}H^2 + \frac{(-it)^3}{2\cdot3}H^3 +\ldots
+  \\&= \sum_{n=0}^\infty \frac{(-it)^n}{n!}H^n.
+  \end{aligned}
+$$
+The state vector changes smoothly: for $t=0$ the time evolution operator is merely the unit operator $\id$, and when $t$ is very small $U(t)\approx \id -itH$ is close to the unit operator, differing from it by something of order $t$.
+
+
+### Quantum circuits
+
+In this course we will hardly refer to the Schrödinger equation.
+Instead we will assume that our clever colleagues, experimental physicists, are able to implement certain unitary operations and we will use these unitaries, like lego blocks, to construct other, more complex, unitaries.
+We refer to preselected elementary quantum operations as **quantum logic gates** and we often draw diagrams, called **quantum circuits**, to illustrate how they act on qubits.
+For example, two unitaries, $U$ followed by $V$, acting on a single qubit are represented as
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6.5}
+\begin{equation*}
+  \begin{quantikz}
+    &\gate{U}
+    &\gate{V}
+    &\qw
+  \end{quantikz}
+\end{equation*}
+```
+
+This diagram should be read from left to right, and the horizontal line represents a qubit that is inertly carried from one quantum operation to another.
+
+
+### Measurements
+
+A complete measurement in quantum theory is determined by the choice of an orthonormal basis $\{\ket{e_i}\}$ in $\mathcal{H}$, and every such basis (in principle) represents a possible measurement.
+Given a quantum system in state $\ket{\psi}$ such that
+$$
+  \ket{\psi} = \sum_i \ket{e_i}\braket{e_i}{\psi},
+$$
+the measurement in the basis $\{\ket{e_i}\}$ gives the outcome labelled by $e_k$ with probability $|\braket{e_k\psi}|^2$, and leaves the system in state $\ket{e_k}$.
+This is consistent with our interpretation of the inner product $\braket{e_k}{\psi}$ as the probability amplitude that a quantum system prepared in state $\ket{\psi}$ will be found in state $\ket{e_k}$.
+State vectors forming orthonormal bases are perfectly distinguishable from each other ($\braket{e_i}{e_j}=\delta_{ij}$), so there is no ambiguity about the outcome.
+A complete measurement is the best we can do in terms of resolving state vectors in the basis states.
+
+In general, for any decomposition of the identity $\sum_k P_k=\id$ into orthogonal projectors $P_k$ (i.e. $P_kP_l = P_k\delta_{kl}$), there exists a measurement that takes a quantum system in state $\ket{\psi}$, outputs label $k$ with probability $\bra{\psi}P_k\ket{\psi}$, and leaves the system in the state $P_k\ket{\psi}$ (multiplied by the normalisation factor i.e. divided by the length of $P_k\ket{\psi}$):
+$$
+  \ket{\psi}
+  \mapsto
+  \frac{P_k\ket{\psi}}{\sqrt{\braket{\psi}{P_k|\psi}}}.
+$$
+The projector formalism covers both complete and incomplete measurements.
+The complete measurements are defined by rank one projectors, $P_k=\proj{e_k}$, projecting on vectors from some orthonormal basis $\{\ket{e_k}\}$.
+
+
+
+
+
+## *Remarks and exercises*
 
 
 ### {}
@@ -660,109 +766,4 @@ How does she do it?
 
 ### The Zeno effect
 
-**!!!TODO!!!**
-
-
-
-
-
-## Quantum theory, formally
-
-
-
-Even though multiplying and adding probability amplitudes is essentially all there is to quantum theory, we hardly ever multiply and add amplitudes in a pedestrian way.
-Instead, as we have seen, we neatly tabulate the amplitudes into vectors and matrices and let the matrix multiplication take care of multiplication and addition of amplitudes corresponding to different alternatives.
-Thus vectors and matrices appear naturally as our bookkeeping tools: we use vectors to describe quantum states, and matrices (operators) to describe quantum evolutions and measurements.
-This leads to a convenient mathematical setting for quantum theory, which is a complex vector space with an inner product, often referred to as a Hilbert space.
-It turns out, somewhat miraculously, that this pure mathematical construct is exactly what we need to formalise quantum theory.
-It gives us a precise language which is appropriate for making empirically testable predictions.
-At a very instrumental level, quantum theory is a set of rules designed to answer questions such as "given a specific preparation and a subsequent evolution, how can we compute probabilities for the outcomes of such-and-such measurement".
-Here is how we represent preparations, evolutions and measurements in mathematical terms, and how we get probabilities.
-
-Note that we have already said much of the below, but we are summarising it again now in a more precise way, formally defining the mathematical framework of quantum theory that we use.
-
-We also need to point out that a vital part of the formalism of quantum theory is missing from the following description, namely the idea of **tensor products**.
-To talk about this, we need to introduce the notion of **entanglement**, and this will be the subject of [Chapter 5](#chapter5).
-
-
-### Quantum states
-
-With any isolated quantum system which can be prepared in $n$ perfectly distinguishable states, we can associate a Hilbert space $\mathcal{H}$ of dimension $n$ such that each vector $\ket{v}\in\mathcal{H}$ of unit length ($\braket{v}{v} =1$) represents a quantum state of the system.
-The overall phase of the vector has no physical significance: $\ket{v}$ and $e^{i\varphi}\ket{v}$, for any real $\varphi$, describe the same state.
-The inner product $\braket{u}{v}$ is the probability amplitude that a quantum system prepared in state $\ket{v}$ will be found in state $\ket{u}$.
-States corresponding to orthogonal vectors, $\braket{u}{v}=0$, are perfectly distinguishable, since the system prepared in state $\ket{v}$ will never be found in state $\ket{u}$, and vice versa.
-In particular, states forming orthonormal bases are always perfectly distinguishable from each other.
-
-
-### Quantum evolutions
-
-::: {.idea data-latex=""}
-Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.
-:::
-
-Unitary operators describing evolutions of quantum systems are usually derived from the **Schrödinger equation**.^[Recall our previous discussion of this equation in [Chapter 3](#chapter3).]
-$$
-  \frac{\mathrm{d}}{\mathrm{d}t} \ket{\psi(t)}
-  = -\frac{i}{\hbar} H \ket{\psi(t)}
-$$
-where $H$ is a Hermitian operator called the Hamiltonian.
-
-This equation contains a complete specification of all interactions both within the system and between the system and the external potentials.
-For time independent Hamiltonians, the formal solution of the Schrödinger equation reads
-$$
-  \begin{gathered}
-    \ket{\psi(t)} = U(t) \ket{\psi(0)}
-  \\\text{where}\quad U(t) = e^{-\frac{i}{\hbar}Ht}.
-  \end{gathered}
-$$
-Any unitary matrix can be represented^[We ignore convergence issues.] as the exponential of some Hermitian matrix $H$ and some real coefficient $t$:
-$$
-  \begin{aligned}
-    e^{-itH}
-    &\equiv \id - itH + \frac{(-it)^2}{2}H^2 + \frac{(-it)^3}{2\cdot3}H^3 +\ldots
-  \\&= \sum_{n=0}^\infty \frac{(-it)^n}{n!}H^n.
-  \end{aligned}
-$$
-The state vector changes smoothly: for $t=0$ the time evolution operator is merely the unit operator $\id$, and when $t$ is very small $U(t)\approx \id -itH$ is close to the unit operator, differing from it by something of order $t$.
-
-
-### Quantum circuits
-
-In this course we will hardly refer to the Schrödinger equation.
-Instead we will assume that our clever colleagues, experimental physicists, are able to implement certain unitary operations and we will use these unitaries, like lego blocks, to construct other, more complex, unitaries.
-We refer to preselected elementary quantum operations as **quantum logic gates** and we often draw diagrams, called **quantum circuits**, to illustrate how they act on qubits.
-For example, two unitaries, $U$ followed by $V$, acting on a single qubit are represented as
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6.5}
-\begin{equation*}
-  \begin{quantikz}
-    &\gate{U}
-    &\gate{V}
-    &\qw
-  \end{quantikz}
-\end{equation*}
-```
-
-This diagram should be read from left to right, and the horizontal line represents a qubit that is inertly carried from one quantum operation to another.
-
-
-### Measurements
-
-A complete measurement in quantum theory is determined by the choice of an orthonormal basis $\{\ket{e_i}\}$ in $\mathcal{H}$, and every such basis (in principle) represents a possible measurement.
-Given a quantum system in state $\ket{\psi}$ such that
-$$
-  \ket{\psi} = \sum_i \ket{e_i}\braket{e_i}{\psi},
-$$
-the measurement in the basis $\{\ket{e_i}\}$ gives the outcome labelled by $e_k$ with probability $|\braket{e_k\psi}|^2$, and leaves the system in state $\ket{e_k}$.
-This is consistent with our interpretation of the inner product $\braket{e_k}{\psi}$ as the probability amplitude that a quantum system prepared in state $\ket{\psi}$ will be found in state $\ket{e_k}$.
-State vectors forming orthonormal bases are perfectly distinguishable from each other ($\braket{e_i}{e_j}=\delta_{ij}$), so there is no ambiguity about the outcome.
-A complete measurement is the best we can do in terms of resolving state vectors in the basis states.
-
-In general, for any decomposition of the identity $\sum_k P_k=\id$ into orthogonal projectors $P_k$ (i.e. $P_kP_l = P_k\delta_{kl}$), there exists a measurement that takes a quantum system in state $\ket{\psi}$, outputs label $k$ with probability $\bra{\psi}P_k\ket{\psi}$, and leaves the system in the state $P_k\ket{\psi}$ (multiplied by the normalisation factor i.e. divided by the length of $P_k\ket{\psi}$):
-$$
-  \ket{\psi}
-  \mapsto
-  \frac{P_k\ket{\psi}}{\sqrt{\braket{\psi}{P_k|\psi}}}.
-$$
-The projector formalism covers both complete and incomplete measurements.
-The complete measurements are defined by rank one projectors, $P_k=\proj{e_k}$, projecting on vectors from some orthonormal basis $\{\ket{e_k}\}$.
+**!!!TO-DO!!!**

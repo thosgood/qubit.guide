@@ -1,11 +1,8 @@
-name: Deploy book
+name: Deploy preview
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - 'README.md'
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   bookdown:
@@ -55,11 +52,20 @@ jobs:
       - name: Build site
         run: |
           R -e "bookdown::render_book('index.Rmd','bookdown::gitbook',output_dir = 'book',config_file = '_bookdown.yml')"
-          R -e "bookdown::render_book('index.Rmd','bookdown::pdf_book',output_dir = 'book',config_file = '_bookdown.yml')"
 
-      - name: Deploy to build branch
-        uses: JamesIves/github-pages-deploy-action@3.6.2
+      - uses: izhangzhihao/delete-comment@master
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: build
-          FOLDER: book
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_user_name: github-actions[bot]
+          issue_number: ${{ github.event.number }}
+
+      - name: Netlify
+        uses: South-Paw/action-netlify-deploy@v1.2.0
+        id: netlify
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
+          build-dir: './book'
+          draft: true
+          comment-on-pull-request: true
