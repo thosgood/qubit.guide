@@ -557,7 +557,7 @@ We mentioned that quantum channels are combinations of
 2. discarding a physical system (taking a partial trace),
 3. and unitary transformations.
 
-For consistency let us note that each of these operations admits an operator sum decomposition. This is obvious for unitary evolution ($\rho\mapsto U\rho U^\dagger$), but perhaps less so for the other two operations.
+For consistency let us note that each of these operations admits an operator-sum decomposition. This is obvious for unitary evolution ($\rho\mapsto U\rho U^\dagger$), but perhaps less so for the other two operations.
 
 - **Adding a system.**
     Any quantum system can be expanded by bringing in an auxiliary system in a fixed state $\ket{a}$.
@@ -598,7 +598,7 @@ For consistency let us note that each of these operations admits an operator sum
     Again, we can check that the Kraus operators $E_i=\bra{i}\otimes\id$ satisfy the completeness relation $\sum_i E^\dagger_i E_i =\id\otimes\id$ (using the fact that $\sum_i\proj{i}=\id$).
 
 Any *sequential* composition of two quantum channels $\mathcal{E}$ and $\mathcal{F}$ with Kraus operators $\{A_i\}_{i\in I}$ and $\{B_j\}_{j\in J}$ (respectively) is another quantum channel^[Here we have tacitly assumed that the dimensions agree, i.e. that the output of $\mathcal{E}$ and the input of $\mathcal{F}$ are of the same dimension, so that the composition makes sense.] described by the Kraus operators $\{B_jA_i\}_{i\in I,j\in J}$.
-Showing this is rather straightforward, at least in the operator sum representation: let
+Showing this is rather straightforward, at least in the operator-sum representation: let
 $$
   \begin{aligned}
     \mathcal{E} &= \sum_i A_i\cdot A^\dagger_i
@@ -1089,38 +1089,93 @@ Let us first make precise what we mean by this.
 We say that a quantum channel $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ is **correctable** if there exists a **recovery channel** $\mathcal{R}\colon\mathcal{B}(\mathcal{H}')\to\mathcal{B}(\mathcal{H})$ such that the composition $\mathcal{R}\circ\mathcal{E}$ is the identity channel.
 :::
 
+The action of any unitary operation $U$ can, of course, be reversed by simply applying the inverse operation, $U^\dagger$;
+the same holds for any isometry $V$, because $V^\dagger V=\id$.
+For example, the process of first adding an auxiliary system in a fixed state and then applying a unitary $U$ to the composite system can be reversed by first applying $U^\dagger$ to the composed system and then discarding the auxiliary system.
+So how about a statistical mixture of unitaries?
+Or, in general, a statistical mixture of isometries?
 
+If all we know is that an isometry $V_i$ is chosen randomly according to some distribution $\{p_i\}_{i\in I}$, then the best we can do in an attempt to reverse the random process is to apply $V_k^\dagger$, where $k\in I$ is such that $p_k$ is the largest of all the $p_i$.
+Clearly, this approach succeeds in reversing the action of the channel with probability $p_k$.
+However, if there were a way to determine, post factum, which particular isometry was chosen, then, of course, we could perfectly reverse the action of the channel.
 
-**!!to-do!!**
+Consider a channel $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ given by
+$$
+  \mathcal{E}\colon\rho
+  \longmapsto \rho'
+  =\sum_i p_i V_i\rho V^\dagger_i
+$$
+in which the isometries $V_i$ are mutually orthogonal (i.e. $V_i^\dagger V_j =\delta_{ij}\id$).
+Let $\mathcal{H}'_i$ be the image of $\mathcal{H}$ under $V_i$;
+these images are subspaces in $\mathcal{H}'$, and they are mutually orthogonal. Indeed, for any vector $\ket{v}$ in $\mathcal{H}$, the vectors $V_i\ket{v}\in \mathcal{H}'_i$ and $V_j\ket{v}\in \mathcal{H}'_j$ are orthogonal:
+$$
+  \bra{v}V_i^\dagger V_j\ket{v}
+  = \delta_{ij} \bra{v}\id\ket{v}
+  = \delta_{ij}.
+$$
+We can now perform a measurement defined by the projections onto these mutually orthogonal subspaces $\mathcal{H}'_i$, and find out which particular isometry was chosen (and then perfectly reverse its action by applying the inverse isometry).
 
+Note that, for a measurement on $\mathcal{H}'$ to be well defined, we need to decompose $\mathcal{H}'$ into mutually orthogonal subspaces.
+That is, the direct sum $\bigoplus_i\mathcal{H}'_i$ might not "fill up" the space $\mathcal{H}'$, so we might need to pad out with whatever is "left over" in order to obtain the decomposition of the whole $\mathcal{H}'$ into mutually orthogonal subspaces.
+That extra subspace with which we pad out the direct sum is *not* in the image of the channel: we will never see the result of the measurement corresponding to the projection onto that subspace.
+However, we *need* to add it in order to obtain a complete decomposition of $\mathcal{H}'$.
+Here the Kraus operators $E_i=\sqrt{p_i}V_i$ satisfy
+$$
+  E^\dagger_i E_j
+  = \sqrt{p_i p_j}\delta_{ij}\id
+$$
+but remember that *the operator-sum decomposition is not unique*, and so the same channel can be described by another, unitarily related, set of Kraus operators, $K_i = \sum_k U_{ik}E_k$, which then satisfy
+$$
+  \begin{aligned}
+    K_i^\dagger K_j
+    &= \sum_{kl} U^\star_{ik} E^\dagger_k E_l U_{jl}
+  \\&= \sum_{kl} U^\star_{ik} (\sqrt{p_k p_l}\delta_{kl}\id) U_{jl}
+  \\&= \sum_{k} U^\star_{ik} p_k U_{jk}\id
+  \\&= \sigma_{ij}\id
+  \end{aligned}
+$$
+where $\sigma_{ij}$ are elements of a density matrix with eigenvalues $p_i$.
+If this condition is satisfied, then the action of the channel can be reversed, and the original state $\rho$ can be recovered.
 
+Conversely, if the channel $\mathcal{E}$ is correctable, then the above condition above holds.
+Indeed, in terms of Kraus representations for $\mathcal{E}$ and $\mathcal{R}$, we require that
+$$
+  \mathcal{R}\circ\mathcal{E}(\rho)
+  = \sum_{lj} R_l E_j \rho R^\dagger_l E^\dagger_j
+  = \rho
+$$
+for any state $\rho$.
+This means that identity channel $\mathcal{R}\circ\mathcal{E}=\id$ must have all the Kraus operators proportional to the identity:
+$$
+  R_lE_j=\lambda_{lj}\id
+$$
+for some complex numbers $\lambda_{lj}$ such that^[This is the normalisation condition for the Kraus operators $R_lE_j$] $\sum_{lj} |\lambda_{lj}|^2=1$.
+Then we can write
+$$
+  \begin{aligned}
+    \sum_l E_i^\dagger R_l^\dagger R_l E_j
+    &= E_i^\dagger E_j
+  \\&=\sum_l \lambda^*_{il}\lambda_{jl}\id
+  \\&=\sigma_{ij}\id
+  \end{aligned}
+$$
+where $\sigma_{ij} = \sum_l \lambda^*_{il}\lambda_{jl}$.
+Clearly, $\sigma_{ij}$ is a positive matrix such that $\tr(\sigma_{ij})=1$ and $\sum_i\sigma_{ii}=\sum_{il}|\lambda_{il}|^2=1$.
+So the condition $E_i^\dagger E_j = \sigma_{ij}\id$ is both necessary *and* sufficient in order for the channel $\mathcal{E}$ to be correctable.
+In summary:
 
+::: {.idea latex=""}
+Let $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ be a quantum channel with Kraus decomposition $\mathcal{E}(\rho)=\sum_i E_i\rho E^\dagger_i$.
+Then the following statements are equivalent:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+1. $\mathcal{E}$ is correctable;
+2. $E_i^\dagger E_j = \sigma_{ij}\id$ for some density matrix $\sigma_{ij}$;
+3. there exists a set of orthogonal isometries $\{V_i\}$ and a probability distribution $\{p_i\}$ such that
+    $$
+    \mathcal{E} (\rho) = \sum_i p_i V_i\rho V^\dagger_i
+    $$
+    for every state $\rho$.
+:::
 
 
 
