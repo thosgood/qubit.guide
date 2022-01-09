@@ -1344,20 +1344,46 @@ This three qubit-encoding can be reversed by the mirror image circuit:
 
 ### The Markov approximation {#markov-approximation}
 
-**!!to-do!!**
+Composition of quantum channels^[Unitary evolutions form a group; quantum channels form a semigroup. Quantum operations are invertible only if they are either unitary operations or simple isometric embeddings (such as the process of bringing in the environment in some fixed state and then *immediately* discarding it, without any intermediate interaction).] in the Kraus representation is rather straightforward, but do not be deceived by its mathematical simplicity!
+We must remember that *quantum channels do not capture all possible quantum evolutions*: the assumption that the system and the environment are *not initially correlated* is crucial, and it does impose some restrictions on the applicability of our formalism.
+Compare, for example, the following two scenarios.
 
+Firstly:
 
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\rho$} &\gate[2]{U_A} &\rstick{$\rho'$} \qw & &\gate[2]{U_B} &\rstick{$\rho''$} \qw
+  \\\lstick{$\ket{e}$} &\qw &\qw &\qw &\qw & \trash{}
+  \end{quantikz}
+\end{equation*}
+```
 
+Here the system, initially in state $\rho$, undergoes two stages of evolution, and the environment is *not* discarded after the first unitary evolution $U_A$; the environment persists and participates in the second unitary evolution $U_B$.
+In this case the evolutions $\rho\mapsto\rho'$ and $\rho\mapsto\rho''$ are both well defined quantum channels, but the evolution $\rho'\mapsto\rho''$ is *not*: it falls outside the remit of our formalism because the input state of the system and the state of the environment are *not independent*.
 
+Secondly:
 
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\rho$} &\gate[2]{U_A} &\qw &\rstick{$\rho'$} \qw & &\qw &\gate[2]{U_B} &\rstick{$\rho''$} \qw
+  \\\lstick{$\ket{a}$} & &\trash{} & & & \lstick{$\ket{b}$} &\qw &\trash{}
+  \end{quantikz}
+\end{equation*}
+```
 
+Here we have two stages of evolution, as before, but we *discard* the environment after the first unitary, and start the second unitary evolution in a fresh tensor-product state, with a *new* environment;
+the two stages involve *independent environments*.
+In this case^[A **quantum Markov process**! [Andrey Markov](https://en.wikipedia.org/wiki/Andrey_Markov) (1929--2012) was a Russian mathematician best known for his work on stochastic processes.] all three evolutions ($\rho\mapsto\rho'$, $\rho'\mapsto\rho''$, and $\rho\mapsto\rho''$) are well defined quantum channels, and they compose: if $\mathcal{E}_\mathcal{A}$ describes the evolution from $\rho$ to $\rho'$, and $\mathcal{E}_\mathcal{B}$ from $\rho'$ to $\rho''$, then the composition $\mathcal{E}_\mathcal{B}\circ\mathcal{E}_\mathcal{A}$ describes the evolution from $\rho$ to $\rho''$.
 
-
-
-
-
-
-
+In practice we often deal with complex environments that have internal dynamics that "hides" any entanglement with the system as quickly as it arises.
+For example, suppose that our system is an atom, surrounded by the electromagnetic field (which serves as the environment).
+Let the field start in the vacuum state.
+If the atom emits a photon into the environment, then the photon quickly propagates away, and the immediate vicinity of the atom appears to be empty, i.e. resets to the vacuum state.
+In this approximate model, we assume that the environment quickly forgets about the state resulting from any previous evolution.
+This is known as the **Markov approximation**;
+in a quantum Markov process the environment has essentially no memory.
 
 
 
@@ -1576,5 +1602,8 @@ and the partial inner product of the same $\ket{\psi}$ with $\ket{1}\in\mathcal{
 $$
   \braket{1}{\psi} = c_{01}\ket{0} + c_{11}\ket{1}.
 $$
+
+
+### {}
 
 **!!to-do!!**
