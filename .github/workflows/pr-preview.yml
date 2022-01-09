@@ -62,21 +62,4 @@ jobs:
           netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
           build-dir: './book'
           draft: true
-
-      - name: Find PR comment
-        uses: peter-evans/find-comment@v1
-        id: find-comment
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: preview
-
-      - name: Create or update PR comment
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          comment-id: ${{ steps.find-comment.outputs.comment-id }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            ✨ [Click here for a preview](${{ steps.netlify.outputs.preview-name }}) ✨
-            (Built from the commit made at ${{ github.event.pull_request.updated_at }})
-          edit-mode: replace
+          comment-on-pr: true
