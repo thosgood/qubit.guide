@@ -6,7 +6,8 @@
     + banner image below homepage title?
 1. `\mapsto` -> `\longmapsto` in display mode (and similar for `\to`/`\rightarrow`)
 1. explain lecture videos (in an html-only div)
-    + **some way of hiding/showing all videos on a page?**
+    + **some way of hiding/showing all videos on a page**
+    + **DEFAULT TO *OFF***
 1. explain gitbook buttons (in an html-only div)
 1. **only one footnote per paragraph**
     + improve sidenote y-positioning using jquery
