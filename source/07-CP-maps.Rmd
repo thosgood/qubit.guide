@@ -880,8 +880,12 @@ $$
 for some operator $E_k$.
 
 Now, any vector $\ket{\psi}$ in $\mathcal{H}\otimes\mathcal{H}'$ can be written as^[**Exercise.** Prove this!]
+**to-do: fix labels**
 $$
-  \ket{\psi}=\id\otimes V \ket{\Omega}
+  \begin{equation}
+    \ket{\psi}=\id\otimes V \ket{\Omega}
+  \end{equation}
+  (\#eq:kraus-vector)
 $$
 where $V=\sum_{ij}V_{ij}\ket{j}\bra{i}$ is an operator from $\mathcal{H}$ to $\mathcal{H}'$, and $\ket{\Omega}=\frac{1}{d}\sum_i\ket{i}\otimes\ket{i}$ is a maximally entangled state in $\mathcal{H}\otimes\mathcal{H}$.
 (Here, the vectors $\ket{i}$ and $\ket{j}$ form orthonormal bases in $\mathcal{H}$ and $\mathcal{H}'$, respectively.)
@@ -931,7 +935,7 @@ We start in the top left corner with a quantum channel $\mathcal{E}$.
 This channel is a CPTP map, which means that $\id\otimes\mathcal{E}$ takes a maximally entangled state $\ket{\Omega}$ to a density matrix $\widetilde{\mathcal{E}}$.
 This is our first implication: *if $\mathcal{E}$ is a quantum channel, then its Choi matrix $\widetilde{\mathcal{E}}$ is a density matrix*.
 The reverse implication goes as follows.
-The density matrix $\widetilde{\mathcal{E}}$ can be expressed as a mixture of pure states, $\proj{\tilde\psi_k}$ (and this takes us to the bottom right corner in the diagram).
+The density matrix $\widetilde{\mathcal{E}}$ can be expressed as a mixture of pure states, $\proj{\widetilde\psi_k}$ (and this takes us to the bottom right corner in the diagram).
 We use this mixture decomposition when we construct map the $\mathcal{E}$ from the Choi matrix $\widetilde{\mathcal{E}}$, via the Choi-Jamiolkowski isomorphism.
 We notice that $\mathcal{E}$ admits the operator-sum representation, and that each of the pure states in the mixture is associated with a Kraus operator, with $\ket{\widetilde{\psi}_k} = (\id\otimes E_k)\ket{\Omega}$.
 All together this gives us the reverse implication: *if the Choi matrix $\widetilde{\mathcal{E}}$ is a density matrix, then $\mathcal{E}$ is a quantum channel.*
@@ -962,7 +966,7 @@ where $\rho^T$ is the transpose of $\rho$.
 But is this map a quantum channel?
 That is, *does it represent a physical process that can be implemented in a lab*?
 
-The expression for $\mathcal{E}$, i.e. the convex sum on the right-hand side, can be interpreted as follows: take the input state $\rho$ and either (i) apply the transpose, or (ii) replace it with the maximally mixed state (with probabilities $p$ and $1-p$, respectively).
+The expression for $\mathcal{E}$, i.e. the convex sum, can be interpreted as follows: take the input state $\rho$ and either (i) apply the transpose, or (ii) replace it with the maximally mixed state (with probabilities $p$ and $1-p$, respectively).
 This is fine, except that the transpose operation is not completely positive, and, as such, *is not physically admissible* --- it cannot be implemented.
 But does it mean that the map $\mathcal{E}$ itself cannot be implemented?
 Not necessarily!
@@ -999,7 +1003,7 @@ $$
     \mathcal{E}(\ket{0}\bra{0})
     & \mathcal{E}(\ket{0}\bra{1})
   \\\mathcal{E}(\ket{1}\bra{0})
-    & \mathcal{E}(\ket{1}\bra{1}) 
+    & \mathcal{E}(\ket{1}\bra{1})
   \end{bmatrix}
   = \frac{1}{2}
   \left[
@@ -1019,7 +1023,59 @@ the latter is true only when $p\leq\frac13$ (note that the eigenvalues of $\wide
 
 ## Kraus operators, revisited
 
-**!!to-do!!**
+One thing that is very important is that *state-channel duality gives us more than just a one-to-one correspondence* between states $\widetilde{\mathcal{E}}$ and channels $\mathcal{E}$ --- it *also* gives a one-to-one correspondence between vectors in the statistical ensemble $\widetilde{\mathcal{E}}$ and the Kraus operators in the decomposition of $\mathcal{E}$.
+From this viewpoint, we see that the freedom to choose the Kraus operators representing a channel in many different ways is really the same thing as the freedom to choose the ensemble of pure states representing a density operator in many different ways.
+We already know that two mixtures $\{p_k, \ket{\psi_k}\}$ and $\{q_l, \ket{\phi_l}\}$ described by the same density operator,
+$$
+  \widetilde{\mathcal{E}}
+  = \sum_k\proj{\widetilde\psi_k}
+  = \sum_l\proj{\widetilde\phi_l},
+$$
+(where $\ket{\widetilde \psi_k}=\sqrt{p_k}\ket{\psi_k}$ and $\ket{\widetilde \phi_l}=\sqrt{q_l}\ket{\phi_l}$) are related: there exists some unitary $R$ such that
+$$
+  \ket{\widetilde \psi_k}
+  = \sum_{l} R_{kl} \ket{\widetilde \phi_l}.
+$$
+Using the correspondence in Equation \@ref(eq:kraus-vector), this implies the same unitary freedom in choosing the Kraus operators.^[The number of vectors contributing to each mixture (and hence the number of corresponding Kraus operators) may be different, so we simply extend the smaller set to the required size by adding zero operators.]
+
+How many Kraus operators do we really need?
+State-channel duality tells us that the *minimal* number of Kraus operators needed to express $\mathcal{E}$ in the operator-sum form is given by the rank of its Choi matrix $\widetilde{\mathcal{E}}$, and so we need no more than $dd'$ such operators.
+In fact, this minimal set of Kraus operators corresponds to the spectral decomposition of $\widetilde{\mathcal{E}}$.
+Indeed, if $\widetilde{\mathcal{E}}=\sum_k\proj{\widetilde{v}_k}$ and $\ket{\widetilde{v}_k}=(\id\otimes E_k)\ket{\Omega}$, then the orthogonality of $\ket{\widetilde{v}_k}$ and $\ket{\widetilde{v}_l}$ implies the orthogonality (in the Hilbert--Schmidt sense^[Recall that the Hilbert--Schmidt product $(A|B)$ of two operators $A$ and $B$ is defined by $(A|B)=\frac12\tr A^\dagger B$.]) of the corresponding Kraus operators, $E_k$ and $E_l$.
+In order to see this, we write $\braket{\widetilde{v}_k}{\widetilde{v}_l}$ as
+$$
+  \begin{aligned}
+    \braket{\widetilde{v}_k |\widetilde{v}_l}
+    &= \bra{\Omega}(\id\otimes E_k^\dagger)(\id\otimes E_l)\ket{\Omega}
+  \\&= \tr(\id\otimes E_k^\dagger E_l)\proj{\Omega}
+  \\&= \frac{1}{d}\tr\sum_{ij}\ket{i}\!\bra{j}\otimes E_k^\dagger E_l \ket{i}\bra{j}
+  \end{aligned}
+$$
+(using the fact that we can substitute $\frac{1}{d}\sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{j}$ for $\proj{\Omega}$).
+Now, the trace of the tensor product of two matrices is the product of their traces, hence
+$$
+  \begin{aligned}
+    \braket{\widetilde{v}_k}{\widetilde{v}_l}
+    &= \frac{1}{d}\sum_{ij} \braket{i}{j}\tr E_k^\dagger E_l \ket{i}\bra{j}
+  \\&= \frac{1}{d} \tr E_k^\dagger E_l
+  \end{aligned}
+$$
+(using the fact that $\braket{i}{j}=\delta_{ij}$ and $\sum_i\proj{i}=\id$).
+In summary then, *$\braket{\widetilde{v}_k}{\widetilde{v}_l}=0$ implies that $\tr E_k^\dagger E_l=0$*.
+
+::: {.idea latex=""}
+A linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ is completely positive if and only if it admits an operator-sum decomposition of the form
+$$
+  \mathcal{E}(\rho) = \sum_k E_k\rho E^\dagger_k.
+$$
+
+If this is the case, then this decomposition has the following properties:
+
+- $\mathcal{E}$ is trace preserving if and only if $\sum_k E^\dagger_kE_k=\id$.
+- Two sets of Kraus operators $\{E_k\}$ and $\{F_l\}$ represent the same map $\mathcal{E}$ if and only if there exists a unitary $R$ such that $E_k =\sum_l R_{kl}F_l$ (where the smaller set of the Kraus operators is padded with zeros, if necessary).
+
+Note that, for *any* $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$, there always exists a representation with *at most* $dd'$ mutually orthogonal Kraus operators: $\tr E^\dagger_iE_j\propto\delta_{ij}$.
+:::
 
 
 
