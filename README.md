@@ -22,3 +22,4 @@
 1. **search for ?? and fix equation labels**
 2. **`{.tim}` divs**
 3. name all remarks and exercises
+4. pretty urls! `/chapter7.html` -> `/chapter-7`
