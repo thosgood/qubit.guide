@@ -1,7 +1,6 @@
 ## To-do
 
 1. general styling
-    + e.g. author names on homepage, etc.
     + favicon
     + banner image below homepage title?
 1. `\mapsto` -> `\longmapsto` in display mode (and similar for `\to`/`\rightarrow`)
@@ -21,7 +20,4 @@
 1. TOC spacing in pdf (e.g. the §11.10 number overlaps with the subsection title)
 1. **search for ?? and fix equation labels**
 2. **`{.tim}` divs**
-3. name all remarks and exercises
 4. $\rho^\mathcal{A}$ vs $\rho_\mathcal{A}$?
-5. latex toc depth
-    + and extra (empty) "Contents" section
