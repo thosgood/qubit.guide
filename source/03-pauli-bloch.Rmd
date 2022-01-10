@@ -419,7 +419,6 @@ $$
   \\&= a_0\id + a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
   \\&= a_0\id + \vec{a}\cdot\vec{\sigma}.
   \end{aligned}
-\tag{3.3.1}
 $$
 for some complex numbers $a_0$, $a_x$, $a_y$, and $a_z$.
 Here, $\vec{a}$ is a vector with three complex components $(a_x, a_y, a_z)$, and $\vec{\sigma}$ represents the "vector" of Pauli matrices $(\sigma_x,\sigma_y,\sigma_z)$.
@@ -606,12 +605,11 @@ $$
   \longmapsto
   \vec{s'}\cdot\vec{\sigma}
   = U(\vec{s}\cdot\vec{\sigma})U^\dagger
-\tag{3.5.1}
+\tag{$\ddagger$}
 $$
 This is a linear map $\mathbb{R}^3\to\mathbb{R}^3$, and is thus given by some $(3\times 3)$ real-valued matrix:
 $$
   R_U\colon \mathbb{R}^3\to\mathbb{R}^3.
-\tag{3.5.2}
 $$
 We note that this map is an isometry (a distance preserving operation), since it preserves the scalar product in the Euclidean space: for any two vectors $\vec{s}$ and $\vec{v}$,
 $$
@@ -637,7 +635,7 @@ $$
   \end{aligned}
 $$
 where $\mathrm{SO}(3)$ stands for the special orthogonal group in three dimensions (the group of all rotations about the origin of three-dimensional Euclidean space $\mathbb{R}^3$ under the operation of composition).
-It is quite clear from Equation (3.5.1) that unitary matrices differing only by a global multiplicative phase factor (e.g. $U$ and $e^{i\gamma}U$) represent the same rotation.
+It is quite clear from Equation ($\ddagger$) that unitary matrices differing only by a global multiplicative phase factor (e.g. $U$ and $e^{i\gamma}U$) represent the same rotation.
 
 Physicists, however, usually prefer a more direct demonstration, which goes roughly like this.
 Consider the map $\vec{s} \mapsto \vec{s'}$ induced by $U=e^{i \alpha \vec{n}\cdot\vec{\sigma}}$.
@@ -860,26 +858,29 @@ which is a rotation with angular frequency $\omega$ about the axis defined by th
 ## *Remarks and exercises*
 
 
-### {}
+### Orthonormal Pauli basis
 
 Show that $\{\id,\sigma_x,\sigma_y,\sigma_z\}$ is an orthonormal basis with respect to the Hilbert-Schmidt product in the space of complex $(2\times 2)$ matrices.
 
 
-### {}
+### Pauli matrix expansion coefficients
 
-Show that the coefficients $a_k$ (for $k=x,y,z$) in Equation (3.3.1) are given by the inner product $a_k = (\sigma_k|A) = \frac12\tr\sigma_k A$.
+Recall that any $(2\times 2)$ complex matrix $A$ has a unique expansion in the form
+$$
+  \begin{aligned}
+    A &=
+    \begin{bmatrix}
+      a_0 + a_z & a_x - i a_y
+    \\a_x +i a_y &  a_0 - a_z
+    \end{bmatrix}
+  \\&= a_0\id + a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
+  \\&= a_0\id + \vec{a}\cdot\vec{\sigma}.
+  \end{aligned}
+\tag{$\star$}
+$$
+for some complex numbers $a_0$, $a_x$, $a_y$, and $a_z$.
 
-
-### {}
-
-1. Show that $\frac12\tr(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}$.
-
-2. Show that any $\vec{n}\cdot\vec{\sigma}$ has eigenvalues $\pm|\vec{n}|$.
-
-3. Show that, if $\vec{n}\cdot\vec{m}=0$, then the operators $\vec{n}\cdot\vec{\sigma}$ and $\vec{m}\cdot\vec{\sigma}$ anticommute.
-
-
-### {}
+1. Show that the coefficients $a_k$ (for $k=x,y,z$) are given by the inner product $a_k = (\sigma_k|A) = \frac12\tr\sigma_k A$.
 
 In these notes, we usually deal with matrices that are Hermitian ($A=A^\dagger$) or unitary ($AA^\dagger=\id$).
 It is easy to see that, if $A$ is Hermitian, then $a_0$ and the three components of $\vec{a}$ are all real.
@@ -889,14 +890,23 @@ $$
 $$
 where $e^{i\gamma}$ is an overall multiplicative phase factor, with $\gamma$ real, and $u_0$ and the three components $u_x$, $u_y$, $u_z$ are all real numbers.
 
-Show that the unitarity condition implies that
-$$
-  u_0^2 + u_x^2 + u_y^2 + u_z^2 = 1,
-$$
-and show that the determinant of $U$ is $e^{i2\gamma}$ using this parametrisation.
+2. Show that the unitarity condition implies that
+    $$
+      u_0^2 + u_x^2 + u_y^2 + u_z^2 = 1
+    $$
+    and show, using this parametrisation, that the determinant of $U$ is $e^{i2\gamma}$.
 
 
-### {}
+### Linear algebra of the Pauli vector
+
+1. Show that $\frac12\tr(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}$. *(You may find [a certain identity involving the cross product](#cross-product-identity) helpful.)*
+
+2. Show that any $\vec{n}\cdot\vec{\sigma}$ has eigenvalues $\pm|\vec{n}|$.
+
+3. Show that, if $\vec{n}\cdot\vec{m}=0$, then the operators $\vec{n}\cdot\vec{\sigma}$ and $\vec{m}\cdot\vec{\sigma}$ anticommute.
+
+
+### Matrix Euler formula
 
 1. Show that, if $A^2=\id$, then we can manipulate the power series expansion of $e^{iA}$ into a simple expression: for any real $\alpha$,
     $$
@@ -913,14 +923,11 @@ and show that the determinant of $U$ is $e^{i2\gamma}$ using this parametrisatio
     (The argument here is the same as the argument that $e^{i\theta}=\cos\theta +i\sin\theta$).
 
 
-### {}
+### Special orthogonal matrix calculations
 
-Show that $\tr\sigma_x\sigma_y\sigma_z = 2i$.
+1. Show that $\tr\sigma_x\sigma_y\sigma_z = 2i$.
 
-
-### {}
-
-1. Consider
+2. Consider
     $$
       U(\vec e_k\cdot\sigma_k)U^\dagger=U\sigma_kU^\dagger={\vec f_k}\cdot\vec\sigma.
     $$
@@ -928,7 +935,7 @@ Show that $\tr\sigma_x\sigma_y\sigma_z = 2i$.
     We already know that, in Euclidean space, this transformation is described by a $(3\times 3)$ orthogonal matrix $R_U$.
     How are the three vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$ related to the entries in matrix $R_U$?
 
-2. Show that
+3. Show that
     $$
       \begin{aligned}
         \tr \sigma_x\sigma_y\sigma_z
@@ -938,14 +945,14 @@ Show that $\tr\sigma_x\sigma_y\sigma_z = 2i$.
     $$
     (which implies that $\det R_U=1$).
 
-3. Make use of the orthonormality of the Pauli basis and Equation (3.5.1) to show that the elements of the matrix $R=R_U$ can be expressed in terms of those of the matrix $U$, in the form
+4. Use the orthonormality of the Pauli basis along with Equation ($\ddagger$) to show that the elements of the matrix $R=R_U$ can be expressed in terms of those of the matrix $U$, in the form
     $$
       R_{ij}=\frac12\tr\left(\sigma_i U\sigma_j U^\dagger\right).
     $$
     Here, $i$ and $j$ take values in $\{1,2,3\}$, and $\sigma_1\equiv\sigma_x$, $\sigma_2\equiv\sigma_y$, $\sigma_3\equiv\sigma_z$.
 
 
-### {}
+### Phase as rotation
 
 Show that the phase gate
 $$
@@ -973,7 +980,7 @@ $$
 $$
 
 
-### {}
+### Geometry of the Hadamard
 
 1. Express the Hadamard gate $H$ in terms of $\vec{n}\cdot\vec{\sigma}$, and show that
 $$
@@ -1009,7 +1016,7 @@ Suppose you are given access to this ball only near the top, so that you can pus
 Can you make it rotate around the vertical axis anyway?
 
 
-### {}
+### Dynamics in a magnetic field
 
 A qubit (spin one-half particle) initially in state $\ket{0}$ (spin up) is placed in a uniform magnetic field.
 The interaction between the field and the qubit is described by the Hamiltonian

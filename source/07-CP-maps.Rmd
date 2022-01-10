@@ -1586,7 +1586,7 @@ $$
 $$
 
 
-### The control part of controlled-$\texttt{Not}$ {#control-controlled-NOT}
+### The "control" part of controlled-NOT {#control-controlled-NOT}
 
 Consider a single-qubit channel induced by the action of the $\texttt{c-NOT}$ gate.
 Recall that the unitary operator associated with the $\texttt{c-NOT}$ gate can be written as
@@ -1675,7 +1675,7 @@ As we can see, the diagonal elements of $\rho$ survive, and the off-diagonal ele
 The two Kraus operators, $A_0=\proj{0}$ and $A_1=\proj{1}$, define the measurement in the standard basis, and so you may think about this operation as being equivalent to *measuring the control qubit in the standard basis and then just forgetting the result*.
 
 
-### {}
+### Surprisingly identical channels
 
 Let us now compare two single qubit quantum channels: $\mathcal{A}(\rho)=\sum_k A_k\rho A^\dagger_k$, defined by the Kraus operators
 $$
@@ -1748,11 +1748,11 @@ You can also check that the two channels can be implemented by the following two
 ```
 
 
-### {}
+### Independent ancilla
 
 Another way to understand the freedom in the operator-sum representation is to realise that, once the system and the ancilla cease to interact, any operation on the ancilla alone has no effect on the state of the system.
 
-(ref:operators-sum-freedom-caption) The quantum channel $\rho\mapsto\rho'$ is not affected by the choice of a unitary $R$.
+(ref:operators-sum-freedom-caption) The quantum channel $\rho\mapsto\rho'$ is not affected by the choice of a unitary $R$, and so these two processes are the same.
 
 ```{r operators-sum-freedom,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8,fig.cap='(ref:operators-sum-freedom-caption)'}
 \[
@@ -1806,13 +1806,13 @@ $$
 $$
 
 
-### {}
+### Cooling down
 
 We can show that the process of cooling a qubit to its ground state, described the map $\mathcal{E}(\rho)=\proj{0}$, is a quantum channel.
 Indeed, the set of Kraus operators is $\proj{0}$ and $\ket{0}\bra{1}$, and all Bloch vectors are mapped to the Bloch vector representing state $\proj{0}$.
 
 
-### {}
+### Unchanged reduced density operator
 
 Show that, for any operator $\rho$ on $\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$, and, for any operator $R$ on $\mathcal{H}_\mathcal{B}$, we have
 $$
@@ -1824,9 +1824,9 @@ That is, the reduced density operator $\rho_\mathcal{A}=\tr_\mathcal{B} \rho$ is
 *(Hint: show this for operators $\rho$ which are tensor products $\rho=A\otimes B$ and then extend the result to any operator $\rho$.)*
 
 
-### {}
+### Order matters?
 
-We know that, given a fixed state of the environment, the unitaries $U$ and $(\id\otimes R)U$, where $R$ acts only on the environment, define the same quantum channel.
+We know that, given a fixed state of the environment, the unitaries $U$ and $(\id\otimes R)U$ (where $R$ acts only on the environment) define the same quantum channel.
 Is the same true for $U$ and $U(\id\otimes R)$?
 That is, do these two unitaries define the same quantum channel as one another?
 
@@ -1876,22 +1876,22 @@ for $p=\frac{3}{4}$, the sphere is contracted to a single point at its centre;
 and for $\frac{3}{4}\leq p\leq1$, the Bloch vector is flipped, and starts pointing in the opposite direction.
 
 
-### {}
+### Complete positivity of a certain map
 
 Let $\mathcal{E}$ be the linear map on single a qubit defined by
 $$
   \begin{aligned}
     \mathcal{E}(\id)
     &= \id
-    \mathcal{E}(\sigma_x)
-  \\&= x\sigma_x
-    \mathcal{E}(\sigma_y)
-  \\&= y\sigma_y
-    \mathcal{E}(\sigma_z)
-  \\&= z\sigma_z
+  \\\mathcal{E}(\sigma_x)
+    &= a_x\sigma_x
+  \\\mathcal{E}(\sigma_y)
+    &= a_y\sigma_y
+  \\\mathcal{E}(\sigma_z)
+    &= a_z\sigma_z
   \end{aligned}
 $$
-where $x$, $y$, $z$ are some fixed real numbers.
+where $a_x$, $a_y$, and $a_z$ are some fixed real numbers.
 Using the Choi matrix of $\mathcal{E}$, determine the range of $x$, $y$, $z$ for which the map $\mathcal{E}$ is *positive*, and the range for which it is *completely positive*.
 
 
@@ -1920,19 +1920,19 @@ Consider the Toffoli gate
 Express $\rho'$ as a function of $\rho$ in the Kraus representation.
 
 
-### {}
+### Duals
 
-We say that $\mathcal{E}^\star$ is the **dual** of $\mathcal{E}$ if
+We say that $\mathcal{E}^\star\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ is the **dual** of a linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ if
 $$
   \tr \mathcal{E}^\star (X)Y = \tr X\mathcal{E}(Y)
 $$
-for any operators $X$ and $Y$.
+for any operators $X$ and $Y$ in $\mathcal{B}(\mathcal{H})$.
 
 1. Show that, if $\mathcal{E}$ is trace preserving, then $\mathcal{E}^\star$ is unital.
 1. Show that, if $\mathcal{E}=\sum_i E_i\cdot E_i^\dagger$, then $\sum_i E^\dagger_i\cdot E_i$ is an operator-sum decomposition of $\mathcal{E}^\star$.
 
 
-### {}
+### Trace, transpose, Choi
 
 Let $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$, and let $d=\dim\mathcal{H}$ and $d'=\dim\mathcal{H}'$.
 Show that, for any $(d\times d)$ matrix $X$ and any $(d'\times d')$ matrix $Y$,
@@ -2028,7 +2028,7 @@ Here are few useful tricks involving a maximally entangled state.
     $$
 
 
-### {}
+### Trace preserving and partial trace
 
 Show that $\mathcal{E}$ is trace preserving if and only if $\tr_\mathcal{B}\widetilde{\mathcal{E}} = d\id$.
 (Here the partial trace is over the second system in our definition $\widetilde{\mathcal{E}} =\mathcal{I}\otimes\mathcal{E}\proj{\Omega}$).
@@ -2036,7 +2036,7 @@ Show that $\mathcal{E}$ is trace preserving if and only if $\tr_\mathcal{B}\wide
 *(Hint: show that $\tr\mathcal{E}(\ket{i}\bra{j}=\delta_{ij}$.)*
 
 
-### {}
+### Rotating Kraus operators
 
 Mathematically speaking, Kraus operators $E_k$ are vectors in a $dd'$-dimensional Hilbert space, with the Hilbert--Schmidt inner product $\tr E^\dagger_k E_l$.
 So, our intuition tells us, in order to describe any quantum channel with $\dim\mathcal{H}=\dim\mathcal{H}'=d$, we should need no more than $d^2$ Kraus operators.
