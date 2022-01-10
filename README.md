@@ -23,3 +23,5 @@
 2. **`{.tim}` divs**
 3. name all remarks and exercises
 4. $\rho^\mathcal{A}$ vs $\rho_\mathcal{A}$?
+5. latex toc depth
+    + and extra (empty) "Contents" section
