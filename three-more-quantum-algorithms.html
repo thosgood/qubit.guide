@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>10.5 Three more quantum algorithms | Introduction to Quantum Information Science</title>
+  <meta name="description" content="An introductory series of lectures on quantum computing." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="10.5 Three more quantum algorithms | Introduction to Quantum Information Science" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="An introductory series of lectures on quantum computing." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="10.5 Three more quantum algorithms | Introduction to Quantum Information Science" />
+  
+  <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
+  
+
+<meta name="author" content="Artur Ekert and Tim Hosgood" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="oracles-and-query-complexity.html"/>
+<link rel="next" href="remarks-and-exercises-8.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="web/gitbook-custom.css" type="text/css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css" type="text/css" />
+<link rel="stylesheet" href="web/lite-yt-embed.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><h4>Table of contents</h4></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a><ul>
+<li class="chapter" data-level="" data-path="plan.html"><a href="plan.html"><i class="fa fa-check"></i>Plan</a></li>
+<li class="chapter" data-level="" data-path="information-about-this-web-version.html"><a href="information-about-this-web-version.html"><i class="fa fa-check"></i>Information about this web version</a></li>
+<li class="chapter" data-level="" data-path="topics.html"><a href="topics.html"><i class="fa fa-check"></i>Topics</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="some-mathematical-preliminaries.html"><a href="some-mathematical-preliminaries.html"><i class="fa fa-check"></i>Some mathematical preliminaries</a><ul>
+<li class="chapter" data-level="0.1" data-path="euclidean-vectors.html"><a href="euclidean-vectors.html"><i class="fa fa-check"></i><b>0.1</b> Euclidean vectors</a></li>
+<li class="chapter" data-level="0.2" data-path="vector-spaces.html"><a href="vector-spaces.html"><i class="fa fa-check"></i><b>0.2</b> Vector spaces</a></li>
+<li class="chapter" data-level="0.3" data-path="bras-and-kets.html"><a href="bras-and-kets.html"><i class="fa fa-check"></i><b>0.3</b> Bras and kets</a></li>
+<li class="chapter" data-level="0.4" data-path="daggers.html"><a href="daggers.html"><i class="fa fa-check"></i><b>0.4</b> Daggers</a></li>
+<li class="chapter" data-level="0.5" data-path="geometry.html"><a href="geometry.html"><i class="fa fa-check"></i><b>0.5</b> Geometry</a></li>
+<li class="chapter" data-level="0.6" data-path="operators.html"><a href="operators.html"><i class="fa fa-check"></i><b>0.6</b> Operators</a></li>
+<li class="chapter" data-level="0.7" data-path="outer-products.html"><a href="outer-products.html"><i class="fa fa-check"></i><b>0.7</b> Outer products</a></li>
+<li class="chapter" data-level="0.8" data-path="the-trace.html"><a href="the-trace.html"><i class="fa fa-check"></i><b>0.8</b> The trace</a></li>
+<li class="chapter" data-level="0.9" data-path="some-useful-identities.html"><a href="some-useful-identities.html"><i class="fa fa-check"></i><b>0.9</b> Some useful identities</a></li>
+</ul></li>
+<li class="part"><span><b>I Foundations</b></span></li>
+<li class="chapter" data-level="1" data-path="chapter1.html"><a href="chapter1.html"><i class="fa fa-check"></i><b>1</b> Quantum interference</a><ul>
+<li class="chapter" data-level="1.1" data-path="two-basic-rules.html"><a href="two-basic-rules.html"><i class="fa fa-check"></i><b>1.1</b> Two basic rules</a></li>
+<li class="chapter" data-level="1.2" data-path="quantum-interference-the-failure-of-probability-theory.html"><a href="quantum-interference-the-failure-of-probability-theory.html"><i class="fa fa-check"></i><b>1.2</b> Quantum interference: the failure of probability theory</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="quantum-interference-the-failure-of-probability-theory.html"><a href="quantum-interference-the-failure-of-probability-theory.html#the-double-slit-experiment"><i class="fa fa-check"></i><b>1.2.1</b> The double slit experiment</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="superpositions.html"><a href="superpositions.html"><i class="fa fa-check"></i><b>1.3</b> Superpositions</a></li>
+<li class="chapter" data-level="1.4" data-path="interferometers.html"><a href="interferometers.html"><i class="fa fa-check"></i><b>1.4</b> Interferometers</a></li>
+<li class="chapter" data-level="1.5" data-path="qubits-gates-and-circuits.html"><a href="qubits-gates-and-circuits.html"><i class="fa fa-check"></i><b>1.5</b> Qubits, gates, and circuits</a></li>
+<li class="chapter" data-level="1.6" data-path="quantum-decoherence.html"><a href="quantum-decoherence.html"><i class="fa fa-check"></i><b>1.6</b> Quantum decoherence</a></li>
+<li class="chapter" data-level="1.7" data-path="computation-deterministic-probabilistic-and-quantum.html"><a href="computation-deterministic-probabilistic-and-quantum.html"><i class="fa fa-check"></i><b>1.7</b> Computation: deterministic, probabilistic, and quantum</a></li>
+<li class="chapter" data-level="1.8" data-path="computational-complexity.html"><a href="computational-complexity.html"><i class="fa fa-check"></i><b>1.8</b> Computational complexity</a></li>
+<li class="chapter" data-level="1.9" data-path="outlook.html"><a href="outlook.html"><i class="fa fa-check"></i><b>1.9</b> Outlook</a></li>
+<li class="chapter" data-level="1.10" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html"><i class="fa fa-check"></i><b>1.10</b> <em>Remarks and exercises</em></a><ul>
+<li class="chapter" data-level="1.10.1" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#a-historical-remark"><i class="fa fa-check"></i><b>1.10.1</b> A historical remark</a></li>
+<li class="chapter" data-level="1.10.2" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#modifying-the-born-rule"><i class="fa fa-check"></i><b>1.10.2</b> Modifying the Born rule</a></li>
+<li class="chapter" data-level="1.10.3" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#complex-numbers"><i class="fa fa-check"></i><b>1.10.3</b> Complex numbers</a></li>
+<li class="chapter" data-level="1.10.4" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#many-computational-paths"><i class="fa fa-check"></i><b>1.10.4</b> Many computational paths</a></li>
+<li class="chapter" data-level="1.10.5" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#distant-photon-emitters"><i class="fa fa-check"></i><b>1.10.5</b> Distant photon emitters</a></li>
+<li class="chapter" data-level="1.10.6" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#physics-against-logic"><i class="fa fa-check"></i><b>1.10.6</b> Physics against logic?</a></li>
+<li class="chapter" data-level="1.10.7" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#quantum-bomb-tester"><i class="fa fa-check"></i><b>1.10.7</b> Quantum bomb tester</a></li>
+<li class="chapter" data-level="1.10.8" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#more-time-more-memory"><i class="fa fa-check"></i><b>1.10.8</b> More time, more memory</a></li>
+<li class="chapter" data-level="1.10.9" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#quantum-turing-machines"><i class="fa fa-check"></i><b>1.10.9</b> Quantum Turing machines</a></li>
+<li class="chapter" data-level="1.10.10" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#polynomial-good-exponential-bad"><i class="fa fa-check"></i><b>1.10.10</b> Polynomial = good; exponential = bad</a></li>
+<li class="chapter" data-level="1.10.11" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#big-o"><i class="fa fa-check"></i><b>1.10.11</b> Big O</a></li>
+<li class="chapter" data-level="1.10.12" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#imperfect-prime-tester"><i class="fa fa-check"></i><b>1.10.12</b> Imperfect prime tester</a></li>
+<li class="chapter" data-level="1.10.13" data-path="remarks-and-exercises.html"><a href="remarks-and-exercises.html#imperfect-decision-maker"><i class="fa fa-check"></i><b>1.10.13</b> Imperfect decision maker</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chapter2.html"><a href="chapter2.html"><i class="fa fa-check"></i><b>2</b> Qubits</a><ul>
+<li class="chapter" data-level="2.1" data-path="composing-quantum-operations.html"><a href="composing-quantum-operations.html"><i class="fa fa-check"></i><b>2.1</b> Composing quantum operations</a></li>
+<li class="chapter" data-level="2.2" data-path="quantum-bits-called-qubits.html"><a href="quantum-bits-called-qubits.html"><i class="fa fa-check"></i><b>2.2</b> Quantum bits, called “qubits”</a></li>
+<li class="chapter" data-level="2.3" data-path="quantum-gates-and-circuits.html"><a href="quantum-gates-and-circuits.html"><i class="fa fa-check"></i><b>2.3</b> Quantum gates and circuits</a></li>
+<li class="chapter" data-level="2.4" data-path="single-qubit-interference.html"><a href="single-qubit-interference.html"><i class="fa fa-check"></i><b>2.4</b> Single qubit interference</a></li>
+<li class="chapter" data-level="2.5" data-path="the-square-root-of-not.html"><a href="the-square-root-of-not.html"><i class="fa fa-check"></i><b>2.5</b> The square root of NOT</a></li>
+<li class="chapter" data-level="2.6" data-path="phase-gates-galore.html"><a href="phase-gates-galore.html"><i class="fa fa-check"></i><b>2.6</b> Phase gates galore</a></li>
+<li class="chapter" data-level="2.7" data-path="pauli-operators.html"><a href="pauli-operators.html"><i class="fa fa-check"></i><b>2.7</b> Pauli operators</a></li>
+<li class="chapter" data-level="2.8" data-path="from-bit-flips-to-phase-flips-and-back-again.html"><a href="from-bit-flips-to-phase-flips-and-back-again.html"><i class="fa fa-check"></i><b>2.8</b> From bit-flips to phase-flips, and back again</a></li>
+<li class="chapter" data-level="2.9" data-path="any-unitary-operation-on-a-single-qubit.html"><a href="any-unitary-operation-on-a-single-qubit.html"><i class="fa fa-check"></i><b>2.9</b> Any unitary operation on a single qubit</a></li>
+<li class="chapter" data-level="2.10" data-path="the-bloch-sphere.html"><a href="the-bloch-sphere.html"><i class="fa fa-check"></i><b>2.10</b> The Bloch sphere</a><ul>
+<li class="chapter" data-level="2.10.1" data-path="the-bloch-sphere.html"><a href="the-bloch-sphere.html#drawing-points-on-the-bloch-sphere"><i class="fa fa-check"></i><b>2.10.1</b> Drawing points on the Bloch sphere</a></li>
+</ul></li>
+<li class="chapter" data-level="2.11" data-path="composition-of-rotations.html"><a href="composition-of-rotations.html"><i class="fa fa-check"></i><b>2.11</b> Composition of rotations</a></li>
+<li class="chapter" data-level="2.12" data-path="a-finite-set-of-universal-gates.html"><a href="a-finite-set-of-universal-gates.html"><i class="fa fa-check"></i><b>2.12</b> A finite set of universal gates</a></li>
+<li class="chapter" data-level="2.13" data-path="remarks-and-exercises-1.html"><a href="remarks-and-exercises-1.html"><i class="fa fa-check"></i><b>2.13</b> <em>Remarks and exercises</em></a><ul>
+<li class="chapter" data-level="2.13.1" data-path="remarks-and-exercises-1.html"><a href="remarks-and-exercises-1.html#unknown-phase"><i class="fa fa-check"></i><b>2.13.1</b> Unknown phase</a></li>
+<li class="chapter" data-level="2.13.2" data-path="remarks-and-exercises-1.html"><a href="remarks-and-exercises-1.html#cross-product-identity"><i class="fa fa-check"></i><b>2.13.2</b> One of the many cross-product identities</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter3.html"><a href="chapter3.html"><i class="fa fa-check"></i><b>3</b> Quantum gates</a><ul>
+<li class="chapter" data-level="3.1" data-path="physics-against-logic-via-beamsplitters.html"><a href="physics-against-logic-via-beamsplitters.html"><i class="fa fa-check"></i><b>3.1</b> Physics against logic, via beamsplitters</a></li>
+<li class="chapter" data-level="3.2" data-path="quantum-interference-revisited-still-about-beam-splitters.html"><a href="quantum-interference-revisited-still-about-beam-splitters.html"><i class="fa fa-check"></i><b>3.2</b> Quantum interference, revisited (still about beam-splitters)</a></li>
+<li class="chapter" data-level="3.3" data-path="the-pauli-matrices-algebraically.html"><a href="the-pauli-matrices-algebraically.html"><i class="fa fa-check"></i><b>3.3</b> The Pauli matrices, algebraically</a></li>
+<li class="chapter" data-level="3.4" data-path="unitaries-as-rotations.html"><a href="unitaries-as-rotations.html"><i class="fa fa-check"></i><b>3.4</b> Unitaries as rotations</a></li>
+<li class="chapter" data-level="3.5" data-path="universality-again.html"><a href="universality-again.html"><i class="fa fa-check"></i><b>3.5</b> Universality, again</a></li>
+<li class="chapter" data-level="3.6" data-path="quantum-dynamics.html"><a href="quantum-dynamics.html"><i class="fa fa-check"></i><b>3.6</b> Some quantum dynamics</a></li>
+<li class="chapter" data-level="3.7" data-path="remarks-and-exercises-2.html"><a href="remarks-and-exercises-2.html"><i class="fa fa-check"></i><b>3.7</b> <em>Remarks and exercises</em></a><ul>
+<li class="chapter" data-level="3.7.1" data-path="remarks-and-exercises-2.html"><a href="remarks-and-exercises-2.html#orthonormal-pauli-basis"><i class="fa fa-check"></i><b>3.7.1</b> Orthonormal Pauli basis</a></li>
+<li class="chapter" data-level="3.7.2" data-path="remarks-and-exercises-2.html"><a href="remarks-and-exercises-2.html#pauli-matrix-expansion-coefficients"><i class="fa fa-check"></i><b>3.7.2</b> Pauli matrix expansion coefficients</a></li>
+<li class="chapter" data-level="3.7.3" data-path="remarks-and-exercises-2.html"><a href="remarks-and-exercises-2.html#linear-algebra-of-the-pauli-vector"><i class="fa fa-check"></i><b>3.7.3</b> Linear algebra of the Pauli vector</a></li>
+<li class="chapter" data-level="3.7.4" data-path="remarks-and-exercises-2.html"><a href="remarks-and-exercises-2.html#matrix-euler-formula"><i class="fa fa-check"></i><b>3.7.4</b> Matrix Euler formula</a></li>
+<li class="chapter" data-level="3.7.5" data-path="remarks-and-exercises-2.html"><a href="remarks-and-exercises-2.html#special-orthogonal-matrix-calculations"><i class="fa fa-check"></i><b>3.7.5</b> Special orthogonal matrix calculations</a></li>
+<li class="chapter" data-level="3.7.6" data-path="remarks-and-exercises-2.html"><a href="remarks-and-exercises-2.html#phase-as-rotation"><i class="fa fa-check"></i><b>3.7.6</b> Phase as rotation</a></li>
+<li class="chapter" data-level="3.7.7" data-path="remarks-and-exercises-2.html"><a href="remarks-and-exercises-2.html#geometry-of-the-hadamard"><i class="fa fa-check"></i><b>3.7.7</b> Geometry of the Hadamard</a></li>
+<li class="chapter" data-level="3.7.8" data-path="remarks-and-exercises-2.html"><a href="remarks-and-exercises-2.html#swiss-granite-fountain"><i class="fa fa-check"></i><b>3.7.8</b> Swiss Granite Fountain</a></li>
+<li class="chapter" data-level="3.7.9" data-path="remarks-and-exercises-2.html"><a href="remarks-and-exercises-2.html#dynamics-in-a-magnetic-field"><i class="fa fa-check"></i><b>3.7.9</b> Dynamics in a magnetic field</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chapter4.html"><a href="chapter4.html"><i class="fa fa-check"></i><b>4</b> Measurements</a><ul>
+<li class="chapter" data-level="4.1" data-path="hilbert-spaces-briefly.html"><a href="hilbert-spaces-briefly.html"><i class="fa fa-check"></i><b>4.1</b> Hilbert spaces, briefly</a></li>
+<li class="chapter" data-level="4.2" data-path="back-to-qubits-complete-measurements.html"><a href="back-to-qubits-complete-measurements.html"><i class="fa fa-check"></i><b>4.2</b> Back to qubits; complete measurements</a></li>
+<li class="chapter" data-level="4.3" data-path="the-projection-rule-incomplete-measurements.html"><a href="the-projection-rule-incomplete-measurements.html"><i class="fa fa-check"></i><b>4.3</b> The projection rule; incomplete measurements</a></li>
+<li class="chapter" data-level="4.4" data-path="example-of-an-incomplete-measurement.html"><a href="example-of-an-incomplete-measurement.html"><i class="fa fa-check"></i><b>4.4</b> Example of an incomplete measurement</a></li>
+<li class="chapter" data-level="4.5" data-path="observables.html"><a href="observables.html"><i class="fa fa-check"></i><b>4.5</b> Observables</a></li>
+<li class="chapter" data-level="4.6" data-path="compatible-observables-and-the-uncertainty-relation.html"><a href="compatible-observables-and-the-uncertainty-relation.html"><i class="fa fa-check"></i><b>4.6</b> Compatible observables and the uncertainty relation</a></li>
+<li class="chapter" data-level="4.7" data-path="quantum-communication.html"><a href="quantum-communication.html"><i class="fa fa-check"></i><b>4.7</b> Quantum communication</a></li>
+<li class="chapter" data-level="4.8" data-path="basic-quantum-coding-and-decoding.html"><a href="basic-quantum-coding-and-decoding.html"><i class="fa fa-check"></i><b>4.8</b> Basic quantum coding and decoding</a></li>
+<li class="chapter" data-level="4.9" data-path="distinguishability-of-non-orthogonal-states.html"><a href="distinguishability-of-non-orthogonal-states.html"><i class="fa fa-check"></i><b>4.9</b> Distinguishability of non-orthogonal states</a></li>
+<li class="chapter" data-level="4.10" data-path="wiesners-quantum-money.html"><a href="wiesners-quantum-money.html"><i class="fa fa-check"></i><b>4.10</b> Wiesner’s quantum money</a></li>
+<li class="chapter" data-level="4.11" data-path="quantum-theory-formally.html"><a href="quantum-theory-formally.html"><i class="fa fa-check"></i><b>4.11</b> Quantum theory, formally</a><ul>
+<li class="chapter" data-level="4.11.1" data-path="quantum-theory-formally.html"><a href="quantum-theory-formally.html#quantum-states"><i class="fa fa-check"></i><b>4.11.1</b> Quantum states</a></li>
+<li class="chapter" data-level="4.11.2" data-path="quantum-theory-formally.html"><a href="quantum-theory-formally.html#quantum-evolutions"><i class="fa fa-check"></i><b>4.11.2</b> Quantum evolutions</a></li>
+<li class="chapter" data-level="4.11.3" data-path="quantum-theory-formally.html"><a href="quantum-theory-formally.html#quantum-circuits"><i class="fa fa-check"></i><b>4.11.3</b> Quantum circuits</a></li>
+<li class="chapter" data-level="4.11.4" data-path="quantum-theory-formally.html"><a href="quantum-theory-formally.html#measurements"><i class="fa fa-check"></i><b>4.11.4</b> Measurements</a></li>
+</ul></li>
+<li class="chapter" data-level="4.12" data-path="remarks-and-exercises-3.html"><a href="remarks-and-exercises-3.html"><i class="fa fa-check"></i><b>4.12</b> <em>Remarks and exercises</em></a><ul>
+<li class="chapter" data-level="4.12.1" data-path="remarks-and-exercises-3.html"><a href="remarks-and-exercises-3.html#projector"><i class="fa fa-check"></i><b>4.12.1</b> Projector?</a></li>
+<li class="chapter" data-level="4.12.2" data-path="remarks-and-exercises-3.html"><a href="remarks-and-exercises-3.html#knowing-the-unknown"><i class="fa fa-check"></i><b>4.12.2</b> Knowing the unknown</a></li>
+<li class="chapter" data-level="4.12.3" data-path="remarks-and-exercises-3.html"><a href="remarks-and-exercises-3.html#measurement-and-idempotents"><i class="fa fa-check"></i><b>4.12.3</b> Measurement and idempotents</a></li>
+<li class="chapter" data-level="4.12.4" data-path="remarks-and-exercises-3.html"><a href="remarks-and-exercises-3.html#unitary-transformations-of-measurements"><i class="fa fa-check"></i><b>4.12.4</b> Unitary transformations of measurements</a></li>
+<li class="chapter" data-level="4.12.5" data-path="remarks-and-exercises-3.html"><a href="remarks-and-exercises-3.html#optimal-measurement"><i class="fa fa-check"></i><b>4.12.5</b> Optimal measurement</a></li>
+<li class="chapter" data-level="4.12.6" data-path="remarks-and-exercises-3.html"><a href="remarks-and-exercises-3.html#alice-knows-what-bob-did"><i class="fa fa-check"></i><b>4.12.6</b> Alice knows what Bob did</a></li>
+<li class="chapter" data-level="4.12.7" data-path="remarks-and-exercises-3.html"><a href="remarks-and-exercises-3.html#the-zeno-effect"><i class="fa fa-check"></i><b>4.12.7</b> The Zeno effect</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chapter5.html"><a href="chapter5.html"><i class="fa fa-check"></i><b>5</b> Quantum entanglement</a><ul>
+<li class="chapter" data-level="5.1" data-path="a-small-history.html"><a href="a-small-history.html"><i class="fa fa-check"></i><b>5.1</b> A small history</a></li>
+<li class="chapter" data-level="5.2" data-path="one-two-many.html"><a href="one-two-many.html"><i class="fa fa-check"></i><b>5.2</b> One, two, many…</a></li>
+<li class="chapter" data-level="5.3" data-path="quantum-theory-formally-continued.html"><a href="quantum-theory-formally-continued.html"><i class="fa fa-check"></i><b>5.3</b> Quantum theory, formally (continued)</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="quantum-theory-formally-continued.html"><a href="quantum-theory-formally-continued.html#tensor-products"><i class="fa fa-check"></i><b>5.3.1</b> Tensor products</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="back-to-qubits.html"><a href="back-to-qubits.html"><i class="fa fa-check"></i><b>5.4</b> Back to qubits</a></li>
+<li class="chapter" data-level="5.5" data-path="separable-or-entangled.html"><a href="separable-or-entangled.html"><i class="fa fa-check"></i><b>5.5</b> Separable or entangled?</a></li>
+<li class="chapter" data-level="5.6" data-path="controlled-not.html"><a href="controlled-not.html"><i class="fa fa-check"></i><b>5.6</b> Controlled-NOT</a><ul>
+<li class="chapter" data-level="5.6.1" data-path="controlled-not.html"><a href="controlled-not.html#the-bell-states-and-the-bell-measurement"><i class="fa fa-check"></i><b>5.6.1</b> The Bell states, and the Bell measurement</a></li>
+<li class="chapter" data-level="5.6.2" data-path="controlled-not.html"><a href="controlled-not.html#quantum-teleportation"><i class="fa fa-check"></i><b>5.6.2</b> Quantum teleportation</a></li>
+<li class="chapter" data-level="5.6.3" data-path="controlled-not.html"><a href="controlled-not.html#thou-shalt-not-clone"><i class="fa fa-check"></i><b>5.6.3</b> Thou shalt not clone</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="other-controlled-gates.html"><a href="other-controlled-gates.html"><i class="fa fa-check"></i><b>5.7</b> Other controlled gates</a><ul>
+<li class="chapter" data-level="5.7.1" data-path="other-controlled-gates.html"><a href="other-controlled-gates.html#controlled-phase"><i class="fa fa-check"></i><b>5.7.1</b> Controlled-phase</a></li>
+<li class="chapter" data-level="5.7.2" data-path="other-controlled-gates.html"><a href="other-controlled-gates.html#controlled-u"><i class="fa fa-check"></i><b>5.7.2</b> Controlled-U</a></li>
+<li class="chapter" data-level="5.7.3" data-path="other-controlled-gates.html"><a href="other-controlled-gates.html#phase-kick-back"><i class="fa fa-check"></i><b>5.7.3</b> Phase kick-back</a></li>
+<li class="chapter" data-level="5.7.4" data-path="other-controlled-gates.html"><a href="other-controlled-gates.html#universality-revisited"><i class="fa fa-check"></i><b>5.7.4</b> Universality, revisited</a></li>
+<li class="chapter" data-level="5.7.5" data-path="other-controlled-gates.html"><a href="other-controlled-gates.html#density-operators-and-the-like"><i class="fa fa-check"></i><b>5.7.5</b> Density operators and the like</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="why-qubits-subsystems-and-entanglement.html"><a href="why-qubits-subsystems-and-entanglement.html"><i class="fa fa-check"></i><b>5.8</b> Why qubits, subsystems, and entanglement?</a></li>
+<li class="chapter" data-level="5.9" data-path="remarks-and-exercises-4.html"><a href="remarks-and-exercises-4.html"><i class="fa fa-check"></i><b>5.9</b> <em>Remarks and exercises</em></a><ul>
+<li class="chapter" data-level="5.9.1" data-path="remarks-and-exercises-4.html"><a href="remarks-and-exercises-4.html#entangled-or-not"><i class="fa fa-check"></i><b>5.9.1</b> Entangled or not?</a></li>
+<li class="chapter" data-level="5.9.2" data-path="remarks-and-exercises-4.html"><a href="remarks-and-exercises-4.html#swap-circuit"><i class="fa fa-check"></i><b>5.9.2</b> SWAP circuit</a></li>
+<li class="chapter" data-level="5.9.3" data-path="remarks-and-exercises-4.html"><a href="remarks-and-exercises-4.html#controlled-not-circuit"><i class="fa fa-check"></i><b>5.9.3</b> Controlled-NOT circuit</a></li>
+<li class="chapter" data-level="5.9.4" data-path="remarks-and-exercises-4.html"><a href="remarks-and-exercises-4.html#measuring-with-controlled-not"><i class="fa fa-check"></i><b>5.9.4</b> Measuring with controlled-NOT</a></li>
+<li class="chapter" data-level="5.9.5" data-path="remarks-and-exercises-4.html"><a href="remarks-and-exercises-4.html#arbitrary-controlled-u-on-two-qubits"><i class="fa fa-check"></i><b>5.9.5</b> Arbitrary controlled-U on two qubits</a></li>
+<li class="chapter" data-level="5.9.6" data-path="remarks-and-exercises-4.html"><a href="remarks-and-exercises-4.html#entangled-qubits"><i class="fa fa-check"></i><b>5.9.6</b> Entangled qubits</a></li>
+<li class="chapter" data-level="5.9.7" data-path="remarks-and-exercises-4.html"><a href="remarks-and-exercises-4.html#quantum-dense-coding"><i class="fa fa-check"></i><b>5.9.7</b> Quantum dense coding</a></li>
+<li class="chapter" data-level="5.9.8" data-path="remarks-and-exercises-4.html"><a href="remarks-and-exercises-4.html#playing-with-conditional-unitaries"><i class="fa fa-check"></i><b>5.9.8</b> Playing with conditional unitaries</a></li>
+</ul></li>
+<li class="chapter" data-level="5.10" data-path="appendices.html"><a href="appendices.html"><i class="fa fa-check"></i><b>5.10</b> <em>Appendices</em></a><ul>
+<li class="chapter" data-level="5.10.1" data-path="appendices.html"><a href="appendices.html#tensor-products-in-components"><i class="fa fa-check"></i><b>5.10.1</b> Tensor products in components</a></li>
+<li class="chapter" data-level="5.10.2" data-path="appendices.html"><a href="appendices.html#the-schmidt-decomposition"><i class="fa fa-check"></i><b>5.10.2</b> The Schmidt decomposition</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chapter6.html"><a href="chapter6.html"><i class="fa fa-check"></i><b>6</b> Density matrices</a><ul>
+<li class="chapter" data-level="6.1" data-path="definitions.html"><a href="definitions.html"><i class="fa fa-check"></i><b>6.1</b> Definitions</a></li>
+<li class="chapter" data-level="6.2" data-path="statistical-mixtures.html"><a href="statistical-mixtures.html"><i class="fa fa-check"></i><b>6.2</b> Statistical mixtures</a></li>
+<li class="chapter" data-level="6.3" data-path="a-few-instructive-examples-and-some-less-instructive-remarks.html"><a href="a-few-instructive-examples-and-some-less-instructive-remarks.html"><i class="fa fa-check"></i><b>6.3</b> A few instructive examples, and some less instructive remarks</a></li>
+<li class="chapter" data-level="6.4" data-path="the-bloch-ball.html"><a href="the-bloch-ball.html"><i class="fa fa-check"></i><b>6.4</b> The Bloch ball</a></li>
+<li class="chapter" data-level="6.5" data-path="subsystems-of-entangled-systems.html"><a href="subsystems-of-entangled-systems.html"><i class="fa fa-check"></i><b>6.5</b> Subsystems of entangled systems</a></li>
+<li class="chapter" data-level="6.6" data-path="partial-trace-revisited.html"><a href="partial-trace-revisited.html"><i class="fa fa-check"></i><b>6.6</b> Partial trace, revisited</a></li>
+<li class="chapter" data-level="6.7" data-path="mixtures-and-subsystems.html"><a href="mixtures-and-subsystems.html"><i class="fa fa-check"></i><b>6.7</b> Mixtures and subsystems</a></li>
+<li class="chapter" data-level="6.8" data-path="partial-trace-yet-again.html"><a href="partial-trace-yet-again.html"><i class="fa fa-check"></i><b>6.8</b> Partial trace, yet again</a></li>
+<li class="chapter" data-level="6.9" data-path="remarks-and-exercises-5.html"><a href="remarks-and-exercises-5.html"><i class="fa fa-check"></i><b>6.9</b> <em>Remarks and exercises</em></a><ul>
+<li class="chapter" data-level="6.9.1" data-path="remarks-and-exercises-5.html"><a href="remarks-and-exercises-5.html#exercise31"><i class="fa fa-check"></i><b>6.9.1</b> Some density operator calculations</a></li>
+<li class="chapter" data-level="6.9.2" data-path="remarks-and-exercises-5.html"><a href="remarks-and-exercises-5.html#purification-of-mixed-states"><i class="fa fa-check"></i><b>6.9.2</b> Purification of mixed states</a></li>
+<li class="chapter" data-level="6.9.3" data-path="remarks-and-exercises-5.html"><a href="remarks-and-exercises-5.html#pure-partial-trace"><i class="fa fa-check"></i><b>6.9.3</b> Pure partial trace</a></li>
+<li class="chapter" data-level="6.9.4" data-path="remarks-and-exercises-5.html"><a href="remarks-and-exercises-5.html#maximally-bell"><i class="fa fa-check"></i><b>6.9.4</b> Maximally Bell</a></li>
+<li class="chapter" data-level="6.9.5" data-path="remarks-and-exercises-5.html"><a href="remarks-and-exercises-5.html#trace-norm"><i class="fa fa-check"></i><b>6.9.5</b> Trace norm</a></li>
+<li class="chapter" data-level="6.9.6" data-path="remarks-and-exercises-5.html"><a href="remarks-and-exercises-5.html#distinguishability-and-the-trace-distance"><i class="fa fa-check"></i><b>6.9.6</b> Distinguishability and the trace distance</a></li>
+<li class="chapter" data-level="6.9.7" data-path="remarks-and-exercises-5.html"><a href="remarks-and-exercises-5.html#spectral-decompositions-and-common-eigenbases"><i class="fa fa-check"></i><b>6.9.7</b> Spectral decompositions and common eigenbases</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chapter7.html"><a href="chapter7.html"><i class="fa fa-check"></i><b>7</b> Quantum channels</a><ul>
+<li class="chapter" data-level="7.1" data-path="random-evolution.html"><a href="random-evolution.html"><i class="fa fa-check"></i><b>7.1</b> Random evolution</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="random-evolution.html"><a href="random-evolution.html#random-unitaries"><i class="fa fa-check"></i><b>7.1.1</b> Random unitaries</a></li>
+<li class="chapter" data-level="7.1.2" data-path="random-evolution.html"><a href="random-evolution.html#random-isometries"><i class="fa fa-check"></i><b>7.1.2</b> Random isometries</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="evolution-of-open-systems.html"><a href="evolution-of-open-systems.html"><i class="fa fa-check"></i><b>7.2</b> Evolution of open systems</a></li>
+<li class="chapter" data-level="7.3" data-path="stinesprings-dilation-and-krauss-ambiguity.html"><a href="stinesprings-dilation-and-krauss-ambiguity.html"><i class="fa fa-check"></i><b>7.3</b> Stinespring’s dilation and Kraus’s ambiguity</a></li>
+<li class="chapter" data-level="7.4" data-path="single-qubit-channels.html"><a href="single-qubit-channels.html"><i class="fa fa-check"></i><b>7.4</b> Single qubit channels</a></li>
+<li class="chapter" data-level="7.5" data-path="composition-of-quantum-channels.html"><a href="composition-of-quantum-channels.html"><i class="fa fa-check"></i><b>7.5</b> Composition of quantum channels</a></li>
+<li class="chapter" data-level="7.6" data-path="completely-positive-trace-preserving-maps.html"><a href="completely-positive-trace-preserving-maps.html"><i class="fa fa-check"></i><b>7.6</b> Completely positive trace-preserving maps</a></li>
+<li class="chapter" data-level="7.7" data-path="state-channel-duality.html"><a href="state-channel-duality.html"><i class="fa fa-check"></i><b>7.7</b> State-channel duality</a></li>
+<li class="chapter" data-level="7.8" data-path="the-mathematics-of-can-and-cannot.html"><a href="the-mathematics-of-can-and-cannot.html"><i class="fa fa-check"></i><b>7.8</b> The mathematics of “can” and “cannot”</a></li>
+<li class="chapter" data-level="7.9" data-path="kraus-operators-revisited.html"><a href="kraus-operators-revisited.html"><i class="fa fa-check"></i><b>7.9</b> Kraus operators, revisited</a></li>
+<li class="chapter" data-level="7.10" data-path="correctable-channels.html"><a href="correctable-channels.html"><i class="fa fa-check"></i><b>7.10</b> Correctable channels</a></li>
+<li class="chapter" data-level="7.11" data-path="appendices-1.html"><a href="appendices-1.html"><i class="fa fa-check"></i><b>7.11</b> <em>Appendices</em></a><ul>
+<li class="chapter" data-level="7.11.1" data-path="appendices-1.html"><a href="appendices-1.html#isometries"><i class="fa fa-check"></i><b>7.11.1</b> Isometries</a></li>
+<li class="chapter" data-level="7.11.2" data-path="appendices-1.html"><a href="appendices-1.html#markov-approximation"><i class="fa fa-check"></i><b>7.11.2</b> The Markov approximation</a></li>
+<li class="chapter" data-level="7.11.3" data-path="appendices-1.html"><a href="appendices-1.html#what-use-are-positive-maps"><i class="fa fa-check"></i><b>7.11.3</b> What use are positive maps?</a></li>
+<li class="chapter" data-level="7.11.4" data-path="appendices-1.html"><a href="appendices-1.html#choi-jamiolkowski"><i class="fa fa-check"></i><b>7.11.4</b> The Choi–Jamiołkowski isomorphism</a></li>
+<li class="chapter" data-level="7.11.5" data-path="appendices-1.html"><a href="appendices-1.html#block-matrices-and-partial-trace"><i class="fa fa-check"></i><b>7.11.5</b> Block matrices and partial trace</a></li>
+</ul></li>
+<li class="chapter" data-level="7.12" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html"><i class="fa fa-check"></i><b>7.12</b> <em>Remarks and exercises</em></a><ul>
+<li class="chapter" data-level="7.12.1" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#partial-inner-product"><i class="fa fa-check"></i><b>7.12.1</b> Partial inner product</a></li>
+<li class="chapter" data-level="7.12.2" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#control-controlled-NOT"><i class="fa fa-check"></i><b>7.12.2</b> The “control” part of controlled-NOT</a></li>
+<li class="chapter" data-level="7.12.3" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#surprisingly-identical-channels"><i class="fa fa-check"></i><b>7.12.3</b> Surprisingly identical channels</a></li>
+<li class="chapter" data-level="7.12.4" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#independent-ancilla"><i class="fa fa-check"></i><b>7.12.4</b> Independent ancilla</a></li>
+<li class="chapter" data-level="7.12.5" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#cooling-down"><i class="fa fa-check"></i><b>7.12.5</b> Cooling down</a></li>
+<li class="chapter" data-level="7.12.6" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#unchanged-reduced-density-operator"><i class="fa fa-check"></i><b>7.12.6</b> Unchanged reduced density operator</a></li>
+<li class="chapter" data-level="7.12.7" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#order-matters"><i class="fa fa-check"></i><b>7.12.7</b> Order matters?</a></li>
+<li class="chapter" data-level="7.12.8" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#pauli-twirl"><i class="fa fa-check"></i><b>7.12.8</b> Pauli twirl</a></li>
+<li class="chapter" data-level="7.12.9" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#depolarising-channel"><i class="fa fa-check"></i><b>7.12.9</b> Depolarising channel</a></li>
+<li class="chapter" data-level="7.12.10" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#depolarising-channel-and-the-bloch-sphere"><i class="fa fa-check"></i><b>7.12.10</b> Depolarising channel and the Bloch sphere</a></li>
+<li class="chapter" data-level="7.12.11" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#complete-positivity-of-a-certain-map"><i class="fa fa-check"></i><b>7.12.11</b> Complete positivity of a certain map</a></li>
+<li class="chapter" data-level="7.12.12" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#toffoli-gate"><i class="fa fa-check"></i><b>7.12.12</b> Toffoli gate</a></li>
+<li class="chapter" data-level="7.12.13" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#duals"><i class="fa fa-check"></i><b>7.12.13</b> Duals</a></li>
+<li class="chapter" data-level="7.12.14" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#trace-transpose-choi"><i class="fa fa-check"></i><b>7.12.14</b> Trace, transpose, Choi</a></li>
+<li class="chapter" data-level="7.12.15" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#purifications-and-isometries"><i class="fa fa-check"></i><b>7.12.15</b> Purifications and isometries</a></li>
+<li class="chapter" data-level="7.12.16" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#tricks-with-a-maximally-entangled-state"><i class="fa fa-check"></i><b>7.12.16</b> Tricks with a maximally entangled state</a></li>
+<li class="chapter" data-level="7.12.17" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#trace-preserving-and-partial-trace"><i class="fa fa-check"></i><b>7.12.17</b> Trace preserving and partial trace</a></li>
+<li class="chapter" data-level="7.12.18" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#rotating-kraus-operators"><i class="fa fa-check"></i><b>7.12.18</b> Rotating Kraus operators</a></li>
+<li class="chapter" data-level="7.12.19" data-path="remarks-and-exercises-6.html"><a href="remarks-and-exercises-6.html#no-pancakes"><i class="fa fa-check"></i><b>7.12.19</b> No pancakes</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>II Applications</b></span></li>
+<li class="chapter" data-level="8" data-path="chapter8.html"><a href="chapter8.html"><i class="fa fa-check"></i><b>8</b> Quantum cryptography</a></li>
+<li class="chapter" data-level="9" data-path="chapter9.html"><a href="chapter9.html"><i class="fa fa-check"></i><b>9</b> Bell’s theorem</a><ul>
+<li class="chapter" data-level="9.1" data-path="quantum-correlations.html"><a href="quantum-correlations.html"><i class="fa fa-check"></i><b>9.1</b> Quantum correlations</a></li>
+<li class="chapter" data-level="9.2" data-path="hidden-variables.html"><a href="hidden-variables.html"><i class="fa fa-check"></i><b>9.2</b> Hidden variables</a></li>
+<li class="chapter" data-level="9.3" data-path="chsh-inequality.html"><a href="chsh-inequality.html"><i class="fa fa-check"></i><b>9.3</b> CHSH inequality</a></li>
+<li class="chapter" data-level="9.4" data-path="quantum-correlations-revisited.html"><a href="quantum-correlations-revisited.html"><i class="fa fa-check"></i><b>9.4</b> Quantum correlations, revisited</a></li>
+<li class="chapter" data-level="9.5" data-path="tsirelsons-inequality.html"><a href="tsirelsons-inequality.html"><i class="fa fa-check"></i><b>9.5</b> Tsirelson’s inequality</a></li>
+<li class="chapter" data-level="9.6" data-path="remarks-and-exercises-7.html"><a href="remarks-and-exercises-7.html"><i class="fa fa-check"></i><b>9.6</b> <em>Remarks and exercises</em></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="chapter10.html"><a href="chapter10.html"><i class="fa fa-check"></i><b>10</b> Quantum algorithms</a><ul>
+<li class="chapter" data-level="10.1" data-path="quantum-boolean-function-evaluation.html"><a href="quantum-boolean-function-evaluation.html"><i class="fa fa-check"></i><b>10.1</b> Quantum Boolean function evaluation</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="quantum-boolean-function-evaluation.html"><a href="quantum-boolean-function-evaluation.html#example"><i class="fa fa-check"></i><b>10.1.1</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="10.2" data-path="hadamard-and-quantum-fourier-transforms.html"><a href="hadamard-and-quantum-fourier-transforms.html"><i class="fa fa-check"></i><b>10.2</b> Hadamard and quantum Fourier transforms</a></li>
+<li class="chapter" data-level="10.3" data-path="more-phase-kick-back.html"><a href="more-phase-kick-back.html"><i class="fa fa-check"></i><b>10.3</b> More phase kick-back</a></li>
+<li class="chapter" data-level="10.4" data-path="oracles-and-query-complexity.html"><a href="oracles-and-query-complexity.html"><i class="fa fa-check"></i><b>10.4</b> Oracles and query complexity</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="oracles-and-query-complexity.html"><a href="oracles-and-query-complexity.html#deutschs-algorithm"><i class="fa fa-check"></i><b>10.4.1</b> Deutsch’s algorithm</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="three-more-quantum-algorithms.html"><a href="three-more-quantum-algorithms.html"><i class="fa fa-check"></i><b>10.5</b> Three more quantum algorithms</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="three-more-quantum-algorithms.html"><a href="three-more-quantum-algorithms.html#the-bernstein-vazirani-algorithm"><i class="fa fa-check"></i><b>10.5.1</b> The Bernstein-Vazirani algorithm</a></li>
+<li class="chapter" data-level="10.5.2" data-path="three-more-quantum-algorithms.html"><a href="three-more-quantum-algorithms.html#grovers-search-algorithm"><i class="fa fa-check"></i><b>10.5.2</b> Grover’s search algorithm</a></li>
+<li class="chapter" data-level="10.5.3" data-path="three-more-quantum-algorithms.html"><a href="three-more-quantum-algorithms.html#simons-problem"><i class="fa fa-check"></i><b>10.5.3</b> Simon’s problem</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="remarks-and-exercises-8.html"><a href="remarks-and-exercises-8.html"><i class="fa fa-check"></i><b>10.6</b> <em>Remarks and exercises</em></a><ul>
+<li class="chapter" data-level="10.6.1" data-path="remarks-and-exercises-8.html"><a href="remarks-and-exercises-8.html#shors-algorithm"><i class="fa fa-check"></i><b>10.6.1</b> Shor’s algorithm</a></li>
+<li class="chapter" data-level="10.6.2" data-path="remarks-and-exercises-8.html"><a href="remarks-and-exercises-8.html#rsa"><i class="fa fa-check"></i><b>10.6.2</b> RSA</a></li>
+<li class="chapter" data-level="10.6.3" data-path="remarks-and-exercises-8.html"><a href="remarks-and-exercises-8.html#more-complexity-classes"><i class="fa fa-check"></i><b>10.6.3</b> More complexity classes</a></li>
+<li class="chapter" data-level="10.6.4" data-path="remarks-and-exercises-8.html"><a href="remarks-and-exercises-8.html#section"><i class="fa fa-check"></i><b>10.6.4</b> </a></li>
+<li class="chapter" data-level="10.6.5" data-path="remarks-and-exercises-8.html"><a href="remarks-and-exercises-8.html#section-1"><i class="fa fa-check"></i><b>10.6.5</b> </a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="chapter11.html"><a href="chapter11.html"><i class="fa fa-check"></i><b>11</b> Decoherence and basic quantum error correction</a><ul>
+<li class="chapter" data-level="11.1" data-path="decoherence-simplified.html"><a href="decoherence-simplified.html"><i class="fa fa-check"></i><b>11.1</b> Decoherence simplified</a></li>
+<li class="chapter" data-level="11.2" data-path="decoherence-and-interference.html"><a href="decoherence-and-interference.html"><i class="fa fa-check"></i><b>11.2</b> Decoherence and interference</a></li>
+<li class="chapter" data-level="11.3" data-path="evolution-of-density-operators-under-decoherence.html"><a href="evolution-of-density-operators-under-decoherence.html"><i class="fa fa-check"></i><b>11.3</b> Evolution of density operators under decoherence</a></li>
+<li class="chapter" data-level="11.4" data-path="quantum-errors.html"><a href="quantum-errors.html"><i class="fa fa-check"></i><b>11.4</b> Quantum errors</a></li>
+<li class="chapter" data-level="11.5" data-path="same-evolution-different-errors.html"><a href="same-evolution-different-errors.html"><i class="fa fa-check"></i><b>11.5</b> Same evolution, different errors</a></li>
+<li class="chapter" data-level="11.6" data-path="some-errors-can-be-corrected-on-some-states.html"><a href="some-errors-can-be-corrected-on-some-states.html"><i class="fa fa-check"></i><b>11.6</b> Some errors can be corrected on some states</a></li>
+<li class="chapter" data-level="11.7" data-path="repetition-codes.html"><a href="repetition-codes.html"><i class="fa fa-check"></i><b>11.7</b> Repetition codes</a></li>
+<li class="chapter" data-level="11.8" data-path="quantum-error-correction.html"><a href="quantum-error-correction.html"><i class="fa fa-check"></i><b>11.8</b> Quantum error correction</a></li>
+<li class="chapter" data-level="11.9" data-path="turning-bit-flips-into-phase-flips.html"><a href="turning-bit-flips-into-phase-flips.html"><i class="fa fa-check"></i><b>11.9</b> Turning bit-flips into phase-flips</a></li>
+<li class="chapter" data-level="11.10" data-path="dealing-with-bit-flip-and-phase-flip-errors.html"><a href="dealing-with-bit-flip-and-phase-flip-errors.html"><i class="fa fa-check"></i><b>11.10</b> Dealing with bit-flip and phase-flip errors</a></li>
+<li class="chapter" data-level="11.11" data-path="remarks-and-exercises-9.html"><a href="remarks-and-exercises-9.html"><i class="fa fa-check"></i><b>11.11</b> <em>Remarks and exercises</em></a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chapter12.html"><a href="chapter12.html"><i class="fa fa-check"></i><b>12</b> Quantum error correction and fault tolerance</a></li>
+<li class="chapter" data-level="13" data-path="chapter13.html"><a href="chapter13.html"><i class="fa fa-check"></i><b>13</b> Further reading</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Introduction to Quantum Information Science</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="three-more-quantum-algorithms" class="section level2">
+<h2><span class="header-section-number">10.5</span> Three more quantum algorithms</h2>
+<p>Along with Deutsch’s algorithm, there are three more fundamental quantum algorithms that we will study here.
+Each one was designed to solve a different specific problem, but they all share some similarity: this omnipresent sequence of Hadamard, function evaluation, Hadamard.</p>
+<div id="the-bernstein-vazirani-algorithm" class="section level3">
+<h3><span class="header-section-number">10.5.1</span> The Bernstein-Vazirani algorithm</h3>
+<p><lite-youtube videoid="60OHCftlqbA" playlabel="Play: The Bernstein-Vazirani algorithm"></lite-youtube></p>
+<div class="scenario">
+<p>We are presented with an oracle that computes some unknown function <eq env="math">f\colon\{0,1\}^n\to\{0,1\}</eq>, but we are promised that <eq env="math">f</eq> is of the form
+<eq env="displaymath">
+  f(x) = a\cdot x
+  \equiv (a_1\cdot x_1) \oplus \ldots \oplus (a_n\cdot x_n)
+</eq>
+for some fixed <eq env="math">a\in\{0,1\}^n</eq>.</p>
+<p>Our task is to determine, using the fewest queries possible, the value of the <eq env="math">n</eq>-bit string <eq env="math">a</eq>.</p>
+</div>
+<p>It’s quite easy to see how to do this classically: if we input the value <eq env="math">x=00\ldots010\ldots0</eq>, with the <eq env="math">1</eq> in the <eq env="math">m</eq>-th bit, then <eq env="math">f(x)</eq> is simply the <eq env="math">m</eq>-th bit of <eq env="math">a</eq>; after <eq env="math">n</eq> such calls, we can evaluate every bit value.
+It is also clear that there cannot exist a better classical algorithm: each call to the oracle teaches us exactly one bit of information, and since we must learn <eq env="math">n</eq> bits, we must query it <eq env="math">n</eq> times.</p>
+<p>In contrast, by running the circuit below, it is possible to determine the value of <eq env="math">a</eq> with a <em>single</em> (!) call to the oracle.</p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Bernstein-Vazirani).</p>
+</div>
+<p><em>First register: <eq env="math">n</eq> qubits. Second register: <eq env="math">1</eq> qubit.</em></p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-69-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<p>N.B. The “<eq env="math">\ldots</eq>” in the circuit means “there are more wires here but they are identical (apart from the numbering) to the ones above”.
+You might also see other notation to denote this, such as</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-70-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>or even simply</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-71-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now, stepping through the execution of the circuit (and ignoring the second register, which remains in state <eq env="math">|-\rangle</eq> throughout), we obtain
+<eq env="displaymath">
+  \begin{aligned}
+    |0\rangle
+    &amp;\overset{H}{\longmapsto}
+    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} |x\rangle
+  \\&amp;\overset{f}{\longmapsto}
+    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} (-1)^{a\cdot x}|x\rangle
+  \\&amp;\overset{H}{\longmapsto}
+    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n}
+    \left[
+      (-1)^{a\cdot x} \left(\frac{1}{\sqrt2}\right)^n
+      \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x} |y\rangle
+    \right]
+  \\&amp;\quad= \left(\frac12\right)^n \sum_{y\in\{0,1\}^n}
+    \left[
+      \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
+    \right]
+    |y\rangle
+  \\&amp;\quad=|a\rangle
+  \end{aligned}
+</eq>
+where we write the second Hadamard transform as
+<eq env="displaymath">
+  |x\rangle
+  \mapsto
+  \left(\frac{1}{\sqrt2}\right)^n \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x}|y\rangle
+</eq>
+and where we have used the fact (which you should prove!) that, for any <eq env="math">y\in\{0,1\}^n</eq>,
+<eq env="displaymath">
+  \sum_{x\in\{0,1\}^n} (-1)^{x\cdot y}
+  =
+  \begin{cases}
+    0 &amp;\text{if $y\neq0$}
+  \\2^n &amp;\text{if $y=0$}
+  \end{cases}
+</eq></p>
+<p>This lets us write<a href="#fn130" class="footnote-ref" id="fnref130"><sup>130</sup></a>
+<eq env="displaymath">
+  \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
+  =
+  \begin{cases}
+    0 &amp;\text{if $y\neq a$}
+  \\2^n &amp;\text{if $y=a$.}
+  \end{cases}
+</eq>
+If you take the sum over <eq env="math">x</eq>, then all the terms always cancel out <em>unless</em> <eq env="math">a\oplus y = 00\ldots0</eq>, i.e. <em>unless <eq env="math">y=a</eq></em>.
+Thus the standard bit-by-bit measurement of the first register gives the value of <eq env="math">a</eq> and solves the problem with a single call to the oracle.</p>
+<p>Note that the algorithm follows the same pattern as Deutsch’s algorithm: Hadamard, function evaluation, Hadamard, i.e. a generic quantum interference pattern.</p>
+</div>
+<div id="grovers-search-algorithm" class="section level3">
+<h3><span class="header-section-number">10.5.2</span> Grover’s search algorithm</h3>
+<p>The next algorithm we will study aims to solve the problem of searching for a specific item in an <em>unsorted</em> database.
+Think about an old-fashioned phone book: the entries are typically sorted alphabetically, by the name of the person that you want to find.
+However, what if you were in the opposite situation: you had a phone number and wanted to find the corresponding person’s name?
+The phone book is not sorted in that way, and to find the number (and hence name) with, say, 50% probability, you would need to search through, on average, 50% of the entries.
+In a large phone book, this would take a long time.</p>
+<p>While this might seem like a rather contrived problem (a computer database should always maintain an index on any searchable field), many problems in computer science can be cast in this form, i.e. that of an <strong>unstructured search</strong>.</p>
+<div class="scenario">
+<p>We are presented with an oracle that computes some unknown function <eq env="math">f\colon\{0,1\}^n\to\{0,1\}</eq>.</p>
+<p>Our task is to find, using the fewest queries possible, an input <eq env="math">x\in\{0,1\}^n</eq> such that <eq env="math">f(x)=1</eq>.</p>
+</div>
+<p>Suppose that we know that, amongst the <eq env="math">N=2^n</eq> binary strings, there are <eq env="math">M\ll N</eq> which are “tagged”, i.e. on which <eq env="math">f</eq> evaluates to <eq env="math">1</eq>.
+There is no structure in the database, and so any classical search requires around <eq env="math">N/M</eq> steps, i.e. the function <eq env="math">f</eq> must be evaluated roughly <eq env="math">N/M</eq> times.</p>
+<p>In contrast, there is a quantum search algorithm, implemented by the circuit below, that was proposed in 1996 by Lov Grover, and which requires only roughly <eq env="math">\sqrt{N/M}</eq> steps.</p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Grover’s search).</p>
+</div>
+<p><em>First register: <eq env="math">n</eq> qubits. Second register: <eq env="math">1</eq> qubit.</em></p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-72-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>where <eq env="math">f_0</eq> tags the binary string of <eq env="math">n</eq> zeros: <eq env="math">f_0(x)=1</eq> if <eq env="math">x=00\ldots0</eq>, and <eq env="math">f_0(x)=0</eq> otherwise.</p>
+</div>
+<p>We can recognise the typical Hadamard, function evaluation, Hadamard sequence, and we can see that the second register (the bottom qubit, in state <eq env="math">|-\rangle</eq>) plays an auxiliary role: the real action takes place in the first register.
+However, unlike the previous algorithms, a single call to the oracle does not do very much, and we have to build up the quantum interference in the first register through repeated calls to the oracle (without any intermediate measurements!).</p>
+<p>Here, the basic step is the <strong>Grover iteration operator <eq env="math">G</eq></strong>, which is the boxed part of the circuit that we repeat over and over.
+After <eq env="math">O(2^{n/2})</eq> applications of <eq env="math">G</eq>, we measure the first register bit-by-bit and obtain the value of <eq env="math">|z\rangle</eq>, which is such that, <em>with “high” probability</em>, <eq env="math">f(z)=1</eq>.
+In order to actually <em>see</em> how this algorithm works, and to justify our claim that it gives what we are searching for “with high probability”, we can take a more geometric approach.</p>
+<p>First, we define two orthonormal vectors in the Hilbert space of the first register:<a href="#fn131" class="footnote-ref" id="fnref131"><sup>131</sup></a>
+<eq env="displaymath">
+  \begin{aligned}
+    |a\rangle
+    &amp;= \frac{1}{\sqrt{N-M}} \sum_{x\in f^{-1}(0)} \!\!\!\!|x\rangle
+  \\|b\rangle
+    &amp;= \frac{1}{\sqrt{M}} \sum_{x\in f^{-1}(1)} \!\!\!\!|x\rangle
+  \end{aligned}
+</eq>
+where <eq env="math">f^{-1}(i) = \{x\in\{0,1\}^n \mid f(x)=i\}</eq>.
+These two vectors span a two-dimensional subspace in which the search will take place.</p>
+<p>This subspace contains the equally-weighted superposition <eq env="math">|s\rangle</eq> of all binary strings of length <eq env="math">n</eq>:<a href="#fn132" class="footnote-ref" id="fnref132"><sup>132</sup></a>
+<eq env="displaymath">
+  \begin{aligned}
+    |s\rangle
+    &amp;= \frac{1}{\sqrt{N}} \sum_x|x\rangle
+  \\&amp;= \sqrt{\frac{N-M}{N}}|a\rangle + \sqrt{\frac{M}{N}}|b\rangle
+  \\&amp;= (\cos\alpha)|a\rangle + (\sin\alpha)|b\rangle
+  \end{aligned}
+</eq>
+where we have parametrised <eq env="math">\sqrt{\frac{N-M}{N}}</eq> as <eq env="math">\cos\alpha</eq>, and <eq env="math">\sqrt{\frac{M}{N}}</eq> as <eq env="math">\sin\alpha</eq>, with <eq env="math">\alpha\approx\sqrt{\frac{M}{N}}</eq>, since <eq env="math">N\gg M</eq>.</p>
+<p>The state <eq env="math">|s\rangle</eq> is our starting input for our sequence of Grover iterations, and we will show that, applying <eq env="math">G</eq>, when restricting to the plane spanned by <eq env="math">|a\rangle</eq> and <eq env="math">|b\rangle</eq>, amounts to applying a rotation by angle <eq env="math">2\alpha</eq>.
+Grover’s search algorithm can then be understood as a sequence of rotations which take the input state <eq env="math">|s\rangle</eq> towards the target state <eq env="math">|b\rangle</eq>.</p>
+<p>To see this, note that the oracle induces the unitary transformation
+<eq env="displaymath">
+  f\colon |x\rangle \mapsto (-1)^{f(x)}|x\rangle
+</eq>
+which we shall write as <eq env="math">I_a = 2|a\rangle\langle a|-\mathbf{1}</eq>, and interpret as a reflection through the <eq env="math">|a\rangle</eq>-axis.
+In particular, evaluation of <eq env="math">f_0</eq> can be written as <eq env="math">2|0\rangle\langle 0|-\mathbf{1}</eq>, and thus thought of as a reflection through the <eq env="math">|0\rangle</eq>-axis.
+If we sandwich <eq env="math">f_0</eq> in between two Hadamards then we obtain <eq env="math">I_s = 2|s\rangle\langle s|-\mathbf{1}</eq>, which is reflection through the <eq env="math">|s\rangle</eq>-axis.
+The Grover iteration operator <eq env="math">G</eq> is the composition
+<eq env="displaymath">
+  G = I_s I_a.
+</eq>
+Note also that <eq env="math">I_a = 2|a\rangle\langle a|-\mathbf{1}= \mathbf{1}-2|b\rangle\langle b|</eq>.</p>
+<p>Now recall the purely geometric fact that (working in <eq env="math">2</eq>-dimensional Euclidean space), if we have two intersecting lines <eq env="math">L_1</eq> and <eq env="math">L_2</eq>, meeting with angle <eq env="math">\theta</eq>, then reflecting an object through <eq env="math">L_1</eq> and then reflecting the resulting image through <eq env="math">L_2</eq> is the same as simply rotating the original object around the point of intersection <eq env="math">L_1\cap L_2</eq> by <eq env="math">2\theta</eq>.</p>
+<p>The angle between <eq env="math">|a\rangle</eq> and <eq env="math">|s\rangle</eq> is <eq env="math">\alpha</eq>, and so, each time <eq env="math">G</eq> is applied, the vector is rotated (around the origin) by <eq env="math">2\alpha</eq> towards the <eq env="math">|b\rangle</eq>-axis.
+We just have to choose the right number <eq env="math">r</eq> of steps such that we end up as close to the <eq env="math">|b\rangle</eq>-axis as possible.
+The state <eq env="math">|s\rangle</eq> starts at angle <eq env="math">\alpha</eq> to <eq env="math">|a\rangle</eq>, and we should perform our final (and only) measurement when this angle is <eq env="math">\pi/2</eq>, i.e. when <eq env="math">(2r+1)\alpha = \pi/2</eq>, which gives
+<eq env="displaymath">
+  r \approx \frac{\pi}{4}\sqrt{\frac{N}{M}}.
+</eq></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:grover-search-geometrically"></span>
+<img src="iqis-book_files/figure-html/grover-search-geometrically-1.png" alt="Understanding the Grover search algorithm geometrically." width="576" />
+<p class="caption">
+Figure 10.3: Understanding the Grover search algorithm geometrically.
+</p>
+</div>
+<p>So the quantum algorithm searches an unsorted list of <eq env="math">N</eq> items in roughly <eq env="math">\sqrt{N}</eq> steps: it offers a <em>quadratic</em> speed-up when compared to classical search, which can be of immense practical importance.
+For example, cracking some of the popular ciphers, such as AES (Advanced Encryption Standard), essentially requires a search among <em>many</em> binary strings (called <strong>keys</strong>).
+If these can be checked at a rate of, say, one million keys per second, then a classical computer would need over a thousand years to find the correct key, while a quantum computer using Grover’s algorithm would find it in less than four minutes.</p>
+</div>
+<div id="simons-problem" class="section level3">
+<h3><span class="header-section-number">10.5.3</span> Simon’s problem</h3>
+<p><lite-youtube videoid="sxIdRKTdRRU" playlabel="Play: Simon's algorithm"></lite-youtube></p>
+<p>Here we will see the simplest quantum algorithm that shows an exponential speed-up compared to the best classical algorithm.</p>
+<div class="scenario">
+<p>We are presented with an oracle that computes some unknown function <eq env="math">f\colon\{0,1\}^n\to\{0,1\}^n</eq>, but we are promised that <eq env="math">f</eq> satisfies, for all <eq env="math">x\in\{0,1\}^n</eq>,
+<eq env="displaymath">
+  f(x) = f(x\oplus s)
+</eq>
+for some fixed <eq env="math">s\in\{0,1\}^n</eq>, which we call the <strong>period</strong> of <eq env="math">f</eq>.<a href="#fn133" class="footnote-ref" id="fnref133"><sup>133</sup></a>
+So that the problem is non-trivial (i.e. so that <eq env="math">f</eq> really is two-to-one), we assume that <eq env="math">s</eq> is <em>not</em> the string of <eq env="math">n</eq> zeros.</p>
+<p>Our task is to determine, using the fewest queries possible, the value of the <eq env="math">n</eq>-bit string <eq env="math">s</eq>.</p>
+</div>
+<p>Classically, this problem is exponentially hard.
+We will not go through a detailed proof of this fact, but the intuition is reasonably simple: since there is no structure in the function <eq env="math">f</eq> that would help us find its period <eq env="math">s</eq>, the best we can do is evaluate <eq env="math">f</eq> on random inputs and hope that we find some distinct <eq env="math">x</eq> and <eq env="math">x'</eq> such that <eq env="math">f(x)=f(x')</eq>, and then we know that <eq env="math">s=x\oplus y</eq>.
+After having made <eq env="math">m</eq> queries to the oracle, we have a list of <eq env="math">m</eq> values of the tuple <eq env="math">(x,f(x))</eq>; there are <eq env="math">m(m-1)/2</eq> possible pairs which could match within this list, and the probability that a randomly chosen pair match is <eq env="math">1/2^{n-1}</eq>.
+This means that the probability of there being at least one matching pair within the list of <eq env="math">m</eq> tuples is less than <eq env="math">m^2/2^n</eq>.
+Clearly, the chance of finding a matching pair is negligible if the oracle is queried on fewer than <eq env="math">\sqrt{2^n}</eq> inputs.</p>
+<p>The quantum case, on the other hand, gives a result with high probability within a <em>linear</em> number of steps.
+The circuit that solves this problem, shown below, has a familiar Hadamard–function–Hadamard structure, but the second register has been expanded to <eq env="math">n</eq> qubits.</p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Simon’s problem).</p>
+</div>
+<p><em>First register: <eq env="math">n</eq> qubits. Second register: <eq env="math">n</eq> qubits.</em></p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-73-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<p>Let’s follow the evolution of the two registers in this circuit.
+We start off by preparing the equally-weighted superposition of all <eq env="math">n</eq>-bit strings, and then query the oracle:
+<eq env="displaymath">
+  \begin{aligned}
+    |0^n\rangle|0^n\rangle
+    &amp;\longmapsto
+    \frac{1}{\sqrt{2^n}} \sum_x |x\rangle|0^n\rangle
+  \\&amp;\longmapsto
+    \frac{1}{\sqrt{2^n}} \sum_x |x\rangle|f(x)\rangle.
+  \end{aligned}
+</eq>
+The second Hadamard transform on the first register then yields the final output state:
+<eq env="displaymath">
+  \frac{1}{2^n} \sum_{x,y} (-1)^{x\cdot y} |y\rangle|f(x)\rangle.
+\tag{6.4.3.1}
+</eq></p>
+<p>Now, if we measure the second register <em>before</em> applying the second Hadamard transform to the first, we obtain one of the <eq env="math">2^{n-1}</eq> possible values of <eq env="math">f(x)</eq>, each equally likely.<a href="#fn134" class="footnote-ref" id="fnref134"><sup>134</sup></a></p>
+<p>Suppose that the outcome of the measurement is <eq env="math">f(a)</eq>.
+Given that both <eq env="math">a</eq> and <eq env="math">a\oplus s</eq> are mapped to <eq env="math">f(a)</eq> by <eq env="math">f</eq>, the first register then collapses to the state
+<eq env="displaymath">
+  \frac{1}{\sqrt{2}}\big( |a\rangle + |a\oplus s\rangle \big).
+</eq></p>
+<p>The subsequent Hadamard transform on the first register then gives us the final state<a href="#fn135" class="footnote-ref" id="fnref135"><sup>135</sup></a>
+<eq env="displaymath">
+  \begin{aligned}
+    \frac{1}{\sqrt{2^{n+1}}} \sum_y \Big((-1)^{a\cdot y}+(-1)^{(a\oplus s)\cdot y}\Big) |y\rangle|f(a)\rangle
+    &amp;=
+    \frac{1}{\sqrt{2^{n+1}}} \sum_y (-1)^{a\cdot y}
+      \Big( 1 + (-1)^{s\cdot y} \Big) |y\rangle|f(a)\rangle
+  \\&amp;=
+    \frac{1}{\sqrt{2^{n-1}}} \sum_{y\in s^\perp}
+      (-1)^{a\cdot y} |y\rangle|f(a)\rangle
+  \end{aligned}
+</eq>
+where we have used the fact that <eq env="math">(a\oplus s)\cdot y = (a\cdot y)\oplus(s\cdot y)</eq>, and that <eq env="math">1+(-1)^{s\cdot y}</eq> can have only two values: either <eq env="math">2</eq> (when <eq env="math">s\cdot y = 0</eq>), or <eq env="math">0</eq> (when <eq env="math">s\cdot y = 1</eq>).
+Now we measure the first register: the outcome is selected at random from all possible values of <eq env="math">y</eq> such that <eq env="math">a\cdot y = 0</eq>, each occurring with probability <eq env="math">1/(2^{n-1})</eq>.</p>
+<p>In fact, we do not have to measure the second register at all: it was a mathematical shortcut, simply taken for pedagogical purposes.
+Instead of collapsing the state to just one term in a superposition, we can express Equation (6.4.3.1) as<a href="#fn136" class="footnote-ref" id="fnref136"><sup>136</sup></a>
+<eq env="displaymath">
+  \frac{1}{2^n} \sum_{y,f(a)}
+    \Big( (-1)^{a\cdot y} + (-1)^{(a\oplus s)\cdot y} \Big) |y\rangle|f(a)\rangle
+  =
+  \frac{1}{2^n} \sum_{y,f(a)} (-1)^{a\cdot y}
+    \Big( 1 + (-1)^{s\cdot y} \Big) |y\rangle|f(a)\rangle
+</eq>
+where the summation over <eq env="math">f(a)</eq> means summing over all binary strings in the image of <eq env="math">f</eq>.</p>
+<p>The output of the algorithm is then
+<eq env="displaymath">
+  \frac{1}{2^{n-1}} \sum_{y\in s^\perp} |y\rangle
+    \sum_{f(a)} (-1)^{a\cdot y} |f(a)\rangle
+</eq>
+and, again, the measurement outcome is selected at random from all possible values of <eq env="math">y</eq> such that <eq env="math">s\cdot y=0</eq>.</p>
+<p>We are not quite done yet: we cannot infer <eq env="math">s</eq> from a <em>single</em> output <eq env="math">y</eq>.
+However, once we have found <eq env="math">n-1</eq> linearly independent<a href="#fn137" class="footnote-ref" id="fnref137"><sup>137</sup></a> strings <eq env="math">y_1,y_2,\ldots,y_{n-1}</eq>, we can solve the <eq env="math">n-1</eq> equations
+<eq env="displaymath">
+  \left\{
+  \begin{aligned}
+    s\cdot y_1 &amp;= 0
+  \\s\cdot y_2 &amp;= 0
+  \\&amp;\,\,\,\vdots
+  \\s\cdot y_{n-1} &amp;= 0
+  \end{aligned}
+  \right\}
+</eq>
+to determine a unique value of <eq env="math">s</eq>.
+(Note that we only need <eq env="math">n-1</eq> values, and not <eq env="math">n</eq>, because <eq env="math">s=0</eq> will always be a solution, but we have explicitly assumed that this is not the case, and so it suffices to narrow down the space of possible solutions to consist of <em>two</em> elements, since then we know that we can just take the non-zero one.)</p>
+<p>So we run this algorithm repeatedly, each time obtaining another value of <eq env="math">y</eq> that satisfies <eq env="math">s\cdot y = 0</eq>.
+Every time we find some new value of <eq env="math">y</eq> that is linearly independent of all previous ones, we can discard half the potential candidates for <eq env="math">s</eq>.
+The probability that <eq env="math">y_1,\ldots,y_{n-1}</eq> are linearly independent is
+<eq env="displaymath">
+  \left( 1 - \frac{1}{2^{n-1}} \right)
+  \left( 1 - \frac{1}{2^{n-2}} \right)
+  \ldots
+  \left( 1 - \frac{1}{2} \right).
+\tag{6.4.3.2}
+</eq></p>
+<p>Indeed, suppose that we have <eq env="math">k</eq> linearly independent binary strings <eq env="math">y_1,\ldots,y_k</eq>.
+Then these strings span a subspace of size <eq env="math">2^k</eq>, consisting of all binary strings of the form <eq env="math">\bigoplus_{i=1}^k b_i y_i</eq>, where <eq env="math">b_1,\ldots,b_k\in\{0,1\}</eq>.
+Now suppose we obtain some <eq env="math">y_{k+1}</eq>.
+It will be linearly independent from the <eq env="math">y_1,\ldots,y_k</eq> if and only if it lies <em>outside</em> the subspace spanned by the <eq env="math">y_1,\ldots,y_k</eq>, which occurs with probability <eq env="math">1-(2^k)/(2^n)</eq>.
+We can bound Equation (6.4.3.2) from below:<a href="#fn138" class="footnote-ref" id="fnref138"><sup>138</sup></a>
+the probability of obtaining a linearly independent set <eq env="math">\{y_1,\ldots,y_{n-1}\}</eq> by running the algorithm <eq env="math">n-1</eq> times (i.e. not having to discard any values and run again) is
+<eq env="displaymath">
+  \prod_{k=1}^{n-1}
+  \left(
+    1-\frac{1}{2^k}
+  \right)
+  \geqslant
+  \left[
+    1 -
+    \left(
+      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac14
+    \right)
+  \right]
+  \cdot \frac12
+  &gt;
+  \frac14.
+</eq></p>
+<p>We conclude that we can determine <eq env="math">s</eq> with some constant probability of error after repeating the algorithm <eq env="math">O(n)</eq> times.
+The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:simons-diagramatically"></span>
+<img src="iqis-book_files/figure-html/simons-diagramatically-1.png" alt="Picture all possible binary strings as dots, but with the string s denoted by a star. Every linearly independent y_{k+1} lets us “zoom in” twice as close towards s." width="576" />
+<p class="caption">
+Figure 10.4: Picture all possible binary strings as dots, but with the string <eq env="math">s</eq> denoted by a star. Every linearly independent <eq env="math">y_{k+1}</eq> lets us “zoom in” twice as close towards <eq env="math">s</eq>.
+</p>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="130">
+<li id="fn130"><p>Even if you don’t immediately see how this sum works for <eq env="math">z\neq a</eq> (writing <eq env="math">|z\rangle</eq> to mean the output), you can first calculate the probability that the output is <eq env="math">z=a</eq>. In this case it is easy to see that the sum is <eq env="math">2^n</eq>, and that in the final state <eq env="math">\sum_z\alpha_z|z\rangle</eq> the term <eq env="math">z=a</eq> has amplitude <eq env="math">1</eq>. Thus, by normalisation, all the other terms must be equal to <eq env="math">0</eq>.<a href="three-more-quantum-algorithms.html#fnref130" class="footnote-back">↩︎</a></p></li>
+<li id="fn131"><p>In fact, we shall completely ignore the second register from now on.<a href="three-more-quantum-algorithms.html#fnref131" class="footnote-back">↩︎</a></p></li>
+<li id="fn132"><p>We often omit from our notation the fact that the sum is over all <eq env="math">x\in\{0,1\}^n</eq>, leaving it (hopefully) implicitly understood from the context.<a href="three-more-quantum-algorithms.html#fnref132" class="footnote-back">↩︎</a></p></li>
+<li id="fn133"><p>This is equivalent to saying that <eq env="math">f</eq> is <strong>two-to-one</strong>: for any <eq env="math">y\in\{0,1\}^n</eq> such that there exists some <eq env="math">x\in\{0,1\}^n</eq> with <eq env="math">f(x)=y</eq>, there exists exactly one other <eq env="math">x'\neq x</eq> such that <eq env="math">f(x')=y</eq> as well.<a href="three-more-quantum-algorithms.html#fnref133" class="footnote-back">↩︎</a></p></li>
+<li id="fn134"><p>As we shall see in a moment, the actual measurement on the second register is not actually necessary.<a href="three-more-quantum-algorithms.html#fnref134" class="footnote-back">↩︎</a></p></li>
+<li id="fn135"><p>We write <eq env="math">s^\perp</eq> to mean the set of all <eq env="math">y\in\{0,1\}^n</eq> such that <eq env="math">y\cdot s=0</eq>.<a href="three-more-quantum-algorithms.html#fnref135" class="footnote-back">↩︎</a></p></li>
+<li id="fn136"><p>Recall that the image of <eq env="math">f</eq> is the set of all <eq env="math">z\in\{0,1\}^n</eq> such that there exists some <eq env="math">x\in\{0,1\}^n</eq> satisfying <eq env="math">f(x)=z</eq>.<a href="three-more-quantum-algorithms.html#fnref136" class="footnote-back">↩︎</a></p></li>
+<li id="fn137"><p>Here, <strong>linearly independent</strong> means that no string in the set <eq env="math">\{y_1,\ldots,y_n\}</eq> can be expressed as the bitwise sum of some other strings in this set.<a href="three-more-quantum-algorithms.html#fnref137" class="footnote-back">↩︎</a></p></li>
+<li id="fn138"><p>Use the inequality <eq env="displaymath">\begin{aligned}(1-x)(1-y)&amp;= 1 - x - y - xy\\&amp;\geqslant 1 - (x+y)\end{aligned}</eq> which holds for any <eq env="math">0&lt;x,y&lt;1</eq>.<a href="three-more-quantum-algorithms.html#fnref138" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
+<script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
+<script type="text/javascript" src="./web/sidenotes.js"></script>
+<script type="text/javascript" src="./web/lite-yt-embed.js"></script>
+
+<script type="text/javascript">
+  $document.ready(function() {
+    $('div.font-settings button.size-3').map(function() {
+      this.setAttribute("class", "button size-2")
+      if (this.innerText == "Sepia") {
+        this.setAttribute("style", "display: none;");
+      }
+      if (this.innerText == "White") {
+        this.innerText = "Light";
+      }
+      if (this.innerText == "Night") {
+        this.innerText = "Dark";
+      }
+    });
+  });
+</script>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="oracles-and-query-complexity.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="remarks-and-exercises-8.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": {}
+},
+"fontsettings": {
+"theme": "white",
+"family": "serif",
+"size": 1
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/10-algorithms.Rmd",
+"text": null
+},
+"download": ["iqis-book.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+},
+"info": false
+});
+});
+</script>
+
+</body>
+
+</html>
