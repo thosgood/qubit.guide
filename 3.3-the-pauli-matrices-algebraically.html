@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>3.3 The Pauli matrices, algebraically | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="3.3 The Pauli matrices, algebraically | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="3.3 The Pauli matrices, algebraically | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="3.2-quantum-interference-revisited-still-about-beam-splitters.html"/>
+<link rel="next" href="3.4-unitaries-as-rotations.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,81 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="the-pauli-matrices-algebraically" class="section level2">
+<h2><span class="header-section-number">3.3</span> The Pauli matrices, algebraically</h2>
+<p>Matrices form a vector space: you can add them, and you can multiply them by a scalar.
+One possible choice of a basis in the vector space of <eq env="math">(2\times 2)</eq> matrices is the set of matrices <eq env="math">\{M_{00},M_{01},M_{10},M_{11}\}</eq>, where the entries of <eq env="math">M_{ij}</eq> are all <eq env="math">0</eq> except for the <eq env="math">ij</eq>-th entry, which is <eq env="math">1</eq> (e.g. <eq env="math">M_{01}=\begin{bmatrix}0&amp;1\\0&amp;0\end{bmatrix}</eq>).
+However, it turns out that there is a different basis which offers lots of insights into the structure of the general single-qubit unitary transformations, namely <eq env="math">\{\mathbf{1},X,Y,Z\}</eq>, i.e. the identity matrix and the three Pauli matrices.<a href="#fn50" class="footnote-ref" id="fnref50"><sup>50</sup></a>
+We have already defined the Pauli operators in <a href="2-chapter2.html#chapter2">Chapter 2</a>, but we recall their definition here along with a different notation that we sometimes use.</p>
+<div class="idea">
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Identity</strong></td>
+<td align="center"><eq env="math">\mathbf{1}= \begin{bmatrix}1&amp;0\\0&amp;1\end{bmatrix}</eq></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Bit-flip</strong></td>
+<td align="center"><eq env="math">X\equiv\sigma_x = \begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}</eq></td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Bit-phase-flip</strong></td>
+<td align="center"><eq env="math">Y\equiv\sigma_y = \begin{bmatrix}0&amp;-i\\i&amp;0\end{bmatrix}</eq></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Phase-flip</strong></td>
+<td align="center"><eq env="math">Z\equiv\sigma_z = \begin{bmatrix}1&amp;0\\0&amp;-1\end{bmatrix}</eq></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Recalling <a href="2-chapter2.html#chapter2">Chapter 2</a>, we know that the Pauli operators (as well as the identity operator) are unitary and Hermitian, square to the identity, and anti-commute.<a href="#fn51" class="footnote-ref" id="fnref51"><sup>51</sup></a></p>
+<p>Any <eq env="math">(2\times 2)</eq> complex matrix <eq env="math">A</eq> has a unique expansion in the form
+<eq env="displaymath">
+  \begin{aligned}
+    A &amp;=
+    \begin{bmatrix}
+      a_0 + a_z &amp; a_x - i a_y
+    \\a_x +i a_y &amp;  a_0 - a_z
+    \end{bmatrix}
+  \\&amp;= a_0\mathbf{1}+ a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
+  \\&amp;= a_0\mathbf{1}+ \vec{a}\cdot\vec{\sigma}.
+  \end{aligned}
+</eq>
+for some complex numbers <eq env="math">a_0</eq>, <eq env="math">a_x</eq>, <eq env="math">a_y</eq>, and <eq env="math">a_z</eq>.
+Here, <eq env="math">\vec{a}</eq> is a vector with three complex components <eq env="math">(a_x, a_y, a_z)</eq>, and <eq env="math">\vec{\sigma}</eq> represents the “vector” of Pauli matrices <eq env="math">(\sigma_x,\sigma_y,\sigma_z)</eq>.
+The algebraic properties of the Pauli matrices can be neatly compacted (see the exercises) into a single expression:</p>
+<div class="idea">
+<p>The <strong>multiplication rule</strong>:
+<eq env="displaymath">
+  (\vec{a}\cdot\vec{\sigma})\,(\vec{b}\cdot\vec{\sigma})
+  = (\vec{a}\cdot\vec{b})\,\mathbf{1}+ i(\vec{a}\times \vec{b})\cdot\vec{\sigma}.
+</eq></p>
+</div>
+<p>We also introduce the inner product of two matrices:</p>
+<div class="idea">
+<p>The <strong>Hilbert–Schmidt product</strong>:<a href="#fn52" class="footnote-ref" id="fnref52"><sup>52</sup></a>
+<eq env="displaymath">
+  (A|B) = \frac12 \operatorname{tr}A^\dagger B.
+</eq></p>
+</div>
+<p>Recall that the trace of a square matrix <eq env="math">A</eq>, denoted by <eq env="math">\operatorname{tr}A</eq>, is defined to be the sum of the elements on the main diagonal of <eq env="math">A</eq>, and defines a linear mapping: for any scalars <eq env="math">\alpha</eq> and <eq env="math">\beta</eq>,
+<eq env="displaymath">
+  \operatorname{tr}(\alpha A+\beta B) = \alpha\operatorname{tr}A +\beta\operatorname{tr}B.
+</eq>
+Moreover, the trace is invariant under <em>cyclic</em> permutations: e.g.
+<eq env="displaymath">
+  \operatorname{tr}(ABC) = \operatorname{tr}(BCA) = \operatorname{tr}(CAB).
+</eq>
+Note, however, that this does <em>not</em> imply that e.g. <eq env="math">\operatorname{tr}(ABC)=\operatorname{tr}(ACB)</eq>.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="50">
+<li id="fn50"><p>In this chapter we are concerned only with the <em>single-qubit</em> Pauli operators. There are analogous <em>multi-qubit</em> Pauli operators, but be careful: these do not satisfy all the same properties! For example, anti-commutativity (explained below) is special to the <em>single-qubit</em> case.<a href="3.3-the-pauli-matrices-algebraically.html#fnref50" class="footnote-back">↩︎</a></p></li>
+<li id="fn51"><p><eq env="displaymath">\begin{aligned}XY+YX&amp;=0,\\XZ+ZX&amp;=0,\\YZ+ZY&amp;=0.\end{aligned}</eq><a href="3.3-the-pauli-matrices-algebraically.html#fnref51" class="footnote-back">↩︎</a></p></li>
+<li id="fn52"><p>The <eq env="math">\frac12</eq> coefficient here is simply the normalisation factor, which changes if we consider <em>multi-qubit</em> Pauli operators.<a href="3.3-the-pauli-matrices-algebraically.html#fnref52" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +449,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3.2-quantum-interference-revisited-still-about-beam-splitters.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3.4-unitaries-as-rotations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +489,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/03-pauli-bloch.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

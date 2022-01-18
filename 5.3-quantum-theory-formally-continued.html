@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>5.3 Quantum theory, formally (continued) | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="5.3 Quantum theory, formally (continued) | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="5.3 Quantum theory, formally (continued) | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="5.2-one-two-many.html"/>
+<link rel="next" href="5.4-back-to-qubits.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,64 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="quantum-theory-formally-continued" class="section level2">
+<h2><span class="header-section-number">5.3</span> Quantum theory, formally (continued)</h2>
+<p>Recalling <a href="4-chapter4.html#chapter4">Chapter 4</a>, where we said that we were missing a key part of the formalism of quantum theory, we can now fill in this hole.
+Our mathematical formalism of choice behind the quantum theory of composite systems is based on the <strong>tensor product</strong> of Hilbert spaces.</p>
+<div id="tensor-products" class="section level3">
+<h3><span class="header-section-number">5.3.1</span> Tensor products</h3>
+<p>Let the states of some system <eq env="math">\mathcal{A}</eq> be described by vectors in an <eq env="math">n</eq>-dimensional Hilbert space <eq env="math">\mathcal{H}_{\mathcal{A}}</eq>, and the states of some system <eq env="math">\mathcal{B}</eq> by vectors in an <eq env="math">m</eq>-dimensional Hilbert space <eq env="math">\mathcal{H}_{\mathcal{B}}</eq>.
+The combined system of <eq env="math">\mathcal{A}</eq> and <eq env="math">\mathcal{B}</eq> is then described by vectors in the <eq env="math">(nm)</eq>-dimensional <strong>tensor product space</strong> <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}</eq>.
+Given bases <eq env="math">\{|a_1\rangle,\ldots,|a_n\rangle\}</eq> of <eq env="math">\mathcal{H}_{\mathcal{A}}</eq> and <eq env="math">\{|b_1\rangle,\ldots,|b_m\rangle\}</eq> of <eq env="math">\mathcal{H}_{\mathcal{B}}</eq>, we form a basis of the tensor product by taking the ordered pairs <eq env="math">|a_i\rangle\otimes|b_j\rangle</eq>, for <eq env="math">i=1,\ldots,n</eq> and <eq env="math">j=1,\ldots,m</eq>.
+The tensor product space <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}</eq> then consists of all linear combination of such tensor product basis vectors:<a href="#fn70" class="footnote-ref" id="fnref70"><sup>70</sup></a>
+<eq env="displaymath">
+  |\psi\rangle
+  = \sum_{ij} c_{ij}|a_i\rangle\otimes|b_j\rangle.
+\tag{5.3.1}
+</eq></p>
+<p>The tensor product operation <eq env="math">\otimes</eq> is distributive:
+<eq env="displaymath">
+  \begin{gathered}
+    |a\rangle \otimes \left( \beta_1|b_1\rangle + \beta_2|b_2\rangle \right)
+    = \beta_1|a\rangle\otimes|b_1\rangle + \beta_2|a\rangle\otimes|b_2\rangle
+  \\\left( \alpha_1|a_1\rangle + \alpha_2|a_2\rangle \right) \otimes |b\rangle
+    = \alpha_1|a_1\rangle\otimes|b\rangle + \alpha_2|a_2\rangle\otimes|b\rangle.
+  \end{gathered}
+</eq>
+The tensor product of Hilbert spaces is again a Hilbert space: the inner products on <eq env="math">\mathcal{H}_{\mathcal{A}}</eq> and <eq env="math">\mathcal{H}_{\mathcal{B}}</eq> give a natural inner product on <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}</eq>, defined for any two product vectors by
+<eq env="displaymath">
+  \left( \langle a'|\otimes\langle b'| \right) \left( |a\rangle\otimes|b\rangle \right)
+  = \langle a'|a\rangle\langle b'|b\rangle
+</eq>
+and extended by linearity to sums of tensor products of vectors, and, by associativity<a href="#fn71" class="footnote-ref" id="fnref71"><sup>71</sup></a>, to any number of subsystems.
+Note that the bra corresponding to the tensor product state <eq env="math">|a\rangle\otimes|b\rangle</eq> is written as <eq env="math">(|a\rangle\otimes|b\rangle)^\dagger = \langle a|\otimes\langle b|</eq>, where the order of the factors on either side of <eq env="math">\otimes</eq> does not change when the dagger operation is applied.</p>
+<p>Some joint states of <eq env="math">\mathcal{A}</eq> and <eq env="math">\mathcal{B}</eq> can be expressed as a single tensor product, say <eq env="math">|\psi\rangle=|a\rangle\otimes|b\rangle</eq> (often written as <eq env="math">|a\rangle|b\rangle</eq>, or <eq env="math">|a, b\rangle</eq>, or even <eq env="math">|ab\rangle</eq>), meaning that the subsystem <eq env="math">\mathcal{A}</eq> is in state <eq env="math">|a\rangle</eq>, and the subsystem <eq env="math">\mathcal{B}</eq> in state <eq env="math">|b\rangle</eq>.
+If we expand <eq env="math">|a\rangle=\sum_i\alpha_i|a_i\rangle</eq> and <eq env="math">|b\rangle=\sum_i\beta_j|b_j\rangle</eq>, then <eq env="math">|\psi\rangle=\sum_{ij}\alpha_i\beta_j|a_i\rangle\otimes|b_j\rangle</eq> and we see that, for all such states, the coefficients <eq env="math">c_{ij}</eq> in Equation (5.3.1) are of a rather special form:
+<eq env="displaymath">
+  c_{ij} = \alpha_i\beta_j.
+</eq>
+We call such states <strong>separable</strong> (or just <strong>product states</strong>).
+States that are not separable are said to be <strong>entangled</strong>.</p>
+<p>A useful fact about tensor products is that <eq env="math">\lambda a\otimes b = a\otimes\lambda b</eq> (where <eq env="math">a</eq> and <eq env="math">b</eq> are vectors, and <eq env="math">\lambda</eq> is a scalar).
+This means that we don’t need to worry about brackets, and can write something like <eq env="math">\lambda(a\otimes b)</eq>.</p>
+<p>We will also need the concept of the tensor product of two operators.
+If <eq env="math">A</eq> is an operator on <eq env="math">\mathcal{H}_{\mathcal{A}}</eq> and <eq env="math">B</eq> an operator on <eq env="math">\mathcal{H}_{\mathcal{B}}</eq>, then the tensor product operator <eq env="math">A\otimes B</eq> is an operator on <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}</eq> defined by its action on product vectors via
+<eq env="displaymath">
+  (A\otimes B)(|a\rangle\otimes|b\rangle) = (A|a\rangle)\otimes (B|b\rangle)
+</eq>
+and with its action on all other vectors determined by linearity:
+<eq env="displaymath">
+  A\otimes B \left( \sum_{ij} c_{ij}|a_i\rangle\otimes|b_j\rangle \right)
+  = \sum_{ij}c_{ij} A|a_i\rangle\otimes B|b_j\rangle.
+</eq></p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="70">
+<li id="fn70"><p>If the bases <eq env="math">\{|a_i\rangle\}</eq> and <eq env="math">\{|b_j\rangle\}</eq> are orthonormal then so too is the tensor product basis <eq env="math">\{|a_i\rangle\otimes|b_j\rangle\}</eq>.<a href="5.3-quantum-theory-formally-continued.html#fnref70" class="footnote-back">↩︎</a></p></li>
+<li id="fn71"><p><eq env="math">({\mathcal{H}}_a \otimes {\mathcal{H}}_b)\otimes {\mathcal{H}}_c = {\mathcal{H}}_a \otimes ({\mathcal{H}}_b\otimes {\mathcal{H}}_c)</eq>.<a href="5.3-quantum-theory-formally-continued.html#fnref71" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +432,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5.2-one-two-many.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5.4-back-to-qubits.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +472,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/05-entanglement.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

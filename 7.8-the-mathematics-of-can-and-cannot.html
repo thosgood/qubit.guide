@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>7.8 The mathematics of “can” and “cannot” | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="7.8 The mathematics of “can” and “cannot” | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="7.8 The mathematics of “can” and “cannot” | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="7.7-state-channel-duality.html"/>
+<link rel="next" href="7.9-kraus-operators-revisited.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,78 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="the-mathematics-of-can-and-cannot" class="section level2">
+<h2><span class="header-section-number">7.8</span> The mathematics of “can” and “cannot”</h2>
+<p>So what is state-channel duality good for?
+To start with, it can be used to asses whether or not a given map <eq env="math">\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')</eq> can actually be implemented, i.e. if it is a physically realisable CPTP map.
+Indeed, all we have to do is to check if the corresponding Choi matrix is a density matrix.
+Let’s look at a simple example.</p>
+<p>Consider the map
+<eq env="displaymath">
+  \mathcal{E}\colon |i\rangle\langle j|
+  \longmapsto p|j\rangle\langle i|+(1-p)\delta_{ij} \frac{1}{2}|i\rangle\langle j|
+</eq>
+where <eq env="math">0\leqslant p\leqslant 1</eq> is some fixed parameter.
+This map acts on a density operator <eq env="math">\rho</eq> via
+<eq env="displaymath">
+  \rho
+  \longmapsto \rho'
+  = p\rho^T +(1-p) \frac{1}{2}\mathbf{1}
+</eq>
+where <eq env="math">\rho^T</eq> is the transpose of <eq env="math">\rho</eq>.</p>
+<p>But is this map a quantum channel?
+That is, <em>does it represent a physical process that can be implemented in a lab</em>?</p>
+<p>The expression for <eq env="math">\mathcal{E}</eq>, i.e. the convex sum, can be interpreted as follows: take the input state <eq env="math">\rho</eq> and either (i) apply the transpose, or (ii) replace it with the maximally mixed state (with probabilities <eq env="math">p</eq> and <eq env="math">1-p</eq>, respectively).
+This is fine, except that the transpose operation is not completely positive, and, as such, <em>is not physically admissible</em> — it cannot be implemented.
+But does it mean that the map <eq env="math">\mathcal{E}</eq> itself cannot be implemented?
+Not necessarily!</p>
+<p>In fact, the answer depends on the value of <eq env="math">p</eq>.
+The case <eq env="math">p=0</eq> corresponds to just replacing the input with the maximally mixed state, which is something that can be easily implemented.
+However, as <eq env="math">p</eq> increases from <eq env="math">0</eq> to <eq env="math">1</eq>, at some critical point the map switches from <em>completely positive</em> to merely <em>positive</em>.
+In order to find this critical value of <eq env="math">p</eq>, we first calculate the <eq env="math">\mathcal{E} (|i\rangle\langle j|)</eq>, as follows:
+<eq env="displaymath">
+  \begin{aligned}
+    |0\rangle\langle 0|
+    &amp;= \begin{bmatrix}1&amp;0\\0&amp;0\end{bmatrix}
+    \longmapsto
+    \begin{bmatrix}\frac{1+p}{2}&amp;0\\0&amp;\frac{1-p}{2}\end{bmatrix}
+  \\|0\rangle\langle 1|
+    &amp;= \begin{bmatrix}0&amp;1\\0&amp;0\end{bmatrix}
+    \longmapsto
+    \begin{bmatrix}0&amp;0\\p&amp;0\end{bmatrix},
+  \\|1\rangle\langle 0|
+    &amp;= \begin{bmatrix}0&amp;0\\1&amp;0\end{bmatrix}
+    \longmapsto
+    \begin{bmatrix}0&amp;p\\0&amp;0\end{bmatrix}
+  \\|1\rangle\langle 1|
+    &amp;= \begin{bmatrix}0&amp;0\\0&amp;1\end{bmatrix}
+    \longmapsto
+    \begin{bmatrix}\frac{1-p}{2}&amp;0\\0&amp;\frac{1+p}{2}\end{bmatrix},
+  \end{aligned}
+</eq>
+We can then write down the Choi matrix:
+<eq env="displaymath">
+  \widetilde{\mathcal{E}}
+  = \frac12
+  \begin{bmatrix}
+    \mathcal{E}(|0\rangle\langle 0|)
+    &amp; \mathcal{E}(|0\rangle\langle 1|)
+  \\\mathcal{E}(|1\rangle\langle 0|)
+    &amp; \mathcal{E}(|1\rangle\langle 1|)
+  \end{bmatrix}
+  = \frac{1}{2}
+  \left[
+    \begin{array}{cc|cc}
+    \frac{1+p}{2} &amp; 0 &amp; 0 &amp; 0
+  \\0 &amp; \frac{1-p}{2} &amp; p &amp; 0
+  \\\hline
+    0 &amp; p &amp; \frac{1-p}{2} &amp; 0
+  \\0 &amp; 0 &amp; 0 &amp; \frac{1+p}{2}
+   \end{array}
+  \right]
+</eq>
+which lets us apply state-channel duality: <em><eq env="math">\mathcal{E}</eq> is completely positive (and hence physically realisable) if and only if <eq env="math">\widetilde{\mathcal{E}}\geqslant 0</eq></em>;
+the latter is true only when <eq env="math">p\leqslant\frac13</eq> (note that the eigenvalues of <eq env="math">\widetilde{\mathcal{E}}</eq> are <eq env="math">\frac{1}{4}(1+p)</eq> and <eq env="math">\frac{1}{4}(1-3p)</eq>).</p>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +446,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="7.7-state-channel-duality.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="7.9-kraus-operators-revisited.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +486,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/07-CP-maps.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

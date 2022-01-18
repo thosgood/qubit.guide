@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>2.7 Pauli operators | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="2.7 Pauli operators | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="2.7 Pauli operators | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="2.6-phase-gates-galore.html"/>
+<link rel="next" href="2.8-from-bit-flips-to-phase-flips-and-back-again.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,59 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="pauli-operators" class="section level2">
+<h2><span class="header-section-number">2.7</span> Pauli operators</h2>
+<p><lite-youtube videoid="WN7sJpsX_G0" playlabel="Play: Pauli gates, Clifford gates, and the T-gate"></lite-youtube></p>
+<p>Adding to our collection of common single-qubit gates, we now look at the three <strong>Pauli operators</strong><a href="#fn36" class="footnote-ref" id="fnref36"><sup>36</sup></a> <eq env="math">\sigma_x</eq>, <eq env="math">\sigma_y</eq>, and <eq env="math">\sigma_z</eq>, also denoted by <eq env="math">X</eq>, <eq env="math">Y</eq>, and <eq env="math">Z</eq> (respectively).
+These three operators, combined with the identity, satisfy a lot of nice formal properties, which we shall examine briefly here, and then return to in more detail in <a href="3-chapter3.html#chapter3">Chapter 3</a>.</p>
+<div class="idea">
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Identity</strong></td>
+<td><eq env="math">\mathbf{1}= \begin{bmatrix}1&amp;0\\0&amp;1\end{bmatrix}</eq></td>
+<td align="left"><eq env="math">\begin{array}{lcr}|0\rangle&amp;\longmapsto&amp;|0\rangle\\|1\rangle&amp;\longmapsto&amp;|1\rangle\end{array}</eq></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Bit-flip</strong></td>
+<td><eq env="math">X = \begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}</eq></td>
+<td align="left"><eq env="math">\begin{array}{lcr}|0\rangle&amp;\longmapsto&amp;|1\rangle\\|1\rangle&amp;\longmapsto&amp;|0\rangle\end{array}</eq></td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Bit-phase-flip</strong></td>
+<td><eq env="math">Y = \begin{bmatrix}0&amp;-i\\i&amp;0\end{bmatrix}</eq></td>
+<td align="left"><eq env="math">\begin{array}{lcr}|0\rangle&amp;\longmapsto&amp;i|1\rangle\\|1\rangle&amp;\longmapsto&amp;-i|0\rangle\end{array}</eq></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Phase-flip</strong></td>
+<td><eq env="math">Z = \begin{bmatrix}1&amp;0\\0&amp;-1\end{bmatrix}</eq></td>
+<td align="left"><eq env="math">\begin{array}{lcr}|0\rangle&amp;\longmapsto&amp;|0\rangle\\|1\rangle&amp;\longmapsto&amp;-|1\rangle\end{array}</eq></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The identity is just a quantum wire, and we have already seen the <eq env="math">X</eq> and <eq env="math">Z</eq> gates in <a href="2.6-phase-gates-galore.html#phase-gates-galore">Phase gates galore</a>, as the bit-flip and phase-flip (respectively).
+Note that, of these latter two, only the <eq env="math">X</eq> gate has a classical analogue (as the logical <eq env="math">\texttt{NOT}</eq> operator).
+The remaining gate, the <eq env="math">Y</eq> operator, describes the combined effect of both the bit- and the phase-flip: <eq env="math">ZX=iY</eq>.</p>
+<p>In fact, this is just one of the equations that the Pauli matrices satisfy.
+The Pauli matrices are unitary and Hermitian, they square to the identity, and they anti-commute.
+By this last point, we mean that
+<eq env="displaymath">
+  \begin{aligned}
+    XY+YX&amp;=0,
+  \\XZ+ZX&amp;=0,
+  \\YZ+ZY&amp;=0.
+  \end{aligned}
+</eq>
+As already mentioned, they satisfy <eq env="math">ZX=iY</eq>, but also any cyclic permutation of this equation.</p>
+<p>These operators are also called <strong>sigma matrices</strong>, or <strong>Pauli spin matrices</strong>.
+They are so ubiquitous in quantum physics that they should certainly be memorised.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="36">
+<li id="fn36"><p>We use the standard basis <eq env="math">\{|0\rangle,|1\rangle\}</eq> most of the time, and so often refer to operators as matrices.<a href="2.7-pauli-operators.html#fnref36" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +427,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="2.6-phase-gates-galore.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="2.8-from-bit-flips-to-phase-flips-and-back-again.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +467,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/02-qubits.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

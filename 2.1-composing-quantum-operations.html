@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>2.1 Composing quantum operations | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="2.1 Composing quantum operations | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="2.1 Composing quantum operations | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="2-chapter2.html"/>
+<link rel="next" href="2.2-quantum-bits-called-qubits.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,80 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="composing-quantum-operations" class="section level2">
+<h2><span class="header-section-number">2.1</span> Composing quantum operations</h2>
+<p>In order to understand something in its full complexity it is always good to start with the simplest case.
+Let us take a closer look at quantum interference in the simplest possible computing machine: the one that has only two distinguishable configurations — two quantum states — which we label as <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>.
+We prepare the machine in some input state, usually <eq env="math">|0\rangle</eq>, and let it <strong>evolve</strong>: the machine undergoes a prescribed sequence of computational steps, each of which induces transitions between the two “computational states”, <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>.
+The machine then ends in the output state <eq env="math">|\psi\rangle=\alpha_0|0\rangle+\alpha_1|1\rangle</eq>, meaning the two outputs, <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>, are reached with probability amplitudes <eq env="math">\alpha_0</eq> and <eq env="math">\alpha_1</eq>, respectively.
+In the process of computation each computational step <eq env="math">U</eq> (also referred to as an <strong>operation</strong>) sends state <eq env="math">|k\rangle</eq> to state <eq env="math">|l\rangle</eq>, where <eq env="math">k,l=0,1</eq>, but only with some <strong>amplitude</strong> <eq env="math">U_{lk}</eq>.
+We write this as
+<eq env="displaymath">
+  |k\rangle \longmapsto \sum_l U_{lk} |l\rangle.
+</eq>
+(watch out for the order of the indices).</p>
+<p>Thus any computational step <eq env="math">U</eq> of this machine can be described by a matrix which tabulates all the transition amplitudes:
+<eq env="displaymath">
+  U =
+  \begin{bmatrix}
+    U_{00} &amp; U_{01}
+  \\U_{10} &amp; U_{11}
+  \end{bmatrix}.
+</eq>
+The matrix element <eq env="math">U_{lk}</eq> represents the amplitude of transition from state <eq env="math">|k\rangle</eq> to state <eq env="math">|l\rangle</eq> (again, watch the order of indices).
+To be clear, the entries in this matrix are not any random complex numbers: their moduli squared represent transition probabilities, which in turn implies that such matrices must be <strong>unitary</strong>.<a href="#fn28" class="footnote-ref" id="fnref28"><sup>28</sup></a></p>
+<p>We can also describe <eq env="math">U</eq> by drawing a diagram, which contains exactly the same information as the matrix representation, but just in a different form:</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-12-1.png" width="336" style="display: block; margin: auto;" /></p>
+<p>Now how can we find some quantum interference to study?
+Consider two computational steps, <eq env="math">U</eq> and <eq env="math">V</eq>.
+What is the amplitude that input <eq env="math">|k\rangle</eq> will generate output <eq env="math">|m\rangle</eq>?
+We have to check all computational paths leading from input <eq env="math">|k\rangle</eq> to output <eq env="math">|m\rangle</eq> and add the corresponding amplitudes.
+For example, as you can see in Figure <a href="2.1-composing-quantum-operations.html#fig:composition-of-two-computation-steps">2.1</a>, input <eq env="math">|0\rangle</eq> and output <eq env="math">|1\rangle</eq> are connected by the two computational paths: <eq env="math">|0\rangle\mapsto|0\rangle\mapsto|1\rangle</eq> (amplitude <eq env="math">V_{10}U_{00}</eq>) and <eq env="math">|0\rangle\mapsto|1\rangle\mapsto|1\rangle</eq> (amplitude <eq env="math">V_{11}U_{10}</eq>).
+Thus the total amplitude that input <eq env="math">|0\rangle</eq> gives output <eq env="math">|1\rangle</eq> is the sum <eq env="math">V_{10}U_{00}+V_{11}U_{10}</eq>, and when we take the modulus squared of this expression we will see the interference term.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:composition-of-two-computation-steps"></span>
+<img src="iqis-book_files/figure-html/composition-of-two-computation-steps-1.png" alt="The composition of two computational steps, U and V, with the possible paths from |0\rangle to |1\rangle highlighted." width="672" />
+<p class="caption">
+Figure 2.1: The composition of two computational steps, <eq env="math">U</eq> and <eq env="math">V</eq>, with the possible paths from <eq env="math">|0\rangle</eq> to <eq env="math">|1\rangle</eq> highlighted.
+</p>
+</div>
+<p>In general, given <eq env="math">U</eq> and <eq env="math">V</eq>
+<eq env="displaymath">
+  \begin{aligned}
+    |k\rangle
+    &amp;\longmapsto
+    \sum_l U_{lk}|l\rangle
+  \\|l\rangle
+    &amp;\longmapsto
+    \sum_m V_{ml}|m\rangle
+  \end{aligned}
+</eq>
+we can compose the two operations: we first apply <eq env="math">U</eq>, and then <eq env="math">V</eq>, to obtain
+<eq env="displaymath">
+  \begin{aligned}
+    |k\rangle
+    &amp;\longmapsto
+    \sum_l U_{lk} \left(
+      \sum_m V_{ml}|m\rangle
+    \right)
+  \\&amp;=
+    \sum_m \left(
+      \sum_l V_{ml}U_{lk}
+    \right) |m\rangle
+  \\&amp;=
+    \sum_m (VU)_{mk} |m\rangle.
+  \end{aligned}
+</eq></p>
+<p>If you want to hone your quantum intuition think about it the following way.
+The amplitude that input <eq env="math">|k\rangle</eq> evolves to <eq env="math">|m\rangle</eq> via a specific intermediate state <eq env="math">|l\rangle</eq> is given by <eq env="math">V_{ml}U_{lk}</eq> (evolutions are independent so the amplitudes are multiplied).
+This done, we have to sum over all possible values of <eq env="math">l</eq> (the transition can occur in several mutually exclusive ways so the amplitudes are added) to obtain <eq env="math">\sum_l V_{ml}U_{lk}</eq>.
+Thus the matrix multiplication <eq env="math">VU</eq> (watch the order of matrices) in one swoop takes care of multiplication and addition of amplitudes corresponding to different computational paths.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="28">
+<li id="fn28"><p>Recall that matrix <eq env="math">U</eq> is called <strong>unitary</strong> if <eq env="displaymath">U^\dagger U = UU^\dagger = \mathbf{1}</eq> where the <strong>adjoint</strong> or <strong>Hermitian conjugate</strong> <eq env="math">U^\dagger</eq> of any matrix <eq env="math">U</eq> with complex entries <eq env="math">U_{ij}</eq> is obtained by taking the complex conjugate of every element in the matrix and then interchanging rows and columns (<eq env="math">U^\dagger_{kl}= U^\star_{lk}</eq>).<a href="2.1-composing-quantum-operations.html#fnref28" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +448,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="2-chapter2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="2.2-quantum-bits-called-qubits.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +488,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/02-qubits.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

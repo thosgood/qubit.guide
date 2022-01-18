@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>7.10 Correctable channels | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="7.10 Correctable channels | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="7.10 Correctable channels | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="7.9-kraus-operators-revisited.html"/>
+<link rel="next" href="7.11-appendices-1.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,102 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="correctable-channels" class="section level2">
+<h2><span class="header-section-number">7.10</span> Correctable channels</h2>
+<p>Another question that we might ask ourselves is if we can <em>reverse the action of a quantum channel, recovering the input state</em>.
+Let us first make precise what we mean by this.</p>
+<div class="idea">
+<p>We say that a quantum channel <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')</eq> is <strong>correctable</strong> if there exists a <strong>recovery channel</strong> <eq env="math">\mathcal{R}\colon\mathcal{B}(\mathcal{H}')\to\mathcal{B}(\mathcal{H})</eq> such that the composition <eq env="math">\mathcal{R}\circ\mathcal{E}</eq> is the identity channel.</p>
+</div>
+<p>The action of any unitary operation <eq env="math">U</eq> can, of course, be reversed by simply applying the inverse operation, <eq env="math">U^\dagger</eq>;
+the same holds for any isometry <eq env="math">V</eq>, because <eq env="math">V^\dagger V=\mathbf{1}</eq>.
+For example, the process of first adding an auxiliary system in a fixed state and then applying a unitary <eq env="math">U</eq> to the composite system can be reversed by first applying <eq env="math">U^\dagger</eq> to the composed system and then discarding the auxiliary system.
+So how about a statistical mixture of unitaries?
+Or, in general, a statistical mixture of isometries?</p>
+<p>If all we know is that an isometry <eq env="math">V_i</eq> is chosen randomly according to some distribution <eq env="math">\{p_i\}_{i\in I}</eq>, then the best we can do in an attempt to reverse the random process is to apply <eq env="math">V_k^\dagger</eq>, where <eq env="math">k\in I</eq> is such that <eq env="math">p_k</eq> is the largest of all the <eq env="math">p_i</eq>.
+Clearly, this approach succeeds in reversing the action of the channel with probability <eq env="math">p_k</eq>.
+However, if there were a way to determine, post factum, which particular isometry was chosen, then, of course, we could perfectly reverse the action of the channel.</p>
+<p>Consider a channel <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')</eq> given by
+<eq env="displaymath">
+  \mathcal{E}\colon\rho
+  \longmapsto \rho'
+  =\sum_i p_i V_i\rho V^\dagger_i
+</eq>
+in which the isometries <eq env="math">V_i</eq> are mutually orthogonal (i.e. <eq env="math">V_i^\dagger V_j =\delta_{ij}\mathbf{1}</eq>).
+Let <eq env="math">\mathcal{H}'_i</eq> be the image of <eq env="math">\mathcal{H}</eq> under <eq env="math">V_i</eq>;
+these images are subspaces in <eq env="math">\mathcal{H}'</eq>, and they are mutually orthogonal. Indeed, for any vector <eq env="math">|v\rangle</eq> in <eq env="math">\mathcal{H}</eq>, the vectors <eq env="math">V_i|v\rangle\in \mathcal{H}'_i</eq> and <eq env="math">V_j|v\rangle\in \mathcal{H}'_j</eq> are orthogonal:
+<eq env="displaymath">
+  \langle v|V_i^\dagger V_j|v\rangle
+  = \delta_{ij} \langle v|\mathbf{1}|v\rangle
+  = \delta_{ij}.
+</eq>
+We can now perform a measurement defined by the projections onto these mutually orthogonal subspaces <eq env="math">\mathcal{H}'_i</eq>, and find out which particular isometry was chosen (and then perfectly reverse its action by applying the inverse isometry).</p>
+<p>Note that, for a measurement on <eq env="math">\mathcal{H}'</eq> to be well defined, we need to decompose <eq env="math">\mathcal{H}'</eq> into mutually orthogonal subspaces.
+That is, the direct sum <eq env="math">\bigoplus_i\mathcal{H}'_i</eq> might not “fill up” the space <eq env="math">\mathcal{H}'</eq>, so we might need to pad out with whatever is “left over” in order to obtain the decomposition of the whole <eq env="math">\mathcal{H}'</eq> into mutually orthogonal subspaces.
+That extra subspace with which we pad out the direct sum is <em>not</em> in the image of the channel: we will never see the result of the measurement corresponding to the projection onto that subspace.
+However, we <em>need</em> to add it in order to obtain a complete decomposition of <eq env="math">\mathcal{H}'</eq>.
+Here the Kraus operators <eq env="math">E_i=\sqrt{p_i}V_i</eq> satisfy
+<eq env="displaymath">
+  E^\dagger_i E_j
+  = \sqrt{p_i p_j}\delta_{ij}\mathbf{1}
+</eq>
+but remember that <em>the operator-sum decomposition is not unique</em>, and so the same channel can be described by another, unitarily related, set of Kraus operators, <eq env="math">K_i = \sum_k U_{ik}E_k</eq>, which then satisfy
+<eq env="displaymath">
+  \begin{aligned}
+    K_i^\dagger K_j
+    &amp;= \sum_{kl} U^\star_{ik} E^\dagger_k E_l U_{jl}
+  \\&amp;= \sum_{kl} U^\star_{ik} (\sqrt{p_k p_l}\delta_{kl}\mathbf{1}) U_{jl}
+  \\&amp;= \sum_{k} U^\star_{ik} p_k U_{jk}\mathbf{1}
+  \\&amp;= \sigma_{ij}\mathbf{1}
+  \end{aligned}
+</eq>
+where <eq env="math">\sigma_{ij}</eq> are elements of a density matrix with eigenvalues <eq env="math">p_i</eq>.
+If this condition is satisfied, then the action of the channel can be reversed, and the original state <eq env="math">\rho</eq> can be recovered.</p>
+<p>Conversely, if the channel <eq env="math">\mathcal{E}</eq> is correctable, then the above condition above holds.
+Indeed, in terms of Kraus representations for <eq env="math">\mathcal{E}</eq> and <eq env="math">\mathcal{R}</eq>, we require that
+<eq env="displaymath">
+  \mathcal{R}\circ\mathcal{E}(\rho)
+  = \sum_{lj} R_l E_j \rho R^\dagger_l E^\dagger_j
+  = \rho
+</eq>
+for any state <eq env="math">\rho</eq>.
+This means that identity channel <eq env="math">\mathcal{R}\circ\mathcal{E}=\mathbf{1}</eq> must have all the Kraus operators proportional to the identity:
+<eq env="displaymath">
+  R_lE_j=\lambda_{lj}\mathbf{1}
+</eq>
+for some complex numbers <eq env="math">\lambda_{lj}</eq> such that<a href="#fn119" class="footnote-ref" id="fnref119"><sup>119</sup></a> <eq env="math">\sum_{lj} |\lambda_{lj}|^2=1</eq>.
+Then we can write
+<eq env="displaymath">
+  \begin{aligned}
+    \sum_l E_i^\dagger R_l^\dagger R_l E_j
+    &amp;= E_i^\dagger E_j
+  \\&amp;=\sum_l \lambda^*_{il}\lambda_{jl}\mathbf{1}
+  \\&amp;=\sigma_{ij}\mathbf{1}
+  \end{aligned}
+</eq>
+where <eq env="math">\sigma_{ij} = \sum_l \lambda^*_{il}\lambda_{jl}</eq>.
+Clearly, <eq env="math">\sigma_{ij}</eq> is a positive matrix such that <eq env="math">\operatorname{tr}(\sigma_{ij})=1</eq> and <eq env="math">\sum_i\sigma_{ii}=\sum_{il}|\lambda_{il}|^2=1</eq>.
+So the condition <eq env="math">E_i^\dagger E_j = \sigma_{ij}\mathbf{1}</eq> is both necessary <em>and</em> sufficient in order for the channel <eq env="math">\mathcal{E}</eq> to be correctable.
+In summary:</p>
+<div class="idea">
+<p>Let <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')</eq> be a quantum channel with Kraus decomposition <eq env="math">\mathcal{E}(\rho)=\sum_i E_i\rho E^\dagger_i</eq>.
+Then the following statements are equivalent:</p>
+<ol style="list-style-type: lower-roman">
+<li><eq env="math">\mathcal{E}</eq> is correctable;</li>
+<li><eq env="math">E_i^\dagger E_j = \sigma_{ij}\mathbf{1}</eq> for some density matrix <eq env="math">\sigma_{ij}</eq>;</li>
+<li>there exists a set of orthogonal isometries <eq env="math">\{V_i\}</eq> and a probability distribution <eq env="math">\{p_i\}</eq> such that
+<eq env="displaymath">
+    \mathcal{E} (\rho) = \sum_i p_i V_i\rho V^\dagger_i
+    </eq>
+for every state <eq env="math">\rho</eq>.</li>
+</ol>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="119">
+<li id="fn119"><p>This is the normalisation condition for the Kraus operators <eq env="math">R_lE_j</eq><a href="7.10-correctable-channels.html#fnref119" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +470,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="7.9-kraus-operators-revisited.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="7.11-appendices-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +510,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/07-CP-maps.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

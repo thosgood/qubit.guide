@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>6.5 Subsystems of entangled systems | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="6.5 Subsystems of entangled systems | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="6.5 Subsystems of entangled systems | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="6.4-the-bloch-ball.html"/>
+<link rel="next" href="6.6-partial-trace-revisited.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,72 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="subsystems-of-entangled-systems" class="section level2">
+<h2><span class="header-section-number">6.5</span> Subsystems of entangled systems</h2>
+<p><lite-youtube videoid="L5HXMlpWAE8" playlabel="Play: Partial trace"></lite-youtube></p>
+<p>We have already trumpeted that one of the most important features of the density operator formalism is its ability to describe the quantum state of a subsystem of a composite system.
+Let me now show you how it works.</p>
+<p>Given a quantum state of the composite system <eq env="math">\mathcal{AB}</eq>, described by some density operator <eq env="math">\rho^{\mathcal{AB}}</eq>, we obtain reduced density operators <eq env="math">\rho^{\mathcal{A}}</eq> and <eq env="math">\rho^{\mathcal{B}}</eq> of subsystems <eq env="math">\mathcal{A}</eq> and <eq env="math">\mathcal{B}</eq>, respectively, by the partial trace:
+<eq env="displaymath">
+  \begin{aligned}
+    \rho^{\mathcal{AB}}
+    &amp;\longmapsto
+    \underbrace{\rho^\mathcal{A}=\operatorname{tr}_{\mathcal{B}}\rho^{\mathcal{AB}}}_{\mathrm{partial\,trace\,over}\,\mathcal{B}}\qquad
+  \\\rho^{\mathcal{AB}}
+    &amp;\longmapsto
+    \underbrace{\rho^\mathcal{B}=\operatorname{tr}_{\mathcal{A}}\rho^{\mathcal{AB}}}_{\mathrm{partial\,trace\,over}\,\mathcal{A}}
+  \end{aligned}
+</eq>
+We define the partial trace over <eq env="math">\mathcal{B}</eq>, or <eq env="math">\mathcal{A}</eq>, first on a tensor product of two operators <eq env="math">A\otimes B</eq> as
+<eq env="displaymath">
+  \begin{aligned}
+    \operatorname{tr}_{\mathcal{B}} (A\otimes B)
+    &amp;= A(\operatorname{tr}B)
+  \\\operatorname{tr}_{\mathcal{A}} (A\otimes B)
+    &amp;= (\operatorname{tr}A) B,
+  \end{aligned}
+</eq>
+and then extend to any operator on <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}</eq> by linearity.</p>
+<p>Here is a simple example.
+Suppose a composite system <eq env="math">\mathcal{AB}</eq> is in a pure entangled state, which we can always write as
+<eq env="displaymath">
+  |\psi_{\mathcal{AB}}\rangle
+  = \sum_{i} c_{i} |a_i\rangle\otimes|b_i\rangle,
+</eq>
+where <eq env="math">|a_i\rangle</eq> and <eq env="math">|b_j\rangle</eq> are two orthonormal bases (e.g. the Schmidt bases), and where <eq env="math">\sum_i |c_i|^2 = 1</eq> (due to the normalisation).
+The corresponding density operator of the composite system is the projector <eq env="math">\rho^{\mathcal{AB}}= |\psi_{\mathcal{AB}}\rangle\langle\psi_{\mathcal{AB}}|</eq>, which we can write as
+<eq env="displaymath">
+  \rho^{\mathcal{AB}}
+  = |\psi_{\mathcal{AB}}\rangle\langle\psi_{\mathcal{AB}}|
+  = \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j| \otimes |b_i\rangle\langle b_j|
+</eq>
+Let us compute the reduced density operator <eq env="math">\rho^{\mathcal{A}}</eq> by taking the partial trace over <eq env="math">\mathcal{B}</eq>:
+<eq env="displaymath">
+  \begin{aligned}
+    \rho^\mathcal{A}
+    &amp;= \operatorname{tr}_{\mathcal{B}}\rho^{\mathcal{AB}}
+  \\&amp;= \operatorname{tr}_{\mathcal{B}} |\psi_{\mathcal{AB}}\rangle\langle\psi_{\mathcal{AB}}|
+  \\&amp;= \operatorname{tr}_{\mathcal{B}} \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j| \otimes |b_i\rangle\langle b_j|
+  \\&amp;= \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j|(\operatorname{tr}|b_i\rangle\langle b_j|)
+  \\&amp;= \sum_{ij} c_i c^\star_j |a_i\rangle\langle a_j| \underbrace{\langle b_i|b_j\rangle}_{\delta_{ij}}
+  \\&amp; = \sum_{i} |c_i|^2 |a_i\rangle\langle a_i|
+  \end{aligned}
+</eq>
+where we have used the fact that <eq env="math">\operatorname{tr}|b_i\rangle\langle b_j| = \langle b_j|b_i\rangle=\delta_{ij}</eq>.
+In the <eq env="math">|a_i\rangle</eq> basis, the reduced density matrix <eq env="math">\rho^{\mathcal{A}}</eq> is diagonal, with entries <eq env="math">p_i=|c_i|^2</eq>.
+We can also take the partial trace over <eq env="math">\mathcal{A}</eq> and obtain <eq env="math">\rho^\mathcal{B} = \sum_{i} |c_i|^2 |b_i\rangle\langle b_i|</eq>.
+In particular, for the maximally entangled states in the <eq env="math">(d\times d)</eq>-dimensional Hilbert spaces <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}</eq>,
+<eq env="displaymath">
+  |\psi_{\mathcal{AB}}\rangle
+  = \frac{1}{\sqrt{d}} \sum_{i}^d |a_i\rangle|b_i\rangle,
+</eq>
+and the reduced density operators, <eq env="math">\rho^\mathcal{A}</eq> and <eq env="math">\rho^\mathcal{B}</eq>, are the maximally mixed states: <eq env="math">\rho^\mathcal{A}=\rho^\mathcal{B}=\frac{1}{d}\mathbf{1}</eq>.
+It follows that the quantum states of individual qubits in any of the Bell states are maximally mixed: their density matrix is <eq env="math">\frac12\mathbf{1}</eq>.
+A state such as
+<eq env="displaymath">
+  \frac{1}{\sqrt 2} \left( |00\rangle + |11\rangle \right)
+</eq>
+guarantees perfect correlations when each qubit is measured in the standard basis: the two equally likely outcomes are (<eq env="math">0</eq> and <eq env="math">0</eq>) or (<eq env="math">1</eq> and <eq env="math">1</eq>), but any single qubit outcome, be it <eq env="math">0</eq> or <eq env="math">1</eq> or anything else, is completely random.</p>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +440,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="6.4-the-bloch-ball.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="6.6-partial-trace-revisited.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +480,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/06-density-matrices.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

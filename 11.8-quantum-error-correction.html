@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>11.8 Quantum error correction | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="11.8 Quantum error correction | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="11.8 Quantum error correction | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="11.7-repetition-codes.html"/>
+<link rel="next" href="11.9-turning-bit-flips-into-phase-flips.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,26 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="quantum-error-correction" class="section level2">
+<h2><span class="header-section-number">11.8</span> Quantum error correction</h2>
+<p>In order to protect a qubit against bit-flips (incoherent <eq env="math">X</eq> rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
+We take a qubit in some unknown pure state <eq env="math">\alpha|0\rangle + \beta|1\rangle</eq>, introduce two auxiliary qubits, and encode it into three qubits as</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-74-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Suppose that at most one qubit is then flipped (say, the second one).
+The encoded state then becomes <eq env="math">\alpha|010\rangle + \beta|101\rangle</eq>.
+Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
+Instead we introduce another two additional qubits, both in state <eq env="math">|0\rangle</eq>, and apply the following network:</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-75-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>We measure the two auxiliary qubits, also known as <strong>ancilla bits</strong>, and the result of the measurement, known as the <strong>error syndrome</strong>, tells us how to reset the three qubits of the code.
+The theory behind this network runs as follows.</p>
+<p>If qubits one and two (counting from the top) are the same, then the first ancilla is in the <eq env="math">|0\rangle</eq> state.
+Similarly, if qubits two and three are the same, then the second ancilla is in the <eq env="math">|0\rangle</eq> state.
+However, if they are different, then the corresponding ancilla is in the <eq env="math">|1\rangle</eq> state.
+Hence, the four possible error syndromes — <eq env="math">|00\rangle</eq>, <eq env="math">|01\rangle</eq>, <eq env="math">|10\rangle</eq>, and <eq env="math">|11\rangle</eq> — each indicate a different possibility: no errors, an error in the third, first, or second qubits (respectively).
+In our example, we would measure <eq env="math">|11\rangle</eq>, revealing that both qubits 1 and 2, and qubits 2 and 3, are different.
+Thus it is qubit 2 that has an error.
+Knowing the error, we can go back and fix it, simply by applying <eq env="math">X</eq> to qubit 2.
+The net result is the state <eq env="math">\alpha|000\rangle + \beta|111\rangle</eq>, which is then turned into <eq env="math">(\alpha|0\rangle + \beta|1\rangle)|0\rangle|0\rangle</eq> by running the mirror image of the encoding network.</p>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +394,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="11.7-repetition-codes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="11.9-turning-bit-flips-into-phase-flips.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +434,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/11-decoherence.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

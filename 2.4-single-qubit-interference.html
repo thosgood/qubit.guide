@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>2.4 Single qubit interference | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="2.4 Single qubit interference | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="2.4 Single qubit interference | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="2.3-quantum-gates-and-circuits.html"/>
+<link rel="next" href="2.5-the-square-root-of-not.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,101 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="single-qubit-interference" class="section level2">
+<h2><span class="header-section-number">2.4</span> Single qubit interference</h2>
+<p><lite-youtube videoid="eDR-OZZu99M" playlabel="Play: Single qubit interference"></lite-youtube></p>
+<p>Let me now describe what is probably the most important sequence of operations performed on a single qubit, namely a generic <strong>single qubit interference</strong>.
+It is typically constructed as a sequence of three elementary operations:</p>
+<ol style="list-style-type: decimal">
+<li>the Hadamard gate</li>
+<li>a phase-shift gate</li>
+<li>the Hadamard gate again.</li>
+</ol>
+<p>We represent it graphically as</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-17-1.png" width="384" style="display: block; margin: auto;" /></p>
+<div class="idea">
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Hadamard</strong></td>
+<td align="left"><eq env="math">H = \frac{1}{\sqrt2}\begin{bmatrix}1&amp;1\\1&amp;-1\end{bmatrix}</eq></td>
+<td><eq env="math">\begin{array}{lcr}|0\rangle&amp;\longmapsto&amp;\frac1{\sqrt{2}}(|0\rangle+|1\rangle)\\|1\rangle&amp;\longmapsto&amp;\frac1{\sqrt{2}}(|0\rangle-|1\rangle)\end{array}</eq></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Phase-shift</strong></td>
+<td align="left"><eq env="math">P_\varphi = \begin{bmatrix}1&amp;0\\0&amp;e^{i\varphi}\end{bmatrix}</eq></td>
+<td><eq env="math">\begin{array}{lcr}|0\rangle&amp;\longmapsto&amp;|0\rangle\\|1\rangle&amp;\longmapsto&amp;e^{i\varphi}|1\rangle\end{array}</eq></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>You will see it over and over again, for it is quantum interference that gives quantum computation additional capabilities.<a href="#fn30" class="footnote-ref" id="fnref30"><sup>30</sup></a></p>
+<div class="idea">
+<p>Something that many explanations of quantum computing say is the following: “quantum computers are quicker because they evaluate all possible solutions at once, in parallel”.
+<strong>This is not accurate.</strong></p>
+<p>Firstly, quantum computers are not necessarily “quicker” than classical computers, but can simply implement quantum algorithms, some of which <em>are</em> quicker than their classical counterparts.
+Secondly, the idea that they “just do all the possible computations at once” is false — instead, they rely on thoughtfully using interference (which can be constructive or destructive) to modify the probabilities of specific outcomes.</p>
+<p><em>The power of quantum computing comes from quantum interference.</em></p>
+</div>
+<p>The product of the three matrices <eq env="math">HP_\varphi H</eq> describes the action of the whole circuit: it gives the transition amplitudes between states <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq> at the input and the output as
+<eq env="displaymath">
+  e^{i\frac{\varphi}{2}}
+  \begin{bmatrix}
+    \cos\varphi/2 &amp; -i\sin\varphi/2
+  \\-i\sin\varphi/2 &amp; \cos\varphi/2
+  \end{bmatrix}
+  =
+  \frac{1}{\sqrt 2}
+  \begin{bmatrix}
+    1 &amp; 1
+  \\1 &amp; -1
+  \end{bmatrix}
+  \begin{bmatrix}
+    1 &amp; 0
+  \\0 &amp; e^{i\varphi}
+  \end{bmatrix}
+  \frac{1}{\sqrt 2}
+  \begin{bmatrix}
+    1 &amp; 1
+  \\1 &amp; -1
+  \end{bmatrix}
+</eq></p>
+<p>Given that our input state is almost always <eq env="math">|0\rangle</eq>, it is sometimes much easier and more instructive to step through the execution of this circuit and follow the evolving state.
+The interference circuit effects the following sequence of transformations:<a href="#fn31" class="footnote-ref" id="fnref31"><sup>31</sup></a>
+<eq env="displaymath">
+  \begin{aligned}
+    |0\rangle
+    &amp;\overset{H}{\longmapsto}
+    \frac{1}{\sqrt2} \left(
+      |0\rangle+|1\rangle
+    \right)
+  \\&amp;\overset{P_\phi}{\longmapsto}
+    \frac{1}{\sqrt2} \left(
+      |0\rangle+e^{i\phi}|1\rangle
+    \right)
+  \\&amp;\overset{H}{\longmapsto}
+    \cos\frac{\phi}{2}|0\rangle - i\sin\frac{\phi}{2}|1\rangle.
+  \end{aligned}
+</eq>
+The first Hadamard gate prepares an equally weighted superposition of <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq> and the second one closes the interference by bringing the interfering paths together.
+The phase shift <eq env="math">\varphi</eq> effectively controls the evolution and determines the output.
+The probabilities of finding the qubit in state <eq env="math">|0\rangle</eq> or <eq env="math">|1\rangle</eq> at the output are, respectively,
+<eq env="displaymath">
+  \begin{aligned}
+    \Pr(0) &amp;= \cos^2\frac{\phi}{2}
+  \\\Pr(1) &amp;= \sin^2\frac{\phi}{2}.
+  \end{aligned}
+</eq>
+This simple quantum process contains, in a nutshell, the essential ingredients of quantum computation.
+This sequence (Hadamard–phase shift–Hadamard) will appear over and over again.
+It reflects a natural progression of quantum computation: first we prepare different computational paths, then we evaluate a function which effectively introduces phase shifts into different computational paths, then we bring the computational paths together at the output.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="30">
+<li id="fn30"><p>Indeed, you have already seen this sequence: recall our study of Ramsey interferometry, and note how this is essentially the same!<a href="2.4-single-qubit-interference.html#fnref30" class="footnote-back">↩︎</a></p></li>
+<li id="fn31"><p>We ignore the global phase factor <eq env="math">e^{i\frac{\varphi}{2}}</eq>.<a href="2.4-single-qubit-interference.html#fnref31" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +469,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="2.3-quantum-gates-and-circuits.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="2.5-the-square-root-of-not.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +509,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/02-qubits.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

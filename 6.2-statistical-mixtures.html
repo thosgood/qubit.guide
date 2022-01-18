@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>6.2 Statistical mixtures | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="6.2 Statistical mixtures | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="6.2 Statistical mixtures | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="6.1-definitions.html"/>
+<link rel="next" href="6.3-a-few-instructive-examples-and-some-less-instructive-remarks.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,96 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="statistical-mixtures" class="section level2">
+<h2><span class="header-section-number">6.2</span> Statistical mixtures</h2>
+<p><lite-youtube videoid="OMIN_H-n-Ac" playlabel="Play: Statistical mixtures of states"></lite-youtube></p>
+<p>Let us start with probability distributions over state vectors.
+Suppose Alice prepares a quantum system and hands it over to Bob who subsequently measures observable <eq env="math">M</eq>.
+If Alice’s preparation is described by a state vector <eq env="math">|\psi\rangle</eq>, then, quantum theory declares, the average value of any observable <eq env="math">M</eq> is given by <eq env="math">\langle\psi|M|\psi\rangle</eq>, which can be also written as<a href="#fn88" class="footnote-ref" id="fnref88"><sup>88</sup></a>
+<eq env="displaymath">
+  \langle M\rangle = \operatorname{tr}M|\psi\rangle\langle\psi|.
+</eq>
+This way of expressing the average value makes a clear separation between the contributions from the state preparation and from the choice of the measurement.
+We have two operators under the trace: one of them, <eq env="math">|\psi\rangle\langle\psi|</eq>, describes the state preparation, and the other one, <eq env="math">M</eq>, the measurement.
+Now, suppose Alice prepares the quantum system in one of the states <eq env="math">|\psi_1\rangle,\ldots,|\psi_m\rangle</eq>, choosing state <eq env="math">|\psi_i\rangle</eq> with probability <eq env="math">p_i</eq>, and hands the system to Bob without telling him which state was chosen.
+The possible states <eq env="math">|\psi_i\rangle</eq> are normalised but need not be orthogonal.
+We call this situation a <strong>mixture of the states</strong> <eq env="math">|\psi_i\rangle</eq>, or a <strong>mixed state</strong> for short.</p>
+<div class="idea">
+<p>Remember, a mixture of states is very different from a superposition of states: a superposition <em>always</em> yields a definite state vector, whereas a mixture does <em>not</em>, and so must be described by a density operator.</p>
+</div>
+<p>Bob knows the ensemble of states <eq env="math">|\psi_1\rangle,\ldots,|\psi_m\rangle</eq> and the corresponding probability distribution <eq env="math">p_1,\ldots,p_m</eq>, and can hence calculate <eq env="math">\langle M\rangle</eq> as<a href="#fn89" class="footnote-ref" id="fnref89"><sup>89</sup></a>
+<eq env="displaymath">
+  \begin{aligned}
+    \langle M\rangle
+    &amp;= \sum_i p_i\left( \operatorname{tr}M|\psi_i\rangle\langle\psi_i| \right)
+  \\&amp;= \operatorname{tr}M \underbrace{\left( \sum_i p_i|\psi_i\rangle\langle\psi_i| \right)}_{\rho}
+  \\&amp;=\operatorname{tr}M\rho.
+  \end{aligned}
+</eq>
+Again, we have two operators under the trace: <eq env="math">\rho=\sum_i p_i|\psi_i\rangle\langle\psi_i|</eq>, which pertains to the state preparation, and <eq env="math">M</eq>, which describes the measurement.
+We shall call the operator
+<eq env="displaymath">
+  \rho = \sum_i p_i |\psi_i\rangle\langle\psi_i|
+</eq>
+the <strong>density operator</strong>, since it has all the defining properties of the density operator (the convex sum of rank one projectors).
+It depends on the constituent states <eq env="math">|\psi_i\rangle</eq> and their probabilities, and it describes our ignorance about the state preparation.</p>
+<p>Once we have <eq env="math">\rho</eq> we can make statistical predictions: for any observable <eq env="math">M</eq> we have
+<eq env="displaymath">
+  \langle M\rangle = \operatorname{tr}M\rho.
+</eq>
+We see that the exact composition of the mixture does not enter this formula: for computing the statistics associated with any observable property of a system, all that matters is the density operator itself, and not its decomposition into the mixture of states.
+This is important because any given density operator, with the remarkable exception of a pure state, can arise from many different mixtures of pure states.
+Consider, for example, the following three scenarios:</p>
+<ol style="list-style-type: decimal">
+<li><p>Alice flips a fair coin.
+If the result is <eq env="math">\texttt{Heads}</eq> then she prepares the qubit in the state <eq env="math">|0\rangle</eq>, and if the result is <eq env="math">\texttt{Tails}</eq> then she prepares the qubit in the state <eq env="math">|1\rangle</eq>.
+She gives Bob the qubit without revealing the result of the coin-flip.
+Bob’s knowledge of the qubit is described by the density matrix
+<eq env="displaymath">
+   \frac12|0\rangle\langle 0| + \frac12|1\rangle\langle 1|
+   =
+   \begin{bmatrix}
+     \frac12 &amp; 0
+   \\0 &amp; \frac12
+   \end{bmatrix}.
+ </eq></p></li>
+<li><p>Suppose Alice flips a fair coin, as before, but now if the result is <eq env="math">\texttt{Heads}</eq> then she prepares the qubit in the state <eq env="math">|\bar{0}\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)</eq>, and if the result is <eq env="math">\texttt{Tails}</eq> then she prepares the qubit in the state <eq env="math">|\bar{1}\rangle = \frac{1}{\sqrt{2}}(|0\rangle - |1\rangle)</eq>.
+Bob’s knowledge of the qubit is now described by the density matrix
+<eq env="displaymath">
+   \begin{aligned}
+     \frac12|\bar{0}\rangle\langle\bar{0}| + \frac12|\bar{1}\rangle\langle\bar{1}|
+     &amp;=
+     \frac12
+     \begin{bmatrix}
+     \frac12 &amp; \frac12
+     \\\frac12 &amp; \frac12
+     \end{bmatrix}
+     +
+     \frac12
+     \begin{bmatrix}
+     \frac12 &amp; -\frac12
+     \\-\frac12 &amp; \frac12
+     \end{bmatrix}
+   \\&amp;=
+     \begin{bmatrix}
+     \frac12 &amp; 0
+     \\0 &amp; \frac12
+     \end{bmatrix}.
+   \end{aligned}
+ </eq></p></li>
+<li><p>Suppose Alice picks up any pair of orthogonal states of a qubit and then flips the coin to chose one of them.
+Any two orthonormal states of a qubit, <eq env="math">|u_1\rangle</eq>, <eq env="math">|u_2\rangle</eq>, form a complete basis, so the mixture <eq env="math">\frac12|u_1\rangle\langle u_1|+\frac12|u_2\rangle\langle u_2|</eq> gives <eq env="math">\frac12\mathbf{1}</eq>.</p></li>
+</ol>
+<p>As you can see, these three different preparations yield precisely the same density matrix and are hence statistically indistinguishable.
+In general, two different mixtures can be distinguished (in a statistical sense) if and only if they yield different density matrices.
+In fact, the optimal way of distinguishing quantum states with different density operators is still an active area of research.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="88">
+<li id="fn88"><p>If <eq env="math">M</eq> is one of the orthogonal projectors <eq env="math">P_k</eq> describing the measurement, then the average <eq env="math">\langle P_k\rangle</eq> is the probability of the outcome <eq env="math">k</eq> associated with this projector.<a href="6.2-statistical-mixtures.html#fnref88" class="footnote-back">↩︎</a></p></li>
+<li id="fn89"><p>A pure state can be seen as a special case of a mixed state, where all but one the probabilities <eq env="math">p_i</eq> equal zero.<a href="6.2-statistical-mixtures.html#fnref89" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +464,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="6.1-definitions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="6.3-a-few-instructive-examples-and-some-less-instructive-remarks.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +504,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/06-density-matrices.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

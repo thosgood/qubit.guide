@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>11.4 Quantum errors | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="11.4 Quantum errors | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="11.4 Quantum errors | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="11.3-evolution-of-density-operators-under-decoherence.html"/>
+<link rel="next" href="11.5-same-evolution-different-errors.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,53 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="quantum-errors" class="section level2">
+<h2><span class="header-section-number">11.4</span> Quantum errors</h2>
+<p>The most general qubit-environment interaction
+<eq env="displaymath">
+  \begin{aligned}
+    |0\rangle|e\rangle &amp;\longmapsto |0\rangle|e_{00}\rangle + |1\rangle|e_{01}\rangle,
+  \\|1\rangle|e\rangle &amp;\longmapsto |1\rangle|e_{10}\rangle + |0\rangle|e_{11}\rangle,
+  \end{aligned}
+</eq>
+where the states of the environment are neither normalised nor orthogonal, leads to decoherence
+<eq env="displaymath">
+  \begin{aligned}
+    \Big( \alpha|0\rangle + \beta|1\rangle \Big) |e\rangle \longmapsto
+    &amp; \Big( \alpha|0\rangle + \beta|1\rangle \Big) \frac{|e_{00}\rangle+|e_{11}\rangle}{2}
+  \\+&amp; \Big( \alpha|0\rangle - \beta|1\rangle \Big) \frac{|e_{00}\rangle-|e_{11}\rangle}{2}
+  \\+&amp; \Big( \alpha|1\rangle + \beta|0\rangle \Big) \frac{|e_{01}\rangle+|e_{10}\rangle}{2}
+  \\+&amp; \Big( \alpha|1\rangle - \beta|0\rangle \Big) \frac{|e_{01}\rangle-|e_{10}\rangle}{2}.
+  \end{aligned}
+</eq>
+We can also write this as
+<eq env="displaymath">
+|\psi\rangle|e\rangle \longmapsto  \mathbf{1}|\psi\rangle|e_{\mathbf{1}}\rangle + Z|\psi\rangle |e_Z\rangle +X|\psi\rangle |e_X\rangle + Y|\psi\rangle |e_Y\rangle.
+</eq>
+The intuition behind this expression is that four things can happen to the qubit:</p>
+<ol style="list-style-type: decimal">
+<li>nothing (<eq env="math">\mathbf{1}</eq>),</li>
+<li>phase-flip (<eq env="math">Z</eq>),</li>
+<li>bit-flip (<eq env="math">X</eq>), or</li>
+<li>both bit-flip and phase-flip (<eq env="math">Y</eq>).</li>
+</ol>
+<p>This is certainly the case when the states <eq env="math">|e_{\mathbf{1}}\rangle, |e_X\rangle, |e_Y\rangle</eq> and <eq env="math">|e_Z\rangle</eq> are mutually orthogonal, otherwise we cannot perfectly distinguish between the four alternatives.</p>
+<div class="idea">
+<p>What is important here is the discretisation of errors, and the fact that we can reduce quantum errors to <em>two types</em>: bit-flip errors <eq env="math">X</eq>, and phase-flip errors <eq env="math">Z</eq>.</p>
+</div>
+<p>In general, given <eq env="math">n</eq> qubits in state <eq env="math">|\psi\rangle</eq> and the environment in state <eq env="math">|e\rangle</eq> the joint evolution can be expanded as
+<eq env="displaymath">
+|\psi\rangle|e\rangle \longmapsto \sum_i E_i|\psi\rangle|e_i\rangle,
+</eq>
+where the <eq env="math">E_i</eq> are the <eq env="math">n</eq>-fold tensor products of the Pauli operators and the <eq env="math">|e_i\rangle</eq> are the corresponding states of the environment, which are not assumed to be normalised or mutually orthogonal.
+A typical operator <eq env="math">E_i</eq> acting on five qubits may look like this,
+<eq env="displaymath">
+  X\otimes Z \otimes \mathbf{1}\otimes \mathbf{1}\otimes Y
+  \equiv XZ\mathbf{1}\mathbf{1}Y.
+</eq>
+We can say that <eq env="math">E_i</eq> represents an error consisting of the bit (<eq env="math">X</eq>) error on the first qubit, phase (<eq env="math">Z</eq>) error on the second qubit and both bit and phase (<eq env="math">Y</eq>) error on the fifth qubit.
+Again, <em>this is not quite accurate if the corresponding states of the environment are not mutually orthogonal</em>, but it gives the right kind of intuition nonetheless.
+Here the index <eq env="math">i</eq> in <eq env="math">E_i</eq> ranges from <eq env="math">1</eq> to <eq env="math">4^5=1024</eq>, because there are <eq env="math">4^5</eq> different Pauli operators acting on <eq env="math">5</eq> qubits.</p>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +421,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="11.3-evolution-of-density-operators-under-decoherence.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="11.5-same-evolution-different-errors.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +461,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/11-decoherence.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

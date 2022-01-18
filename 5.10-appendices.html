@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>5.10 Appendices | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="5.10 Appendices | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="5.10 Appendices | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="5.9-remarks-and-exercises-4.html"/>
+<link rel="next" href="6-chapter6.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,237 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="appendices" class="section level2">
+<h2><span class="header-section-number">5.10</span> <em>Appendices</em></h2>
+<div id="tensor-products-in-components" class="section level3">
+<h3><span class="header-section-number">5.10.1</span> Tensor products in components</h3>
+<p>In our discussion of tensor products we have so far taken a rather abstract approach.
+There are, however, situations in which we have to put numbers in, and write tensor products of vectors and matrices explicitly.
+For example, here is the standard basis of two qubits written explicitly as column vectors:
+<eq env="displaymath">
+  \begin{aligned}
+    |00\rangle &amp;\equiv |0\rangle\otimes|0\rangle
+    = \begin{bmatrix}1\\0\end{bmatrix} \otimes \begin{bmatrix}1\\0\end{bmatrix}
+    = \begin{bmatrix}1\\0\\0\\0\end{bmatrix}
+  \\[1em]
+    |01\rangle &amp;\equiv |0\rangle\otimes|1\rangle
+    = \begin{bmatrix}1\\0\end{bmatrix} \otimes \begin{bmatrix}0\\1\end{bmatrix}
+    = \begin{bmatrix}0\\1\\0\\0\end{bmatrix}
+  \\[1em]
+    |10\rangle &amp;\equiv |1\rangle\otimes|0\rangle
+    = \begin{bmatrix}0\\1\end{bmatrix} \otimes \begin{bmatrix}1\\0\end{bmatrix}
+    = \begin{bmatrix}0\\0\\1\\0\end{bmatrix}
+  \\[1em]
+    |11\rangle &amp;\equiv |1\rangle\otimes|1\rangle
+    = \begin{bmatrix}0\\1\end{bmatrix} \otimes \begin{bmatrix}0\\1\end{bmatrix}
+    = \begin{bmatrix}0\\0\\0\\1\end{bmatrix}
+  \end{aligned}
+</eq>
+Given <eq env="math">|a\rangle = \alpha_0|0\rangle + \alpha_1|1\rangle</eq> and <eq env="math">|b\rangle = \beta_0|0\rangle +\beta_1|1\rangle</eq>, we write <eq env="math">|a\rangle\otimes|b\rangle</eq> as
+<eq env="displaymath">
+  \begin{aligned}
+    |a\rangle\otimes|b\rangle
+    &amp;= \begin{bmatrix}\alpha_0\\\alpha_1\end{bmatrix} \otimes \begin{bmatrix}\beta_0\\\beta_1\end{bmatrix}
+  \\&amp;= \begin{bmatrix}\alpha_0\begin{bmatrix}\beta_0\\\beta_1\end{bmatrix}\\\alpha_1\begin{bmatrix}\beta_0\\\beta_1\end{bmatrix}\end{bmatrix}
+  \\&amp;= \begin{bmatrix}\alpha_0\beta_0\\\alpha_0\beta_1\\\alpha_1\beta_0\\\alpha_1\beta_1\end{bmatrix}.
+  \end{aligned}
+</eq>
+Note that each element of the first vector multiplies the entire second vector.
+This is often the easiest way to get the tensor products in practice.</p>
+<p>The matrix elements of the tensor product operation <eq env="math">A\otimes B</eq></p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-50-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>are given by
+<eq env="displaymath">
+  (A\otimes B)_{ik,jl} = A_{ij}B_{kl}
+</eq>
+where <eq env="math">ik\in\{00,01,10,11\}</eq> labels the rows, and <eq env="math">kl\in\{00,01,10,11\}</eq> labels columns, when forming the block matrix:<a href="#fn83" class="footnote-ref" id="fnref83"><sup>83</sup></a>
+<eq env="displaymath">
+  \begin{aligned}
+    A\otimes B
+    &amp;= \begin{bmatrix}A_{00}&amp;A_{01}\\A_{10}&amp;A_{11}\end{bmatrix} \otimes \begin{bmatrix}B_{00}&amp;B_{01}\\B_{10}&amp;B_{11}\end{bmatrix}
+  \\&amp;= \begin{bmatrix}A_{00}B&amp;A_{01}B\\A_{10}B&amp;A_{11}B\end{bmatrix}
+  \\&amp;=
+  \left[
+  \,
+    \begin{array}{c|c}
+      \begin{matrix}A_{00}B_{00}&amp;A_{00}B_{01}\\A_{00}B_{10}&amp;A_{00}B_{11}\end{matrix}
+      &amp; \begin{matrix}A_{01}B_{00}&amp;A_{01}B_{01}\\A_{01}B_{10}&amp;A_{01}B_{11}\end{matrix}
+    \\\hline
+    \begin{matrix}A_{10}B_{00}&amp;A_{10}B_{01}\\A_{10}B_{10}&amp;A_{10}B_{11}\end{matrix}
+      &amp; \begin{matrix}A_{11}B_{00}&amp;A_{11}B_{01}\\A_{11}B_{10}&amp;A_{11}B_{11}\end{matrix}
+    \end{array}
+  \,
+  \right]
+  \end{aligned}
+</eq></p>
+<p>The tensor product induces a natural partition of matrices into blocks.
+Multiplication of block matrices works pretty much the same as regular matrix multiplication (assuming the dimensions of the sub-matrices are appropriate), except that the entries are now matrices rather than numbers, and so may not commute.</p>
+<ol style="list-style-type: decimal">
+<li><p>Evaluate the following matrix product of <eq env="math">(4\times 4)</eq> block matrices:
+<eq env="displaymath">
+   \left[
+   \,
+     \begin{array}{c|c}
+       \mathbf{1}&amp; X
+     \\\hline
+       Y &amp; Z
+     \end{array}
+   \,
+   \right]
+   \left[
+   \,
+     \begin{array}{c|c}
+       \mathbf{1}&amp; Y
+     \\\hline
+       X &amp; Z
+     \end{array}
+   \,
+   \right]
+ </eq>
+(where <eq env="math">X</eq>, <eq env="math">Y</eq>, and <eq env="math">Z</eq> are the Pauli matrices).</p></li>
+<li><p>Using the block matrix form of <eq env="math">A\otimes B</eq> expressed in terms of <eq env="math">A_{ij}</eq> and <eq env="math">B_{ij}</eq> (as described above), explain how the following operations are performed on the block matrix:</p>
+<ul>
+<li>transposition <eq env="math">(A\otimes B)^T</eq>; partial transpositions <eq env="math">A^T\otimes B</eq> and <eq env="math">A\otimes B^T</eq>;</li>
+<li>trace <eq env="math">\operatorname{tr}(A\otimes B)</eq>; partial traces <eq env="math">(\operatorname{tr}A )\otimes B</eq> and <eq env="math">A\otimes (\operatorname{tr}B)</eq>.</li>
+</ul>
+<p>Consider the Hadamard transform <eq env="math">H\otimes H\otimes H</eq> on three qubits, which is described by a <eq env="math">(2^3\times2^3)</eq> matrix.
+We know that
+<eq env="displaymath">
+   H = \frac{1}{\sqrt2}\begin{bmatrix}1&amp;1\\1&amp;-1\end{bmatrix}
+ </eq>
+and so we can calculate that
+<eq env="displaymath">
+   H\otimes H
+   = \frac12
+   \left[
+   \,
+     \begin{array}{c|c}
+       \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+       &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+     \\\hline
+       \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+       &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+     \end{array}
+   \,
+   \right]
+ </eq>
+and thus that
+<eq env="displaymath">
+   H\otimes H\otimes H
+   = \frac12
+   \left[
+   \,
+     \begin{array}{c|c|c|c}
+       \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+       &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+       &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+       &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+     \\\hline
+       \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+       &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+       &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+       &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+     \\\hline
+       \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+       &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+       &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+       &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+     \\\hline
+       \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+       &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+       &amp; \begin{matrix}-1&amp;-1\\-1&amp;1\end{matrix}
+       &amp; \begin{matrix}1&amp;1\\1&amp;-1\end{matrix}
+     \end{array}
+   \,
+   \right].
+ </eq>
+The rows and columns of <eq env="math">H\otimes H\otimes H</eq> are labelled by the triples <eq env="math">000,001,\ldots,111</eq>.
+Now, suppose we apply <eq env="math">H\otimes H\otimes H</eq> to the state <eq env="math">|110\rangle</eq>:</p></li>
+</ol>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-51-1.png" width="672" style="display: block; margin: auto;" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li><p>The output state is a superposition of all binary strings: <eq env="math">\sum_x c_x|x\rangle</eq>, with <eq env="math">x\in\{0,1\}^3</eq>.
+Where in the <eq env="math">H^{\otimes 3}</eq> matrix will you find the coefficients <eq env="math">c_x</eq>?</p>
+<p>Now, do you want to write down <eq env="math">H\otimes H\otimes H\otimes H</eq>?
+I don’t think so.
+This is an exponentially growing monster and you may soon run out of space if you actually do try to write it down.
+Instead, let’s spot the pattern of the entries <eq env="math">\pm1</eq> in these matrices.</p></li>
+<li><p>Consider the Hadamard gate matrix <eq env="math">H_{ab}</eq>, where <eq env="math">a,b=0,1</eq> are the labels for the rows and the columns.
+Observe that <eq env="math">H_{ab}=(-1)^{ab}/\sqrt{2}</eq>.
+(This may look like a fancy way of writing the entries of the Hadamard matrix but it will pay off in a moment).
+Using the fact that <eq env="math">(A\otimes B)_{ik,jl} = A_{ij}B_{kl}</eq>, or any other method, analyse the pattern of the <eq env="math">\pm1</eq> in the tensor product of Hadamard matrices.
+What is the entry <eq env="math">H^{\otimes 4}_{0101,1110}</eq>?</p></li>
+<li><p>For any two binary strings <eq env="math">a=(a_1,\ldots, a_n)</eq> and <eq env="math">b =(b_1,\ldots , b_n)</eq> of the same length we can define their “scalar” product as <eq env="math">a\cdot b = (a_1b_1\oplus \ldots \oplus a_n b_n)</eq>.
+Show that, up to the constant <eq env="math">(1/\sqrt{2})^n</eq>, the entry <eq env="math">H^{\otimes n}_{a,b}</eq>, for any <eq env="math">n</eq> and for any binary strings <eq env="math">a</eq> and <eq env="math">b</eq> of length <eq env="math">n</eq>, is <eq env="math">(-1)^{a\cdot b}</eq>.</p></li>
+<li><p>Show that <eq env="math">H^{\otimes n}</eq> acts as
+<eq env="displaymath">
+   |a\rangle
+   \longmapsto
+   \left(\frac{1}{\sqrt 2}\right)^n
+   \sum_{b\in\{0,1\}^n} (-1)^{a\cdot b}|b\rangle
+ </eq></p></li>
+<li><p>A quantum register of <eq env="math">10</eq> qubits holds the binary string <eq env="math">0110101001</eq>.
+The Hadamard Transform is then applied to this register yielding a superposition of all binary strings of length <eq env="math">10</eq>.
+What is the sign in front of the <eq env="math">|0101010101\rangle</eq> term?</p></li>
+</ol>
+</div>
+<div id="the-schmidt-decomposition" class="section level3">
+<h3><span class="header-section-number">5.10.2</span> The Schmidt decomposition</h3>
+<p>An arbitrary vector in the Hilbert space <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes \mathcal{H}_{\mathcal{B}}</eq> can be expanded in a product basis as
+<eq env="displaymath">
+  |\psi\rangle
+  = \sum_{ij} c_{ij}|a_i\rangle|b_j\rangle.
+</eq>
+Moreover, for each particular joint state <eq env="math">|\psi\rangle</eq>, we can find orthonormal bases, <eq env="math">\{|\widetilde{a_i}\rangle\}</eq> in <eq env="math">\mathcal{H}_{\mathcal{A}}</eq> and <eq env="math">\{|\widetilde{b_j}\rangle\}</eq> in <eq env="math">\mathcal{H}_{\mathcal{B}}</eq>, such that <eq env="math">|\psi\rangle</eq> can be expressed as
+<eq env="displaymath">
+  |\psi\rangle
+  = \sum_{i} d_{i}|\tilde a_i\rangle|\tilde b_i\rangle,
+</eq>
+where the coefficients <eq env="math">d_i</eq> are non-negative numbers.
+This is known as the <strong>Schmidt decomposition</strong> of <eq env="math">|\psi\rangle</eq>.
+Any bipartite state can be expressed in this form, but remember that <em>the bases used depend on the state being expanded</em>.
+Indeed, given two bipartite states <eq env="math">|\psi\rangle</eq> and <eq env="math">|\phi\rangle</eq>, we usually <em>cannot</em> perform the Schmidt decomposition using the <em>same</em> orthonormal bases in <eq env="math">\mathcal{H}_{\mathcal{A}}</eq> and <eq env="math">\mathcal{H}_{\mathcal{B}}</eq>.
+The number of terms in the Schmidt decomposition is, at most, the minimum of <eq env="math">\dim\mathcal{H}_{\mathcal{A}}</eq> and <eq env="math">\dim\mathcal{H}_{\mathcal{B}}</eq>.</p>
+<p>The Schmidt decomposition follows from the <strong>singular value decomposition</strong> or <strong>SVD</strong>): <em>any</em> <eq env="math">(n\times m)</eq> matrix <eq env="math">C</eq> can be written as
+<eq env="displaymath">
+  C = UDV
+</eq>
+where <eq env="math">U</eq> and <eq env="math">V</eq> are (respectively) <eq env="math">(n\times n)</eq> and <eq env="math">(m\times m)</eq> unitary matrices and <eq env="math">D</eq> is an <eq env="math">(n\times m)</eq> diagonal matrix with real, non-negative elements in descending order <eq env="math">d_1\geqslant d_2\geqslant\ldots\geqslant d_{\min{(n,m)}}</eq> (and with the rest of the matrix is filled with zeros).
+The elements <eq env="math">d_k</eq> are called the <strong>singular values</strong> of <eq env="math">C</eq>.</p>
+<p>You can visualize the SVD by thinking of <eq env="math">C</eq> as representing a linear
+transformation from <eq env="math">m</eq>-dimensional to <eq env="math">n</eq>-dimensional Euclidean space: it maps the unit ball in the <eq env="math">m</eq>-dimensional space to an ellipsoid in
+the <eq env="math">n</eq>-dimensional space; the singular values are the lengths of
+the semi-axes of that ellipsoid; the matrices <eq env="math">U</eq> and <eq env="math">V</eq> carry
+information about the locations of those axes and the vectors in
+the first space which map into them.
+Thus SVD tells us that the transformation <eq env="math">C</eq> is composed of rotating the unit ball (transformation <eq env="math">V</eq>), stretching the axes by factors <eq env="math">d_k</eq>, and then rotating the resulting ellipsoid (transformation <eq env="math">U</eq>).</p>
+<p>Using the index notation <eq env="math">C_{ij} = \sum_k U_{ik}d_k V_{kj}</eq>, we can thus apply SVD to <eq env="math">c_{ij}</eq>,
+<eq env="displaymath">
+  \begin{aligned}
+    |\psi\rangle
+    &amp;= \sum_{ij} c_{ij}|a_ib_j\rangle
+  \\&amp;= \sum_{ij} \sum_k U_{ik}d_k V_{kj}|a_ib_j\rangle
+  \\&amp;= \sum_k d_k \left(\sum_i U_{ik}|a_i\rangle\right)\otimes\left(\sum_j V_{kj}|b_j\rangle\right).
+  \end{aligned}
+</eq>
+The Schmidt decomposition of a separable state of the form
+<eq env="math">|a\rangle\otimes|b\rangle</eq> is trivially just this state.
+The Bell states <eq env="math">\Psi^+</eq> and <eq env="math">\Phi^+</eq> are already written in their Schmidt form, whereas <eq env="math">\Psi^-</eq> and <eq env="math">\Phi^-</eq> can be easily expressed in the Schmidt form.
+For example, for <eq env="math">|\Psi^-\rangle</eq> we have <eq env="math">d_1 = d_2 = \frac{1}{\sqrt 2}</eq>, and the Schmidt basis is <eq env="math">|\bar a_1\rangle =|0\rangle, |\bar a_2\rangle=|1\rangle</eq>, <eq env="math">|\bar b_1\rangle = |1\rangle, |\bar b_2\rangle=-|0\rangle</eq>.
+The number of non-zero singular values of <eq env="math">c_{ij}</eq> is called the <strong>rank</strong> of <eq env="math">c_{ij}</eq>, or the rank of the corresponding quantum state, or sometimes, the <strong>Schmidt number</strong>.
+Clearly, all bipartite states of rank one are separable.</p>
+<p>The Schmidt decomposition is <em>almost</em> unique.
+The ambiguity arises when we have two or more identical singular values, as, for example, in the case of the Bell states.
+Then any unitary transformation of the basis vectors corresponding to a degenerate singular value, both in <eq env="math">\mathcal{H}_a</eq> and in <eq env="math">\mathcal{H}_b</eq>, generates another set of basis vectors.</p>
+
+</div>
+</div>
+<!-- </div> -->
+<div class="footnotes">
+<hr />
+<ol start="83">
+<li id="fn83"><p>We always use the lexicographic order <eq env="math">00&lt;01&lt;10&lt;11</eq>.<a href="5.10-appendices.html#fnref83" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +605,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5.9-remarks-and-exercises-4.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="6-chapter6.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +645,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/05-entanglement.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

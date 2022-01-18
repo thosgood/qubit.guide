@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>6.3 A few instructive examples, and some less instructive remarks | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="6.3 A few instructive examples, and some less instructive remarks | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="6.3 A few instructive examples, and some less instructive remarks | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="6.2-statistical-mixtures.html"/>
+<link rel="next" href="6.4-the-bloch-ball.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,95 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="a-few-instructive-examples-and-some-less-instructive-remarks" class="section level2">
+<h2><span class="header-section-number">6.3</span> A few instructive examples, and some less instructive remarks</h2>
+<ol style="list-style-type: decimal">
+<li><p>The density matrix corresponding to the state vector <eq env="math">|\psi\rangle</eq> is the rank one projector <eq env="math">|\psi\rangle\langle\psi|</eq>.
+Observe that there is no phase ambiguity, since <eq env="math">|\psi\rangle\mapsto e^{i\phi}|\psi\rangle</eq> leaves the density matrix unchanged, and each <eq env="math">|\psi\rangle</eq> gives rise to a distinct density matrix.</p></li>
+<li><p>If Alice prepares a qubit in the state <eq env="math">|\psi\rangle = \alpha|0\rangle + \beta|1\rangle</eq> then the corresponding density matrix is the projector
+<eq env="displaymath">
+   |\psi\rangle\langle\psi|
+   =
+   \begin{bmatrix}
+     |\alpha|^2 &amp; \alpha\beta^\star
+   \\\alpha^\star\beta &amp; |\beta|^2
+   \end{bmatrix}.
+ </eq></p></li>
+<li><p>You are given a qubit and you are told that it was prepared either in state <eq env="math">|0\rangle</eq> with probability <eq env="math">|\alpha|^2</eq> or in state <eq env="math">|1\rangle</eq> with probability <eq env="math">|\beta|^2</eq>.
+In this case all you can say is that your qubit is in a mixed state described by the density matrix
+<eq env="displaymath">
+   |\alpha|^2|0\rangle\langle 0| + |\beta|^2|1\rangle\langle 1|
+   =
+   \begin{bmatrix}
+     |\alpha|^2 &amp; 0
+   \\0 &amp; |\beta|^2
+   \end{bmatrix}.
+ </eq>
+Diagonal density matrices correspond to classical probability distributions on the set of basis vectors.</p></li>
+<li><p>Suppose you want to distinguish between preparations described by the density matrices in examples 2 and 3.
+Assume that you are given sufficiently many identically prepared qubits described either by the density matrix in example 2 or by the density matrix in example 3.
+Which of the two measurements would you choose: the measurement in the standard basis <eq env="math">\{|0\rangle,|1\rangle\}</eq>, or the measurement in the basis <eq env="math">\{|\psi\rangle,|\psi_\perp\rangle\}</eq>?
+One of the two measurements is completely useless.
+Which one, and why?</p></li>
+<li><p>In general, the diagonal entries of a density matrix describe the probability distributions on the set of basis vectors.
+They must add up to one, which is why the trace of any density matrix is one.
+The off-diagonal elements, often called <strong>coherences</strong>, signal departure from the classical probability distribution and quantify the degree to which a quantum system can interfere (we will discuss this in detail later on).
+The process in which off-diagonal entries (the parameter <eq env="math">\epsilon</eq> in the matrices below) go to zero is called <strong>decoherence</strong>.
+<eq env="displaymath">
+   \begin{bmatrix}
+     |\alpha|^2 &amp; \alpha\beta^\star
+   \\\alpha^\star\beta &amp; |\beta|^2
+   \end{bmatrix}
+   \mapsto
+   \begin{bmatrix}
+     |\alpha|^2 &amp; \epsilon
+   \\\epsilon^\star &amp; |\beta|^2
+   \end{bmatrix}
+   \mapsto
+   \begin{bmatrix}
+     |\alpha|^2 &amp; 0
+   \\0 &amp; |\beta|^2
+   \end{bmatrix}
+ </eq>
+For <eq env="math">\epsilon = \alpha\beta^\star</eq> we have a pure quantum state (“full interference capability”) and for <eq env="math">\epsilon=0</eq> we have a classical probability distribution over the standard basis (“no interference capability”).</p></li>
+<li><p>Suppose it is equally likely that your qubit was prepared either in state <eq env="math">\alpha|0\rangle + \beta|1\rangle</eq> or in state <eq env="math">\alpha|0\rangle - \beta|1\rangle</eq>.
+This means that your qubit is in a mixed state described by the density matrix
+<eq env="displaymath">
+   \frac12
+   \begin{bmatrix}
+     |\alpha|^2 &amp; \alpha\beta^\star
+   \\\alpha^\star\beta &amp; |\beta|^2
+   \end{bmatrix}
+   +
+   \frac12
+   \begin{bmatrix}
+     |\alpha|^2 &amp; -\alpha\beta^\star
+   \\-\alpha^\star\beta &amp; |\beta|^2
+   \end{bmatrix}
+   =
+   \begin{bmatrix}
+     |\alpha|^2 &amp; 0
+   \\0 &amp; |\beta|^2
+   \end{bmatrix}.
+ </eq>
+You cannot tell the difference between the equally weighted mixture of <eq env="math">\alpha|0\rangle\pm\beta|1\rangle</eq> and a mixture of <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq> with (respective) probabilities <eq env="math">|\alpha|^2</eq> and <eq env="math">|\beta|^2</eq>.</p></li>
+<li><p>For any density matrix <eq env="math">\rho</eq>, the most natural mixture that yields <eq env="math">\rho</eq> is its spectral decomposition: <eq env="math">\rho=\sum_i p_i|u_i\rangle\langle u_i|</eq>, with eigenvectors <eq env="math">|u_i\rangle</eq> and eigenvalues <eq env="math">p_i</eq>.</p></li>
+<li><p>If the states <eq env="math">|u_1\rangle,\ldots,|u_m\rangle</eq> form an orthonormal basis, and each occurs with equal probability <eq env="math">1/m</eq>, then the resulting density matrix is proportional to the identity:
+<eq env="displaymath">
+   \frac{1}{m}\sum_{i=1}^m |\psi_i\rangle\langle\psi_i|
+   = \frac{1}{m}\mathbf{1}.
+ </eq>
+This is called the <strong>maximally mixed state</strong>.
+For qubits, any pair of orthogonal states taken with equal probabilities gives the maximally mixed state <eq env="math">\frac12\mathbf{1}</eq>.
+In maximally mixed states, outcomes of <em>any</em> measurement are completely random.</p></li>
+<li><p>It is often convenient to write density operators in terms of projectors on states which are not normalised, incorporating the probabilities into the length of the state vector:
+<eq env="displaymath">
+   \rho = \sum_i|\widetilde\psi_i\rangle\langle\widetilde\psi_i|
+ </eq>
+where <eq env="math">|\widetilde\psi_i\rangle = \sqrt{p_i}|\psi_i\rangle</eq>, i.e. <eq env="math">p_i=\langle\widetilde\psi_i|\widetilde\psi_i\rangle</eq>.
+This form is more compact, but you have to remember that the state vectors are <em>not</em> normalised.
+We tend to mark such states with the tilde, e.g. <eq env="math">|\widetilde\psi\rangle</eq>, but you may have your own way to remember.</p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +463,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="6.2-statistical-mixtures.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="6.4-the-bloch-ball.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +503,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/06-density-matrices.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

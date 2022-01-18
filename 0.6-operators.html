@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>0.6 Operators | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="0.6 Operators | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="0.6 Operators | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="0.5-geometry.html"/>
+<link rel="next" href="0.7-outer-products.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,48 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="operators" class="section level2">
+<h2><span class="header-section-number">0.6</span> Operators</h2>
+<p>A <strong>linear map</strong> between two vector spaces <eq env="math">\mathcal{H}</eq> and <eq env="math">\mathcal{K}</eq> is a function <eq env="math">A\colon\mathcal{H}\to\mathcal{K}</eq> that respects linear combinations:
+<eq env="displaymath">
+  A(c_1|v_1\rangle+c_2|v_2\rangle)=c_1 A|v_1\rangle+c_2 A|v_2\rangle
+</eq>
+for any vectors <eq env="math">|v_1\rangle,|v_2\rangle</eq> and any complex numbers <eq env="math">c_1,c_2</eq>.
+We will focus mostly on <strong>endomorphisms</strong>, that is, maps from <eq env="math">\mathcal{H}</eq> to <eq env="math">\mathcal{H}</eq>, and we will call them <strong>operators</strong>.
+The symbol <eq env="math">\mathbf{1}</eq> is reserved for the identity operator that maps every element of <eq env="math">\mathcal{H}</eq> to itself (i.e. <eq env="math">\mathbf{1}|v\rangle=|v\rangle</eq> for all <eq env="math">|v\rangle\in\mathcal{H}</eq>).
+The product <eq env="math">AB</eq> of two operators <eq env="math">A</eq> and <eq env="math">B</eq> is the operator obtained by first applying <eq env="math">B</eq> to some ket <eq env="math">|v\rangle</eq> and then <eq env="math">A</eq> to the ket which results from applying <eq env="math">B</eq>:
+<eq env="displaymath">
+  (AB)|v\rangle = A(B|v\rangle).
+</eq>
+The order <em>does</em> matter: in general, <eq env="math">AB\neq BA</eq>.
+In the exceptional case in which <eq env="math">AB=BA</eq>, one says that these two operators <strong>commute</strong>.
+The inverse of <eq env="math">A</eq>, written as <eq env="math">A^{-1}</eq>, is the operator that satisfies <eq env="math">AA^{-1}=\mathbf{1}=A^{-1}A</eq>.
+For finite-dimensional spaces, one only needs to check <em>one</em> of these two conditions, since any one of the two implies the other, whereas, on an infinite-dimensional space, <em>both</em> must be checked.
+Finally, given a particular basis, an operator <eq env="math">A</eq> is uniquely determined by the entries of its matrix, defined by <eq env="math">A_{ij}=\langle i|A|j\rangle</eq>.
+The <strong>adjoint</strong>, or <strong>Hermitian conjugate</strong>, of <eq env="math">A</eq>, denoted by <eq env="math">A^\dagger</eq>, is defined by the relation
+<eq env="displaymath">
+  \begin{gathered}
+    \langle i|A^\dagger|j\rangle
+    = \langle j|A|i\rangle^\star
+  \\\text{for all $|i\rangle,|j\rangle\in\mathcal{H}$}.
+  \end{gathered}
+</eq></p>
+<p>An operator <eq env="math">A</eq> is said to be</p>
+<ul>
+<li><strong>normal</strong> if <eq env="math">AA^\dagger = A^\dagger A</eq>,</li>
+<li><strong>unitary</strong> if <eq env="math">AA^\dagger = A^\dagger A = \mathbf{1}</eq>,</li>
+<li><strong>Hermitian</strong> (or <strong>self-adjoint</strong>) if <eq env="math">A^\dagger = A</eq>.</li>
+</ul>
+<p>Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.
+Note that unitary operators preserve the inner product: given a unitary operator <eq env="math">U</eq> and two kets <eq env="math">|a\rangle</eq> and <eq env="math">|b\rangle</eq>, and defining <eq env="math">|a'\rangle=U|a\rangle</eq> and <eq env="math">|b'\rangle=U|b\rangle</eq>, we have that
+<eq env="displaymath">
+  \begin{gathered}
+    \langle a'|=\langle a|U^\dagger
+  \\\langle b'|=\langle b|U^\dagger
+  \\\langle a'|b'\rangle=\langle a|U^\dagger U|b\rangle=\langle a|\mathbf{1}|b\rangle=\langle a|b\rangle.
+  \end{gathered}
+</eq>
+Preserving the inner product implies preserving the norm induced by this product, i.e. unit state vectors are mapped to unit state vectors, i.e. <em>unitary operations are the isometries of the Euclidean norm</em>.</p>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +416,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="0.5-geometry.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="0.7-outer-products.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

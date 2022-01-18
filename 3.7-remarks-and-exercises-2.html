@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>3.7 Remarks and exercises | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="3.7 Remarks and exercises | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="3.7 Remarks and exercises | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="3.6-quantum-dynamics.html"/>
+<link rel="next" href="4-chapter4.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,182 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="remarks-and-exercises-2" class="section level2">
+<h2><span class="header-section-number">3.7</span> <em>Remarks and exercises</em></h2>
+<div id="orthonormal-pauli-basis" class="section level3">
+<h3><span class="header-section-number">3.7.1</span> Orthonormal Pauli basis</h3>
+<p>Show that <eq env="math">\{\mathbf{1},\sigma_x,\sigma_y,\sigma_z\}</eq> is an orthonormal basis with respect to the Hilbert-Schmidt product in the space of complex <eq env="math">(2\times 2)</eq> matrices.</p>
+</div>
+<div id="pauli-matrix-expansion-coefficients" class="section level3">
+<h3><span class="header-section-number">3.7.2</span> Pauli matrix expansion coefficients</h3>
+<p>Recall that any <eq env="math">(2\times 2)</eq> complex matrix <eq env="math">A</eq> has a unique expansion in the form
+<eq env="displaymath">
+  \begin{aligned}
+    A &amp;=
+    \begin{bmatrix}
+      a_0 + a_z &amp; a_x - i a_y
+    \\a_x +i a_y &amp;  a_0 - a_z
+    \end{bmatrix}
+  \\&amp;= a_0\mathbf{1}+ a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
+  \\&amp;= a_0\mathbf{1}+ \vec{a}\cdot\vec{\sigma}.
+  \end{aligned}
+\tag{$\star$}
+</eq>
+for some complex numbers <eq env="math">a_0</eq>, <eq env="math">a_x</eq>, <eq env="math">a_y</eq>, and <eq env="math">a_z</eq>.</p>
+<ol style="list-style-type: decimal">
+<li>Show that the coefficients <eq env="math">a_k</eq> (for <eq env="math">k=x,y,z</eq>) are given by the inner product <eq env="math">a_k = (\sigma_k|A) = \frac12\operatorname{tr}\sigma_k A</eq>.</li>
+</ol>
+<p>In these notes, we usually deal with matrices that are Hermitian (<eq env="math">A=A^\dagger</eq>) or unitary (<eq env="math">AA^\dagger=\mathbf{1}</eq>).
+It is easy to see that, if <eq env="math">A</eq> is Hermitian, then <eq env="math">a_0</eq> and the three components of <eq env="math">\vec{a}</eq> are all real.
+The <eq env="math">(2\times 2)</eq> unitaries are usually parametrised as
+<eq env="displaymath">
+  U = e^{i\gamma}\Big(u_0\mathbf{1}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
+</eq>
+where <eq env="math">e^{i\gamma}</eq> is an overall multiplicative phase factor, with <eq env="math">\gamma</eq> real, and <eq env="math">u_0</eq> and the three components <eq env="math">u_x</eq>, <eq env="math">u_y</eq>, <eq env="math">u_z</eq> are all real numbers.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Show that the unitarity condition implies that
+<eq env="displaymath">
+   u_0^2 + u_x^2 + u_y^2 + u_z^2 = 1
+ </eq>
+and show, using this parametrisation, that the determinant of <eq env="math">U</eq> is <eq env="math">e^{i2\gamma}</eq>.</li>
+</ol>
+</div>
+<div id="linear-algebra-of-the-pauli-vector" class="section level3">
+<h3><span class="header-section-number">3.7.3</span> Linear algebra of the Pauli vector</h3>
+<ol style="list-style-type: decimal">
+<li><p>Show that <eq env="math">\frac12\operatorname{tr}(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}</eq>. <em>(You may find <a href="2.13-remarks-and-exercises-1.html#cross-product-identity">a certain identity involving the cross product</a> helpful.)</em></p></li>
+<li><p>Show that any <eq env="math">\vec{n}\cdot\vec{\sigma}</eq> has eigenvalues <eq env="math">\pm|\vec{n}|</eq>.</p></li>
+<li><p>Show that, if <eq env="math">\vec{n}\cdot\vec{m}=0</eq>, then the operators <eq env="math">\vec{n}\cdot\vec{\sigma}</eq> and <eq env="math">\vec{m}\cdot\vec{\sigma}</eq> anticommute.</p></li>
+</ol>
+</div>
+<div id="matrix-euler-formula" class="section level3">
+<h3><span class="header-section-number">3.7.4</span> Matrix Euler formula</h3>
+<ol style="list-style-type: decimal">
+<li><p>Show that, if <eq env="math">A^2=\mathbf{1}</eq>, then we can manipulate the power series expansion of <eq env="math">e^{iA}</eq> into a simple expression: for any real <eq env="math">\alpha</eq>,
+<eq env="displaymath">
+   e^{i\alpha A}
+   = (\cos\alpha)\mathbf{1}+ (i\sin\alpha)A.
+ </eq></p></li>
+<li><p>Show that any <eq env="math">(2\times 2)</eq> unitary matrix <eq env="math">U</eq> can be written, up to an overall multiplicative phase factor, as
+<eq env="displaymath">
+   U
+   = e^{i \theta \vec{n}\cdot\vec{\sigma}}
+   = (\cos\theta)\mathbf{1}+ (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
+ </eq>
+(The argument here is the same as the argument that <eq env="math">e^{i\theta}=\cos\theta +i\sin\theta</eq>).</p></li>
+</ol>
+</div>
+<div id="special-orthogonal-matrix-calculations" class="section level3">
+<h3><span class="header-section-number">3.7.5</span> Special orthogonal matrix calculations</h3>
+<ol style="list-style-type: decimal">
+<li><p>Show that <eq env="math">\operatorname{tr}\sigma_x\sigma_y\sigma_z = 2i</eq>.</p></li>
+<li><p>Consider
+<eq env="displaymath">
+   U(\vec e_k\cdot\sigma_k)U^\dagger=U\sigma_kU^\dagger={\vec f_k}\cdot\vec\sigma.
+ </eq>
+So <eq env="math">U</eq> maps the unit vectors <eq env="math">\vec e_x</eq>, <eq env="math">\vec e_y</eq>, and <eq env="math">\vec z_z</eq>, (along the <eq env="math">x</eq>-, <eq env="math">y</eq>-, and <eq env="math">z</eq>-axis, respectively), to new unit vectors <eq env="math">\vec f_x</eq>, <eq env="math">\vec f_y</eq>, and <eq env="math">\vec f_z</eq>.
+We already know that, in Euclidean space, this transformation is described by a <eq env="math">(3\times 3)</eq> orthogonal matrix <eq env="math">R_U</eq>.
+How are the three vectors <eq env="math">\vec f_x</eq>, <eq env="math">\vec f_y</eq>, and <eq env="math">\vec f_z</eq> related to the entries in matrix <eq env="math">R_U</eq>?</p></li>
+<li><p>Show that
+<eq env="displaymath">
+   \begin{aligned}
+     \operatorname{tr}\sigma_x\sigma_y\sigma_z
+     &amp;= \operatorname{tr}({\vec f_x}\cdot\vec\sigma)( {\vec f_y}\cdot\vec\sigma)({\vec f_z}\cdot\vec\sigma)
+   \\&amp;= 2i\det R_U
+   \end{aligned}
+ </eq>
+(which implies that <eq env="math">\det R_U=1</eq>).</p></li>
+<li><p>Use the orthonormality of the Pauli basis along with Equation (<eq env="math">\ddagger</eq>) to show that the elements of the matrix <eq env="math">R=R_U</eq> can be expressed in terms of those of the matrix <eq env="math">U</eq>, in the form
+<eq env="displaymath">
+   R_{ij}=\frac12\operatorname{tr}\left(\sigma_i U\sigma_j U^\dagger\right).
+ </eq>
+Here, <eq env="math">i</eq> and <eq env="math">j</eq> take values in <eq env="math">\{1,2,3\}</eq>, and <eq env="math">\sigma_1\equiv\sigma_x</eq>, <eq env="math">\sigma_2\equiv\sigma_y</eq>, <eq env="math">\sigma_3\equiv\sigma_z</eq>.</p></li>
+</ol>
+</div>
+<div id="phase-as-rotation" class="section level3">
+<h3><span class="header-section-number">3.7.6</span> Phase as rotation</h3>
+<p>Show that the phase gate
+<eq env="displaymath">
+  P_\varphi = \begin{bmatrix}1&amp;0\\0&amp;e^{i\varphi}\end{bmatrix}
+</eq>
+represents an anticlockwise rotation about the <eq env="math">z</eq>-axis through the angle <eq env="math">\varphi</eq>.</p>
+<p><strong>Hint.</strong> It might be helpful to start with the <eq env="math">\mathrm{SU}(2)</eq> version of the phase gate:
+<eq env="displaymath">
+  \begin{aligned}
+    P_\varphi
+    &amp;= e^{-i\frac{\varphi}{2}\sigma_z}
+  \\&amp;= \begin{bmatrix}
+      e^{-i \frac{\varphi}{2}}&amp; 0
+    \\0 &amp; e^{i \frac{\varphi}{2}}
+    \end{bmatrix}
+    \quad\longrightarrow\quad
+    R
+  \\&amp;= \begin{bmatrix}
+      \cos \varphi &amp; -\sin \varphi &amp; 0
+    \\\sin \varphi &amp; \cos \varphi &amp; 0
+    \\0 &amp; 0 &amp; 1
+    \end{bmatrix}
+  \end{aligned}
+</eq></p>
+</div>
+<div id="geometry-of-the-hadamard" class="section level3">
+<h3><span class="header-section-number">3.7.7</span> Geometry of the Hadamard</h3>
+<ol style="list-style-type: decimal">
+<li><p>Express the Hadamard gate <eq env="math">H</eq> in terms of <eq env="math">\vec{n}\cdot\vec{\sigma}</eq>, and show that
+<eq env="displaymath">
+  \begin{aligned}
+ HZH&amp;=X
+  \\HXH&amp;=Z
+  \\HYH&amp;=-Y.
+  \end{aligned}
+</eq></p></li>
+<li><p>Show that the Hadamard gate <eq env="math">H</eq> turns rotations about the <eq env="math">x</eq>-axis into rotations about the <eq env="math">z</eq>-axis, and vice versa.
+That is,
+<eq env="displaymath">
+   \begin{aligned}
+     H \left(
+       e^{-i\frac{\varphi}{2}Z}
+     \right) H
+     &amp;= e^{-i\frac{\varphi}{2}X}
+   \\H \left(
+       e^{-i\frac{\varphi}{2}X}
+     \right) H
+     &amp;= e^{-i\frac{\varphi}{2}Z}.
+   \end{aligned}
+ </eq></p></li>
+</ol>
+</div>
+<div id="swiss-granite-fountain" class="section level3">
+<h3><span class="header-section-number">3.7.8</span> Swiss Granite Fountain</h3>
+<p>In the Singapore Botanic Gardens, there is a sculpture by Ueli Fausch called “Swiss Granite Fountain”.
+It is a spherical granite ball which measures 80cm in diameter and weighs 700kg, and is kept afloat by strong water pressure directed through the basal block.
+It is easy to set the ball in motion, and it keeps rotating in whatever way you start for a long time.
+Suppose you are given access to this ball only near the top, so that you can push it to make it rotate around any horizontal axis, but you don’t have enough of a grip to make it turn around the vertical axis.
+Can you make it rotate around the vertical axis anyway?</p>
+</div>
+<div id="dynamics-in-a-magnetic-field" class="section level3">
+<h3><span class="header-section-number">3.7.9</span> Dynamics in a magnetic field</h3>
+<p>A qubit (spin one-half particle) initially in state <eq env="math">|0\rangle</eq> (spin up) is placed in a uniform magnetic field.
+The interaction between the field and the qubit is described by the Hamiltonian
+<eq env="displaymath">
+  H
+  = \omega
+  \begin{bmatrix}
+    0 &amp; - i
+  \\i &amp; 0
+  \end{bmatrix}
+</eq>
+where <eq env="math">\omega</eq> is proportional to the strength of the field.<a href="#fn61" class="footnote-ref" id="fnref61"><sup>61</sup></a>
+What is the state of the qubit after time <eq env="math">t=\pi/4\omega</eq>?</p>
+
+</div>
+</div>
+<!-- </div> -->
+<div class="footnotes">
+<hr />
+<ol start="61">
+<li id="fn61"><p>In Earth’s magnetic field, which is about <eq env="math">0.5</eq> gauss, the value of <eq env="math">\omega</eq> is of the order of <eq env="math">10^6</eq> cycles per second.<a href="3.7-remarks-and-exercises-2.html#fnref61" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +550,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3.6-quantum-dynamics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4-chapter4.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +590,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/03-pauli-bloch.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

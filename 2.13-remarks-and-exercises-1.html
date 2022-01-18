@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>2.13 Remarks and exercises | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="2.13 Remarks and exercises | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="2.13 Remarks and exercises | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="2.12-a-finite-set-of-universal-gates.html"/>
+<link rel="next" href="3-chapter3.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,14 +347,62 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="remarks-and-exercises-1" class="section level2">
+<h2><span class="header-section-number">2.13</span> <em>Remarks and exercises</em></h2>
+<div id="unknown-phase" class="section level3">
+<h3><span class="header-section-number">2.13.1</span> Unknown phase</h3>
+<p>Consider the usual quantum interference circuit:</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-23-1.png" width="240" style="display: block; margin: auto;" /></p>
+<p>Suppose you can control the input of the circuit and measure the output, but you do not know the phase shift <eq env="math">\varphi</eq> introduced by the phase gate.
+You prepare input <eq env="math">|0\rangle</eq> and register output <eq env="math">|1\rangle</eq>.
+What can you say about <eq env="math">\varphi</eq>?</p>
+<p>Now you are promised that <eq env="math">\varphi</eq> is either <eq env="math">0</eq> or <eq env="math">\pi</eq>.
+You can run the circuit only once to find out which of the two phases was chosen.
+Can you do that?</p>
 </div>
+<div id="cross-product-identity" class="section level3">
+<h3><span class="header-section-number">2.13.2</span> One of the many cross-product identities</h3>
+<p>Derive the identity
+<eq env="displaymath">
+  (\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma})
+  = (\vec{a}\cdot\vec{b})\mathbf{1}+ i(\vec{a}\times \vec{b})\cdot \vec{\sigma}.
+</eq></p>
+<p><em>(Hint: all you need here are the Pauli matrices’ commutation and anti-commutation relations, but it is instructive to derive the identity using the component notation, and below we give a sketch of how such a derivation would go.)</em></p>
+<p>First, notice that the products of Pauli matrices can be written succinctly as
+<eq env="displaymath">
+ \sigma_{i}\sigma_{j}
+ = \delta _{ij}\mathbf{1}+ i\varepsilon_{ijk}\,\sigma _{k},
+</eq>
+where <eq env="math">\delta_{ij}</eq> is the Kronecker delta and <eq env="math">\varepsilon_{ijk}</eq> is the <strong>Levi-Civita symbol</strong>:
+<eq env="displaymath">
+ \varepsilon_{ijk}
+ = \begin{cases}
+  +1 &amp; {\text{if }}(i,j,k){\text{ is }}(1,2,3)\text{, }(2,3,1){\text{, or }}(3,1,2)
+\\-1 &amp; {\text{if }}(i,j,k){\text{ is }}(3,2,1)\text{, }(1,3,2){\text{, or }}(2,1,3)
+\\\;\;\;0 &amp; {\text{if }}i=j,{\text{ or }}j=k,{\text{ or }}k=i
+\end{cases}
+</eq>
+That is, <eq env="math">\varepsilon _{ijk}</eq> is <eq env="math">1</eq> if <eq env="math">(i, j, k)</eq> is an even permutation of <eq env="math">(1, 2, 3)</eq>, it is <eq env="math">-1</eq> if it is an odd permutation, and it is <eq env="math">0</eq> if any index is repeated.
+The Levi-Civita symbol is anti-symmetric, meaning when any two indices are changed, its sign alternates.
+Then recall that the scalar (dot) product and vector (cross) product of two Euclidean vectors <eq env="math">\vec{a}</eq> and <eq env="math">\vec{b}</eq> can be written, in terms of the components, as
+<eq env="displaymath">
+  \begin{aligned}
+    \vec{a}\cdot\vec{b}
+    &amp;= \sum_{i=1}^3 a_i b_i
+  \\(\vec{a}\times\vec{b})_i
+    &amp;= \sum_{j,k=1}^3 \varepsilon_{ijk}a_jb_k.
+  \end{aligned}
+</eq>
+The rest is rather straightforward:
+<eq env="displaymath">
+  (\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma})
+  = \sum_{ij}a_i b_j\sigma_i\sigma_j
+  = \ldots.
+</eq></p>
+
+</div>
+</div>
+<!-- </div> -->
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
 <script type="text/javascript" src="./web/sidenotes.js"></script>
@@ -381,8 +429,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="2.12-a-finite-set-of-universal-gates.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3-chapter3.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +469,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/02-qubits.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

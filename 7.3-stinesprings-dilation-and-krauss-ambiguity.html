@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>7.3 Stinespring’s dilation and Kraus’s ambiguity | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="7.3 Stinespring’s dilation and Kraus’s ambiguity | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="7.3 Stinespring’s dilation and Kraus’s ambiguity | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="7.2-evolution-of-open-systems.html"/>
+<link rel="next" href="7.4-single-qubit-channels.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,115 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="stinesprings-dilation-and-krauss-ambiguity" class="section level2">
+<h2><span class="header-section-number">7.3</span> Stinespring’s dilation and Kraus’s ambiguity</h2>
+<p>Once we start playing with adding physical systems and increasing the dimension of the underlying Hilbert space, it is convenient to switch from unitaries to isometries.
+This is more for mathematical simplicity than physical insight, but it is always good to declutter our equations a bit if we can.
+Note that when we fix the initial state of system <eq env="math">\mathcal{A}</eq> to be <eq env="math">|k\rangle</eq>, we can use Equation (<eq env="math">\ddagger</eq>) to define an isometry <eq env="math">V</eq> from <eq env="math">\mathcal{H}_\mathcal{B}</eq> to <eq env="math">\mathcal{H}_\mathcal{A}\otimes \mathcal{H}_\mathcal{B}</eq>, by
+<eq env="displaymath">
+  V\colon |\psi\rangle
+  \longmapsto \sum_i|i\rangle\otimes E_i|\psi\rangle
+</eq>
+where <eq env="math">E_i\equiv B_{ik}</eq> and, according to Equation (<eq env="math">\star</eq>), <eq env="math">\sum_i E_i^\dagger E_i=\mathbf{1}</eq> (here the identity operator acts on <eq env="math">\mathcal{H}_\mathcal{B}</eq>).<a href="#fn107" class="footnote-ref" id="fnref107"><sup>107</sup></a>
+The matrix representation of an isometry is a rectangular matrix given by selecting only a few of the columns from a unitary matrix;
+here, with <eq env="math">|k\rangle</eq> fixed, it is only the <eq env="math">k</eq>-th column of the block matrix <eq env="math">U</eq> that determines the evolution of <eq env="math">\mathcal{B}</eq>, as shown in Figure <a href="7.3-stinesprings-dilation-and-krauss-ambiguity.html#fig:unitary-isometry">7.1</a>.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unitary-isometry"></span>
+<img src="iqis-book_files/figure-html/unitary-isometry-1.png" alt="For k=2, the second block column is selected. The matrix representation of the isometry V on the right-hand side look like a column vector, but remember that the entries E_i are matrices." width="672" />
+<p class="caption">
+Figure 7.1: For <eq env="math">k=2</eq>, the second block column is selected. The matrix representation of the isometry <eq env="math">V</eq> on the right-hand side look like a column vector, but remember that the entries <eq env="math">E_i</eq> are <em>matrices</em>.
+</p>
+</div>
+<p>Let us now rephrase our derivation of the evolution of system <eq env="math">\mathcal{B}</eq> using isometries.
+Note that the isometry <eq env="math">V</eq> in Figure <a href="7.3-stinesprings-dilation-and-krauss-ambiguity.html#fig:unitary-isometry">7.1</a> acts by
+<eq env="displaymath">
+  |\psi\rangle\langle\psi|
+  \longmapsto
+  V|\psi\rangle\langle\psi|V^\dagger
+  = \sum_{ij} |i\rangle\langle j| \otimes E_i|\psi\rangle\langle\psi| E_j^\dagger.
+</eq>
+We trace out <eq env="math">\mathcal{A}</eq>, recall that <eq env="math">\operatorname{tr}|i\rangle\langle j| = \langle i|j\rangle=\delta_{ij}</eq>, and express the evolution of system <eq env="math">\mathcal{B}</eq> as
+<eq env="displaymath">
+  \rho
+  \longmapsto
+  \rho' = \operatorname{tr}_\mathcal{A} V\rho V^\dagger =\sum_i E_i\rho E_i^\dagger,
+</eq>
+where <eq env="math">\sum_iE_i^\dagger E_i=\mathbf{1}</eq>, and we allowed the input states <eq env="math">\rho</eq> of <eq env="math">\mathcal{B}</eq> to be mixed (since they can always be expressed as statistical mixtures of pure states <eq env="math">|\psi\rangle</eq>).
+This expression shows two different ways of looking at quantum evolutions, and both even have names associated with them.</p>
+<div class="idea">
+<ul>
+<li><p><strong>Stinespring</strong><a href="#fn108" class="footnote-ref" id="fnref108"><sup>108</sup></a> <strong>dilation.</strong>
+Any quantum channel <eq env="math">\mathcal{E}</eq> can be thought of as arising from a <em>unitary</em> evolution on a <em>dilated</em> system.
+When we combine tensoring and the unitary evolution into an isometry <eq env="math">V</eq>, we can express the action of the channel <eq env="math">\mathcal{E}</eq> as
+<eq env="displaymath">
+    \rho \longmapsto \rho'= \operatorname{tr}_\mathcal{A} V\rho V^\dagger,
+  </eq>
+where we trace out a suitably chosen ancilla <eq env="math">\mathcal{A}</eq>.
+In quantum information science we often refer to this approach as <em>“the Church of the Larger Hilbert Space”</em>.
+<!--  --></p></li>
+<li><p><strong>Kraus</strong><a href="#fn109" class="footnote-ref" id="fnref109"><sup>109</sup></a> <strong>representation</strong> (a.k.a. <strong>operator-sum decomposition</strong>).
+It is often more convenient to not deal with a larger Hilbert space, but to instead work with operators between the input and output Hilbert spaces
+<eq env="displaymath">
+    \rho \longmapsto \rho'= \sum_i E_i\rho E_i^\dagger.
+  </eq>
+Here we avoid dragging in the ancilla, which can be a good thing, since ancillas typically represent environments that can be very large and complex.
+This operator–sum decomposition is not unique, since the operators <eq env="math">E_i</eq> (known as the <strong>Kraus operators</strong> or <strong>effects</strong>) depend on the choice of basis in the ancilla.
+The Kraus operators must satisfy the normalisation condition <eq env="math">\sum_i E^\dagger_iE_i=\mathbf{1}</eq>, also known as the <strong>completeness relation</strong>.</p></li>
+</ul>
+</div>
+<p>We can easily switch between these two equivalent representations:</p>
+<ul>
+<li>We have already seen how to go from a unitary evolution <eq env="math">U</eq> on a larger system, to an isometry <eq env="math">V</eq>, and then to a map on density operators represented by a set of Kraus operators <eq env="math">E_i</eq> (as in Figure <a href="7.3-stinesprings-dilation-and-krauss-ambiguity.html#fig:unitary-isometry">7.1</a>).</li>
+<li>Conversely, once we have an operator-sum representation of the channel with a set of Kraus operators <eq env="math">E_i</eq>, we can introduce an ancilla of dimension equal to the number of Kraus operators, and use the orthonormal basis <eq env="math">|i\rangle</eq> to form the isometry <eq env="math">V=\sum_i|i\rangle\otimes E_i</eq>.
+In terms of matrices, this corresponds to simply “stacking up” the matrices <eq env="math">E_i</eq> to form the block column (as shown in Figure <a href="7.3-stinesprings-dilation-and-krauss-ambiguity.html#fig:unitary-isometry">7.1</a>), which gives us the matrix representation of <eq env="math">V</eq>.
+If we want to go further, from an isometry <eq env="math">V</eq> to a unitary <eq env="math">U</eq>, then the next step is somewhat arbitrary: we can choose all the remaining block columns of <eq env="math">U</eq> however we please, <em>as long as</em> we end up with a unitary matrix <eq env="math">U</eq>.</li>
+</ul>
+<p>In summary:</p>
+<div class="idea">
+<p>All linear transformations of density operators that can be written in the Stinespring (or, equivalently, Kraus) form represent <em>physically realisable operations</em>, and we call them <strong>quantum channels</strong>.<a href="#fn110" class="footnote-ref" id="fnref110"><sup>110</sup></a></p>
+</div>
+<p>We note again that the Kraus decomposition is <em>not unique</em>: the operators <eq env="math">E_i</eq> depend on the choice of the ancilla basis.
+Indeed, let <eq env="math">|e_i\rangle</eq> and <eq env="math">|f_j\rangle</eq> be two orthonormal bases in the Hilbert space associated with the ancilla.
+Then <eq env="math">V</eq> can be expressed as
+<eq env="displaymath">
+  \begin{aligned}
+    V
+    &amp;= \sum_i|e_i\rangle\otimes E_i
+  \\&amp;= \sum _{ij} |f_j\rangle\langle f_j|e_i\rangle\otimes E_i
+  \\&amp;= \sum_{j} |f_j\rangle \otimes \sum_i \underbrace{\langle f_j|e_i\rangle}_{R_{ji}} E_i
+  \\&amp;= \sum_{j} |f_j\rangle \otimes F_j
+  \end{aligned}
+</eq>
+where we have used the fact that <eq env="math">\sum_j |f_j\rangle\langle f_j|=\mathbf{1}</eq>, and where <eq env="math">R_{ji}=\langle f_j|e_i\rangle</eq> is a unitary matrix connecting the two orthonormal bases (and also the two sets of the Kraus operators) via <eq env="math">F_j=\sum_i R_{ji} E_i</eq>.
+So we have a set of Kraus operators <eq env="math">E_i</eq> associated with basis <eq env="math">|e_i\rangle</eq> and another, unitarily related, set of Kraus operators associated with basis <eq env="math">|f_j\rangle</eq>, and the two sets describe the same isometry, and hence the same quantum channel.
+This correspondence goes both ways: if two channels <eq env="math">\mathcal{E}</eq> and <eq env="math">\mathcal{F}</eq> have their Kraus operators related by some unitary <eq env="math">R_{ji}</eq>, then the two channels are identical:
+<eq env="displaymath">
+  \begin{aligned}
+    \mathcal{F}(\rho)
+    &amp;= \sum_j F_j\rho F^\dagger_j
+  \\&amp;= \sum_{ijk} R_{ji}E_i \rho E^\dagger_k R^\star_{jk}
+  \\&amp;=\sum_{ik} \underbrace{\left(\sum_j R_{jk}^\star R_{ji}\right)}_{\delta_{ki}} E_i\rho E^\dagger_k
+  \\&amp;= \sum_i E_i\rho E^\dagger_i
+  \\&amp;= \mathcal{E}(\rho).
+  \end{aligned}
+</eq></p>
+<p>In summary:</p>
+<div class="idea">
+<p>Suppose <eq env="math">E_1,\ldots,E_n</eq> and <eq env="math">F_1,\ldots,F_m</eq> are Kraus operators associated with quantum channels <eq env="math">\mathcal{E}</eq> and <eq env="math">\mathcal{F}</eq>, respectively.
+We can append zero operators to the shorter list<a href="#fn111" class="footnote-ref" id="fnref111"><sup>111</sup></a> to ensure that <eq env="math">n=m</eq>.
+Then <em><eq env="math">\mathcal{E}</eq> and <eq env="math">\mathcal{F}</eq> describe the same channel if and only if <eq env="math">F_j=\sum_i R_{ji} E_i</eq> for some unitary <eq env="math">R</eq></em>.</p>
+</div>
+<p>In particular, this unitary equivalence of the Kraus operators implies that the identity channel <eq env="math">\rho\mapsto\rho'=\mathbf{1}\rho\mathbf{1}</eq> can only have Kraus operators that are proportional to the identity.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="107">
+<li id="fn107"><p>Recall that a map <eq env="math">V</eq> is an isometry if <eq env="math">V^\dagger V=\mathbf{1}</eq>. For example, adding a system in state <eq env="math">|k\rangle</eq> gives an isometry <eq env="math">V\colon|\psi\rangle\mapsto|k\rangle\otimes|\psi\rangle</eq>, and the combination of adding a system in a fixed state followed by a unitary evolution of the combined system is also an isometry. Isometries preserve inner products, and therefore also preserve both the norm and the metric based upon the norm.<a href="7.3-stinesprings-dilation-and-krauss-ambiguity.html#fnref107" class="footnote-back">↩︎</a></p></li>
+<li id="fn108"><p><a href="https://en.wikipedia.org/wiki/W.%5FForrest%5FStinespring">William Forrest “Woody” Stinespring</a> (1929–2012) was an American mathematician specialising in operator theory.<a href="7.3-stinesprings-dilation-and-krauss-ambiguity.html#fnref108" class="footnote-back">↩︎</a></p></li>
+<li id="fn109"><p><a href="https://en.wikipedia.org/wiki/Karl%5FKraus%5F(physicist)">Karl Kraus</a> (1938–1988) was a German physicist known for his contributions to the mathematical foundations of quantum theory. His book <em>States, effects, and operations</em> (Lecture Notes in Physics, Vol. <strong>190</strong>, Springer-Verlag, Berlin 1983) is an early account of the notion of complete positivity in physics.<a href="7.3-stinesprings-dilation-and-krauss-ambiguity.html#fnref109" class="footnote-back">↩︎</a></p></li>
+<li id="fn110"><p>Quantum channels are also known as <strong>superoperators</strong> — this way physicists remind themselves that these transformations take operators to operators.<a href="7.3-stinesprings-dilation-and-krauss-ambiguity.html#fnref110" class="footnote-back">↩︎</a></p></li>
+<li id="fn111"><p>If you wish, instead of appending zeros, you may view <eq env="math">R_{ji}</eq> as an isometry from the the smaller to the larger set of Kraus operators.<a href="7.3-stinesprings-dilation-and-krauss-ambiguity.html#fnref111" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +483,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="7.2-evolution-of-open-systems.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="7.4-single-qubit-channels.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +523,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/07-CP-maps.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

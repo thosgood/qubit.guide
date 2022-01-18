@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>3.5 Universality, again | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="3.5 Universality, again | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="3.5 Universality, again | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="3.4-unitaries-as-rotations.html"/>
+<link rel="next" href="3.6-quantum-dynamics.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,75 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="universality-again" class="section level2">
+<h2><span class="header-section-number">3.5</span> Universality, again</h2>
+<p><lite-youtube videoid="OKlNfNGuFZo" playlabel="Play: Universal sets of gates (for a single qubit)"></lite-youtube></p>
+<p>Although this may all seem tediously abstract, it is surprisingly useful.
+Take another look at the single qubit interference circuit</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-26-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p>and the corresponding sequence of unitary operations
+<eq env="displaymath">
+  \begin{aligned}
+    H \left(
+      e^{-i\frac{\varphi}{2}Z}
+    \right) H
+    &amp;= e^{-i\frac{\varphi}{2}X}
+  \\&amp;= \begin{bmatrix}
+      \cos\varphi/2 &amp; -i\sin\varphi/2
+    \\-i\sin\varphi/2 &amp; \cos\varphi/2
+    \end{bmatrix}
+  \end{aligned}
+</eq></p>
+<div class="idea">
+<p>The single qubit interference circuit has a simple geometrical meaning: it shows how a rotation about the <eq env="math">z</eq>-axis, induced by the phase gate <eq env="math">P_\varphi</eq>, is turned, by the two Hadamard gates, into a rotation about the <eq env="math">x</eq>-axis.</p>
+</div>
+<p>Now, take a look at this circuit:</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-27-1.png" width="336" style="display: block; margin: auto;" /></p>
+<p>What does it represent?
+The central part is a rotation by <eq env="math">\varphi</eq> about the <eq env="math">x</eq>-axis, but is it is sandwiched between two rotations about the <eq env="math">z</eq>-axis.
+Now we have to appeal to your knowledge of classical mechanics: you may recall that any rotation in the Euclidean space can be performed as a sequence of three rotations: one about <eq env="math">z</eq>-axis, one about <eq env="math">x</eq>-axis, and one more about the <eq env="math">z</eq>-axis.
+In this context, this implies that any unitary <eq env="math">U</eq>, up to a global phase factor, can be written as
+<eq env="displaymath">
+  \begin{aligned}
+    U(\alpha, \beta, \varphi)
+    &amp;= e^{-i\frac{\beta}{2}Z} e^{-i\frac{\varphi}{2}X} e^{-i\frac{\alpha}{2}Z}
+  \\&amp;= \begin{bmatrix}
+      e^{-i\left(\frac{\alpha+\beta}{2}\right)}\cos\frac{\varphi}{2}
+      &amp; ie^{i\left(\frac{\alpha-\beta}{2}\right)}\sin\frac\varphi{2}
+    \\ie^{-i\left(\frac{\alpha-\beta}{2}\right)}\sin\frac\varphi{2}
+      &amp; e^{i\left(\frac{\alpha+\beta}{2}\right)}\cos\frac\varphi{2}
+    \end{bmatrix}.
+  \end{aligned}
+</eq></p>
+<p>Thus once you are given a couple of Hadamard gates and an infinite supply of phase gates, so that you can choose the three phases you need, you can construct an arbitrary unitary operation on a single qubit. Needless to say, the two axes in question, <eq env="math">z</eq> and <eq env="math">x</eq>, do not have any special status, geometrically speaking — if we have rotations about any two orthogonal<a href="#fn58" class="footnote-ref" id="fnref58"><sup>58</sup></a> axes then we can create any one-qubit unitary that we want.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:two-families-of-circles"></span>
+<img src="iqis-book_files/figure-html/two-families-of-circles-1.png" alt="If we can move along the two families of circles, then from any point on the sphere we can reach any other point. The two axes do not even have to be orthogonal: any two different axes will do. Can you see why?" width="384" />
+<p class="caption">
+Figure 3.8: If we can move along the two families of circles, then from any point on the sphere we can reach any other point. The two axes do not even have to be orthogonal: any two different axes will do. Can you see why?
+</p>
+</div>
+<p>Consider the following circuit:</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-28-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>where both <eq env="math">A</eq> and <eq env="math">B</eq> are unitary operations.
+We claim that <em>any</em> unitary <eq env="math">U</eq> can be represented in this form.</p>
+<p>Again, we can prove this geometrically.
+The circuit represents two rotations by <eq env="math">180^\circ</eq> about two axes obtained by rotating the <eq env="math">z</eq>-axis with unitaries <eq env="math">A</eq> and <eq env="math">B</eq>, respectively.
+Any rotation in the three-dimensional space is the composition of two rotations by <eq env="math">180^\circ</eq>, as shown in Figure <a href="3.5-universality-again.html#fig:two-rotations-by-180">3.9</a>.
+The resulting axis of rotation is perpendicular to the two axes about which rotations by <eq env="math">180^\circ</eq> are performed, and the angle of the composed rotation is twice the angle between the two axes.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:two-rotations-by-180"></span>
+<img src="iqis-book_files/figure-html/two-rotations-by-180-1.png" alt="Rotating by \alpha around the z-axis is the same as the composition of two rotations by 180^\circ around axes which both lie in the xy-plane, with angle \alpha/2 between them." width="384" />
+<p class="caption">
+Figure 3.9: Rotating by <eq env="math">\alpha</eq> around the <eq env="math">z</eq>-axis is the same as the composition of two rotations by <eq env="math">180^\circ</eq> around axes which both lie in the <eq env="math">xy</eq>-plane, with angle <eq env="math">\alpha/2</eq> between them.
+</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="58">
+<li id="fn58"><p>In fact, even this condition isn’t necessary! See Figure <a href="3.5-universality-again.html#fig:two-families-of-circles">3.8</a><a href="3.5-universality-again.html#fnref58" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +443,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3.4-unitaries-as-rotations.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3.6-quantum-dynamics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +483,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/03-pauli-bloch.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

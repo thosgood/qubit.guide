@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>11.3 Evolution of density operators under decoherence | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="11.3 Evolution of density operators under decoherence | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="11.3 Evolution of density operators under decoherence | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="11.2-decoherence-and-interference.html"/>
+<link rel="next" href="11.4-quantum-errors.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,45 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="evolution-of-density-operators-under-decoherence" class="section level2">
+<h2><span class="header-section-number">11.3</span> Evolution of density operators under decoherence</h2>
+<p>In terms of density operators, the qubit alone evolves from the pure state <eq env="math">|\psi\rangle\langle\psi|</eq> to a mixed state, which can be obtained by tracing over the environment.
+We start with the evolution of the state vector <eq env="math">|\psi\rangle=\alpha|0\rangle+\beta|1\rangle</eq>, which is given by
+<eq env="displaymath">
+  \left( \alpha|0\rangle +\beta |1\rangle\right)|e\rangle \longmapsto
+  \alpha |0\rangle|e_{00}\rangle +\beta |1\rangle |e_{11}\rangle,
+</eq>
+Then we write it as the evolution of the projector <eq env="math">|\psi\rangle\langle\psi|</eq>, and trace over the environment to obtain
+<eq env="displaymath">
+  \begin{aligned}
+    |\psi\rangle\langle\psi| \longmapsto &amp; |\alpha|^2|0\rangle\langle 0| \langle e_{00}|e_{00}\rangle+ \alpha\beta^\star |0\rangle\langle 1|\langle e_{11}|e_{00}\rangle
+  \\+ &amp;\alpha^\star\beta |1\rangle\langle 0|\langle e_{00}|e_{11}\rangle  + |\beta|^2|1\rangle\langle 1|\langle e_{11}|e_{11}\rangle.
+  \end{aligned}
+</eq>
+Written in the matrix form, this is
+<eq env="displaymath">
+  \begin{bmatrix}
+    |\alpha|^2 &amp; \alpha\beta^\ast
+  \\\alpha^\ast\beta &amp; |\beta|^2
+  \end{bmatrix}
+  \longmapsto
+  \begin{bmatrix}
+    |\alpha|^2 &amp; \alpha\beta^\ast \langle e_{11}|e_{00}\rangle
+    \\\alpha^\ast\beta \langle e_{00}|e_{11}\rangle &amp; |\beta|^2
+  \end{bmatrix}.
+</eq>
+The off-diagonal elements, originally called <strong>coherences</strong>, vanish as <eq env="math">\langle e_{00}|e_{11}\rangle</eq> approaches zero.
+This is why this particular interaction is called decoherence.</p>
+<p>Notice that
+<eq env="displaymath">
+|\psi\rangle|e\rangle \longmapsto \mathbf{1}|\psi\rangle|e_{\mathbf{1}}\rangle+Z|\psi\rangle|e_Z\rangle,
+</eq>
+implies
+<eq env="displaymath">
+|\psi\rangle\langle\psi|\longmapsto \mathbf{1}|\psi\rangle\langle\psi| \mathbf{1}\langle e_{\mathbf{1}}|e_{\mathbf{1}}\rangle +Z|\psi\rangle\langle\psi| Z\langle e_Z|e_Z\rangle,
+</eq>
+<em>only</em> when <eq env="math">\langle e_{\mathbf{1}}|e_Z\rangle=0</eq> (otherwise you would have additional cross terms <eq env="math">\mathbf{1}|\psi\rangle\langle\psi| Z</eq> and <eq env="math">Z|\psi\rangle\langle\psi| \mathbf{1}</eq>).
+In this case we can indeed say that, with probability <eq env="math">\langle e_{\mathbf{1}}|e_{\mathbf{1}}\rangle</eq>, nothing happens, and, with probability <eq env="math">\langle e_Z|e_Z\rangle</eq>, the qubit undergoes the phase-flip <eq env="math">Z</eq>.</p>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +413,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="11.2-decoherence-and-interference.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="11.4-quantum-errors.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +453,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/11-decoherence.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

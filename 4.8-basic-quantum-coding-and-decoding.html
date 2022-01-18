@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>4.8 Basic quantum coding and decoding | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="4.8 Basic quantum coding and decoding | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="4.8 Basic quantum coding and decoding | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="4.7-quantum-communication.html"/>
+<link rel="next" href="4.9-distinguishability-of-non-orthogonal-states.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,79 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="basic-quantum-coding-and-decoding" class="section level2">
+<h2><span class="header-section-number">4.8</span> Basic quantum coding and decoding</h2>
+<p>Suppose Alice randomly chooses one of the pre-agreed <eq env="math">N</eq> signal states <eq env="math">|s_k\rangle</eq> and sends it to Bob, who tries to identify the signal states by performing a measurement defined by the projectors <eq env="math">P_l</eq>.
+Let <eq env="math">P</eq> be a projector on a subspace spanned by the signal states <eq env="math">|s_k\rangle</eq>, i.e. <eq env="math">P|s_k\rangle = |s_k\rangle</eq>.
+The dimension <eq env="math">d</eq> of this subspace is given by <eq env="math">d = \operatorname{tr}P</eq>.
+We shall assume, without any loss of generality, that Bob designed his measurement in such a way that, whenever he gets outcome <eq env="math">P_k</eq>, he concludes that Alice sent state <eq env="math">|s_k\rangle</eq>.
+His probability of success is given by
+<eq env="displaymath">
+  \Pr(\text{success})
+  = \frac{1}{N} \sum_k \langle s_k|P_k|s_k\rangle
+</eq>
+which is the probability that signal state <eq env="math">|s_k\rangle</eq> is selected (here equal to <eq env="math">1/N</eq>, since all the signal states are equally likely) times the probability that the selected signal state is correctly identified by Bob (which is <eq env="math">\langle s_k|P_k|s_k\rangle</eq>), and we sum over all signal states.</p>
+<div class="idea">
+<p>We have the following <strong>trace identities</strong>:</p>
+<ul>
+<li><eq env="math">\operatorname{tr}(ABC) = \operatorname{tr}(BCA) = \operatorname{tr}(CAB)</eq></li>
+<li><eq env="math">\operatorname{tr}|a\rangle\langle b| = \langle b|a\rangle</eq></li>
+<li><eq env="math">\operatorname{tr}|a\rangle\langle b| = \langle b|A|a\rangle</eq></li>
+<li><eq env="math">\operatorname{tr}BP \leqslant\operatorname{tr}B</eq> for any positive semi-definite <eq env="math">B</eq> and projector <eq env="math">P</eq>.</li>
+</ul>
+<p>To prove this last identity, consider the projector <eq env="math">Q=\mathbf{1}-P</eq>, and note that
+<eq env="displaymath">
+  \begin{aligned}
+    \operatorname{tr}B
+    &amp;= \operatorname{tr}B(P+Q)
+  \\&amp;= \operatorname{tr}BP + \operatorname{tr}BQ
+  \end{aligned}
+</eq>
+and that <eq env="math">\operatorname{tr}BQ</eq> is non-negative.</p>
+</div>
+<p>Let us use this case to practice some of the trace identities.
+It is often convenient to write expressions such as <eq env="math">\langle\psi|A|\psi\rangle</eq> in terms of the trace: for any vector <eq env="math">|\psi\rangle</eq> and operator <eq env="math">A</eq> we have
+<eq env="displaymath">
+  \begin{aligned}
+    \langle\psi|A|\psi\rangle
+    &amp;= \operatorname{tr}(A|\psi\rangle\langle\psi|)
+  \\&amp;= \operatorname{tr}(|\psi\rangle\langle\psi| A).
+  \end{aligned}
+</eq>
+In our case,
+<eq env="displaymath">
+  \begin{aligned}
+    \Pr(\text{success})
+    &amp;= \frac{1}{N} \sum_k \langle s_k|P_k|s_k\rangle
+  \\&amp;= \frac{1}{N} \sum_k \langle s_k|PP_kP|s_k\rangle
+  \\&amp;= \frac{1}{N} \sum_k \operatorname{tr}(PP_kP|s_k\rangle\langle s_k|)
+  \end{aligned}
+</eq>
+where we have also used that <eq env="math">P|s_k\rangle=|s_k\rangle</eq>.
+Let us bound this expression above by using the aforementioned trace identities:
+<eq env="displaymath">
+  \begin{aligned}
+    \sum_k\frac{1}{N} \langle s_k|P_k|s_k\rangle
+    &amp;= \frac{1}{N} \sum_k \operatorname{tr}(PP_kP|s_k\rangle\langle s_k|)
+  \\&amp;\leqslant\frac{1}{N} \sum_k \operatorname{tr}(PP_kP)
+  \\&amp;= \frac{1}{N} P\left(\sum_k P_k\right)P
+  \\&amp;= \frac{1}{N} \operatorname{tr}(P\mathbf{1}P)
+  \\&amp;= \frac{1}{N} \operatorname{tr}(P)
+  \\&amp;= \frac{d}{N}.
+  \end{aligned}
+</eq></p>
+<p>So if Alice encodes <eq env="math">N</eq> equally likely messages as states in a quantum system that, mathematically speaking, lives in the Hilbert space of dimension <eq env="math">d</eq>, and if Bob decodes by performing a measurement and inferring the message from the result, then Bob’s probability of success is bounded by <eq env="math">\frac{d}{N}</eq>.
+If the number <eq env="math">N</eq> of possible signals exceeds the dimension <eq env="math">d</eq>, then Bob will not be able to reliably distinguish between the signals by any measurement.
+In particular:</p>
+<div class="idea">
+<p>In this setting<a href="#fn65" class="footnote-ref" id="fnref65"><sup>65</sup></a>, one qubit can store <em>at most</em> one bit of information that can <em>reliably</em> be read by a measurement.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="65">
+<li id="fn65"><p>There is something called <a href="https://en.wikipedia.org/wiki/Superdense_coding"><strong>superdense coding</strong></a>, where one qubit can actually store <em>two</em> classical bits, but this relies on Alice and Bob both having access to a shared entangled state right from the very start of the experiment.<a href="4.8-basic-quantum-coding-and-decoding.html#fnref65" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +447,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.7-quantum-communication.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.9-distinguishability-of-non-orthogonal-states.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +487,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/04-measurement.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

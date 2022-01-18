@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>2.10 The Bloch sphere | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="2.10 The Bloch sphere | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="2.10 The Bloch sphere | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="2.9-any-unitary-operation-on-a-single-qubit.html"/>
+<link rel="next" href="2.11-composition-of-rotations.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,105 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="the-bloch-sphere" class="section level2">
+<h2><span class="header-section-number">2.10</span> The Bloch sphere</h2>
+<p><lite-youtube videoid="_UYZYXTaRYM" playlabel="Play: The Bloch sphere"></lite-youtube></p>
+<p><lite-youtube videoid="YMw-Kbfqtf4" playlabel="Play: Pauli and Clifford gates on the Bloch sphere"></lite-youtube></p>
+<p>Unitary operations on a single qubit form a group.
+More precisely, the set of all <eq env="math">(2\times 2)</eq> unitary matrices forms a non-abelian group under the matrix multiplication, denoted by <eq env="math">\mathrm{U}(2)</eq>.
+It turns out that compositions of single qubit unitaries behave pretty much the same as compositions of rotations in three dimensions.
+Technically speaking, we claim that <eq env="math">\mathrm{U}(2)/\mathrm{U}(1)\cong \mathrm{SO}(3)</eq>.<a href="#fn39" class="footnote-ref" id="fnref39"><sup>39</sup></a>
+That is, <eq env="math">(2\times 2)</eq> unitaries, up to global phase, form a group which is isomorphic to the group of rotations in three dimensions, denoted by <eq env="math">\mathrm{SO}(3)</eq>.
+This isomorphism helps to visualise the actions of single-qubit gates.</p>
+<p>There are many ways to introduce this isomorphism.
+Here we will just show how to represent single-qubit state vectors in terms of Euclidean vectors in three dimensions; in <a href="3-chapter3.html#chapter3">Chapter 3</a> we will actually relate unitary operations on state vectors to rotations in this Euclidean space, demonstrating this isomorphism.<a href="#fn40" class="footnote-ref" id="fnref40"><sup>40</sup></a></p>
+<p>Any single qubit state can be written as <eq env="math">|\psi\rangle=\alpha|0\rangle+\beta|1\rangle</eq>, constrained by the relation <eq env="math">|\alpha|^2+|\beta|^2=1</eq>.
+This suggests a more natural parametrisation as
+<eq env="displaymath">
+  |\psi\rangle =
+  \cos\frac{\theta}{2}e^{i\varphi_0}|0\rangle
+  + \sin\frac{\theta}{2}e^{i\varphi_1}|1\rangle
+</eq>
+(note that there is a good reason to use <eq env="math">\theta/2</eq> instead of <eq env="math">\theta</eq>, and we we will explain why later on).
+We can then factor out a global phase:
+<eq env="displaymath">
+  |\psi\rangle =
+  e^{i\varphi_0}\left(
+    \cos\frac{\theta}{2}|0\rangle + \sin\frac{\theta}{2}e^{i\varphi}|1\rangle
+  \right),
+</eq>
+and even remove it completely, since states that are identical up to a global phase are physically indistinguishable.</p>
+<p>The parametrisation in terms of <eq env="math">\theta</eq> and <eq env="math">\varphi</eq> should remind you of spherical polar coordinates for the surface of a sphere.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:bloch-sphere"></span>
+<img src="iqis-book_files/figure-html/bloch-sphere-1.png" alt="The Bloch sphere, with the point \vec{s} corresponding to |\psi\rangle marked." width="384" />
+<p class="caption">
+Figure 2.3: The Bloch sphere, with the point <eq env="math">\vec{s}</eq> corresponding to <eq env="math">|\psi\rangle</eq> marked.
+</p>
+</div>
+<p>We call this sphere the <strong>Bloch sphere</strong>, and the unit vector <eq env="math">\vec{s}</eq> defined by <eq env="math">\theta</eq> and <eq env="math">\varphi</eq> the <strong>Bloch vector</strong>.<a href="#fn41" class="footnote-ref" id="fnref41"><sup>41</sup></a>
+This is a very useful way to visualise quantum states of a single qubit and unitary operations that we perform on it.
+Any unitary action on the state vector will induce a rotation of the corresponding Bloch vector.
+But what kind of rotation?</p>
+<p>We give a complete answer to this question in <a href="3-chapter3.html#chapter3">Chapter 3</a>, but we might as well give some specific results here first, since some are easy enough to calculate “by hand”.
+Note that <em>any two orthogonal state vectors appear on the Bloch sphere as two Bloch vectors pointing in opposite directions</em>.
+Now, the two eigenvectors of a single-qubit unitary <eq env="math">U</eq> must be orthogonal, and thus define an axis running through the centre of the Bloch sphere.
+This is the axis about which the Bloch vector is rotated when <eq env="math">U</eq> acts on the corresponding state vector.
+The rotation angle <eq env="math">\alpha</eq> is given by the eigenvalues of <eq env="math">U</eq>, which, up to a global phase factor, are of the form <eq env="math">e^{\mp i\alpha/2}</eq>.</p>
+<p>It is instructive to work out few simple cases and get a feel for the rotations corresponding to the most common unitaries.
+For example, it is easy to check that a phase gate <eq env="math">P_\alpha</eq> acts by
+<eq env="displaymath">
+  \cos\frac{\theta}{2}|0\rangle + e^{i\varphi}\sin\frac{\theta}{2}|1\rangle
+  \longmapsto
+  \cos\frac{\theta}{2}|0\rangle + e^{i(\varphi+\alpha)}\sin\frac{\theta}{2}|1\rangle.
+</eq>
+The azimuthal angle changes from <eq env="math">\varphi</eq> to <eq env="math">\varphi+\alpha</eq>, and so the Bloch sphere is rotated anticlockwise by <eq env="math">\alpha</eq> about the <eq env="math">z</eq>-axis.
+The Bloch vectors corresponding to the two eigenvectors of <eq env="math">P_\alpha</eq>, namely <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>, define the axis of the rotation.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:bloch-sphere-rotation"></span>
+<img src="iqis-book_files/figure-html/bloch-sphere-rotation-1.png" alt="Phase gates P_\alpha represent rotations of the Bloch sphere around the z-axis." width="480" />
+<p class="caption">
+Figure 2.4: Phase gates <eq env="math">P_\alpha</eq> represent rotations of the Bloch sphere around the <eq env="math">z</eq>-axis.
+</p>
+</div>
+<p>As previously mentioned, the Pauli operator <eq env="math">Z=\sigma_z</eq> is a special case of a phase gate, and represents rotation by <eq env="math">{180}^{\circ}</eq> (that is, <eq env="math">\pi</eq> radians), about the <eq env="math">z</eq>-axis.
+You can also verify that <eq env="math">X=\sigma_x</eq>, with eigenvectors <eq env="math">{(|0\rangle\pm|1\rangle)/\sqrt{2}}</eq>, represents rotation by <eq env="math">{180}^{\circ}</eq> about the <eq env="math">x</eq>-axis, and <eq env="math">Y=\sigma_y</eq>, with eigenvectors <eq env="math">{(|0\rangle\pm i|1\rangle)/\sqrt{2}}</eq>, represents rotation by <eq env="math">{180}^{\circ}</eq> about the <eq env="math">y</eq>-axis.</p>
+<p><strong>!!!TO-DO!!! points on the intersection of the axes with the Bloch sphere are exactly the eigenstates of the corresponding Pauli operator</strong></p>
+<p>How about the Hadamard gate?
+Like the Pauli operators, it squares to the identity (<eq env="math">H^2=\mathbf{1}</eq>), which implies that its eigenvalues are <eq env="math">\pm 1</eq>.
+Thus it will correspond to a rotation by <eq env="math">{180}^{\circ}</eq>.
+But about which axis?
+This time, rather than finding eigenvectors of <eq env="math">H</eq>, we notice that <eq env="math">HXH=Z</eq> and <eq env="math">HZH=X</eq>, thus <eq env="math">H</eq> must swap <eq env="math">x</eq>- and <eq env="math">z</eq>-axes, turning rotations about the <eq env="math">z</eq>-axis into rotations about the <eq env="math">x</eq>-axis, and vice versa.
+The Hadamard gate must then represent rotation by <eq env="math">{180}^{\circ}</eq> about the diagonal <eq env="math">(x+z)</eq>-axis.
+You may also notice that, after this rotation, the <eq env="math">y</eq>-axis points in the opposite direction, which seems to be related to another identity: <eq env="math">HYH=-Y</eq>.
+This is not a coincidence.</p>
+<p>One can show<a href="#fn42" class="footnote-ref" id="fnref42"><sup>42</sup></a> that the effect of the rotation represented by unitary <eq env="math">U</eq> on the Bloch vector with components <eq env="math">s_x</eq>, <eq env="math">s_y</eq>, <eq env="math">s_z</eq> is summarised in the formula
+<eq env="displaymath">
+  U (s_x X + s_y Y + s_z Z) U^\dagger
+  = s'_x X+ s'_y Y + s'_z Z,
+</eq>
+where <eq env="math">s'_x</eq>, <eq env="math">s'_y</eq>, and <eq env="math">s'_z</eq> are the components of the rotated Bloch vector.</p>
+<div id="drawing-points-on-the-bloch-sphere" class="section level3">
+<h3><span class="header-section-number">2.10.1</span> Drawing points on the Bloch sphere</h3>
+<p>We know that the state <eq env="math">|0\rangle</eq> corresponds to the north pole of the Bloch sphere, and the state <eq env="math">|1\rangle</eq> to the south, but what about an arbitrary state <eq env="math">|\psi\rangle=\alpha|0\rangle+\beta|1\rangle</eq>?
+By definition, we can find the parametrisation in terms of <eq env="math">\theta</eq> and <eq env="math">\varphi</eq>, but there is also a neat “trick” for finding the point on the Bloch sphere that corresponds to <eq env="math">|\psi\rangle</eq>, which goes as follows.</p>
+<ol style="list-style-type: decimal">
+<li>Calculate <eq env="math">\lambda=\beta/\alpha</eq> (assuming that <eq env="math">\alpha\neq0</eq>, since otherwise <eq env="math">|\psi\rangle=|1\rangle</eq>).</li>
+<li>Write <eq env="math">\lambda=\lambda_x+i\lambda_y</eq> and mark the point <eq env="math">p=(\lambda_x,\lambda_y)</eq> in the <eq env="math">xy</eq>-plane (i.e. the plane <eq env="math">\{z=0\}</eq>).</li>
+<li>Draw the line going through the south-pole and the point <eq env="math">p</eq>. This will intersect the Bloch sphere in exactly one other point, and this is exactly the point corresponding to <eq env="math">|\psi\rangle</eq>.</li>
+</ol>
+<p>Note that this lets you <em>draw</em> the point on the sphere, but doesn’t (immediately) give you the <em>coordinates</em> for it.
+That is, this method is nice for geometric visualisation, but the parametrisation method is much better when it comes to actually doing calculations.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="39">
+<li id="fn39"><p>Note that <eq env="math">\mathrm{U}(1)\cong\mathbb{C}^\times</eq>, where <eq env="math">\mathbb{C}^\times</eq> is the multiplicative group of unit elements of the complex numbers, i.e. the set <eq env="math">\mathbb{C}\setminus\{0\}</eq> with the group operation given by multiplication.<a href="2.10-the-bloch-sphere.html#fnref39" class="footnote-back">↩︎</a></p></li>
+<li id="fn40"><p>That is, we have the group <eq env="math">\mathrm{U}(2)</eq> acting on the space of single-qubit state vectors, and we have the group <eq env="math">\mathrm{SO}(3)</eq> acting on the unit sphere <eq env="math">S^2\subset\mathbb{R}^3</eq>. In this chapter we will discuss how to go from one <em>space</em> (i.e. the thing being acted upon by the group) to the other; in <a href="3-chapter3.html#chapter3">Chapter 3</a> we will discuss how to go from one <em>group</em> (i.e. the thing acting on the space) to the other.<a href="2.10-the-bloch-sphere.html#fnref40" class="footnote-back">↩︎</a></p></li>
+<li id="fn41"><p>We will revisit this construction again in more detail, and from a slightly different point of view, in <a href="3-chapter3.html#chapter3">Chapter 3</a>.<a href="2.10-the-bloch-sphere.html#fnref41" class="footnote-back">↩︎</a></p></li>
+<li id="fn42"><p>Again, see <a href="3-chapter3.html#chapter3">Chapter 3</a>.<a href="2.10-the-bloch-sphere.html#fnref42" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +473,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="2.9-any-unitary-operation-on-a-single-qubit.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="2.11-composition-of-rotations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +513,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/02-qubits.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

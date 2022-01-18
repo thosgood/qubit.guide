@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>1.4 Interferometers | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="1.4 Interferometers | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="1.4 Interferometers | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="1.3-superpositions.html"/>
+<link rel="next" href="1.5-qubits-gates-and-circuits.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,107 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="interferometers" class="section level2">
+<h2><span class="header-section-number">1.4</span> Interferometers</h2>
+<p><lite-youtube videoid="T2vpnfX3lJA" playlabel="Play: Ramsey interferometry"></lite-youtube></p>
+<p><lite-youtube videoid="TWVL7u06BB4" playlabel="Play: Ramsey interferometry via matrices"></lite-youtube></p>
+<p>Many modern interference experiments are performed using internal degrees of freedom of atoms and ions.
+For example, <strong>Ramsey interferometry</strong>, named after American physicist Norman Ramsey, is a generic name for an interference experiment in which atoms are sent through two separate resonant interaction zones, known as <strong>Ramsey zones</strong>, separated by an intermediate dispersive interaction zone.</p>
+<p>Many beautiful experiments of this type were carried out in the 1990s in Serge Haroche’s lab at the Ecole Normale Supérieure in Paris.
+Rubidium atoms were sent through two separate interaction zones (resonant interaction in the first and the third cavity) separated by a phase inducing dispersive interaction zone (the central cavity).
+The atoms were subsequently measured, via a selective ionisation, and found to be in one of the two preselected energy states, here labeled as <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>.
+The fraction of atoms found in states <eq env="math">|0\rangle</eq> or <eq env="math">|1\rangle</eq> showed a clear dependence on the phase shifts induced by the dispersive interaction in the central cavity.
+In 2012, Serge Haroche and Dave Wineland shared the Nobel Prize in physics for “ground-breaking experimental methods that enable measuring and manipulation of individual quantum systems.”</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ramsey-figure"></span>
+<img src="iqis-book_files/figure-html/ramsey-figure-1.png" alt="A schematic diagram of a Ramsey interference experiment." width="672" />
+<p class="caption">
+Figure 1.1: A schematic diagram of a Ramsey interference experiment.
+</p>
+</div>
+<p>The three rectangular boxes in Figure <a href="1.4-interferometers.html#fig:ramsey-figure">1.1</a> represent three cavities, each cavity being an arrangement of mirrors which traps electromagnetic field (think about standing waves in between two mirrors).
+The oval shapes represent rubidium atoms with two preselected energy states labelled as <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>.
+Each atom is initially prepared in a highly excited internal energy state <eq env="math">|0\rangle</eq> and zips through the three cavities, from the left to the right.
+In each cavity the atom interacts with the cavity field.
+The first and the third cavities are, for all theoretical purposes, identical: their frequencies are tuned to the resonant frequency of the atom, and the atom exchanges energy with the cavity, going back and forth between its energy states <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>.
+In contrast, in the second (central) cavity, the atom undergoes the so-called dispersive interaction: it is too off-resonance to exchange energy with the field but its energy states “feel” the field and acquire phase shifts.
+After experiencing this well timed sequence of resonant–dispersive–resonant interactions, the energy of the atom is measured and the atom is found to be either in state <eq env="math">|0\rangle</eq> or state <eq env="math">|1\rangle</eq>.
+The fraction of atoms found in state <eq env="math">|0\rangle</eq> or <eq env="math">|1\rangle</eq> shows a clear dependence on the phase shifts induced by the dispersive interaction in the central cavity.</p>
+<p>We can understand this interference better if we follow the two internal states of the atom as it moves through the three cavities.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:ramsey-figure-2"></span>
+<img src="iqis-book_files/figure-html/ramsey-figure-2-1.png" alt="The Ramsey interferometer represented as an abstract diagram. It should be read from left to right. The line segments represent transitions between the two states, |0\rangle and |1\rangle, and the numbers are the corresponding probability amplitudes." width="672" />
+<p class="caption">
+Figure 1.2: The Ramsey interferometer represented as an abstract diagram. It should be read from left to right. The line segments represent transitions between the two states, <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>, and the numbers are the corresponding probability amplitudes.
+</p>
+</div>
+<p>Suppose we are interested in the probability that the atom, initially in state <eq env="math">|0\rangle</eq>, will be found, after completing its journey through the three cavities, in state <eq env="math">|1\rangle</eq>.
+As you can see in Figure <a href="1.4-interferometers.html#fig:ramsey-figure-2">1.2</a>, this can happen in two ways, as indicated by the two red paths connecting the input state <eq env="math">|0\rangle</eq> on the left with the output state <eq env="math">|1\rangle</eq> on the right.
+Again, let <eq env="math">U_{ij}</eq> denote the probability amplitude that input <eq env="math">|j\rangle</eq> generates output <eq env="math">|i\rangle</eq> (for <eq env="math">i,j=0,1</eq>).
+We can see from the diagram that
+<eq env="displaymath">
+  \begin{aligned}
+    U_{10}
+    &amp;= \frac{1}{\sqrt2} e^{i\varphi_0}\frac{1}{\sqrt2} + \frac{1}{\sqrt2} e^{i\varphi_1}\frac{-1}{\sqrt2}
+  \\&amp;= \frac12 e^{i\varphi_0} - \frac12 e^{i\varphi_1}
+  \\&amp;= -ie^{i\frac{\varphi_0+\varphi_1}{2}}\sin\frac{\varphi}{2},
+  \end{aligned}
+</eq>
+where <eq env="math">\varphi = \varphi_1-\varphi_0</eq> is the relative phase.
+The corresponding probability reads<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a>
+<eq env="displaymath">
+  \begin{aligned}
+    P_{10}
+    &amp;= \vert U_{10}\vert^2
+  \\&amp;= \left\vert \frac12 e^{i\varphi_0} - \frac12 e^{i\varphi_1}\right\vert^2
+  \\&amp;= \frac12 - \frac12\cos\varphi.
+  \end{aligned}
+</eq>
+You should recognise the first term, <eq env="math">\frac12</eq>, as the “classical” probability and the second one, <eq env="math">-\frac12\cos\varphi</eq>, as the interference term.
+We can repeat such calculations for any other pair of input–output states.
+This approach works fine here but, in general, tracking all possible paths in evolving quantum systems can become messy when the number of input and output states increases.
+There is, however, a neat way of doing it via matrix multiplication.</p>
+<p>The effect of each interaction on atomic states can be described by a matrix of transition amplitudes, as illustrated in Figure <a href="1.4-interferometers.html#fig:interference-matrix">1.3</a>.
+Then a sequence of independent interactions is described by the product of these matrices.
+<eq env="displaymath">
+  \begin{aligned}
+    U &amp;=
+    \begin{bmatrix}
+      \frac{1}{\sqrt2} &amp; \frac{1}{\sqrt2}
+    \\\frac{1}{\sqrt2} &amp; \frac{-1}{\sqrt2}
+    \end{bmatrix}
+    \begin{bmatrix}
+      e^{i\varphi_0} &amp; 0
+    \\0 &amp; e^{i\varphi_1}
+    \end{bmatrix}
+    \begin{bmatrix}
+      \frac{1}{\sqrt2} &amp; \frac{1}{\sqrt2}
+    \\\frac{1}{\sqrt2} &amp; \frac{-1}{\sqrt2}
+    \end{bmatrix}
+  \\&amp;= e^{i\frac{\varphi_0+\varphi_1}{2}}
+    \begin{bmatrix}
+      \cos\frac{\varphi}{2} &amp; -i\sin\frac{\varphi}{2}
+    \\\ -i\sin\frac{\varphi}{2}&amp; \cos\frac{\varphi}{2}
+    \end{bmatrix},
+  \end{aligned}
+</eq>
+where <eq env="math">\varphi = \varphi_1-\varphi_0</eq>, as before.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:interference-matrix"></span>
+<img src="iqis-book_files/figure-html/interference-matrix-1.png" alt="The Ramsey interferometer represented as an abstract diagram (matrix approach). Here we have omitted the |0\rangle and |1\rangle labels, just to simply the diagram. We also ignore the global phase factor of e^{i\frac{\varphi_0+\varphi_1}{2}}." width="672" />
+<p class="caption">
+Figure 1.3: The Ramsey interferometer represented as an abstract diagram (matrix approach). Here we have omitted the <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq> labels, just to simply the diagram. We also ignore the global phase factor of <eq env="math">e^{i\frac{\varphi_0+\varphi_1}{2}}</eq>.
+</p>
+</div>
+<p>In general, quantum operation <eq env="math">A</eq> followed by another quantum operation <eq env="math">B</eq> is a quantum operation described by the matrix product <eq env="math">BA</eq> (watch the order of matrices).
+Indeed, the expression <eq env="math">(BA)_{ij}=\sum_k B_{ik}A_{kj}</eq> is the sum over amplitudes that input <eq env="math">|j\rangle</eq> generates output <eq env="math">|i\rangle</eq> via a specific intermediate state <eq env="math">|k\rangle</eq>.
+As you can see, the matrix approach is a wonderful bookkeeping tool for in one swap it takes care of both multiplying and adding probability amplitudes corresponding to all the contributing paths.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="12">
+<li id="fn12"><p>From the classical probability theory perspective the resonant interaction induces a random switch between <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq> (why?) and the dispersive interaction has no effect on these two states (why?). Hence, one random switch followed by another random switch gives exactly a single random switch, which gives <eq env="math">\frac12</eq> for the probability that input <eq env="math">|0\rangle</eq> becomes output <eq env="math">|1\rangle</eq>.<a href="1.4-interferometers.html#fnref12" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +475,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1.3-superpositions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1.5-qubits-gates-and-circuits.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +515,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/01-interference.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

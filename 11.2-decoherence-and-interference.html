@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>11.2 Decoherence and interference | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="11.2 Decoherence and interference | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="11.2 Decoherence and interference | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="11.1-decoherence-simplified.html"/>
+<link rel="next" href="11.3-evolution-of-density-operators-under-decoherence.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,48 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="decoherence-and-interference" class="section level2">
+<h2><span class="header-section-number">11.2</span> Decoherence and interference</h2>
+<p><lite-youtube videoid="ot2BAKigS1E" playlabel="Play: Entanglement, interference, and visibility"></lite-youtube></p>
+<p>Suppose the qubit undergoes the usual interference experiment, but, in between the two Hadamard gates, it is affected by <strong>decoherence</strong> (denoted by <eq env="math">\times</eq>), which acts as described above (i.e. <eq env="math">|0\rangle|e\rangle\mapsto|0\rangle|e_{00}\rangle</eq> and <eq env="math">|1\rangle|e\rangle\mapsto|1\rangle|e_{11}\rangle</eq>).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:decoherence-interference"></span>
+<img src="iqis-book_files/figure-html/decoherence-interference-1.png" alt="The usual interference experiment, but with decoherence." width="432" />
+<p class="caption">
+Figure 11.1: The usual interference experiment, but with decoherence.
+</p>
+</div>
+<p>Let us step through the circuit in Figure <a href="11.2-decoherence-and-interference.html#fig:decoherence-interference">11.1</a>, keeping track of the state of the environment:
+<eq env="displaymath">
+  \begin{aligned}
+    |0\rangle|e\rangle
+    &amp; \overset{H}{\longmapsto} \Big( |0\rangle + |1\rangle \Big) |e\rangle
+  \\&amp; \overset{\phi}{\longmapsto} \Big( |0\rangle + e^{i\phi}|1\rangle \Big) |e\rangle
+  \\&amp; \overset{\times}{\longmapsto} |0\rangle|e_{00}\rangle + e^{i\phi}|1\rangle|e_{11}\rangle
+  \\&amp; \overset{H}{\longmapsto} |0\rangle\Big( |e_{00}\rangle + e^{i\phi}|e_{11}\rangle \Big) + |1\rangle\Big( |e_{00}\rangle - e^{i\phi}|e_{11}\rangle \Big).
+  \end{aligned}
+</eq>
+If we write <eq env="math">\langle e_{00}|e_{11}\rangle = ve^{i\alpha}</eq>, then the final probabilities of <eq env="math">0</eq> and <eq env="math">1</eq> oscillate with <eq env="math">\phi</eq> as
+<eq env="displaymath">
+  \begin{aligned}
+    P_{0}(\phi) &amp;= \frac12\big(1 + v\cos(\phi + \alpha)\big),
+  \\P_{1}(\phi) &amp;= \frac12\big(1 - v\cos(\phi + \alpha)\big).
+  \end{aligned}
+</eq></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:visibility-suppression"></span>
+<img src="iqis-book_files/figure-html/visibility-suppression-1.png" alt="Visibility suppression." width="480" />
+<p class="caption">
+Figure 11.2: Visibility suppression.
+</p>
+</div>
+<p>As we can see in Figure <a href="11.2-decoherence-and-interference.html#fig:visibility-suppression">11.2</a>, the interference pattern is suppressed by a factor <eq env="math">v</eq>, which we call the <strong>visibility</strong>.
+As <eq env="math">v=|\langle e_{00}|e_{11}\rangle|</eq> decreases, we lose all the advantages of quantum interference.
+For example, in Deutsch’s algorithm we obtain the correct answer with probability at most <eq env="math">\frac12(1+v)</eq>.
+For <eq env="math">\langle e_{00}|e_{11}\rangle = 0</eq>, the <strong>perfect decoherence</strong> case, the network outputs <eq env="math">0</eq> or <eq env="math">1</eq> with equal probabilities, i.e. <em>it is useless as a computing device</em>.</p>
+<div class="idea">
+<p>It is clear that we want to avoid decoherence, or at least diminish its impact on our computing device.
+For this we need <strong>quantum error correction</strong>: we encode the state of a single (logical) qubit across several (physical) qubits.</p>
+</div>
+<p><strong>!!!TO-DO!!! generalised decoherence as controlled-<eq env="math">U</eq> gate, varying from <eq env="math">\mathbf{1}</eq> to controlled-<eq env="math">\texttt{NOT}</eq></strong></p>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +416,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="11.1-decoherence-simplified.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="11.3-evolution-of-density-operators-under-decoherence.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +456,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/11-decoherence.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

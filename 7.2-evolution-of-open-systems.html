@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>7.2 Evolution of open systems | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="7.2 Evolution of open systems | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="7.2 Evolution of open systems | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="7.1-random-evolution.html"/>
+<link rel="next" href="7.3-stinesprings-dilation-and-krauss-ambiguity.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,98 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="evolution-of-open-systems" class="section level2">
+<h2><span class="header-section-number">7.2</span> Evolution of open systems</h2>
+<p>Needless to say, there is more to evolutions of open systems than random isometries, and what follows is the most general scenario we will discuss.
+Consider two interacting systems, <eq env="math">\mathcal{A}</eq> and <eq env="math">\mathcal{B}</eq>, but this time we do <em>not</em> assume that their interacting dynamics admits a control-target interpretation.
+We will view <eq env="math">\mathcal{A}</eq> as an auxiliary system, i.e. an ancilla, and focus on<a href="#fn105" class="footnote-ref" id="fnref105"><sup>105</sup></a> the evolution of system <eq env="math">\mathcal{B}</eq>.</p>
+<p>Let us pick an orthonormal basis <eq env="math">|i\rangle</eq> of the Hilbert space <eq env="math">\mathcal{H}_\mathcal{A}</eq> associated with the ancilla.
+Any unitary transformation of the combined system <eq env="math">\mathcal{AB}</eq> can then be written as
+<eq env="displaymath">
+  U
+  = \sum_{ij}|i\rangle\langle j|\otimes B_{ij}
+  =
+  \begin{bmatrix}
+    B_{11} &amp; B_{12} &amp; B_{13} &amp; \ldots
+  \\B_{21} &amp; B_{22} &amp; B_{23} &amp; \ldots
+  \\B_{31} &amp; B_{32} &amp; B_{33} &amp; \ldots
+  \\\vdots &amp; \vdots &amp; \vdots &amp; \ddots
+  \end{bmatrix}
+</eq>
+where the <eq env="math">B_{ij}</eq> are operators acting on the the Hilbert space <eq env="math">\mathcal{H}_\mathcal{B}</eq> associated with system <eq env="math">\mathcal{B}</eq>.
+Note that the <eq env="math">B_{ij}</eq> do <em>not</em> need to be unitary, but, for the overall transformation <eq env="math">U</eq> to be unitary, they must satisfy
+<eq env="displaymath">
+  \begin{aligned}
+    \sum_i B_{ik}^\dagger B_{il}
+    &amp;= \delta_{kl} \mathbf{1}_\mathcal{AB}
+  \\\sum_i B_{ki}B_{li}^\dagger
+    &amp;= \delta_{kl} \mathbf{1}_\mathcal{B}
+  \end{aligned}
+  \tag{$\star$}
+</eq>
+where <eq env="math">\mathbf{1}_\mathcal{AB}</eq> and <eq env="math">\mathbf{1}_\mathcal{B}</eq> are the identity operators on <eq env="math">\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}</eq> and <eq env="math">\mathcal{H}_\mathcal{B}</eq>, respectively.
+These two conditions correspond to the requirement that both column and row vectors must be orthonormal for a matrix to be unitary, except that here <eq env="math">U</eq> is a block matrix, and the entries <eq env="math">B_{ij}</eq> are complex matrices rather than complex numbers, so some care must be taken with the order of multiplication.
+Again, the evolution of the system <eq env="math">\mathcal{B}</eq> depends on both <eq env="math">U</eq> <em>and</em> on the initial state of the auxiliary system <eq env="math">\mathcal{A}</eq>.</p>
+<p>Without any loss of generality, we may assume that system <eq env="math">\mathcal{A}</eq> is in a pure state<a href="#fn106" class="footnote-ref" id="fnref106"><sup>106</sup></a> which can be chosen to be one of the basis states <eq env="math">|i\rangle</eq>, say <eq env="math">|k\rangle</eq>.
+In this case, <eq env="math">U</eq> acts by
+<eq env="displaymath">
+  U\colon |k\rangle\otimes|\psi\rangle \longmapsto
+  \sum_i |i\rangle\otimes B_{ik}|\psi\rangle
+\tag{$\ddagger$}
+</eq>
+for an arbitrary state <eq env="math">|\psi\rangle</eq> of <eq env="math">\mathcal{B}</eq>.</p>
+<p>The resulting density operator for <eq env="math">\mathcal{B}</eq> is found by taking the density operator of the output state of <eq env="math">\mathcal{AB}</eq>, which is
+<eq env="displaymath">
+  \sum_{ij} |i\rangle\langle j|\otimes B_{ik}|\psi\rangle\langle\psi|B_{jk}^\dagger
+</eq>
+and then tracing out <eq env="math">\mathcal{A}</eq>, obtaining
+<eq env="displaymath">
+  \begin{aligned}
+    \operatorname{tr}_\mathcal{A} \left(
+      \sum_{ij} |i\rangle\langle j|\otimes B_{ik}|\psi\rangle\langle\psi|B_{jk}^\dagger
+    \right)
+    &amp;= \sum_{ij} \langle i|j\rangle\cdot B_{ik}|\psi\rangle\langle\psi|B_{jk}^\dagger
+  \\&amp;= \sum_i B_{ik}|\psi\rangle\langle\psi|B_{ik}^\dagger
+  \end{aligned}
+</eq>
+where we have used the fact that <eq env="math">\langle i|j\rangle=\delta_{ij}</eq>.
+In general, for any input state <eq env="math">\rho</eq>, we obtain the map
+<eq env="displaymath">
+  \rho\longmapsto
+  \rho'= \sum_i B_{ik}\rho B^\dagger_{ik} \equiv \sum_i B_{i}\rho B^\dagger_{i}
+</eq>
+where, in the last expression on the right-hand size, we have dropped index <eq env="math">k</eq> (remember, it was there only to remind us about the initial state of the ancilla).
+Since the overall transformation <eq env="math">U</eq> is unitary, recall that the <eq env="math">B_i</eq> satisfy <eq env="math">\sum_i B_i^\dagger B_i=\mathbf{1}</eq>.
+This normalisation conditions guarantees that the trace is preserved.</p>
+<div class="idea">
+<p>In summary, we can think about a quantum evolution of subsystem <eq env="math">\mathcal{B}</eq> as a sequence of the three distinct operations:
+<eq env="displaymath">
+  \begin{aligned}
+    \rho
+    \longmapsto &amp;\underbrace{|k\rangle\langle k|\otimes\rho}_{\text{add ancilla}}
+  \\\longmapsto &amp;\underbrace{U(|k\rangle\langle k|\otimes\rho) U^\dagger}_{\text{unitary evolution}}
+  \\\longmapsto &amp;\underbrace{\operatorname{tr}_\mathcal{A} \left[U(|k\rangle\langle k|\otimes\rho) U^\dagger\right]}_{\text{discard ancilla}}
+    = \sum_i B_{i}\rho B_{i}^\dagger
+    =\rho'.
+  \end{aligned}
+</eq></p>
+</div>
+<p>In summary:</p>
+<ul>
+<li>First we pick up a system of interest which, in general, can be in a mixed state <eq env="math">\rho</eq>. It may be the case that this system is entangled with some other degrees of freedom or with some other physical systems, but these other entities will remain passive and will not enter any subsequent dynamics.</li>
+<li>Then we dilate the system: we add an ancilla which is large enough to include everything our system will interact with, and also large enough to be in a pure state. The expansion ends when the composed system is (for all practical purposes) isolated and follows a unitary evolution <eq env="math">U</eq>.</li>
+<li>After the unitary evolution takes place, we discard the ancilla and focus on the system alone. In fact we do not have to discard exactly what we added: we can discard only part of the ancilla, or any other part of the dilated system.</li>
+<li>The output system in this scenario does not have to be the original input system, but usually it is.</li>
+</ul>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-54-1.png" width="192" style="display: block; margin: auto;" /></p>
+<p>It is adding (i.e. tensoring) the auxiliary system in a fixed state, and then discarding it (via the partial trace), that is responsible for the <em>non-unitary</em> character of this evolution.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="105">
+<li id="fn105"><p>For now, when we write tensor products, we will place the ancilla first and the system of interest second: <eq env="math">\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}</eq>. We do this to begin with simply because block matrices on tensor products are easier to interpret when written in this particular order. Later on we will revert to the more common convention in which the system of interest is placed first.<a href="7.2-evolution-of-open-systems.html#fnref105" class="footnote-back">↩︎</a></p></li>
+<li id="fn106"><p>If <eq env="math">\mathcal{A}</eq> were initially in a mixed state, we could always regard <eq env="math">\mathcal{A}</eq> as a subsystem of some larger <eq env="math">\widetilde{\mathcal{A}}</eq> that is in an entangled pure state.<a href="7.2-evolution-of-open-systems.html#fnref106" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +466,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="7.1-random-evolution.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="7.3-stinesprings-dilation-and-krauss-ambiguity.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +506,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/07-CP-maps.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

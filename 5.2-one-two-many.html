@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>5.2 One, two, many… | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="5.2 One, two, many… | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="5.2 One, two, many… | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="5.1-a-small-history.html"/>
+<link rel="next" href="5.3-quantum-theory-formally-continued.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,70 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="one-two-many" class="section level2">
+<h2><span class="header-section-number">5.2</span> One, two, many…</h2>
+<p><lite-youtube videoid="Y52d8Awh96g" playlabel="Play: Dimension argument for entanglement"></lite-youtube></p>
+<p>In classical physics, the transition from a single object to a composite system of many objects is trivial: in order to describe the state of, say, 42 objects at any given moment of time, it is sufficient to describe the state of each of the objects separately.
+Indeed, the classical state of 42 point-like particles is described by specifying the position and the momentum of each particle.</p>
+<div class="idea">
+<p>In the <em>classical</em> world, “the whole is the sum of its parts”, but the <em>quantum</em> world is very different.</p>
+</div>
+<p>Consider, for example, a pair of qubits.
+Suppose that each one is described by a state vector: the first one by <eq env="math">|a\rangle</eq>, and the second one by <eq env="math">|b\rangle</eq>.
+One might therefore think that the most general state of the two qubits should be represented by a pair of state vectors, <eq env="math">|a\rangle|b\rangle</eq>, with one for each qubit.
+Indeed, such a state is certainly possible, but there are other states that <em>cannot</em> be expressed in this form.
+In order to write down the most general state of two qubits we first focus on the basis states.</p>
+<p>For a single qubit we have been using the standard basis <eq env="math">\{|0\rangle,|1\rangle\}</eq>.
+For two qubits we may choose the following as our standard basis states:<a href="#fn69" class="footnote-ref" id="fnref69"><sup>69</sup></a>
+<eq env="displaymath">
+  \begin{array}{cc}
+    |00\rangle \equiv |0\rangle|0\rangle
+    &amp; |01\rangle \equiv |0\rangle|1\rangle
+  \\|10\rangle \equiv |1\rangle|0\rangle
+    &amp;|11\rangle \equiv |1\rangle|1\rangle.
+  \end{array}
+</eq>
+Within each ket, the first symbol refers to the first qubit, and the second to the second, and we have tacitly assumed that we can distinguish the two qubits by their location, or some other means.
+Now, the most general state of the two qubits is a normalised linear combination of these four basis states, i.e. a vector of the form
+<eq env="displaymath">
+  |\psi\rangle
+  = c_{00}|00\rangle + c_{01}|01\rangle + c_{10}|10\rangle + c_{11}|11\rangle.
+</eq>
+Physical interpretation aside, let us count how many real parameters are needed to specify this state.
+Six, right?
+We have four complex numbers (eight real parameters) restricted by the normalisation condition, along with the fact that states differing only by a global phase factor are equivalent, which leaves us with six real parameters.
+Now, by the same line of argument, we need only two real parameters to specify the state of a single qubit, and hence need four real parameters to specify any state of two qubits of the form <eq env="math">|a\rangle|b\rangle</eq>.
+So it cannot be the case that every state of two qubits can be expressed as a pair of states <eq env="math">|a\rangle|b\rangle</eq>, simply for “dimension reasons”.</p>
+<p>For example, compare the two states of two qubits,
+<eq env="displaymath">
+  \begin{gathered}
+    \frac{1}{\sqrt 2}|00\rangle + \frac{1}{\sqrt 2}|01\rangle
+  \\\text{and}
+  \\\frac{1}{\sqrt 2}|00\rangle + \frac{1}{\sqrt 2}|11\rangle.
+  \end{gathered}
+</eq>
+The first one is <strong>separable</strong>, i.e. we can view it as a pair of state vectors where each one pertains to one of the two qubits:
+<eq env="displaymath">
+  \frac{1}{\sqrt 2}|00\rangle + \frac{1}{\sqrt 2}|01\rangle
+  = \underbrace{\vphantom{\frac{1}{\sqrt 2}}|0\rangle}_{\text{qubit 1}}
+  \;\;
+  \underbrace{\frac{1}{\sqrt 2}(|0\rangle+|1\rangle)}_{\text{qubit 2}},
+</eq>
+The second state, however, does <em>not</em> admit such a decomposition: there do <em>not</em> exist any <eq env="math">\psi_1,\psi_2</eq> such that
+<eq env="displaymath">
+  \frac{1}{\sqrt 2}|00\rangle + \frac{1}{\sqrt 2}|11\rangle
+  =
+  |\psi_1\rangle|\psi_2\rangle
+</eq>
+and so we say that it is an <strong>entangled</strong> state.
+Informally, any bipartite state that cannot be viewed as a pair of two states pertaining to the constituent subsystems is said to be entangled.</p>
+<p>With this discussion in our minds, we can now give more formal account of the states of composite quantum systems.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="69">
+<li id="fn69"><p>It looks like we are defining some sort of “multiplication rule” for kets here, saying that <eq env="math">|a\rangle|b\rangle:=|ab\rangle</eq>. This is indeed the case, but to talk about this properly we need to introduce the idea of <strong>tensor products</strong> (which we do very soon).<a href="5.2-one-two-many.html#fnref69" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +438,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5.1-a-small-history.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5.3-quantum-theory-formally-continued.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +478,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/05-entanglement.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>2.2 Quantum bits, called “qubits” | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="2.2 Quantum bits, called “qubits” | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="2.2 Quantum bits, called “qubits” | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="2.1-composing-quantum-operations.html"/>
+<link rel="next" href="2.3-quantum-gates-and-circuits.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,67 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="quantum-bits-called-qubits" class="section level2">
+<h2><span class="header-section-number">2.2</span> Quantum bits, called “qubits”</h2>
+<p>A two-state machine that we have just described in abstract terms is usually realised as a controlled evolution of a two state system, called a quantum bit or a qubit.
+For example, state <eq env="math">|0\rangle</eq> may be chosen to be the lowest energy state of an atom (the <strong>ground state</strong>), and state <eq env="math">|1\rangle</eq> a higher energy state (the <strong>excited state</strong>).
+Pulses of light of appropriate frequency, duration, and intensity can take the atom back and forth between the basis states <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq> (implementing logical <eq env="math">\texttt{NOT}</eq>).</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-13-1.png" width="192" style="display: block; margin: auto;" /></p>
+<p>Some other pulses (say, half the duration or intensity) will take the atom into states that have no classical analogue.
+Such states are called <strong>coherent superpositions</strong> of <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>, and represent a qubit in state <eq env="math">|0\rangle</eq> with some amplitude <eq env="math">\alpha_0</eq> and in state <eq env="math">|1\rangle</eq> with some other amplitude <eq env="math">\alpha_1</eq>.
+This is conveniently represented by a state vector
+<eq env="displaymath">
+    |\psi\rangle =
+    \alpha_0|0\rangle + \alpha_1|1\rangle
+    \leftrightarrow
+    \begin{bmatrix}
+      \alpha_0
+    \\\alpha_1
+    \end{bmatrix}
+</eq>
+which we can also draw graphically:</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-14-1.png" width="288" style="display: block; margin: auto;" /></p>
+<div class="idea">
+<p>A <strong>qubit</strong> is a quantum system in which the Boolean states <eq env="math">0</eq> and <eq env="math">1</eq> are represented by a prescribed pair of normalised and mutually orthogonal quantum states labelled by <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>.
+The two states form a so-called <strong>computational</strong> (or <strong>standard</strong>) basis, and so any other state of an isolated qubit can be written as a coherent superposition
+<eq env="displaymath">
+  |\psi\rangle = \alpha_0|0\rangle + \alpha_1|1\rangle
+</eq>
+for some <eq env="math">\alpha_0</eq> and <eq env="math">\alpha_1</eq> such that <eq env="math">|\alpha_0|^2 + |\alpha_1|^2 = 1</eq>.</p>
+<p>In practice, a qubit is typically a microscopic system, such as an atom, a nuclear spin, or a polarised photon.</p>
+</div>
+<p>As we have already mentioned, any<a href="#fn29" class="footnote-ref" id="fnref29"><sup>29</sup></a> computational step, that is, any physically admissible operation <eq env="math">U</eq> on a qubit, is described by a <eq env="math">(2\times 2)</eq> unitary matrix <eq env="math">U</eq>.
+It modifies the state of the qubit as
+<eq env="displaymath">
+  |\psi\rangle
+  \longmapsto
+  |\psi'\rangle
+  =
+  U|\psi\rangle
+</eq>
+which we can write explicitly as
+<eq env="displaymath">
+  \begin{bmatrix}
+    \alpha'_0
+  \\\alpha'_1
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    U_{00} &amp; U_{01}
+  \\U_{10} &amp; U_{11}
+  \end{bmatrix}
+  \begin{bmatrix}
+    \alpha_0
+  \\\alpha_1
+  \end{bmatrix}
+</eq>
+That is, the operation <eq env="math">U</eq> turns the state <eq env="math">|\psi\rangle</eq>, with components <eq env="math">\alpha_k</eq>, into the state <eq env="math">|\psi'\rangle=U|\psi\rangle</eq>, with components <eq env="math">\alpha'_l= \sum_k U_{lk}\alpha_k</eq>.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="29">
+<li id="fn29"><p> Here we are talking about <em>isolated</em> systems. As you will soon learn, a larger class of physically admissible operations is described by completely positive maps. It may sound awfully complicated but, as you will soon see, it is actually very simple.<a href="2.2-quantum-bits-called-qubits.html#fnref29" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +435,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="2.1-composing-quantum-operations.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="2.3-quantum-gates-and-circuits.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +475,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/02-qubits.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

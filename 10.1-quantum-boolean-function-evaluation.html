@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>10.1 Quantum Boolean function evaluation | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="10.1 Quantum Boolean function evaluation | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="10.1 Quantum Boolean function evaluation | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="10-chapter10.html"/>
+<link rel="next" href="10.2-hadamard-and-quantum-fourier-transforms.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,109 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="quantum-boolean-function-evaluation" class="section level2">
+<h2><span class="header-section-number">10.1</span> Quantum Boolean function evaluation</h2>
+<p><lite-youtube videoid="8ok34yT-G4g" playlabel="Play: Abstract computation and reversible computation"></lite-youtube></p>
+<p><lite-youtube videoid="x_umQRMcwtA" playlabel="Play: Quantum function evaluation"></lite-youtube></p>
+<p><em>In quantum computation, all elementary operations are reversible</em> (unitary), so we compute Boolean functions in a reversible fashion as
+<eq env="displaymath">
+  |x\rangle|y\rangle \mapsto |x\rangle|y\oplus f(x)\rangle.
+</eq></p>
+<p>The corresponding circuit diagram (for <eq env="math">n=3</eq>) is shown in Figure <a href="10.1-quantum-boolean-function-evaluation.html#fig:n-equals-3-circuit-diagram">10.1</a>.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:n-equals-3-circuit-diagram"></span>
+<img src="iqis-book_files/figure-html/n-equals-3-circuit-diagram-1.png" alt="Computing some f\colon\{0,1\}^3\to\{0,1\} in a quantum manner." width="672" />
+<p class="caption">
+Figure 10.1: Computing some <eq env="math">f\colon\{0,1\}^3\to\{0,1\}</eq> in a quantum manner.
+</p>
+</div>
+<p>Here we use two registers: the first one (counting from the top to the bottom of the circuit diagram) stores the arguments <eq env="math">x</eq>, and the second one the values <eq env="math">f(x)</eq>.
+More precisely, the value <eq env="math">f(x)</eq> is added bit-wise to the pre-existing binary value <eq env="math">y</eq> of the second register.
+We usually set <eq env="math">y=0</eq> to get
+<eq env="displaymath">
+  |x\rangle|0\rangle \mapsto |x\rangle|f(x)\rangle.
+</eq></p>
+<p>Quantum Boolean function evaluation is a special case of the generalised <eq env="math">x</eq>-controlled-<eq env="math">U</eq> on two registers:
+<eq env="displaymath">
+  \sum_x |x\rangle\langle x|\otimes U_x
+</eq>
+where <eq env="math">U_x</eq> is either the identity <eq env="math">\mathbf{1}</eq> (when <eq env="math">f(x)=0</eq>) or the bit-flip<a href="#fn127" class="footnote-ref" id="fnref127"><sup>127</sup></a> <eq env="math">X</eq> (when <eq env="math">f(x)=1</eq>).
+We may also write this as
+<eq env="displaymath">
+  \sum_x |x\rangle\langle x|\otimes X^{f(x)}.
+</eq></p>
+<div id="example" class="section level3">
+<h3><span class="header-section-number">10.1.1</span> Example</h3>
+<p>Consider the Boolean function <eq env="math">f\colon\{0,1\}^2\to\{0,1\}</eq> given by
+<eq env="displaymath">
+  f(x)
+  =
+  \begin{cases}
+    1 &amp;\text{if $x=01$,}
+  \\0 &amp;\text{otherwise.}
+  \end{cases}
+</eq>
+The evaluation <eq env="math">|x\rangle|y\rangle \mapsto |x\rangle|y\oplus f(x)\rangle</eq> can be tabulated explicitly as
+<eq env="displaymath">
+  \begin{array}{cc}
+    |00\rangle|0\rangle \mapsto |00\rangle|0\rangle
+    &amp; |00\rangle|1\rangle \mapsto |00\rangle|1\rangle
+  \\|01\rangle|0\rangle \mapsto |01\rangle|1\rangle
+    &amp; |01\rangle|1\rangle \mapsto |01\rangle|0\rangle
+  \\|10\rangle|0\rangle \mapsto |10\rangle|0\rangle
+    &amp; |10\rangle|1\rangle \mapsto |10\rangle|1\rangle
+  \\|11\rangle|0\rangle \mapsto |11\rangle|0\rangle
+    &amp; |11\rangle|1\rangle \mapsto |11\rangle|1\rangle
+  \end{array}
+</eq>
+and the expression <eq env="math">\sum_x |x\rangle\langle x|\otimes X^{f(x)}</eq> becomes
+<eq env="displaymath">
+  \begin{aligned}
+    &amp;|00\rangle\langle 00| \otimes \mathbf{1}
+  \\+ &amp;|01\rangle\langle 01| \otimes X
+  \\+ &amp;|10\rangle\langle 10| \otimes \mathbf{1}
+  \\+ &amp;|11\rangle\langle 11| \otimes \mathbf{1}.
+  \end{aligned}
+</eq>
+Finally, the matrix form looks like
+<eq env="displaymath">
+  \left[
+  \,
+    \begin{array}{c|c|c|c}
+      \begin{matrix}1&amp;0\\0&amp;1\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+    \\\hline
+    \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;1\\1&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+    \\\hline
+    \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}1&amp;0\\0&amp;1\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+    \\\hline
+    \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}0&amp;0\\0&amp;0\end{matrix}
+      &amp; \begin{matrix}1&amp;0\\0&amp;1\end{matrix}
+    \end{array}
+  \,
+  \right]
+</eq>
+As you can see, this is a diagonal block matrix: a <eq env="math">(4\times 4)</eq> matrix with <eq env="math">(2\times 2)</eq> matrices as entries.
+The rows and the columns of the <eq env="math">(4\times 4)</eq> matrix are labelled by the binary strings <eq env="math">00, 01, 10, 11</eq>, and the <eq env="math">(2\times 2)</eq> matrices on the diagonal represent operations applied to the qubit in the second register.
+Here all of them are the identity <eq env="math">\mathbf{1}</eq> except the <eq env="math">(01, 01)</eq> entry, which represents the bit-flip <eq env="math">X</eq>.
+This is because <eq env="math">f(01)=1</eq>, and <eq env="math">f(x)=0</eq> for all other binary strings <eq env="math">x</eq>.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="127">
+<li id="fn127"><p>Do not confuse the capital <eq env="math">X</eq>, which is the Pauli flip operator <eq env="math">\sigma_x</eq>, with the small <eq env="math">x</eq>, which is a binary string stored in the first register and the argument of our Boolean function <eq env="math">f</eq>.<a href="10.1-quantum-boolean-function-evaluation.html#fnref127" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +477,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="10-chapter10.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="10.2-hadamard-and-quantum-fourier-transforms.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +517,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/10-algorithms.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

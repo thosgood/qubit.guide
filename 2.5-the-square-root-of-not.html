@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>2.5 The square root of NOT | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="2.5 The square root of NOT | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="2.5 The square root of NOT | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="2.4-single-qubit-interference.html"/>
+<link rel="next" href="2.6-phase-gates-galore.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,77 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="the-square-root-of-not" class="section level2">
+<h2><span class="header-section-number">2.5</span> The square root of NOT</h2>
+<p><lite-youtube videoid="FyTtG0fM0-0" playlabel="Play: The square root of NOT"></lite-youtube></p>
+<p>Now that we have poked our heads into the quantum world, let us see how quantum interference challenges conventional logic.
+Consider a following task: design a logic gate that operates on a single bit and such that when it is followed by another, identical, logic gate the output is always the negation of the input.
+Let us call this logic gate <strong>the square root of <eq env="math">\texttt{NOT}</eq></strong>, or <eq env="math">\sqrt{\texttt{NOT}}</eq>.</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-18-1.png" width="288" style="display: block; margin: auto;" /></p>
+<p>A simple check, such as an attempt to construct a truth table, should persuade you that there is no such operation in logic.
+It may seem reasonable to argue that since there is no such operation in logic, <eq env="math">\sqrt{\texttt{NOT}}</eq> is impossible.
+But it does exist!
+Experimental physicists routinely construct such “impossible” gates in their laboratories.
+It is a physically admissible operation described by the unitary matrix<a href="#fn32" class="footnote-ref" id="fnref32"><sup>32</sup></a>
+<eq env="displaymath">
+  \sqrt{\texttt{NOT}}
+  =
+  \frac12
+  \begin{bmatrix}
+    1+i &amp; 1-i
+  \\1-i&amp;1+i
+  \end{bmatrix}
+  =
+  \frac1{\sqrt2}
+  \begin{bmatrix}
+    e^{i\frac{\pi}{4}} &amp; e^{-i\frac{\pi}{4}}
+  \\e^{-i\frac{\pi}{4}} &amp; e^{i\frac{\pi}{4}}
+  \end{bmatrix}.
+</eq>
+Indeed,
+<eq env="displaymath">
+  \frac12
+  \begin{bmatrix}
+    1+i &amp; 1-i
+  \\1-i &amp; 1+i
+  \end{bmatrix}
+  \frac12
+  \begin{bmatrix}
+    1+i &amp; 1-i
+  \\1-i &amp; 1+i
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    0&amp;1
+  \\1&amp;0
+  \end{bmatrix}.
+</eq></p>
+<p>We could also step through the circuit diagram and follow the evolution of the state vector:</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-19-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Or, if you prefer to work with column vectors and matrices, you can write the two consecutive application of <eq env="math">\sqrt{\texttt{NOT}}</eq> to state <eq env="math">|0\rangle</eq> as
+<eq env="displaymath">
+  \begin{bmatrix}0\\1\end{bmatrix}
+  \,\longleftarrow\!\!\!\vert\,\,
+  \frac{1}{\sqrt 2}
+  \begin{bmatrix}
+    e^{i\frac{\pi}{4}}
+  \\e^{-i\frac{\pi}{4}}
+  \end{bmatrix}
+  \,\longleftarrow\!\!\!\vert\,\,
+  \begin{bmatrix}1\\0\end{bmatrix}
+</eq>
+(following a well established convention, the above should be read from <em>right to left</em>)<a href="#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a>, where each <eq env="math">\longleftarrow\!\!\!\vert</eq> denotes multiplication by <eq env="math">\frac1{\sqrt2}\begin{bmatrix}e^{i\frac{\pi}{4}} &amp; e^{-i\frac{\pi}{4}}\\e^{-i\frac{\pi}{4}} &amp; e^{i\frac{\pi}{4}}\end{bmatrix}</eq>.</p>
+<p>One way or another, quantum theory explains the behaviour of <eq env="math">\sqrt{\texttt{NOT}}</eq>, and so, reassured by the physical experiments<a href="#fn34" class="footnote-ref" id="fnref34"><sup>34</sup></a> that corroborate this theory, logicians are now entitled to propose a new logical operation <eq env="math">\sqrt{\texttt{NOT}}</eq>.
+Why?
+Because a faithful physical model for it exists in nature!</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="32">
+<li id="fn32"><p>There are infinitely many unitary operations that act as the square root of <eq env="math">\texttt{NOT}</eq>.<a href="2.5-the-square-root-of-not.html#fnref32" class="footnote-back">↩︎</a></p></li>
+<li id="fn33"><p>Just remember that circuits diagrams are read from <em>left to right</em>, and vector and matrix operations go from <em>right to left</em>.<a href="2.5-the-square-root-of-not.html#fnref33" class="footnote-back">↩︎</a></p></li>
+<li id="fn34"><p>We discuss this in more detail in [Appendix:<strong>!!to-do!!</strong> Physics against logic, via beamsplitters].<a href="2.5-the-square-root-of-not.html#fnref34" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +445,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="2.4-single-qubit-interference.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="2.6-phase-gates-galore.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +485,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/02-qubits.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

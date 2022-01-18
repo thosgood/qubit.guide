@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>4.9 Distinguishability of non-orthogonal states | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="4.9 Distinguishability of non-orthogonal states | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="4.9 Distinguishability of non-orthogonal states | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="4.8-basic-quantum-coding-and-decoding.html"/>
+<link rel="next" href="4.10-wiesners-quantum-money.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,89 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="distinguishability-of-non-orthogonal-states" class="section level2">
+<h2><span class="header-section-number">4.9</span> Distinguishability of non-orthogonal states</h2>
+<p>We have already mentioned that non-orthogonal states cannot be reliably distinguished, and now it is time to make this statement more precise.
+Suppose Alice sends Bob a message by choosing one of the two non-orthogonal states <eq env="math">|s_1\rangle</eq> and <eq env="math">|s_2\rangle</eq>, where both are equally likely to be chosen.
+What is the probability that Bob will decode the message correctly and what is the best (i.e. the one that maximises this probability) measurement?
+As a general rule, before you embark on any calculations, check for symmetries, special cases, and anything that may help you to visualise the problem and make intelligent guesses about the solution.
+One of the most powerful research tools is a good guess.
+In fact, this is what real research is about: educated guesses that guide your calculations.
+In this particular case you can use symmetry arguments to guess the optimal measurement — see Figure <a href="4.9-distinguishability-of-non-orthogonal-states.html#fig:optimal-measurement">4.2</a>.
+Once you have guessed the answer, you might as well do the calculations.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:optimal-measurement"></span>
+<img src="iqis-book_files/figure-html/optimal-measurement-1.png" alt="The optimal measurement to distinguish between the two equally likely non-orthogonal signal states |s_1\rangle and |s_2\rangle is described by the two orthogonal vectors |d_1\rangle and |d_2\rangle placed symmetrically around the signal states." width="192" />
+<p class="caption">
+Figure 4.2: The optimal measurement to distinguish between the two equally likely non-orthogonal signal states <eq env="math">|s_1\rangle</eq> and <eq env="math">|s_2\rangle</eq> is described by the two orthogonal vectors <eq env="math">|d_1\rangle</eq> and <eq env="math">|d_2\rangle</eq> placed symmetrically around the signal states.
+</p>
+</div>
+<p>Suppose Bob’s measurement is described by projectors <eq env="math">P_1</eq> and <eq env="math">P_2</eq>, with the inference rule “<eq env="math">P_1</eq> implies <eq env="math">|s_1\rangle</eq>; <eq env="math">P_2</eq> implies <eq env="math">|s_2\rangle</eq>”.
+Then
+<eq env="displaymath">
+  \begin{aligned}
+    \Pr(\text{success})
+    &amp;= \frac12\left(
+        \langle s_1|P_1|s_1\rangle + \langle s_2|P_2|s_2\rangle
+      \right)
+  \\&amp;= \frac12\left(
+        \operatorname{tr}P_1|s_1\rangle\langle s_1| + \operatorname{tr}P_2|s_2\rangle\langle s_2|
+      \right)
+  \\&amp;= \frac12\left(
+        \operatorname{tr}P_1|s_1\rangle\langle s_1| + \operatorname{tr}(\mathbf{1}-P_1)|s_2\rangle\langle s_2|
+      \right)
+  \\&amp;= \frac12\left(
+        1 + \operatorname{tr}P_1\left( |s_1\rangle\langle s_1| - |s_2\rangle\langle s_2| \right)
+      \right).
+\end{aligned}
+</eq>
+Let us look at the operator <eq env="math">D = |s_1\rangle\langle s_1| - |s_2\rangle\langle s_2|</eq> that appears in the last expression.
+This operator acts on the subspace spanned by <eq env="math">|s_1\rangle</eq> and <eq env="math">|s_2\rangle</eq>; it is Hermitian; the sum of its two (real) eigenvalues is zero; and <eq env="math">\operatorname{tr}D=\langle s_1|s_1\rangle-\langle s_2|s_2\rangle=0</eq>.
+Let us write <eq env="math">D</eq> as <eq env="math">\lambda(|d_+\rangle\langle d_+| - |d_-\rangle\langle d_-|)</eq>, where <eq env="math">|d_\pm\rangle</eq> are the two orthonormal eigenstates of <eq env="math">D</eq>, and <eq env="math">\pm\lambda</eq> are the corresponding eigenvalues.
+Now we write
+<eq env="displaymath">
+\begin{aligned}
+  \Pr (\text{success})
+  &amp;= \frac12\left(
+      1 + \lambda\operatorname{tr}P_1\left( |d_+\rangle\langle d_+|-|d_-\rangle\langle d_-| \right)
+    \right)
+\\&amp;\leqslant\frac12\left(
+      1+\lambda \langle d_+|P_1|d_+\rangle
+    \right)
+\end{aligned}
+</eq>
+where we have dropped the non-negative term <eq env="math">\operatorname{tr}P_1|d_-\rangle\langle d_-|</eq>.
+In fact, it is easy to see that we will maximise the expression above by choosing <eq env="math">P_1 = |d_+\rangle\langle d_+|</eq> (and <eq env="math">P_2 = |d_-\rangle\langle d_-|</eq>).
+The probability of success is then bounded by <eq env="math">\frac12(1+\lambda)</eq>.
+All we have to do now is to find the positive eigenvalue <eq env="math">\lambda</eq> for the operator <eq env="math">D</eq>.
+We can do this, of course, by solving the characteristic equation for a matrix representation of <eq env="math">D</eq>, but, as we are now practising the trace operations, we can also notice that <eq env="math">\operatorname{tr}D^2 = 2\lambda^2</eq>, and then evaluate the trace of <eq env="math">D^2</eq>.
+We use the trace identities and obtain
+<eq env="displaymath">
+  \begin{aligned}
+    \operatorname{tr}D^2
+    &amp;= \operatorname{tr}\left( |s_1\rangle\langle s_1|-|s_2\rangle\langle s_2| \right) \left( |s_1\rangle\langle s_1|-|s_2\rangle\langle s_2| \right)
+  \\&amp;= 2-2|\langle s_1|s_2\rangle|^2
+  \end{aligned}
+</eq>
+which gives <eq env="math">\lambda = \sqrt{1-|\langle s_1|s_2\rangle|^2}</eq>.
+Bringing it all together we have the final expression:
+<eq env="displaymath">
+ \Pr (\text{success})
+ = \frac12\left( 1+ \sqrt{1-|\langle s_1|s_2\rangle|^2} \right).
+</eq></p>
+<p>We can parametrise <eq env="math">|\langle s_1|s_2\rangle| = \cos\alpha</eq>, and interpret <eq env="math">\alpha</eq> as the angle between <eq env="math">|s_1\rangle</eq> and <eq env="math">|s_2\rangle</eq>.</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-32-1.png" width="192" style="display: block; margin: auto;" /></p>
+<p>This allows us to express our findings in a clearer way: given two equally likely states, <eq env="math">|s_1\rangle</eq> and <eq env="math">|s_2\rangle</eq>, such that <eq env="math">|\langle s_1|s_2\rangle| = \cos\alpha</eq>, the probability of correctly identifying the state by a projective measurement is bounded by
+<eq env="displaymath">
+ \Pr (\text{success})
+ = \frac12(1 + \sin\alpha),
+</eq>
+and the optimal measurement that achieves this bound is determined by the eigenvectors of <eq env="math">D = |s_1\rangle\langle s_1|-|s_2\rangle\langle s_2|</eq> (try to visualise these eigenvectors).</p>
+<p>It makes sense, right?
+If we try just guessing the state, without any measurement, then we expect <eq env="math">\Pr (\text{success}) = \frac12</eq>.
+This is our lower bound, and in any attempt to distinguish the two states we should do better than that.
+If the two signal states are very close to each other then <eq env="math">\sin\alpha</eq> is small and we are slightly better off than guessing.
+As we increase <eq env="math">\alpha</eq>, the two states become more distinguishable, and, as we can see from the formula, when the two states become orthogonal they also become completely distinguishable.</p>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +457,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.8-basic-quantum-coding-and-decoding.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.10-wiesners-quantum-money.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +497,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/04-measurement.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

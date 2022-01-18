@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>5.6 Controlled-NOT | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="5.6 Controlled-NOT | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="5.6 Controlled-NOT | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="5.5-separable-or-entangled.html"/>
+<link rel="next" href="5.7-other-controlled-gates.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,233 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="controlled-not" class="section level2">
+<h2><span class="header-section-number">5.6</span> Controlled-NOT</h2>
+<p><lite-youtube videoid="1PJonQOi5M8" playlabel="Play: Controlled-NOT"></lite-youtube></p>
+<p>How do entangled states arise in real physical situations?
+The short answer is that <em>entanglement is the result of interactions</em>.
+It is easy to see that tensor product operations <eq env="math">U_1\otimes\ldots\otimes U_n</eq> map product states to product states:</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-37-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>and so any collection of separable qubits remains separable.</p>
+<p>As soon as qubits start interacting with one another, however, they become entangled, and things start to get really interesting.
+We will describe interactions that cannot be written as tensor products of unitary operations on individual qubits.
+The most popular two-qubit entangling gate is the <strong>controlled-<eq env="math">\texttt{NOT}</eq></strong> (or <eq env="math">\texttt{c-NOT}</eq>), also known as the <strong>controlled-<eq env="math">X</eq></strong> gate.<a href="#fn75" class="footnote-ref" id="fnref75"><sup>75</sup></a>
+The gate acts on two qubits: it flips the second qubit (referred to as the <strong>target</strong>) if the first qubit (referred to as the <strong>control</strong>) is <eq env="math">|1\rangle</eq>, and does nothing if the control qubit is <eq env="math">|0\rangle</eq>.
+In the standard basis <eq env="math">\{|00\rangle,|01\rangle,|10\rangle,|11\rangle\}</eq>, it is represented by the following unitary matrix:</p>
+<div class="idea">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">controlled-<eq env="math">\texttt{NOT}</eq></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><eq env="math">\left[\begin{array}{c|c}\begin{matrix}1&amp;0\\0&amp;1\end{matrix}&amp;\begin{matrix}0&amp;0\\0&amp;0\end{matrix}\\\hline\begin{matrix}0&amp;0\\0&amp;0\end{matrix}&amp;\begin{matrix}0&amp;1\\1&amp;0\end{matrix}\end{array}\right]</eq></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We can also represent the <eq env="math">\texttt{c-NOT}</eq> gate using the circuit notation, as in Figure <a href="5.6-controlled-not.html#fig:c-not-diagram">5.1</a>.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c-not-diagram"></span>
+<img src="iqis-book_files/figure-html/c-not-diagram-1.png" alt="Where x,y\in\{0,1\}, and \oplus denotes \texttt{XOR}, or addition modulo 2." width="672" />
+<p class="caption">
+Figure 5.1: Where <eq env="math">x,y\in\{0,1\}</eq>, and <eq env="math">\oplus</eq> denotes <eq env="math">\texttt{XOR}</eq>, or addition modulo 2.
+</p>
+</div>
+<p>Note that this gate does not admit any tensor product decomposition, but can be written as a sum of tensor products:<a href="#fn76" class="footnote-ref" id="fnref76"><sup>76</sup></a>
+<eq env="displaymath">
+  \texttt{c-NOT}
+  = |0\rangle\langle 0|\otimes\mathbf{1}+ |1\rangle\langle 1|\otimes X
+</eq>
+where <eq env="math">X</eq> is the Pauli bit-flip operation.</p>
+<p>The <eq env="math">\texttt{c-NOT}</eq> gate lets us do many interesting things, and can act in a rather deceptive way.
+Let us now study some of these things.</p>
+<div id="the-bell-states-and-the-bell-measurement" class="section level3">
+<h3><span class="header-section-number">5.6.1</span> The Bell states, and the Bell measurement</h3>
+<p><lite-youtube videoid="jWzTMtFiG8k" playlabel="Play: Bell states"></lite-youtube></p>
+<p>We start with the generation of entanglement.
+Here is a simple circuit that demonstrates the entangling power of <eq env="math">\texttt{c-NOT}</eq>:<a href="#fn77" class="footnote-ref" id="fnref77"><sup>77</sup></a></p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Generating entanglement).</p>
+</div>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-38-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<p>In this circuit, the separable input <eq env="math">|0\rangle|0\rangle</eq> evolves as
+<eq env="displaymath">
+  \begin{aligned}
+    |0\rangle|0\rangle
+    \overset{H}{\longmapsto}&amp; \frac{1}{\sqrt2} (|0\rangle + |1\rangle) |0\rangle
+  \\=&amp; \frac{1}{\sqrt2}|0\rangle|0\rangle + \frac{1}{\sqrt2}|1\rangle|0\rangle
+  \\\overset{\texttt{c-NOT}}{\longmapsto}&amp; \frac{1}{\sqrt2}|0\rangle|0\rangle + \frac{1}{\sqrt2}|1\rangle|1\rangle
+  \end{aligned}
+</eq>
+resulting in the entangled output <eq env="math">\frac{1}{\sqrt 2}(|00\rangle+|11\rangle)</eq>.
+In fact, this circuit implements the unitary operation which maps the standard computational basis into the four entangled states, known as the <strong>Bell states</strong>.</p>
+<div class="idea">
+<p>The <strong>Bell states</strong>, <eq env="math">|\psi_{ij}\rangle</eq>, as generated by the above circuit:
+<eq env="displaymath">
+  \begin{aligned}
+    |00\rangle
+    &amp;\mapsto
+    |\psi_{00}\rangle = \frac{1}{\sqrt 2}(|00\rangle+|11\rangle)
+  \\|01\rangle
+    &amp;\mapsto
+    |\psi_{01}\rangle = \frac{1}{\sqrt 2}(|01\rangle+|10\rangle)
+  \\|10\rangle
+    &amp;\mapsto
+    |\psi_{10}\rangle = \frac{1}{\sqrt 2}(|00\rangle-|11\rangle)
+  \\|11\rangle
+    &amp;\mapsto
+    |\psi_{11}\rangle = \frac{1}{\sqrt 2}(|01\rangle-|10\rangle)
+  \end{aligned}
+</eq>
+The more standard notation for these states, however, is the following:
+<eq env="displaymath">
+  \begin{aligned}
+    \Phi^+ &amp;= |\psi_{00}\rangle
+  \\\Psi^+ &amp;= |\psi_{01}\rangle
+  \\\Phi^- &amp;= |\psi_{10}\rangle
+  \\\Psi^-&amp;= |\psi_{11}\rangle
+  \end{aligned}
+</eq>
+(and this is the notation that we will use from now on).</p>
+</div>
+<p>The Bell states form an orthonormal basis in the Hilbert space <eq env="math">\mathcal{H}_1\otimes\mathcal{H}_2</eq> of two qubits.
+We can perform measurements in the Bell basis: the easiest way to do it in practice is to “rotate” the Bell basis to the standard basis, and then perform the measurement in the standard basis.<a href="#fn78" class="footnote-ref" id="fnref78"><sup>78</sup></a>
+Indeed, if we reverse the circuit, then we get a circuit which maps the Bell state <eq env="math">|\psi_{xy}\rangle</eq> to the corresponding state <eq env="math">|xy\rangle</eq> in the standard basis.
+This unitary mapping allows us to “implement” the projections on Bell states by applying the reversed circuit followed by the usual qubit-by-qubit measurement in the standard basis.</p>
+</div>
+<div id="quantum-teleportation" class="section level3">
+<h3><span class="header-section-number">5.6.2</span> Quantum teleportation</h3>
+<p><lite-youtube videoid="lbrO_0EImZ4" playlabel="Play: Quantum teleportation"></lite-youtube></p>
+<p>A wonderful fact, that sounds more like science fiction than actual science, is the following: <em>an unknown quantum state can be teleported from one location to another.</em>
+Consider the following circuit:<a href="#fn79" class="footnote-ref" id="fnref79"><sup>79</sup></a></p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Quantum teleportation).</p>
+</div>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<p>The first input qubit (counting from the top) is in some arbitrary state.
+After the action of the part of the circuit in the first dashed box (counting from the left), the state of the three qubits reads<a href="#fn80" class="footnote-ref" id="fnref80"><sup>80</sup></a>
+<eq env="displaymath">
+  \big( \alpha|0\rangle+\beta|1\rangle \big)
+  \big( |00\rangle+|11\rangle \big).
+</eq>
+By regrouping the terms, but keeping the qubits in the same order, this state can be written as the sum
+<eq env="displaymath">
+  \begin{aligned}
+    &amp;(|00\rangle + |11\rangle) \otimes (\alpha|0\rangle + \beta|1\rangle)
+  \\+ &amp;(|01\rangle + |10\rangle) \otimes (\alpha|1\rangle + \beta|0\rangle)
+  \\+ &amp;(|00\rangle - |11\rangle) \otimes (\alpha|0\rangle - \beta|1\rangle)
+  \\+ &amp;(|01\rangle - |10\rangle) \otimes (\alpha|1\rangle - \beta|0\rangle).
+  \end{aligned}
+</eq>
+Then the part of the circuit in the second dashed box maps the four Bell states of the first two qubits to the corresponding states from the computational basis:
+<eq env="displaymath">
+  \begin{aligned}
+    &amp;|00\rangle \otimes (\alpha|0\rangle + \beta|1\rangle)
+  \\+ &amp;|01\rangle \otimes (\alpha|1\rangle + \beta|0\rangle)
+  \\+ &amp;|10\rangle \otimes (\alpha|0\rangle - \beta|1\rangle)
+  \\+ &amp;|11\rangle \otimes (\alpha|1\rangle - \beta|0\rangle).
+  \end{aligned}
+</eq>
+Upon performing the standard measurement and learning the values of <eq env="math">x</eq> and <eq env="math">y</eq>, we choose one of the four following transformations depending on these values:
+<eq env="displaymath">
+  \begin{array}{ll}
+    00 \mapsto \mathbf{1}
+    &amp;\quad 01 \mapsto X
+  \\[1em]
+    10 \mapsto Z
+    &amp;\quad 11 \mapsto ZX
+  \end{array}
+\tag{5.6.2}
+</eq>
+(e.g. if <eq env="math">x=0</eq> and <eq env="math">y=1</eq>, then we choose <eq env="math">X</eq>).
+We then apply this transformation to the third qubit, which restores the original state of the first qubit.</p>
+<p>If you understand how this circuit works then you are ready for quantum teleportation.
+Here is a dramatic version.</p>
+<blockquote>
+<p>Suppose three qubits, which look very similar, are initially in the possession of an absent-minded Oxford student, Alice.
+The first qubit is in a precious quantum state and this state is needed urgently for an experiment in Cambridge.
+The other two qubits are entangled, in the <eq env="math">|\psi_{00}\rangle</eq> state. Alice’s colleague, Bob, pops in to collect the qubit.
+Once he is gone, Alice realises that, by mistake, she gave him not the first but the third qubit: the one which is entangled with the second qubit.</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-40-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p>The situation seems to be hopeless — Alice does not know the quantum state of the first qubit, and Bob is now miles away and her communication with him is limited to few bits.
+However, Alice and Bob are both very clever and they both diligently attended their “Introduction to Quantum Information Science” classes.
+Can Alice rectify her mistake and save Cambridge science?</p>
+<p>Hmmm… (pause for thought)…</p>
+<p>Of course: Alice can teleport the state of the first qubit!
+She performs the Bell measurement on the first two qubits, which gives her two binary digits, <eq env="math">x</eq> and <eq env="math">y</eq>.
+She then broadcasts <eq env="math">x</eq> and <eq env="math">y</eq> to Bob, who chooses the corresponding transformation, as in Equation (5.6.2), performs it, and recovers the original state.</p>
+</blockquote>
+<p>This raises a natural “philosophical” question: what do we really <em>mean</em> by teleportation?
+A key part of this question is understanding what happens to our original qubit when we teleport it.
+As it turns out, it must necessarily be <em>destroyed</em>, as we now explain.</p>
+</div>
+<div id="thou-shalt-not-clone" class="section level3">
+<h3><span class="header-section-number">5.6.3</span> Thou shalt not clone</h3>
+<p><lite-youtube videoid="sy3I932usMQ" playlabel="Play: Quantum cloning"></lite-youtube></p>
+<p>Let us now look at something that controlled-<eq env="math">\texttt{NOT}</eq> <em>seems</em> to be doing but, in fact, <em>isn’t</em>.
+It is easy to see that the <eq env="math">\texttt{c-NOT}</eq> can copy the bit value of the first qubit:
+<eq env="displaymath">
+  |x\rangle|0\rangle \overset{\texttt{c-NOT}}{\longmapsto} |x\rangle|x\rangle
+  \qquad\text{(for $x=0,1$)}
+</eq>
+so one might suppose that this gate could also be used to copy superpositions, such as <eq env="math">|\psi\rangle = \alpha|0\rangle+\beta|1\rangle</eq>, so that
+<eq env="displaymath">
+  |\psi\rangle|0\rangle \overset{\texttt{c-NOT}}{\longmapsto} |\psi\rangle|\psi\rangle
+</eq>
+for any <eq env="math">|\psi\rangle</eq>.</p>
+<p><strong>This is not so!</strong></p>
+<p>The unitarity of the <eq env="math">\texttt{c-NOT}</eq> means that it turns superpositions in the control qubit into <em>entanglement</em> of the control and the target: if the control qubit is in the a superposition state <eq env="math">|\psi\rangle = \alpha|0\rangle+\beta|1\rangle</eq> (with <eq env="math">\alpha,\beta\neq0</eq>), and the target is in <eq env="math">|0\rangle</eq>, then the <eq env="math">\texttt{c-NOT}</eq> gate generates the entangled state
+<eq env="displaymath">
+  \big( \alpha|0\rangle+\beta|1\rangle \big) |0\rangle
+  \overset{\texttt{c-NOT}}{\longmapsto}
+  \alpha|00\rangle + \beta|11\rangle.
+</eq>
+In fact, it is <em>impossible</em> to clone an unknown quantum state, and we can prove this!</p>
+<p>To prove this via contradiction, let’s assume that we <em>could</em> build a universal quantum cloner, and then take any two normalised states <eq env="math">|\psi\rangle</eq> and <eq env="math">|\phi\rangle</eq> that are <em>non-identical</em> (i.e. <eq env="math">|\langle\psi|\phi\rangle|\neq1</eq>) and <em>non-orthogonal</em> (i.e. <eq env="math">\langle\psi|\phi\rangle\neq0</eq>).
+If we then run our hypothetical cloning machine we get
+<eq env="displaymath">
+  \begin{aligned}
+    |\psi\rangle|0\rangle|W\rangle
+    &amp;\mapsto |\psi\rangle|\psi\rangle|W'\rangle
+  \\|\phi\rangle|0\rangle|W\rangle
+    &amp;\mapsto |\phi\rangle|\phi\rangle|W''\rangle
+  \end{aligned}
+</eq>
+where the third system, initially in state <eq env="math">|W\rangle</eq>, represents everything else (say, the internal state of the cloning machine).
+For this transformation to be unitary, it must preserve the inner product, and so we require that
+<eq env="displaymath">
+  \langle\psi|\phi\rangle
+  = \langle\psi|\phi\rangle^2 \langle W'|W''\rangle
+</eq>
+which can only be satisfied if <eq env="math">|\langle\psi|\phi\rangle|</eq> is equal to <eq env="math">1</eq> or <eq env="math">0</eq>, but this contradicts our assumptions!</p>
+<p>Thus, states of qubits, unlike states of classical bits, cannot be faithfully cloned.
+Note that, in quantum teleportation, the original state must therefore be <em>destroyed</em>, since otherwise we would be producing a clone of an unknown quantum state.
+The no-cloning property of quantum states leads to interesting applications, of which quantum cryptography is one.</p>
+<div class="idea">
+<p>Universal quantum cloners are <em>impossible</em>.</p>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="75">
+<li id="fn75"><p>Here the <eq env="math">X</eq> refers to the Pauli operator <eq env="math">\sigma_x\equiv X</eq> that implements the bit-flip.<a href="5.6-controlled-not.html#fnref75" class="footnote-back">↩︎</a></p></li>
+<li id="fn76"><p>Make sure that you understand how the Dirac notation is used here. More generally, think why <eq env="displaymath">|0\rangle\langle 0|\otimes A + |1\rangle\langle 1|\otimes B</eq> means “<em>if the first qubit is in state <eq env="math">|0\rangle</eq> then apply <eq env="math">A</eq> to the second one, and if the first qubit is in state <eq env="math">|1\rangle</eq> then apply <eq env="math">B</eq> to the second one</em>”. What happens if the first qubit is in a superposition of <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>?<a href="5.6-controlled-not.html#fnref76" class="footnote-back">↩︎</a></p></li>
+<li id="fn77"><p>John Stewart Bell (1928–1990) was a Northern Irish physicist.<a href="5.6-controlled-not.html#fnref77" class="footnote-back">↩︎</a></p></li>
+<li id="fn78"><p>For any state <eq env="math">|\psi\rangle</eq> of two qubits, the amplitude <eq env="math">\langle\psi_{xy}|\psi\rangle</eq> can be written as <eq env="math">\langle xy|U^\dagger|\psi\rangle</eq>, where <eq env="math">U^\dagger</eq> is such that <eq env="math">|\psi_{xy}\rangle = U|xy\rangle</eq>.<a href="5.6-controlled-not.html#fnref78" class="footnote-back">↩︎</a></p></li>
+<li id="fn79"><p><em>Divide et impera</em>, or “divide and conquer”: a good approach to solving problems in mathematics (and in life). Start with the smaller circuits in the dashed boxes.<a href="5.6-controlled-not.html#fnref79" class="footnote-back">↩︎</a></p></li>
+<li id="fn80"><p>We neglect to write the normalisation factors.<a href="5.6-controlled-not.html#fnref80" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +601,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5.5-separable-or-entangled.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5.7-other-controlled-gates.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +641,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/05-entanglement.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

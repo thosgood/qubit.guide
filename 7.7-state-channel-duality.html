@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>7.7 State-channel duality | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="7.7 State-channel duality | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="7.7 State-channel duality | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="7.6-completely-positive-trace-preserving-maps.html"/>
+<link rel="next" href="7.8-the-mathematics-of-can-and-cannot.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,130 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="state-channel-duality" class="section level2">
+<h2><span class="header-section-number">7.7</span> State-channel duality</h2>
+<p>Suppose that <eq env="math">\mathcal{H}</eq> is of dimension <eq env="math">d</eq> and <eq env="math">\mathcal{H}'</eq> is of dimension <eq env="math">d'</eq>, and pick a basis for each space.
+Then any linear map <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})</eq> can be completely characterised by its action on the <eq env="math">d^2</eq>-many basis matrices <eq env="math">|i\rangle\langle j|</eq> of <eq env="math">\mathcal{B}(\mathcal{H})</eq>, where <eq env="math">i,j\in\{1,2\ldots,d\}</eq>, i.e. for any density operator <eq env="math">\rho</eq> on <eq env="math">\mathcal{H}</eq> we have
+<eq env="displaymath">
+  \mathcal{E}(\rho)
+  = \mathcal{E}\left(\sum_{ij}\rho_{ij} |i\rangle\langle j|\right)
+  = \sum_i\rho_{ij}\mathcal{E}(|i\rangle\langle j|).
+\tag{$\natural$}
+</eq>
+We can now tabulate all the <eq env="math">(d'\times d')</eq> matrices <eq env="math">\mathcal{E}(|i\rangle\langle j|)</eq> in <eq env="math">\mathcal{H}'</eq> by forming a bigger <eq env="math">(dd'\times dd')</eq> block matrix in <eq env="math">\mathcal{H}\otimes\mathcal{H}'</eq>:</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-56-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We call this block matrix <eq env="math">\widetilde{\mathcal{E}}\in\mathcal{B}(\mathcal{H}\otimes\mathcal{H}')</eq> the <strong>Choi matrix</strong> of <eq env="math">\mathcal{E}</eq>.</p>
+<p>The Choi matrix is essentially another way of representing a linear map <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})</eq>: if you are given the Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq> of <eq env="math">\mathcal{E}</eq> and you want to evaluate <eq env="math">\mathcal{E}(\rho)</eq>, then you simply follow Equation (<eq env="math">\natural</eq>), taking the values of <eq env="math">\mathcal{E}(|i\rangle\langle j|)</eq> from the Choi matrix.
+This can be formally written as</p>
+<div class="idea">
+<p>The Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq> of a linear map <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})</eq> satisfies
+<eq env="displaymath">
+  \mathcal{E}(\rho)
+  = d(\operatorname{tr}\otimes\mathbf{1})\left[(\rho^T\otimes\mathbf{1})\widetilde{\mathcal{E}}\right]
+</eq>
+for all density matrices <eq env="math">\rho</eq>, where <eq env="math">d=\dim\mathcal{H}</eq>.</p>
+</div>
+<p>The expression above may look baffling to an untrained eye, but this is often the case when we turn something conceptually obvious into a precise and compact mathematical notation.
+In order to gain some intuition here, recall that, for matrices <eq env="math">A</eq> and <eq env="math">B</eq>,
+<eq env="displaymath">
+  \operatorname{tr}A^T B = \sum_{ij} A_{ij}B_{ij}.
+</eq>
+If we take <eq env="math">A</eq> and <eq env="math">B</eq> to be the block matrices <eq env="math">\rho\otimes\mathbf{1}</eq> and <eq env="math">\widetilde{\mathcal{E}}</eq>, respectively, then we can use this to show that
+<eq env="displaymath">
+  (\operatorname{tr}\otimes\mathbf{1})\left[(\rho^T\otimes\mathbf{1})\widetilde{\mathcal{E}}\right]
+  = \frac{1}{d}\sum_i\rho_{ij}\mathcal{E}(|i\rangle\langle j|).
+</eq></p>
+<p>This state-channel duality thus gives us a one-to-one correspondence between linear maps <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')</eq> and matrices <eq env="math">\widetilde{\mathcal{E}}</eq> acting on the tensor product <eq env="math">\mathcal{H}\otimes\mathcal{H}'</eq>.
+This correspondence is sometimes called the <strong>Choi–Jamiołkowski isomorphism</strong>, and we discuss it further in <a href="7.11-appendices-1.html#choi-jamiolkowski">the appendix of the same name</a>.</p>
+<p>Mathematically, it is not too surprising that the matrix elements of an operator on a tensor product can be reorganised and reinterpreted as the matrix elements of an operator between operator spaces.
+What is interesting, and perhaps not so obvious, however, is that the positivity conditions for maps correspond exactly to conditions on their Choi matrices under this correspondence.
+In order to see this, let us express the Choi matrix as the result of <eq env="math">\mathbf{1}\otimes\mathcal{E}</eq> acting on the maximally entangled state in <eq env="math">\mathcal{H}\otimes\mathcal{H}</eq>:</p>
+<div class="idea">
+<p>The Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq> of a linear map <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})</eq> is given by
+<eq env="displaymath">
+  \widetilde{\mathcal{E}}
+  = (\mathbf{1}\otimes\mathcal{E})|\Omega\rangle\langle\Omega|
+  = \frac{1}{d} \sum_{ij} |i\rangle\langle j|\otimes\mathcal{E}(|i\rangle\langle j|)
+</eq>
+where <eq env="math">|\Omega\rangle=\frac{1}{\sqrt d}\sum_{i=1}^d|i\rangle|i\rangle</eq> is the maximally entangled state in <eq env="math">\mathcal{H}\otimes\mathcal{H}</eq>, and where <eq env="math">d=\dim\mathcal{H}</eq>.</p>
+</div>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-57-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>In this form, the Choi–Jamiołkowski isomorphism gives us a simple necessary and sufficient condition for a linear map to be a quantum channel:</p>
+<div class="idea">
+<p><strong>State-channel duality</strong>: <eq env="math">\mathcal{E}</eq> is a quantum channel if and only if <eq env="math">\widetilde{\mathcal{E}}</eq> is a density matrix.</p>
+</div>
+<p>One direction of this claim is immediate: we already know that any quantum channel <eq env="math">\mathcal{E}</eq> is, in particular, a completely positive map, and so <eq env="math">\mathbf{1}\otimes\mathcal{E}</eq> maps density matrices to density matrices, whence <eq env="math">\widetilde{\mathcal{E}}=(\mathbf{1}\otimes\mathcal{E})|\Omega\rangle\langle\Omega|</eq> is a density matrix, since <eq env="math">|\Omega\rangle\langle\Omega|</eq> is a density matrix.
+The other direction is less obvious.
+If <eq env="math">\widetilde{\mathcal{E}}</eq> is a density matrix, then it can be written as a mixture of pure states <eq env="math">|\psi_k\rangle\langle\psi_k|</eq> with probabilities <eq env="math">p_k</eq>:
+<eq env="displaymath">
+  \widetilde{\mathcal{E}}
+  = \sum_k|\widetilde{\psi}_k\rangle\langle\widetilde{\psi}_k|,
+</eq>
+where <eq env="math">|\widetilde{ \psi}_k\rangle=\sqrt{p_k}|\psi_k\rangle</eq> are (non-normalised) vectors, and any such vector can be written as
+<eq env="displaymath">
+  |\widetilde{ \psi}_k\rangle = (\mathbf{1}\otimes E_k)|\Omega\rangle
+</eq>
+for some operator <eq env="math">E_k</eq>.</p>
+<p>Now, any vector <eq env="math">|\psi\rangle</eq> in <eq env="math">\mathcal{H}\otimes\mathcal{H}'</eq> can be written as<a href="#fn115" class="footnote-ref" id="fnref115"><sup>115</sup></a>
+<eq env="displaymath">
+  |\psi\rangle=\mathbf{1}\otimes V|\Omega\rangle
+</eq>
+where <eq env="math">V=\sum_{ij}V_{ij}|j\rangle\langle i|</eq> is an operator from <eq env="math">\mathcal{H}</eq> to <eq env="math">\mathcal{H}'</eq>, and <eq env="math">|\Omega\rangle=\frac{1}{d}\sum_i|i\rangle|i\rangle</eq> is a maximally entangled state in <eq env="math">\mathcal{H}\otimes\mathcal{H}</eq>.
+(Here, the vectors <eq env="math">|i\rangle</eq> and <eq env="math">|j\rangle</eq> form orthonormal bases in <eq env="math">\mathcal{H}</eq> and <eq env="math">\mathcal{H}'</eq>, respectively).</p>
+<p>Using this, we see that
+<eq env="displaymath">
+  \begin{aligned}
+    \widetilde{\mathcal{E}}
+    &amp;= \sum_k|\widetilde{\psi}_k\rangle\langle\widetilde{\psi}_k|
+  \\&amp;= \sum_k  (\mathbf{1}\otimes E_k)|\Omega\rangle\langle\Omega| (\mathbf{1}\otimes E^\dagger_k)
+  \\&amp;= \frac{1}{d} \sum_{ij} |i\rangle\langle j|\otimes\underbrace{\sum_k E_k(|i\rangle\langle j|) E^\dagger_k}_{\mathcal{E}(|i\rangle\langle j|)}.
+  \end{aligned}
+</eq>
+Comparing the last expression on the right-hand size with the definition of <eq env="math">\widetilde{\mathcal{E}}</eq>, or using the Choi–Jamiołkowski isomorphism, we conclude that <eq env="math">\mathcal{E}</eq> is of the form
+<eq env="displaymath">
+  \mathcal{E}(\rho)
+  = \sum_k E_k \rho E^\dagger_k.
+</eq>
+Moreover, <eq env="math">\operatorname{tr}\widetilde{\mathcal{E}}=1</eq> implies that<a href="#fn116" class="footnote-ref" id="fnref116"><sup>116</sup></a> <eq env="math">\sum_k E^\dagger_kE_k=\mathbf{1}</eq>.
+So if <eq env="math">\widetilde{\mathcal{E}}</eq> is a density operator, then the map <eq env="math">\mathcal{E}</eq> can be expressed in the Kraus form.
+Thus <eq env="math">\mathcal{E}</eq> is a quantum channel, and, therefore, also a CPTP map.
+We have now established the desired isomorphism between <em>states</em> and <em>channels</em>.</p>
+<p>The equations
+<eq env="displaymath">
+  \mathcal{E}(\rho)
+  = d(\operatorname{tr}\otimes\mathbf{1})\left[(\rho^T\otimes\mathbf{1})\widetilde{\cal{E}}\right].
+</eq>
+and
+<eq env="displaymath">
+  \widetilde{\mathcal{E}}
+  = (\mathbf{1}\otimes\mathcal{E})|\Omega\rangle\langle\Omega|
+  = \frac{1}{d} \sum_{ij} |i\rangle\langle j|\otimes\mathcal{E}(|i\rangle\langle j|)
+</eq>
+tell us how to obtain the state <eq env="math">\widetilde{\mathcal{E}}</eq> from the channel <eq env="math">\mathcal{E}</eq>, and vice versa.
+We have also shown that quantum channels are exactly the completely positive trace-preserving maps.</p>
+<p>We summarise the flow of implications in the following diagram:
+<eq env="displaymath">
+\begin{CD}
+  \mathcal{E} @&gt;{\widetilde{E}=(\mathbf{1}\otimes\mathcal{E})|\Omega\rangle\langle\Omega|}&gt;&gt; \widetilde{\mathcal{E}}
+\\@VVV @VVV
+\\E_k\cdot E_k^\dagger @&lt;&lt;{|\widetilde{\psi}_k\rangle=(\mathbf{1}\otimes E_k)|\Omega\rangle}&lt; |\widetilde{\psi}_k\rangle\langle\widetilde{\psi}_k|
+\end{CD}
+</eq>
+We start in the top left corner with a quantum channel <eq env="math">\mathcal{E}</eq>.
+This channel is a CPTP map, which means that <eq env="math">\mathbf{1}\otimes\mathcal{E}</eq> takes a maximally entangled state <eq env="math">|\Omega\rangle</eq> to a density matrix <eq env="math">\widetilde{\mathcal{E}}</eq>.
+This is our first implication: <em>if <eq env="math">\mathcal{E}</eq> is a quantum channel, then its Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq> is a density matrix</em>.
+The reverse implication goes as follows.
+The density matrix <eq env="math">\widetilde{\mathcal{E}}</eq> can be expressed as a mixture of pure states, <eq env="math">|\widetilde\psi_k\rangle\langle\widetilde\psi_k|</eq> (and this takes us to the bottom right corner in the diagram).
+We use this mixture decomposition when we construct map the <eq env="math">\mathcal{E}</eq> from the Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq>, via the Choi-Jamiolkowski isomorphism.
+We notice that <eq env="math">\mathcal{E}</eq> admits the operator-sum representation, and that each of the pure states in the mixture is associated with a Kraus operator, with <eq env="math">|\widetilde{\psi}_k\rangle = (\mathbf{1}\otimes E_k)|\Omega\rangle</eq>.
+All together this gives us the reverse implication: <em>if the Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq> is a density matrix, then <eq env="math">\mathcal{E}</eq> is a quantum channel.</em></p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="115">
+<li id="fn115"><p><strong>Exercise.</strong> Prove this!<a href="7.7-state-channel-duality.html#fnref115" class="footnote-back">↩︎</a></p></li>
+<li id="fn116"><p><strong>Exercise.</strong> Prove this!<a href="7.7-state-channel-duality.html#fnref116" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +498,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="7.6-completely-positive-trace-preserving-maps.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="7.8-the-mathematics-of-can-and-cannot.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +538,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/07-CP-maps.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

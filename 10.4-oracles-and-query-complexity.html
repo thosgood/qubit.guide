@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>10.4 Oracles and query complexity | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="10.4 Oracles and query complexity | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="10.4 Oracles and query complexity | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="10.3-more-phase-kick-back.html"/>
+<link rel="next" href="10.5-three-more-quantum-algorithms.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,89 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="oracles-and-query-complexity" class="section level2">
+<h2><span class="header-section-number">10.4</span> Oracles and query complexity</h2>
+<p>The computational power of quantum interference was discovered by counting how many times certain Boolean functions have to be evaluated in order to find the answer to a given problem.
+Imagine a “black box” (also called an <strong>oracle</strong>) that computes some fixed Boolean function, but whose inner workings are unknown to us, and a scenario in which one wants to learn about a given property of the Boolean function but has to “pay” (in energy, or in money!) for each use (often referred to as a <strong>query</strong>) of the box.
+In such a setting, the objective is to minimise number of queries to the oracle while finding out as much information as possible about the function computed by the oracle.
+For this purpose, we ignore everything that happens inside the black box: the Boolean function evaluation counts as just <em>one</em> computational step.</p>
+<div id="deutschs-algorithm" class="section level3">
+<h3><span class="header-section-number">10.4.1</span> Deutsch’s algorithm</h3>
+<p><lite-youtube videoid="DyINHZoOcLQ" playlabel="Play: Deutsch's algorithm"></lite-youtube></p>
+<p>We start, once more, with the simplest quantum interference circuit:</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-66-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Suppose you can prepare the input, you can read the output, you <em>cannot</em> see the phase shifter, <em>but</em> you are promised that the phase shifter is set to either <eq env="math">\varphi=0</eq> or <eq env="math">\varphi=\pi</eq>.
+Can you tell which value <eq env="math">\varphi</eq> has been set to?</p>
+<p>Of course you can!</p>
+<p>One way of doing it is to set your input to <eq env="math">|0\rangle</eq> and check the output: for <eq env="math">\varphi=0</eq> the output is always <eq env="math">|0\rangle</eq>, and for <eq env="math">\varphi=\pi</eq> it is always <eq env="math">|1\rangle</eq>.
+A single run of the interference experiment is sufficient to determine the difference.
+The first quantum algorithm, proposed by David Deutsch in 1985, is very much related to this effect, but where the phase setting is determined by the Boolean function evaluation via the phase kick-back.</p>
+<div class="scenario">
+<p>We are presented with an oracle that computes some unknown function <eq env="math">f\colon\{0,1\}\to\{0,1\}</eq>.
+Note that there are only four possibilities for what <eq env="math">f</eq> can be: it could be one of two constant functions (i.e. those where <eq env="math">f(0)=f(1)</eq>), or one of two “balanced” functions (i.e. those where <eq env="math">f(0)\neq f(1)</eq>).</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right"></th>
+<th align="center"><eq env="math">f(0)</eq></th>
+<th align="center"><eq env="math">f(1)</eq></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">constant</td>
+<td align="center"><eq env="math">\begin{matrix}0\\1\end{matrix}</eq></td>
+<td align="center"><eq env="math">\begin{matrix}0\\1\end{matrix}</eq></td>
+</tr>
+<tr class="even">
+<td align="right">balanced</td>
+<td align="center"><eq env="math">\begin{matrix}0\\1\end{matrix}</eq></td>
+<td align="center"><eq env="math">\begin{matrix}1\\0\end{matrix}</eq></td>
+</tr>
+</tbody>
+</table>
+<p>Our task is to determine, using the fewest queries possible, whether the function computed by the oracle is constant or balanced.</p>
+</div>
+<p>Note that we are <em>not</em> asked for the particular values <eq env="math">f(0)</eq> and <eq env="math">f(1)</eq>, but <em>only whether the two values are the same or different</em>.
+Classical intuition tells us that we have to evaluate both <eq env="math">f(0)</eq> and <eq env="math">f(1)</eq> and compare them, which involves evaluating <eq env="math">f</eq> <em>twice</em>.
+But, in the quantum setting, we can solve this problem with a <em>single</em> function evaluation, using the following circuit.</p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Deutsch’s).</p>
+</div>
+<p><em>First register: <eq env="math">1</eq> qubit. Second register: <eq env="math">1</eq> qubit.</em></p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-67-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<p>During the function evaluation, the second register “kicks back” the phase factor <eq env="math">(-1)^{f(x)}</eq> in front of <eq env="math">|x\rangle</eq>, but the state of the second register remains unchanged; the first register is modified as follows:
+<eq env="displaymath">
+  \begin{aligned}
+    |0\rangle
+    &amp;\overset{H}{\longmapsto}
+    |0\rangle+|1\rangle
+  \\&amp;\overset{f}{\longmapsto}
+    (-1)^{f(0)}|0\rangle + (-1)^{f(1)}|1\rangle
+  \\&amp;\quad\equiv
+    |0\rangle + (-1)^{f(0)\oplus f(1)}|1\rangle
+  \\&amp;\overset{H}{\longmapsto}
+    |f(0)\oplus f(1)\rangle.
+  \end{aligned}
+</eq></p>
+<p>This evolution can be represented by the circuit diagram</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-68-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>where the relative phase is <eq env="math">\varphi = (-1)^{f(0)\oplus f(1)}</eq>.
+The first qubit ends in state <eq env="math">|0\rangle</eq> if the function <eq env="math">f</eq> is constant, and in state <eq env="math">|1\rangle</eq> if the function is balanced, and the standard measurement distinguishes these two cases with certainty.<a href="#fn128" class="footnote-ref" id="fnref128"><sup>128</sup></a></p>
+<p>Deutsch’s result laid the foundation for the new field of quantum computation, and was followed by several other quantum algorithms for various problems.
+They all seem to rest on the same generic sequence: a Hadamard transform, followed by a function evaluation, followed by another Hadamard (or Fourier) transform.<a href="#fn129" class="footnote-ref" id="fnref129"><sup>129</sup></a>
+As we shall see in a moment, in some cases (such as in Grover’s search algorithm) this sequence is repeated several times.
+Let me now take you through the three early quantum algorithms, each one offering a higher-order speed-up when compared to their classical analogues than the last.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="128">
+<li id="fn128"><p>The original Deutsch algorithm provides the correct answer with probability 50%. Here we have presented a modified/improved version.<a href="10.4-oracles-and-query-complexity.html#fnref128" class="footnote-back">↩︎</a></p></li>
+<li id="fn129"><p>The Hadamard transform is a special case of the Fourier transform over the group <eq env="math">\mathbb{Z}_2^n</eq>.<a href="10.4-oracles-and-query-complexity.html#fnref129" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +457,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="10.3-more-phase-kick-back.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="10.5-three-more-quantum-algorithms.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +497,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/10-algorithms.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

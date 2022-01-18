@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>7.9 Kraus operators, revisited | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="7.9 Kraus operators, revisited | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="7.9 Kraus operators, revisited | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="7.8-the-mathematics-of-can-and-cannot.html"/>
+<link rel="next" href="7.10-correctable-channels.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,65 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="kraus-operators-revisited" class="section level2">
+<h2><span class="header-section-number">7.9</span> Kraus operators, revisited</h2>
+<p>One thing that is very important is that <em>state-channel duality gives us more than just a one-to-one correspondence</em> between states <eq env="math">\widetilde{\mathcal{E}}</eq> and channels <eq env="math">\mathcal{E}</eq> — it <em>also</em> gives a one-to-one correspondence between vectors in the statistical ensemble <eq env="math">\widetilde{\mathcal{E}}</eq> and the Kraus operators in the decomposition of <eq env="math">\mathcal{E}</eq>.
+From this viewpoint, we see that the freedom to choose the Kraus operators representing a channel in many different ways is really the same thing as the freedom to choose the ensemble of pure states representing a density operator in many different ways.</p>
+<p>We already know that two mixtures <eq env="math">\{p_k, |\psi_k\rangle\}</eq> and <eq env="math">\{q_l, |\phi_l\rangle\}</eq> described by the same density operator
+<eq env="displaymath">
+  \widetilde{\mathcal{E}}
+  = \sum_k|\widetilde\psi_k\rangle\langle\widetilde\psi_k|
+  = \sum_l|\widetilde\phi_l\rangle\langle\widetilde\phi_l|,
+</eq>
+(where <eq env="math">|\widetilde \psi_k\rangle=\sqrt{p_k}|\psi_k\rangle</eq> and <eq env="math">|\widetilde \phi_l\rangle=\sqrt{q_l}|\phi_l\rangle</eq>) are related: there exists some unitary <eq env="math">R</eq> such that
+<eq env="displaymath">
+  |\widetilde \psi_k\rangle
+  = \sum_{l} R_{kl} |\widetilde \phi_l\rangle.
+</eq>
+Using the aforementioned fact that any vector <eq env="math">|\psi\rangle</eq> in <eq env="math">\mathcal{H}\otimes\mathcal{H}'</eq> can be written as <eq env="math">|\psi\rangle=\mathbf{1}\otimes V|\Omega\rangle</eq>, this implies the same unitary freedom in choosing the Kraus operators.<a href="#fn117" class="footnote-ref" id="fnref117"><sup>117</sup></a></p>
+<p>How many Kraus operators do we really need?
+State-channel duality tells us that the <em>minimal</em> number of Kraus operators needed to express <eq env="math">\mathcal{E}</eq> in the operator-sum form is given by the rank of its Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq>, and so we need no more than <eq env="math">dd'</eq> such operators.
+In fact, this minimal set of Kraus operators corresponds to the spectral decomposition of <eq env="math">\widetilde{\mathcal{E}}</eq>.
+Indeed, if <eq env="math">\widetilde{\mathcal{E}}=\sum_k|\widetilde{v}_k\rangle\langle\widetilde{v}_k|</eq> and <eq env="math">|\widetilde{v}_k\rangle=(\mathbf{1}\otimes E_k)|\Omega\rangle</eq>, then the orthogonality of <eq env="math">|\widetilde{v}_k\rangle</eq> and <eq env="math">|\widetilde{v}_l\rangle</eq> implies the orthogonality (in the Hilbert–Schmidt sense<a href="#fn118" class="footnote-ref" id="fnref118"><sup>118</sup></a>) of the corresponding Kraus operators, <eq env="math">E_k</eq> and <eq env="math">E_l</eq>.
+In order to see this, we write <eq env="math">\langle\widetilde{v}_k|\widetilde{v}_l\rangle</eq> as
+<eq env="displaymath">
+  \begin{aligned}
+    \braket{\widetilde{v}_k |\widetilde{v}_l}
+    &amp;= \langle\Omega|(\mathbf{1}\otimes E_k^\dagger)(\mathbf{1}\otimes E_l)|\Omega\rangle
+  \\&amp;= \operatorname{tr}(\mathbf{1}\otimes E_k^\dagger E_l)|\Omega\rangle\langle\Omega|
+  \\&amp;= \frac{1}{d}\operatorname{tr}\sum_{ij}|i\rangle\langle j|\otimes E_k^\dagger E_l |i\rangle\langle j|
+  \end{aligned}
+</eq>
+(using the fact that we can substitute <eq env="math">\frac{1}{d}\sum_{ij}|i\rangle\langle j|\otimes|i\rangle\langle j|</eq> for <eq env="math">|\Omega\rangle\langle\Omega|</eq>).
+Now, the trace of the tensor product of two matrices is the product of their traces, hence
+<eq env="displaymath">
+  \begin{aligned}
+    \langle\widetilde{v}_k|\widetilde{v}_l\rangle
+    &amp;= \frac{1}{d}\sum_{ij} \langle i|j\rangle\operatorname{tr}E_k^\dagger E_l |i\rangle\langle j|
+  \\&amp;= \frac{1}{d} \operatorname{tr}E_k^\dagger E_l
+  \end{aligned}
+</eq>
+(using the fact that <eq env="math">\langle i|j\rangle=\delta_{ij}</eq> and <eq env="math">\sum_i|i\rangle\langle i|=\mathbf{1}</eq>).
+In summary then, <em><eq env="math">\langle\widetilde{v}_k|\widetilde{v}_l\rangle=0</eq> implies that <eq env="math">\operatorname{tr}E_k^\dagger E_l=0</eq></em>.</p>
+<div class="idea">
+<p>A linear map <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')</eq> is completely positive if and only if it admits an operator-sum decomposition of the form
+<eq env="displaymath">
+  \mathcal{E}(\rho) = \sum_k E_k\rho E^\dagger_k.
+</eq></p>
+<p>If this is the case, then this decomposition has the following properties:</p>
+<ul>
+<li><eq env="math">\mathcal{E}</eq> is trace preserving if and only if <eq env="math">\sum_k E^\dagger_kE_k=\mathbf{1}</eq>.</li>
+<li>Two sets of Kraus operators <eq env="math">\{E_k\}</eq> and <eq env="math">\{F_l\}</eq> represent the same map <eq env="math">\mathcal{E}</eq> if and only if there exists a unitary <eq env="math">R</eq> such that <eq env="math">E_k =\sum_l R_{kl}F_l</eq> (where the smaller set of the Kraus operators is padded with zeros, if necessary).</li>
+</ul>
+</div>
+<p>Note that, for <em>any</em> <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')</eq>, there always exists a representation with <em>at most</em> <eq env="math">dd'</eq> mutually orthogonal Kraus operators: <eq env="math">\operatorname{tr}E^\dagger_iE_j\propto\delta_{ij}</eq>.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="117">
+<li id="fn117"><p>The number of vectors contributing to each mixture (and hence the number of corresponding Kraus operators) may be different, so we simply extend the smaller set to the required size by adding zero operators.<a href="7.9-kraus-operators-revisited.html#fnref117" class="footnote-back">↩︎</a></p></li>
+<li id="fn118"><p>Recall that the Hilbert–Schmidt product <eq env="math">(A|B)</eq> of two operators <eq env="math">A</eq> and <eq env="math">B</eq> is defined by <eq env="math">(A|B)=\frac12\operatorname{tr}A^\dagger B</eq>.<a href="7.9-kraus-operators-revisited.html#fnref118" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +433,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="7.8-the-mathematics-of-can-and-cannot.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="7.10-correctable-channels.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +473,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/07-CP-maps.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

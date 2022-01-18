@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>Chapter 7 Quantum channels | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="Chapter 7 Quantum channels | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="Chapter 7 Quantum channels | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="6.9-remarks-and-exercises-5.html"/>
+<link rel="next" href="7.1-random-evolution.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,56 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="chapter7" class="section level1">
+<h1><span class="header-section-number">Chapter 7</span> Quantum channels</h1>
+<blockquote>
+<p>Quantum evolution of any <em>isolated</em> system is unitary but its constituent parts may evolve in a more complicated way. In this chapter we will go beyond unitary evolutions and describe physically realisable transformations of density operators, called quantum channels. Be prepared for some name dropping; you will hear about Karl Kraus, Woody Stinespring, Andrzej Jamiołkowski and Man-Duen Choi. To be sure, knowing names will not give you more insights, but at least you will not be intimidated when you hear about the <strong>Stinespring</strong> and the <strong>Kraus representations</strong>, the <strong>Jamiołkowski isomorphism</strong>, or the <strong>Choi matrix</strong>.</p>
+</blockquote>
+<p>We discussed how entanglement forced us to describe quantum states of open quantum systems (ones which are part of a larger system) in terms of density operators.
+In this chapter we will describe how open systems evolve.
+The question we are asking here is: what are the most general physically admissible transformations of density operators?
+At the fundamental level — and this should be your quantum mantra<a href="#fn97" class="footnote-ref" id="fnref97"><sup>97</sup></a> — there is <em>only one</em> unitary evolution, and if there is any other evolution then it has to be derived from a unitary evolution.
+From this perspective, any non-unitary evolution of an open system is induced by a unitary evolution of a larger system.
+But how?
+The short answer is: by adding (tensoring) and removing (partial trace) physical systems.
+A typical combination of these operations is shown in the following diagram:</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-52-1.png" width="288" style="display: block; margin: auto;" /></p>
+<p>First, we prepare our system of interest in an input state <eq env="math">\rho</eq>.
+Then we dilate the system by “adding” (or “taking into account”) an auxiliary system<a href="#fn98" class="footnote-ref" id="fnref98"><sup>98</sup></a> which is large enough to include everything our system will interact with, and also large enough to be in a pure state <eq env="math">|a\rangle</eq>.
+Mathematically, we do this by tensoring the input state <eq env="math">\rho</eq> with <eq env="math">|a\rangle\langle a|</eq> to obtain <eq env="math">|a\rangle\langle a|\otimes\rho</eq> (here we place the auxiliary system first and our system of interest second).
+The dilated system is assumed to be closed so that it undergoes some unitary evolution <eq env="math">U</eq>.
+After all the interactions have taken place, we <em>trace out</em> the auxiliary system, turning the joint state <eq env="math">U|a\rangle\langle a|\otimes\rho U^\dagger</eq> of the dilated system into the final state of our system of interest: the output state <eq env="math">\rho'</eq>.
+The net effect of this composition, as we shall see in a moment, is the input-output transformation which can be written, as long as the initial state of the auxiliary system in <em>not</em> correlated with the input state, in a nice compact way:
+<eq env="displaymath">
+  \rho\longmapsto\rho' = \sum_i E_i\rho E_i^\dagger
+</eq>
+where the <eq env="math">E_i</eq> are some operators that satisfy <eq env="math">\sum_i E_i^\dagger E_i=\mathbf{1}</eq>.
+This linear map is called a <strong>completely positive trace-preserving map</strong>, or, in the parlance of quantum information science, a <strong>quantum channel</strong>.
+We will elaborate on the mathematics behind quantum channels shortly, but for now let us only check the essential properties, i.e. that this map preserves both trace and positivity (as its name suggests).</p>
+<ul>
+<li>Trace preserving: since the trace is linear, invariant under cyclic permutations of operators, and we ask that <eq env="math">\sum_i E_i^\dagger E_i=\mathbf{1}</eq>, we see that
+<eq env="displaymath">
+    \operatorname{tr}\left(\sum_k E_k\rho E_k^\dagger\right)
+    = \operatorname{tr}\left(\sum_k E^\dagger_k E_k \rho\right)
+    = \operatorname{tr}\rho.
+  </eq></li>
+<li>Positivity preserving: since <eq env="math">\rho</eq> is a positive<a href="#fn99" class="footnote-ref" id="fnref99"><sup>99</sup></a> (semi-definite) operator, and so is <eq env="math">\sqrt{\rho}</eq>, we see that
+<eq env="displaymath">
+    \sum_k E_k\rho E_k^\dagger
+    = \sum_k (E_k\sqrt{\rho})(\sqrt{\rho} E_k^\dagger).
+  </eq></li>
+</ul>
+<p>These conditions are certainly <em>necessary</em> if we want to map density operators into legal density operators, but we shall see in a moment that they are not <em>sufficient</em>: quantum channels are not just positive maps, they are <strong>completely</strong> positive maps.
+We will discuss their special properties, describe the most common examples, and, last but not least, specify when the action of quantum quantum channels can be reversed, or corrected, so that we can recover the original input state.
+This will set the stage for our subsequent discussion of quantum error correction.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="97">
+<li id="fn97"><p>…there is only one unitary evolution, there is only one unitary evolution, there only one unitary evolution… …and everything else is cheating<a href="7-chapter7.html#fnref97" class="footnote-back">↩︎</a></p></li>
+<li id="fn98"><p>Depending on the context, the auxiliary system is either called the <strong>ancilla</strong> (usually when we can control it) or the <strong>environment</strong> (usually when we cannot control it).<a href="7-chapter7.html#fnref98" class="footnote-back">↩︎</a></p></li>
+<li id="fn99"><p>Recall that an operator is positive if and only if it can be written in the form <eq env="math">XX^\dagger</eq> for some <eq env="math">X</eq> (here <eq env="math">X=E_k\sqrt{\rho}</eq>). Also, the sum of positive operators is again a positive operator.<a href="7-chapter7.html#fnref99" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +424,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="6.9-remarks-and-exercises-5.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="7.1-random-evolution.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +464,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/07-CP-maps.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

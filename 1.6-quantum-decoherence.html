@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>1.6 Quantum decoherence | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="1.6 Quantum decoherence | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="1.6 Quantum decoherence | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="1.5-qubits-gates-and-circuits.html"/>
+<link rel="next" href="1.7-computation-deterministic-probabilistic-and-quantum.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,50 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="quantum-decoherence" class="section level2">
+<h2><span class="header-section-number">1.6</span> Quantum decoherence</h2>
+<p>We do need quantum theory to describe many physical phenomena, but, at the same time, there are many other phenomena where the classical theory of probability works pretty well.
+We hardly see quantum interference on a daily basis.
+Why?
+The answer is <strong>decoherence</strong>.
+The addition of probability amplitudes, rather than probabilities, applies to physical systems which are completely isolated.
+However, it is almost impossible to isolate a complex quantum system, such as a quantum computer, from the rest of the world.
+There will always be spurious interactions with the environment, and when we add amplitudes, we have to take into account not only different configurations of the physical system at hand, but also different configurations of the environment.</p>
+<p>For example, consider an isolated system composed of a quantum computer and its environment.
+The computer is prepared in some input state <eq env="math">I</eq> and generates output <eq env="math">O</eq>.
+Let us look at the following two scenarios:</p>
+<ol style="list-style-type: decimal">
+<li><em>The computer is isolated and quantum computation does not affect the environment.</em>
+The computer and the environment evolve independently from each other and, as a result, the environment does not hold any physical record of how the computer reached output <eq env="math">O</eq>.
+In this case we add the amplitudes for each of the two alternative computational paths.</li>
+</ol>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-6-1.png" width="144" style="display: block; margin: auto;" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li><em>Quantum computation affects the environment.</em>
+The environment now holds a physical record of how the computer reached output <eq env="math">O</eq>, which results in two final states of the composed system (computer + environment) which we denote <eq env="math">O_1</eq> and <eq env="math">O_2</eq>.
+We add the probabilities for each of the two alternative computational paths.</li>
+</ol>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-7-1.png" width="144" style="display: block; margin: auto;" /></p>
+<p>When quantum computation affects the environment, we have to include the environment in our analysis for it now takes part in the computation.
+Depending on which computational path was taken, the environment may end up in two distinct states.
+The computer itself may show output <eq env="math">O</eq>, but when we include the environment we have not one, but two outputs, <eq env="math">O_1</eq> and <eq env="math">O_2</eq>, denoting, respectively, “computer shows output <eq env="math">O</eq> and the environment knows that path <eq env="math">1</eq> was taken” and “computer shows output <eq env="math">O</eq> and the environment knows that path <eq env="math">2</eq> was taken”.
+There are no alternative ways of reaching <eq env="math">O_1</eq> or <eq env="math">O_2</eq>, hence there is no interference, and the corresponding probabilities read <eq env="math">p_1=|z_1|^2</eq> for <eq env="math">O_1</eq>, and <eq env="math">p_2=|z_2|^2</eq> for <eq env="math">O_2</eq>.
+The probability that the computer shows output <eq env="math">O</eq>, regardless the state of the environment, is the sum of of the two probabilities: <eq env="math">p=p_1+p_2</eq>.
+We have lost the interference term and any advantages of quantum computation along with it.
+In the presence of decoherence, the interference formula in Equation (1.2.1.1) is modified and reads
+<eq env="displaymath">
+p
+= p_1 + p_2 + 2 v \sqrt{p_1 p_2}\cos (\varphi_2-\varphi_1),
+</eq>
+where the parameter <eq env="math">v</eq>, called the <strong>visibility</strong> of the interference pattern, ranges from <eq env="math">0</eq> (the environment can perfectly distinguish between the two paths, total decoherence, no interference) to <eq env="math">1</eq> (the environment cannot distinguish between the two paths, no decoherence, full interference), with the values in between corresponding to partial decoherence.</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-8-1.png" width="288" style="display: block; margin: auto;" /></p>
+<p>We shall derive this formula later on, and you will see that <eq env="math">v</eq> quantifies the degree of distinguishability between <eq env="math">O_1</eq> and <eq env="math">O_2</eq>.
+The more the environment knows about which path was taken the less interference we see.</p>
+<div class="idea">
+<p>Decoherence suppresses quantum interference.</p>
+</div>
+<p>Decoherence is chiefly responsible for our classical description of the world — without interference terms we may as well add probabilities instead of amplitudes.
+While decoherence is a serious impediment to building quantum computers, depriving us of the power of quantum interference, it is not all doom and gloom: there are clever ways around decoherence, such as quantum error correction and fault-tolerant methods we will meet later.</p>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +418,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1.5-qubits-gates-and-circuits.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1.7-computation-deterministic-probabilistic-and-quantum.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +458,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/01-interference.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>7.4 Single qubit channels | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="7.4 Single qubit channels | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="7.4 Single qubit channels | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="7.3-stinesprings-dilation-and-krauss-ambiguity.html"/>
+<link rel="next" href="7.5-composition-of-quantum-channels.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,73 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="single-qubit-channels" class="section level2">
+<h2><span class="header-section-number">7.4</span> Single qubit channels</h2>
+<p>The best way to familiarise ourselves with the concept of a quantum channel is to study a few examples, and we will start with the simplest case: <strong>single qubit channels</strong>.
+The single qubit case is special since we can visualise the action of the channel by looking at the corresponding deformation of the Bloch sphere.
+Recall that an arbitrary density matrix for a single qubit can be written in the form
+<eq env="displaymath">
+  \begin{aligned}
+    \rho
+    &amp;= \frac{1}{2}\left(\mathbf{1}+\vec{s}\cdot \vec\sigma\right)
+  \\&amp;= \frac{1}{2}\left(\mathbf{1}+s_x X+ s_y Y + s_z Z\right)
+  \end{aligned}
+</eq>
+where <eq env="math">\vec{s}</eq> is the Bloch vector of the qubit with components <eq env="math">(s_x, s_y, s_z)</eq>, and <eq env="math">X</eq>, <eq env="math">Y</eq>, and <eq env="math">Z</eq> are the Pauli operators.
+Recall that unitary operations rotate the Bloch sphere.
+In particular the <eq env="math">X</eq>, <eq env="math">Y</eq>, and <eq env="math">Z</eq> — viewed as unitary transformations — rotate the Bloch sphere by <eq env="math">180^\circ</eq> around the <eq env="math">x</eq>, <eq env="math">y</eq>, and <eq env="math">z</eq> axes, respectively.
+General quantum channels, however, may deform it further, into spheroids with a displaced centre, as the following examples show.</p>
+<ul>
+<li><p><em>A bit-flip with probability <eq env="math">p</eq>:</em>
+<eq env="displaymath">
+    \rho \longmapsto (1-p)\rho+pX\rho X.
+  </eq>
+The Kraus operators are <eq env="math">\sqrt{1-p}\mathbf{1}</eq> and <eq env="math">\sqrt{p}X</eq>;
+the original Bloch sphere shrinks into a prolate spheroid aligned with the <eq env="math">x</eq>-axis;
+for the specific case of <eq env="math">p=\frac{1}{2}</eq>, the Bloch sphere degenerates to the <eq env="math">[-1,1]</eq> interval on the <eq env="math">x</eq>-axis.</p></li>
+<li><p><em>A phase-flip with probability <eq env="math">p</eq>:</em>
+<eq env="displaymath">
+    \rho \longmapsto (1-p)\rho+pZ\rho Z.
+  </eq>
+The Kraus operators are <eq env="math">\sqrt{1-p}\mathbf{1}</eq> and <eq env="math">\sqrt{p}Z</eq>;
+the original Bloch sphere shrinks into a prolate spheroid aligned with the <eq env="math">z</eq>-axis;
+for the specific case of <eq env="math">p=\frac{1}{2}</eq>, the Bloch sphere degenerates to the <eq env="math">[-1,1]</eq> interval on the <eq env="math">z</eq>-axis.</p></li>
+<li><p><em>The depolarising channel:</em>
+<eq env="displaymath">
+    \rho\longmapsto (1-p)\rho + \frac{p}{3}\left(X\rho X+Y\rho Y+Z\rho Z\right).
+  </eq>
+Here the qubit remains intact with probability <eq env="math">1-p</eq>, while a quantum error occurs with probability <eq env="math">p</eq>.
+The error can be of any one of three types: bit-flip <eq env="math">X</eq>, phase-flip <eq env="math">Z</eq>, or and both bit- and phase-flip <eq env="math">Y</eq>; each type of error is equally likely.
+For <eq env="math">p&lt;\frac{3}{4}</eq>, the original Bloch sphere contracts uniformly under the action of the channel, and the Bloch vector shrinks by the factor <eq env="math">1-\frac{4}{3}p</eq>;
+for the specific case of <eq env="math">p=\frac{3}{4}</eq>, the Bloch sphere degenerates to the point at the centre of the sphere;
+for <eq env="math">p&gt;\frac{3}{4}</eq>, the Bloch sphere is flipped, and the Bloch vector starts pointing in the opposite direction increasing the magnitude up to <eq env="math">\frac{1}{3}</eq> (which occurs for <eq env="math">p=1</eq>).</p></li>
+</ul>
+<p>There are two interesting points that must be mentioned here.
+The first one is about the interpretation of the action of the channel in terms of Kraus operators: our narrative may change when we switch to a different set of effects.
+For example, take the phase-flip channel with <eq env="math">p=\frac{1}{2}</eq> and switch from the effects
+<eq env="displaymath">
+  \begin{aligned}
+    E_1 &amp;= \frac{1}{\sqrt{2}}\mathbf{1}
+  \\E_2 &amp;= \frac{1}{\sqrt{2}}Z
+  \end{aligned}
+</eq>
+to
+<eq env="displaymath">
+  \begin{aligned}
+    F_1 &amp;= \frac{1}{\sqrt{2}}(E_1+E_2)=|0\rangle\langle 0|
+  \\F_2 &amp;= \frac{1}{\sqrt{2}}(E_1-E_2)=|1\rangle\langle 1|.
+  \end{aligned}
+</eq>
+These two sets of Kraus operators <eq env="math">\{E_1,E_2\}</eq> and <eq env="math">\{F_1,F_2\}</eq> describe the same channel, but the <em>narrative</em> is different.
+The first set of effects tells us that the channel chooses randomly, with the same probability, between the two options: let the qubit pass undisturbed or apply the phase-flip <eq env="math">Z</eq>;
+the second set tells us that channel essentially performs the measurement in the standard basis, but the outcome of the measurement is not revealed.
+In general:</p>
+<div class="idea">
+<p>Describing actions of quantum channels purely in terms of their effects (i.e. Kraus operators) can be ambiguous.</p>
+</div>
+<p>The second interesting point is that not <em>all</em> transformations of the Bloch sphere into spheroids are possible.
+For example, we cannot deform the Bloch sphere into a pancake-like oblate spheroid.
+This is due to <em>complete</em> positivity (instead of mere positivity) of quantum channels, which we will explain shortly.</p>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +441,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="7.3-stinesprings-dilation-and-krauss-ambiguity.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="7.5-composition-of-quantum-channels.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +481,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/07-CP-maps.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

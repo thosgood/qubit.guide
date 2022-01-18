@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>4.5 Observables | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="4.5 Observables | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="4.5 Observables | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="4.4-example-of-an-incomplete-measurement.html"/>
+<link rel="next" href="4.6-compatible-observables-and-the-uncertainty-relation.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,72 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="observables" class="section level2">
+<h2><span class="header-section-number">4.5</span> Observables</h2>
+<p>An <strong>observable</strong> <eq env="math">A</eq> is a measurable physical property which has a numerical value, for example, spin or momentum or energy.
+The term “observable” also extends to any basic measurement in which each outcome is associated with a numerical value.
+If <eq env="math">\lambda_k</eq> is the numerical value associated with outcome <eq env="math">|e_k\rangle</eq> then we say that the observable <eq env="math">A</eq> is <strong>represented</strong> by the operator
+<eq env="displaymath">
+  \begin{aligned}
+    A
+    &amp;= \sum_k \lambda_k |e_k\rangle\langle e_k|
+  \\&amp;= \sum_k \lambda_k P_k,
+  \end{aligned}
+</eq>
+where <eq env="math">\lambda_k</eq> is now the eigenvalue corresponding to the eigenvector <eq env="math">|e_k\rangle</eq>, or the projector <eq env="math">P_k</eq>.</p>
+<div class="idea">
+<p>Recall the following types of operator:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>normal</strong></td>
+<td align="left"><eq env="math">AA^\dagger = A^\dagger A</eq></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>unitary</strong></td>
+<td align="left"><eq env="math">AA^\dagger = A^\dagger A = \mathbf{1}</eq></td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Hermitian</strong>, or <strong>self-adjoint</strong></td>
+<td align="left"><eq env="math">A^\dagger = A</eq></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>positive semi-definite</strong></td>
+<td align="left"><eq env="math">\langle v|A|v\rangle\geqslant 0</eq> for all <eq env="math">|v\rangle</eq></td>
+</tr>
+</tbody>
+</table>
+<p>Note that an operator <eq env="math">A</eq> is normal if and only if it is unitarily diagonalisable, and that both unitary and Hermitian operators are normal.</p>
+</div>
+<p>Conversely, to any normal operator <eq env="math">A</eq> we can associate a measurement defined by the eigenvectors of <eq env="math">A</eq>, which form an orthonormal basis, and use the eigenvalues of <eq env="math">A</eq> to label the outcomes of this measurement.
+If we choose the eigenvalues to be real numbers then <eq env="math">A</eq> becomes a Hermitian operator.
+For example, the standard measurement on a single qubit is often called the <strong><eq env="math">Z</eq>-measurement</strong>, because the Pauli <eq env="math">Z</eq> operator can be diagonalised in the standard basis and written as <eq env="math">Z = (+1)|0\rangle\langle 0| + (-1)|1\rangle\langle 1|</eq>.
+The two outcomes, <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>, are now labelled as <eq env="math">+1</eq> and <eq env="math">-1</eq>, respectively.
+Using the same association we also have the <eq env="math">X</eq>- and the <eq env="math">Y</eq>-measurements, defined by the Pauli <eq env="math">X</eq> and <eq env="math">Y</eq> operators, respectively.</p>
+<div class="idea">
+<p>The outcomes can be labelled by any symbols of your choice; it is the <em>decomposition</em> of the Hilbert space into <em>mutually orthogonal subspaces</em> that defines a measurement, not the labels.</p>
+</div>
+<p>This said, labelling outcomes with real numbers is very useful.<a href="#fn64" class="footnote-ref" id="fnref64"><sup>64</sup></a>
+For example, the expected value <eq env="math">\langle A\rangle</eq>, which is the average of the numerical values <eq env="math">\lambda_k</eq> weighted by their probabilities, is a very useful quantity and can be easily expressed in terms of the operator <eq env="math">A</eq> as <eq env="math">\langle\psi|A|\psi\rangle</eq>, as follows:
+<eq env="displaymath">
+  \begin{aligned}
+    \sum_k \lambda_k \Pr (\text{outcome k})
+    &amp;= \sum_k \lambda_k |\langle e_k|\psi\rangle|^2
+  \\&amp;= \sum_k\lambda_k \langle\psi|e_k\rangle\langle e_k|\psi\rangle
+  \\&amp;= \langle\psi| \left( \sum_k\lambda_k|e_k\rangle\langle e_k| \right)|\psi\rangle
+  \\&amp;= \langle\psi|A|\psi\rangle.
+  \end{aligned}
+</eq>
+To be clear, this is not a value we expect to see in any particular experiment.
+Instead, imagine a huge number of quantum objects, all prepared in the state <eq env="math">|\psi\rangle</eq> and think about the observable <eq env="math">A</eq> being measured on each of the objects.
+Statistically we then expect the average of our measurement results to be roughly <eq env="math">\langle A\rangle</eq>.
+Note that when <eq env="math">A</eq> is a projector then <eq env="math">\langle\psi|A|\psi\rangle</eq> is the probability of the outcome associated with <eq env="math">A</eq>.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="64">
+<li id="fn64"><p>Some textbooks describe observables in terms of Hermitian operators, claiming that the corresponding operators <em>have to</em> be Hermitian “because the outcomes are real numbers”. This is actually a bit backwards. As we say above, the labels can be arbitrary, but, since real number labels are often useful (as we’re about to justify), we tend to only work with Hermitian operators.<a href="4.5-observables.html#fnref64" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +440,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.4-example-of-an-incomplete-measurement.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.6-compatible-observables-and-the-uncertainty-relation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +480,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/04-measurement.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

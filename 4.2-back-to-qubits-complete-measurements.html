@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>4.2 Back to qubits; complete measurements | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="4.2 Back to qubits; complete measurements | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="4.2 Back to qubits; complete measurements | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="4.1-hilbert-spaces-briefly.html"/>
+<link rel="next" href="4.3-the-projection-rule-incomplete-measurements.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,51 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="back-to-qubits-complete-measurements" class="section level2">
+<h2><span class="header-section-number">4.2</span> Back to qubits; complete measurements</h2>
+<div class="idea">
+<p>A <strong>projector</strong> is any Hermitian operator <eq env="math">P=P^\dagger</eq> which is idempotent (<eq env="math">P^2=P</eq>).
+The rank of <eq env="math">P</eq> is evaluated using <eq env="math">\operatorname{tr}(P)</eq>.
+In the Dirac notation, <eq env="math">|e\rangle\langle e|</eq> is a rank one projector on the subspace spanned by the unit vector <eq env="math">|e\rangle</eq>, and it acts on any vector <eq env="math">|v\rangle</eq> as <eq env="math">(|e\rangle\langle e|)|v\rangle = |e\rangle\langle e|v\rangle</eq>.</p>
+</div>
+<p>The most common measurement in quantum information science is the standard measurement on a qubit, also referred to as the measurement in the <strong>standard</strong> (or <strong>computational</strong>) basis <eq env="math">\{|0\rangle,|1\rangle\}</eq>.
+When we draw circuit diagrams it is tacitly assumed that such a measurement is performed on each qubit at the end of quantum evolution.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:standard-basis-measurement"></span>
+<img src="iqis-book_files/figure-html/standard-basis-measurement-1.png" alt="The standard (computational) basis defines the standard measurements." width="288" />
+<p class="caption">
+Figure 4.1: The standard (computational) basis defines the standard measurements.
+</p>
+</div>
+<p>However, if we want to emphasise the role of the measurement, then we can include it explicitly in the diagram as a special quantum gate, e.g. as</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-29-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>or, in an alternative notation, as</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-30-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>As we can see, if the qubit is prepared in state <eq env="math">|\psi\rangle = \alpha_0|0\rangle + \alpha_1|1\rangle</eq> and subsequently measured in the standard basis state, then the outcome is <eq env="math">|k\rangle</eq> (for <eq env="math">k=0,1</eq>) with probability<a href="#fn63" class="footnote-ref" id="fnref63"><sup>63</sup></a>
+<eq env="displaymath">
+  \begin{aligned}
+    |\alpha_k|^2
+    &amp;= |\langle k|\psi\rangle|^2
+  \\&amp;= \underbrace{\langle\psi|k\rangle}_{\alpha_k^\star}
+    \underbrace{\langle k|\psi\rangle}_{\alpha_k}
+  \\&amp;= \langle\psi| \underbrace{|k\rangle\langle k|}_{\text{projector}} |\psi\rangle
+  \\&amp;= \langle\psi|P_k|\psi\rangle
+  \end{aligned}
+</eq>
+where <eq env="math">P_k=|k\rangle\langle k|</eq> is the projector on <eq env="math">|k\rangle</eq>.
+If the outcome of the measurement is <eq env="math">k</eq>, then the output state of the measurement gate is <eq env="math">|k\rangle</eq>.
+The original state <eq env="math">|\psi\rangle</eq> is <em>irretrievably lost</em>.
+This sudden change of the state, from the pre-measurement state <eq env="math">|\psi\rangle</eq> to the post-measurement state, either <eq env="math">|0\rangle</eq> or <eq env="math">|1\rangle</eq>, is often called a <strong>collapse</strong> or a <strong>reduction</strong> of the state.</p>
+<p>So it looks like there are two distinct ways for a quantum state to change: on the one hand we have unitary evolutions, and on the other hand we have an abrupt change during the measurement process.
+Surely, the measurement process is not governed by any different laws of physics?</p>
+<p>No, it is not!</p>
+<p>A measurement is a physical process and can be explained without any “collapse”, but it is usually a complicated process in which one complex system (a measuring apparatus or an observer) interacts and gets correlated with a physical system being measured.
+We will discuss this more later on, but for now let us accept a “collapse” as a <em>convenient mathematical shortcut</em>, and describe it in terms of projectors rather than unitary operators.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="63">
+<li id="fn63"><p>This slick argument is a good example of how nice the bra-ket notation can be.<a href="4.2-back-to-qubits-complete-measurements.html#fnref63" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +419,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.1-hilbert-spaces-briefly.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.3-the-projection-rule-incomplete-measurements.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +459,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/04-measurement.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

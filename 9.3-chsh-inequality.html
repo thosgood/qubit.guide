@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>9.3 CHSH inequality | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="9.3 CHSH inequality | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="9.3 CHSH inequality | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="9.2-hidden-variables.html"/>
+<link rel="next" href="9.4-quantum-correlations-revisited.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,51 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="chsh-inequality" class="section level2">
+<h2><span class="header-section-number">9.3</span> CHSH inequality</h2>
+<blockquote>
+<p>An upper bound on <strong>classical</strong> correlations.</p>
+</blockquote>
+<p><lite-youtube videoid="xFj9Mf9LGso" playlabel="Play: Device-independent tests and Bell inequalities"></lite-youtube></p>
+<p>We will describe the most popular version of Bell’s argument, introduced in 1969 by John Clauser, Michael Horne, Abner Shimony, and Richard Holt (CHSH).
+Let us assume that the results of any measurement on any individual system are predetermined.
+Any probabilities we may use to describe the system merely reflect our ignorance of these hidden variables.</p>
+<p>Now, imagine the following scenario.
+Alice and Bob, two characters with a predilection for wacky experiments, are equipped with appropriate measuring devices and sent to two distant locations.
+Somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob.
+Let us label the two qubits in each pair as <eq env="math">\mathcal{A}</eq> and <eq env="math">\mathcal{B}</eq> respectively, and let us assume that both Alice and Bob have well defined values of their observables.
+We ask Alice and Bob to measure one of the two pre-agreed observables.
+For each incoming qubit, Alice and Bob choose randomly, and independently from each other, which particular observable will be measured.
+Alice chooses between <eq env="math">A_1</eq> and <eq env="math">A_2</eq>, and Bob between <eq env="math">B_1</eq> and <eq env="math">B_2</eq>.
+Each observable has value <eq env="math">+1</eq> or <eq env="math">-1</eq>, and so we are allowed to think about them as random variables <eq env="math">A_k</eq> and <eq env="math">B_k</eq>, for <eq env="math">k=1,2</eq>, which take values <eq env="math">\pm 1</eq>.
+Let us define a new random variable, the <strong>CHSH quantity</strong> <eq env="math">S</eq>, as
+<eq env="displaymath">
+  S = A_1(B_1 - B_2) + A_2(B_1 + B_2).
+</eq>
+It is easy to see that one of the terms <eq env="math">B_1\pm B_2</eq> must be equal to zero and the other to <eq env="math">\pm 2</eq>, hence <eq env="math">S=\pm2</eq>.
+The average value of <eq env="math">S</eq> must lie somewhere in-between, i.e.
+<eq env="displaymath">
+  -2 \leqslant\langle S\rangle \leqslant 2.
+</eq>
+That’s it!
+Such a simple and yet profound mathematical statement about correlations, which we refer simply to as the <strong>CHSH inequality</strong>.
+No quantum theory is involved because the CHSH inequality is not specific to quantum theory: it does not really matter what kind of physical process is behind the appearance of binary values of <eq env="math">A_1</eq>, <eq env="math">A_2</eq>, <eq env="math">B_1</eq>, and <eq env="math">B_2</eq>; it is a statement about correlations, and for all classical correlations we must have
+<eq env="displaymath">
+  |
+    \langle A_1 B_1\rangle - \langle A_1 B_2\rangle + \langle A_2 B_1\rangle + \langle A_2 B_2\rangle
+  | \leqslant 2.
+</eq></p>
+<p>There are essentially two two assumptions here:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Hidden variables</strong>: observables have definite values; and</li>
+<li><strong>Locality</strong>: Alice’s choice of measurements (<eq env="math">A_1</eq> or <eq env="math">A_2</eq>) does not affect the outcomes of Bob’s measurement, and vice versa.</li>
+</ol>
+<p>We will not discuss the locality assumption here in detail but let me comment on it briefly.
+In the hidden variable world a, statement such as “if Bob were to measure <eq env="math">B_1</eq> then he would register <eq env="math">+1</eq>” must be either true or false <em>prior to Bob’s measurement</em>.
+Without the locality hypothesis, such a statement is ambiguous, since the value of <eq env="math">B_1</eq> could depend on whether <eq env="math">A_1</eq> or <eq env="math">A_2</eq> will be chosen by Alice.
+We do not want this for it implies the instantaneous communication.
+It means that, say, Alice by making a choice between <eq env="math">A_1</eq> and <eq env="math">A_2</eq>, affects Bob’s results.
+Bob can immediately “see” what Alice “does”.</p>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +419,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="9.2-hidden-variables.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="9.4-quantum-correlations-revisited.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +459,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/09-EPR-bell.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

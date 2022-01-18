@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>4.11 Quantum theory, formally | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="4.11 Quantum theory, formally | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="4.11 Quantum theory, formally | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="4.10-wiesners-quantum-money.html"/>
+<link rel="next" href="4.12-remarks-and-exercises-3.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,92 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="quantum-theory-formally" class="section level2">
+<h2><span class="header-section-number">4.11</span> Quantum theory, formally</h2>
+<p>Even though multiplying and adding probability amplitudes is essentially all there is to quantum theory, we hardly ever multiply and add amplitudes in a pedestrian way.
+Instead, as we have seen, we neatly tabulate the amplitudes into vectors and matrices and let the matrix multiplication take care of multiplication and addition of amplitudes corresponding to different alternatives.
+Thus vectors and matrices appear naturally as our bookkeeping tools: we use vectors to describe quantum states, and matrices (operators) to describe quantum evolutions and measurements.
+This leads to a convenient mathematical setting for quantum theory, which is a complex vector space with an inner product, often referred to as a Hilbert space.
+It turns out, somewhat miraculously, that this pure mathematical construct is exactly what we need to formalise quantum theory.
+It gives us a precise language which is appropriate for making empirically testable predictions.
+At a very instrumental level, quantum theory is a set of rules designed to answer questions such as “given a specific preparation and a subsequent evolution, how can we compute probabilities for the outcomes of such-and-such measurement”.
+Here is how we represent preparations, evolutions and measurements in mathematical terms, and how we get probabilities.</p>
+<p>Note that we have already said much of the below, but we are summarising it again now in a more precise way, formally defining the mathematical framework of quantum theory that we use.</p>
+<p>We also need to point out that a vital part of the formalism of quantum theory is missing from the following description, namely the idea of <strong>tensor products</strong>.
+To talk about this, we need to introduce the notion of <strong>entanglement</strong>, and this will be the subject of <a href="5-chapter5.html#chapter5">Chapter 5</a>.</p>
+<div id="quantum-states" class="section level3">
+<h3><span class="header-section-number">4.11.1</span> Quantum states</h3>
+<p>With any isolated quantum system which can be prepared in <eq env="math">n</eq> perfectly distinguishable states, we can associate a Hilbert space <eq env="math">\mathcal{H}</eq> of dimension <eq env="math">n</eq> such that each vector <eq env="math">|v\rangle\in\mathcal{H}</eq> of unit length (<eq env="math">\langle v|v\rangle =1</eq>) represents a quantum state of the system.
+The overall phase of the vector has no physical significance: <eq env="math">|v\rangle</eq> and <eq env="math">e^{i\varphi}|v\rangle</eq>, for any real <eq env="math">\varphi</eq>, describe the same state.
+The inner product <eq env="math">\langle u|v\rangle</eq> is the probability amplitude that a quantum system prepared in state <eq env="math">|v\rangle</eq> will be found in state <eq env="math">|u\rangle</eq>.
+States corresponding to orthogonal vectors, <eq env="math">\langle u|v\rangle=0</eq>, are perfectly distinguishable, since the system prepared in state <eq env="math">|v\rangle</eq> will never be found in state <eq env="math">|u\rangle</eq>, and vice versa.
+In particular, states forming orthonormal bases are always perfectly distinguishable from each other.</p>
+</div>
+<div id="quantum-evolutions" class="section level3">
+<h3><span class="header-section-number">4.11.2</span> Quantum evolutions</h3>
+<div class="idea">
+<p>Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.</p>
+</div>
+<p>Unitary operators describing evolutions of quantum systems are usually derived from the <strong>Schrödinger equation</strong>.<a href="#fn66" class="footnote-ref" id="fnref66"><sup>66</sup></a>
+<eq env="displaymath">
+  \frac{\mathrm{d}}{\mathrm{d}t} |\psi(t)\rangle
+  = -\frac{i}{\hbar} H |\psi(t)\rangle
+</eq>
+where <eq env="math">H</eq> is a Hermitian operator called the Hamiltonian.</p>
+<p>This equation contains a complete specification of all interactions both within the system and between the system and the external potentials.
+For time independent Hamiltonians, the formal solution of the Schrödinger equation reads
+<eq env="displaymath">
+  \begin{gathered}
+    |\psi(t)\rangle = U(t) |\psi(0)\rangle
+  \\\text{where}\quad U(t) = e^{-\frac{i}{\hbar}Ht}.
+  \end{gathered}
+</eq>
+Any unitary matrix can be represented<a href="#fn67" class="footnote-ref" id="fnref67"><sup>67</sup></a> as the exponential of some Hermitian matrix <eq env="math">H</eq> and some real coefficient <eq env="math">t</eq>:
+<eq env="displaymath">
+  \begin{aligned}
+    e^{-itH}
+    &amp;\equiv \mathbf{1}- itH + \frac{(-it)^2}{2}H^2 + \frac{(-it)^3}{2\cdot3}H^3 +\ldots
+  \\&amp;= \sum_{n=0}^\infty \frac{(-it)^n}{n!}H^n.
+  \end{aligned}
+</eq>
+The state vector changes smoothly: for <eq env="math">t=0</eq> the time evolution operator is merely the unit operator <eq env="math">\mathbf{1}</eq>, and when <eq env="math">t</eq> is very small <eq env="math">U(t)\approx \mathbf{1}-itH</eq> is close to the unit operator, differing from it by something of order <eq env="math">t</eq>.</p>
+</div>
+<div id="quantum-circuits" class="section level3">
+<h3><span class="header-section-number">4.11.3</span> Quantum circuits</h3>
+<p>In this course we will hardly refer to the Schrödinger equation.
+Instead we will assume that our clever colleagues, experimental physicists, are able to implement certain unitary operations and we will use these unitaries, like lego blocks, to construct other, more complex, unitaries.
+We refer to preselected elementary quantum operations as <strong>quantum logic gates</strong> and we often draw diagrams, called <strong>quantum circuits</strong>, to illustrate how they act on qubits.
+For example, two unitaries, <eq env="math">U</eq> followed by <eq env="math">V</eq>, acting on a single qubit are represented as</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-33-1.png" width="624" style="display: block; margin: auto;" /></p>
+<p>This diagram should be read from left to right, and the horizontal line represents a qubit that is inertly carried from one quantum operation to another.</p>
+</div>
+<div id="measurements" class="section level3">
+<h3><span class="header-section-number">4.11.4</span> Measurements</h3>
+<p>A complete measurement in quantum theory is determined by the choice of an orthonormal basis <eq env="math">\{|e_i\rangle\}</eq> in <eq env="math">\mathcal{H}</eq>, and every such basis (in principle) represents a possible measurement.
+Given a quantum system in state <eq env="math">|\psi\rangle</eq> such that
+<eq env="displaymath">
+  |\psi\rangle = \sum_i |e_i\rangle\langle e_i|\psi\rangle,
+</eq>
+the measurement in the basis <eq env="math">\{|e_i\rangle\}</eq> gives the outcome labelled by <eq env="math">e_k</eq> with probability <eq env="math">|\langle e_k\psi||\rangle^2</eq>, and leaves the system in state <eq env="math">|e_k\rangle</eq>.
+This is consistent with our interpretation of the inner product <eq env="math">\langle e_k|\psi\rangle</eq> as the probability amplitude that a quantum system prepared in state <eq env="math">|\psi\rangle</eq> will be found in state <eq env="math">|e_k\rangle</eq>.
+State vectors forming orthonormal bases are perfectly distinguishable from each other (<eq env="math">\langle e_i|e_j\rangle=\delta_{ij}</eq>), so there is no ambiguity about the outcome.
+A complete measurement is the best we can do in terms of resolving state vectors in the basis states.</p>
+<p>In general, for any decomposition of the identity <eq env="math">\sum_k P_k=\mathbf{1}</eq> into orthogonal projectors <eq env="math">P_k</eq> (i.e. <eq env="math">P_kP_l = P_k\delta_{kl}</eq>), there exists a measurement that takes a quantum system in state <eq env="math">|\psi\rangle</eq>, outputs label <eq env="math">k</eq> with probability <eq env="math">\langle\psi|P_k|\psi\rangle</eq>, and leaves the system in the state <eq env="math">P_k|\psi\rangle</eq> (multiplied by the normalisation factor i.e. divided by the length of <eq env="math">P_k|\psi\rangle</eq>):
+<eq env="displaymath">
+  |\psi\rangle
+  \mapsto
+  \frac{P_k|\psi\rangle}{\sqrt{\langle\psi|P_k|\psi\rangle}}.
+</eq>
+The projector formalism covers both complete and incomplete measurements.
+The complete measurements are defined by rank one projectors, <eq env="math">P_k=|e_k\rangle\langle e_k|</eq>, projecting on vectors from some orthonormal basis <eq env="math">\{|e_k\rangle\}</eq>.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="66">
+<li id="fn66"><p>Recall our previous discussion of this equation in <a href="3-chapter3.html#chapter3">Chapter 3</a>.<a href="4.11-quantum-theory-formally.html#fnref66" class="footnote-back">↩︎</a></p></li>
+<li id="fn67"><p>We ignore convergence issues.<a href="4.11-quantum-theory-formally.html#fnref67" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +460,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.10-wiesners-quantum-money.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.12-remarks-and-exercises-3.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +500,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/04-measurement.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

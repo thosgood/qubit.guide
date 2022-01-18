@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>7.5 Composition of quantum channels | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="7.5 Composition of quantum channels | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="7.5 Composition of quantum channels | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="7.4-single-qubit-channels.html"/>
+<link rel="next" href="7.6-completely-positive-trace-preserving-maps.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,102 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="composition-of-quantum-channels" class="section level2">
+<h2><span class="header-section-number">7.5</span> Composition of quantum channels</h2>
+<p>We mentioned that quantum channels are combinations of</p>
+<ol style="list-style-type: decimal">
+<li>adding a physical system in a fixed state (via tensoring),</li>
+<li>discarding a physical system (taking a partial trace),</li>
+<li>and unitary transformations.</li>
+</ol>
+<p>For consistency let us note that each of these operations admits an operator-sum decomposition. This is obvious for unitary evolution (<eq env="math">\rho\mapsto U\rho U^\dagger</eq>), but perhaps less so for the other two operations.</p>
+<ul>
+<li><p><strong>Adding a system.</strong>
+Any quantum system can be expanded by bringing in an auxiliary system in a fixed state <eq env="math">|a\rangle</eq>.
+This transformation takes vectors in the Hilbert space associated with the original system and tensors them with a fixed vector <eq env="math">|a\rangle</eq> in the Hilbert space associated with the auxiliary system:
+<eq env="displaymath">
+    |\psi\rangle
+    \longmapsto |a\rangle\otimes|\psi\rangle
+    = (|a\rangle\otimes\mathbf{1}) |\psi\rangle.
+  </eq>
+In terms of density operators, we write this “expansion” transformation as
+<eq env="displaymath">
+    \begin{aligned}
+      \rho
+      \longmapsto \rho'
+      &amp;= |a\rangle\langle a|\otimes\rho
+    \\&amp;= (|a\rangle\otimes\mathbf{1})\rho (\langle a|\otimes\mathbf{1})
+    \\&amp;= V\rho V^\dagger
+    \end{aligned}
+  </eq>
+where <eq env="math">V=\mathbf{1}\otimes|a\rangle</eq>.
+We note that <eq env="math">V^\dagger V = \mathbf{1}\otimes\langle a|a|=\rangle\mathbf{1}</eq> is the identity in the Hilbert space associated with the system, and so <eq env="math">V</eq> is an isometry.
+Indeed, this transformation is an <em>isometric embedding</em>.</p></li>
+<li><p><strong>Discarding a system.</strong>
+Conversely, given a composite system in state <eq env="math">\rho</eq>, we can discard one of its subsystems.
+The partial trace over an auxiliary system can be written in the Kraus representation as
+<eq env="displaymath">
+    \begin{aligned}
+      \rho
+      \longmapsto \rho'
+      &amp;= \operatorname{tr}_\mathcal{A}\rho
+    \\&amp;= (\operatorname{tr}\otimes\mathbf{1})\rho
+    \\&amp;= \sum_i (\langle i|\otimes\mathbf{1})\rho(|i\rangle\otimes\mathbf{1})
+    \\&amp;= \sum_i E_i\rho E^\dagger_i
+    \end{aligned}
+  </eq>
+where the vectors <eq env="math">|i\rangle</eq> form an orthonormal basis in the Hilbert space associated with the auxiliary system.
+Again, we can check that the Kraus operators <eq env="math">E_i=\langle i|\otimes\mathbf{1}</eq> satisfy the completeness relation <eq env="math">\sum_i E^\dagger_i E_i =\mathbf{1}\otimes\mathbf{1}</eq> (using the fact that <eq env="math">\sum_i|i\rangle\langle i|=\mathbf{1}</eq>).</p></li>
+</ul>
+<p>Any <em>sequential</em> composition of two quantum channels <eq env="math">\mathcal{E}</eq> and <eq env="math">\mathcal{F}</eq> with Kraus operators <eq env="math">\{A_i\}_{i\in I}</eq> and <eq env="math">\{B_j\}_{j\in J}</eq> (respectively) is another quantum channel<a href="#fn112" class="footnote-ref" id="fnref112"><sup>112</sup></a> described by the Kraus operators <eq env="math">\{B_jA_i\}_{i\in I,j\in J}</eq>.
+Showing this is rather straightforward, at least in the operator-sum representation: let
+<eq env="displaymath">
+  \begin{aligned}
+    \mathcal{E} &amp;= \sum_i A_i\cdot A^\dagger_i
+  \\\mathcal{F} &amp;= \sum_j B_j\cdot B^\dagger_j
+  \end{aligned}
+</eq>
+where <eq env="math">\sum_i A^\dagger_i A_i=\sum_j B^\dagger_j B_j=\mathbf{1}</eq>;
+then the sequential composition of <eq env="math">\mathcal{E}</eq> followed by <eq env="math">\mathcal{F}</eq> can be written as
+<eq env="displaymath">
+  \mathcal{F} \circ\mathcal{E}
+  = \sum_{ij} (B_jA_i) \cdot (B_jA_i)^\dagger
+</eq>
+so that the <eq env="math">B_jA_i</eq> are the Kraus operators associated with the new channel <eq env="math">\mathcal{F}\circ\mathcal{E}</eq>, where the normalisation condition (or completeness relation) follows from
+<eq env="displaymath">
+  \begin{aligned}
+    \sum_{ij} (B_jA_i)^\dagger (B_jA_i)
+    &amp;= \sum_i A_i^\dagger\left(\sum_j B_j^\dagger B_j\right)A_i
+  \\&amp;= \sum_i A_i^\dagger A_i
+  \\&amp;= \mathbf{1}.
+  \end{aligned}
+</eq></p>
+<p>You might wonder why we explicitly called the above composition “sequential” — isn’t this how we always compose functions?
+In actual fact, since we have access to tensor products, there is another sort of composition, namely <strong>parallel</strong> composition: if we have systems <eq env="math">\mathcal{A}</eq> and <eq env="math">\mathcal{B}</eq> with channels <eq env="math">\mathcal{E}_\mathcal{A}</eq> acting on <eq env="math">\mathcal{A}</eq> and <eq env="math">\mathcal{E}_\mathcal{B}</eq> acting on <eq env="math">\mathcal{B}</eq>, then the parallel composition is denoted by <eq env="math">\mathcal{E}_\mathcal{A}\otimes\mathcal{E}_\mathcal{B}</eq>, acting on the joint system <eq env="math">\mathcal{A}\otimes\mathcal{B}</eq>, and with Kraus operators given by the <eq env="math">A_i\otimes B_j</eq>.
+The normalisation condition again follows from a simple calculation:
+<eq env="displaymath">
+  \begin{aligned}
+    \sum_{ij} (A_i\otimes B_j)^\dagger (A_i\otimes B_j)
+    &amp;= \sum_{ij} A_i^\dagger A_i \otimes B_j^\dagger B_j
+  \\&amp;= \mathbf{1}_A\otimes\mathbf{1}_B.
+  \end{aligned}
+</eq></p>
+<p>Now that we know how to compose quantum channels in terms of Kraus operators, we can see that the Stinespring representation is perfectly consistent with the Kraus representation: the three basic operations that we are allowed to use to build channels in the Stinespring representation (i.e. adding a system, unitary evolution, and discarding a system) are all themselves quantum channels, in that they admit a Kraus decomposition.</p>
+<p>Before moving on, we make a small (but important) remark:</p>
+<div class="idea">
+<p>When we compose quantum channels, each channel needs its own independent ancilla;
+<em>do not share ancillas between different channels</em>.</p>
+</div>
+<p>For example, say we have three channels, <eq env="math">\mathcal{E}_1</eq>, <eq env="math">\mathcal{E}_2</eq>, and <eq env="math">\mathcal{E}_3</eq>, with <eq env="math">\mathcal{E}_i</eq> defined by the unitary <eq env="math">U_i</eq> and the state <eq env="math">|a_i\rangle</eq> of its ancilla.
+Then the (sequential) composition <eq env="math">\mathcal{E}_3\circ\mathcal{E}_2\circ\mathcal{E}_1</eq> is given by</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-55-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>For more on this, see <a href="7.11-appendices-1.html#markov-approximation">the appendix on Markov approximation</a>.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="112">
+<li id="fn112"><p>Here we have tacitly assumed that the dimensions agree, i.e. that the output of <eq env="math">\mathcal{E}</eq> and the input of <eq env="math">\mathcal{F}</eq> are of the same dimension, so that the composition makes sense.<a href="7.5-composition-of-quantum-channels.html#fnref112" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +470,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="7.4-single-qubit-channels.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="7.6-completely-positive-trace-preserving-maps.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +510,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/07-CP-maps.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

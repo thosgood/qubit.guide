@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>3.4 Unitaries as rotations | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="3.4 Unitaries as rotations | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="3.4 Unitaries as rotations | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="3.3-the-pauli-matrices-algebraically.html"/>
+<link rel="next" href="3.5-universality-again.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,185 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="unitaries-as-rotations" class="section level2">
+<h2><span class="header-section-number">3.4</span> Unitaries as rotations</h2>
+<p>Now we can finish off what we started in <a href="2-chapter2.html#chapter2">Chapter 2</a>: we know how single-qubit state vectors correspond to points on the Bloch sphere, but now we can study how <eq env="math">(2\times 2)</eq> unitary matrices correspond to <em>rotations</em> of this sphere.</p>
+<p>Geometrically speaking, the group of unitaries <eq env="math">\mathrm{U}(2)</eq> is a three-dimensional sphere <eq env="math">S^3</eq> in <eq env="math">\mathbb{R}^4</eq>.
+We often fix the determinant to be <eq env="math">+1</eq> and express <eq env="math">(2\times 2)</eq> unitaries as
+<eq env="displaymath">
+  U = u_0\mathbf{1}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z).
+</eq>
+Such matrices form a popular subgroup of <eq env="math">\mathrm{U}(2)</eq>; it is called the <strong>special</strong> (meaning the determinant is equal to <eq env="math">1</eq>) unitary group, and denoted by <eq env="math">\mathrm{SU}(2)</eq>.
+In quantum theory, any two unitary matrices that differ by some global multiplicative phase factor represent the same physical operation, so we are “allowed to” fix the determinant to be <eq env="math">+1</eq>, and thus restrict ourselves to considering matrices in <eq env="math">\mathrm{SU}(2)</eq>.
+This is a sensible approach, practised by many theoretical physicists, but again, for some historical reasons, the convention in quantum information science does not follow this approach.
+For example, phase gates are usually written as
+<eq env="displaymath">
+  P_\alpha = \begin{bmatrix}1&amp;0\\0&amp;e^{i\alpha}\end{bmatrix}
+</eq>
+rather than
+<eq env="displaymath">
+  P_\alpha = \begin{bmatrix}e^{-i\frac{\alpha}{2}}&amp;0\\0&amp;e^{\,i\frac{\alpha}{2}}\end{bmatrix}
+</eq>
+Still, sometimes the <eq env="math">T</eq> gate
+<eq env="displaymath">
+  T
+  = \begin{bmatrix}1&amp;0\\0&amp;e^{i\pi/4}\end{bmatrix}
+  = \begin{bmatrix}e^{-i\pi/8}&amp;0\\0&amp;e^{i\pi/8}\end{bmatrix}
+</eq>
+is called the <eq env="math">\pi/8</eq> gate, because of its <eq env="math">\mathrm{SU}(2)</eq> form.</p>
+<p>So let us write any <eq env="math">(2\times 2)</eq> unitary, up to an overall phase factor, as
+<eq env="displaymath">
+  U
+  = u_0\mathbf{1}+ i(u_x \sigma_x + u_y \sigma_y + u_z \sigma_z)
+  = u_0\mathbf{1}+ i{\vec{u}}\cdot{\vec{\sigma}}
+</eq>
+where <eq env="math">u_0^2+|\vec{u}|^2=1</eq>.
+This additional unitarity restriction allows us to parametrise <eq env="math">u_0</eq> and <eq env="math">\vec{u}</eq> in terms of a real unit vector <eq env="math">\vec{n}</eq>, parallel to <eq env="math">\vec{u}</eq>, and a real angle <eq env="math">\theta</eq> so that<a href="#fn53" class="footnote-ref" id="fnref53"><sup>53</sup></a>
+<eq env="displaymath">
+  U
+  = (\cos\theta)\mathbf{1}+ (i\sin\theta){\vec{n}}\cdot{\vec{\sigma}}.
+</eq></p>
+<p>An alternative way of writing this expression is<a href="#fn54" class="footnote-ref" id="fnref54"><sup>54</sup></a>
+<eq env="displaymath">
+  U
+  = e^{i\theta {\vec{n}}\cdot{\vec{\sigma}}},
+</eq>
+as follows from the power-series expansion of the exponential.
+Indeed, any unitary matrix can always be written in the exponential form as
+<eq env="displaymath">
+  \begin{aligned}
+    e^{iA}
+    &amp;\equiv \mathbf{1}+ iA + \frac{(i A)^2}{1\cdot 2} + \frac{(i A)^3}{1\cdot 2\cdot 3} \ldots
+  \\&amp;= \sum_{n=0}^\infty \frac{(i A)^n}{n!}
+  \end{aligned}
+</eq>
+where <eq env="math">A</eq> is a Hermitian matrix.</p>
+<div class="idea">
+<p>Writing unitary matrices in the form <eq env="math">e^{iA}</eq> is analogous to writing complex numbers of unit modulus as <eq env="math">e^{i\alpha}</eq> (the so-called <strong>polar form</strong>).</p>
+</div>
+<p>Now comes a remarkable connection between two-dimensional unitary matrices and ordinary three-dimensional rotations:</p>
+<div class="idea">
+<p>The unitary <eq env="math">U = e^{i\theta \vec{n}\cdot\vec{\sigma}}</eq> represents a clockwise rotation through the angle <eq env="math">2\theta</eq> about the axis defined by <eq env="math">\vec{n}</eq>.
+(<strong>N.B.</strong> <eq env="math">2\theta</eq>, <em>not</em> <eq env="math">\theta</eq>).</p>
+</div>
+<p>For example,
+<eq env="displaymath">
+  \begin{aligned}
+    e^{i\theta\sigma_x}
+    &amp;=
+    \begin{bmatrix}
+      \cos\theta &amp; i\sin\theta
+    \\i\sin\theta &amp; \cos\theta
+    \end{bmatrix}
+  \\e^{i\theta\sigma_y}
+    &amp;=
+    \begin{bmatrix}
+      \cos\theta &amp; \sin\theta
+    \\-\sin\theta &amp; \cos\theta
+    \end{bmatrix}
+  \\e^{i\theta\sigma_z}
+    &amp;= \begin{bmatrix}e^{i\theta}&amp;0\\0&amp;e^{-i\theta}\end{bmatrix}
+  \end{aligned}
+</eq>
+represent rotations by <eq env="math">2\theta</eq> about the <eq env="math">x</eq>-, <eq env="math">y</eq>- and <eq env="math">z</eq>-axis, respectively.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-25"></span>
+<img src="iqis-book_files/figure-html/unnamed-chunk-25-1.png" alt="e^{i\theta\vec{n}\cdot\vec{\sigma}} rotates the vector \vec{s} about \vec{n} by angle 2\theta, sending it to a point on the blue circle, whose centre is passed through by \vec{n}." width="384" />
+<p class="caption">
+Figure 3.7: <eq env="math">e^{i\theta\vec{n}\cdot\vec{\sigma}}</eq> rotates the vector <eq env="math">\vec{s}</eq> about <eq env="math">\vec{n}</eq> by angle <eq env="math">2\theta</eq>, sending it to a point on the blue circle, whose centre is passed through by <eq env="math">\vec{n}</eq>.
+</p>
+</div>
+<p>Now we can show that the Hadamard gate
+<eq env="displaymath">
+  \begin{aligned}
+    H
+    &amp;= \frac{1}{\sqrt 2}
+    \begin{bmatrix}
+      1&amp; 1
+    \\1 &amp; -1
+    \end{bmatrix}
+  \\&amp;= \frac{1}{\sqrt 2}(\sigma_x + \sigma_z)
+  \\&amp;= (-i)e^{i \frac{\pi}{2} \frac{1}{\sqrt 2}(\sigma_x+\sigma_z)}
+  \end{aligned}
+</eq>
+(which, up to the overall multiplicative phase factor of <eq env="math">-i</eq>, is equal to <eq env="math">e^{i \frac{\pi}{2} \frac{1}{\sqrt 2}(\sigma_x+\sigma_z)}</eq>) represents rotation about the diagonal <eq env="math">(x+z)</eq>-axis through the angle <eq env="math">\pi</eq>.</p>
+<p>In somewhat abstract terms, we make the connection between unitaries and rotations by looking how the unitary group <eq env="math">\mathrm{U}(2)</eq> acts on the three-dimensional Euclidian space of <eq env="math">(2\times 2)</eq> Hermitian matrices <em>with zero trace</em>.
+All such matrices <eq env="math">S</eq> can be written as <eq env="math">S=\vec{s}\cdot\vec{\sigma}</eq> for some real <eq env="math">\vec{s}</eq>, i.e. each matrix is represented by a Euclidean vector <eq env="math">\vec{s}</eq> in <eq env="math">\mathbb{R}^3</eq>.
+Now, <eq env="math">U\in \mathrm{U}(2)</eq> acts on the Euclidean space of such matrices by <eq env="math">S\mapsto S' = USU^\dagger</eq>, i.e.
+<eq env="displaymath">
+  \vec{s}\cdot\vec{\sigma}
+  \longmapsto
+  \vec{s'}\cdot\vec{\sigma}
+  = U(\vec{s}\cdot\vec{\sigma})U^\dagger
+\tag{$\ddagger$}
+</eq>
+This is a linear map <eq env="math">\mathbb{R}^3\to\mathbb{R}^3</eq>, and is thus given by some <eq env="math">(3\times 3)</eq> real-valued matrix:
+<eq env="displaymath">
+  R_U\colon \mathbb{R}^3\to\mathbb{R}^3.
+</eq>
+We note that this map is an isometry (a distance preserving operation), since it preserves the scalar product in the Euclidean space: for any two vectors <eq env="math">\vec{s}</eq> and <eq env="math">\vec{v}</eq>,
+<eq env="displaymath">
+  \begin{aligned}
+    \vec{s'}\cdot\vec{v'}
+    &amp;= \frac12\operatorname{tr}[S'V']
+  \\&amp;= \frac12\operatorname{tr}[(USU^\dagger)(UVU^\dagger)]
+  \\&amp;= \frac12\operatorname{tr}[SV]
+  \\&amp;= \vec{s}\cdot\vec{v}
+  \end{aligned}
+</eq>
+(where <eq env="math">S=\vec{s}\cdot\vec{\sigma}</eq> and <eq env="math">V=\vec{v}\cdot\vec{\sigma}</eq>) using the cyclic property of the trace.
+This means that the matrix <eq env="math">R_U</eq> is <em>orthogonal</em>.<a href="#fn55" class="footnote-ref" id="fnref55"><sup>55</sup></a></p>
+<p>Furthermore, we can show<a href="#fn56" class="footnote-ref" id="fnref56"><sup>56</sup></a> that <eq env="math">\det R_U=1</eq>.
+But the only isometries in three dimensional Euclidian space (which are described by orthogonal matrices with determinant <eq env="math">1</eq>) are rotations.</p>
+<p>Thus, in the mathematical lingo, we have established a homomorphism<a href="#fn57" class="footnote-ref" id="fnref57"><sup>57</sup></a>
+<eq env="displaymath">
+  \begin{aligned}
+    \mathrm{U}(2) &amp;\longrightarrow \mathrm{SO}(3)
+  \\U &amp;\longmapsto R_U
+  \end{aligned}
+</eq>
+where <eq env="math">\mathrm{SO}(3)</eq> stands for the special orthogonal group in three dimensions (the group of all rotations about the origin of three-dimensional Euclidean space <eq env="math">\mathbb{R}^3</eq> under the operation of composition).
+It is quite clear from Equation (<eq env="math">\ddagger</eq>) that unitary matrices differing only by a global multiplicative phase factor (e.g. <eq env="math">U</eq> and <eq env="math">e^{i\gamma}U</eq>) represent the same rotation.</p>
+<p>Physicists, however, usually prefer a more direct demonstration, which goes roughly like this.
+Consider the map <eq env="math">\vec{s} \mapsto \vec{s'}</eq> induced by <eq env="math">U=e^{i \alpha \vec{n}\cdot\vec{\sigma}}</eq>.
+For small values of <eq env="math">\alpha</eq>, we can write
+<eq env="displaymath">
+  \begin{aligned}
+    \vec{s'}\cdot\vec{\sigma}
+    &amp;= U(\vec{s}\cdot\vec{\sigma}) U^\dagger
+  \\&amp;= \Big(
+      \mathbf{1}+i\alpha (\vec{n}\cdot\vec{\sigma})+\ldots
+    \Big)
+    (\vec{s}\cdot\vec{\sigma}) 
+    \Big(
+      \mathbf{1}- i\alpha(\vec{n}\cdot\vec{\sigma})+\ldots
+    \Big).
+  \end{aligned}
+</eq>
+To the first order in <eq env="math">\alpha</eq>, this gives
+<eq env="displaymath">
+  \vec{s'} \cdot\vec{\sigma}
+  = \Big(
+    \vec{s} + 2\alpha (\vec{n}\times\vec{s})
+  \Big)
+  \cdot \vec{\sigma}
+</eq>
+that is,
+<eq env="displaymath">
+  \vec{s'} =
+  \vec{s} + 2\alpha(\vec{n}\times\vec{s})
+</eq>
+which we recognise as a good old textbook formula for an infinitesimal clockwise rotation of <eq env="math">\vec{s}</eq> about the axis <eq env="math">\vec{n}</eq> through the angle <eq env="math">2\alpha</eq>.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="53">
+<li id="fn53"><p>As you can see, we often make progress and gain insights simply by choosing a convenient parametrisation.<a href="3.4-unitaries-as-rotations.html#fnref53" class="footnote-back">↩︎</a></p></li>
+<li id="fn54"><p>Although this looks neat and tidy, the normal convention is to parametrise so that <eq env="math">U=e^{i\frac{-\theta}{2}\vec{n}\cdot\vec{\sigma}}</eq>, and then the direction follows from the right-hand rule, and the rotation corresponds to that in the Bloch sphere. It is a useful exercise to show that you can write <eq env="math">U</eq> in this way as well.<a href="3.4-unitaries-as-rotations.html#fnref54" class="footnote-back">↩︎</a></p></li>
+<li id="fn55"><p>Orthogonal transformations preserve the length of vectors as well as the angles between them.<a href="3.4-unitaries-as-rotations.html#fnref55" class="footnote-back">↩︎</a></p></li>
+<li id="fn56"><p>We can also see that <eq env="math">\det R_U=1</eq> from the fact that any matrix in <eq env="math">\mathrm{U}(2)</eq> can be smoothly connected to the identity.<a href="3.4-unitaries-as-rotations.html#fnref56" class="footnote-back">↩︎</a></p></li>
+<li id="fn57"><p>Recall that a homomorphism is a structure-preserving map between two algebraic structures of the same type, in our case two groups. An isomorphism between algebraic structures of the same type is one-to-one homomorphism.<a href="3.4-unitaries-as-rotations.html#fnref57" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +553,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3.3-the-pauli-matrices-algebraically.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3.5-universality-again.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +593,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/03-pauli-bloch.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

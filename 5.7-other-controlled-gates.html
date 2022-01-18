@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>5.7 Other controlled gates | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="5.7 Other controlled gates | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="5.7 Other controlled gates | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="5.6-controlled-not.html"/>
+<link rel="next" href="5.8-why-qubits-subsystems-and-entanglement.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,218 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="other-controlled-gates" class="section level2">
+<h2><span class="header-section-number">5.7</span> Other controlled gates</h2>
+<div id="controlled-phase" class="section level3">
+<h3><span class="header-section-number">5.7.1</span> Controlled-phase</h3>
+<p>Needless to say, not everything is about the controlled-<eq env="math">\texttt{NOT}</eq> gate.
+Another common two-qubit gate is the <strong>controlled-phase</strong> gate <eq env="math">\texttt{c-}P_\varphi</eq>.</p>
+<div class="idea">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">controlled-phase</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><eq env="math">\left[\begin{array}{c|c}\begin{matrix}1&amp;0\\0&amp;1\end{matrix}&amp;\begin{matrix}0&amp;0\\0&amp;0\end{matrix}\\\hline\begin{matrix}0&amp;0\\0&amp;0\end{matrix}&amp;\begin{matrix}1&amp;0\\0&amp;e^{i\varphi}\end{matrix}\end{array}\right]</eq></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We can also represent the <eq env="math">\texttt{c-}P_\varphi</eq> gate using the circuit notation, as in Figure <a href="5.7-other-controlled-gates.html#fig:c-phase-diagram">5.2</a>.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c-phase-diagram"></span>
+<img src="iqis-book_files/figure-html/c-phase-diagram-1.png" alt="Where x,y\in\{0,1\}." width="672" />
+<p class="caption">
+Figure 5.2: Where <eq env="math">x,y\in\{0,1\}</eq>.
+</p>
+</div>
+<p>Again, the matrix is written in the computational basis <eq env="math">\{|00\rangle,|01\rangle,|10\rangle,|11\rangle\}</eq>.
+If we do not specify the phase then we usually assume that <eq env="math">\varphi=\pi</eq>, in which case we call this operation the <strong>controlled-<eq env="math">Z</eq> gate</strong>, which acts as <eq env="math">|0\rangle\langle 0|0\otimes\mathbf{1}+ |1\rangle\langle 1|1\otimes Z</eq>.
+Here <eq env="math">Z</eq> refers again to the Pauli phase-flip <eq env="math">\sigma_z\equiv Z</eq> operation.</p>
+<p>In order to see the entangling power of the controlled-phase shift gate, consider the following circuit.</p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Generating entanglement, again).</p>
+</div>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<p>In this circuit, first the two Hadamard gates prepare the equally-weighted superposition of all states from the computational basis</p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>and then the controlled-<eq env="math">Z</eq> operation flips the sign in front of <eq env="math">|11\rangle</eq></p>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>which results in the entangled state.</p>
+</div>
+<div id="controlled-u" class="section level3">
+<h3><span class="header-section-number">5.7.2</span> Controlled-U</h3>
+<p>Both the above two-qubit controlled gates (i.e. <eq env="math">\texttt{c-NOT}</eq> and <eq env="math">\texttt{c-}P_\varphi</eq>) are specific examples of the more general construction of a <strong>controlled-<eq env="math">U</eq> gate</strong>:
+<eq env="displaymath">
+  \texttt{c-}U
+  =
+  |0\rangle\langle 0|0\otimes\mathbf{1}+ |1\rangle\langle 1|1\otimes U
+</eq>
+where <eq env="math">U</eq> is an arbitrary single-qubit unitary transformation <eq env="math">U</eq>.</p>
+<div class="idea">
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">controlled-<eq env="math">U</eq></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><eq env="math">\left[\begin{array}{c|c}\begin{matrix}1&amp;0\\0&amp;1\end{matrix}&amp;\begin{matrix}0&amp;0\\0&amp;0\end{matrix}\\\hline\begin{matrix}0&amp;0\\0&amp;0\end{matrix}&amp;U\end{array}\right]</eq></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We can also represent the <eq env="math">\texttt{c-}U</eq> gate using the circuit notation, as in Figure <a href="5.7-other-controlled-gates.html#fig:c-U-diagram">5.3</a>.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c-U-diagram"></span>
+<img src="iqis-book_files/figure-html/c-U-diagram-1.png" alt="Where x,y\in\{0,1\}." width="672" />
+<p class="caption">
+Figure 5.3: Where <eq env="math">x,y\in\{0,1\}</eq>.
+</p>
+</div>
+<p>We can go even further and consider a more general unitary operation: the two-qubit <strong><eq env="math">x</eq>-controlled-<eq env="math">U</eq> gate</strong>:
+<eq env="displaymath">
+  \sum_x |x\rangle\langle x|\otimes U_x
+  \equiv
+  |0\rangle\langle 0|\otimes U_0 + |1\rangle\langle 1|\otimes U_1
+</eq>
+where each <eq env="math">U_x</eq> is a unitary transformation that is applied to the second qubit only if the first one is in state <eq env="math">|x\rangle</eq>.
+In general, an <eq env="math">x</eq>-controlled-<eq env="math">U</eq> gate can be defined on two registers of arbitrary size <eq env="math">n</eq> and <eq env="math">m</eq>, with <eq env="math">x\in\{0,1\}^n</eq> and the <eq env="math">U_x</eq> being <eq env="math">(2^m\times 2^m)</eq> unitary matrices acting on the second register.</p>
+</div>
+<div id="phase-kick-back" class="section level3">
+<h3><span class="header-section-number">5.7.3</span> Phase kick-back</h3>
+<p>Before moving on to the next section, we first describe a simple “trick” — an unusual way of introducing phase shifts that will be essential for our analysis of quantum algorithms.
+Consider the following circuit.</p>
+<div class="circuit">
+<div class="circuit_title">
+<p>(Controlled-<eq env="math">U</eq> interference).</p>
+</div>
+<p><img src="iqis-book_files/figure-html/unnamed-chunk-44-1.png" width="672" style="display: block; margin: auto;" />
+where <eq env="math">|u\rangle</eq> is an <em>eigenstate</em> of <eq env="math">U</eq> (that is, <eq env="math">U|u\rangle = e^{i\varphi}|u\rangle</eq> for some <eq env="math">\varphi</eq>).</p>
+</div>
+<p>This should look familiar: it is the usual interference circuit, but with the phase gate replaced by a controlled-<eq env="math">U</eq> gate, which will mimic the phase gate, as we shall soon see.
+Note that the second qubit is prepared in state <eq env="math">|u\rangle</eq>, which is <em>required to be an eigenstate of <eq env="math">U</eq></em>.
+The circuit effects the following sequence of transformations (omitting the normalisation factors):
+<eq env="displaymath">
+  \begin{aligned}
+    |0\rangle|u\rangle
+    &amp;\overset{H}{\longmapsto}
+    (|0\rangle+|1\rangle)|u\rangle
+  \\&amp;\quad = |0\rangle|u\rangle + |1\rangle|u\rangle
+  \\&amp;\overset{\texttt{c-}U}{\longmapsto}
+    |0\rangle|u\rangle + |1\rangle U|u\rangle
+  \\&amp;\quad = |0\rangle|u\rangle + e^{i\varphi}|1\rangle|u\rangle
+  \\&amp;\quad = (|0\rangle + e^{i\varphi}|1\rangle) |u\rangle
+  \\&amp;\overset{H}{\longmapsto}
+    \left(
+      \cos\frac{\varphi}{2}|0\rangle
+      - i\sin\frac{\varphi}{2}|1\rangle
+    \right) |u\rangle.
+  \end{aligned}
+</eq>
+Note that the second qubit does <em>not</em> get entangled with the first one: it remains in its original state <eq env="math">|u\rangle</eq>.
+However, the interaction between the two qubits introduces a phase shift on the first qubit.
+This may look like an unnecessarily complicated way of introducing phase shifts, but, as we shall soon see, this is how quantum computers do it.
+Let me give you a preview of things to come.</p>
+<p>Consider the following <eq env="math">x</eq>-controlled-<eq env="math">U</eq> operation:
+<eq env="displaymath">
+  \begin{gathered}
+    \left[
+      \begin{array}{cccc}
+        \mathbf{1}&amp; 0 &amp; 0 &amp; 0
+      \\0 &amp; \mathbf{1}&amp; 0 &amp; 0
+      \\0 &amp; 0 &amp; \mathbf{1}&amp; 0
+      \\0 &amp; 0 &amp; 0 &amp; X
+      \end{array}
+    \right]
+  \\[1em]
+    =|00\rangle\langle 00|\otimes\mathbf{1}
+  \\+ |01\rangle\langle 01|\otimes\mathbf{1}
+  \\+ |10\rangle\langle 10|\otimes\mathbf{1}
+  \\+ |11\rangle\langle 11|\otimes X.
+  \end{gathered}
+</eq>
+The first register is of size <eq env="math">2</eq>, and the second register is of size <eq env="math">1</eq>.
+If the first register is prepared in state <eq env="math">|11\rangle</eq>, then the qubit in the second register is flipped (by the Pauli bit-flip <eq env="math">X</eq>); otherwise, nothing happens.
+This unitary operation is a quantum version of the Boolean function evaluation: it corresponds to the Boolean function
+<eq env="displaymath">
+  \begin{aligned}
+    f\colon\{0,1\}^2 &amp;\to \{0,1\}
+  \\00&amp;\mapsto0
+  \\01&amp;\mapsto0
+  \\10&amp;\mapsto0
+  \\11&amp;\mapsto1.
+  \end{aligned}
+</eq>
+If <eq env="math">f(x)=1</eq>, then we flip the bit value in the second register (with operation <eq env="math">X</eq>); if <eq env="math">f(x)=0</eq>, then we do nothing.</p>
+<p>Now, prepare the qubit in the second register in state <eq env="math">|0\rangle-|1\rangle</eq>, which is an eigenstate of <eq env="math">X</eq> with eigenvalue <eq env="math">e^{\pi i}=-1</eq>.
+So whenever <eq env="math">X</eq> is applied to the second register, the phase factor <eq env="math">-1</eq> appears in front of the corresponding term in the first register.
+If we prepare the first register in the superposition <eq env="math">|00\rangle+|01\rangle+|10\rangle+|11\rangle</eq> then the result of applying the above <eq env="math">x</eq>-controlled-<eq env="math">U</eq> operation is the entangled state <eq env="math">|00\rangle+|01\rangle+|10\rangle-|11\rangle</eq>.
+That is, <em>the phase kick-back mechanism introduced a relative phase in the equally-weighted superposition of all binary strings of length two</em>.</p>
+<div class="idea">
+<p>Phase kick-back is how we control quantum interference in quantum computation.</p>
+</div>
+<p>We will return to this topic later on, when we discuss quantum evaluation of Boolean functions and quantum algorithms.</p>
+</div>
+<div id="universality-revisited" class="section level3">
+<h3><span class="header-section-number">5.7.4</span> Universality, revisited</h3>
+<p><lite-youtube videoid="IzyAY6US5C4" playlabel="Play: Universal sets of gates (for multiple qubits)"></lite-youtube></p>
+<p>We will come across few more gates in this course, but at this stage you already know all the elementary unitary operations that are needed to construct any unitary operation on any number of qubits:</p>
+<ul>
+<li>the Hadamard gate,</li>
+<li>all phase gates, and</li>
+<li>the <eq env="math">\texttt{c-NOT}</eq></li>
+</ul>
+<p>These gates form a <strong>universal set of gates</strong>: with <eq env="math">O(4^{n}n)</eq> of these gates, we can construct any <eq env="math">n</eq>-qubit unitary operation.<a href="#fn81" class="footnote-ref" id="fnref81"><sup>81</sup></a>
+We should mention that there are many universal sets of gates.
+In fact, almost any gate that can entangle two qubits can be used as a universal gate.</p>
+<p>We are particularly interested in any <em>finite</em> universal set of gates (such as the one containing the Hadamard, <eq env="math">P_{\frac{\pi}{4}}</eq> (the <eq env="math">T</eq> gate), and the <eq env="math">\texttt{c-NOT}</eq>), which can approximate any unitary operation on <eq env="math">n</eq> qubits with arbitrary precision.
+The price to pay is the number of gates — better precision requires more gates.
+We shall elaborate on this later.</p>
+</div>
+<div id="density-operators-and-the-like" class="section level3">
+<h3><span class="header-section-number">5.7.5</span> Density operators and the like</h3>
+<p>The existence of entangled states leads to an obvious question: if we cannot attribute a state vector to an individual qubit, then how can we describe its quantum state?
+In the next few chapters we will see that, when we limit our attentions to a part of a larger system, states are not represented by vectors, measurements are not described by orthogonal projections, and evolution is not unitary.
+As a spoiler, here is a dictionary of some of the new concepts that will soon be introduced:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td align="right">state vectors</td>
+<td align="center"><eq env="math">\longmapsto</eq></td>
+<td align="left">density operators</td>
+</tr>
+<tr class="even">
+<td align="right">unitary evolutions</td>
+<td align="center"><eq env="math">\longmapsto</eq></td>
+<td align="left">completely-positive trace-preserving maps</td>
+</tr>
+<tr class="odd">
+<td align="right">orthogonal projectors</td>
+<td align="center"><eq env="math">\longmapsto</eq></td>
+<td align="left">positive operator-valued measures</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="81">
+<li id="fn81"><p>Recall the big-<eq env="math">O</eq> asymptotic notation: given a <em>positive</em> function <eq env="math">f(n)</eq>, we write <eq env="math">O(f(n))</eq> to mean “bounded above by <eq env="math">c\,f(n)</eq> for some constant <eq env="math">c &gt; 0</eq> (for sufficiently large <eq env="math">n</eq>)”. For example, <eq env="math">15n^2+4n+7</eq> is <eq env="math">O(n^2)</eq>.<a href="5.7-other-controlled-gates.html#fnref81" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +586,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5.6-controlled-not.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5.8-why-qubits-subsystems-and-entanglement.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +626,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/05-entanglement.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],

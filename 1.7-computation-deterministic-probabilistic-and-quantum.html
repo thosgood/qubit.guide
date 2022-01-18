@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Plan | Introduction to Quantum Information Science</title>
+  <title>1.7 Computation: deterministic, probabilistic, and quantum | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="1.7 Computation: deterministic, probabilistic, and quantum | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Plan | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="1.7 Computation: deterministic, probabilistic, and quantum | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="information-about-this-web-version.html"/>
+<link rel="prev" href="1.6-quantum-decoherence.html"/>
+<link rel="next" href="1.8-computational-complexity.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -347,13 +347,69 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plan" class="section level2 unnumbered">
-<h2>Plan</h2>
-<p>In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.</p>
-<p>The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these things are covered at the end of this chapter.</p>
+<div id="computation-deterministic-probabilistic-and-quantum" class="section level2">
+<h2><span class="header-section-number">1.7</span> Computation: deterministic, probabilistic, and quantum</h2>
+<p><lite-youtube videoid="v6-tQj--yoI" playlabel="Play: Deterministic, probabilistic, and quantum computation"></lite-youtube></p>
+<p>Take one physical bit or a qubit.
+It has two logical states: <eq env="math">|0\rangle</eq> and <eq env="math">|1\rangle</eq>.
+Bring another qubit and the combined systems has four logical states <eq env="math">|00\rangle, |01\rangle,|10\rangle</eq> and <eq env="math">|11\rangle</eq>.
+In general <eq env="math">n</eq> qubits will give us <eq env="math">2^n</eq> states representing all possible binary strings of length <eq env="math">n</eq>.
+It is important to use subsystems — here qubits — rather than one chunk of matter, for operating on at most <eq env="math">n</eq> qubits we can reach any of the <eq env="math">2^n</eq> states of the composed system.
+Now, let the qubits interact in a controllable fashion.
+We are computing.
+Think about computation as a physical process that evolves a prescribed initial configuration of a computing machine, called <strong><eq env="math">\texttt{INPUT}</eq></strong>, into some final configuration, called <strong><eq env="math">\texttt{OUTPUT}</eq></strong>.
+We shall refer to the configurations as <strong>states</strong>.
+Figure <a href="1.7-computation-deterministic-probabilistic-and-quantum.html#fig:deterministic-computation">1.4</a> shows five consecutive computational steps performed on four distinct states.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:deterministic-computation"></span>
+<img src="iqis-book_files/figure-html/deterministic-computation-1.png" alt="Deterministic computation." width="672" />
+<p class="caption">
+Figure 1.4: Deterministic computation.
+</p>
+</div>
+<p>That computation was <strong>deterministic</strong>: every time you run it with the same input, you get the same output.
+But a computation does not have to be deterministic — we can augment a computing machine by allowing it to “toss an unbiased coin” and to choose its steps randomly.
+It can then be viewed as a directed<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a> tree-like graph where each node corresponds to a state of the machine, and each edge represents one step of the computation, as shown in Figure <a href="1.7-computation-deterministic-probabilistic-and-quantum.html#fig:probabilistic-computation">1.5</a></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:probabilistic-computation"></span>
+<img src="iqis-book_files/figure-html/probabilistic-computation-1.png" alt="Probabilistic computation." width="672" />
+<p class="caption">
+Figure 1.5: Probabilistic computation.
+</p>
+</div>
+<p>The computation starts from some initial state (<eq env="math">\texttt{INPUT}</eq>) and it subsequently branches into other nodes representing states reachable with non-zero probability from the initial state.
+The probability of a particular final state (<eq env="math">\texttt{OUTPUT}</eq>) being reached is equal to the sum of the probabilities along all mutually exclusive paths which connect the initial state with that particular state.
+Figure <a href="1.7-computation-deterministic-probabilistic-and-quantum.html#fig:probabilistic-computation">1.5</a> shows only two computational paths, but, in general, there could be many more paths (here, up to 256) contributing to the final probability.
+Quantum computation can be represented by a similar graph, as in <a href="1.7-computation-deterministic-probabilistic-and-quantum.html#fig:quantum-computation">1.6</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:quantum-computation"></span>
+<img src="iqis-book_files/figure-html/quantum-computation-1.png" alt="Quantum computation." width="672" />
+<p class="caption">
+Figure 1.6: Quantum computation.
+</p>
+</div>
+<p>For quantum computations, we associate with each edge in the graph the probability <em>amplitude</em> that the computation follows that edge.
+The probability amplitude of a particular path to be followed is the product of amplitudes pertaining to transitions in each step.
+The probability amplitude of a particular final state being reached is equal to the sum of the amplitudes along all mutually exclusive paths which connect the initial state with that particular state:
+<eq env="displaymath">
+  z = \sum_{\mathrm{all\,paths}\,k} z_k.
+</eq>
+The resulting probability, as we have just seen, is the sum of the probabilities pertaining to each computational path <eq env="math">p_k</eq> modified by the interference terms:
+<eq env="displaymath">
+  \begin{aligned}
+    p
+    &amp;= |z|^2
+  \\&amp;= \sum_{k,j} z_j^\star z_k
+  \\&amp;= \sum_k p_k + \sum_{k\ne j} \sqrt{p_k p_j}\cos(\varphi_k-\varphi_j).
+  \end{aligned}
+</eq></p>
+<div class="idea">
+<p>Quantum computation can be viewed as a complex multi-particle quantum interference involving many computational paths through a computing device.
+The art of quantum computation is to shape quantum interference, through a sequence of computational steps, enhancing probabilities of correct outputs and suppressing probabilities of the wrong ones.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="16">
+<li id="fn16"><p>So we read left to right, and omit the arrowheads.<a href="1.7-computation-deterministic-probabilistic-and-quantum.html#fnref16" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
@@ -381,8 +437,8 @@ Some of these things are covered at the end of this chapter.</p>
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="information-about-this-web-version.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="1.6-quantum-decoherence.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1.8-computational-complexity.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -421,7 +477,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/iqis-book/blob/main/index.Rmd",
+"link": "https://github.com/thosgood/iqis-book/blob/main/source/01-interference.Rmd",
 "text": null
 },
 "download": ["iqis-book.pdf"],
