@@ -96,7 +96,7 @@
 
 \title{Introduction to Quantum Information Science}
 \author{\href{https://www.arturekert.org/}{Artur Ekert} and \href{https://thosgood.com}{Tim Hosgood}}
-\date{Last updated: 19 January 2022}
+\date{Last updated: 09 March 2022}
 
 
 \begin{document}
@@ -1921,7 +1921,7 @@ Any unitary operation on a qubit (up to an overall multiplicative phase factor) 
 
 If we multiply the matrices corresponding to each gate in the network (remember that the order of matrix multiplication is reversed) we obtain
 \[
-  U(\alpha,\beta,\gamma)
+  U(\alpha,\beta,\varphi)
   =\begin{bmatrix}
     e^{-i\left(\frac{\alpha+\beta}{2}\right)}\cos\varphi/2
     & -ie^{i\left(\frac{\alpha-\beta}{2}\right)}\sin\varphi/2
@@ -3252,7 +3252,7 @@ Now is a good moment to introduce Alice and Bob (not their real names): our two 
 These two play the major role in many communication dramas, though they remain rather lacking in character development.
 
 This time Alice is sending quantum states to Bob, and Bob does his best to identify them correctly by choosing appropriate measurements.
-Let us start we a simple observation: if a quantum state of the carrier of information is described by a state vector in a \(2^n\)-dimensional Hilbert space, then the carrier can carry at most \(n\) bits of information.
+Let us start with a simple observation: if a quantum state of the carrier of information is described by a state vector in a \(2^n\)-dimensional Hilbert space, then the carrier can carry at most \(n\) bits of information.
 For example, Alice can choose one of the \(2^n\) states from a pre-agreed orthonormal basis \(\{|e_k\rangle\}\), and Bob will be able to distinguish them reliably by choosing the \(\{|e_k\rangle\}\) basis for his measurement.
 
 But can Alice and Bob do better than that?
@@ -3285,12 +3285,12 @@ We have the following \textbf{trace identities}:
 \item
   \(\operatorname{tr}|a\rangle\langle b| = \langle b|a\rangle\)
 \item
-  \(\operatorname{tr}|a\rangle\langle b| = \langle b|A|a\rangle\)
+  \(\operatorname{tr}A|a\rangle\langle b| = \langle b|A|a\rangle\)
 \item
   \(\operatorname{tr}BP \leqslant\operatorname{tr}B\) for any positive semi-definite \(B\) and projector \(P\).
 \end{itemize}
 
-To prove this last identity, consider the projector \(Q=\mathbf{1}-P\), and note that
+(To prove this last identity, consider the projector \(Q=\mathbf{1}-P\), and note that
 \[
   \begin{aligned}
     \operatorname{tr}B
@@ -3298,7 +3298,7 @@ To prove this last identity, consider the projector \(Q=\mathbf{1}-P\), and note
   \\&= \operatorname{tr}BP + \operatorname{tr}BQ
   \end{aligned}
 \]
-and that \(\operatorname{tr}BQ\) is non-negative.
+and that \(\operatorname{tr}BQ\) is non-negative.)
 
 \end{idea}
 
@@ -3441,6 +3441,8 @@ As we increase \(\alpha\), the two states become more distinguishable, and, as w
 \subsection{Wiesner's quantum money}\label{wiesners-quantum-money}}
 
 \textbf{!!!TO-DO!!!}
+
+\emph{(cf.~\href{https://arxiv.org/abs/1404.1507}{arXiv:1404.1507})}
 
 \hypertarget{quantum-theory-formally}{%
 \subsection{Quantum theory, formally}\label{quantum-theory-formally}}
@@ -5500,7 +5502,7 @@ We will elaborate on the mathematics behind quantum channels shortly, but for no
 \end{itemize}
 
 These conditions are certainly \emph{necessary} if we want to map density operators into legal density operators, but we shall see in a moment that they are not \emph{sufficient}: quantum channels are not just positive maps, they are \textbf{completely} positive maps.
-We will discuss their special properties, describe the most common examples, and, last but not least, specify when the action of quantum quantum channels can be reversed, or corrected, so that we can recover the original input state.
+We will discuss their special properties, describe the most common examples, and, last but not least, specify when the action of quantum channels can be reversed, or corrected, so that we can recover the original input state.
 This will set the stage for our subsequent discussion of quantum error correction.
 
 \hypertarget{random-unitaries}{%
@@ -5584,7 +5586,7 @@ and, by the same sequence of arguments as before, we obtain the evolution of the
 where \(p_i=|\alpha_i|^2\).
 That is, the state of the target system is modified by the unitary \(U_i\), chosen randomly with probability \(p_i\).
 
-The reason we are paying a particular attention to the random unitaries is that each unitary is invertible, and, as such, they offer a sliver of hope for reversing the action of the channel.
+The reason we are paying particular attention to the random unitaries is that each unitary is invertible, and, as such, they offer a sliver of hope for reversing the action of the channel.
 If we can learn, post factum, which particular unitary operation \(U_i\) was chosen then we can simply apply the inverse of that unitary and recover the original state.
 For example, if we can measure the control system in the \(|i\rangle\) basis, then measuring the outcome to be \(k\) tells us that we have to apply \(U_k^\dagger\) to the target to recover its input state.
 However, if we do not have access to the control system, then there is very little we can do: \emph{we cannot figure out which particular unitary was applied by inspecting the target system alone}.
@@ -6280,7 +6282,7 @@ So if \(\widetilde{\mathcal{E}}\) is a density operator, then the map \(\mathcal
 Thus \(\mathcal{E}\) is a quantum channel, and, therefore, also a CPTP map.
 We have now established the desired isomorphism between \emph{states} and \emph{channels}.
 
-The equations
+The equations\footnote{Where \(\operatorname{tr}\otimes\mathbf{1}\) acts as \((\operatorname{tr}\otimes\mathbf{1})(A\otimes B)\coloneqq(\operatorname{tr}A)\otimes B\).}
 \[
   \mathcal{E}(\rho)
   = d(\operatorname{tr}\otimes\mathbf{1})\left[(\rho^T\otimes\mathbf{1})\widetilde{\cal{E}}\right].
@@ -7306,7 +7308,7 @@ We write the corresponding observable as the tensor product
   = (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma).
 \]
 The eigenvalues of \(A\otimes B\) are the products of eigenvalues of \(A\) and \(B\).
-Thus \(A\otimes B\) has two eigenvalues: \(+1\), corresponding to the instances when Alice and Bob registered identical outcomes, i.e.~\((+1,+1)\) or \((-1,-1)\); and \(-1\), corresponding to the instances when Alice and Bob registered different outcomes, i.e.~\((+1,-1)\) or \((-1,-1)\).
+Thus \(A\otimes B\) has two eigenvalues: \(+1\), corresponding to the instances when Alice and Bob registered identical outcomes, i.e.~\((+1,+1)\) or \((-1,-1)\); and \(-1\), corresponding to the instances when Alice and Bob registered different outcomes, i.e.~\((+1,-1)\) or \((-1,+1)\).
 This means that the expected value of \(A\otimes B\), in any state, has a simple interpretation:
 \[
     \langle A\otimes B\rangle = \Pr (\text{outcomes are the same}) - \Pr (\text{outcomes are different}).
