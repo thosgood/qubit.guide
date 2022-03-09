@@ -18,3 +18,4 @@
 1. TOC spacing in pdf (e.g. the §11.10 number overlaps with the subsection title)
 1. **`{.tim}` divs**
 1. $\rho^\mathcal{A}$ vs $\rho_\mathcal{A}$?
+1. make physical page numbers agree with printed page numbers (PDF version)
