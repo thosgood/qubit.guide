@@ -5,7 +5,6 @@
     + banner image below homepage title?
 1. `\mapsto` -> `\longmapsto` in display mode (and similar for `\to`/`\rightarrow`)
 1. **some way of hiding/showing all videos on a page**
-1. explain gitbook buttons (in an html-only div)
 1. **only one footnote per paragraph**
     + improve sidenote y-positioning using jquery
         - find the previous `.footnote-ref` in the DOM and align with that
@@ -19,3 +18,4 @@
 1. **`{.tim}` divs**
 1. $\rho^\mathcal{A}$ vs $\rho_\mathcal{A}$?
 1. make physical page numbers agree with printed page numbers (PDF version)
+1. smaller format pdf version ("book-sized", with footnotes at the bottom)
