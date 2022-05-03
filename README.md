@@ -15,7 +15,8 @@
 1. **search for TO-DO and to-do**
 1. add more questions from problem sheets
 1. TOC spacing in pdf (e.g. the §11.10 number overlaps with the subsection title)
-1. **`{.tim}` divs**
+1. **`{.maths}` divs**
+2. turn some footnotes into `{.physics}` divs?
 1. $\rho^\mathcal{A}$ vs $\rho_\mathcal{A}$?
 1. make physical page numbers agree with printed page numbers (PDF version)
 1. smaller format pdf version ("book-sized", with footnotes at the bottom)
