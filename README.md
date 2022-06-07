@@ -20,3 +20,5 @@
 1. $\rho^\mathcal{A}$ vs $\rho_\mathcal{A}$?
 1. make physical page numbers agree with printed page numbers (PDF version)
 1. smaller format pdf version ("book-sized", with footnotes at the bottom)
+1. pretty urls
+    + this is gonna have to be a hack: see [`bookdown/issues/1298`](https://github.com/rstudio/bookdown/issues/1298)
