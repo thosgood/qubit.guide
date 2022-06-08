@@ -1,0 +1,20 @@
+#!/bin/bash
+
+
+# Check we're in the base directory
+if [[ `basename "$PWD"` != "qubit.guide" ]]; then
+    echo "Script must be run from the main qubit.guide directory" >&2
+    exit 1
+else
+    echo "Building site..."
+fi
+
+
+# Build the various versions of the book
+
+## Web
+R -e "bookdown::render_book('index.Rmd','bookdown::gitbook',config_file = '_bookdown.yml')"
+## A4 PDF
+R -e "bookdown::render_book('index.Rmd','bookdown::pdf_book',config_file = '_bookdown.yml',template='a4-latex-template.tex')"
+## Small book PDF
+# R -e "bookdown::render_book('index.Rmd','bookdown::pdf_book',output_dir = 'book',config_file = '_bookdown.yml')"

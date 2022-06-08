@@ -1,5 +1,7 @@
 ## To-do
 
+**move build process into single build file, and run that from the github action**
+
 1. general styling
     + favicon
     + banner image below homepage title?
