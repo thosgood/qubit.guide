@@ -1,7 +1,5 @@
 ## To-do
 
-**move build process into single build file, and run that from the github action**
-
 1. general styling
     + favicon
     + banner image below homepage title?
@@ -12,7 +10,7 @@
         - find the previous `.footnote-ref` in the DOM and align with that
 1. pdf title page
     + **include update date**
-1. **embed youtube videos for lecture 8 (and 7?)**
+1. **embed youtube videos for lecture 8**
     + [`lite-youtube-embed`](https://github.com/paulirish/lite-youtube-embed)
 1. **search for TO-DO**
 1. add more questions from problem sheets
