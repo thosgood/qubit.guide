@@ -284,20 +284,11 @@ This is sufficient for all our purposes and we will avoid many mathematical subt
 ::: {.technical}
 Dealing with finite (and thus discrete) degrees of quantum freedom means that we can avoid a lot of technical machinery, such as functional analysis (which is, vaguely, what you can use to do "infinite dimensional linear algebra" in a way that also respects the analytic structure, i.e. allowing you to talk about limits and other such things).
 
-One specific example of this is the fact that any finite dimensional vector space with an inner product is automatically **complete** under the metric induced by the inner product.
-Let's explain what we mean by this.
-If $V$ is a vector space with an inner product $\langle-,-\rangle$, then this gives us a **norm** on $V$ by defining $\|x\|\coloneqq\sqrt{\langle x,x\rangle}$ and thus a **metric** by defining $d(x,y)\coloneqq\|y-x\|$.
-We say that a sequence $(x_n)$ in $V$ is **Cauchy** if its elements "eventually always get closer", i.e. if for all $\varepsilon>0$ there exists some $N\in\mathbb{N}$ such that for all $m,n>N$ we have $\|x_n-x_m\|<\varepsilon$.
-We say that a normed space is **complete** if *every Cauchy sequence converges in that space*, i.e. if the limits of sequences that *should* exist actually *do* exist.
-Now one useful fact is the following: on a *finite dimensional* vector space, all norms are equivalent.
-This follows from another useful fact: in a *finite dimensional* vector space, the unit ball is compact.
-By a short topological argument, we can use these facts to show that what we claimed, namely that every *finite dimensional* inner product space is complete (with respect to the norm induced by the inner product, and thus with respect to *any* norm, since all norms are equivalent).
-In the infinite dimensional case these facts are *not* true, and we have a special name for those inner product spaces which *are* complete: **Hilbert spaces**.
-So working in the finite dimensional case means that "we do not have to worry about analysis", in that the completeness property comes for free the moment we have an inner product.
+One specific example of this is the fact that any finite dimensional vector space with an inner product is automatically **complete** under the metric induced by the inner product, which means that we can refer to inner product spaces as **Hilbert spaces**, as we explain next.
 :::
 
 
-## Bras and kets
+## Bras and kets {#bras-and-kets}
 
 An **inner product** on a vector space $V$ (over the complex numbers) is a function that assigns to each pair of vectors $\ket{u},\ket{v}\in V$ a complex number $\braket{u}{v}$, and satisfies the following conditions:
 
@@ -313,8 +304,19 @@ $$
 $$
 for any complex constants $c_1$ and $c_2$.
 
-With any physical system we associate a complex vector space with an inner product, known as a **Hilbert space**^[The term "Hilbert space" used to be reserved for an infinite-dimensional inner product space that is **complete**, i.e. such that every Cauchy sequence in the space converges to an element in the space. Nowadays, as in these notes, the term includes finite-dimensional spaces, which automatically satisfy the condition of completeness.] $\mathcal{H}$.
+To any physical system we associate^[The question of *how* exactly we construct this associated space is a subtle one in the case of arbitrary physical systems, but we shall see that this is relatively straightforward when working with the types of systems that we consider in this book.] a complex vector space with an inner product, known as a **Hilbert space** $\mathcal{H}$.
 The inner product between vectors $\ket{u}$ and $\ket{v}$ in ${\mathcal{H}}$ is written as $\braket{u}{v}$.
+
+::: {.technical}
+If $V$ is a vector space with an inner product $\langle-,-\rangle$, then this gives us a **norm** on $V$ by defining $\|x\|\coloneqq\sqrt{\langle x,x\rangle}$ and thus a **metric** by defining $d(x,y)\coloneqq\|y-x\|$.
+We say that a sequence $(x_n)$ in $V$ is **Cauchy** if its elements "eventually always get closer", i.e. if for all $\varepsilon>0$ there exists some $N\in\mathbb{N}$ such that for all $m,n>N$ we have $\|x_n-x_m\|<\varepsilon$.
+We say that a normed space is **complete** if *every Cauchy sequence converges in that space*, i.e. if the limits of sequences that *should* exist actually *do* exist.
+Now one useful fact is the following: on a *finite dimensional* vector space, all norms are equivalent.
+This follows from another useful fact: in a *finite dimensional* vector space, the unit ball is compact.
+By a short topological argument, we can use these facts to show that what we claimed, namely that every *finite dimensional* inner product space is complete (with respect to the norm induced by the inner product, and thus with respect to *any* norm, since all norms are equivalent).
+In the infinite dimensional case these facts are *not* true, and we have a special name for those inner product spaces which *are* complete: **Hilbert spaces**.
+So working in the finite dimensional case means that "we do not have to worry about analysis", in that the completeness property comes for free the moment we have an inner product, and we can freely refer to inner product spaces as Hilbert spaces.
+:::
 
 For example, for column vectors $\ket{u}$ and $\ket{v}$ in $\mathbb{C}^n$ written as
 $$
@@ -354,14 +356,14 @@ Elements of ${\mathcal{H}}^\star$ are **linear functionals**, that is, linear ma
 A linear functional $\bra{u}$ acting on a vector $\ket{v}$ in $\mathcal{H}$ gives a complex number $\braket{u}{v}$.
 
 ::: {.idea latex=""}
-All Hilbert spaces of the same dimension are isomorphic, so the differences between quantum systems cannot be really understood without additional structure. This structure is provided by a specific algebra of operators acting on $\mathcal{H}$.
+All Hilbert spaces of the same (finite) dimension are isomorphic, so the differences between quantum systems cannot be really understood without additional structure. This structure is provided by a specific algebra of operators acting on $\mathcal{H}$.
 :::
 
 
 ## Daggers
 
 Although $\mathcal{H}$ and $\mathcal{H}^\star$ are not identical spaces --- the former is inhabited by kets, and the latter by bras --- they are closely related.
-There is a bijective map from one to the other, $\ket{v}\leftrightarrow \bra{v}$, denoted by a **dagger**:^["Is this a $\dagger$ which I see before me..."]
+There is a bijective map from one to the other given by $\ket{v}\leftrightarrow \bra{v}$, and denoted by a **dagger**:^["Is this a $\dagger$ which I see before me..."]
 $$
   \begin{aligned}
     \bra{v}
@@ -372,7 +374,7 @@ $$
 $$
 We usually omit the parentheses when it is obvious what the dagger operation applies to.
 
-The dagger operation, also known as **Hermitian conjugation**, is _antilinear_: 
+The dagger operation, also known as **Hermitian conjugation**^[Recall that the conjugate transpose, or the Hermitian conjugate, of an $(n\times m)$ matrix $A$ is an $(m\times n)$ matrix $A^\dagger$, obtained by interchanging the rows and columns of $A$ and taking complex conjugates of each entry in $A$, i.e. $A^\dagger_{ij}=A^\star_{ji}$. In mathematics texts it is often denoted by ${}^\star$ rather than ${}^\dagger$, but we reserve the former for complex conjugation *without* matrix transpose. Note, however, that scalars can be thought of as $(1\times1)$ matrices, and in this special case we have that $\dagger=\star$.], is _antilinear_:
 $$
   \begin{aligned}
     (c_1\ket{v_1}+c_2\ket{v_2})^\dagger
@@ -382,7 +384,7 @@ $$
   \end{aligned}
 $$
 Also, when applied twice, the dagger operation is the identity map.
-In the matrix representation,^[Recall that the conjugate transpose, or the Hermitian conjugate, of an $(n\times m)$ matrix $A$ is an $(m\times n)$ matrix $A^\dagger$, obtained by interchanging the rows and columns of $A$ and taking complex conjugates of each entry in $A$, i.e. $A^\dagger_{ij}=A^\star_{ji}$. In mathematics texts it is often denoted by ${}^\star$ rather than ${}^\dagger$.]
+In the matrix representation,
 $$
   \ket{v} = \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
   \overset{\dagger}{\longleftrightarrow}
@@ -423,13 +425,15 @@ But _do not confuse $\ket{0}$ with the zero vector_!
 We _never_ write the zero vector as $\ket{0}$, but only ever as $0$, without any bra or ket decorations (so e.g. $\ket{v}+0=\ket{v}$).
 
 ::: {.idea latex=""}
-- With any _isolated_ quantum system, which can be prepared in $n$ _perfectly distinguishable_ states, we can associate a Hilbert space $\mathcal{H}$ of dimension $n$ such that each vector $\ket{v}\in\mathcal{H}$ of unit length (i.e. $\braket{v}{v} =1$) represents a quantum state of the system.
+Now that we have some notion of geometry, we can explain a bit more about this idea of associating a Hilbert space to a quantum system.
+
+- With any *isolated* quantum system, which can be prepared in $n$ *perfectly distinguishable* states, we can associate a Hilbert space $\mathcal{H}$ of dimension $n$ such that each vector $\ket{v}\in\mathcal{H}$ of unit length (i.e. $\braket{v}{v}=1$) represents a quantum state of the system.
 
 - The overall phase of the vector has no physical significance: $\ket{v}$ and $e^{i\varphi}\ket{v}$ (for any real $\varphi$) both describe the same state.
 
 - The inner product $\braket{u}{v}$ is the _probability amplitude_ that a quantum system prepared in state $\ket{v}$ will be found in state $\ket{u}$ upon measurement.
 
-- States corresponding to orthogonal vectors (i.e. $\braket{u}{v}=0$) are _perfectly distinguishable_, since, if we prepare the system in state $\ket{v}$, then it will never be found in state $\ket{u}$, and vice versa.
+- States corresponding to orthogonal vectors (i.e. $\braket{u}{v}=0$) are **perfectly distinguishable**: if we prepare the system in state $\ket{v}$, then it will never be found in state $\ket{u}$, and vice versa.
     In particular, states forming orthonormal bases are always perfectly distinguishable from each other.
     Choosing such states, as we shall see in a moment, is equivalent to choosing a particular quantum measurement.
 :::
@@ -444,11 +448,11 @@ $$
 for any vectors $\ket{v_1},\ket{v_2}$ and any complex numbers $c_1,c_2$.
 We will focus mostly on **endomorphisms**, that is, maps from $\mathcal{H}$ to $\mathcal{H}$, and we will call them **operators**.
 The symbol $\id$ is reserved for the identity operator that maps every element of $\mathcal{H}$ to itself (i.e. $\id\ket{v}=\ket{v}$ for all $\ket{v}\in\mathcal{H}$).
-The product $AB$ of two operators $A$ and $B$ is the operator obtained by first applying $B$ to some ket $\ket{v}$ and then $A$ to the ket which results from applying $B$:
+The product $BA$ of two operators $A$ and $B$ is the operator obtained by first applying $A$ to some ket $\ket{v}$ and then $B$ to the ket which results from applying $A$:
 $$
-  (AB)\ket{v} = A(B\ket{v}).
+  (BA)\ket{v} = B(A\ket{v}).
 $$
-The order _does_ matter: in general, $AB\neq BA$.
+The order _does_ matter: in general, $BA\neq AB$.
 In the exceptional case in which $AB=BA$, one says that these two operators **commute**.
 The inverse of $A$, written as $A^{-1}$, is the operator that satisfies $AA^{-1}=\id=A^{-1}A$.
 For finite-dimensional spaces, one only needs to check _one_ of these two conditions, since any one of the two implies the other, whereas, on an infinite-dimensional space, _both_ must be checked.
@@ -465,10 +469,12 @@ $$
 An operator $A$ is said to be
 
 - **normal** if $AA^\dagger = A^\dagger A$,
-- **unitary** if $AA^\dagger = A^\dagger A = \id$,
+- **unitary** if $A^\dagger=A^{-1}$
 - **Hermitian** (or **self-adjoint**) if $A^\dagger = A$.
 
-Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.
+In particular then, being unitary implies being normal, since if $A^\dagger=A^{-1}$ then $AA^\dagger=A^\dagger A$, since both of these are equal to $\id$.
+
+Any *physically admissible* evolution of an isolated quantum system is represented by a unitary operator.^[This is an *axiom*, justified by experimental evidence, and also by some sort of mathematical intuition. So, in this book, we take this as a *fact* that we do not question. It is, however, very interesting to question it: *why should we assume this to be true?*]
 Note that unitary operators preserve the inner product: given a unitary operator $U$ and two kets $\ket{a}$ and $\ket{b}$, and defining $\ket{a'}=U\ket{a}$ and $\ket{b'}=U\ket{b}$, we have that
 $$
   \begin{gathered}
@@ -486,7 +492,7 @@ Apart from the inner product $\braket{u}{v}$, which is a complex number, we can 
 This is what physicists like (and what mathematicians dislike!) about Dirac notation: a certain degree of healthy ambiguity.
 
 - The result of $\ket{u}\bra{v}$ acting on a ket $\ket{x}$ is $\ket{u}\braket{v}{x}$, i.e. the vector $\ket{u}$ multiplied by the complex number $\braket{v}{x}$.
-- Similarly, the result of $\ket{u}\bra{v}$ acting on a bra $\bra{y}$ is $\braket{y}{u}\bra{v}$, i.e. the functional $\bra{v}$ multiplied by the complex number $\braket{y}{u}$.
+- Similarly, the result of $\ket{u}\bra{v}$ acting on a bra $\bra{y}$ is $\braket{y}{u}\bra{v}$, i.e. the linear functional $\bra{v}$ multiplied by the complex number $\braket{y}{u}$.
 
 The product of two maps, $A=\ket{a}\bra{b}$ followed by $B=\ket{c}\bra{d}$, is a linear map $BA$, which can be written in Dirac notation as
 $$
@@ -494,14 +500,14 @@ $$
 $$
 i.e. the inner product (complex number) $\braket{d}{a}$ times the outer product (linear map) $\ket{c}\bra{b}$.
 
-Any operator on $\mathcal{H}$ can be expressed as a sum of outer products. Given an orthonormal basis $\{\ket{e_i}\}$, any operator which maps the basis vectors $\ket{e_i}$ to vectors $\ket{f_i}$ can be written as $\sum_i\ket{f_i}\bra{e_i}$, where the sum is over all the vectors in the orthonormal basis.
-If the vectors $\{\ket{f_i}\}$ also form an orthonormal basis then the operator simply "rotates" one orthonormal basis into another.
+Any operator on $\mathcal{H}$ can be expressed as a sum of outer products. Given an orthonormal basis $\{\ket{e_i}\}_{i=1,\ldots,n}$, any operator which maps the basis vectors $\ket{e_i}$ to vectors $\ket{f_i}$ can be written as $\sum_{i=1}^n\ket{f_i}\bra{e_i}$.
+If the vectors $\{\ket{f_i}\}$ *also* form an orthonormal basis then the operator simply "rotates" one orthonormal basis into another.
 These are unitary operators which preserve the inner product.
 In particular, if each $\ket{e_i}$ is mapped to $\ket{e_i}$, then we obtain the identity operator:
 $$
   \sum_i\ket{e_i}\bra{e_i}=\id.
 $$ 
-This relation holds for _any_ orthonormal basis, and it is one of the most ubiquitous and useful formulas in quantum theory.
+This relation holds for _any_ orthonormal basis, and it is one of the most ubiquitous and useful formulas in quantum theory, known as **completeness**.^[Not to be confused with "completeness" in the sense of Hilbert spaces.]
 For example, for any vector $\ket{v}$ and for any orthonormal basis $\{\ket{e_i}\}$, we have
 $$
   \begin{aligned}
@@ -513,8 +519,17 @@ $$
   \end{aligned}
 $$
 where $v_i=\braket{e_i}{v}$ are the components of $\ket{v}$.
-Finally, note that the adjoint of $\ket{a}\bra{b}$ is $\ket{b}\bra{a}$.
 
+Finally, note that calculating the adjoint of an outer product boils down to just swapping the order:
+$$
+  (\ket{a}\bra{b})^\dagger = \ket{b}\bra{a}.
+$$
+
+::: {.technical}
+This whole package of stuff and properties and structure (i.e. finite dimensional Hilbert spaces with linear maps and the dagger) bundles up into the abstract framework called a [**dagger compact category**](https://en.wikipedia.org/wiki/Dagger_compact_category).
+We will not delve into the vast world of category theory in this book, and to reach an understanding of all the ingredients that go into the definition of dagger compact categories would take more than a single chapter.
+But it's a good idea to be aware that there are researchers in quantum information science who work entirely from this categorical approach.
+:::
 
 ## The trace
 
@@ -523,12 +538,13 @@ $$
   \tr\colon \ket{b}\bra{a} \longmapsto \braket{a}{b}.
 $$
 We have just seen that any linear operator can be written as a sum of outer products, and so we can extend the definition of trace (by linearity) to any operator.
-Alternatively, for any square matrix $A$, the trace of $A$ is defined to be the sum of its diagonal elements:
+Equivalently, for any square matrix $A$, the trace of $A$ can be defined to be the sum of its diagonal elements:
 $$
   \tr A = \sum_k \bra{e_k}A\ket{e_k} = \sum_k A_{kk}.
 $$
-You can show, using this definition or otherwise, that the trace is cyclic (i.e. $\tr(AB) = \tr(BA)$) and linear (i.e. $\tr(\alpha A+\beta B) = \alpha\tr(A)+\beta\tr(B)$, where $A$ and $B$ are square matrices and $\alpha$ and $\beta$ complex numbers).
-Moreover,
+You can show, using this definition or otherwise, that the trace is cyclic^[Note that "cyclic" does not mean the same thing as "permutation invariant"! It is *not* true in general that $\tr(ABC)=\tr(CBA)$, but only that $\tr(ABC)=\tr(BCA)=\tr(CAB)$, i.e. we can only *cyclically* permute the operators.] ($\tr(AB) = \tr(BA)$) and linear ($\tr(\alpha A+\beta B) = \alpha\tr(A)+\beta\tr(B)$, where $A$ and $B$ are square matrices and $\alpha$ and $\beta$ complex numbers).
+
+To recover the first definition from the second, we argue as follows:
 $$
   \begin{aligned}
     \tr\ket{b}\bra{a}
@@ -542,12 +558,11 @@ Here, the second term can be viewed both as the sum of the diagonal elements of 
 We have used the decomposition of the identity, $\sum_k\ket{e_k}\bra{e_k}=\id$.
 Given that we can decompose the identity by choosing any orthonormal basis, it is clear that the trace does _not_ depend on the choice of the basis.
 
-::: {.technical}
-**!!TO-DO: mention what this whole package of data all bundled up looks like from the categorical pov!!**
-:::
-
 
 ## Some useful identities
+
+Here is a summary of some particularly useful equalities concerning bras, kets, inner products, outer products, traces, and operators, that we will be using time and time again.
+In all of these, $\ket{a},\ket{b}\in\mathcal{H}$ are kets, $A,B,C$ are operators on $\mathcal{H}$, and $\alpha,\beta\in\mathbb{C}$ are scalars.
 
 - $\ket{a}^\dagger = \bra{a}$
 - $\bra{a}^\dagger = \ket{a}$
