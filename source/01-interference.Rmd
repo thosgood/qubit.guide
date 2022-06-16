@@ -37,7 +37,7 @@ Feel free to think of this chapter as a sort of "aeroplane tour" of the rudiment
 Quantum theory, at least at some instrumental level, can be viewed as a modification of probability theory: we replace *positive real* numbers (i.e. probabilities) with *complex* numbers $z$, called **probability amplitudes** (or simply "amplitudes"), such that the squares of their absolute values $|z|^2$ are interpreted as probabilities.
 
 ::: {.idea latex=""}
-The correspondence between probability amplitudes $z$ and probabilities $|z|^2$ is known as **Born's Rule**, named for physicist and mathematician [Max Born](https://en.wikipedia.org/wiki/Max_Born) (1882--1970).
+The correspondence between probability amplitudes $z$ and probabilities $|z|^2$ is known as **Born's rule**, named for physicist and mathematician [Max Born](https://en.wikipedia.org/wiki/Max_Born) (1882--1970).
 :::
 
 The rules for combining amplitudes are very reminiscent of the rules for combining probabilities:
@@ -203,7 +203,7 @@ As we shall soon see, there is much more to this notation, and learning to manip
 
 
 
-## Interferometers
+## Interferometers {#interferometers}
 
 <lite-youtube videoid="T2vpnfX3lJA" playlabel="Play: Ramsey interferometry"></lite-youtube>
 
@@ -885,66 +885,6 @@ b. Now assume that $z\approx \frac{1}{r}e^{i{2r\pi}/{\lambda}}$, where $r$ is th
   \draw [process] (star2) to node [pos=0.5,fill=white] {$z$} (detector2);
   \draw [process] (star1) to node [pos=0.25,fill=white] {$ze^{i\phi}$} (detector2);
   \draw [process] (star2) to node [pos=0.25,fill=white] {$ze^{i\phi}$} (detector1);
-\end{tikzpicture}
-```
-
-### Physics against logic?
-
-Now that we have poked our heads into the quantum world, let us see how quantum interference challenges conventional logic and leads to qualitatively different computations.
-Consider the following task (which we will return to a few more times in later chapters): design a logic gate that operates on a single bit such that, when it is followed by another, identical, logic gate, the output is *always* the negation of the input.
-Let us call this logic gate **the square root of $\texttt{NOT}$**, or $\sqrt{\texttt{NOT}}$ (since it defined exactly to satisfy $\sqrt{\texttt{NOT}}^2=\texttt{NOT}$).
-A simple check, such as an attempt to construct a truth table, should persuade you that there is *no such operation in logic*.
-It may seem reasonable to argue that since there is no such operation in logic, $\sqrt{\texttt{NOT}}$ is impossible.
-Think again!
-
-Figure \@ref(fig:sqrt-not) shows a simple computation: two identical computational steps performed on two states labelled as $0$ and $1$, i.e. on one bit.
-An interplay of constructive and destructive interference makes some transitions impossible and the result is the logical $\texttt{NOT}$.
-Thus, quantum theory declares, the square root of $\texttt{NOT}$ actually *is* possible.
-Even more contrarily, it exists in our physical world!
-Experimental physicists routinely construct this and many other "impossible" gates in their laboratories, and they form the building blocks of a quantum computer.
-Quantum theory explains the behaviour of $\sqrt{\texttt{NOT}}$, hence, reassured by the physical experiments that corroborate this theory, logicians are now entitled to propose a new logical operation $\sqrt{\texttt{NOT}}$.
-Why?
-*Because a faithful physical model for it exists in nature.*
-
-Write a $2\times 2$ matrix which describes the $\sqrt{\texttt{NOT}}$ operation.
-Is there just one such a matrix?
-Suppose you are given a supply of Hadamard and phase gates with tuneable phase settings.
-How would you construct the $\sqrt{\texttt{NOT}}$ gate?
-(We will answer this question when we introduce [the Mach--Zender interferometer](#beamsplitters-against-logic).)
-
-(ref:sqrt-not-caption) A computation that, when repeated, gives exactly $\texttt{NOT}$. An unlabelled line means that it has probability $1$, and the lack of a line corresponds to having probability $0$.
-
-```{r sqrt-not,engine='tikz',fig.cap='(ref:sqrt-not-caption)'}
-\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
-\tikzset{centrelabel/.style={pos=0.5,fill=white}}
-\begin{tikzpicture}[xscale=3,yscale=2]
-  \node [dot,label=left:{$0$}] (i0) at (0,1) {};
-  \node [dot,label=left:{$1$}] (i1) at (0,0) {};
-  \node [dot] (m0) at (1,1) {};
-  \node [dot] (m1) at (1,0) {};
-  \node [dot,label=right:{$0$}] (o0) at (2,1) {};
-  \node [dot,label=right:{$1$}] (o1) at (2,0) {};
-  \draw [thick] (i0) to node [centrelabel] {$\frac{1+i}{\sqrt2}$} (1,1);
-  \draw [thick] (i0) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt2}$} (1,0);
-  \draw [thick] (i1) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt2}$} (1,1);
-  \draw [thick] (i1) to node [centrelabel] {$\frac{1+i}{\sqrt2}$} (1,0);
-  \draw [thick] (m0) to node [centrelabel] {$\frac{1+i}{\sqrt2}$} (o0);
-  \draw [thick] (m0) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt2}$} (o1);
-  \draw [thick] (m1) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt2}$} (o0);
-  \draw [thick] (m1) to node [centrelabel] {$\frac{1+i}{\sqrt2}$} (o1);
-  %
-  \node at (2.5,0.5) {$=$};
-  %
-  \node [dot,label=left:{$0$}] (i0) at (3,1) {};
-  \node [dot,label=left:{$1$}] (i1) at (3,0) {};
-  \node [dot,label=right:{$0$}] (o0) at (4,1) {};
-  \node [dot,label=right:{$1$}] (o1) at (4,0) {};
-  \draw [thick] (i0) to (o1);
-  \draw [thick] (i1) to (o0);
-  %
-  \node at (0.5,-0.45) {$\sqrt{\texttt{NOT}}$};
-  \node at (1.5,-0.45) {$\sqrt{\texttt{NOT}}$};
-  \node at (3.5,-0.45) {\texttt{NOT}};
 \end{tikzpicture}
 ```
 

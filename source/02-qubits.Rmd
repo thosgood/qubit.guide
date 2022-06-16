@@ -4,7 +4,7 @@
 
 When studying classical information theory, one single bit isn't usually the most interesting object to think about --- it's either $0$ or $1$.
 Yet in the quantum case, just working with one "quantum bit" (which we call a **qubit**) opens up a whole world of interesting mathematics.
-In fact, **single qubit interference** is arguably one of the fundamental building blocks for quantum computing, and deserves to be thoroughly investigated and understood.
+In fact, **single qubit interference** is arguably *the* fundamental building block for quantum computing, and so deserves to be thoroughly investigated and understood.
 
 
 
@@ -14,7 +14,7 @@ In fact, **single qubit interference** is arguably one of the fundamental buildi
 
 In order to understand something in its full complexity it is always good to start with the simplest case.
 Let us take a closer look at quantum interference in the simplest possible computing machine: the one that has only two distinguishable configurations  --- two quantum states --- which we label as $\ket{0}$ and $\ket{1}$.
-We prepare the machine in some input state, usually $\ket{0}$, and let it **evolve**: the machine undergoes a prescribed sequence of computational steps, each of which induces transitions between the two "computational states", $\ket{0}$ and $\ket{1}$.
+We prepare the machine in some input state, usually $\ket{0}$, and let it **evolve**: the machine undergoes a prescribed sequence of computational steps, each of which induces transitions between the two "computational states" $\ket{0}$ and $\ket{1}$.
 The machine then ends in the output state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$, meaning the two outputs, $\ket{0}$ and $\ket{1}$, are reached with probability amplitudes $\alpha_0$ and $\alpha_1$, respectively.
 In the process of computation each computational step $U$ (also referred to as an **operation**) sends state $\ket{k}$ to state $\ket{l}$, where $k,l=0,1$, but only with some **amplitude** $U_{lk}$.
 We write this as
@@ -125,7 +125,7 @@ $$
 If you want to hone your quantum intuition think about it the following way.
 The amplitude that input $\ket{k}$ evolves to $\ket{m}$ via a specific intermediate state $\ket{l}$ is given by $V_{ml}U_{lk}$ (evolutions are independent so the amplitudes are multiplied).
 This done, we have to sum over all possible values of $l$ (the transition can occur in several mutually exclusive ways so the amplitudes are added) to obtain $\sum_l V_{ml}U_{lk}$.
-Thus the matrix multiplication $VU$ (watch the order of matrices) in one swoop takes care of multiplication and addition of amplitudes corresponding to different computational paths.
+Thus the matrix multiplication $VU$ (watch the order of matrices) in one swoop takes care of the multiplication *and* addition of amplitudes corresponding to different computational paths.
 
 
 
@@ -133,9 +133,22 @@ Thus the matrix multiplication $VU$ (watch the order of matrices) in one swoop t
 
 ## Quantum bits, called "qubits"
 
-A two-state machine that we have just described in abstract terms is usually realised as a controlled evolution of a two state system, called a quantum bit or a qubit.
-For example, state $\ket{0}$ may be chosen to be the lowest energy state of an atom (the **ground state**), and state $\ket{1}$ a higher energy state (the **excited state**).
-Pulses of light of appropriate frequency, duration, and intensity can take the atom back and forth between the basis states $\ket{0}$ and $\ket{1}$ (implementing logical $\texttt{NOT}$).
+Such a two-state machine that we have just described in abstract terms is usually realised as a controlled evolution of a two-state system, called a **quantum bit**, or **qubit** for short.^[More general $n$-state systems can also be of interest, and are sometimes called **q-nits**; three-state systems in particular are sometimes called **q-trits**. In this book, however, we will only concern ourselves with qubits, since they readily generalise the classical notion of bits (and also give us more than enough interesting constructions to get started with!).]
+For example, the state $\ket{0}$ may be chosen to be the lowest energy state of an atom (the **ground state**), and state $\ket{1}$ a higher energy state (the **excited state**).
+Pulses of light of the appropriate frequency, duration, and intensity can take the atom back and forth between the basis states $\ket{0}$ and $\ket{1}$ (implementing logical $\texttt{NOT}$).
+
+Some other pulses (say, half the duration or intensity) will take the atom into states that have no classical analogue.
+Such states are called **coherent superpositions** of $\ket{0}$ and $\ket{1}$, and represent a qubit in state $\ket{0}$ with some amplitude $\alpha_0$ and in state $\ket{1}$ with some other amplitude $\alpha_1$.
+This is conveniently represented by a state vector
+$$
+    \ket{\psi} =
+    \alpha_0\ket{0} + \alpha_1\ket{1}
+    \leftrightarrow
+    \begin{bmatrix}
+      \alpha_0
+    \\\alpha_1
+    \end{bmatrix}
+$$
 
 ```{r,engine='tikz',fig.width=2}
 \definecolor{primary}{RGB}{177,98,78}
@@ -157,19 +170,9 @@ Pulses of light of appropriate frequency, duration, and intensity can take the a
 \end{tikzpicture}
 ```
 
-Some other pulses (say, half the duration or intensity) will take the atom into states that have no classical analogue.
-Such states are called **coherent superpositions** of $\ket{0}$ and $\ket{1}$, and represent a qubit in state $\ket{0}$ with some amplitude $\alpha_0$ and in state $\ket{1}$ with some other amplitude $\alpha_1$.
-This is conveniently represented by a state vector
-$$
-    \ket{\psi} =
-    \alpha_0\ket{0} + \alpha_1\ket{1}
-    \leftrightarrow
-    \begin{bmatrix}
-      \alpha_0
-    \\\alpha_1
-    \end{bmatrix}
-$$
-which we can also draw graphically:
+
+By Born's rule, we know that $\alpha_0$ and $\alpha_1$ cannot be arbitrary complex numbers: they must satisfy $|\alpha_0|^2+|\alpha_1|^2=1$.
+This lets us draw the state vector "geometrically", using the fact that the locus of vectors of magnitude equal to $1$ describes a circle:
 
 ```{r,engine='tikz',fig.width=3}
 \definecolor{primary}{RGB}{177,98,78}
@@ -192,6 +195,9 @@ which we can also draw graphically:
 \end{tikzpicture}
 ```
 
+But recall that amplitudes are *complex* numbers, and so $\alpha_0$ and $\alpha_1$ cannot really be drawn as $1$-dimensional *real* vectors on a flat screen or piece of paper;
+the picture above provides good intuition, but to be fully accurate we would need to draw it in four-dimensional space (or at least on some three-dimensional paper).
+
 ::: {.idea latex=""}
 A **qubit** is a quantum system in which the Boolean states $0$ and $1$ are represented by a prescribed pair of normalised and mutually orthogonal quantum states labelled by $\ket{0}$ and $\ket{1}$.
 The two states form a so-called **computational** (or **standard**) basis, and so any other state of an isolated qubit can be written as a coherent superposition
@@ -203,14 +209,13 @@ for some $\alpha_0$ and $\alpha_1$ such that $|\alpha_0|^2 + |\alpha_1|^2 = 1$.
 In practice, a qubit is typically a microscopic system, such as an atom, a nuclear spin, or a polarised photon.
 :::
 
-As we have already mentioned, any^[ Here we are talking about _isolated_ systems. As you will soon learn, a larger class of physically admissible operations is described by completely positive maps. It may sound awfully complicated but, as you will soon see, it is actually very simple.] computational step, that is, any physically admissible operation $U$ on a qubit, is described by a $(2\times 2)$ unitary matrix $U$.
+As we have already mentioned, any^[ Here we are talking about *isolated* systems. As you will soon learn, a larger class of physically admissible operations is described by completely positive maps. It may sound awfully complicated but, as you will soon see, it is actually very simple.] computational step, that is, any physically admissible operation $U$ on a qubit, is described by a $(2\times 2)$ unitary matrix $U$.
 It modifies the state of the qubit as
 $$
   \ket{\psi}
   \longmapsto
   \ket{\psi'}
-  =
-  U\ket{\psi}
+  = U\ket{\psi}
 $$
 which we can write explicitly as
 $$
@@ -218,8 +223,7 @@ $$
     \alpha'_0
   \\\alpha'_1
   \end{bmatrix}
-  =
-  \begin{bmatrix}
+  = \begin{bmatrix}
     U_{00} & U_{01}
   \\U_{10} & U_{11}
   \end{bmatrix}
@@ -238,13 +242,13 @@ That is, the operation $U$ turns the state $\ket{\psi}$, with components $\alpha
 
 <lite-youtube videoid="XJy7I3bvr9E" playlabel="Play: Multi-qubit circuits"></lite-youtube>
 
-Atoms, trapped ions, molecules, nuclear spins and many other quantum objects, which we call qubits, can be used to implement simple quantum interference, and hence simple quantum computation.
+Atoms, trapped ions, molecules, nuclear spins and many other quantum objects, which we call qubits, can be used to implement simple quantum interference (something which we have still yet to explain), and hence simple quantum computation.
 There is no need to learn about physics behind these diverse technologies if all you want is to understand the basics of quantum computation.
 We may now conveniently forget about any specific experimental realisation of a qubit and just remember that any manipulations on qubits have to be performed by physically admissible operations, and that such operations are represented by unitary transformations.
 
 ::: {.idea latex=""}
 A **quantum (logic) gate** is a device which performs a fixed unitary operation on selected qubits in a fixed period of time, and a **quantum circuit** is a device consisting of quantum logic gates whose computational steps are synchronised in time.
-The **sizes** of the circuit is the number of gates it contains.
+The **size** of such a circuit is the number of gates it contains.
 :::
 
 Some unitary $U$ acting on a single qubit is represented diagrammatically as
@@ -255,7 +259,7 @@ Some unitary $U$ acting on a single qubit is represented diagrammatically as
 \end{quantikz}
 ```
 
-This diagram should be read from left to right.
+This diagram should be read *from left to right*.
 The horizontal line represents a qubit that is inertly carried from one quantum operation to another.
 We often call this line a **quantum wire**.
 The wire may describe translation in space (e.g. atoms travelling through cavities) or translation in time (e.g. a sequence of operations performed on a trapped ion).
@@ -277,7 +281,7 @@ and is described by the matrix product $VU$ (note the order in which we multiply
 
 <lite-youtube videoid="eDR-OZZu99M" playlabel="Play: Single qubit interference"></lite-youtube>
 
-Let me now describe what is probably the most important sequence of operations performed on a single qubit, namely a generic **single qubit interference**.
+Let us now describe what is probably the most important sequence of operations performed on a single qubit: a generic **single qubit interference**.
 It is typically constructed as a sequence of three elementary operations:
 
 1. the Hadamard gate
@@ -304,26 +308,20 @@ We represent it graphically as
 :::
 
 
-You will see it over and over again, for it is quantum interference that gives quantum computation additional capabilities.^[Indeed, you have already seen this sequence: recall our study of Ramsey interferometry, and note how this is essentially the same!]
+You will see this specific sequence of gates over and over again, for it is quantum interference that gives quantum computation additional capabilities.^[Indeed, you have already seen this sequence: recall [our study of Ramsey interferometry](#interferometers), and note how this is essentially the same!]
 
 ::: {.idea latex=""}
 Something that many explanations of quantum computing say is the following: "quantum computers are quicker because they evaluate all possible solutions at once, in parallel".
 **This is not accurate.**
 
-Firstly, quantum computers are not necessarily "quicker" than classical computers, but can simply implement quantum algorithms, some of which _are_ quicker than their classical counterparts.
-Secondly, the idea that they "just do all the possible computations at once" is false --- instead, they rely on thoughtfully using interference (which can be constructive or destructive) to modify the probabilities of specific outcomes.
+Firstly, quantum computers are not necessarily "quicker" than classical computers, but can simply implement quantum algorithms, *some* of which *are* quicker than their classical counterparts.
+Secondly, the idea that they "just do all the possible computations at once" is false --- instead, they rely on thoughtfully using interference (which can be constructive or destructive) to *modify the probabilities of specific outcomes*.
 
-_The power of quantum computing comes from quantum interference._
+The motto to keep in mind is that *the power of quantum computing comes from quantum interference.*
 :::
 
 The product of the three matrices $HP_\varphi H$ describes the action of the whole circuit: it gives the transition amplitudes between states $\ket{0}$ and $\ket{1}$ at the input and the output as
 $$
-  e^{i\frac{\varphi}{2}}
-  \begin{bmatrix}
-    \cos\varphi/2 & -i\sin\varphi/2
-  \\-i\sin\varphi/2 & \cos\varphi/2
-  \end{bmatrix}
-  =
   \frac{1}{\sqrt 2}
   \begin{bmatrix}
     1 & 1
@@ -337,6 +335,11 @@ $$
   \begin{bmatrix}
     1 & 1
   \\1 & -1
+  \end{bmatrix}
+  = e^{i\frac{\varphi}{2}}
+  \begin{bmatrix}
+    \cos\varphi/2 & -i\sin\varphi/2
+  \\-i\sin\varphi/2 & \cos\varphi/2
   \end{bmatrix}
 $$
 
@@ -357,8 +360,8 @@ $$
     \cos\frac{\phi}{2}\ket{0} - i\sin\frac{\phi}{2}\ket{1}.
   \end{aligned}
 $$
-The first Hadamard gate prepares an equally weighted superposition of $\ket{0}$ and $\ket{1}$ and the second one closes the interference by bringing the interfering paths together.
-The phase shift $\varphi$ effectively controls the evolution and determines the output.
+The first Hadamard gate prepares an equally weighted superposition of $\ket{0}$ and $\ket{1}$ and the second Hadamard closes the interference by bringing the interfering paths together.
+The phase shift $\varphi$ in between effectively controls the entire evolution and determines the output.
 The probabilities of finding the qubit in state $\ket{0}$ or $\ket{1}$ at the output are, respectively,
 $$
   \begin{aligned}
@@ -379,8 +382,11 @@ It reflects a natural progression of quantum computation: first we prepare diffe
 <lite-youtube videoid="FyTtG0fM0-0" playlabel="Play: The square root of NOT"></lite-youtube>
 
 Now that we have poked our heads into the quantum world, let us see how quantum interference challenges conventional logic.
-Consider a following task: design a logic gate that operates on a single bit and such that when it is followed by another, identical, logic gate the output is always the negation of the input.
-Let us call this logic gate **the square root of $\texttt{NOT}$**, or $\sqrt{\texttt{NOT}}$.
+Consider a following task:
+
+> Design a logic gate that operates on a single bit and such that when it is followed by another, identical, logic gate the output is always the negation of the input.
+
+Let us call the resulting logic gate **the square root of $\texttt{NOT}$**, or $\sqrt{\texttt{NOT}}$.
 
 ```{r,engine='tikz',fig.width=3}
 \tikzset{operator/.style={draw,fill=white}}
@@ -398,14 +404,12 @@ Experimental physicists routinely construct such "impossible" gates in their lab
 It is a physically admissible operation described by the unitary matrix^[There are infinitely many unitary operations that act as the square root of $\texttt{NOT}$.]
 $$
   \sqrt{\texttt{NOT}}
-  =
-  \frac12
+  = \frac1{\sqrt2}
   \begin{bmatrix}
     1+i & 1-i
   \\1-i&1+i
   \end{bmatrix}
-  =
-  \frac1{\sqrt2}
+  = \frac1{\sqrt2}
   \begin{bmatrix}
     e^{i\frac{\pi}{4}} & e^{-i\frac{\pi}{4}}
   \\e^{-i\frac{\pi}{4}} & e^{i\frac{\pi}{4}}
@@ -413,22 +417,57 @@ $$
 $$
 Indeed,
 $$
-  \frac12
+  \frac1{\sqrt2}
   \begin{bmatrix}
     1+i & 1-i
   \\1-i & 1+i
   \end{bmatrix}
-  \frac12
+  \frac1{\sqrt2}
   \begin{bmatrix}
     1+i & 1-i
   \\1-i & 1+i
   \end{bmatrix}
-  =
-  \begin{bmatrix}
+  = \begin{bmatrix}
     0&1
   \\1&0
   \end{bmatrix}.
 $$
+
+(ref:sqrt-not-caption) A computation that, when repeated, gives exactly $\texttt{NOT}$. An unlabelled line means that it has probability $1$, and the lack of a line corresponds to having probability $0$.
+
+```{r sqrt-not,engine='tikz',fig.cap='(ref:sqrt-not-caption)'}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\tikzset{centrelabel/.style={pos=0.5,fill=white}}
+\begin{tikzpicture}[xscale=3,yscale=2]
+  \node [dot,label=left:{$0$}] (i0) at (0,1) {};
+  \node [dot,label=left:{$1$}] (i1) at (0,0) {};
+  \node [dot] (m0) at (1,1) {};
+  \node [dot] (m1) at (1,0) {};
+  \node [dot,label=right:{$0$}] (o0) at (2,1) {};
+  \node [dot,label=right:{$1$}] (o1) at (2,0) {};
+  \draw [thick] (i0) to node [centrelabel] {$\frac{1+i}{\sqrt2}$} (1,1);
+  \draw [thick] (i0) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt2}$} (1,0);
+  \draw [thick] (i1) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt2}$} (1,1);
+  \draw [thick] (i1) to node [centrelabel] {$\frac{1+i}{\sqrt2}$} (1,0);
+  \draw [thick] (m0) to node [centrelabel] {$\frac{1+i}{\sqrt2}$} (o0);
+  \draw [thick] (m0) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt2}$} (o1);
+  \draw [thick] (m1) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt2}$} (o0);
+  \draw [thick] (m1) to node [centrelabel] {$\frac{1+i}{\sqrt2}$} (o1);
+  %
+  \node at (2.5,0.5) {$=$};
+  %
+  \node [dot,label=left:{$0$}] (i0) at (3,1) {};
+  \node [dot,label=left:{$1$}] (i1) at (3,0) {};
+  \node [dot,label=right:{$0$}] (o0) at (4,1) {};
+  \node [dot,label=right:{$1$}] (o1) at (4,0) {};
+  \draw [thick] (i0) to (o1);
+  \draw [thick] (i1) to (o0);
+  %
+  \node at (0.5,-0.45) {$\sqrt{\texttt{NOT}}$};
+  \node at (1.5,-0.45) {$\sqrt{\texttt{NOT}}$};
+  \node at (3.5,-0.45) {\texttt{NOT}};
+\end{tikzpicture}
+```
 
 We could also step through the circuit diagram and follow the evolution of the state vector:
 
@@ -438,12 +477,6 @@ We could also step through the circuit diagram and follow the evolution of the s
 \begin{tikzpicture}
   \begin{scope}[xscale=3]
     \node (input) at (-1.5,0) {$\ket{0}$};
-    \node (output) at (1.5,0) {$\ket{1}$};
-    \draw (input) to node [operator] {$\sqrt{\texttt{NOT}}$} (0,0);
-    \draw (0,0) to node [operator] {$\sqrt{\texttt{NOT}}$} (output);
-  \end{scope}
-  \begin{scope}[xscale=3,shift={(0,-1.5)}]
-    \node (input) at (-1.5,0) {$\ket{0}$};
     \node (inter) at (0,0) {$\frac{1}{\sqrt 2}\left[e^{i\frac{\pi}{4}}\ket{0}+e^{-i\frac{\pi}{4}}\ket{1}\right]$};
     \node (output) at (1.5,0) {$\ket{1}$};
     \draw[|->] (input) to node[label=above:{$\sqrt{\texttt{NOT}}$}]{} (inter);
@@ -452,7 +485,7 @@ We could also step through the circuit diagram and follow the evolution of the s
 \end{tikzpicture}
 ```
 
-Or, if you prefer to work with column vectors and matrices, you can write the two consecutive application of $\sqrt{\texttt{NOT}}$ to state $\ket{0}$ as
+Or, if you prefer to work with column vectors and matrices, you can write the two consecutive application of $\sqrt{\texttt{NOT}}$ to state $\ket{0}$ as^[Just remember that circuits diagrams are read from *left to right*, and vector and matrix operations go from *right to left*.]
 $$
   \begin{bmatrix}0\\1\end{bmatrix}
   \,\longleftarrow\!\!\!\vert\,\,
@@ -464,9 +497,9 @@ $$
   \,\longleftarrow\!\!\!\vert\,\,
   \begin{bmatrix}1\\0\end{bmatrix}
 $$
-(following a well established convention, the above should be read from _right to left_)^[Just remember that circuits diagrams are read from _left to right_, and vector and matrix operations go from _right to left_.], where each $\longleftarrow\!\!\!\vert$ denotes multiplication by $\frac1{\sqrt2}\begin{bmatrix}e^{i\frac{\pi}{4}} & e^{-i\frac{\pi}{4}}\\e^{-i\frac{\pi}{4}} & e^{i\frac{\pi}{4}}\end{bmatrix}$.
+where each $\longleftarrow\!\!\!\vert$ denotes multiplication by $\frac1{\sqrt2}\begin{bmatrix}e^{i\frac{\pi}{4}} & e^{-i\frac{\pi}{4}}\\e^{-i\frac{\pi}{4}} & e^{i\frac{\pi}{4}}\end{bmatrix}$.
 
-One way or another, quantum theory explains the behaviour of $\sqrt{\texttt{NOT}}$, and so, reassured by the physical experiments^[One of which we discuss detail in [the next chapter](#beamsplitters-against-logic).] that corroborate this theory, logicians are now entitled to propose a new logical operation $\sqrt{\texttt{NOT}}$.
+One way or another, quantum theory explains the behaviour of $\sqrt{\texttt{NOT}}$, and so, reassured by the physical experiments^[One such experiment (which we will soon discuss) is the [Mach-Zehnder interferometer](#beamsplitters-against-logic).] that corroborate this theory, logicians are now entitled to propose a new logical operation $\sqrt{\texttt{NOT}}$.
 Why?
 Because a faithful physical model for it exists in nature!
 
