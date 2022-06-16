@@ -1,8 +1,9 @@
 ## To-do
 
-1. general styling
+1. general web styling
     + favicon
     + banner image below homepage title?
+1. make the tables (in e.g. "phase gates galore") in the pdf version look good
 1. `\mapsto` -> `\longmapsto` in display mode (and similar for `\to`/`\rightarrow`)
 1. **some way of hiding/showing all videos on a page**
 1. **only one footnote per paragraph**
