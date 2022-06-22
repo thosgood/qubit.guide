@@ -394,10 +394,10 @@ where $\varphi=\varphi_1-\varphi_0$.
 
 ## The Pauli matrices, algebraically {#pauli-matrices-algebraically}
 
-Matrices form a vector space: you can add them, and you can multiply them by a scalar.
-One possible choice of a basis in the vector space of $(2\times 2)$ matrices is the set of matrices $\{M_{00},M_{01},M_{10},M_{11}\}$, where the entries of $M_{ij}$ are all $0$ except for the $ij$-th entry, which is $1$ (e.g. $M_{01}=\begin{bmatrix}0&1\\0&0\end{bmatrix}$).
+Matrices (of a fixed size, with entries in a fixed field) form a vector space: you can add them, and you can multiply them by a scalar.
+One possible choice of a basis in the vector space of $(2\times 2)$ matrices (over any field) is the set of matrices $\{M_{00},M_{01},M_{10},M_{11}\}$, where the entries of $M_{ij}$ are all $0$ except for the $ij$-th entry, which is $1$ (e.g. $M_{01}=\begin{bmatrix}0&1\\0&0\end{bmatrix}$).
 However, it turns out that there is a different basis which offers lots of insights into the structure of the general single-qubit unitary transformations, namely $\{\id,X,Y,Z\}$, i.e. the identity matrix and the three Pauli matrices.^[In this chapter we are concerned only with the _single-qubit_ Pauli operators. There are analogous _multi-qubit_ Pauli operators, but be careful: these do not satisfy all the same properties! For example, anti-commutativity (explained below) is special to the _single-qubit_ case.]
-We have already defined the Pauli operators in [Chapter 2](#qubits), but we recall their definition here along with a different notation that we sometimes use.
+We [have already defined the Pauli operators](#pauli-operators), but we recall their definition here.
 
 ::: {.idea latex=""}
 | | | |
@@ -408,9 +408,9 @@ We have already defined the Pauli operators in [Chapter 2](#qubits), but we reca
 | **Phase-flip** | $Z\equiv\sigma_z = \begin{bmatrix}1&0\\0&-1\end{bmatrix}$ |
 :::
 
-Recalling [Chapter 2](#qubits), we know that the Pauli operators (as well as the identity operator) are unitary and Hermitian, square to the identity, and anti-commute.^[$$\begin{aligned}XY+YX&=0,\\XZ+ZX&=0,\\YZ+ZY&=0.\end{aligned}$$]
+[Recall](#pauli-operators) that the Pauli operators (as well as the identity operator) are unitary and Hermitian, square to the identity, and anti-commute.^[$$\begin{aligned}XY+YX&=0,\\XZ+ZX&=0,\\YZ+ZY&=0.\end{aligned}$$]
 
-Any $(2\times 2)$ complex matrix $A$ has a unique expansion in the form
+The fact that $\{\id,X,Y,Z\}$ forms a basis for $(2\times2)$ complex matrices is equivalent to the statement that *any* $(2\times 2)$ complex matrix $A$ has a *unique* expansion in the form
 $$
   \begin{aligned}
     A &=
@@ -418,13 +418,16 @@ $$
       a_0 + a_z & a_x - i a_y
     \\a_x +i a_y &  a_0 - a_z
     \end{bmatrix}
-  \\&= a_0\id + a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
-  \\&= a_0\id + \vec{a}\cdot\vec{\sigma}.
+  \\&= a_0\id + a_x \sigma_x + a_y \sigma_y + a_z \sigma_z.
   \end{aligned}
 $$
 for some complex numbers $a_0$, $a_x$, $a_y$, and $a_z$.
-Here, $\vec{a}$ is a vector with three complex components $(a_x, a_y, a_z)$, and $\vec{\sigma}$ represents the "vector" of Pauli matrices $(\sigma_x,\sigma_y,\sigma_z)$.
-The algebraic properties of the Pauli matrices can be neatly compacted (see the exercises) into a single expression:
+
+If we define vectors $\vec{a}=(a_x, a_y, a_z)$ and $\vec{\sigma}=(\sigma_x,\sigma_y,\sigma_z)$, then we can write the above expansion very concisely:
+$$
+  A = a_0\id + \vec{a}\cdot\vec{\sigma}.
+$$
+The algebraic properties of the Pauli matrices can then be neatly compacted (see [the exercises](#remarks-and-exercises-3)) into a single expression:
 
 ::: {.idea latex=""}
 The **multiplication rule**:
@@ -434,16 +437,7 @@ $$
 $$
 :::
 
-We also introduce the inner product of two matrices:
-
-::: {.idea latex=""}
-The **Hilbert--Schmidt product**:^[The $\frac12$ coefficient here is simply the normalisation factor, which changes if we consider _multi-qubit_ Pauli operators.]
-$$
-  (A|B) = \frac12 \tr A^\dagger B.
-$$
-:::
-
-Recall that the trace of a square matrix $A$, denoted by $\tr A$, is defined to be the sum of the elements on the main diagonal of $A$, and defines a linear mapping: for any scalars $\alpha$ and $\beta$,
+Recall that the **trace** of a square matrix $A$, denoted by $\tr A$, is defined to be the sum of the elements on the main diagonal of $A$, and defines a linear mapping: for any scalars $\alpha$ and $\beta$,
 $$
   \tr (\alpha A+\beta B) = \alpha\tr A +\beta\tr B.
 $$
@@ -453,6 +447,15 @@ $$
 $$
 Note, however, that this does _not_ imply that e.g. $\tr(ABC)=\tr(ACB)$.
 
+We can also define an **inner product** on the vector space of matrices:^[The $\frac12$ coefficient here is simply the normalisation factor, which changes if we consider _multi-qubit_ Pauli operators.]
+
+::: {.idea latex=""}
+The **Hilbert--Schmidt product** of $A$ and $B$ is given by
+$$
+  (A|B) = \frac12 \tr A^\dagger B.
+$$
+:::
+
 
 
 
@@ -460,16 +463,17 @@ Note, however, that this does _not_ imply that e.g. $\tr(ABC)=\tr(ACB)$.
 
 ## Unitaries as rotations {#unitaries-as-rotations}
 
-Now we can finish off what we started in [Chapter 2](#qubits): we know how single-qubit state vectors correspond to points on the Bloch sphere, but now we can study how $(2\times 2)$ unitary matrices correspond to _rotations_ of this sphere.
+Now we can finish off [our previous discussion of the Bloch sphere](#the-bloch-sphere): we know how single-qubit state vectors correspond to points on the Bloch sphere, but now we can study how $(2\times 2)$ unitary matrices correspond to *rotations* of this sphere.
 
-Geometrically speaking, the group of unitaries $\mathrm{U}(2)$ is a three-dimensional sphere $S^3$ in $\mathbb{R}^4$.
-We often fix the determinant to be $+1$ and express $(2\times 2)$ unitaries as
+Geometrically speaking, the group of $(2\times2)$ unitaries $\mathrm{U}(2)$ is a three-dimensional sphere $S^3$ in $\mathbb{R}^4$.
+We often make the additional assumption that the determinant is equal to $+1$, and can then express these matrices as
 $$
   U = u_0\id + i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z).
 $$
-Such matrices form a popular subgroup of $\mathrm{U}(2)$; it is called the **special** (meaning the determinant is equal to $1$) unitary group, and denoted by $\mathrm{SU}(2)$.
+Such matrices form a very important subgroup of $\mathrm{U}(2)$, called the **special** (meaning the determinant is equal to $1$) unitary group, and denoted by $\mathrm{SU}(2)$.
+
 In quantum theory, any two unitary matrices that differ by some global multiplicative phase factor represent the same physical operation, so we are "allowed to" fix the determinant to be $+1$, and thus restrict ourselves to considering matrices in $\mathrm{SU}(2)$.
-This is a sensible approach, practised by many theoretical physicists, but again, for some historical reasons, the convention in quantum information science does not follow this approach.
+This is a sensible approach, practised by many theoretical physicists, but again, for some historical reasons, this convention is not usually followed in quantum information science.
 For example, phase gates are usually written as
 $$
   P_\alpha = \diag{1}{e^{i\alpha}}
@@ -478,7 +482,7 @@ rather than
 $$
   P_\alpha = \diag{e^{-i\frac{\alpha}{2}}}{e^{\,i\frac{\alpha}{2}}}
 $$
-Still, sometimes the $T$ gate
+Still, as we've already mentioned, sometimes the $T$ gate
 $$
   T
   = \diag{1}{e^{i\pi/4}}
@@ -486,20 +490,21 @@ $$
 $$
 is called the $\pi/8$ gate, because of its $\mathrm{SU}(2)$ form.
 
-So let us write any $(2\times 2)$ unitary, up to an overall phase factor, as
+Here we're going to work with $\mathrm{SU}(2)$, so that we can write any $(2\times 2)$ unitary (i.e. up to an overall phase factor) as
 $$
   U
   = u_0\id + i(u_x \sigma_x + u_y \sigma_y + u_z \sigma_z)
   = u_0\id + i{\vec{u}}\cdot{\vec{\sigma}}
 $$
 where $u_0^2+|\vec{u}|^2=1$.
-This additional unitarity restriction allows us to parametrise $u_0$ and $\vec{u}$ in terms of a real unit vector $\vec{n}$, parallel to $\vec{u}$, and a real angle $\theta$ so that^[As you can see, we often make progress and gain insights simply by choosing a convenient parametrisation.]
+
+This last restriction on $u_0$ and $\vec{u}$ allows us to parametrise $u_0$ and $\vec{u}$ in terms of a real unit vector $\vec{n}$, parallel to $\vec{u}$, and a real angle $\theta$, in such a way that^[As you can see, we often make progress and gain insights simply by choosing a convenient parametrisation.]
 $$
   U
   = (\cos\theta)\id + (i\sin\theta){\vec{n}}\cdot{\vec{\sigma}}.
 $$
 
-An alternative way of writing this expression is^[Although this looks neat and tidy, the normal convention is to parametrise so that $U=e^{i\frac{-\theta}{2}\vec{n}\cdot\vec{\sigma}}$, and then the direction follows from the right-hand rule, and the rotation corresponds to that in the Bloch sphere. It is a useful exercise to show that you can write $U$ in this way as well.]
+An alternative way of writing this expression is
 $$
   U
   = e^{i\theta {\vec{n}}\cdot{\vec{\sigma}}},
@@ -514,17 +519,15 @@ $$
   \end{aligned}
 $$
 where $A$ is a Hermitian matrix.
-
-::: {.idea latex=""}
-Writing unitary matrices in the form $e^{iA}$ is analogous to writing complex numbers of unit modulus as $e^{i\alpha}$ (the so-called **polar form**).
-:::
+This is analogous to writing complex numbers of unit modulus as $e^{i\alpha}$.
 
 Now comes a remarkable connection between two-dimensional unitary matrices and ordinary three-dimensional rotations:
 
 ::: {.idea latex=""}
 The unitary $U = e^{i\theta \vec{n}\cdot\vec{\sigma}}$ represents a clockwise rotation through the angle $2\theta$ about the axis defined by $\vec{n}$.
-(**N.B.** $2\theta$, _not_ $\theta$).
 :::
+
+The fact that the angle is $2\theta$, not $\theta$, comes from our choice of parametrisation; the "better" convention^[It is a good exercise to show that you can write any $U$ in this way as well.] is to parametrise so that $U=e^{i\frac{-\theta}{2}\vec{n}\cdot\vec{\sigma}}$, and then the direction follows from the right-hand rule, and the rotation corresponds to that in the Bloch sphere.
 
 For example,
 $$
@@ -547,7 +550,7 @@ $$
 $$
 represent rotations by $2\theta$ about the $x$-, $y$- and $z$-axis, respectively.
 
-(ref:exponential-rotation-caption) $e^{i\theta\vec{n}\cdot\vec{\sigma}}$ rotates the vector $\vec{s}$ about $\vec{n}$ by angle $2\theta$, sending it to a point on the blue circle, whose centre is passed through by $\vec{n}$.
+(ref:exponential-rotation-caption) The matrix $e^{i\theta\vec{n}\cdot\vec{\sigma}}$ rotates the vector $\vec{s}$ about $\vec{n}$ by angle $2\theta$, sending it to a point on the blue circle, which is defined by being the unique circle whose centre is passed through by $\vec{n}$ and containing $\vec{s}$.
 
 ```{r,engine='tikz',fig.width=4,fig.cap='(ref:exponential-rotation-caption)'}
 \usetikzlibrary{arrows.meta}
@@ -597,7 +600,7 @@ $$
   \\&= (-i)e^{i \frac{\pi}{2} \frac{1}{\sqrt 2}(\sigma_x+\sigma_z)}
   \end{aligned}
 $$
-(which, up to the overall multiplicative phase factor of $-i$, is equal to $e^{i \frac{\pi}{2} \frac{1}{\sqrt 2}(\sigma_x+\sigma_z)}$) represents rotation about the diagonal $(x+z)$-axis through the angle $\pi$.
+represents (since we can ignore the global phase factor of $-i$) rotation about the diagonal $(x+z)$-axis by an angle of $\pi$.
 
 In somewhat abstract terms, we make the connection between unitaries and rotations by looking how the unitary group $\mathrm{U}(2)$ acts on the three-dimensional Euclidian space of $(2\times 2)$ Hermitian matrices _with zero trace_.
 All such matrices $S$ can be written as $S=\vec{s}\cdot\vec{\sigma}$ for some real $\vec{s}$, i.e. each matrix is represented by a Euclidean vector $\vec{s}$ in $\mathbb{R}^3$.
@@ -638,6 +641,10 @@ $$
 $$
 where $\mathrm{SO}(3)$ stands for the special orthogonal group in three dimensions (the group of all rotations about the origin of three-dimensional Euclidean space $\mathbb{R}^3$ under the operation of composition).
 It is quite clear from Equation ($\ddagger$) that unitary matrices differing only by a global multiplicative phase factor (e.g. $U$ and $e^{i\gamma}U$) represent the same rotation.
+
+::: {.technical}
+**TO-DO** **traceless matrices is the Lie algebra!**!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+:::
 
 Physicists, however, usually prefer a more direct demonstration, which goes roughly like this.
 Consider the map $\vec{s} \mapsto \vec{s'}$ induced by $U=e^{i \alpha \vec{n}\cdot\vec{\sigma}}$.
