@@ -602,9 +602,20 @@ $$
 $$
 represents (since we can ignore the global phase factor of $-i$) rotation about the diagonal $(x+z)$-axis by an angle of $\pi$.
 
-In somewhat abstract terms, we make the connection between unitaries and rotations by looking how the unitary group $\mathrm{U}(2)$ acts on the three-dimensional Euclidian space of $(2\times 2)$ Hermitian matrices _with zero trace_.
-All such matrices $S$ can be written as $S=\vec{s}\cdot\vec{\sigma}$ for some real $\vec{s}$, i.e. each matrix is represented by a Euclidean vector $\vec{s}$ in $\mathbb{R}^3$.
-Now, $U\in \mathrm{U}(2)$ acts on the Euclidean space of such matrices by $S\mapsto S' = USU^\dagger$, i.e.
+In somewhat abstract terms, we make the connection between unitaries and rotations by looking how the unitary group $\mathrm{U}(2)$ acts on the three-dimensional vector space $V$ of $(2\times 2)$ Hermitian matrices *with zero trace*.
+All such matrices $S\in V$ can be written as $S=\vec{s}\cdot\vec{\sigma}$ for some real $\vec{s}$, i.e. each matrix is represented by a Euclidean vector $\vec{s}$ in $\mathbb{R}^3$.
+
+::: {.technical}
+The vector space of **traceless matrices** (i.e. matrices $S$ such that $\tr S=0$) might seem like an odd one, but it's actually one of the fundamental examples of a structure which is fundamental to modern mathematical physics, namely that of a [**Lie algebra**](https://en.wikipedia.org/wiki/Lie_algebra).
+These arise when studying [**Lie groups**](https://en.wikipedia.org/wiki/Lie_group) --- which are a combination of groups and manifolds, i.e. "a geometric space which has an algebraic structure" --- via the notion of a [**tangent space**](https://en.wikipedia.org/wiki/Tangent_space).
+
+In particular, the space of $(n\times n)$ traceless **skew-Hermitian** ($A^\dagger=-A$) matrices is the Lie algebra known as $\mathfrak{su}(2)$, which is the Lie algebra of $\mathrm{SU}(2)$, since the latter is indeed a *Lie* group.
+
+You might be wondering why we have suddenly switched to *skew*-Hermitian instead of Hermitian, but this is really [just a mathematician/physicist convention](https://en.wikipedia.org/wiki/Special_unitary_group#Fundamental_representation): you can go from one to the other by simply multiplying by $i$.
+For example, mathematicians would usually prefer to work with $i\sigma_x$, $i\sigma_y$, and $i\sigma_z$ instead of the Pauli matrices $\sigma_x$, $\sigma_y$, and $\sigma_z$ themselves; the former are skew-Hermitian, the latter are Hermitian.
+:::
+
+Now, $U\in\mathrm{U}(2)$ acts on the space $V$ by $S\mapsto S' = USU^\dagger$, i.e.
 $$
   \vec{s}\cdot\vec{\sigma}
   \longmapsto
@@ -612,41 +623,41 @@ $$
   = U(\vec{s}\cdot\vec{\sigma})U^\dagger
 \tag{$\ddagger$}
 $$
-This is a linear map $\mathbb{R}^3\to\mathbb{R}^3$, and is thus given by some $(3\times 3)$ real-valued matrix:
+This gives a linear map $\mathbb{R}^3\to\mathbb{R}^3$, and is thus given by some $(3\times 3)$ real-valued matrix:
 $$
   R_U\colon \mathbb{R}^3\to\mathbb{R}^3.
 $$
-We note that this map is an isometry (a distance preserving operation), since it preserves the scalar product in the Euclidean space: for any two vectors $\vec{s}$ and $\vec{v}$,
+
+Next, note that this map is an isometry (a distance preserving operation), since it preserves the scalar product in the Euclidean space: for any two vectors $\vec{s}$ and $\vec{t}$,
 $$
   \begin{aligned}
-    \vec{s'}\cdot\vec{v'}
-    &= \frac12\tr [S'V']
-  \\&= \frac12\tr [(USU^\dagger)(UVU^\dagger)]
-  \\&= \frac12\tr [SV]
-  \\&= \vec{s}\cdot\vec{v}
+    \vec{s'}\cdot\vec{t'}
+    &= \frac12\tr [S'T']
+  \\&= \frac12\tr [(USU^\dagger)(UTU^\dagger)]
+  \\&= \frac12\tr [ST]
+  \\&= \vec{s}\cdot\vec{t}
   \end{aligned}
 $$
-(where $S=\vec{s}\cdot\vec{\sigma}$ and $V=\vec{v}\cdot\vec{\sigma}$) using the cyclic property of the trace.
-This means that the matrix $R_U$ is _orthogonal_.^[Orthogonal transformations preserve the length of vectors as well as the angles between them.]
+(where $S=\vec{s}\cdot\vec{\sigma}$ and $T=\vec{t}\cdot\vec{\sigma}$) using the cyclic property of the trace.
+This means that the matrix $R_U$ is **orthogonal**.^[Orthogonal transformations preserve the length of vectors as well as the angles between them.]
 
-Furthermore, we can show^[We can also see that $\det R_U=1$ from the fact that any matrix in $\mathrm{U}(2)$ can be smoothly connected to the identity.] that $\det R_U=1$.
-But the only isometries in three dimensional Euclidian space (which are described by orthogonal matrices with determinant $1$) are rotations.
-
-Thus, in the mathematical lingo, we have established a homomorphism^[Recall that a homomorphism is a structure-preserving map between two algebraic structures of the same type, in our case two groups. An isomorphism between algebraic structures of the same type is one-to-one homomorphism.]
+Furthermore, we can show^[You might hear people say that $\det R_U=1$ follows from the fact that any matrix in $\mathrm{U}(2)$ can be "smoothly connected to the identity".] that $\det R_U=1$.
+But the *only* isometries in three dimensional Euclidean space (which are described by orthogonal matrices with determinant $1$) are rotations.
+Thus, in the mathematical lingo, we have established a group homomorphism^[Recall that a **homomorphism** is a structure-preserving map between two algebraic structures of the same type, in our case two groups. An **isomorphism** between algebraic structures of the same type is a homomorphism that has an inverse homomorphism.]
 $$
   \begin{aligned}
     \mathrm{U}(2) &\longrightarrow \mathrm{SO}(3)
   \\U &\longmapsto R_U
   \end{aligned}
 $$
-where $\mathrm{SO}(3)$ stands for the special orthogonal group in three dimensions (the group of all rotations about the origin of three-dimensional Euclidean space $\mathbb{R}^3$ under the operation of composition).
-It is quite clear from Equation ($\ddagger$) that unitary matrices differing only by a global multiplicative phase factor (e.g. $U$ and $e^{i\gamma}U$) represent the same rotation.
+where $\mathrm{SO}(3)$ stands for the **special orthogonal group** in three dimensions --- the group of all rotations about the origin of three-dimensional Euclidean space $\mathbb{R}^3$ under the operation of composition, which can be represented by the group of $(3\times3)$ orthogonal (and thus *real*) matrices.
+It follows from Equation ($\ddagger$) that unitary matrices differing only by a global multiplicative phase factor (e.g. $U$ and $e^{i\varphi}U$) represent the same rotation.
 
 ::: {.technical}
-**TO-DO** **traceless matrices is the Lie algebra!**!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+This mathematical argument is secretly using the language of unit [**quaternions**](https://en.wikipedia.org/wiki/Quaternion), also known as [**versors**](https://en.wikipedia.org/wiki/Versor), since these provide a very convenient way of describing [spatial rotation](https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation), and are often used in e.g. 3D computer graphics software.
 :::
 
-Physicists, however, usually prefer a more direct demonstration, which goes roughly like this.
+Physicists, however, usually prefer a more direct demonstration of this rotation interpretation, which might go roughly as follows.
 Consider the map $\vec{s} \mapsto \vec{s'}$ induced by $U=e^{i \alpha \vec{n}\cdot\vec{\sigma}}$.
 For small values of $\alpha$, we can write
 $$
@@ -676,7 +687,6 @@ $$
   \vec{s} + 2\alpha(\vec{n}\times\vec{s})
 $$
 which we recognise as a good old textbook formula for an infinitesimal clockwise rotation of $\vec{s}$ about the axis $\vec{n}$ through the angle $2\alpha$.
-
 
 
 
@@ -725,8 +735,8 @@ Now, take a look at this circuit:
 ```
 
 What does it represent?
-The central part is a rotation by $\varphi$ about the $x$-axis, but is it is sandwiched between two rotations about the $z$-axis.
-Now we have to appeal to your knowledge of classical mechanics: you may recall that any rotation in the Euclidean space can be performed as a sequence of three rotations: one about $z$-axis, one about $x$-axis, and one more about the $z$-axis.
+The central part is a rotation by $\varphi$ about the $x$-axis, sandwiched between two rotations about the $z$-axis.
+Recall [our previous discussion about a universal set of gates](#composition-of-rotations): any rotation in the Euclidean space can be performed as a sequence of three rotations: one about $z$-axis, one about $x$-axis, and one more about the $z$-axis.
 In this context, this implies that any unitary $U$, up to a global phase factor, can be written as
 $$
   \begin{aligned}
@@ -741,9 +751,11 @@ $$
   \end{aligned}
 $$
 
-Thus once you are given a couple of Hadamard gates and an infinite supply of phase gates, so that you can choose the three phases you need, you can construct an arbitrary unitary operation on a single qubit. Needless to say, the two axes in question, $z$ and $x$, do not have any special status, geometrically speaking --- if we have rotations about any two orthogonal^[In fact, even this condition isn't necessary! See Figure \@ref(fig:two-families-of-circles)] axes then we can create any one-qubit unitary that we want.
+That is, once you are given a pair of Hadamard gates and an infinite supply of phase gates (so that you can choose the three phases you need) you can construct an *arbitrary* unitary operation on a single qubit.
 
-(ref:two-families-of-circles-caption) If we can move along the two families of circles, then from any point on the sphere we can reach any other point. The two axes do not even have to be orthogonal: any two different axes will do. Can you see why?
+It is important to note that the two axes in question, $z$ and $x$, do not have any special status, geometrically speaking --- if we have rotations about any two orthogonal^[In fact, even this orthogonality condition isn't necessary! See Figure \@ref(fig:two-families-of-circles)] axes then we can create any one-qubit unitary that we want.
+
+(ref:two-families-of-circles-caption) If we can move along the two families of circles, then from any point on the sphere we can reach any other point. The two axes do not even have to be orthogonal: any two different (i.e. non-collinear) axes will do! Can you see why?
 
 ```{r two-families-of-circles,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4,fig.cap='(ref:two-families-of-circles-caption)'}
 \tdplotsetmaincoords{60}{125}
@@ -772,7 +784,7 @@ Thus once you are given a couple of Hadamard gates and an infinite supply of pha
 \end{tikzpicture}
 ```
 
-Consider the following circuit:
+Now consider the following circuit:
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5}
 \begin{quantikz}
@@ -788,10 +800,10 @@ Consider the following circuit:
 ```
 
 where both $A$ and $B$ are unitary operations.
-We claim that _any_ unitary $U$ can be represented in this form.
+We claim that *any* unitary $U$ can be represented in this form, for some $A$ and $B$.
 
 Again, we can prove this geometrically.
-The circuit represents two rotations by $180^\circ$ about two axes obtained by rotating the $z$-axis with unitaries $A$ and $B$, respectively.
+The circuit represents two rotations by $180^\circ$ about the two axes obtained by rotating the $z$-axis via unitaries $A$ and $B$, respectively.
 Any rotation in the three-dimensional space is the composition of two rotations by $180^\circ$, as shown in Figure \@ref(fig:two-rotations-by-180).
 The resulting axis of rotation is perpendicular to the two axes about which rotations by $180^\circ$ are performed, and the angle of the composed rotation is twice the angle between the two axes.
 
@@ -816,7 +828,7 @@ The resulting axis of rotation is perpendicular to the two axes about which rota
   \draw [fill=secondary!40] (0,0) to (10:1.3) to [bend right] (25:1.3) to cycle;
   \node [secondary] at (17.5:1.7) {$\alpha/2$};
   \draw [ultra thick,secondary] (205:1.5) to (25:1.5);
-  \draw [ultra thick,secondary] (190:1.5) to (10:1.5);
+  \draw [ultra thick,secondary] (190:1.6) to (10:1.6);
 \end{tikzpicture}
 ```
 
@@ -827,13 +839,18 @@ The resulting axis of rotation is perpendicular to the two axes about which rota
 
 ## Some quantum dynamics {#some-quantum-dynamics}
 
-The time evolution of a quantum state is a unitary process which is generated by a Hermitian operator called the **Hamiltonian**, which we also^[Hopefully it will always be clear from the context which $H$ refers to Hamiltonian and which $H$ to Hadamard. Don't confuse the two!] denote by $H$.
+Now is a good time to introduce some more general quantum theory.
+The time evolution of a quantum state is a unitary process which is generated by a Hermitian operator called the **Hamiltonian**, which we denote^[Hopefully it will always be clear from the context which $H$ refers to the Hamiltonian and which $H$ to the Hadamard. Don't confuse the two!] by $H$.
 The Hamiltonian contains a complete specification of all interactions within the system under consideration.
 In an isolated system, the state vector $\ket{\psi(t)}$ changes smoothly in time according to the **Schrödinger equation**:
 $$
   \frac{\mathrm{d}}{\mathrm{d}t} \ket{\psi(t)}
   =-\frac{i}{\hbar} H \ket{\psi(t)}.
 $$
+
+::: {.technical}
+**TO-DO**: a brief interlude on the main idea of Hamiltonian physics
+:::
 
 For **time-independent** Hamiltonians (i.e. where $\ket{\psi(t)}=\ket{\psi}$ has no $t$-dependence), the formal solution of this reads^[Here $\hbar$ denotes **Planck's constant**, which has the value $\hbar = 1.05\times 10^{-34}\,\text{ Js}$. However, theorists always choose to work with a system of units where $\hbar = 1$.]
 $$
@@ -869,7 +886,7 @@ which is a rotation with angular frequency $\omega$ about the axis defined by th
 
 ### Quantum bomb tester
 
-You have been drafted by the government to help in the demining effort in a former war-zone.^[This is a slightly modified version of a bomb-testing problem described by Avshalom Elitzur and Lev Vaidman in _Quantum-mechanical interaction-free measurement_, Found. Phys. **47** (1993), 987-997.]
+You have been drafted by the government to help in the demining effort in a former war-zone.^[This is a slightly modified version of a bomb-testing problem described by Avshalom Elitzur and Lev Vaidman in _Quantum-mechanical interaction-free measurement_, Found. Phys. **47** (1993), pp. 987--997.]
 In particular, retreating forces have left very sensitive bombs in some of the sealed rooms.
 The bombs are configured such that if even one photon of light is absorbed by the fuse (i.e. if someone looks into the room), the bomb will go off.
 Each room has an input and output port which can be hooked up to external devices.
@@ -958,7 +975,7 @@ You would like to know whether a particular room has a bomb in it with as much c
 ```
 
 2. Assume that the two beam splitters in the interferometer are different.
-  Say the first beam-splitter reflects incoming light with probability $r$ and transmits with probability $t=1-r$, and the second one transmits with probability $r$ and reflects with probability $t$.
+  Say the first beam-splitter reflects incoming light with probability $R$ and transmits with probability $T=1-R$, but the second one transmits with probability $R$ and reflects with probability $T$ (that is, the two beam-splitters are *asymmetric*, but "inverse" to one another).
   Would the new setup improve the overall success rate of the detection of a bomb without blowing it up?
 
 3. There exists a scheme, involving many beam-splitters and something called the **quantum Zeno effect**, such that the success rate for detecting a bomb without blowing it up approaches 100%.
@@ -966,7 +983,7 @@ You would like to know whether a particular room has a bomb in it with as much c
 
 ### Orthonormal Pauli basis
 
-Show that $\{\id,\sigma_x,\sigma_y,\sigma_z\}$ is an orthonormal basis with respect to the Hilbert-Schmidt product in the space of complex $(2\times 2)$ matrices.
+Show that $\{\id,\sigma_x,\sigma_y,\sigma_z\}$ is an orthonormal basis of the space of complex $(2\times 2)$ matrices with respect to the Hilbert-Schmidt product.
 
 
 ### Pauli matrix expansion coefficients
@@ -992,20 +1009,23 @@ In these notes, we usually deal with matrices that are Hermitian ($A=A^\dagger$)
 It is easy to see that, if $A$ is Hermitian, then $a_0$ and the three components of $\vec{a}$ are all real.
 The $(2\times 2)$ unitaries are usually parametrised as
 $$
-  U = e^{i\gamma}\Big(u_0\id + i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
+  U = e^{i\varphi}\Big(u_0\id + i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
 $$
-where $e^{i\gamma}$ is an overall multiplicative phase factor, with $\gamma$ real, and $u_0$ and the three components $u_x$, $u_y$, $u_z$ are all real numbers.
+where $e^{i\varphi}$ is an overall multiplicative phase factor, with $\varphi$ real, and $u_0$ and the three components $u_x$, $u_y$, $u_z$ are all real numbers.
 
 2. Show that the unitarity condition implies that
     $$
       u_0^2 + u_x^2 + u_y^2 + u_z^2 = 1
     $$
-    and show, using this parametrisation, that the determinant of $U$ is $e^{i2\gamma}$.
+    and show, using this parametrisation, that the determinant of $U$ is $e^{i2\varphi}$.
 
 
 ### Linear algebra of the Pauli vector
 
-1. Show that $\frac12\tr(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}$. *(You may find [a certain identity involving the cross product](#cross-product-identity) helpful.)*
+In what follows, we use the notation from [our algebraic treatment of Pauli operators](#pauli-matrices-algebraically), where we defined the **Pauli vector** $\vec{\sigma}$.
+
+1. Show that $\frac12\tr(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}$.
+    *Hint: you may find [a certain identity involving the cross product](#cross-product-identity) helpful.*
 
 2. Show that any $\vec{n}\cdot\vec{\sigma}$ has eigenvalues $\pm|\vec{n}|$.
 
@@ -1026,20 +1046,21 @@ where $e^{i\gamma}$ is an overall multiplicative phase factor, with $\gamma$ rea
       = e^{i \theta \vec{n}\cdot\vec{\sigma}}
       = (\cos\theta)\id + (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
     $$
-    (The argument here is the same as the argument that $e^{i\theta}=\cos\theta +i\sin\theta$).
+    *Hint: the argument here is the same as the argument that $e^{i\theta}=\cos\theta +i\sin\theta$.*
 
 
 ### Special orthogonal matrix calculations
 
 1. Show that $\tr\sigma_x\sigma_y\sigma_z = 2i$.
 
-2. Consider
+2. Let $U$ be a unitary matrix, and write $\vec{e}_x$, $\vec{e}_y$, and $\vec{e}_z$ to mean the unit vectors along the $x$-, $y$-, and $z$-axis, (respectively).
+    We define new unit vectors $\vec{f}_x$, $\vec{f}_y$, and $\vec{f}_z$ by applying $U$ to our existing unit vectors.
+    Then
     $$
-      U(\vec e_k\cdot\sigma_k)U^\dagger=U\sigma_kU^\dagger={\vec f_k}\cdot\vec\sigma.
+      U(\vec{e}_k\cdot\sigma_k)U^\dagger=U\sigma_kU^\dagger={\vec{f}_k}\cdot\vec\sigma.
     $$
-    So $U$ maps the unit vectors $\vec e_x$, $\vec e_y$, and $\vec z_z$, (along the $x$-, $y$-, and $z$-axis, respectively), to new unit vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$.
     We already know that, in Euclidean space, this transformation is described by a $(3\times 3)$ orthogonal matrix $R_U$.
-    How are the three vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$ related to the entries in matrix $R_U$?
+    How are the three vectors $\vec{f}_x$, $\vec{f}_y$, and $\vec{f}_z$ related to the entries in matrix $R_U$?
 
 3. Show that
     $$
@@ -1066,7 +1087,7 @@ $$
 $$
 represents an anticlockwise rotation about the $z$-axis through the angle $\varphi$.
 
-**Hint.** It might be helpful to start with the $\mathrm{SU}(2)$ version of the phase gate:
+*Hint: it might be helpful to start with the $\mathrm{SU}(2)$ version of the phase gate:*
 $$
   \begin{aligned}
     P_\varphi
@@ -1116,7 +1137,7 @@ $$
 ### Swiss Granite Fountain
 
 In the Singapore Botanic Gardens, there is a sculpture by Ueli Fausch called "Swiss Granite Fountain".
-It is a spherical granite ball which measures 80cm in diameter and weighs 700kg, and is kept afloat by strong water pressure directed through the basal block.
+It is a spherical granite ball which measures 80cm in diameter and weighs 700kg, and is kept afloat by strong water pressure directed through a basal block.
 It is easy to set the ball in motion, and it keeps rotating in whatever way you start for a long time.
 Suppose you are given access to this ball only near the top, so that you can push it to make it rotate around any horizontal axis, but you don't have enough of a grip to make it turn around the vertical axis.
 Can you make it rotate around the vertical axis anyway?
@@ -1124,7 +1145,7 @@ Can you make it rotate around the vertical axis anyway?
 
 ### Dynamics in a magnetic field
 
-A qubit (spin one-half particle) initially in state $\ket{0}$ (spin up) is placed in a uniform magnetic field.
+A qubit initially in state $\ket{0}$ is placed in a uniform magnetic field.
 The interaction between the field and the qubit is described by the Hamiltonian
 $$
   H
