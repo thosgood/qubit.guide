@@ -15,9 +15,9 @@ The goal for the former is to study a way of implementing this gate using physic
 ## Physics against logic, via beam-splitters {#beamsplitters-against-logic}
 
 A **symmetric beam-splitter** is a cube of glass which reflects half the light that impinges upon it, while allowing the remaining half to pass through unaffected.
-For our purposes it can be viewed as a device which has two input and two output ports which we label as $\ket{0}$ and $\ket{1}$, as in Figure \@ref(fig:beam-splitter).
+For our purposes it can simply be viewed as a device that has two input and two output ports, which we label with $\ket{0}$ and $\ket{1}$ as in Figure \@ref(fig:beam-splitter).
 
-```{r beam-splitter,engine='tikz',fig.width=2,fig.cap='A beam-splitter.'}
+```{r beam-splitter,engine='tikz',fig.width=2,fig.cap='A symmetric beam-splitter, with input ports on the bottom and the left sides, and output ports on the top and the right sides.'}
 \usetikzlibrary{arrows.meta}
 \tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
 \tikzset{process/.style={thick,-{Latex},shorten >=0.1cm,shorten <=0.1cm}}
@@ -34,14 +34,16 @@ For our purposes it can be viewed as a device which has two input and two output
 ```
 
 When we aim a single photon at such a beam-splitter using one of the input ports, we notice that the photon doesn't split in two: we can place photo-detectors wherever we like in the apparatus, fire in a photon, and verify that if any of the photo-detectors registers a hit, none of the others do.
-In particular, if we place a photo-detector behind the beam-splitter in each of the two possible exit beams, the photon is detected with equal probability at either detector, no matter whether the photon was initially fired from input port $\ket{0}$ or $\ket{1}$.
+In particular, if we place a photo-detector behind the beam-splitter in each of the two possible exit beams, the photon is detected with equal probability at either detector, no matter whether the photon was initially fired into input port $\ket{0}$ or $\ket{1}$.
 
-It may seem obvious that, at the very least, the photon is _either_ in the transmitted beam $\ket{0}$ _or_ in the reflected beam $\ket{1}$ during any one run of this experiment.
+If we fire the photon into the input port $\ket{0}$, it may seem obvious that, at the very least, the photon is _either_ in the **transmitted** beam $\ket{0}$ _or_ in the **reflected** beam $\ket{1}$ during any one run of this experiment.
 Thus we may be tempted to think of the beam-splitter as a random binary switch which, with equal probability, transforms any binary input into one of the two possible outputs.
-However, that is not necessarily the case.
-Let us introduce a second beam-splitter and place two normal mirrors so that both paths intersect at the second beam-splitter, resulting in something resembling the Mach-Zehnder interferometer (see \@ref(fig:two-beam-splitters)).
+However, as you might expect (now having already learnt about the double-slit experiment), *this is not necessarily the case*.
+Let us introduce a second beam-splitter and place two normal mirrors so that both paths intersect at the second beam-splitter, as well as putting a detector at each output port of the second beam-splitter (see Figure \@ref(fig:two-beam-splitters)).
 
-```{r two-beam-splitters,engine='tikz',fig.width=5,fig.cap='Two beam-splitters with mirrors, so that a photon travels through both.'}
+(ref:two-beam-splitters-caption) Two beam-splitters with mirrors, arranged so that the photon travels through both, along with two detectors. We label the detectors in such a way that, if a photon enters input $\ket{i}$ and is *transmitted* (not reflected) through both beam-splitters, then it is detected by detector $i$.
+
+```{r two-beam-splitters,engine='tikz',fig.width=5,fig.cap='(ref:two-beam-splitters-caption)'}
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{decorations.markings}
 \tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
@@ -67,17 +69,18 @@ Let us introduce a second beam-splitter and place two normal mirrors so that bot
 \end{tikzpicture}
 ```
 
-Now, the axiom of additivity in probability theory says that whenever something can happen in several alternative ways we add probabilities for each way considered separately.
+Recall the Kolmogorov additivity axiom in classical probability theory: whenever something can happen in several alternative ways, we add probabilities for each way considered separately.
 We might argue that a photon fired into the input port $\ket{0}$ can reach the detector $0$ in two _mutually exclusive_ ways: either by two consecutive reflections or by two consecutive transmissions.
-Each reflection happens with probability $1/2$ and each transmission happens with probability $1/2$ thus the total probability of reaching detector 0 is a sum of the probability of the two consecutive reflections ($1/2\times 1/2 = 1/4$) and the probability of the two consecutive transmissions ($1/2\times 1/2 = 1/4$) which gives probability $1/2$.
+Each reflection happens with probability $1/2$, and each transmission happens with probability $1/2$, so the total probability of a photon fired into input $\ket{0}$ reaching detector $0$ is the sum of the probability of the two consecutive reflections ($1/2\times 1/2 = 1/4$) and the probability of the two consecutive transmissions ($1/2\times 1/2 = 1/4$), which gives a probability of $1/2$.
 This is summarised in Figure \@ref(fig:classical-guess-double-beam-splitter), and makes perfect sense --- a random switch followed by a random switch should give nothing else but a random switch.
-However, if we set up such an experiment, that is not what happens!
+
+However, if we set up such an experiment in a lab, *this is not what happens*!
 
 ::: {.idea latex=""}
 There is no reason why probability theory (or any other _a priori_ mathematical construct for that matter) should make any meaningful statements about outcomes of physical experiments.
 :::
 
-(ref:classical-guess-double-beam-splitter-caption) The two possible classical scenarios. Note that this is **not** what actually happens in the real physical world!
+(ref:classical-guess-double-beam-splitter-caption) The two possible classical scenarios. Note that this is *not* what actually happens in the real physical world!
 
 ```{r classical-guess-double-beam-splitter,engine='tikz',fig.cap='(ref:classical-guess-double-beam-splitter-caption)'}
 \usetikzlibrary{arrows.meta}
@@ -102,7 +105,7 @@ There is no reason why probability theory (or any other _a priori_ mathematical 
     \draw [thick,gray!70,dashed] (0,0) to (0,3) to (5,3);
     \node at (-1.5,0) {$\ket{0}$};
     \node at (2.5,-1.5) {two consecutive transmissions:};
-    \node at (2.5,-2.5) {probability amplitude = $\frac{i}{\sqrt2}\frac{i}{\sqrt2}=-\frac12$};
+    \node at (2.5,-2.5) {probability amplitude = $\frac{1}{\sqrt2}\frac{1}{\sqrt2}=\frac12$};
   \end{scope}
   \begin{scope}[shift={(8,0)}]
     \draw (0,0) pic {beamsplitter};
@@ -123,10 +126,10 @@ There is no reason why probability theory (or any other _a priori_ mathematical 
 \end{tikzpicture}
 ```
 
-In experimental reality, when the optical paths between the two beam-splitters are the same, the photon fired from input port $\ket{0}$ _always_ strikes detector 1 and _never_ detector 0 (and the photon fired from input port $\ket{1}$ _always_ strikes detector 0 and _never_ detector 1).
-Thus a beam-splitter acts as the square root of $\texttt{NOT}$ gate.
+In experimental reality, when the optical paths between the two beam-splitters are the same, the photon fired from input port $\ket{0}$ *always* strikes detector 1 and *never* detector $0$ (and the photon fired from input port $\ket{1}$ *always* strikes detector $0$ and *never* detector $1$).
+In other words, *a beam-splitter is a physical implementation of a $\sqrt{\texttt{NOT}}$ gate*.
 
-The action of the beam-splitter --- in fact, the action of any quantum device --- can be described by tabulating the amplitudes of transitions between its input and output ports.^[Note that gate $B$ is not the same square root of $\texttt{NOT}$ as the one described previously. In fact, there are infinitely many ways of implementing this "impossible" logical operation.]
+The action of the beam-splitter --- in fact, the action of any quantum device --- can be described by tabulating the amplitudes of transitions between its input and output ports.^[Note that gate $B$ is not the same square root of $\texttt{NOT}$ as the one we have already seen. In fact, there are infinitely many ways of implementing this "impossible" logical operation.]
 $$
   B = 
   \begin{bmatrix}
@@ -139,16 +142,19 @@ $$
   \end{bmatrix}.
 $$
 The matrix element $B_{lk}$, where $k,l=0,1$, represents the amplitude of transition from input  $\ket{k}$ to output  $\ket{l}$ (watch the order of indices).
-Each reflection (entries $B_{01}$ and $B_{10}$) happens with amplitude $i/\sqrt{2}$ and each transmission  (entries $B_{00}$ and $B_{11}$) happens with amplitude $1/\sqrt{2}$.
-Thus the total amplitude that a photon fired from input port $\ket{0}$ will reach detector $0$ is the sum of the amplitude of the two consecutive reflections ($i/\sqrt{2}\times i/{\sqrt 2} = -1/2$) and the amplitude of the two consecutive transmissions ($1/{\sqrt 2}\times 1/{\sqrt 2} = 1/2$) which gives the total amplitude $0$.
-The resulting probability is then zero.
-Unlike probabilities, amplitudes can cancel out each other out.
+Each reflection (entries $B_{01}$ and $B_{10}$) happens with amplitude $i/\sqrt{2}$, and each transmission  (entries $B_{00}$ and $B_{11}$) happens with amplitude $1/\sqrt{2}$.
+So the total amplitude that a photon fired from input port $\ket{0}$ will reach detector $0$ is the sum of the amplitude of the two consecutive reflections ($i/\sqrt{2}\times i/{\sqrt 2} = -1/2$) and the amplitude of the two consecutive transmissions ($1/{\sqrt 2}\times 1/{\sqrt 2} = 1/2$) which gives the total amplitude $0$, and thus a resulting probability of *zero*.
+
+::: {.idea latex=""}
+Unlike probabilities, amplitudes can cancel out each other out, witnessing destructive interference.
+:::
+
 We can now go on and calculate the amplitude that the photon will reach detector $1$.
-In this case we will get $i$, which gives probability $1$.
+In this case we will get $i$, which gives probability $1$ (since $|i|^2=1$).
 We can then switch to input $\ket{1}$ and repeat our calculations.
 All possible paths and associated amplitudes are shown in \@ref(fig:paths-and-amplitudes-two-beam-splitters).
 
-```{r paths-and-amplitudes-two-beam-splitters,engine='tikz',fig.cap='All possible transitions and their amplitudes when we compose two beam-splitters $B$.'}
+```{r paths-and-amplitudes-two-beam-splitters,engine='tikz',fig.cap='All possible transitions and their amplitudes when we compose two beam-splitters, as described by the matrix $B$ above.'}
 \tikzset{centrelabel/.style={pos=0.5,fill=white}}
 \tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
 \newcommand{\ket}[1]{|#1\rangle}
@@ -195,8 +201,6 @@ $$
   X = \texttt{NOT} = \begin{bmatrix}0&1\\1&0\end{bmatrix}.
 $$
 
-Recalling [Chapter 2](#qubits), we see that beam-splitters give a physical way of constructing the square root of $\texttt{NOT}$.
-
 ::: {.idea latex=""}
 |  |  |  |
 |:-|:-|:-|
@@ -211,9 +215,9 @@ Recalling [Chapter 2](#qubits), we see that beam-splitters give a physical way o
 
 ## Quantum interference, revisited (still about beam-splitters)
 
-One of the simplest quantum devices in which quantum interference can be controlled is a **Mach--Zehnder interferometer** --- see Figure \@ref(fig:mach-zehnder).^[You can play around with a virtual Mach--Zehnder interferometer at [Virtual Lab by Quantum Flytrap](https://lab.quantumflytrap.com/lab/mach-zehnder). (There are also lots of other things you can do in this virtual lab: [go have a look!](https://quantumflytrap.com/lab-how-to/)).]
+One of the simplest quantum devices in which quantum interference can be controlled is a **Mach--Zehnder interferometer** --- see Figure \@ref(fig:mach-zehnder).^[You can play around with a virtual Mach--Zehnder interferometer at [Quantum Flytrap's *Virtual Lab*](https://lab.quantumflytrap.com/lab/mach-zehnder). (There are also lots of other things you can do in this virtual lab --- [go have a look!](https://quantumflytrap.com/lab-how-to/)).]
 
-(ref:mach-zehnder-caption) The [Mach-Zehnder interferometer](https://en.wikipedia.org/wiki/Mach-Zehnder_interferometer), with the input photon represented by the coloured dot. This experimental set-up is named after the physicists Ludwig Mach and Ludwig Zehnder, who proposed it back in 1890s.
+(ref:mach-zehnder-caption) The [Mach--Zehnder interferometer](https://en.wikipedia.org/wiki/Mach--Zehnder_interferometer), with the input photon represented by the coloured dot. This experimental set-up is named after the physicists [Ludwig Mach](https://en.wikipedia.org/wiki/Ludwig_Mach) and [Ludwig Zehnder](https://en.wikipedia.org/wiki/Ludwig_Zehnder), who proposed it back in 1890s.
 
 ```{r mach-zehnder,engine='tikz',fig.cap='(ref:mach-zehnder-caption)'}
 \usetikzlibrary{arrows.meta}
@@ -239,39 +243,41 @@ One of the simplest quantum devices in which quantum interference can be control
   \node [smallblob=primary] at (-1.4,0) {};
   \node at (-2.3,0) {Input $\ket{0}$};
   \node at (0,-1.5) {Input $\ket{1}$};
-  \node [fill=white] at (0,2) {Beam 1};
-  \node [fill=white] at (4,1) {Beam 0};
+  % \node [fill=white] at (0,2) {Beam 1};
+  % \node [fill=white] at (4,1) {Beam 0};
 \end{tikzpicture}
 ```
 
-It consists of two beam-splitters (the square boxes, bottom left and top right) and two slivers of glass of different thickness which are inserted into each of the optical paths connecting the two beam-splitters.
+This is a slightly modified version of the construction shown in Figure \@ref(fig:two-beam-splitters), where we have added two slivers of glass of different thickness into each of the optical paths connecting the two beam-splitters
 The slivers are usually referred to as "phase shifters" and their thicknesses, $\varphi_0$ and $\varphi_1$, are measured in units of the photon's wavelength multiplied by $2\pi$.
-The two inputs ports of the interferometer are labelled as $\ket{0}$ and $\ket{1}$, and each of the two output ports, also labelled as $0$ and $1$, terminates in a photodetector.^[The two diagonal objects in the top-left and bottom-right corners of \@ref(fig:mach-zehnder) are simply mirrors to make the two possible paths meet at the second beam-splitter.]
+These phase shifters are so called because they modify the probability amplitudes by phase factors $e^{i\varphi_0}$ and $e^{i\varphi_1}$ (respectively).
+The only other change that we make is replacing the *symmetric* beam-splitters with **non-symmetric** ones, i.e. they no longer transmit or reflect with equal probability, but instead reflect with some (fixed) probability amplitude $i\sqrt{R}$ and transmit with some probability amplitude $\sqrt{T}$, where $R+T=1$.
+As before, the two inputs ports of the interferometer are labelled as $\ket{0}$ and $\ket{1}$, and each of the two output ports, also labelled as $0$ and $1$, terminates in a photodetector.
 
-A photon (the coloured dot in the figure) impinges on the first beam-splitter from one of the two input ports (here input 1) and begins its journey towards one of the two photodetectors.
+A photon (the coloured dot in the figure) impinges on the first beam-splitter from one of the two input ports (here input $\ket{0}$) and begins its journey towards one of the two photodetectors.
 Let^[We will often use $i$ as an index even though it is also used for the imaginary unit. Hopefully, no confusion will arise for it should be clear from the context which one is which.] $U_{ij}$ denote the probability amplitude that the photon initially in input port $j=0,1$ ends up in detector $i=0,1$.
-At each of the two beam-splitters the photon is transmitted with the probability amplitude $\sqrt{T}$ and reflected with the probability amplitude $i\sqrt{R}$, with $R+T=1$, and the two phase shifters modify the amplitudes by phase factors $e^{i\varphi_0}$ and $e^{i\varphi_1}$, respectively.
-In quantum theory we almost always start with the amplitudes, and once we have a full expression for the amplitude of a given outcome we square its absolute value to get the corresponding probability.
 
-For example, let us calculate  $U_{00}$.
-We notice that there are two alternative ways for the photon in the input port $0$ to end up in the output port $0$.
-It can take the lower path, through the phase shifter $\varphi_0$, or the upper path, through the phase shifter $\varphi_1$.
+::: {.idea latex=""}
+In quantum theory we almost always work with probability *amplitudes*, and only once we have a full expression for the amplitude of a given outcome do we square its absolute value to get the corresponding probability.
+:::
+
+For example, let us calculate $U_{00}$.
+We notice that there are two alternative ways for the photon in the input port $\ket{0}$ to end up at the output port $0$: It can take the lower path, through the phase shifter $\varphi_0$, or the upper path, through the phase shifter $\varphi_1$.
 The lower path implies two consecutive transmissions at the beam-splitters and the phase factor $e^{i\varphi_0}$, whereas the upper path implies two consecutive reflections and the phase factor $e^{i\varphi_1}$.
-Once the photon ends in the output port $0$ there is no way of knowing which path was taken, thus we add the amplitudes pertaining to each path.
+Once the photon ends in the output port $0$ there is no way of knowing which path was taken, so we add the amplitudes pertaining to each path.
 The resulting amplitude is
 $$
   U_{00}
-  = \sqrt{T} e^{i\varphi_0} \sqrt{T}
-  + i\sqrt{R} e^{i\varphi_1} i \sqrt{R},
+  = \sqrt{T} e^{i\varphi_0} \sqrt{T} + i\sqrt{R} e^{i\varphi_1} i \sqrt{R},
 $$
-and the corresponding probability $P_{00}=|U_{00}|^2$ reads
+and the corresponding probability $P_{00}=|U_{00}|^2$ is
 $$
   \begin{aligned}
     P_{00}
     & = \left\vert
           \sqrt{T}e^{i\varphi_0}\sqrt{T} + i\sqrt{R}e^{i\varphi_1}i\sqrt{R}
         \right\vert^2
-      = \left\vert
+  \\&= \left\vert
           Te^{i\varphi_0} - Re^{i\varphi_1}
         \right\vert^2
   \\& = T^2 + R^2
@@ -281,8 +287,8 @@ $$
 
 The "classical" part of this expression, $T^2+R^2$, basically says that the photon undergoes either two consecutive transmissions with probability $T^2$, or two consecutive reflections with probability $R^2$.
 The probability of being transmitted through any phase shifter is always $1$, hence the phase shifters play no role in the classical description of this process.
-But the classical description is not correct, as the experiments show, whence the interference term $2TR\cos(\varphi_1-\varphi_0)$ in which the phase shifters play the essential role.
-Depending on the _relative_ phase $\varphi=\varphi_1-\varphi_0$ the probability that the detector $0$ "clicks" can vary from $(T-R)^2$, for $\varphi=0$, to $1$, for $\varphi=\pi$.
+But the classical description is *not* correct --- it doesn't agree with physical experiments! --- whence the interference term $2TR\cos(\varphi_1-\varphi_0)$ in which the phase shifters play the essential role.
+Depending on the _relative_ phase $\varphi=\varphi_1-\varphi_0$ the probability that the detector $0$ "clicks" after having fired a photon into input $\ket{0}$ can vary from $(T-R)^2$ to $1$.
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
 \definecolor{secondary}{RGB}{91,132,177}
@@ -290,15 +296,16 @@ Depending on the _relative_ phase $\varphi=\varphi_1-\varphi_0$ the probability 
   \begin{axis}[
     xmin=0,xmax=5,
     xlabel=relative phase,
-    ylabel=$\Pr(\mbox{detector 0 clicks})$,
+    ylabel=$P_{00}$,
     ymin=0,ymax=1.1,
     axis lines=middle,
-    xtick={0},
-    xticklabels={$0$},
+    xtick={0.05,1.05,2.1},
+    xticklabels={$0$,$\pi$,$2\pi$},very thick,
     ytick={0.16,0.58,1},
     yticklabels={$(T-R)^2$,$T^2+R^2$,1},very thick,
     xlabel style={font=\Large, anchor=north,at={(axis description cs:0.8,0)}},
     ylabel style={font=\Large, anchor=south,at={(axis description cs:0.15,1.05)}},
+    xticklabel style={font=\Large},
     yticklabel style={font=\Large}
   ]
     \addplot[domain=0:1.6*pi,samples=200,secondary,line width=2pt]{0.58-0.42*cos(deg(3*x))};
@@ -309,9 +316,9 @@ Depending on the _relative_ phase $\varphi=\varphi_1-\varphi_0$ the probability 
 \end{tikzpicture}
 ```
 
-If we do not care about the experimental details, we can represent the action of the Mach--Zehnder interferometer in terms of a diagram: see \@ref(fig:mach-zehnder-diagram).
+If we do not care about the experimental details, we can represent the action of the Mach--Zehnder interferometer in terms of a diagram, as in Figure \@ref(fig:mach-zehnder-diagram).
 
-```{r mach-zehnder-diagram,engine='tikz',fig.cap='The Mach-Zehnder interferometer represented as an abstract diagram.'}
+```{r mach-zehnder-diagram,engine='tikz',fig.cap='The Mach--Zehnder interferometer represented as an abstract diagram.'}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
@@ -344,7 +351,7 @@ If we do not care about the experimental details, we can represent the action of
 ```
 
 Here we can follow, from left to right, the multiple different paths that a photon can take in between specific input and output ports.
-The amplitude along any given path is just the product of the amplitudes pertaining to the path segments (Rule 1), while the overall amplitude is the sum of the amplitudes for the many different paths (Rule 2). You can, for example, see that the probability amplitude $U_{10}$ is given by
+The amplitude along any given path is just the product of the amplitudes pertaining to the path segments ([Rule 1](#two-basic-rules)), while the overall amplitude is the sum of the amplitudes for the many different paths ([Rule 2](#two-basic-rules)). You can, for example, see that the probability amplitude $U_{10}$ is given by
 $$
   U_{10}
   = \sqrt{T}e^{i\varphi_0}i\sqrt{R} + i\sqrt{R}e^{i\varphi_1}\sqrt{T}
@@ -361,7 +368,7 @@ $$
 $$
 Again, the first term is of "classical" origin and represents probabilities corresponding to each path: one reflection followed by one transmission plus one transmission followed by one reflection, that is, $RT+TR=2RT$.
 The second term is the interference term.
-Clearly, the photon entering port $1$ will end up in one of the two detectors, hence,
+Clearly, the photon entering port $\ket{0}$ will end up in one of the two detectors, hence
 $$
   P_{00} + P_{10}
   = R^2 + 2RT + T^2
@@ -370,7 +377,7 @@ $$
 $$
 The action of the interferometer is thus fully described^[In general, any isolated quantum device, including a quantum computer, can be described by a matrix of probability amplitudes $U_{ij}$ that input $j$ generates output $i$. Watch the order of indices.] by the four probability amplitudes $U_{ij}$ ($i,j=0,1$).
 
-The most popular instance of a Mach--Zehnder interferometer involves only symmetric beam-splitters $(R=T=\frac12)$ and is fully described by the matrix
+The most popular instance of a Mach--Zehnder interferometer involves only *symmetric* beam-splitters (i.e. $R=T=\frac12$) and is fully described by the matrix^[Really, when you write down the matrices describing the action of the symmetric beam-splitters and the phase gates, and then multiply them all together (which is an exercise worth doing!), you actually obtain $ie^{i\frac{\varphi_0+\varphi_1}{2}}U$ rather than $U$, but as we have already said, we can ignore global phase factors.]
 $$
   U =
   \begin{bmatrix}
@@ -379,9 +386,6 @@ $$
   \end{bmatrix}
 $$
 where $\varphi=\varphi_1-\varphi_0$.
-In fact, when you do all the calculations^[That is, when you write down the matrices describing the action of the symmetric beam-splitters and the phase gates, and then multiply them all together (which is an exercise worth doing).] you obtain $ie^{i\frac{\varphi_0+\varphi_1}{2}}U$ rather than $U$, but the global phase factor $ie^{i\frac{\varphi_0+\varphi_1}{2}}$ is common to all the amplitudes in the matrix and as such it does not contribute to the resulting probabilities.
-
-To better understand why we don't worry about global phase factors, think about the eigenvalues of a matrix $A$ and of the matrix $\mu A$, where $\mu$ is a complex number with $|\mu|=1$.
 
 
 
