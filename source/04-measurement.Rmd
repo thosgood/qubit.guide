@@ -2,7 +2,7 @@
 
 > About the **Hilbert-space formalism** of quantum theory, and the role of **measurements** in quantum information theory, as well as introducing the quantum dramas of Alice and Bob.
 
-Eventually, we have to talk about quantum measurements, since, at some point, someone has to look at a measuring device and register the outcome of whatever quantum circuits we've been designing.
+Eventually we have to talk about **quantum measurements**, since, at some point, someone has to look at a measuring device and register the outcome of whatever quantum circuits we've been designing.
 It turns out that this is a bit more tricky than one might think.
 Quantum measurement is not a passive acquisition of information: if you measure, you disturb.
 Even though it is a physical process, like any other quantum evolution, it is traditionally described by a different set of mathematical tools.
@@ -13,22 +13,18 @@ Even though it is a physical process, like any other quantum evolution, it is tr
 
 ## Hilbert spaces, briefly
 
-A formal mathematical setting for a quantum system is that of a **Hilbert space** $\mathcal{H}$, which is, for us, just a vector space along with an inner product.
+A formal mathematical setting for a quantum system is that of a **Hilbert space** $\mathcal{H}$, which is (for us^[[Recall](#bras-and-kets) that we only work with *finite dimensional* vector spaces, and it is a very convenient fact that finite dimensional inner product spaces are automatically Hilbert spaces.]) just a vector space along with an inner product.
 
-::: {.technical}
-**!!TO-DO: define hilbert spaces!!**
-((((((((The term "Hilbert space" used to be reserved for an infinite-dimensional inner product space that is **complete**, i.e. such that every Cauchy sequence in the space converges to an element in the space. Nowadays, as in these notes, the term includes finite-dimensional spaces, which automatically satisfy the condition of completeness.))))))))
-:::
-
-Given a Hilbert space corresponding to our system, the result of any preparation of the system is then represented by some unit vector $\ket{\psi}\in \mathcal{H}$, and any test is represented by some other unit vector $\ket{e}\in \mathcal{H}$.
+Given a Hilbert space corresponding to our system, the result of any preparation of the system is then represented by some *unit* vector $\ket{\psi}\in \mathcal{H}$, and any test is represented by some other unit vector $\ket{e}\in \mathcal{H}$.
 The inner product of these two vectors, $\braket{e}{\psi}$, gives the probability amplitude that an object prepared in state $\ket{\psi}$ will pass a test for being in state $\ket{e}$.
-Probabilities are obtained by squaring absolute values of probability amplitudes:
+As always, probabilities are obtained by squaring absolute values of probability amplitudes:
 $$
   |\braket{e}{\psi}|^2
   = \braket{\psi}{e}\braket{e}{\psi}.
 $$
 After the test, in which the object was found to be in state $\ket{e}$, say, the object forgets about its previous state $\ket{\psi}$ and is, indeed, actually now in state $\ket{e}$.
-This is the mysterious **quantum collapse** which we will briefly discuss later on.
+That is, if we immediately measure the object again, we will find it to still be in state $\ket{e}$ with probability $1$.
+This is the mysterious **quantum collapse**, which we will further discuss later on.
 
 A more complete test involves multiple states $e_k$ that form an orthonormal basis $\{\ket{e_1},\ldots,\ket{e_n}\}$.
 These states are perfectly distinguishable from each other: the condition $\braket{e_k}{e_l} = \delta_{kl}$ implies that a quantum system prepared in state $\ket{e_l}$ will never be found in state $\ket{e_k}$ (unless $k=l$).
@@ -49,15 +45,15 @@ A **complete** measurement in quantum theory is determined by the choice of an o
 ## Back to qubits; complete measurements
 
 ::: {.idea latex=""}
-A **projector** is any Hermitian operator $P=P^\dagger$ which is idempotent ($P^2=P$).
-The rank of $P$ is evaluated using $\tr(P)$.
-In the Dirac notation, $\proj{e}$ is a rank one projector on the subspace spanned by the unit vector $\ket{e}$, and it acts on any vector $\ket{v}$ as $(\proj{e})\ket{v} = \ket{e}\braket{e}{v}$.
+A **projector** is any Hermitian ($P=P^\dagger$) operator which is **idempotent** ($P^2=P$).
+The **rank** of $P$ is given by $\tr(P)$.
+In the Dirac notation, if $\ket{e}$ is a unit vector, then $\proj{e}$ is a rank one projector on the subspace spanned by $\ket{e}$, and it acts on any vector $\ket{v}$ via $(\proj{e})\ket{v} = \ket{e}\braket{e}{v}$.
 :::
 
-The most common measurement in quantum information science is the standard measurement on a qubit, also referred to as the measurement in the **standard** (or **computational**) basis $\{\ket{0},\ket{1}\}$.
+The most common measurement in quantum information science is the **standard measurement** on a qubit, also referred to as the measurement in the **standard** (or **computational**) basis: $\{\ket{0},\ket{1}\}$.
 When we draw circuit diagrams it is tacitly assumed that such a measurement is performed on each qubit at the end of quantum evolution.
 
-```{r standard-basis-measurement,engine='tikz',fig.width=3,fig.cap='The standard (computational) basis defines the standard measurements.'}
+```{r standard-basis-measurement,engine='tikz',fig.width=3,fig.cap='The standard/computational basis defines the so-called standard measurements.'}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \usetikzlibrary{arrows.meta}
@@ -109,7 +105,7 @@ or, in an alternative notation, as
 \end{equation*}
 ```
 
-As we can see, if the qubit is prepared in state $\ket{\psi} = \alpha_0\ket{0} + \alpha_1\ket{1}$ and subsequently measured in the standard basis state, then the outcome is $\ket{k}$ (for $k=0,1$) with probability^[This slick argument is a good example of how nice the bra-ket notation can be.]
+As we can see, if the qubit is prepared in state $\ket{\psi} = \alpha_0\ket{0} + \alpha_1\ket{1}$ and subsequently measured in the standard basis, then the outcome is $\ket{k}$ (for $k=0,1$) with probability^[This slick argument is a good example of how nice the bra-ket notation can be when we leverage the ambiguity of an expression like $\bra{a}\ket{b}\ket{b}\bra{a}$, which we can read as the scalar product of two scalars or as a projector sandwiched between a bra and a ket.]
 $$
   \begin{aligned}
     |\alpha_k|^2
@@ -121,7 +117,7 @@ $$
   \end{aligned}
 $$
 where $P_k=\proj{k}$ is the projector on $\ket{k}$.
-If the outcome of the measurement is $k$, then the output state of the measurement gate is $\ket{k}$.
+If the outcome of the measurement is $\ket{k}$, then the output state of the measurement gate is $\ket{k}$.
 The original state $\ket{\psi}$ is _irretrievably lost_.
 This sudden change of the state, from the pre-measurement state $\ket{\psi}$ to the post-measurement state, either $\ket{0}$ or $\ket{1}$, is often called a **collapse** or a **reduction** of the state.
 
@@ -130,28 +126,43 @@ Surely, the measurement process is not governed by any different laws of physics
 
 No, it is not!
 
+::: {.reading}
+The subtleties (both mathematical and philosophical) of quantum collapsing are still very much active topics of research, and we could spend an entire book discussing them.
+We refer the interested reader to other sources, such as the following:
+
+- T. Norson, *Foundations of Quantum Mechanics: An Exploration of the Physical Meaning of Quantum Theory*. Springer, 2017. ISBN: 978-3-319-65867-4. DOI: [10.1007/978-3-319-65867-4](https://doi.org/10.1007/978-3-319-65867-4).
+- M. Schlosshauer, "Decoherence, the measurement problem, and interpretations of quantum mechanics". Rev. Mod. Phys. **76** (2004), pp. 1267--1305.   arXiv:[quant-ph/0312059](https://arxiv.org/abs/quant-ph/0312059).
+- F. Giacosa, "On unitary evolution and collapse in Quantum Mechanics". Quanta **3** (2014), pp. 156--170. arXiv:[1406.2344](https://arxiv.org/abs/1406.2344).
+:::
+
 A measurement is a physical process and can be explained without any "collapse", but it is usually a complicated process in which one complex system (a measuring apparatus or an observer) interacts and gets correlated with a physical system being measured.
 We will discuss this more later on, but for now let us accept a "collapse" as a _convenient mathematical shortcut_, and describe it in terms of projectors rather than unitary operators.
 
+::: {.idea latex=""}
+For our purposes, the idea of "quantum collapse" is simply a way of black boxing the *irreversible* interaction between a quantum system and its surrounding classical environment.
+
+On a practical level, it means that we describe measurement and observation with projectors instead of unitary operators.
+:::
 
 
 
 
-## The projection rule; incomplete measurements
+
+## The projection rule, and incomplete measurements
 
 So far we have identified measurements with orthonormal bases, or, if you wish, with a set of orthonormal projectors on the basis vectors.
 
 ::: {.idea latex=""}
-- The **orthonormality** condition:
+Conditions on basis vectors:
+
+- The **orthonormality** condition
     $$
       \braket{e_k}{e_l} = \delta_{kl}
     $$
-    i.e. the basis consists of unit vectors that are pairwise orthogonal.
-- The **completeness** condition:
+- The **completeness** condition
     $$
       \sum_k\proj{e_k} = \id
     $$
-    i.e. _any_ vector in $\mathcal{H}$ can be expressed as the sum of the orthogonal projections on the $\ket{e_k}$.
 :::
 
 Given a quantum system in state $\ket{\psi}$ such that $\ket{\psi} = \sum_k \alpha_k\ket{e_k}$, we can write
@@ -162,16 +173,17 @@ $$
   \\&= \sum_k (\proj{e_k}) \ket{\psi}
   \\&= \sum_k \ket{e_k}\braket{e_k}{\psi}
   \\&= \sum_k \ket{e_k}\alpha_k
-  \\&= \sum_k \alpha_k\ket{e_k}.
+  \\&= \sum_k \alpha_k\ket{e_k}
   \end{aligned}
 $$
+which tells us that *any* vector in $\mathcal{H}$ can be expressed as the sum of the orthogonal projections on the $\ket{e_k}$, whence the name of the "completeness" condition.
 This says that the measurement in the basis $\{\ket{e_i}\}$ gives the outcome labelled by $e_k$ with probability
 $$
   |\braket{e_k}{\psi}|^2 = \braket{\psi}{e_k}\braket{e_k}{\psi}
 $$
 and leaves the system in state $\ket{e_k}$.
 This is a _complete_ measurement, which represents the best we can do in terms of resolving state vectors in the basis states.
-But sometimes we do not want our measurement to distinguish all the elements of an orthonormal basis.
+But sometimes we do not want our measurement to distinguish *all* the elements of an orthonormal basis.
 
 For example, a complete measurement in a four-dimensional Hilbert space will have four distinct outcomes: $\ket{e_1}$, $\ket{e_2}$, $\ket{e_3}$, and $\ket{e_4}$, but we may want to lump together some of the outcomes and distinguish, say, only between $\{\ket{e_1}$, $\ket{e_2}\}$, and $\{\ket{e_3},\ket{e_4}\}$.
 In other words, we might be trying to distinguish one _subspace_ from another, without separating vectors that lie in the same subspace.
@@ -184,17 +196,19 @@ Intuitively, an incomplete measurement has fewer outcomes and is hence less info
 In general, instead of projecting on one dimensional subspaces spanned by vectors from an orthonormal basis, we can decompose our Hilbert space into mutually orthogonal subspaces of various dimensions and project on them.
 
 ::: {.idea latex=""}
-- The orthogonality conditions for projectors:
+Conditions on *projectors*:
+
+- The **orthogonality** condition
     $$
       P_k P_l = P_k\delta_{kl}
     $$
-- The projector decomposition of the identity:
+- The **completeness** condition
     $$
       \sum_k P_k = \id
     $$
 :::
 
-For any decomposition of the identity into orthogonal projectors $P_k$, there exists a measurement that takes a quantum system in state $\ket{\psi}$, outputs label $k$ with probability $\braket{\psi}{P_k|\psi}$, and leaves the system in the state $P_k\ket{\psi}$ (multiplied by the normalisation factor, i.e. divided by the length of $P_k\ket{\psi}$):
+For any decomposition of the identity into orthogonal projectors $P_k$ (using the completeness condition), there exists a measurement that takes a quantum system in state $\ket{\psi}$, gives the output labelled $k$ with probability $\braket{\psi}{P_k|\psi}$, and leaves the system in the state $P_k\ket{\psi}$ (multiplied by the normalisation factor, i.e. divided by the length of $P_k\ket{\psi}$):
 $$
   \ket{\psi}
   \mapsto
@@ -207,15 +221,15 @@ $$
 
 ## Example of an incomplete measurement
 
-Consider a three-dimensional Hilbert space $\mathcal{H}$, and the two orthogonal projectors
+Take a three-dimensional Hilbert space $\mathcal{H}$ with basis $\{\ket{e_1},\ket{e_2},\ket{e_3}\}$, and consider the two orthogonal projectors
 $$
   \begin{aligned}
     P &= \ket{e_1}\bra{e_1} + \ket{e_2}\bra{e_2}
   \\Q &= \ket{e_3}\bra{e_3}
   \end{aligned}
 $$
-that form the decomposition of the identity: $P+Q=\id$.
-Suppose that a physical system is prepared in state $\ket{\psi} = \alpha_1\ket{e_1} + \alpha_2\ket{e_2} + \alpha_3\ket{e_3}$.
+These form the decomposition of the identity: $P+Q=\id$.
+Now suppose that a physical system is prepared in state $\ket{\psi} = \alpha_1\ket{e_1} + \alpha_2\ket{e_2} + \alpha_3\ket{e_3}$.
 Ideally, we would like to perform a complete measurement that would resolve the state $\ket{v}$ into the three basis states, but suppose our experimental apparatus is not good enough, and lumps together $\ket{e_1}$ and $\ket{e_2}$.
 In other words, it can only differentiate between the two subspaces associated with projectors $P$ and $Q$.
 

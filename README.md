@@ -19,6 +19,8 @@
 1. **`{.technical}` divs**
     + should these also be in the latex? if so (i.e. almost certainly) make sure to add `latex=""` to each one
     + turn some footnotes into `{.technical}` divs!
+1. **`{.reading}` divs**
+    + go through and add some of these!
 1. $\rho^\mathcal{A}$ vs $\rho_\mathcal{A}$?
 1. make physical page numbers agree with printed page numbers (PDF version)
 1. smaller format pdf version ("book-sized", with footnotes at the bottom)
