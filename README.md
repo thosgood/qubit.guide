@@ -17,9 +17,11 @@
 1. add more questions from problem sheets
 1. TOC spacing in pdf (e.g. the §11.10 number overlaps with the subsection title)
 1. **`{.technical}` divs**
+    + make these concertinas/accordions
     + should these also be in the latex? if so (i.e. almost certainly) make sure to add `latex=""` to each one
     + turn some footnotes into `{.technical}` divs!
 1. **`{.reading}` divs**
+    + make these concertinas/accordions
     + go through and add some of these!
 1. $\rho^\mathcal{A}$ vs $\rho_\mathcal{A}$?
 1. make physical page numbers agree with printed page numbers (PDF version)

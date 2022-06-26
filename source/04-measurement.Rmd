@@ -193,7 +193,7 @@ Such measurements (said to be **incomplete**) are indeed possible, and they can 
 Intuitively, an incomplete measurement has fewer outcomes and is hence less informative, but the state after such a measurement is usually less disturbed.
 :::
 
-In general, instead of projecting on one dimensional subspaces spanned by vectors from an orthonormal basis, we can decompose our Hilbert space into mutually orthogonal subspaces of various dimensions and project on them.
+In general, instead of projecting on one dimensional subspaces spanned by vectors from an orthonormal basis, we can decompose our Hilbert space into mutually orthogonal subspaces of various dimensions and *project* onto them.
 
 ::: {.idea latex=""}
 Conditions on *projectors*:
@@ -290,7 +290,7 @@ The measurement may also find the system in the subspace associated with $Q$ wit
 
 ## Observables
 
-An **observable** $A$ is a measurable physical property which has a numerical value, for example, spin or momentum or energy.
+An **observable** $A$ is a measurable physical property which has a numerical value, for example, spin, position, momentum, or energy.
 The term "observable" also extends to any basic measurement in which each outcome has an associated numerical value.
 If $\lambda_k$ is the numerical value associated to the outcome $\ket{e_k}$, then the observable $A$ is **represented** by the operator
 $$
@@ -300,7 +300,7 @@ $$
   \\&= \sum_k \lambda_k P_k,
   \end{aligned}
 $$
-where $\lambda_k$ is now the eigenvalue corresponding to the eigenvector $\ket{e_k}$, or the projector $P_k$.
+where $\lambda_k$ is now the eigenvalue corresponding to the eigenvector $\ket{e_k}$, or to the projector $P_k$.
 
 ::: {.idea latex=""}
 Recall the following types of operator:
@@ -317,7 +317,7 @@ The [**spectral theorem**](https://en.wikipedia.org/wiki/Spectral_theorem) says 
 Note that unitary, Hermitian, and positive semi-definite operators are all, in particular, normal.
 :::
 
-Since $(\ket{e_k}\bra{e_k})^\dagger=\ket{e_k}\bra{e_k}$, the projectors $P_k=\ket{e_k}\bra{e_k}$ are Hermitian, and thus normal, which means that $A$ itself is a normal operator.
+Since $(\ket{a}\bra{b})^\dagger=\ket{b}\bra{a}$, the projectors $P_k=\ket{e_k}\bra{e_k}$ are Hermitian, and thus normal, which means that $A$ itself is a normal operator.
 
 Conversely, given any normal operator $A$, we can associate a measurement defined by the eigenvectors of $A$, which form an orthonormal basis, and use the eigenvalues of $A$ to label the outcomes of this measurement.
 If we choose the eigenvalues to be real numbers then $A$ becomes a Hermitian operator.
@@ -363,10 +363,8 @@ First of all, assume that $A$ and $B$ do commute, so that $AB=BA$, and let $\ket
 Then
 $$
   \begin{aligned}
-    A(B\ket{e})
-    &= (AB)\ket{e}
-  \\&= (BA)\ket{e}
-  \\&= B(A\ket{e})
+    AB\ket{e}
+  \\&= BA\ket{e}
   \\&= B\lambda\ket{e}
   \\&= \lambda(B\ket{e})
   \end{aligned}
@@ -374,6 +372,7 @@ $$
 which says that $B\ket{e}$ is also an eigenvector of $A$, with eigenvalue $\lambda$.
 If $\lambda\neq0$, then this says^[To make this argument fully formal, and to deal with the case where $\lambda$ is degenerate, isn't too hard, but we don't want to get too involved with the necessary linear algebra here.] that $B\ket{e}$ is proportional to $\ket{e}$, which is simply saying that $\ket{e}$ is also an eigenvector of $B$.
 This means that any eigenbasis of $A$ is also an eigenbasis of $B$.
+Another way of saying this is that $A$ and $B$ are **simultaneously diagonalisable**: there exists a basis in which both $A$ and $B$ are diagonal, namely any common eigenbasis of the two.
 
 Conversely, say that $A$ and $B$ have some common eigenbasis $\{\ket{e_1},\ldots,\ket{e_n}\}$, with $A\ket{e_k}=\alpha_k$ and $B\ket{e_k}=\beta_k$.
 To show that $AB=BA$, it suffices to show that $(AB)\ket{\psi}=(BA)\ket{\psi}$ for any state $\ket{\psi}$.
@@ -390,10 +389,6 @@ $$
 $$
 and $\alpha_k$ and $\beta_k$ commute, since thy are just complex numbers.
 This means that running the same calculation for $(BA)\ket{\psi}$ would give exactly the same result, and so $AB=BA$.
-
-::: {.technical}
-**TO-DO: simultaneously diagonalisable**
-:::
 
 ::: {.idea latex=""}
 Two operators $A$ and $B$ commute if and only if there exists some common eigenbasis.
@@ -434,16 +429,56 @@ $$
 where $[A,B]=AB-BA$ is the **commutator**.
 :::
 
-This says that there does not exist *any* state for which $\sigma_A\sigma_B$ is less that some value determined entirely by the operators $A$ and $B$.
+This says that there does not exist *any* state for which $\sigma_A\sigma_B$ is less that some specific value, which is determined entirely by the operators $A$ and $B$.
 Of course, if $A$ and $B$ are compatible, then $[A,B]=0$, and so the uncertainty principle doesn't tell us anything at all --- it simply says that the product of two non-negative numbers is greater than or equal to $0$, which is always the case!
 
-You might recognise the name, having heard of **Heisenberg's uncertainty principle**, which is indeed a special case of this: one can show that the commutator of the (one-dimensional) position and momentum operators is exactly $i\hbar$, where $\hbar$ is a very (*very*) small number known as the [**Planck constant**](https://en.wikipedia.org/wiki/Planck_constant), whence $\sigma_x\sigma_p\geq\frac{\hbar}{2}$.
+You might recognise the name, having maybe heard elsewhere of [**Heisenberg's uncertainty principle**](https://en.wikipedia.org/wiki/Uncertainty_principle), which is indeed a special case of this: one can show that the commutator of the (one-dimensional) position and momentum operators is exactly $i\hbar$ (where $\hbar$ is a very (*very*) small^[Physicists often pick a unit system such that $\hbar$ is equal to $1$, to make calculations simpler. But in SI units, $\hbar$ is exactly equal to $6.62607015\times10^{-34}$ joules per hertz. Note that we say *exactly* equal, since a kilogram is actually *defined* in SI in terms of the Planck constant, the speed of light, and the atomic transition frequency of of caesium-133.] number known as the [**Planck constant**](https://en.wikipedia.org/wiki/Planck_constant)), whence $\sigma_x\sigma_p\geq\frac{\hbar}{2}$.
+
+As a historical note, Planck's constant $\hbar$ has its roots right in the very birth of quantum physics, since it shows up in the equation for the energy of a photon.
+More generally, in 1923 [de Broglie](https://en.wikipedia.org/wiki/Louis_de_Broglie) postulated that the ratio between the momentum and quantum wavelength of *any* particle would be $2\pi\hbar$.
+Even before this, it turned up in 1905 when Einstein stated his support for Planck's idea that light is not just a wave, but simultaneously consists of tiny packets of energy, called **quanta** (whence the name quantum physics!), which we now call electrons.^[The whole history of quantum physics, arguably starting with the [black-body problem](https://en.wikipedia.org/wiki/Planck%27s_law), accounting for the [Rayleigh--Jeans law](https://en.wikipedia.org/wiki/Rayleigh%E2%80%93Jeans_law), and leading on to the discovery of the [photoelectric effect](https://en.wikipedia.org/wiki/Photoelectric_effect), is a wonderful story, but one that we do not have the space to tell here.]
 
 ::: {.technical}
-**TO-DO:** limit as $\hbar\to0$
+We said that $\hbar$ is very small, and this is fundamental to the relationship between quantum and classic physics.
+Most of the things that we deal with in day-to-day life are on the macroscopic level, and are many many orders of magnitude larger than the Planck constant.
+Indeed, if we wave our hands quite a lot, then we can say that "we see quantum effects only when dealing with things on the same order of magnitude as the Planck constant".
+For example, a single photon of green light (roughly midway through the visible spectrum) has energy $\approx3.5\times10^{-19}$ joules, whereas a [mole](https://en.wikipedia.org/wiki/Mole_(unit)) of such photons (which is a "reasonable" number to encounter when talking about things that actually look green in day-to-day life) has energy $\approx200\times10^{3}$ joules, so we would expect a single photon to exhibit quantum behaviour much more measurably than, for example, the light emitted from a green light bulb.
+
+In a way which we shall not make precise, the fact that $\hbar$ is strictly greater than zero (albeit very small) is what makes quantum physics inherently *discrete*.
+Quite wondrously, it is very often the case that taking a limit $\hbar\to0$ in some formula in quantum physics recovers the corresponding formula in classical physics --- this is known as the [**classical limit**](https://en.wikipedia.org/wiki/Classical_limit) or [**correspondence principle**](https://en.wikipedia.org/wiki/Correspondence_principle).
+This isn't unique to quantum physics: special relativity reduces to classical mechanics if we take all velocities to be much smaller than the speed of light; general relativity reduces to the classical theory of gravity if we take all gravitational fields to be weak enough; statistical mechanics reduces to thermodynamics when we take the number of particles to be large enough; and so on.
+
+This idea, that classical systems can be recovered from quantum ones by taking $\hbar\to0$, poses a question: *can we go in the other direction?*
+That is, given some classical theory that we know agrees with physical experiments, can we formulate some corresponding quantum version which we might hope to be correct on much smaller scales?
+Trying to answer this question has led to some incredibly deep (and very technical) mathematics known as [**quantization theory**](https://en.wikipedia.org/wiki/Quantization_(physics)), with [**geometric quantization**](https://en.wikipedia.org/wiki/Geometric_quantization) and [**deformation quantization**](https://en.wikipedia.org/wiki/Wigner%E2%80%93Weyl_transform#Deformation_quantization) being two key areas.
 :::
 
-**TO-DO: consider three sequential incompatible measurements**
+Before moving on, let us consider one more quantum phenomena that arises when we look at incompatible operators.
+Suppose that we have three operators, say $A$, $B$, and $C$, and we wish to let these act on our quantum system sequentially, but throwing away any results which are not a given outcome.
+That is, if we start (for simplicity) with some eigenstate $\ket{a}$ of $A$, then we want to know the probability of measuring some specific output $\ket{c}$.
+But we know how to calculate this!
+
+First of all, we know the probability of measuring outcome $\ket{c}$ *given that $\ket{a}$ first evolves into the intermediate state $\ket{b_k}$*: this is the probability of $\ket{a}$ evolving under $B$ into $\ket{b_k}$ multiplied by the probability of $\ket{b_k}$ evolving under $C$ into $\ket{c}$, i.e.
+$$
+  \Pr(c|b) = |\braket{c}{b}|^2|\braket{b}{a}|^2.
+$$
+Then to obtain the probability of measuring outcome $\ket{c}$ we can just sum over all possible intermediate states:
+$$
+  \Pr(c) = \sum_{k}|\braket{c}{b_k}|^2|\braket{b_k}{a}|^2.
+$$
+
+But now, if we forget entirely about $B$, then we could calculate $\Pr(c)$ in a different way: it is simply given by
+$$
+  \Pr(c) = |\braket{c}{a}|^2.
+$$
+Using the fact that $\sum_{k}\ket{b_k}\bra{b_k}=1$, we can rewrite this as
+$$
+  \Pr(c) = \left|\sum_k\braket{c}{b_k}\braket{b_k}{a}\right|^2
+$$
+and this is *not generally equal* to the previous expression for $\Pr(c)$.
+In fact, you can show that these two expressions agree *if and only if* $[A,B]=0$ or $[B,C]=0$, i.e. if and only if either $A$ and $B$ or $B$ and $C$ are compatible.
+
+We briefly discuss an explicit scenario of where three evolutions behave in such a paradoxical way later on, [when we introduce Bell's theorem](#bells-theorem), in what is sometimes known as the **quantum Venn diagram paradox**.
 
 
 
