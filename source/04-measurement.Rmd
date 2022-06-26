@@ -291,8 +291,8 @@ The measurement may also find the system in the subspace associated with $Q$ wit
 ## Observables
 
 An **observable** $A$ is a measurable physical property which has a numerical value, for example, spin or momentum or energy.
-The term "observable" also extends to any basic measurement in which each outcome is associated with a numerical value.
-If $\lambda_k$ is the numerical value associated with outcome $\ket{e_k}$ then we say that the observable $A$ is **represented** by the operator
+The term "observable" also extends to any basic measurement in which each outcome has an associated numerical value.
+If $\lambda_k$ is the numerical value associated to the outcome $\ket{e_k}$, then the observable $A$ is **represented** by the operator
 $$
   \begin{aligned}
     A
@@ -308,38 +308,46 @@ Recall the following types of operator:
 | | |
 | :- | :- |
 | **normal** | $AA^\dagger = A^\dagger A$ |
-| **unitary** | $AA^\dagger = A^\dagger A = \id$ |
+| **unitary** | $A^\dagger = A^{-1}$ |
 | **Hermitian**, or **self-adjoint** | $A^\dagger = A$ |
 | **positive semi-definite** | $\braket{v}{A|v}\geq0$ for all $\ket{v}$ |
 
-Note that an operator $A$ is normal if and only if it is unitarily diagonalisable, and that both unitary and Hermitian operators are normal.
+The [**spectral theorem**](https://en.wikipedia.org/wiki/Spectral_theorem) says that an operator $A$ is normal if and only if it is **unitarily diagonalisable**: there exists some unitary $Q$ and some diagonal $D$ such that $A=Q^\dagger DQ$.
+
+Note that unitary, Hermitian, and positive semi-definite operators are all, in particular, normal.
 :::
 
-Conversely, to any normal operator $A$ we can associate a measurement defined by the eigenvectors of $A$, which form an orthonormal basis, and use the eigenvalues of $A$ to label the outcomes of this measurement.
+Since $(\ket{e_k}\bra{e_k})^\dagger=\ket{e_k}\bra{e_k}$, the projectors $P_k=\ket{e_k}\bra{e_k}$ are Hermitian, and thus normal, which means that $A$ itself is a normal operator.
+
+Conversely, given any normal operator $A$, we can associate a measurement defined by the eigenvectors of $A$, which form an orthonormal basis, and use the eigenvalues of $A$ to label the outcomes of this measurement.
 If we choose the eigenvalues to be real numbers then $A$ becomes a Hermitian operator.
 For example, the standard measurement on a single qubit is often called the **$Z$-measurement**, because the Pauli $Z$ operator can be diagonalised in the standard basis and written as $Z = (+1)\proj{0} + (-1)\proj{1}$.
 The two outcomes, $\ket{0}$ and $\ket{1}$, are now labelled as $+1$ and $-1$, respectively.
 Using the same association we also have the $X$- and the $Y$-measurements, defined by the Pauli $X$ and $Y$ operators, respectively.
 
 ::: {.idea latex=""}
-The outcomes can be labelled by any symbols of your choice; it is the _decomposition_ of the Hilbert space into _mutually orthogonal subspaces_ that defines a measurement, not the labels.
+The outcomes can be labelled by *any symbols of your choice* --- it is the *decomposition* of the Hilbert space into *mutually orthogonal subspaces* that defines a measurement, not the labels.
 :::
 
-This said, labelling outcomes with real numbers is very useful.^[Some textbooks describe observables in terms of Hermitian operators, claiming that the corresponding operators _have to_ be Hermitian "because the outcomes are real numbers". This is actually a bit backwards. As we say above, the labels can be arbitrary, but, since real number labels are often useful (as we're about to justify), we tend to only work with Hermitian operators.]
-For example, the expected value $\av{A}$, which is the average of the numerical values $\lambda_k$ weighted by their probabilities, is a very useful quantity and can be easily expressed in terms of the operator $A$ as $\braket{\psi}{A|\psi}$, as follows:
+This said, labelling outcomes with real numbers is very useful.
+Some textbooks describe observables in terms of Hermitian operators, claiming that the corresponding operators *have to* be Hermitian "because the outcomes are real numbers". This is actually a bit backwards. As we say above, the labels can be arbitrary, but, since real number labels are often useful (as we're about to justify), we tend to only work with Hermitian operators.
+
+For example, the **expected value** $\av{A}$ (also known as the **mean**), which is the average of the numerical values $\lambda_k$ weighted by their probabilities, is a very useful quantity and can be easily expressed in terms of the operator $A$ and the state of the system $\ket{\psi}$ as follows:
 $$
   \begin{aligned}
-    \sum_k \lambda_k \Pr (\text{outcome k})
-    &= \sum_k \lambda_k |\braket{e_k}{\psi}|^2
+    \av{A}
+    &=\sum_k \lambda_k \Pr (\text{outcome k})
+  \\&= \sum_k \lambda_k |\braket{e_k}{\psi}|^2
   \\&= \sum_k\lambda_k \braket{\psi}{e_k}\braket{e_k}{\psi}
   \\&= \bra{\psi} \left( \sum_k\lambda_k\proj{e_k} \right)\ket{\psi}
   \\&= \braket{\psi}{A|\psi}.
   \end{aligned}
 $$
-To be clear, this is not a value we expect to see in any particular experiment.
-Instead, imagine a huge number of quantum objects, all prepared in the state $\ket{\psi}$ and think about the observable $A$ being measured on each of the objects.
-Statistically we then expect the average of our measurement results to be roughly $\av{A}$.
-Note that when $A$ is a projector then $\braket{\psi}{A|\psi}$ is the probability of the outcome associated with $A$.
+
+To be clear, this is not a value we expect to see in one particular run of the experiment, but instead a statistical average.
+Imagine a huge number of quantum objects, all prepared in the state $\ket{\psi}$ and think about the observable $A$ being measured on each of the objects.
+Statistically, we expect the average of our measurement results to be roughly $\av{A}$.
+Note that when $A$ is, in particular, a single projector $A=\lambda_k\ket{e_k}\bra{e_k}$ then $\braket{\psi}{A|\psi}$ is the probability of the outcome associated with $A$.
 
 
 
@@ -347,7 +355,95 @@ Note that when $A$ is a projector then $\braket{\psi}{A|\psi}$ is the probabilit
 
 ## Compatible observables and the uncertainty relation
 
-**!!!TO-DO!!!**
+Now that we have explained how observables correspond to normal operators, we can try to understand what implications follow from the fact that matrix multiplication does *not* generally commute: $AB\neq BA$.
+We can start by trying to figure out when exactly two given operators $A$ and $B$ will or will not commute, ideally in terms of eigenvectors (since this will let us talk about outcomes and their numerical values, using the language we have just built up).
+An important definition is the following: if a basis $\{\ket{e_1},\ldots,\ket{e_n}\}$ is such that each $\ket{e_k}$ is an eigenvector of an operator $A$, then we call it an **eigenbasis of $A$**.
+
+First of all, assume that $A$ and $B$ do commute, so that $AB=BA$, and let $\ket{e}$ be some eigenvector of $A$ with eigenvalue $\lambda$.
+Then
+$$
+  \begin{aligned}
+    A(B\ket{e})
+    &= (AB)\ket{e}
+  \\&= (BA)\ket{e}
+  \\&= B(A\ket{e})
+  \\&= B\lambda\ket{e}
+  \\&= \lambda(B\ket{e})
+  \end{aligned}
+$$
+which says that $B\ket{e}$ is also an eigenvector of $A$, with eigenvalue $\lambda$.
+If $\lambda\neq0$, then this says^[To make this argument fully formal, and to deal with the case where $\lambda$ is degenerate, isn't too hard, but we don't want to get too involved with the necessary linear algebra here.] that $B\ket{e}$ is proportional to $\ket{e}$, which is simply saying that $\ket{e}$ is also an eigenvector of $B$.
+This means that any eigenbasis of $A$ is also an eigenbasis of $B$.
+
+Conversely, say that $A$ and $B$ have some common eigenbasis $\{\ket{e_1},\ldots,\ket{e_n}\}$, with $A\ket{e_k}=\alpha_k$ and $B\ket{e_k}=\beta_k$.
+To show that $AB=BA$, it suffices to show that $(AB)\ket{\psi}=(BA)\ket{\psi}$ for any state $\ket{\psi}$.
+But we can write any $\ket{\psi}$ in the common eigenbasis as $\ket{\psi}=\sum_k\lambda_k\ket{e_k}$ for some $\lambda_k$, and then
+$$
+  \begin{aligned}
+    (AB)\ket{\psi}
+    &= AB\sum_k\lambda_k\ket{e_k}
+  \\&= \sum_k\lambda_k AB\ket{e_k}
+  \\&= \sum_k\lambda_k A\beta_k\ket{e_k}
+  \\&= \sum_k\lambda_k \beta_k A\ket{e_k}
+  \\&= \sum_k\lambda_k \beta_k\alpha_k\ket{e_k}
+  \end{aligned}
+$$
+and $\alpha_k$ and $\beta_k$ commute, since thy are just complex numbers.
+This means that running the same calculation for $(BA)\ket{\psi}$ would give exactly the same result, and so $AB=BA$.
+
+::: {.technical}
+**TO-DO: simultaneously diagonalisable**
+:::
+
+::: {.idea latex=""}
+Two operators $A$ and $B$ commute if and only if there exists some common eigenbasis.
+In this case, we say that $A$ and $B$ are **compatible**; if $A$ and $B$ do not commute then we say that they are **incompatible**.
+:::
+
+We have said that eigenvectors $\ket{e_k}$ of an operator $A$ correspond to outcomes of the observable, where the eigenvalue $\lambda_k$ is the associated numerical value.
+So if we have two compatible operators $A$ and $B$, then we have a complete system of measurements for *both* observables at once, given by their common eigenbasis, say $\{\ket{e_1},\ldots,\ket{e_k}\}$.
+What does this mean in terms of measurements?
+Well, if we measure $A$ on some system initially in state $\ket{\psi}$, then we know that the system will collapse into one of the states $\ket{e_k}$.
+But this is also an eigenvector for $B$, so measuring $B$ won't affect the state at all, and similarly for a subsequent measurement of $A$.
+
+If, however, $A$ and $B$ are incompatible operators, then things are very different.
+If we measure $A$, then $B$, and then $A$ again, there is absolutely no guarantee that the two measurements of $A$ will be the same.
+In other words, measuring $B$ somehow makes the system "forget" the result of the first measurement of $A$.
+We see this in the lab if we measure *position* and *momentum* of a particle: taking the momentum measurement "spreads out" the position of the particle throughout space, meaning that a position measurement taken immediately prior will have no reason to be the same as a position measurement taken immediately afterwards.
+
+Incompatible operators turn up all over the place, and actually turn out to be very interesting --- sometimes it's *good* when things don't work too simply!
+One particularly interesting question we can ask is the following: *can we quantify how far away from being compatible two incompatible operators are?*
+We can make this question more mathematically concrete by rephrasing it slightly, asking if we can find at least *some* states that are *close* to being common eigenstates.
+
+Imagine preparing a huge number of systems into the same initial state $\ket{\psi}$, and then measuring $A$ on half of them and $B$ on the other half.
+Doing so we can obtain the expected values $\av{A}$ and $\av{B}$, and we can calculate (using classical statistics) the **standard deviation** of these variables, $\sigma_A$ and $\sigma_B$ (respectively).
+The standard deviation of a random variable is basically a measurement of "how close to the expected value are all the resulting values".^[For example, if the random variable is [normally distributed](https://en.wikipedia.org/wiki/Normal_distribution), then around 68% of the results will lie within one standard deviation from the expected value.]
+The smaller the standard deviation, the more "well defined" the measurement is.
+In particular, given any single operator $A$, we can always make the standard deviation exactly $0$, by just preparing our system in an eigenstate of $A$.
+If $A$ and $B$ are compatible, then we can simultaneously make $\sigma_A$ and $\sigma_B$ exactly $0$ as well, since we know that $A$ and $B$ have a common eigenbasis.
+
+The really interesting, purely quantum, phenomena, however, comes when $A$ and $B$ are incompatible: we can prove that the standard deviations cannot both be made simultaneously arbitrarily small.
+
+::: {.idea latex=""}
+The **uncertainty principle** for operators $A$ and $B$ says that
+$$
+  \sigma_A\sigma_B
+  \geq
+  \left|\frac{1}{2i}\av{[A,B]}\right|
+$$
+where $[A,B]=AB-BA$ is the **commutator**.
+:::
+
+This says that there does not exist *any* state for which $\sigma_A\sigma_B$ is less that some value determined entirely by the operators $A$ and $B$.
+Of course, if $A$ and $B$ are compatible, then $[A,B]=0$, and so the uncertainty principle doesn't tell us anything at all --- it simply says that the product of two non-negative numbers is greater than or equal to $0$, which is always the case!
+
+You might recognise the name, having heard of **Heisenberg's uncertainty principle**, which is indeed a special case of this: one can show that the commutator of the (one-dimensional) position and momentum operators is exactly $i\hbar$, where $\hbar$ is a very (*very*) small number known as the [**Planck constant**](https://en.wikipedia.org/wiki/Planck_constant), whence $\sigma_x\sigma_p\geq\frac{\hbar}{2}$.
+
+::: {.technical}
+**TO-DO:** limit as $\hbar\to0$
+:::
+
+**TO-DO: consider three sequential incompatible measurements**
 
 
 
@@ -579,7 +675,7 @@ As we increase $\alpha$, the two states become more distinguishable, and, as we 
 
 ## Quantum theory, formally
 
-
+**!!TO-DO: mention e.g. <https://arxiv.org/abs/quant-ph/0101012>**
 
 Even though multiplying and adding probability amplitudes is essentially all there is to quantum theory, we hardly ever multiply and add amplitudes in a pedestrian way.
 Instead, as we have seen, we neatly tabulate the amplitudes into vectors and matrices and let the matrix multiplication take care of multiplication and addition of amplitudes corresponding to different alternatives.
@@ -606,6 +702,10 @@ In particular, states forming orthonormal bases are always perfectly distinguish
 
 
 ### Quantum evolutions
+
+**TO-DO: really rework this bit (look at Berge.pdf for inspiration?)**
+
+**TO-DO: actually... maybe go back and fix the previous introduction to quantum dynamics at the end of §3?**
 
 ::: {.idea latex=""}
 Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.
