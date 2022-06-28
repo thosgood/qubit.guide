@@ -148,7 +148,7 @@ On a practical level, it means that we describe measurement and observation with
 
 
 
-## The projection rule, and incomplete measurements
+## The projection rule, and incomplete measurements {#projection-rule-and-incomplete-measurements}
 
 So far we have identified measurements with orthonormal bases, or, if you wish, with a set of orthonormal projectors on the basis vectors.
 
@@ -353,7 +353,7 @@ Note that when $A$ is, in particular, a single projector $A=\lambda_k\ket{e_k}\b
 
 
 
-## Compatible observables and the uncertainty relation
+## Compatible observables and the uncertainty relation {#compatible-observables-and-uncertainty}
 
 Now that we have explained how observables correspond to normal operators, we can try to understand what implications follow from the fact that matrix multiplication does *not* generally commute: $AB\neq BA$.
 We can start by trying to figure out when exactly two given operators $A$ and $B$ will or will not commute, ideally in terms of eigenvectors (since this will let us talk about outcomes and their numerical values, using the language we have just built up).
@@ -432,12 +432,7 @@ where $[A,B]=AB-BA$ is the **commutator**.
 This says that there does not exist *any* state for which $\sigma_A\sigma_B$ is less that some specific value, which is determined entirely by the operators $A$ and $B$.
 Of course, if $A$ and $B$ are compatible, then $[A,B]=0$, and so the uncertainty principle doesn't tell us anything at all --- it simply says that the product of two non-negative numbers is greater than or equal to $0$, which is always the case!
 
-You might recognise the name, having maybe heard elsewhere of [**Heisenberg's uncertainty principle**](https://en.wikipedia.org/wiki/Uncertainty_principle), which is indeed a special case of this: one can show that the commutator of the (one-dimensional) position and momentum operators is exactly $i\hbar$ (where $\hbar$ is a very (*very*) small^[Physicists often pick a unit system such that $\hbar$ is equal to $1$, to make calculations simpler. But in SI units, $\hbar$ is exactly equal to $6.62607015\times10^{-34}$ joules per hertz. Note that we say *exactly* equal, since a kilogram is now actually *defined* in SI in terms of the Planck constant, the speed of light, and the atomic transition frequency of of caesium-133.] number known as the [**Planck constant**](https://en.wikipedia.org/wiki/Planck_constant)), whence $\sigma_x\sigma_p\geq\frac{\hbar}{2}$.
-
-As a historical note, Planck's constant $\hbar$ has its roots right in the very birth of quantum physics, since it shows up in the equation for the energy of a photon.
-More generally, in 1923 [de Broglie](https://en.wikipedia.org/wiki/Louis_de_Broglie) postulated that the ratio between the momentum and quantum wavelength of *any* particle would be $2\pi\hbar$.
-Even before this, it turned up in 1905 when Einstein stated his support for Planck's idea that light is not just a wave, but simultaneously consists of tiny packets of energy, called **quanta** (whence the name quantum physics!), which we now call electrons.
-The whole history of quantum physics, arguably starting with the [black-body problem](https://en.wikipedia.org/wiki/Planck%27s_law), accounting for the [Rayleigh--Jeans law](https://en.wikipedia.org/wiki/Rayleigh%E2%80%93Jeans_law), and leading on to the discovery of the [photoelectric effect](https://en.wikipedia.org/wiki/Photoelectric_effect), is a wonderful story, but one that we do not have the space to tell here.
+You might recognise the name, having maybe heard elsewhere of [**Heisenberg's uncertainty principle**](https://en.wikipedia.org/wiki/Uncertainty_principle), which is indeed a special case of this: one can show that the commutator of the (one-dimensional) position and momentum operators is exactly $i\hbar$ (where $\hbar$ is again the very small number known as the [**Planck constant**](https://en.wikipedia.org/wiki/Planck_constant)), whence $\sigma_x\sigma_p\geq\frac{\hbar}{2}$.
 
 ::: {.technical}
 We said that $\hbar$ is very small, and this is fundamental to the relationship between quantum and classic physics.
@@ -490,15 +485,15 @@ We briefly discuss an explicit scenario of where three evolutions behave in such
 Now is a good moment to introduce Alice and Bob (not their real names): our two protagonists who always need to communicate with each other, in scenarios of varying complexity and danger.
 These two play the major role in many communication dramas, though they remain rather lacking in character development.
 
-This time, Alice is sending quantum states to Bob, and Bob does his best to identify them correctly by choosing appropriate measurements.
-Let us start with a simple observation: if a quantum state of the carrier of information is described by a state vector in a $2^n$-dimensional Hilbert space, then the carrier can carry at most $n$ bits of information.
+In this episode of their story, Alice is sending quantum states, called **carriers**, to Bob, and Bob is trying his best to correctly identify them by choosing appropriate measurements.
+Let us start with a simple observation: if the carriers are described by state vectors in a $2^n$-dimensional Hilbert space, then they can encode at most $n$ bits of information.
 For example, Alice can choose one of the $2^n$ states from a pre-agreed orthonormal basis $\{\ket{e_k}\}$, and Bob will be able to distinguish them reliably by choosing the $\{\ket{e_k}\}$ basis for his measurement.
 
 But can Alice and Bob do better than that?
-Can Alice send more than $n$ bits of information per carrier by encoding them in states $\ket{s_1},\ldots,\ket{s_N}$ where $N \geq 2^n$?
+Can Alice send *more* than $n$ bits of information per carrier by encoding them in states $\ket{s_1},\ldots,\ket{s_N}$ where $N \geq 2^n$?
 Can Bob choose a clever measurement and reliably distinguish between all such states?
 
-The answer is _no_.
+The answer is *no*.
 
 
 
@@ -506,38 +501,19 @@ The answer is _no_.
 
 ## Basic quantum coding and decoding
 
-Suppose Alice randomly chooses one of the pre-agreed $N$ signal states $\ket{s_k}$ and sends it to Bob, who tries to identify the signal states by performing a measurement defined by the projectors $P_l$.
-Let $P$ be a projector on a subspace spanned by the signal states $\ket{s_k}$, i.e. $P\ket{s_k} = \ket{s_k}$.
-The dimension $d$ of this subspace is given by $d = \tr P$.
+Suppose Alice uniformly at random chooses one of the pre-agreed $N$ signal states $\ket{s_1},\ldots\ket{s_N}$ and sends it to Bob, who tries to identify the signal states by performing a measurement defined by the projectors $P_1,\ldots,P_N$.
+Let $P$ be a projector on the subspace spanned by the signal states $\ket{s_1},\ldots\ket{s_N}$, i.e. $P\ket{s_k} = \ket{s_k}$ for all $k=1,\ldots,N$.
+The dimension $d$ of this subspace is given by $d=\tr P$.
 We shall assume, without any loss of generality, that Bob designed his measurement in such a way that, whenever he gets outcome $P_k$, he concludes that Alice sent state $\ket{s_k}$.
-His probability of success is given by
+His probability of successfully identifying which state Alice sent to him is given by
 $$
   \Pr(\text{success})
   = \frac{1}{N} \sum_k \braket{s_k}{P_k|s_k}
 $$
-which is the probability that signal state $\ket{s_k}$ is selected (here equal to $1/N$, since all the signal states are equally likely) times the probability that the selected signal state is correctly identified by Bob (which is $\braket{s_k}{P_k|s_k}$), and we sum over all signal states.
+which is the probability that signal state $\ket{s_k}$ is selected (here equal to $1/N$, since Alice chose between all $N$ signal states with equal probability) times the probability that the selected signal state is correctly identified by Bob (which is $\braket{s_k}{P_k|s_k}$), and we sum over all possible signal states.
 
-::: {.idea latex=""}
-We have the following **trace identities**:
-
-- $\tr(ABC) = \tr(BCA) = \tr(CAB)$
-- $\tr\ket{a}\bra{b} = \braket{b}{a}$
-- $\tr A\ket{a}\bra{b} = \braket{b}{A|a}$
-- $\tr BP \leq \tr B$ for any positive semi-definite $B$ and projector $P$.
-
-(To prove this last identity, consider the projector $Q=\id-P$, and note that
-$$
-  \begin{aligned}
-    \tr B
-    &= \tr B(P+Q)
-  \\&= \tr BP + \tr BQ
-  \end{aligned}
-$$
-and that $\tr BQ$ is non-negative.)
-:::
-
-Let us use this case to practice some of the trace identities.
-It is often convenient to write expressions such as $\braket{\psi}{A|\psi}$ in terms of the trace: for any vector $\ket{\psi}$ and operator $A$ we have
+Let us use this as a chance to practice some of the [trace identities](#some-useful-identities).
+In particular, it is often convenient to write expressions such as $\braket{\psi}{A|\psi}$ in terms of the trace: for any vector $\ket{\psi}$ and operator $A$ we have
 $$
   \begin{aligned}
     \braket{\psi}{A|\psi}
@@ -555,7 +531,24 @@ $$
   \end{aligned}
 $$
 where we have also used that $P\ket{s_k}=\ket{s_k}$.
-Let us bound this expression above by using the aforementioned trace identities:
+
+::: {.idea latex=""}
+If $B$ is a positive semi-definite operator, and $P$ is a projector, then
+$$
+  \tr BP \leq \tr B.
+$$
+To prove this, consider the projector $Q=\id-P$, and note that
+$$
+  \begin{aligned}
+    \tr B
+    &= \tr B(P+Q)
+  \\&= \tr BP + \tr BQ
+  \end{aligned}
+$$
+and that $\tr BQ$ is non-negative.
+:::
+
+We can use this inequality to bound the expression above:
 $$
   \begin{aligned}
     \sum_k\frac{1}{N} \braket{s_k}{P_k|s_k}
@@ -568,12 +561,12 @@ $$
   \end{aligned}
 $$
 
-So if Alice encodes $N$ equally likely messages as states in a quantum system that, mathematically speaking, lives in the Hilbert space of dimension $d$, and if Bob decodes by performing a measurement and inferring the message from the result, then Bob's probability of success is bounded by $\frac{d}{N}$.
-If the number $N$ of possible signals exceeds the dimension $d$, then Bob will not be able to reliably distinguish between the signals by any measurement.
+So if Alice encodes $N$ equally likely messages as states in a quantum system that, mathematically speaking, lives in the Hilbert space of dimension $d$, and if Bob decodes by performing a measurement and inferring the message from the result, then Bob's probability of success is bounded above by $\frac{d}{N}$.
+*If the number $N$ of possible signals exceeds the dimension $d$, then Bob will not be able to reliably distinguish between the signals by any measurement*.
 In particular:
 
 ::: {.idea latex=""}
-In this setting^[There is something called [**superdense coding**](https://en.wikipedia.org/wiki/Superdense_coding), where one qubit can actually store _two_ classical bits, but this relies on Alice and Bob both having access to a shared entangled state right from the very start of the experiment.], one qubit can store _at most_ one bit of information that can _reliably_ be read by a measurement.
+With this setup^[There is something called [**superdense coding**](https://en.wikipedia.org/wiki/Superdense_coding), where one qubit can actually store _two_ classical bits, but this relies on Alice and Bob both having access to a shared entangled state right from the very start of the experiment.], one qubit can store *at most* one bit of information that can *reliably* be read by a measurement.
 :::
 
 
@@ -582,14 +575,9 @@ In this setting^[There is something called [**superdense coding**](https://en.wi
 
 ## Distinguishability of non-orthogonal states
 
-We have already mentioned that non-orthogonal states cannot be reliably distinguished, and now it is time to make this statement more precise.
-Suppose Alice sends Bob a message by choosing one of the two non-orthogonal states $\ket{s_1}$ and $\ket{s_2}$, where both are equally likely to be chosen.
-What is the probability that Bob will decode the message correctly and what is the best (i.e. the one that maximises this probability) measurement?
-As a general rule, before you embark on any calculations, check for symmetries, special cases, and anything that may help you to visualise the problem and make intelligent guesses about the solution.
-One of the most powerful research tools is a good guess.
-In fact, this is what real research is about: educated guesses that guide your calculations.
-In this particular case you can use symmetry arguments to guess the optimal measurement --- see Figure \@ref(fig:optimal-measurement).
-Once you have guessed the answer, you might as well do the calculations.
+We [have already mentioned](#projection-rule-and-incomplete-measurements) that non-orthogonal states cannot be reliably distinguished, and now we can make this statement more precise.
+Suppose Alice sends Bob a message by choosing one of the two *non-orthogonal* states $\ket{s_1}$ and $\ket{s_2}$, where both are equally likely to be chosen.
+What is the probability that Bob will decode the message correctly, and what is the best (i.e. the one that maximises this probability) choice of measurement?^[As a general rule, before you embark on any calculations, check for symmetries, special cases, and anything that may help you to visualise the problem and make intelligent guesses about the solution. One of the most powerful research tools is a good guess! In fact, this is what real research is about: educated guesses that guide your calculations. In this particular case you can use symmetry arguments to guess the optimal measurement --- see Figure \@ref(fig:optimal-measurement). Once you have guessed the answer, you might as well do the calculations.]
 
 (ref:optimal-measurement-caption) The optimal measurement to distinguish between the two equally likely non-orthogonal signal states $\ket{s_1}$ and $\ket{s_2}$ is described by the two orthogonal vectors $\ket{d_1}$ and $\ket{d_2}$ placed symmetrically around the signal states.
 
@@ -610,7 +598,10 @@ Once you have guessed the answer, you might as well do the calculations.
 \end{tikzpicture}
 ```
 
-Suppose Bob's measurement is described by projectors $P_1$ and $P_2$, with the inference rule "$P_1$ implies $\ket{s_1}$; $P_2$ implies $\ket{s_2}$".
+Thinking about what we have already seen, we should expect that how well we can correctly distinguish between $\ket{s_1}$ and $\ket{s_2}$ is directly proportional to "how close" they are to being orthogonal --- if they are orthogonal, then we can distinguish perfectly; if they are identical (i.e. collinear), then we cannot distinguish between them at all.
+Hopefully, then, our final answer will depend on the angle between $\ket{s_1}$ and $\ket{s_2}$.
+
+So suppose Bob's measurement is described by projectors $P_1$ and $P_2$, chosen such that "$P_1$ implies $\ket{s_1}$, and $P_2$ implies $\ket{s_2}$".
 Then
 $$
   \begin{aligned}
@@ -630,8 +621,9 @@ $$
 \end{aligned}
 $$
 Let us look at the operator $D = \proj{s_1} - \proj{s_2}$ that appears in the last expression.
-This operator acts on the subspace spanned by $\ket{s_1}$ and $\ket{s_2}$; it is Hermitian; the sum of its two (real) eigenvalues is zero; and $\tr D=\braket{s_1}{s_1}-\braket{s_2}{s_2}=0$.
+This operator acts on the subspace spanned by $\ket{s_1}$ and $\ket{s_2}$; it is Hermitian; the sum of its two (real) eigenvalues is zero (whence $\tr D=\braket{s_1}{s_1}-\braket{s_2}{s_2}=0$).
 Let us write $D$ as $\lambda(\proj{d_+} - \proj{d_-})$, where $\ket{d_\pm}$ are the two orthonormal eigenstates of $D$, and $\pm\lambda$ are the corresponding eigenvalues.
+
 Now we write
 $$
 \begin{aligned}
@@ -645,10 +637,11 @@ $$
 \end{aligned}
 $$
 where we have dropped the non-negative term $\tr P_1\ket{d_-}\bra{d_-}$.
-In fact, it is easy to see that we will maximise the expression above by choosing $P_1 = \proj{d_+}$ (and $P_2 = \proj{d_-}$).
+In fact, it is easy to see that we will maximise the expression above by choosing $P_1 = \proj{d_+}$ and $P_2 = \proj{d_-}$.
 The probability of success is then bounded by $\frac12(1+\lambda)$.
 All we have to do now is to find the positive eigenvalue $\lambda$ for the operator $D$.
-We can do this, of course, by solving the characteristic equation for a matrix representation of $D$, but, as we are now practising the trace operations, we can also notice that $\tr D^2 = 2\lambda^2$, and then evaluate the trace of $D^2$.
+
+We can do this, of course, by solving the characteristic equation for a matrix representation of $D$, but, since we are practising using the trace identities, we can also notice that $\tr D^2 = 2\lambda^2$, and then evaluate the trace of $D^2$.
 We use the trace identities and obtain
 $$
   \begin{aligned}
@@ -664,7 +657,7 @@ $$
  = \frac12\left( 1+ \sqrt{1-|\braket{s_1}{s_2}|^2} \right).
 $$
 
-We can parametrise $|\braket{s_1}{s_2}| = \cos\alpha$, and interpret $\alpha$ as the angle between $\ket{s_1}$ and $\ket{s_2}$.
+We can parametrise $|\braket{s_1}{s_2}| = \cos\alpha$, where $\alpha$ is then the angle between $\ket{s_1}$ and $\ket{s_2}$.
 
 ```{r,engine='tikz',fig.width=2}
 \definecolor{primary}{RGB}{177,98,78}
@@ -680,7 +673,7 @@ We can parametrise $|\braket{s_1}{s_2}| = \cos\alpha$, and interpret $\alpha$ as
 \end{tikzpicture}
 ```
 
-This allows us to express our findings in a clearer way: given two equally likely states, $\ket{s_1}$ and $\ket{s_2}$, such that $|\braket{s_1}{s_2}| = \cos\alpha$, the probability of correctly identifying the state by a projective measurement is bounded by
+This allows us to express our findings in a clearer way: given two equally likely states, $\ket{s_1}$ and $\ket{s_2}$, such that $|\braket{s_1}{s_2}| = \cos\alpha$, the probability of correctly identifying the state by a projective measurement is bounded by^[Here we use that $\cos^2\alpha+\sin^2\alpha=1$ for any $\alpha$.]
 $$
  \Pr (\text{success})
  = \frac12(1 + \sin\alpha),
@@ -690,7 +683,7 @@ and the optimal measurement that achieves this bound is determined by the eigenv
 It makes sense, right?
 If we try just guessing the state, without any measurement, then we expect $\Pr (\text{success}) = \frac12$.
 This is our lower bound, and in any attempt to distinguish the two states we should do better than that.
-If the two signal states are very close to each other then $\sin\alpha$ is small and we are slightly better off than guessing.
+If the two signal states are very close to each other, then $\sin\alpha$ is small and we are slightly better off than guessing.
 As we increase $\alpha$, the two states become more distinguishable, and, as we can see from the formula, when the two states become orthogonal they also become completely distinguishable.
 
 
@@ -716,7 +709,7 @@ As we increase $\alpha$, the two states become more distinguishable, and, as we 
 Even though multiplying and adding probability amplitudes is essentially all there is to quantum theory, we hardly ever multiply and add amplitudes in a pedestrian way.
 Instead, as we have seen, we neatly tabulate the amplitudes into vectors and matrices and let the matrix multiplication take care of multiplication and addition of amplitudes corresponding to different alternatives.
 Thus vectors and matrices appear naturally as our bookkeeping tools: we use vectors to describe quantum states, and matrices (operators) to describe quantum evolutions and measurements.
-This leads to a convenient mathematical setting for quantum theory, which is a complex vector space with an inner product, often referred to as a Hilbert space.
+This leads to a convenient mathematical setting for quantum theory: a complex vector space with an inner product (which is exactly a Hilbert space, since we only work in finite dimension).
 It turns out, somewhat miraculously, that this pure mathematical construct is exactly what we need to formalise quantum theory.
 It gives us a precise language which is appropriate for making empirically testable predictions.
 At a very instrumental level, quantum theory is a set of rules designed to answer questions such as "given a specific preparation and a subsequent evolution, how can we compute probabilities for the outcomes of such-and-such measurement".
@@ -725,7 +718,26 @@ Here is how we represent preparations, evolutions and measurements in mathematic
 Note that we have already said much of the below, but we are summarising it again now in a more precise way, formally defining the mathematical framework of quantum theory that we use.
 
 We also need to point out that a vital part of the formalism of quantum theory is missing from the following description, namely the idea of **tensor products**.
-To talk about this, we need to introduce the notion of **entanglement**, and this will be the subject of [Chapter 5](#quantum-entanglement).
+To talk about this, we need to introduce the notion of **entanglement**, and this will be the subject of the [next chapter](#quantum-entanglement).
+
+::: {.technical}
+It is a very reasonable question to ask *why* this formalism (Hilbert spaces, unitary operators, the Born rule) is "the good one".
+One answer is that "it just works" --- the calculations that we do in this framework give us answers which are in agreement with the results of physical experiments --- but this can be rather unsatisfying as an answer.
+
+Quite beautifully, it turns out that if we start from just *five* axioms, then we can prove that our choice of formalism is actually the only one that makes sense.
+This is the result of the paper "Quantum Theory From Five Reasonable Axioms", by L. Hardy [arXiv:quant-ph/0101012](https://arxiv.org/abs/quant-ph/0101012).
+We start by saying that a quantum system should be characterised by two integers: the number of degrees of freedom $K$, and the dimension $N$.
+The former is (roughly) the minimum number of real numbers needed to specify any state; the latter is the maximum number of states that can be distinguished from one another in one single measurement.
+The five axioms are then as follows.
+
+1. *Probabilities.* Relative frequencies of observed outcomes from measuring an ensemble of $n$ systems tend to a well-defined value, called the **probability**, when $n$ tends to infinity.
+2. *Simplicity.* The integer $K$ is a function of $N$, and takes the minimum possible value consistent with these axioms for each $N$.
+3. *Subspaces.* If a system is such that its states all lie within an $M$-dimensional subspace (for some $M<N$), then it behaves exactly like a system of dimension $M$.
+4. *Composite systems.* Composite systems behave multiplicatively, i.e. if a system is a composite of two subsystems $A$ and $B$, then $N=N_AN_B$ and $K=K_AK_B$.
+5. *Continuity.* Given any two pure states of a system, there exists a continuous reversible transformation of the system that sends one to the other.
+
+What is particularly nice, as a bonus result, is that if we make one tiny change to these axioms --- just dropping the word "continuous" from the fifth axiom --- then the result is exactly *classical* probability theory.
+:::
 
 
 ### Quantum states
@@ -739,15 +751,11 @@ In particular, states forming orthonormal bases are always perfectly distinguish
 
 ### Quantum evolutions
 
-**TO-DO: really rework this bit (look at Berge.pdf for inspiration?)**
-
-**TO-DO: actually... maybe go back and fix the previous introduction to quantum dynamics at the end of §3?**
-
 ::: {.idea latex=""}
 Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.
 :::
 
-Unitary operators describing evolutions of quantum systems are usually derived from the **Schrödinger equation**.^[Recall our previous discussion of this equation in [Chapter 3](#quantum-gates).]
+Unitary operators describing evolutions of quantum systems are usually derived from the **Schrödinger equation**.^[Recall [our previous discussion](#some-quantum-dynamics) of this equation.]
 $$
   \frac{\mathrm{d}}{\mathrm{d}t} \ket{\psi(t)}
   = -\frac{i}{\hbar} H \ket{\psi(t)}
@@ -762,7 +770,7 @@ $$
   \\\text{where}\quad U(t) = e^{-\frac{i}{\hbar}Ht}.
   \end{gathered}
 $$
-Any unitary matrix can be represented^[We ignore convergence issues.] as the exponential of some Hermitian matrix $H$ and some real coefficient $t$:
+Any unitary matrix can be represented as the exponential of some Hermitian matrix $H$ and some real coefficient $t$:
 $$
   \begin{aligned}
     e^{-itH}
@@ -795,7 +803,7 @@ This diagram should be read from left to right, and the horizontal line represen
 
 ### Measurements
 
-A complete measurement in quantum theory is determined by the choice of an orthonormal basis $\{\ket{e_i}\}$ in $\mathcal{H}$, and every such basis (in principle) represents a possible measurement.
+A complete measurement in quantum theory is determined by the choice of an orthonormal basis $\{\ket{e_1},\ldots,\ket{e_n}\}$ in $\mathcal{H}$, and every such basis (in principle) represents a possible measurement.
 Given a quantum system in state $\ket{\psi}$ such that
 $$
   \ket{\psi} = \sum_i \ket{e_i}\braket{e_i}{\psi},
