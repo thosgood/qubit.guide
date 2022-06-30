@@ -190,7 +190,7 @@ $$
     & \equiv \ket{111}.
   \end{aligned}
 $$
-A *classical* register composed of three bits can store *only one* of these two binary strings at any time; a *quantum* register composed of three qubits can store *both of them* in a superposition.
+A *classical* **register** (that is, a collection of bits) composed of three bits can store *only one* of these two binary strings at any time; a *quantum* register composed of three qubits can store *both of them* in a superposition.
 
 Indeed, if we start with the state $\ket{011}$ and apply the Hadamard gate to the first qubit (which is the same as applying $H\otimes\id\otimes\id$), then, given that linear combinations distribute over tensor products, we obtain
 $$
@@ -552,7 +552,8 @@ Here is a dramatic version.
 
 This raises a natural "philosophical" question: what do we really *mean* by teleportation?
 A key part of this question is understanding what happens to our original qubit when we teleport it.
-As it turns out, it must necessarily be *destroyed*, as we now explain.
+Note that the actual physical electron (or whatever implementation of qubits we are using) does not suddenly move through space --- what is teleported is the *state* of the qubit, but the argument can be made that if two qubits are entirely indistinguishable from any measurements then they really are "the same" in every way that matters, and so the qubit which now has the original qubit's state "is the same as" the original qubit.
+As it turns out, this process necessarily *destroys* the original qubit's state, as we now explain.
 
 ::: {.technical}
 The first actual teleportation experiment was successfully achieved in 1997 ([arXiv:quant-ph/9710013](https://arxiv.org/abs/quant-ph/9710013)); in 2012 a record distance was set: an entangled photon pair was used to teleport a state 143 kilometres/88 miles ([arXiv:1205.3909](https://arxiv.org/abs/1205.3909)); in 2017, successful ground-to-satellite teleportation was achieved ([arXiv:](https://arxiv.org/abs/1707.00934)).
@@ -629,7 +630,7 @@ Universal quantum cloners are _impossible_.
 ### Controlled-phase
 
 Needless to say, not everything is about the controlled-$\texttt{NOT}$ gate.
-Another common two-qubit gate is the **controlled-phase** gate $\texttt{c-}P_\varphi$.
+Another common two-qubit gate is the **controlled-phase** gate, denoted $\texttt{c-}P_\varphi$.
 
 ::: {.idea latex=""}
 | controlled-phase |
@@ -713,7 +714,7 @@ and then the controlled-$Z$ operation flips the sign in front of $\ket{11}$
 \end{equation*}
 ```
 
-which results in the entangled state.
+which results in an entangled state.
 
 
 
@@ -790,12 +791,12 @@ Consider the following circuit.
   \end{quantikz}
 \end{equation*}
 ```
-where $\ket{u}$ is an _eigenstate_ of $U$ (that is, $U\ket{u} = e^{i\varphi}\ket{u}$ for some $\varphi$).
+where $\ket{u}$ is an _eigenstate_ of $U$, so that $U\ket{u} = e^{i\varphi}\ket{u}$ for some $\varphi$.
 ::::
 
 This should look familiar: it is the usual interference circuit, but with the phase gate replaced by a controlled-$U$ gate, which will mimic the phase gate, as we shall soon see.
 Note that the second qubit is prepared in state $\ket{u}$, which is _required to be an eigenstate of $U$_.
-The circuit effects the following sequence of transformations (omitting the normalisation factors):
+The circuit effects the following sequence of transformations:^[Omitting, as per usual, the normalisation factors.]
 $$
   \begin{aligned}
     \ket{0}\ket{u}
@@ -816,21 +817,20 @@ $$
 Note that the second qubit does _not_ get entangled with the first one: it remains in its original state $\ket{u}$.
 However, the interaction between the two qubits introduces a phase shift on the first qubit.
 This may look like an unnecessarily complicated way of introducing phase shifts, but, as we shall soon see, this is how quantum computers do it.
-Let me give you a preview of things to come.
+Here is a preview of things to come.
 
 Consider the following $x$-controlled-$U$ operation:
 $$
-  \begin{gathered}
-    \left[
-      \begin{array}{cccc}
-        \id & 0 & 0 & 0
-      \\0 & \id & 0 & 0
-      \\0 & 0 & \id & 0
-      \\0 & 0 & 0 & X
-      \end{array}
-    \right]
-  \\[1em]
-    =\proj{00}\otimes\id
+  \left[
+    \begin{array}{cccc}
+      \id & 0 & 0 & 0
+    \\0 & \id & 0 & 0
+    \\0 & 0 & \id & 0
+    \\0 & 0 & 0 & X
+    \end{array}
+  \right]
+  = \begin{gathered}
+    \proj{00}\otimes\id
   \\+ \proj{01}\otimes\id
   \\+ \proj{10}\otimes\id
   \\+ \proj{11}\otimes X.
