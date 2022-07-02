@@ -4,12 +4,12 @@
 > Also a first look at the **partial trace**.
 
 We cannot always assign a definite state vector to a quantum system.
-It may be that the system is part of a composite system that is in an entangled state, or it may be that our knowledge of the preparation of a particular system is insufficient to determine its state (for example, someone may prepare a particle in one of the states $\ket{\psi_1}, \ket{\psi_2}, \ldots, \ket{\psi_n}$, with (respective) probabilities $p_1, p_2, \ldots, p_n$).
+It may be that the system is part of a composite system that is in an entangled state, or it may be that our knowledge of the preparation of a particular system is insufficient to determine its state --- for example, someone may prepare a particle in one of the states $\ket{\psi_1}, \ket{\psi_2}, \ldots, \ket{\psi_n}$, with (respective) probabilities $p_1, p_2, \ldots, p_n$, and then give it to us without telling us which state $\ket{\psi_k}$ it's actually in.
 Nevertheless, in either case we are able to make statistical predictions about the outcomes of measurements performed on the system using a more general description of quantum states.
 
-We have already mentioned that the existence of entangled states begs an obvious question: if we cannot attribute a state vectors to an individual quantum system then how shall we describe its quantum state?
+We have already mentioned that the existence of entangled states leads to an obvious question: if we cannot attribute a state vectors to an individual quantum system, then how should we describe its quantum state?
 In this chapter we will introduce an alternate description of quantum states that can be applied both to a composite system and to any of its subsystems.
-Our new mathematical tool is called a **density operator**.^[If we choose a particular basis, operators become matrices. Here I will use both terms (density _operators_ and density _matrices_) interchangeably.]
+Our new mathematical tool is called a **density operator**.^[If we choose a particular basis, operators become matrices. Throughout this book we use both terms (density *operators* and density *matrices*) pretty interchangeably.]
 We will start with the density operator as a description of the mixture of quantum states, and will then discuss the partial trace, which is a unique operation that takes care of the reduction of a density operator of a composite system to density operators of its components.
 
 <lite-youtube videoid="7HAqkivzt-I" playlabel="Play: Problems with state vectors"></lite-youtube>
@@ -24,29 +24,38 @@ We will start with the density operator as a description of the mixture of quant
 
 <lite-youtube videoid="pyTxPQLy6SE" playlabel="Play: Density operators"></lite-youtube>
 
-If you are an impatient mathematically minded person, who feels more comfortable when things are properly defined right from the beginning, here is your definition:^[A self-adjoint matrix $M$ is said to be **non-negative**, or **positive semi-definite**, if $\braket{v}{M|v}\geq 0$ for any vector $\ket{v}$, or if all of its eigenvalues are non-negative, or if there exists a matrix $A$ such that $M=A^\dagger A$. (This is called a **Cholesky factorization**.)]
+If you are an impatient, more mathematically minded person, who feels most comfortable when things are properly defined right from the beginning, here is your definition:^[Recall that a Hermitian matrix $M$ is said to be **non-negative**, or **positive semi-definite**, if $\braket{v}{M|v}\geq 0$ for any vector $\ket{v}$, or if all of its eigenvalues are non-negative, or if there exists another matrix $A$ such that $M=A^\dagger A$. (This is called a **Cholesky factorization**.)]
 
 ::: {.idea latex=""}
-A **density operator** $\rho$ on a finite dimensional Hilbert space $\mathcal{H}$ is any non-negative self-adjoint operator with trace equal to one.
+A **density operator** $\rho$ on a Hilbert space $\mathcal{H}$ is a non-negative Hermitian operator with trace equal to one:
+
+- $\rho^\dagger=\rho$
+- $\braket{v}{\rho|v}\geq0$ for all $\ket{v}$
+- $\tr\rho=1$.
 :::
 
-It follows that any such $\rho$ can always be diagonalised, that the eigenvalues are all real and non-negative, and that the eigenvalues sum to one.
-Moreover, given two density operators $\rho_1$ and $\rho_2$, we can always construct another density operator as a convex sum of the two:
+It follows that any such $\rho$ can always be diagonalised, that the eigenvalues are all real and non-negative, and that the eigenvalues sum to $1$.
+Moreover, given two density operators $\rho_1$ and $\rho_2$, we can always construct another density operator as a **convex sum** of the two:
 $$
   \rho = p_1\rho_1 + p_2\rho_2
-  \qquad\text{where}\quad
-  p_1, p_2 \geq 0
-  \text{ and }
-  p_1+p_2 = 1.
 $$
-You should check that $\rho$ has all the defining properties of a density matrix, i.e. that it is self-adjoint, non-negative, and that its trace is one.
-This means that density operators form a convex set.^[A subset of a vector space is said to be **convex** if, for any two points in the subset, the straight line segment joining them is also entirely contained inside the subset.]
+where $\p_1,p_2\geq$ are such that $p_1+p_2=1$.
+You should check that the resulting $\rho$ has all the defining properties of a density matrix, i.e. that it is Hermitian, non-negative, and that its trace is $1$.
+This means that density operators form a **convex set**: a subset of a vector space is said to be **convex** if, for any two points in the subset, the straight line segment joining them is also entirely contained inside the subset.
 
-An important example of a density operator is a rank one projector.^[The **rank** of a matrix is the number of its non-zero eigenvalues.]
-Any quantum state that can be described by the state vector $\ket{\psi}$, called a **pure state**, can be also described by the density operator  $\rho=\proj{\psi}$.
-Pure states are the extremal points in the convex set of density operators: they cannot be expressed as a convex sum of other elements in the set.
-In contrast, all other states, called **mixed states**, can be always written as the convex sum of pure states: $\sum_i p_i \proj{\psi_i}$ ($p_i\geq 0$ and $\sum_i p_i=1$).
-Now that we have cleared the mathematical essentials, we will turn to physical applications.
+An important example of a density operator is a rank-one projector.^[Recall that the rank of a matrix is equal to the number of its non-zero eigenvalues, or (equivalently) the dimension of its image.]
+Any quantum state that can be described by the state vector $\ket{\psi}$ (and thus called a **pure state**) can be also described by the density operator $\rho=\proj{\psi}$.
+Pure states are the extremal points in the convex set of density operators: they cannot be expressed as a non-trivial convex sum of other elements in the set.
+In contrast, all other states, called **mixed states**, can be always written as the convex sum of pure states: $\sum_i p_i \proj{\psi_i}$ for some $p_i\geq 0$ with $\sum_i p_i=1$.
+
+::: {.technical}
+Convex spaces show up in many areas of mathematics: combinatorists and discrete geometers are often interested in [**convex polytopes**](https://en.wikipedia.org/wiki/Convex_polytope), and the special case of [**simplices**](https://en.wikipedia.org/wiki/Simplex) is even more fundamental, turning in up in algebraic topology, higher algebraic geometry, and, more generally, [higher category theory](https://en.wikipedia.org/wiki/Higher_category_theory).
+Closer to what we are studying, the notion of [**entropy**](https://en.wikipedia.org/wiki/Entropy_(information_theory)) in (classical) information theory is somehow inherently convex (see e.g. [arXiv:1106.1791](https://arxiv.org/abs/1106.1791)).
+
+The specific type of convex polytope that we are interested in turns out to be a [**convex hull**](https://en.wikipedia.org/wiki/Convex_hull), which are also found all throughout mathematics.
+:::
+
+Now that we have settled the mathematical essentials, we will turn to physical applications.
 
 
 
@@ -57,72 +66,79 @@ Now that we have cleared the mathematical essentials, we will turn to physical a
 <lite-youtube videoid="OMIN_H-n-Ac" playlabel="Play: Statistical mixtures of states"></lite-youtube>
 
 Let us start with probability distributions over state vectors.
-Suppose Alice prepares a quantum system and hands it over to Bob who subsequently measures observable $M$.
-If Alice's preparation is described by a state vector $\ket{\psi}$, then, quantum theory declares, the average value of any observable $M$ is given by $\braket{\psi}{M|\psi}$, which can be also written as^[If $M$ is one of the orthogonal projectors $P_k$ describing the measurement, then the average $\av{P_k}$ is the probability of the outcome $k$ associated with this projector.]
+Suppose Alice prepares a quantum system and hands it over to Bob, who subsequently measures observable $M$.
+If Alice's preparation is described by a state vector $\ket{\psi}$, then, quantum theory declares, the average value of any observable $M$ is given by $\braket{\psi}{M|\psi}$, which we have previously also written as^[If $M$ is one of the orthogonal projectors $P_k$ describing the measurement, then the average $\av{P_k}$ is the probability of the outcome $k$ associated with this projector.]
 $$
   \av{M} = \tr M\proj{\psi}.
 $$
+
 This way of expressing the average value makes a clear separation between the contributions from the state preparation and from the choice of the measurement.
-We have two operators under the trace: one of them, $\proj{\psi}$, describes the state preparation, and the other one, $M$, the measurement.
-Now, suppose Alice prepares the quantum system in one of the states $\ket{\psi_1},\ldots,\ket{\psi_m}$, choosing state $\ket{\psi_i}$ with probability $p_i$, and hands the system to Bob without telling him which state was chosen.
-The possible states $\ket{\psi_i}$ are normalised but need not be orthogonal.
-We call this situation a **mixture of the states** $\ket{\psi_i}$, or a **mixed state** for short.
+We have two operators inside the trace: $\proj{\psi}$ describes the state preparation, and $M$ describes the measurement.
+
+Now, suppose Alice prepares the quantum system in one of the (normalised, but not necessarily orthogonal) states $\ket{\psi_1},\ldots,\ket{\psi_m}$, choosing state $\ket{\psi_i}$ with probability $p_i$.
+She then hands the system to Bob without telling him which state she chose.
+We call this situation a **(statistical) mixture of the states** $\ket{\psi_i}$, or a **mixed state** for short.^[A pure state can be seen as a special case of a mixed state, where all but one the probabilities $p_i$ equal zero. So by talking about mixed states, we're still able to talk about everything that we've already seen up to this point.]
 
 ::: {.idea latex=""}
-Remember, a mixture of states is very different from a superposition of states: a superposition _always_ yields a definite state vector, whereas a mixture does _not_, and so must be described by a density operator.
+It is important to note that a mixture of states is very different from a superposition of states: a superposition *always* yields a definite state vector, whereas a mixture does *not*, and so must be described by a density operator.
 :::
 
-Bob knows the ensemble of states $\ket{\psi_1},\ldots,\ket{\psi_m}$ and the corresponding probability distribution $p_1,\ldots,p_m$, and can hence calculate $\av{M}$ as^[A pure state can be seen as a special case of a mixed state, where all but one the probabilities $p_i$ equal zero.]
+Let's be extra clear about this distinction between superpositions and statistical mixtures.
+If Alice had prepared the system in the superposition $\sum_i p_i\ket{\psi_i}$, then both her *and* Bob would describe it by the state vector $\sum_i p_i\ket{\psi_i}$.
+If she instead follows the above procedure, then *she* knows that it is simply described by the state vector $\ket{\psi_i}$, but the best description available to *Bob* is $\sum_i p_i\proj{\psi_i}$, as we will now justify.
+
+What Bob *does* know is the ensemble of states $\ket{\psi_1},\ldots,\ket{\psi_m}$ as well as the corresponding probability distribution $p_1,\ldots,p_m$.
+Using this, he can calculate $\av{M}$ as follows:
 $$
   \begin{aligned}
     \av{M}
     &= \sum_i p_i\left( \tr M\proj{\psi_i} \right)
-  \\&= \tr M \underbrace{\left( \sum_i p_i\proj{\psi_i} \right)}_{\rho}
-  \\&=\tr M\rho.
+  \\&= \tr M \left( \sum_i p_i\proj{\psi_i} \right)
+  \\&=\tr M\rho
   \end{aligned}
 $$
-Again, we have two operators under the trace: $\rho=\sum_i p_i\proj{\psi_i}$, which pertains to the state preparation, and $M$, which describes the measurement.
+where we have simply defined $\rho=\sum_i p_i\proj{\psi_i}$.
+As before, we have two operators under the trace: $\rho=\sum_i p_i\proj{\psi_i}$, which pertains to the state preparation, and $M$, which describes the measurement.
 We shall call the operator
 $$
   \rho = \sum_i p_i \proj{\psi_i}
 $$
-the **density operator**, since it has all the defining properties of the density operator (the convex sum of rank one projectors).
+the **density operator**, since it has all the defining properties of a density operator (it is a convex sum of rank-one projectors).
 It depends on the constituent states $\ket{\psi_i}$ and their probabilities, and it describes our ignorance about the state preparation.
 
-Once we have $\rho$ we can make statistical predictions: for any observable $M$ we have
+Once we have $\rho$ we can make statistical predictions: we have just shown that, for any observable $M$, its expected value is given by
 $$
   \av{M} = \tr M\rho.
 $$
-We see that the exact composition of the mixture does not enter this formula: for computing the statistics associated with any observable property of a system, all that matters is the density operator itself, and not its decomposition into the mixture of states.
+So the exact composition of the mixture does not enter this formula: for computing the statistics associated with any observable property of a system, all that matters is the density operator itself, but *not* its decomposition into the mixture of states.
 This is important because any given density operator, with the remarkable exception of a pure state, can arise from many different mixtures of pure states.
 Consider, for example, the following three scenarios:
 
 1. Alice flips a fair coin.
-    If the result is $\texttt{Heads}$ then she prepares the qubit in the state $\ket{0}$, and if the result is $\texttt{Tails}$ then she prepares the qubit in the state $\ket{1}$.
+    If the result is heads then she prepares the qubit in the state $\ket{0}$, and if the result is tails then she prepares the qubit in the state $\ket{1}$.
     She gives Bob the qubit without revealing the result of the coin-flip.
     Bob's  knowledge of the qubit is described by the density matrix
     $$
       \frac12\proj{0} + \frac12\proj{1}
-      =
-      \begin{bmatrix}
+      = \begin{bmatrix}
         \frac12 & 0
       \\0 & \frac12
       \end{bmatrix}.
     $$
 
-2. Suppose Alice flips a fair coin, as before, but now if the result is $\texttt{Heads}$ then she prepares the qubit in the state $\ket{\bar{0}} = \frac{1}{\sqrt{2}}(\ket{0} + \ket{1})$, and if the result is $\texttt{Tails}$ then she prepares the qubit in the state $\ket{\bar{1}} = \frac{1}{\sqrt{2}}(\ket{0} - \ket{1})$.
+2. Alice flips a fair coin.
+    If the result is heads then she prepares the qubit in the state $\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$, and if the result is tails then she prepares the qubit in the state $\ket{-}=\frac{1}{\sqrt{2}}(\ket{0}-\ket{1})$.
     Bob's knowledge of the qubit is now described by the density matrix
     $$
       \begin{aligned}
-        \frac12\proj{\bar{0}} + \frac12\proj{\bar{1}}
+        \frac12\proj{+} + \frac12\proj{-}
         &=
         \frac12
         \begin{bmatrix}
         \frac12 & \frac12
         \\\frac12 & \frac12
         \end{bmatrix}
-        +
-        \frac12
+        +\frac12
         \begin{bmatrix}
         \frac12 & -\frac12
         \\-\frac12 & \frac12
@@ -135,11 +151,12 @@ Consider, for example, the following three scenarios:
       \end{aligned}
     $$
 
-3. Suppose Alice picks up any pair of orthogonal states of a qubit and then flips the coin to chose one of them.
-    Any two orthonormal states of a qubit, $\ket{u_1}$, $\ket{u_2}$, form a complete basis, so the mixture $\frac12\proj{u_1}+\frac12\proj{u_2}$ gives $\frac12\id$.
+3. Alice flips a fair coin, having already picked an arbitrary pair of orthonormal states $\ket{u_1}$ and $\ket{u_2}$.
+    If the result is heads then she prepares the qubit in the state $\ket{u_1}$, and if the result is tails then she prepares the qubit in the state $\ket{u_2}$.
+    Since any two orthonormal states of a qubit form a complete basis, the mixture $\frac12\proj{u_1}+\frac12\proj{u_2}$ gives $\frac12\id$.
 
-As you can see, these three different preparations yield precisely the same density matrix and are hence statistically indistinguishable.
-In general, two different mixtures can be distinguished (in a statistical sense) if and only if they yield different density matrices.
+As you can see, these three different preparations yield precisely the same density matrix and are thus *statistically indistinguishable*.
+In general, two different mixtures can be distinguished (in a statistical, experimental sense) if and only if they yield different density matrices.
 In fact, the optimal way of distinguishing quantum states with different density operators is still an active area of research.
 
 
@@ -148,14 +165,13 @@ In fact, the optimal way of distinguishing quantum states with different density
 
 ## A few instructive examples, and some less instructive remarks
 
-1. The density matrix corresponding to the state vector $\ket{\psi}$ is the rank one projector $\proj{\psi}$.
+1. The density matrix corresponding to the state vector $\ket{\psi}$ is the rank-one projector $\proj{\psi}$.
     Observe that there is no phase ambiguity, since $\ket{\psi}\mapsto e^{i\phi}\ket{\psi}$ leaves the density matrix unchanged, and each $\ket{\psi}$ gives rise to a distinct density matrix.
 
 2. If Alice prepares a qubit in the state $\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$ then the corresponding density matrix is the projector
     $$
       \proj{\psi}
-      =
-      \begin{bmatrix}
+      = \begin{bmatrix}
         |\alpha|^2 & \alpha\beta^\star
       \\\alpha^\star\beta & |\beta|^2
       \end{bmatrix}.
@@ -165,8 +181,7 @@ In fact, the optimal way of distinguishing quantum states with different density
     In this case all you can say is that your qubit is in a mixed state described by the density matrix
     $$
       |\alpha|^2\proj{0} + |\beta|^2\proj{1}
-      =
-      \begin{bmatrix}
+      = \begin{bmatrix}
         |\alpha|^2 & 0
       \\0 & |\beta|^2
       \end{bmatrix}.
@@ -209,14 +224,12 @@ In fact, the optimal way of distinguishing quantum states with different density
         |\alpha|^2 & \alpha\beta^\star
       \\\alpha^\star\beta & |\beta|^2
       \end{bmatrix}
-      +
-      \frac12
+      +\frac12
       \begin{bmatrix}
         |\alpha|^2 & -\alpha\beta^\star
       \\-\alpha^\star\beta & |\beta|^2
       \end{bmatrix}
-      =
-      \begin{bmatrix}
+      = \begin{bmatrix}
         |\alpha|^2 & 0
       \\0 & |\beta|^2
       \end{bmatrix}.
@@ -239,7 +252,7 @@ In fact, the optimal way of distinguishing quantum states with different density
       \rho = \sum_i\proj{\widetilde\psi_i}
     $$
     where $\ket{\widetilde\psi_i} = \sqrt{p_i}\ket{\psi_i}$, i.e. $p_i=\braket{\widetilde\psi_i}{\widetilde\psi_i}$.
-    This form is more compact, but you have to remember that the state vectors are _not_ normalised.
+    This form is more compact, but you have to remember that the state vectors are *not* normalised.
     We tend to mark such states with the tilde, e.g. $\ket{\widetilde\psi}$, but you may have your own way to remember.
 
 
@@ -370,8 +383,7 @@ Suppose someone writes down for you a density matrix of two qubits in the standa
 The tensor product structure of this $(4\times 4)$ matrix means that it is has a block form:
 $$
   \rho^{\mathcal{AB}}
-  =
-  \left[
+  = \left[
     \begin{array}{c|c}
       P & Q
     \\\hline
@@ -564,6 +576,8 @@ $$
 
 ### Purification of mixed states
 
+**TO-DO: mention <https://en.wikipedia.org/wiki/Schr%C3%B6dinger%E2%80%93HJW_theorem>**
+
 Given a mixed state $\rho$, a **purification** of $\rho$ is a pure state $\proj{\psi}$ of some potentially larger system such that $\rho$ is equal to a partial trace of $\proj{\psi}$.
 
 1. Show that an arbitrary mixed state $\rho$ always has a purification.
@@ -594,7 +608,7 @@ $$
   \|A\|_{\tr} = \tr \left(\sqrt{A^\dagger A}\right).
 $$
 
-1. Show that, if $A$ is self-adjoint, then its trace norm is equal to the sum of the absolute values of its eigenvalues.
+1. Show that, if $A$ is Hermitian, then its trace norm is equal to the sum of the absolute values of its eigenvalues.
 
 2. What is the trace norm of an arbitrary density matrix?
 
