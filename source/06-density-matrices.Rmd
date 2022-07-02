@@ -257,20 +257,20 @@ You cannot tell the difference between the equally weighted mixture of $\alpha\k
       \frac{1}{n}\sum_{i=1}^n \proj{\psi_i}
       = \frac{1}{n}\id.
     $$
-    This is called the **maximally mixed state**.
+    This is called the **maximally mixed**, or **maximally entangled**, state.
     For qubits, any pair of orthogonal states taken with equal probabilities gives the maximally mixed state $\frac12\id$.
 
 ::: {.idea latex=""}
 In maximally mixed states, outcomes of *any* measurement are completely random.
 :::
 
-6. It is often convenient to write density operators in terms of projectors on states which are *not* normalised, incorporating the probabilities into the length of the state vector:
-    $$
-      \rho = \sum_i\proj{\tilde\psi_i}
-    $$
-    where $\ket{\tilde\psi_i} = \sqrt{p_i}\ket{\psi_i}$, i.e. $p_i=\braket{\tilde\psi_i}{\tilde\psi_i}$.
-    This form is more compact, but you have to remember that the state vectors are *not* normalised.
-    We tend to mark such states with the tilde, e.g. $\ket{\tilde\psi}$, but you may have your own way to remember.
+It is often convenient to write density operators in terms of projectors on states which are *not* normalised, incorporating the probabilities into the length of the state vector:
+$$
+  \rho = \sum_i\proj{\tilde\psi_i}
+$$
+where $\ket{\tilde\psi_i} = \sqrt{p_i}\ket{\psi_i}$, i.e. $p_i=\braket{\tilde\psi_i}{\tilde\psi_i}$.
+This form is more compact, but you have to remember that the state vectors are *not* normalised.
+We tend to mark such states with the tilde, e.g. $\ket{\tilde\psi}$, but you may have your own way to remember.
 
 
 
@@ -280,39 +280,44 @@ In maximally mixed states, outcomes of *any* measurement are completely random.
 
 <lite-youtube videoid="qmj0aD8pYho" playlabel="Play: The Bloch ball"></lite-youtube>
 
-We have already talked in some depth about the Bloch sphere in [Chapter 2]{#qubits} and [Chapter 3]{#quantum-gates}, but now that we are considering density operators (which are strictly more general than state vectors), we are actually interested in the Bloch _ball_, i.e. not just the sphere of vectors of magnitude $1$, but instead the ball of vectors of magnitude _less than or equal to_ $1$.
+We have already talked in some depth about the Bloch sphere, but now that we are considering density operators (which are strictly more general than state vectors), we are actually interested in the Bloch *ball*,^[Physicists often still refer to the Bloch *ball* as the Bloch *sphere*, even though it really is a ball now, not a sphere.] i.e. not just the sphere of vectors of magnitude $1$, but instead the ball of vectors of magnitude *less than or equal to* $1$.
 
-The most general Hermitian $(2\times 2)$ matrix has four real parameters and can be expanded in the basis composed of the identity and the three Pauli matrices: $\{\id, \sigma_x, \sigma_y, \sigma_z\}$.
-Since the Pauli matrices are traceless, the coefficient of $\id$ in the expansion of a density matrix $\rho$ must be $\frac12$, so that $\tr\rho=1$.
-Thus $\rho$ may be expressed as^[Physicists usually still refer to the Bloch _ball_ as the Bloch _sphere_, even though it really is a ball now, not a sphere.]
+An arbitrary $(2\times 2)$ Hermitian matrix has four real parameters and can be expanded in the basis $\{\id, \sigma_x, \sigma_y, \sigma_z\}$ consisting of the identity and the three Pauli matrices.
+Since the Pauli matrices are traceless, the coefficient of $\id$ in the expansion of a density matrix $\rho$ must be $\frac12$, in order to have $\tr\rho=1$.
+Thus $\rho$ may be expressed as
 $$
   \begin{aligned}
     \rho
     &= \frac12\left( \id +\vec{s}\cdot\vec{\sigma} \right)
-  \\&= \frac12\left( \id + s_x\sigma_x + s_y\sigma_y + s_z\sigma_z \right)
   \\&= \frac12
     \begin{bmatrix}
-      1 + s_z & s_x - is_y
-    \\s_x + is_y & 1 - s_z
+      1+s_z & s_x-is_y
+    \\s_x+is_y & 1-s_z
     \end{bmatrix}.
   \end{aligned}
 $$
+where $\vec{s}=(s_x,s_y,s_z)$ and $\vec{\sigma}=(\sigma_x,\sigma_y,\sigma_z)$.
 The vector $\vec{s}$ is called the **Bloch vector** for the density operator $\rho$.
-Any real Bloch vector $\vec{s}$ defines a trace one Hermitian operator $\rho$, but in order for $\rho$ to be a density operator it must also be non-negative.
+Any real Bloch vector $\vec{s}$ defines a Hermitian operator $\rho$ with $\tr\rho=1$, but in order for $\rho$ to be a density operator it must *also* be non-negative.
 Which Bloch vectors yield legitimate density operators?
+That is, what does the non-negative condition on $\rho$ translate to in terms of the Bloch vector $\vec{s}$?
 
-Let us compute the eigenvalues of $\rho$.
-The sum of the two eigenvalues of $\rho$ is, of course, equal to one ($\tr\rho=1$) and the product is equal to the determinant of $\rho$, which can be computed from the matrix form above:
+To answer this, let's compute the eigenvalues of $\rho$.
+The trace of a matrix is equal to the *sum* of its eigenvalues, and the determinant is equal to the *product* of its eigenvalues.
+We know that $\tr\rho=1$, and we can calculate $\det\rho$ from the matrix form above:
 $$
-  \det\rho
-  = \frac{1}{4}(1-s^2)
-  = \frac12(1+s)\frac12(1-s)
+  \begin{aligned}
+    \det\rho
+    &= \frac{1}{4}(1-s^2)
+  \\&= \frac12(1+s)\frac12(1-s)
+  \end{aligned}
 $$
-where $s=|\vec{s}|$.
+where $s=|\vec{s}|=\sqrt{|s_x|^2+|s_y|^2+|s_z|^2}$.
 It follows that the two eigenvalues of $\rho$ are $\frac12(1\pm s)$.
-They have to be non-negative, and so $s$, the length of the Bloch vector, cannot exceed one.^[One might hope that there is an equally nice visualisation of the density operators in higher dimensions. Unfortunately there isn't.]
-We can now visualise the convex set of $(2\times 2)$ density matrices as a unit ball in three-dimensional Euclidean space: the extremal points, which represent pure states, are the points on the boundary ($s=1$), i.e. the surface of the ball; the maximally mixed state $\id/2$ corresponds to $s=0$, i.e. the centre of the ball.
-In general, the length of the Bloch vector $s$ can be thought of as a "purity" of a state.
+For $\rho$ to be non-negative, its eigenvalues have to be non-negative, and so $s$ (the length of the Bloch vector) cannot exceed $1$.
+
+We can now visualise the convex set of $(2\times 2)$ density matrices as a unit ball in three-dimensional Euclidean space: the extremal points, which represent pure states, are the points on the boundary ($\vec{s}$ such that $s=1$), i.e. the surface of the ball (the Bloch sphere, which we have already seen!); the maximally mixed state $\id/2$ corresponds to $s=0$, i.e. the centre of the ball.^[One might hope that there is an equally nice visualisation of the density operators in higher dimensions. Unfortunately there is *not*.]
+In general, the length of the Bloch vector $s$ can be thought of as the "purity" of a state.
 
 
 
@@ -322,21 +327,23 @@ In general, the length of the Bloch vector $s$ can be thought of as a "purity" o
 
 <lite-youtube videoid="L5HXMlpWAE8" playlabel="Play: Partial trace"></lite-youtube>
 
-We have already trumpeted that one of the most important features of the density operator formalism is its ability to describe the quantum state of a subsystem of a composite system.
-Let me now show you how it works.
+Earlier, we claimed that one of the most important features of the density operator formalism is its ability to describe the quantum state of a subsystem of a composite system.
+Let us now show you how this works.
 
-Given a quantum state of the composite system $\mathcal{AB}$, described by some density operator $\rho^{\mathcal{AB}}$, we obtain reduced density operators $\rho^{\mathcal{A}}$ and $\rho^{\mathcal{B}}$ of subsystems $\mathcal{A}$ and $\mathcal{B}$, respectively, by the partial trace:
+Given a quantum state of the composite system $\mathcal{AB}$ described by some density operator $\rho_{\mathcal{AB}}$, we obtain **reduced** density operators $\rho_{\mathcal{A}}$ and $\rho_{\mathcal{B}}$ of the subsystems $\mathcal{A}$ and $\mathcal{B}$ (respectively) by the **partial trace**:
 $$
   \begin{aligned}
-    \rho^{\mathcal{AB}}
+    \rho_{\mathcal{AB}}
     &\longmapsto
-    \underbrace{\rho^\mathcal{A}=\tr_{\mathcal{B}}\rho^{\mathcal{AB}}}_{\mathrm{partial\,trace\,over}\,\mathcal{B}}\qquad
-  \\\rho^{\mathcal{AB}}
+    \rho_{\mathcal{A}}
+    = \underbrace{\tr_{\mathcal{B}}\rho_{\mathcal{AB}}}_{\mathrm{partial\,trace\,over}\,\mathcal{B}}\qquad
+  \\\rho_{\mathcal{AB}}
     &\longmapsto
-    \underbrace{\rho^\mathcal{B}=\tr_{\mathcal{A}}\rho^{\mathcal{AB}}}_{\mathrm{partial\,trace\,over}\,\mathcal{A}}
+    \rho_{\mathcal{B}}
+    = \underbrace{\tr_{\mathcal{A}}\rho_{\mathcal{AB}}}_{\mathrm{partial\,trace\,over}\,\mathcal{A}}
   \end{aligned}
 $$
-We define the partial trace over $\mathcal{B}$, or $\mathcal{A}$, first on a tensor product of two operators $A\otimes B$ as
+We will revisit the notion of partial trace quite a few times, but for now we simply define the partial trace over $\mathcal{B}$ (or $\mathcal{A}$) first on a tensor product of two operators $A\otimes B$ as
 $$
   \begin{aligned}
     \tr_{\mathcal{B}} (A\otimes B)
@@ -348,87 +355,48 @@ $$
 and then extend to any operator on $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ by linearity.
 
 Here is a simple example.
-Suppose a composite system $\mathcal{AB}$ is in a pure entangled state, which we can always write as
+Suppose a composite system $\mathcal{AB}$ is in a pure entangled state $\ket{\psi_{\mathcal{AB}}}$.
+We can always write this as
 $$
   \ket{\psi_{\mathcal{AB}}}
   = \sum_{i} c_{i} \ket{a_i}\otimes\ket{b_i},
 $$
-where $\ket{a_i}$ and $\ket{b_j}$ are two orthonormal bases (e.g. the Schmidt bases), and where $\sum_i |c_i|^2 = 1$ (due to the normalisation).
-The corresponding density operator of the composite system is the projector $\rho^{\mathcal{AB}}= \proj{\psi_{\mathcal{AB}}}$, which we can write as
+where $\ket{a_i}$ and $\ket{b_j}$ are two orthonormal bases (e.g. the [Schmidt bases](#the-schmidt-decomposition)), and where $\sum_i |c_i|^2 = 1$ (due to the normalisation).
+The corresponding density operator of the composite system is the projector $\rho_{\mathcal{AB}}= \proj{\psi_{\mathcal{AB}}}$, which we can write as
 $$
-  \rho^{\mathcal{AB}}
+  \rho_{\mathcal{AB}}
   = \proj{\psi_{\mathcal{AB}}}
   = \sum_{ij} c_i c^\star_j \ket{a_i}\bra{a_j} \otimes \ket{b_i}\bra{b_j}
 $$
-Let us compute the reduced density operator $\rho^{\mathcal{A}}$ by taking the partial trace over $\mathcal{B}$:
+
+Let us compute the reduced density operator $\rho_{\mathcal{A}}$ by taking the partial trace over $\mathcal{B}$:
 $$
   \begin{aligned}
-    \rho^\mathcal{A}
-    &= \tr_{\mathcal{B}}\rho^{\mathcal{AB}}
+    \rho_{\mathcal{A}}
+    &= \tr_{\mathcal{B}}\rho_{\mathcal{AB}}
   \\&= \tr_{\mathcal{B}} \proj{\psi_{\mathcal{AB}}}
   \\&= \tr_{\mathcal{B}} \sum_{ij} c_i c^\star_j \ket{a_i}\bra{a_j} \otimes \ket{b_i}\bra{b_j}
   \\&= \sum_{ij} c_i c^\star_j \ket{a_i}\bra{a_j}(\tr\ket{b_i}\bra{b_j})
   \\&= \sum_{ij} c_i c^\star_j \ket{a_i}\bra{a_j} \underbrace{\braket{b_i}{b_j}}_{\delta_{ij}}
-  \\& = \sum_{i} |c_i|^2 \proj{a_i}
+  \\& = \sum_{i} |c_i|^2 \proj{a_i}.
   \end{aligned}
 $$
-where we have used the fact that $\tr\ket{b_i}\bra{b_j} = \braket{b_j}{b_i}=\delta_{ij}$.
-In the $\ket{a_i}$ basis, the reduced density matrix $\rho^{\mathcal{A}}$ is diagonal, with entries $p_i=|c_i|^2$.
-We can also take the partial trace over $\mathcal{A}$ and obtain $\rho^\mathcal{B} = \sum_{i} |c_i|^2 \proj{b_i}$.
-In particular, for the maximally entangled states in the $(d\times d)$-dimensional Hilbert spaces $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$,
+So, in the $\ket{a_i}$ basis, the reduced density matrix $\rho_{\mathcal{A}}$ is diagonal, with entries $p_i=|c_i|^2$.
+Similarly, if we take the partial trace over $\mathcal{A}$, then we get $\rho_{\mathcal{B}}=\sum_{i} |c_i|^2 \proj{b_i}$.
+
+In particular, if $\dim\mathcal{H}_{\mathcal{A}}=\dim\mathcal{H}_{\mathcal{B}}=d$, then the maximally entangled state
 $$
   \ket{\psi_{\mathcal{AB}}}
   = \frac{1}{\sqrt{d}} \sum_{i}^d \ket{a_i}\ket{b_i},
 $$
-and the reduced density operators, $\rho^\mathcal{A}$ and $\rho^\mathcal{B}$, are the maximally mixed states: $\rho^\mathcal{A}=\rho^\mathcal{B}=\frac{1}{d}\id$.
+in the $(d\times d)$-dimensional Hilbert space $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ is such that the reduced density operators $\rho_{\mathcal{A}}$ and $\rho_{\mathcal{B}}$ are also the maximally mixed states of their respective subsystems: $\rho_{\mathcal{A}}=\rho_{\mathcal{B}}=\frac{1}{d}\id$.
 It follows that the quantum states of individual qubits in any of the Bell states are maximally mixed: their density matrix is $\frac12\id$.
-A state such as
+
+A bipartite state such as
 $$
   \frac{1}{\sqrt 2} \left( \ket{00} + \ket{11} \right)
 $$
-guarantees perfect correlations when each qubit is measured in the standard basis: the two equally likely outcomes are ($0$ and $0$) or ($1$ and $1$), but any single-qubit outcome, be it $0$ or $1$ or anything else, is completely random.
-
-
-
-
-
-## Partial trace, revisited
-
-If you are given a matrix you calculate the trace by summing its diagonal entries.
-How about the partial trace?
-Suppose someone writes down for you a density matrix of two qubits in the standard basis, $\{\ket{00}, \ket{01}, \ket{10}, \ket{11}\}$, and asks you to find the reduced density matrices of the individual qubits.
-The tensor product structure of this $(4\times 4)$ matrix means that it is has a block form:
-$$
-  \rho^{\mathcal{AB}}
-  = \left[
-    \begin{array}{c|c}
-      P & Q
-    \\\hline
-      R & S
-    \end{array}
-  \right]
-$$
-where $P,Q,R,S$ are $(2\times 2)$ sized sub-matrices.
-The two partial traces can then be evaluated as^[Take any of the Bell states, write its $(4\times 4)$-density matrix explicitly, and then trace over each qubit. In each case you should get the maximally mixed state.]
-$$
-  \begin{aligned}
-    \rho^\mathcal{A}
-    &=
-    \tr_{B}\rho^{\mathcal{AB}}
-    =
-    \left[
-      \begin{array}{c|c}
-        \tr P & \tr Q
-      \\\hline
-        \tr R & \tr S
-      \end{array}
-    \right]
-  \\\rho^\mathcal{B}
-    &= \tr_{A}\rho^{\mathcal{AB}}
-    = P+S.
-  \end{aligned}
-$$
-The same holds for a general $\rho^{\mathcal{AB}}$ on any $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ with corresponding block form ($(m\times m)$ blocks of $(n\times n)$-sized sub-matrices, where $m$ and $n$ are the dimensions of  $\mathcal{H}_{\mathcal{A}}$ and $\mathcal{H}_{\mathcal{B}}$, respectively).
+guarantees *perfect correlations* when each qubit is measured in the standard basis: the two outcomes are "$0$ and $0$" or "$1$ and $1$" (which are equally likely), and we will never observe e.g. "$0$ and $1$", but the outcome of either *single*-qubit subsystem is completely random.
 
 
 
@@ -459,7 +427,7 @@ Note that $p_j=\braket{\widetilde\psi_j}{\widetilde\psi_j}$.
 Then the partial trace over $\mathcal{B}$ gives the reduced density operator of subsystem $\mathcal{A}$:
 $$
   \begin{aligned}
-    \rho^{\mathcal{A}}
+    \rho_{\mathcal{A}}
     &=\tr_{\mathcal{B}} \sum_{ij} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} \otimes \ket{b_i}\bra{b_j}
   \\&= \sum_{ij} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} (\tr\ket{b_i}\bra{b_j})
   \\&= \sum_{ij} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} \braket{b_j}{b_i}
@@ -468,7 +436,7 @@ $$
   \end{aligned}
 $$
 
-Now, let us see how $\rho^{\mathcal{A}}$ can be understood in terms of mixtures.
+Now, let us see how $\rho_{\mathcal{A}}$ can be understood in terms of mixtures.
 Let us place subsystems $\mathcal{A}$ and $\mathcal{B}$ in separate labs, run by Alice and Bob, respectively.
 When Bob measures part $\mathcal{B}$ in the $\ket{b_j}$ basis and obtains result $k$, which happens with the probability $p_k$, he prepares subsystem $\mathcal{A}$ in the state $\ket{\psi_k}$:
 $$
@@ -477,8 +445,8 @@ $$
   \ket{\psi_k}\ket{b_k}.
 $$
 Bob does not communicate the outcome of his measurement.
-Thus, from Alice's perspective, Bob prepares a mixture of $\ket{\psi_1},\ldots,\ket{\psi_m}$, with probabilities $p_1,\ldots,p_m$, which means that Alice, who knows the joint state but not the outcomes of Bob's measurement, may associate density matrix $\rho^\mathcal{A}=\sum_i p_i\proj{\psi_i}$ with her subsystem $\mathcal{A}$.
-This is the same $\rho^{\mathcal{A}}$ which we obtained by the partial trace.
+Thus, from Alice's perspective, Bob prepares a mixture of $\ket{\psi_1},\ldots,\ket{\psi_m}$, with probabilities $p_1,\ldots,p_m$, which means that Alice, who knows the joint state but not the outcomes of Bob's measurement, may associate density matrix $\rho_{\mathcal{A}}=\sum_i p_i\proj{\psi_i}$ with her subsystem $\mathcal{A}$.
+This is the same $\rho_{\mathcal{A}}$ which we obtained by the partial trace.
 
 But suppose Bob chooses to measure his subsystem in some other basis.
 Will it have any impact on Alice's statistical predictions?
@@ -507,7 +475,7 @@ $$
   \\&= \sum_i\proj{\widetilde\psi_j},
   \end{aligned}
 $$
-which is exactly $\rho^\mathcal{A}$.
+which is exactly $\rho_{\mathcal{A}}$.
 So does it really matter whether Bob performs the measurement or not?
 
 _It does not._
@@ -523,16 +491,53 @@ Philosophy aside, the fact that the two interpretations give exactly the same pr
 
 
 
-## Partial trace, yet again
+## Partial trace, revisited
 
-The partial trace is the only map $\rho^{\mathcal{AB}}\mapsto\rho^{\mathcal{A}}$ such that^[One can repeat the same argument for $\rho^{\mathcal{AB}}\mapsto\rho^{\mathcal{B}}$: the partial trace is the unique map $\rho^{\mathcal{AB}}\mapsto\rho^{\mathcal{B}}$ such that $\rho^{\mathcal{B}}$ satisfies $\tr [Y\rho^{\mathcal{B}}] = \tr [(1\otimes Y)\rho^{\mathcal{AB}}]$ for any observable $Y$ on $\mathcal{B}$.]
+If you are given a matrix you calculate the trace by summing its diagonal entries.
+How about the partial trace?
+Suppose someone writes down for you a density matrix of two qubits in the standard basis, $\{\ket{00}, \ket{01}, \ket{10}, \ket{11}\}$, and asks you to find the reduced density matrices of the individual qubits.
+The tensor product structure of this $(4\times 4)$ matrix means that it is has a block form:
 $$
-  \tr [X\rho^{\mathcal{A}}] = \tr [(X\otimes\id)\rho^{\mathcal{AB}}]
+  \rho_{\mathcal{AB}}
+  = \left[
+    \begin{array}{c|c}
+      P & Q
+    \\\hline
+      R & S
+    \end{array}
+  \right]
+$$
+where $P,Q,R,S$ are $(2\times 2)$ sized sub-matrices.
+
+The two partial traces can then be evaluated as^[Take any of the Bell states, write its $(4\times 4)$-density matrix explicitly, and then trace over each qubit. In each case you should get the maximally mixed state.]
+$$
+  \begin{aligned}
+    \rho_{\mathcal{A}}
+    &=
+    \tr_{B}\rho_{\mathcal{AB}}
+    =
+    \left[
+      \begin{array}{c|c}
+        \tr P & \tr Q
+      \\\hline
+        \tr R & \tr S
+      \end{array}
+    \right]
+  \\\rho_{\mathcal{B}}
+    &= \tr_{A}\rho_{\mathcal{AB}}
+    = P+S.
+  \end{aligned}
+$$
+The same holds for a general $\rho_{\mathcal{AB}}$ on any $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ with corresponding block form (i.e. $(m\times m)$ blocks of $(n\times n)$-sized sub-matrices, where $m=\dim\mathcal{H}_{\mathcal{A}}$ and $n=\dim\mathcal{H}_{\mathcal{B}}$).
+
+The partial trace is the only map $\rho_{\mathcal{AB}}\mapsto\rho_{\mathcal{A}}$ such that^[One can repeat the same argument for $\rho_{\mathcal{AB}}\mapsto\rho_{\mathcal{B}}$: the partial trace is the unique map $\rho_{\mathcal{AB}}\mapsto\rho_{\mathcal{B}}$ such that $\rho_{\mathcal{B}}$ satisfies $\tr [Y\rho_{\mathcal{B}}] = \tr [(1\otimes Y)\rho_{\mathcal{AB}}]$ for any observable $Y$ on $\mathcal{B}$.]
+$$
+  \tr [X\rho_{\mathcal{A}}] = \tr [(X\otimes\id)\rho_{\mathcal{AB}}]
 $$
 holds for any observable $X$ acting on $\mathcal{A}$.
 This condition concerns the consistency of statistical predictions.
 Any observable $X$ on $\mathcal{A}$ can be viewed as an observable $X\otimes\id$ on the composite system $\mathcal{AB}$, where $\id$ is the identity operator acting on $\mathcal{B}$.
-When constructing $\rho^{\mathcal{A}}$ we had better make sure that for any observable $X$ the average value of $X$ in the state $\rho^\mathcal{A}$ is the same as the average value of $X\otimes\id$ in the state $\rho^{\mathcal{AB}}$.
+When constructing $\rho_{\mathcal{A}}$ we had better make sure that for any observable $X$ the average value of $X$ in the state $\rho_{\mathcal{A}}$ is the same as the average value of $X\otimes\id$ in the state $\rho_{\mathcal{AB}}$.
 This is indeed the case for the partial trace.
 
 For example, let us go back to the state in Equation ($\ddagger$) and assume that Alice measures some observable $X$ on her part of the system.
@@ -540,7 +545,7 @@ Technically, such an observable can be expressed as $X\otimes \id$, where $\id$ 
 The expected value of this observable in the state $\ket{\psi_{\mathcal{AB}}}$ is $\tr (X\otimes\id)\proj{\psi_{\mathcal{AB}}}$, i.e.
 $$
   \begin{aligned}
-    \tr [(X\otimes \id) \rho^{\mathcal{AB}}]
+    \tr [(X\otimes \id) \rho_{\mathcal{AB}}]
     &= \tr \left[
         (X\otimes\id) \left(
           \sum_{ij} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} \otimes \ket{b_i}\bra{b_j}
@@ -552,9 +557,9 @@ $$
       \underbrace{\left[\tr\left(\ket{b_i}\bra{b_j}\right)\right]}_{\delta_{ij}}
   \\&= \sum_i \tr \big[X \ket{\widetilde\psi_i}\bra{\widetilde\psi_i}\big]
   \\&= \tr \left[
-      X \underbrace{\sum_i p_i\proj{\psi_i}}_{\rho^{\mathcal{A}} = \tr_{\mathcal{B}}\rho^{\mathcal{AB}}}
+      X \underbrace{\sum_i p_i\proj{\psi_i}}_{\rho_{\mathcal{A}} = \tr_{\mathcal{B}}\rho_{\mathcal{AB}}}
     \right]
-  \\&= \tr [X\rho^{\mathcal{A}}]
+  \\&= \tr [X\rho_{\mathcal{A}}]
   \end{aligned}
 $$
 as required.
@@ -607,7 +612,7 @@ Given a mixed state $\rho$, a **purification** of $\rho$ is a pure state $\proj{
 
 ### Pure partial trace
 
-Two qubits are in the state described by the density operator $\rho = \rho^\mathcal{A}\otimes\rho^\mathcal{B}$.
+Two qubits are in the state described by the density operator $\rho = \rho_{\mathcal{A}}\otimes\rho_{\mathcal{B}}$.
 What is the partial trace of $\rho$ over each qubit?
 
 

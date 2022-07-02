@@ -5,6 +5,7 @@
     + banner image below homepage title?
 1. make the tables (in e.g. "phase gates galore") in the pdf version look good
 1. `\mapsto` -> `\longmapsto` in display mode (and similar for `\to`/`\rightarrow`)
+1. `↗︎` symbol after *external* links?
 1. **some way of hiding/showing all videos on a page**
 1. **only one footnote per paragraph**
     + improve sidenote y-positioning using jquery
@@ -23,7 +24,6 @@
 1. **`{.reading}` divs**
     + make these concertinas/accordions
     + go through and add some of these!
-1. $\rho^\mathcal{A}$ vs $\rho_\mathcal{A}$?
 1. make physical page numbers agree with printed page numbers (PDF version)
 1. smaller format pdf version ("book-sized", with footnotes at the bottom)
 1. pretty urls
