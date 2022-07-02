@@ -39,7 +39,7 @@ Moreover, given two density operators $\rho_1$ and $\rho_2$, we can always const
 $$
   \rho = p_1\rho_1 + p_2\rho_2
 $$
-where $\p_1,p_2\geq$ are such that $p_1+p_2=1$.
+where $p_1,p_2\geq$ are such that $p_1+p_2=1$.
 You should check that the resulting $\rho$ has all the defining properties of a density matrix, i.e. that it is Hermitian, non-negative, and that its trace is $1$.
 This means that density operators form a **convex set**: a subset of a vector space is said to be **convex** if, for any two points in the subset, the straight line segment joining them is also entirely contained inside the subset.
 
@@ -84,8 +84,8 @@ It is important to note that a mixture of states is very different from a superp
 :::
 
 Let's be extra clear about this distinction between superpositions and statistical mixtures.
-If Alice had prepared the system in the superposition $\sum_i p_i\ket{\psi_i}$, then both her *and* Bob would describe it by the state vector $\sum_i p_i\ket{\psi_i}$.
-If she instead follows the above procedure, then *she* knows that it is simply described by the state vector $\ket{\psi_i}$, but the best description available to *Bob* is $\sum_i p_i\proj{\psi_i}$, as we will now justify.
+If Alice had prepared the system in the *superposition* $\sum_i p_i\ket{\psi_i}$, then both her *and* Bob would describe it by the state vector $\sum_i p_i\ket{\psi_i}$.
+If she instead follows the above random procedure, then *she* knows that it is simply described by the state vector $\ket{\psi_i}$, but the best "description"^[This description is not one that we have seen before --- it's not a linear combination of kets, but instead a linear combination of *projectors*!] available to *Bob* is $\sum_i p_i\proj{\psi_i}$, as we will now justify.
 
 What Bob *does* know is the ensemble of states $\ket{\psi_1},\ldots,\ket{\psi_m}$ as well as the corresponding probability distribution $p_1,\ldots,p_m$.
 Using this, he can calculate $\av{M}$ as follows:
@@ -103,7 +103,7 @@ We shall call the operator
 $$
   \rho = \sum_i p_i \proj{\psi_i}
 $$
-the **density operator**, since it has all the defining properties of a density operator (it is a convex sum of rank-one projectors).
+the associated **density operator**, since it has all the defining properties of a density operator (it is a convex sum of rank-one projectors).
 It depends on the constituent states $\ket{\psi_i}$ and their probabilities, and it describes our ignorance about the state preparation.
 
 Once we have $\rho$ we can make statistical predictions: we have just shown that, for any observable $M$, its expected value is given by
@@ -163,12 +163,17 @@ In fact, the optimal way of distinguishing quantum states with different density
 
 
 
-## A few instructive examples, and some less instructive remarks
+## Some instructive examples, questions, and remarks
 
-1. The density matrix corresponding to the state vector $\ket{\psi}$ is the rank-one projector $\proj{\psi}$.
-    Observe that there is no phase ambiguity, since $\ket{\psi}\mapsto e^{i\phi}\ket{\psi}$ leaves the density matrix unchanged, and each $\ket{\psi}$ gives rise to a distinct density matrix.
+::: {.idea latex=""}
+The density matrix corresponding to the state vector $\ket{\psi}$ is the rank-one projector $\proj{\psi}$.
+:::
 
-2. If Alice prepares a qubit in the state $\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$ then the corresponding density matrix is the projector
+This correspondence is well defined: each $\ket{\psi}$ gives rise to a distinct density matrix, and the fact that we ignore global phases for state vectors doesn't introduce any ambiguity for the density matrices, since $\ket{\psi}$ and $e^{i\phi}\ket{\psi}$ give the same density matrix.
+
+Let's consider two examples, seeing again how superpositions differ from statistical mixtures.
+
+1. If Alice prepares a qubit in the superposition state $\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$ then the corresponding density matrix is the projector
     $$
       \proj{\psi}
       = \begin{bmatrix}
@@ -177,7 +182,7 @@ In fact, the optimal way of distinguishing quantum states with different density
       \end{bmatrix}.
     $$
 
-3. You are given a qubit and you are told that it was prepared either in state $\ket{0}$ with probability $|\alpha|^2$ or in state $\ket{1}$ with probability $|\beta|^2$.
+2. You are given a qubit and you are told that it was prepared either in state $\ket{0}$ with probability $|\alpha|^2$ or in state $\ket{1}$ with probability $|\beta|^2$.
     In this case all you can say is that your qubit is in a mixed state described by the density matrix
     $$
       |\alpha|^2\proj{0} + |\beta|^2\proj{1}
@@ -186,37 +191,43 @@ In fact, the optimal way of distinguishing quantum states with different density
       \\0 & |\beta|^2
       \end{bmatrix}.
     $$
-    Diagonal density matrices correspond to classical probability distributions on the set of basis vectors.
 
-4. Suppose you want to distinguish between preparations described by the density matrices in examples 2 and 3.
-    Assume that you are given sufficiently many identically prepared qubits described either by the density matrix in example 2 or by the density matrix in example 3.
-    Which of the two measurements would you choose: the measurement in the standard basis $\{\ket{0},\ket{1}\}$, or the measurement in the basis $\{\ket{\psi},\ket{\psi_\perp}\}$?
-    One of the two measurements is completely useless.
-    Which one, and why?
+::: {.idea latex=""}
+The density matrix corresponding to a statistical mixture of states $\ket{\psi_1},\ldots,\ket{\psi_n}$ with probability distribution $p_1,\ldots,p_n$ is the convex combination $\sum_i p_i\proj{\psi_i}$.
 
-5. In general, the diagonal entries of a density matrix describe the probability distributions on the set of basis vectors.
-    They must add up to one, which is why the trace of any density matrix is one.
-    The off-diagonal elements, often called **coherences**, signal departure from the classical probability distribution and quantify the degree to which a quantum system can interfere (we will discuss this in detail later on).
-    The process in which off-diagonal entries (the parameter $\epsilon$ in the matrices below) go to zero is called **decoherence**.
-    $$
-      \begin{bmatrix}
-        |\alpha|^2 & \alpha\beta^\star
-      \\\alpha^\star\beta & |\beta|^2
-      \end{bmatrix}
-      \mapsto
-      \begin{bmatrix}
-        |\alpha|^2 & \epsilon
-      \\\epsilon^\star & |\beta|^2
-      \end{bmatrix}
-      \mapsto
-      \begin{bmatrix}
-        |\alpha|^2 & 0
-      \\0 & |\beta|^2
-      \end{bmatrix}
-    $$
-    For $\epsilon = \alpha\beta^\star$ we have a pure quantum state ("full interference capability") and for $\epsilon=0$ we have a classical probability distribution over the standard basis ("no interference capability").
+The resulting density matrix is always *diagonal*.
+:::
 
-6. Suppose it is equally likely that your qubit was prepared either in state $\alpha\ket{0} + \beta\ket{1}$ or in state $\alpha\ket{0} - \beta\ket{1}$.
+Suppose you want to distinguish between preparations described by the density matrices in the above two examples.
+Assume that you are given sufficiently many qubits, all identically prepared, i.e. either all described by the density matrix $\left[\begin{smallmatrix}|\alpha|^2&\alpha\beta^\star\\\alpha^\star\beta&|\beta|^2\end{smallmatrix}\right]$, or all described by the density matrix $\left[\begin{smallmatrix}|\alpha|^2&0\\0&|\beta|^2\end{smallmatrix}\right]$.
+Which of the two measurements would you choose: the measurement in the standard basis $\{\ket{0},\ket{1}\}$, or the measurement in the basis $\{\ket{\psi},\ket{\psi^\perp}\}$ where $\ket{\psi^\perp}$ is orthonormal to $\ket{\psi}$?
+
+In fact, one of these two measurements is completely useless.
+Which one, and why?
+
+In general, the diagonal entries of a density matrix describe the probability distributions on the set of basis vectors.
+They must add up to one, which is why the trace of any density matrix is one.
+The off-diagonal elements, often called **coherences**, signal departure from the classical probability distribution and quantify the degree to which a quantum system can witness interference (we will discuss this in detail later on).
+The process in which off-diagonal entries go to zero is called **decoherence**.
+$$
+  \begin{bmatrix}
+    |\alpha|^2 & \alpha\beta^\star
+  \\\alpha^\star\beta & |\beta|^2
+  \end{bmatrix}
+  \longmapsto
+  \begin{bmatrix}
+    |\alpha|^2 & \epsilon
+  \\\epsilon^\star & |\beta|^2
+  \end{bmatrix}
+  \longmapsto
+  \begin{bmatrix}
+    |\alpha|^2 & 0
+  \\0 & |\beta|^2
+  \end{bmatrix}
+$$
+For $\epsilon = \alpha\beta^\star$ we have a pure quantum state ("full interference capability") and for $\epsilon=0$ we have a classical probability distribution over the standard basis ("no interference capability").
+
+3. Suppose that your qubit was prepared either in state $\alpha\ket{0} + \beta\ket{1}$ or in state $\alpha\ket{0} - \beta\ket{1}$, with equal probability.
     This means that your qubit is in a mixed state described by the density matrix
     $$
       \frac12
@@ -234,26 +245,32 @@ In fact, the optimal way of distinguishing quantum states with different density
       \\0 & |\beta|^2
       \end{bmatrix}.
     $$
-    You cannot tell the difference between the equally weighted mixture of $\alpha\ket{0}\pm\beta\ket{1}$ and a mixture of $\ket{0}$ and $\ket{1}$ with (respective) probabilities $|\alpha|^2$ and $|\beta|^2$.
 
-7. For any density matrix $\rho$, the most natural mixture that yields $\rho$ is its spectral decomposition: $\rho=\sum_i p_i\proj{u_i}$, with eigenvectors $\ket{u_i}$ and eigenvalues $p_i$.
+::: {.idea latex=""}
+You cannot tell the difference between the equally weighted mixture of $\alpha\ket{0}\pm\beta\ket{1}$ and a mixture of $\ket{0}$ and $\ket{1}$ with (respective) probabilities $|\alpha|^2$ and $|\beta|^2$.
+:::
 
-8. If the states $\ket{u_1},\ldots,\ket{u_m}$ form an orthonormal basis, and each occurs with equal probability $1/m$, then the resulting density matrix is proportional to the identity:
+4. For *any* density matrix $\rho$, the most natural mixture that yields $\rho$ is its spectral decomposition: $\rho=\sum_i p_i\proj{u_i}$, with eigenvectors $\ket{u_i}$ and eigenvalues $p_i$.
+
+5. If the states $\ket{u_1},\ldots,\ket{u_n}$ form an orthonormal basis, and each occurs with equal probability $1/n$, then the resulting density matrix is proportional to the identity:
     $$
-      \frac{1}{m}\sum_{i=1}^m \proj{\psi_i}
-      = \frac{1}{m}\id.
+      \frac{1}{n}\sum_{i=1}^n \proj{\psi_i}
+      = \frac{1}{n}\id.
     $$
     This is called the **maximally mixed state**.
     For qubits, any pair of orthogonal states taken with equal probabilities gives the maximally mixed state $\frac12\id$.
-    In maximally mixed states, outcomes of _any_ measurement are completely random.
 
-9. It is often convenient to write density operators in terms of projectors on states which are not normalised, incorporating the probabilities into the length of the state vector:
+::: {.idea latex=""}
+In maximally mixed states, outcomes of *any* measurement are completely random.
+:::
+
+6. It is often convenient to write density operators in terms of projectors on states which are *not* normalised, incorporating the probabilities into the length of the state vector:
     $$
-      \rho = \sum_i\proj{\widetilde\psi_i}
+      \rho = \sum_i\proj{\tilde\psi_i}
     $$
-    where $\ket{\widetilde\psi_i} = \sqrt{p_i}\ket{\psi_i}$, i.e. $p_i=\braket{\widetilde\psi_i}{\widetilde\psi_i}$.
+    where $\ket{\tilde\psi_i} = \sqrt{p_i}\ket{\psi_i}$, i.e. $p_i=\braket{\tilde\psi_i}{\tilde\psi_i}$.
     This form is more compact, but you have to remember that the state vectors are *not* normalised.
-    We tend to mark such states with the tilde, e.g. $\ket{\widetilde\psi}$, but you may have your own way to remember.
+    We tend to mark such states with the tilde, e.g. $\ket{\tilde\psi}$, but you may have your own way to remember.
 
 
 
