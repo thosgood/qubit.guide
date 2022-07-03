@@ -6,7 +6,7 @@ if [[ `basename "$PWD"` != "qubit.guide" ]]; then
     echo "Script must be run from the main qubit.guide directory" >&2
     exit 1
 else
-    echo "Building site..."
+    echo "Building book..."
 fi
 
 
@@ -20,3 +20,9 @@ R -e "bookdown::render_book('index.Rmd','bookdown::pdf_book',config_file='_bookd
 ## Small book PDF
 # R -e "bookdown::render_book('index.Rmd','bookdown::pdf_book',config_file='_bookdown.yml',output_options=list(template='latex-template-6x9.tex'))"
 # to-do: rename resulting files
+
+
+# 3. Post-build changes (i.e. messy hacks)
+
+# Change the "View Source" icon from an eye to "</>"
+find . -type f -exec sed -i 's/fa-eye/fa-code/g' {} +
