@@ -4,8 +4,6 @@
 
 - `↗︎` symbol after *external* links?
 - **only one footnote per paragraph**
-- **embed youtube videos for lecture 8**
-    + [`lite-youtube-embed`](https://github.com/paulirish/lite-youtube-embed)
 - **search for TO-DO**
 - add more questions from problem sheets
 - **`{.technical}` divs**
