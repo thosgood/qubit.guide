@@ -17,6 +17,7 @@
 
 - *general web styling*
     + favicon
+        * `favicon: "favicon.ico"` in the `index.Rmd` YAML
     + banner image below homepage title?
 - pretty urls
     + this is gonna have to be a hack: see [`bookdown/issues/1298`](https://github.com/rstudio/bookdown/issues/1298)
@@ -27,6 +28,8 @@
 ### PDF
 
 - *general PDF styling*
+    + FONT
+    + "Part X" pages
     + make the tables (in e.g. "phase gates galore") in the pdf version look good
     + title page (**including update date**)
     + TOC spacing (e.g. the §11.10 number overlaps with the subsection title)

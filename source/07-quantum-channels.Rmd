@@ -1,10 +1,13 @@
 # Quantum channels {#quantum-channels}
 
-**TO-DO:** rewrite this as "About ...", like all other sections!
-
-> Quantum evolution of any *isolated* system is unitary but its constituent parts may evolve in a more complicated way. In this chapter we will go beyond unitary evolutions and describe physically realisable transformations of density operators, called quantum channels. Be prepared for some name dropping; you will hear about Karl Kraus, Woody Stinespring, Andrzej Jamiołkowski and Man-Duen Choi. To be sure, knowing names will not give you more insights, but at least you will not be intimidated when you hear about the **Stinespring** and the **Kraus representations**, the **Jamiołkowski isomorphism**, or the **Choi matrix**.
+> About **quantum channels**, which are to density operators what unitaries are to state vectors --- physically realisable transformations.
+> Also about many eponymous constructions, such as the **Stinespring** and the **Kraus representations**, the **Jamiołkowski isomorphism**, and the **Choi matrix**.
 
 <lite-youtube videoid="tFEfpamz5k0" playlabel="Play: Open quantum systems"></lite-youtube>
+
+::: {.idea latex=""}
+Quantum evolution of any *isolated* system is unitary but its constituent parts may evolve in a more complicated way.
+:::
 
 We discussed how entanglement forced us to describe quantum states of open quantum systems (ones which are part of a larger system) in terms of density operators.
 In this chapter we will describe how open systems evolve.
@@ -231,6 +234,165 @@ How would you reverse these operations?
 
 Single unitaries or isometries apart, it turns out that the only reversible, or **correctable**, channels (i.e. channels in which the input state can be recovered) are exactly the mixtures of mutually orthogonal isometries $V^\dagger_i V_j=\delta_{ij}\id$.
 We shall return to these channels later on.
+
+**TO-DO: merge this with the below, which was originally an appendix!!!!!**
+
+In many applications, including quantum communication and quantum error correction, it is useful to encode a quantum state of one system into a quantum state of a larger system.
+Such operations are described by *isometries*.^[The word isometric (like pretty much most of the fancy words you come across in this course) comes from Greek, meaning "of the same measures": *isos* means "equal", and *metron* means "a measure", and so an "isometry" is a transformation that preserves distances.]
+You may think about isometries as a generalisation of unitaries: like unitaries, they preserve inner products; unlike unitaries, they are maps between spaces of *different* dimensions.
+
+::: {.idea latex=""}
+Let $\mathcal{H}$ and $\mathcal{H}'$ be Hilbert spaces such that $\dim\mathcal{H}\leq\dim\mathcal{H}'$.
+An **isometry** is a linear map $V\colon\mathcal{H}\to\mathcal{H}'$ such that $V^\dagger V=\id_{\mathcal{H}}$
+
+Isometries preserve inner products, and therefore also the norm and the metric induced by the norm.
+:::
+
+An isometry $V\colon\mathcal{H}\to\mathcal{H}'$ maps the *whole* Hilbert space $\mathcal{H}$ onto a *subspace* of $\mathcal{H}'$.
+As a consequence, the matrix representation of an isometry is a rectangular matrix formed by selecting only a few of the columns from a unitary matrix.
+For example, given a unitary $U$ we can construct an isometry $V$ as follows:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
+\definecolor{primary}{RGB}{177,98,78}
+\begin{equation*}
+  U =
+  \left[
+    \setlength\arraycolsep{0.4em}
+    \begin{array}{cccc}
+      U_{11}
+      & \cellcolor{primary!20}U_{12}
+      & U_{13}
+      & \cellcolor{primary!20}U_{14}
+    \\U_{21}
+      & \cellcolor{primary!20}U_{22}
+      & U_{23}
+      & \cellcolor{primary!20} U_{24}
+    \\U_{31}
+      & \cellcolor{primary!20}U_{32}
+      & U_{33}
+      & \cellcolor{primary!20}U_{34}
+    \\U_{41}
+      & \cellcolor{primary!20}U_{42}
+      & U_{43}
+      & \cellcolor{primary!20}U_{44}
+    \end{array}
+  \right]
+  \longmapsto
+  V =
+  \left[
+    \setlength\arraycolsep{0.4em}
+    \begin{array}{cc}
+      \cellcolor{primary!20}U_{12}
+      & \cellcolor{primary!20}U_{14}
+    \\\cellcolor{primary!20}U_{22}
+      & \cellcolor{primary!20}U_{24}
+    \\\cellcolor{primary!20}U_{32}
+      & \cellcolor{primary!20}U_{34}
+    \\\cellcolor{primary!20}U_{42}
+      & \cellcolor{primary!20} U_{44}
+    \end{array}
+  \right]
+\end{equation*}
+```
+
+The fact that an isometry $V$ preserves the inner products comes from the fact that we require $V^\dagger V=\id_{\mathcal{H}}$;
+we do *not* require $VV^\dagger=\id_{\mathcal{H'}}$.
+Indeed, if we required both of these, then that would be equivalent to asking for $V$ to be *unitary*.
+The operator $VV^\dagger$ is a projector operator acting on $\mathcal{H}'$, which projects onto the image of $\mathcal{H}$ under the isometry $V$, as we can see by expressing the $V$ in Dirac notation:
+$$
+  V = \sum_i \ket{b_i}\bra{a_i},
+$$
+where the $\ket{a_i}$ form an orthonormal basis in $\mathcal{H}$, and the $\ket{b_i}$ are just orthonormal vectors in $\mathcal{H}'$;
+in the special case where $V$ is unitary, the orthonormal vectors $\ket{b_i}$ form an orthonormal basis in $\mathcal{H}'$.
+Writing $V$ in this form, it is clear that $V^\dagger V=\sum_i \ket{a_i}\bra{a_i}=\id$, and that $VV^\dagger = \sum_i \ket{b_i}\bra{b_i}$ projects on the subspace spanned by $\ket{b_i}$.
+
+The reason that we care about this more general notion of isometry (instead of specifically unitaries) is that *isometries represent physically admissible operations*: they can be implemented by bringing two systems together (via tensoring) and then applying unitary transformations to the composite system.
+That is, take some system $\mathcal{A}$ in state $\ket{\psi}$, and bring in another system $\mathcal{B}$ in some fixed state $\ket{b}$;
+applying some unitary $U$ to the combined system $\mathcal{A}\mathcal{B}$ then gives an isometry from $\mathcal{H}=\mathcal{H}_\mathcal{A}$ to $\mathcal{H}'=\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$, i.e. the result is a linear map $V$ defined by
+$$
+  V\colon
+  \ket{\psi}
+  \longmapsto
+  \ket{\psi}\ket{b}
+  \longmapsto
+  U(\ket{\psi}\ket{b}
+$$
+for any vector $\ket{\psi}\in\mathcal{H}_\mathcal{A}$.
+
+Any isometry is a quantum channel, since any quantum state described by the state vector $\ket{\psi}$ (or by a density operator $\rho$) is transformed as
+$$
+  \ket{\psi}\longmapsto V\ket{\psi}
+$$
+(or as $\rho\mapsto V\rho V^\dagger$), and the normalisation condition is exactly the defining property of isometries:
+$$
+  V^\dagger V =\id.
+$$
+
+
+An example which we will later return to is that of the **three-qubit code**.
+Take a qubit in some pure state $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, introduce two auxiliary qubits in a fixed state $\ket{0}\ket{0}$, and apply a unitary operation to the three qubits, namely two controlled-$\texttt{NOT}$ gates:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\alpha\ket{0}+\beta\ket{1}$}
+    & \ctrl{1}
+    & \ctrl{2}
+    & \qw
+    & \qw
+    \rstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+    \\
+    \lstick{$\ket{0}$}
+    & \targ{}
+    & \qw
+    & \qw
+    & \qw
+    \\
+    \lstick{$\ket{0}$}
+    & \qw
+    & \targ{}
+    & \qw
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+The result is the isometric embedding of the $2$-dimensional Hilbert space of the first qubit (spanned by $\ket{0}$ and $\ket{1}$) into the $2$-dimensional subspace (spanned by $\ket{000}$ and $\ket{111}$) of the $8$-dimensional Hilbert space of the three qubits.
+The isometric operator
+$$
+  V = \ket{000}\bra{0} + \ket{111}\bra{1}
+$$
+acts via
+$$
+  \alpha\ket{0}+\beta\ket{1}
+  \longmapsto \alpha\ket{000}+\beta\ket{111}.
+$$
+This three qubit-encoding can be reversed by the mirror image circuit:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+    & \ctrl{2}
+    & \ctrl{1}
+    & \qw
+    & \qw
+    \rstick{$\alpha\ket{0}+\beta\ket{1}$}
+    \\
+    & \qw
+    & \targ{}
+    & \qw
+    & \qw
+    \rstick{$\ket{0}$}
+    \\
+    & \targ{}
+    & \qw
+    & \qw
+    & \qw
+    \rstick{$\ket{0}$}
+  \end{quantikz}
+\end{equation*}
+```
 
 
 
@@ -1213,167 +1375,6 @@ iii. there exists a set of orthogonal isometries $\{V_i\}$ and a probability dis
 
 
 ## *Remarks and exercises* {#remarks-and-exercises-7}
-
-### Isometries {#isometries}
-
-In many applications, including quantum communication and quantum error correction, it is useful to encode a quantum state of one system into a quantum state of a larger system.
-Such operations are described by *isometries*.^[The word isometric (like pretty much most of the fancy words you come across in this course) comes from Greek, meaning "of the same measures": *isos* means "equal", and *metron* means "a measure", and so an "isometry" is a transformation that preserves distances.]
-You may think about isometries as a generalisation of unitaries: like unitaries, they preserve inner products; unlike unitaries, they are maps between spaces of *different* dimensions.
-
-::: {.idea latex=""}
-Let $\mathcal{H}$ and $\mathcal{H}'$ be Hilbert spaces such that $\dim\mathcal{H}\leq\dim\mathcal{H}'$.
-An **isometry** is a linear map $V\colon\mathcal{H}\to\mathcal{H}'$ such that $V^\dagger V=\id_{\mathcal{H}}$
-
-Isometries preserve inner products, and therefore also the norm and the metric induced by the norm.
-:::
-
-An isometry $V\colon\mathcal{H}\to\mathcal{H}'$ maps the *whole* Hilbert space $\mathcal{H}$ onto a *subspace* of $\mathcal{H}'$.
-As a consequence, the matrix representation of an isometry is a rectangular matrix formed by selecting only a few of the columns from a unitary matrix.
-For example, given a unitary $U$ we can construct an isometry $V$ as follows:
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
-\definecolor{primary}{RGB}{177,98,78}
-\begin{equation*}
-  U =
-  \left[
-    \setlength\arraycolsep{0.4em}
-    \begin{array}{cccc}
-      U_{11}
-      & \cellcolor{primary!20}U_{12}
-      & U_{13}
-      & \cellcolor{primary!20}U_{14}
-    \\U_{21}
-      & \cellcolor{primary!20}U_{22}
-      & U_{23}
-      & \cellcolor{primary!20} U_{24}
-    \\U_{31}
-      & \cellcolor{primary!20}U_{32}
-      & U_{33}
-      & \cellcolor{primary!20}U_{34}
-    \\U_{41}
-      & \cellcolor{primary!20}U_{42}
-      & U_{43}
-      & \cellcolor{primary!20}U_{44}
-    \end{array}
-  \right]
-  \longmapsto
-  V =
-  \left[
-    \setlength\arraycolsep{0.4em}
-    \begin{array}{cc}
-      \cellcolor{primary!20}U_{12}
-      & \cellcolor{primary!20}U_{14}
-    \\\cellcolor{primary!20}U_{22}
-      & \cellcolor{primary!20}U_{24}
-    \\\cellcolor{primary!20}U_{32}
-      & \cellcolor{primary!20}U_{34}
-    \\\cellcolor{primary!20}U_{42}
-      & \cellcolor{primary!20} U_{44}
-    \end{array}
-  \right]
-\end{equation*}
-```
-
-The fact that an isometry $V$ preserves the inner products comes from the fact that we require $V^\dagger V=\id_{\mathcal{H}}$;
-we do *not* require $VV^\dagger=\id_{\mathcal{H'}}$.
-Indeed, if we required both of these, then that would be equivalent to asking for $V$ to be *unitary*.
-The operator $VV^\dagger$ is a projector operator acting on $\mathcal{H}'$, which projects onto the image of $\mathcal{H}$ under the isometry $V$, as we can see by expressing the $V$ in Dirac notation:
-$$
-  V = \sum_i \ket{b_i}\bra{a_i},
-$$
-where the $\ket{a_i}$ form an orthonormal basis in $\mathcal{H}$, and the $\ket{b_i}$ are just orthonormal vectors in $\mathcal{H}'$;
-in the special case where $V$ is unitary, the orthonormal vectors $\ket{b_i}$ form an orthonormal basis in $\mathcal{H}'$.
-Writing $V$ in this form, it is clear that $V^\dagger V=\sum_i \ket{a_i}\bra{a_i}=\id$, and that $VV^\dagger = \sum_i \ket{b_i}\bra{b_i}$ projects on the subspace spanned by $\ket{b_i}$.
-
-The reason that we care about this more general notion of isometry (instead of specifically unitaries) is that *isometries represent physically admissible operations*: they can be implemented by bringing two systems together (via tensoring) and then applying unitary transformations to the composite system.
-That is, take some system $\mathcal{A}$ in state $\ket{\psi}$, and bring in another system $\mathcal{B}$ in some fixed state $\ket{b}$;
-applying some unitary $U$ to the combined system $\mathcal{A}\mathcal{B}$ then gives an isometry from $\mathcal{H}=\mathcal{H}_\mathcal{A}$ to $\mathcal{H}'=\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$, i.e. the result is a linear map $V$ defined by
-$$
-  V\colon
-  \ket{\psi}
-  \longmapsto
-  \ket{\psi}\ket{b}
-  \longmapsto
-  U(\ket{\psi}\ket{b}
-$$
-for any vector $\ket{\psi}\in\mathcal{H}_\mathcal{A}$.
-
-Any isometry is a quantum channel, since any quantum state described by the state vector $\ket{\psi}$ (or by a density operator $\rho$) is transformed as
-$$
-  \ket{\psi}\longmapsto V\ket{\psi}
-$$
-(or as $\rho\mapsto V\rho V^\dagger$), and the normalisation condition is exactly the defining property of isometries:
-$$
-  V^\dagger V =\id.
-$$
-
-
-An example which we will later return to is that of the **three-qubit code**.
-Take a qubit in some pure state $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, introduce two auxiliary qubits in a fixed state $\ket{0}\ket{0}$, and apply a unitary operation to the three qubits, namely two controlled-$\texttt{NOT}$ gates:
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick{$\alpha\ket{0}+\beta\ket{1}$}
-    & \ctrl{1}
-    & \ctrl{2}
-    & \qw
-    & \qw
-    \rstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
-    \\
-    \lstick{$\ket{0}$}
-    & \targ{}
-    & \qw
-    & \qw
-    & \qw
-    \\
-    \lstick{$\ket{0}$}
-    & \qw
-    & \targ{}
-    & \qw
-    & \qw
-  \end{quantikz}
-\end{equation*}
-```
-
-The result is the isometric embedding of the $2$-dimensional Hilbert space of the first qubit (spanned by $\ket{0}$ and $\ket{1}$) into the $2$-dimensional subspace (spanned by $\ket{000}$ and $\ket{111}$) of the $8$-dimensional Hilbert space of the three qubits.
-The isometric operator
-$$
-  V = \ket{000}\bra{0} + \ket{111}\bra{1}
-$$
-acts via
-$$
-  \alpha\ket{0}+\beta\ket{1}
-  \longmapsto \alpha\ket{000}+\beta\ket{111}.
-$$
-This three qubit-encoding can be reversed by the mirror image circuit:
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
-    & \ctrl{2}
-    & \ctrl{1}
-    & \qw
-    & \qw
-    \rstick{$\alpha\ket{0}+\beta\ket{1}$}
-    \\
-    & \qw
-    & \targ{}
-    & \qw
-    & \qw
-    \rstick{$\ket{0}$}
-    \\
-    & \targ{}
-    & \qw
-    & \qw
-    & \qw
-    \rstick{$\ket{0}$}
-  \end{quantikz}
-\end{equation*}
-```
-
-
 
 ### The Markov approximation {#markov-approximation}
 
