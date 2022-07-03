@@ -759,7 +759,7 @@ Showing that CPTP maps are quantum channels is less obvious, and, in order to pr
 
 
 
-## State-channel duality
+## Channel-state duality
 
 <lite-youtube videoid="vO34FIq1NBg" playlabel="Play: Choi matrix"></lite-youtube>
 
@@ -828,8 +828,46 @@ $$
   = \frac{1}{d}\sum_i\rho_{ij}\mathcal{E}(\ket{i}\bra{j}).
 $$
 
-This state-channel duality thus gives us a one-to-one correspondence between linear maps $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ and matrices $\widetilde{\mathcal{E}}$ acting on the tensor product $\mathcal{H}\otimes\mathcal{H}'$.
-This correspondence is sometimes called the **Choi--Jamiołkowski isomorphism**, and we discuss it further in [the appendix of the same name](#choi-jamiolkowski).
+This **channel-state duality** thus gives us a one-to-one correspondence between linear maps $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ and matrices $\widetilde{\mathcal{E}}$ acting on the tensor product $\mathcal{H}\otimes\mathcal{H}'$.
+This correspondence is sometimes called the **Choi--Jamiołkowski isomorphism**.
+
+::: {.technical}
+The correspondence between linear maps $\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H'})$ and operators in $\mathscr{B}(\mathcal{H}\otimes\mathcal{H'})$, known as the **Choi--Jamiołkowski isomorphism** or **channel-state duality**, is another example of a well known correspondence between vectors in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ and operators $\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})$ or $\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})$.
+
+Take a tensor product vector in $\ket{a}\otimes\ket{b}\in \mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$.
+Then it defines natural maps in $\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})$ and $\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})$, via
+$$
+  \begin{aligned}
+    \bra{x}
+    &\longmapsto \braket{x}{a}\ket{b}
+  \\\bra{y}
+    &\longmapsto \ket{a}\braket{y}{b}
+  \end{aligned}
+$$
+for any linear forms $\bra{x}\in\mathcal{H}^\star_A$ and $\bra{y}\in\mathcal{H}^\star_B$.
+We then extend this construction (by linearity) to any vector in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$.
+These isomorphisms are **canonical**: they do not depend on the choice of any bases in the vectors spaces involved.
+
+However, some care must be taken when we want to define correspondence between vectors in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ and operators in $\mathscr{B}(\mathcal{H}_{\mathcal{A}},\mathcal{H}_{\mathcal{B}})$ or $\mathscr{B}(\mathcal{H}_{\mathcal{B}},\mathcal{H}_{\mathcal{A}})$.
+For example, physicists like to "construct" $\mathscr{B}(\mathcal{H}_{\mathcal{B}},\mathcal{H}_{\mathcal{A}})$ in a deceptively simple way:
+$$
+  \ket{a}\ket{b} \longleftrightarrow \ket{a}\bra{b}.
+$$
+Flipping $\ket{b}$ and switching from $\mathcal{H}_{\mathcal{B}}$ to $\mathcal{H}^\star_B$ is an _anti-linear_ operation (since it involves complex conjugation).
+This is fine _when we stick to a specific basis_ $\ket{i}\ket{j}$ and use the ket-flipping approach _only for the basis vectors_.
+This means that, for $\ket{b}=\sum_j\beta_j\ket{j}$, the correspondence looks like
+$$
+  \ket{i}\ket{b} \longleftrightarrow \sum_j \beta_j \ket{i}\bra{j}
+$$
+and _not_ like
+$$
+  \ket{i}\ket{b} \longleftrightarrow \ket{i}\bra{b}
+  = \sum_j \beta^\star_j \ket{i}\bra{j}.
+$$
+This isomorphism is **non-canonical**: it depends on the choice of the basis.
+But it is still a pretty useful isomorphism!
+The Choi--Jamiołkowski isomorphism is of this kind (i.e. non-canonical) --- it works in the basis in which you express a maximally entangled state $\ket{\Omega}=\sum_i\ket{i}\ket{i}$.
+:::
 
 Mathematically, it is not too surprising that the matrix elements of an operator on a tensor product can be reorganised and reinterpreted as the matrix elements of an operator between operator spaces.
 What is interesting, and perhaps not so obvious, however, is that the positivity conditions for maps correspond exactly to conditions on their Choi matrices under this correspondence.
@@ -858,7 +896,7 @@ where $\ket{\Omega}=\frac{1}{\sqrt d}\sum_{i=1}^d\ket{i}\ket{i}$ is the maximall
 In this form, the Choi--Jamiołkowski isomorphism gives us a simple necessary and sufficient condition for a linear map to be a quantum channel:
 
 ::: {.idea latex=""}
-**State-channel duality**: $\mathcal{E}$ is a quantum channel if and only if $\widetilde{\mathcal{E}}$ is a density matrix.
+**Channel-state duality**: $\mathcal{E}$ is a quantum channel if and only if $\widetilde{\mathcal{E}}$ is a density matrix.
 :::
 
 One direction of this claim is immediate: we already know that any quantum channel $\mathcal{E}$ is, in particular, a completely positive map, and so $\id\otimes\mathcal{E}$ maps density matrices to density matrices, whence $\widetilde{\mathcal{E}}=(\id\otimes\mathcal{E})\ket{\Omega}\bra{\Omega}$ is a density matrix, since $\ket{\Omega}\bra{\Omega}$ is a density matrix.
@@ -935,7 +973,7 @@ All together this gives us the reverse implication: *if the Choi matrix $\wideti
 
 ## The mathematics of "can" and "cannot"
 
-So what is state-channel duality good for?
+So what is channel-state duality good for?
 To start with, it can be used to asses whether or not a given map $\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ can actually be implemented, i.e. if it is a physically realisable CPTP map.
 Indeed, all we have to do is to check if the corresponding Choi matrix is a density matrix.
 Let's look at a simple example.
@@ -1007,7 +1045,7 @@ $$
    \end{array}
   \right]
 $$
-which lets us apply state-channel duality: *$\mathcal{E}$ is completely positive (and hence physically realisable) if and only if $\widetilde{\mathcal{E}}\geq0$*;
+which lets us apply channel-state duality: *$\mathcal{E}$ is completely positive (and hence physically realisable) if and only if $\widetilde{\mathcal{E}}\geq0$*;
 the latter is true only when $p\leq\frac13$ (note that the eigenvalues of $\widetilde{\mathcal{E}}$ are $\frac{1}{4}(1+p)$ and $\frac{1}{4}(1-3p)$).
 
 
@@ -1016,7 +1054,7 @@ the latter is true only when $p\leq\frac13$ (note that the eigenvalues of $\wide
 
 <lite-youtube videoid="YxnTjuRwvdg" playlabel="Play: Properties of Kraus representations"></lite-youtube>
 
-One thing that is very important is that *state-channel duality gives us more than just a one-to-one correspondence* between states $\widetilde{\mathcal{E}}$ and channels $\mathcal{E}$ --- it *also* gives a one-to-one correspondence between vectors in the statistical ensemble $\widetilde{\mathcal{E}}$ and the Kraus operators in the decomposition of $\mathcal{E}$.
+One thing that is very important is that *channel-state duality gives us more than just a one-to-one correspondence* between states $\widetilde{\mathcal{E}}$ and channels $\mathcal{E}$ --- it *also* gives a one-to-one correspondence between vectors in the statistical ensemble $\widetilde{\mathcal{E}}$ and the Kraus operators in the decomposition of $\mathcal{E}$.
 From this viewpoint, we see that the freedom to choose the Kraus operators representing a channel in many different ways is really the same thing as the freedom to choose the ensemble of pure states representing a density operator in many different ways.
 
 We already know that two mixtures $\{p_k, \ket{\psi_k}\}$ and $\{q_l, \ket{\phi_l}\}$ described by the same density operator
@@ -1033,7 +1071,7 @@ $$
 Using the aforementioned fact that any vector $\ket{\psi}$ in $\mathcal{H}\otimes\mathcal{H}'$ can be written as $\ket{\psi}=\id\otimes V\ket{\Omega}$, this implies the same unitary freedom in choosing the Kraus operators.^[The number of vectors contributing to each mixture (and hence the number of corresponding Kraus operators) may be different, so we simply extend the smaller set to the required size by adding zero operators.]
 
 How many Kraus operators do we really need?
-State-channel duality tells us that the *minimal* number of Kraus operators needed to express $\mathcal{E}$ in the operator-sum form is given by the rank of its Choi matrix $\widetilde{\mathcal{E}}$, and so we need no more than $dd'$ such operators.
+Channel-state duality tells us that the *minimal* number of Kraus operators needed to express $\mathcal{E}$ in the operator-sum form is given by the rank of its Choi matrix $\widetilde{\mathcal{E}}$, and so we need no more than $dd'$ such operators.
 In fact, this minimal set of Kraus operators corresponds to the spectral decomposition of $\widetilde{\mathcal{E}}$.
 Indeed, if $\widetilde{\mathcal{E}}=\sum_k\proj{\widetilde{v}_k}$ and $\ket{\widetilde{v}_k}=(\id\otimes E_k)\ket{\Omega}$, then the orthogonality of $\ket{\widetilde{v}_k}$ and $\ket{\widetilde{v}_l}$ implies the orthogonality (in the Hilbert--Schmidt sense^[Recall that the Hilbert--Schmidt product $(A|B)$ of two operators $A$ and $B$ is defined by $(A|B)=\frac12\tr A^\dagger B$.]) of the corresponding Kraus operators, $E_k$ and $E_l$.
 In order to see this, we write $\braket{\widetilde{v}_k}{\widetilde{v}_l}$ as
@@ -1172,7 +1210,7 @@ iii. there exists a set of orthogonal isometries $\{V_i\}$ and a probability dis
 
 
 
-## *Appendices*
+## *Remarks and exercises* {#remarks-and-exercises-7}
 
 ### Isometries {#isometries}
 
@@ -1424,147 +1462,9 @@ However, for _two_ qubits, the PPT states are exactly the separable states.
 
 
 
-### The Choi--Jamiołkowski isomorphism {#choi-jamiolkowski}
-
-The correspondence between linear maps $\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H'})$ and operators in $\mathscr{B}(\mathcal{H}\otimes\mathcal{H'})$, known as the **Choi--Jamiołkowski isomorphism** or **channel--state duality**, is another example of a well known correspondence between vectors in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ and operators $\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})$ or $\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})$.
-
-::: {.technical}
-It is slightly confusing at first, but the **Choi isomorphism**, the **Jamiołkowski isomorphism**, and the **Choi--Jamiołkowski** isomorphism are really three distinct things:
-
-1. [the first](https://en.wikipedia.org/wiki/Choi%27s_theorem_on_completely_positive_maps) is very nice, but non-canonical (i.e. is dependent on the choice of basis);
-2. the second (for which I have no nice citation, but is basically given by considering $\sum\ket{j}\bra{i}\otimes\mathcal{E}(\ket{i}\bra{j})$ instead of $\sum\ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})$) is canonical, but doesn't always map CP maps to positive semidefinite matrices;
-3. [the third](https://en.wikipedia.org/wiki/Choi%E2%80%93Jamio%C5%82kowski_isomorphism) brings together the two similar, but distinct, results by the respective authors. However, people often say "Choi--Jamiołkowski" to mean any one of the three. Such is life.
-:::
-
-Take a tensor product vector in $\ket{a}\otimes\ket{b}\in \mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$.
-Then it defines natural maps in $\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})$ and $\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})$, via
-$$
-  \begin{aligned}
-    \bra{x}
-    &\longmapsto \braket{x}{a}\ket{b}
-  \\\bra{y}
-    &\longmapsto \ket{a}\braket{y}{b}
-  \end{aligned}
-$$
-for any linear forms $\bra{x}\in\mathcal{H}^\star_A$ and $\bra{y}\in\mathcal{H}^\star_B$.
-We then extend this construction (by linearity) to any vector in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$.
-These isomorphisms are **canonical**: they do not depend on the choice of any bases in the vectors spaces involved.
-
-However, some care must be taken when we want to define correspondence between vectors in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ and operators in $\mathscr{B}(\mathcal{H}_{\mathcal{A}},\mathcal{H}_{\mathcal{B}})$ or $\mathscr{B}(\mathcal{H}_{\mathcal{B}},\mathcal{H}_{\mathcal{A}})$.
-For example, physicists like to "construct" $\mathscr{B}(\mathcal{H}_{\mathcal{B}},\mathcal{H}_{\mathcal{A}})$ in a deceptively simple way:
-$$
-  \ket{a}\ket{b} \longleftrightarrow \ket{a}\bra{b}.
-$$
-(where we have simply omitted the tensor product symbol).
-Flipping $\ket{b}$ and switching from $\mathcal{H}_{\mathcal{B}}$ to $\mathcal{H}^\star_B$ is an _anti-linear_ operation (since it involves complex conjugation).
-This is fine _when we stick to a specific basis $\ket{i}\ket{j}$ and use the ket-flipping approach only for the basis vectors_.
-This means that, for $\ket{b}=\sum_j\beta_j\ket{j}$, the correspondence looks like
-$$
-  \ket{i}\ket{b} \longleftrightarrow \sum_j \beta_j \ket{i}\bra{j}
-$$
-and _not_ like
-$$
-  \ket{i}\ket{b} \longleftrightarrow \ket{i}\bra{b}
-  = \sum_j \beta^\star_j \ket{i}\bra{j}.
-$$
-This isomorphism is **non-canonical**: it depends on the choice of the basis.
-But it is still a pretty useful isomorphism!
-The Choi--Jamiołkowski isomorphism is of this kind (i.e. non-canonical) --- it works in the basis in which you express a maximally entangled state $\ket{\Omega}=\sum_i\ket{i}\ket{i}$.
-
-
-### Block matrices and partial trace
-
-For any matrix $M$ in $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ _that is written in the tensor product basis_, the partial trace over the first subsystem (here $\mathcal{A}$) is the sum of the diagonal block matrices, and the partial trace over the second subsystem (here $\mathcal{B}$) is a matrix in which the block sub-matrices are replaced by their traces.
-You can visualise this as in Figure \@ref(fig:visualising-partial-trace).
-
-(ref:visualising-partial-trace-caption) Visualising the two partial traces of a matrix _written in the tensor product basis_.
-
-```{r visualising-partial-trace,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8,fig.cap='(ref:visualising-partial-trace-caption)'}
-\definecolor{primary}{RGB}{177,98,78}
-\providecommand{\mqty}[1]{\begin{matrix}#1\end{matrix}}
-\providecommand{\tr}{\operatorname{tr}}
-\begin{equation*}
-  \begin{array}{c}
-    \left[
-      \,
-      \setlength\arraycolsep{0.4em}
-      \begin{array}{c|c|c}
-        \cellcolor{primary!20}\mqty{\cdot&\cdot\\\cdot&\cdot}
-        & \mqty{\cdot&\cdot\\\cdot&\cdot}
-        & \mqty{\cdot&\cdot\\\cdot&\cdot}
-        \\\hline
-        \mqty{\cdot&\cdot\\\cdot&\cdot}
-        & \cellcolor{primary!20}\mqty{\cdot&\cdot\\\cdot&\cdot}
-        & \mqty{\cdot&\cdot\\\cdot&\cdot}
-        \\\hline
-        \mqty{\cdot&\cdot\\\cdot&\cdot}
-        & \mqty{\cdot&\cdot\\\cdot&\cdot}
-        & \cellcolor{primary!20}\mqty{\cdot&\cdot\\\cdot&\cdot}
-      \end{array}
-      \,
-    \right]
-    \\ \\
-    \tr_{\mathcal{A}} M
-  \end{array}
-  \qquad
-  \begin{array}{c}
-    \left[
-      \,
-      \setlength\arraycolsep{0.4em}
-      \begin{array}{c|c|c}
-        \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
-        & \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
-        & \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
-      \\\hline
-        \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
-        & \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
-        & \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
-      \\\hline
-        \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
-        &\mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
-        & \mqty{\cellcolor{primary!20}\cdot&\cdot\\\cdot&\cellcolor{primary!20}\cdot}
-      \end{array}
-      \,
-    \right]
-    \\ \\
-    \tr_{\mathcal{B}} M
-  \end{array}
-\end{equation*}
-```
-
-For example, for any $M$ in the tensor product space associated with two qubits, written in the standard basis $\{\ket{00},\ket{01},\ket{10},\ket{11}\}$ in block form as
-$$
-  M =
-  \left[
-    \begin{array}{c|c}
-      P & Q
-    \\\hline
-      R & S
-    \end{array}
-  \right]
-$$
-where $P$, $Q$, $R$, and $S$ are all $(2\times 2)$ sized sub-matrices, we have that
-$$
-  \begin{aligned}
-    \tr_{\mathcal{A}} M
-    &= P+S
-  \\\tr_{\mathcal{B}} M
-    &=
-  \left[
-    \begin{array}{c|c}
-      \tr P & \tr Q
-    \\\hline
-      \tr R & \tr S
-    \end{array}
-  \right]
-  \end{aligned}
-$$
-
-The same holds for general $M$ in any $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ with such a block form (i.e. $m\times m$ blocks of $(n\times n)$ sized sub-matrices, where $m=\dim\mathcal{H}_{\mathcal{A}}$ and $n=\dim\mathcal{H}_{\mathcal{B}}$).
 
 
 
-## *Remarks and exercises* {#remarks-and-exercises-7}
 
 
 ### Partial inner product
@@ -1838,8 +1738,7 @@ That is, the reduced density operator $\rho_\mathcal{A}=\tr_\mathcal{B} \rho$ is
 ### Order matters?
 
 We know that, given a fixed state of the environment, the unitaries $U$ and $(\id\otimes R)U$ (where $R$ acts only on the environment) define the same quantum channel.
-Is the same true for $U$ and $U(\id\otimes R)$?
-That is, do these two unitaries define the same quantum channel as one another?
+Is the same true for $U$ and $U(\id\otimes R)$ --- do these two unitaries define the same quantum channel as one another?
 
 
 ### Pauli twirl {#pauli-twirl}
@@ -1855,7 +1754,7 @@ $$
 
 <lite-youtube videoid="lnPP5rk593M" playlabel="Play: The depolarising channel"></lite-youtube>
 
-The most "popular" Pauli channel is the **depolarising channel**
+The "most popular" Pauli channel is the **depolarising channel**
 $$
   \rho\longmapsto (1-p)\rho + \frac{p}{3}\left(X\rho X+Y\rho Y+Z\rho Z\right).
 $$
@@ -1891,7 +1790,7 @@ and for $\frac{3}{4}\leq p\leq1$, the Bloch vector is flipped, and starts pointi
 
 ### Complete positivity of a certain map
 
-Let $\mathcal{E}$ be the linear map on single a qubit defined by
+Let $\mathcal{E}$ be the linear map on a single qubit defined by
 $$
   \begin{aligned}
     \mathcal{E}(\id)
@@ -1910,7 +1809,7 @@ Using the Choi matrix of $\mathcal{E}$, determine the range of $x$, $y$, $z$ for
 
 ### Toffoli gate
 
-Consider the Toffoli gate
+Consider the [**Toffoli gate**](https://en.wikipedia.org/wiki/Toffoli_gate)
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
 \begin{equation*}
