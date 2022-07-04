@@ -8,6 +8,7 @@
 - add more questions from problem sheets
 - **`{.technical}` divs**
     + make these concertinas/accordions
+        * possible icon: [search-plus](https://fontawesome.com/v4/icon/search-plus), [book](https://fontawesome.com/v4/icon/book), [cogs](https://fontawesome.com/v4/icon/cogs), [comments](https://fontawesome.com/v4/icon/comments), [rocket](https://fontawesome.com/v4/icon/rocket)
     + latex implementation
         * add `latex=""` to each one
 - look at all internal links and check that their text isn't anything like "Chapter 3" or whatever (i.e. nothing that isn't permutation invariant!)
@@ -27,6 +28,9 @@
 
 ### PDF
 
+- **`_pdf-instructions.Rmd` to mirror `_web-instructions.Rmd`**
+    + talk about technical divs
+    + explain that web version exists
 - *general PDF styling*
     + FONT
     + "Part X" pages
