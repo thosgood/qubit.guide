@@ -27,7 +27,9 @@ Build using the `./build_book` script.
 - pretty urls
     + note that these already sort of work (i.e. you can happily delete the trailing `.html` from any page's url), but the *TOC* is all ugly links
     + this is gonna have to be a hack: see [`bookdown/issues/1298`](https://github.com/rstudio/bookdown/issues/1298)
-- **some way of hiding/showing all videos on a page**
+- fix load flicker of embedded videos
+    + **videos should work the same as `.technical` divs**
+    + `fa-video-camera`, then "*Video title*"
 - improve sidenote y-positioning using jquery
     + find the previous `.footnote-ref` in the DOM and align with that
 
