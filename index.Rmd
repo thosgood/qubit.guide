@@ -183,7 +183,7 @@ d. Here is a simple proof that $+1=-1$: $$1=\sqrt{1}=\sqrt{(-1)(-1)}=\sqrt{-1}\s
 
 We assume that you are familiar with Euclidean vectors --- those arrow-like geometric objects which are used to represent physical quantities, such as trajectories, velocities, or forces.
 You know that any two velocities can be added to yield a third, and the multiplication of a "velocity vector" by a real number is another "velocity vector".
-So a **linear combination** of vectors is another vector: if $v$ and $w$ are vectors, and $\lambda$ and $\mu$ are real numbers, then $\lambda v+\mu w$ is another vector.
+So a **linear combination** of vectors is another vector: if $v$ and $w$ are vectors, and $\lambda$ and $\mu$ are numbers (rational, real, or complex, for example), then $\lambda v+\mu w$ is another vector.
 Mathematicians have simply taken these properties and defined vectors as _anything_ that we can add and multiply by numbers, as long as everything behaves in a nice enough way.
 This is basically what an Italian mathematician Giuseppe Peano (1858--1932) did in a chapter of his 1888 book with an impressive title: _Calcolo geometrico secondo l'Ausdehnungslehre di H. Grassmann preceduto dalle operazioni della logica deduttiva_.
 Following Peano, we define a **vector space** as a mathematical structure in which the notion of linear combination "makes sense".
@@ -272,10 +272,12 @@ The inner product between vectors $\ket{u}$ and $\ket{v}$ in ${\mathcal{H}}$ is 
 If $V$ is a vector space with an inner product $\langle-,-\rangle$, then this gives us a **norm** on $V$ by defining $\|x\|=\sqrt{\langle x,x\rangle}$ and thus a **metric** by defining $d(x,y)=\|y-x\|$.
 We say that a sequence $(x_n)$ in $V$ is **Cauchy** if its elements "eventually always get closer", i.e. if for all $\varepsilon>0$ there exists some $N\in\mathbb{N}$ such that for all $m,n>N$ we have $\|x_n-x_m\|<\varepsilon$.
 We say that a normed space is **complete** if *every Cauchy sequence converges in that space*, i.e. if the limits of sequences that *should* exist actually *do* exist.
+
 Now one useful fact is the following: on a *finite dimensional* vector space, all norms are equivalent.
-(Note that this does *not* mean that $\|x\|_1=\|x\|_2$ for any two norms $\|-\|_1$ and $\|-\|_2$, but simply that they "induce the same topology" --- you can look up the precise definition somewhere else if you are not familiar with it).
+(Note that this does *not* mean that $\|x\|_1=\|x\|_2$ for any two norms $\|-\|_1$ and $\|-\|_2$, but simply that they "induce the same topology" --- feel free to look up the precise definition elsewhere).
 This follows from another useful fact: in a *finite dimensional* vector space, the unit ball is compact.
 By a short topological argument, we can use these facts to show that what we claimed, namely that every *finite dimensional* inner product space is complete (with respect to the norm induced by the inner product, and thus with respect to *any* norm, since all norms are equivalent).
+
 In the infinite dimensional case these facts are *not* true, and we have a special name for those inner product spaces which *are* complete: **Hilbert spaces**.
 So working in the finite dimensional case means that "we do not have to worry about analysis", in that the completeness property comes for free the moment we have an inner product, and we can freely refer to inner product spaces as Hilbert spaces.
 :::
@@ -336,7 +338,7 @@ $$
 $$
 We usually omit the parentheses when it is obvious what the dagger operation applies to.
 
-The dagger operation, also known as **Hermitian conjugation**^[Recall that the conjugate transpose, or the Hermitian conjugate, of an $(n\times m)$ matrix $A$ is an $(m\times n)$ matrix $A^\dagger$, obtained by interchanging the rows and columns of $A$ and taking complex conjugates of each entry in $A$, i.e. $A^\dagger_{ij}=A^\star_{ji}$. In mathematics texts it is often denoted by ${}^\star$ rather than ${}^\dagger$, but we reserve the former for complex conjugation *without* matrix transpose. Note, however, that scalars can be thought of as $(1\times1)$ matrices, and in this special case we have that $\dagger=\star$.], is _antilinear_:
+The dagger operation, also known as **Hermitian conjugation**, is _antilinear_:
 $$
   \begin{aligned}
     (c_1\ket{v_1}+c_2\ket{v_2})^\dagger
@@ -346,12 +348,15 @@ $$
   \end{aligned}
 $$
 Also, when applied twice, the dagger operation is the identity map.
-In the matrix representation,
+
+You might already be familiar with Hermitian conjugation under another name: the **conjugate transpose**^[In mathematics texts this operation is often denoted by ${}^\star$ rather than ${}^\dagger$, but we reserve the former for complex conjugation *without* matrix transposition. Note, however, that scalars can be thought of as $(1\times1)$ matrices, and in this special case we have that $\dagger=\star$.] of an $(n\times m)$ matrix $A$ is an $(m\times n)$ matrix $A^\dagger$, obtained by interchanging the rows and columns of $A$ and taking complex conjugates of each entry in $A$, i.e. $A^\dagger_{ij}=A^\star_{ji}$.
+In particular then,
 $$
   \ket{v} = \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
   \overset{\dagger}{\longleftrightarrow}
   \bra{v} = \begin{bmatrix}v_1^\star,&v_2^\star,&\ldots,&v_n^\star\end{bmatrix}.
 $$
+
 
 
 ## Geometry
@@ -383,21 +388,21 @@ $$
     &= \sum_j \braket{v}{i}\bra{i}.
   \end{aligned}
 $$
-But _do not confuse $\ket{0}$ with the zero vector_!
-We _never_ write the zero vector as $\ket{0}$, but only ever as $0$, without any bra or ket decorations (so e.g. $\ket{v}+0=\ket{v}$).
+But *do not confuse $\ket{0}$ with the zero vector*!
+We *never* write the zero vector as $\ket{0}$, but only ever as $0$, without any bra or ket decorations (so e.g. $\ket{v}+0=\ket{v}$).
+
+Now that we have some notion of geometry, we can explain a bit more about this idea of associating a Hilbert space to a quantum system --- we will use some terminology that we have not yet introduced, but all will be explained in due time.
 
 ::: {.idea latex=""}
-Now that we have some notion of geometry, we can explain a bit more about this idea of associating a Hilbert space to a quantum system.
+To any *isolated* quantum system, which can be prepared in $n$ **perfectly distinguishable** states, we can associate a Hilbert space $\mathcal{H}$ of dimension $n$ such that each vector $\ket{v}\in\mathcal{H}$ of unit length $\braket{v}{v}=1$ represents a quantum state of the system.
+The overall phase of the vector has no physical significance: $\ket{v}$ and $e^{i\varphi}\ket{v}$ (for any real $\varphi$) both describe the same state.
+:::
 
-- To any *isolated* quantum system, which can be prepared in $n$ *perfectly distinguishable* states, we can associate a Hilbert space $\mathcal{H}$ of dimension $n$ such that each vector $\ket{v}\in\mathcal{H}$ of unit length (i.e. $\braket{v}{v}=1$) represents a quantum state of the system.
+We note here one more fact that also won't yet make sense, but which won't hurt to have hidden away in the back of your mind.
 
-- The overall phase of the vector has no physical significance: $\ket{v}$ and $e^{i\varphi}\ket{v}$ (for any real $\varphi$) both describe the same state.
-
-- The inner product $\braket{u}{v}$ is the _probability amplitude_ that a quantum system prepared in state $\ket{v}$ will be found in state $\ket{u}$ upon measurement.
-
-- States corresponding to orthogonal vectors (i.e. $\braket{u}{v}=0$) are **perfectly distinguishable**: if we prepare the system in state $\ket{v}$, then it will never be found in state $\ket{u}$, and vice versa.
-    In particular, states forming orthonormal bases are always perfectly distinguishable from each other.
-    Choosing such states, as we shall see in a moment, is equivalent to choosing a particular quantum measurement.
+::: {.idea latex=""}
+The inner product $\braket{u}{v}$ is the **probability amplitude** that a quantum system prepared in state $\ket{v}$ will be found in state $\ket{u}$ upon measurement.
+This means that states corresponding to orthogonal vectors (i.e. $\braket{u}{v}=0$) are perfectly distinguishable: if we prepare the system in state $\ket{v}$, then it will never be found in state $\ket{u}$, and vice versa.
 :::
 
 
