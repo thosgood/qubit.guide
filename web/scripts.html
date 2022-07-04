@@ -42,31 +42,28 @@
     // 2. Videos and technical divs
 
     $("div.video").each(function() {
-      this.append('<i class="fa fa-video-camera"></i>');
-      var title = this.attr("title");
-      var id = this.attr("id");
-      this.append(`<a class="video-toggle" onclick="toggleVideo(${id})">${title}</a>`)
-      if (id) {
-        // this.append(`<lite-youtube videoid="${id}"></lite-youtube>`);
-      }
+      jQuery("<i>", {
+          class: "fa fa-video-camera"
+      }).appendTo(this);
+      var title = $(this).attr("title");
+      var video_id = $(this).attr("video_id");
+      jQuery("<a>", {
+          class: "video-toggle",
+          text: title
+      }).appendTo(this);
     });
 
-    function toggleVideo(id) {
-      var possible_video = this.siblings("lite-youtube");
+    $('.video-toggle').click(function() {
+      var parent = $(this).parent();
+      var possible_video = $(this).siblings("lite-youtube");
       if (possible_video.length) {
         possible_video[0].remove();
       } else {
-        this.append(`<lite-youtube videoid="${id}"></lite-youtube>`);
+        jQuery("<lite-youtube>", {
+            videoid: parent.data("videoid")
+        }).insertAfter($(this));
       }
-    };
-
-    function embeddedVideo(metadata) {
-      if (metadata["title"] && metadata["id"]) {
-        return `<lite-youtube videoid="${metadata["id"]}" playlabel="${metadata["title"]}"></lite-youtube>`
-      }
-    };
-
-    // TO-DO
+    });
 
 
     // 3. Other stuff
