@@ -13,6 +13,7 @@ Build using the `./build_book` script.
 - **search for TO-DO**
 - add more questions from problem sheets
 - look at all internal links and check that their text isn't anything like "Chapter 3" or whatever (i.e. (*ideally*) nothing that isn't permutation invariant!)
+- rewrite `.circuit` and `.scenario` to use `content: attr(title)".";`?
 
 
 ### Web
@@ -27,9 +28,7 @@ Build using the `./build_book` script.
 - pretty urls
     + note that these already sort of work (i.e. you can happily delete the trailing `.html` from any page's url), but the *TOC* is all ugly links
     + this is gonna have to be a hack: see [`bookdown/issues/1298`](https://github.com/rstudio/bookdown/issues/1298)
-- fix load flicker of embedded videos
-    + **videos should work the same as `.technical` divs**
-    + `fa-video-camera`, then "*Video title*"
+- make embedded videos slide in/out rather than just appear/disappear
 - improve sidenote y-positioning using jquery
     + find the previous `.footnote-ref` in the DOM and align with that
 
