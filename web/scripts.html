@@ -41,26 +41,28 @@
 
     // 2. Videos and technical divs
 
+    // Create an icon and a toggle link in each div
     $("div.video").each(function() {
       jQuery("<i>", {
           class: "fa fa-video-camera"
       }).appendTo(this);
       var title = $(this).attr("title");
-      var video_id = $(this).attr("video_id");
       jQuery("<a>", {
           class: "video-toggle",
           text: title
       }).appendTo(this);
     });
 
+    // The toggle code, run when the link generated above is clicked
     $('.video-toggle').click(function() {
       var parent = $(this).parent();
+      var video_id = parent.data("videoid");
       var possible_video = $(this).siblings("lite-youtube");
       if (possible_video.length) {
         possible_video[0].remove();
       } else {
         jQuery("<lite-youtube>", {
-            videoid: parent.data("videoid")
+            videoid: video_id
         }).insertAfter($(this));
       }
     });
