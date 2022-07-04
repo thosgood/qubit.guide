@@ -39,7 +39,37 @@
     // $('a[title="View Source"]').children()[0].setAttribute("class", "fa fa-code");
 
 
-    // 2. Other stuff
+    // 2. Videos and technical divs
+
+    $("div.video").each(function() {
+      this.append('<i class="fa fa-video-camera"></i>');
+      var title = this.attr("title");
+      var id = this.attr("id");
+      this.append(`<a class="video-toggle" onclick="toggleVideo(${id})">${title}</a>`)
+      if (id) {
+        // this.append(`<lite-youtube videoid="${id}"></lite-youtube>`);
+      }
+    });
+
+    function toggleVideo(id) {
+      var possible_video = this.siblings("lite-youtube");
+      if (possible_video.length) {
+        possible_video[0].remove();
+      } else {
+        this.append(`<lite-youtube videoid="${id}"></lite-youtube>`);
+      }
+    };
+
+    function embeddedVideo(metadata) {
+      if (metadata["title"] && metadata["id"]) {
+        return `<lite-youtube videoid="${metadata["id"]}" playlabel="${metadata["title"]}"></lite-youtube>`
+      }
+    };
+
+    // TO-DO
+
+
+    // 3. Other stuff
 
     // Class and new-tab-opening for external links
     $("a[href^='http']").each(function() {
