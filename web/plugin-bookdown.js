@@ -7,7 +7,7 @@ gitbook.require(["gitbook", "lodash", "jQuery"], function(gitbook, _, $) {
   gitbook.events.bind("start", function(e, config) {
 
     // Add separator to sidebar
-    toolbar.createButton({
+    gitbook.toolbar.createButton({
         text: '/',
         label: 'Separator',
         className: 'header-divider-slash',
