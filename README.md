@@ -21,6 +21,7 @@ Build using the `./build_book` script.
 - **`{.technical}` divs**
     + make these concertinas/accordions
     + possible icon: [search-plus](https://fontawesome.com/v4/icon/search-plus), [book](https://fontawesome.com/v4/icon/book), [cogs](https://fontawesome.com/v4/icon/cogs), [comments](https://fontawesome.com/v4/icon/comments), [rocket](https://fontawesome.com/v4/icon/rocket)
+    + **add titles to all**
 - *general web styling*
     + favicon
         * `favicon: "favicon.ico"` in the `index.Rmd` YAML
