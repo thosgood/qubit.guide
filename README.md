@@ -45,5 +45,6 @@ Build using the `./build_book` script.
     + TOC spacing (e.g. the §11.10 number overlaps with the subsection title)
     + make physical page numbers agree with printed page numbers
     + icon for `.technical` divs?
+    + some figures are just TOO BIG (e.g. that relative phase/probability p graph for decoherence)
 - check footnotes don't spill over into subsequent pages
 - smaller format pdf version ("book-sized", with footnotes at the bottom)
