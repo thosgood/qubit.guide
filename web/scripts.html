@@ -41,7 +41,7 @@
 
     // 2. Videos
 
-    // Create an icon and a toggle link in each div
+    // Create an icon and a toggle link
     $("div.video").each(function() {
       jQuery("<i>", {
           class: "fa fa-video-camera"
@@ -53,7 +53,7 @@
       }).appendTo(this);
     });
 
-    // The toggle code, run when the link generated above is clicked
+    // Toggle showing the video
     $('.video-toggle').click(function() {
       var parent = $(this).parent();
       var video_id = parent.data("videoid");
@@ -70,8 +70,11 @@
 
     // 3. Technical divs
 
-    // Create an icon and a toggle link in each div
     $("div.technical").each(function() {
+      // Wrap the div contents in a div
+      $(this).wrapInner('<div class="technical-contents"></div>');
+      // Create an icon and toggle link
+      jQuery("<hr>").prependTo(this);
       var title = $(this).attr("title");
       jQuery("<a>", {
           class: "technical-toggle",
@@ -82,9 +85,11 @@
       }).prependTo(this);
     });
 
-    // The toggle code, run when the link generated above is clicked
-    $('.technical-toggle').click(function() {
-      // TO-DO: change display to "block" (?) for everything
+    // Toggle showing the technical contents
+    $(".technical-toggle").click(function() {
+      $(this).next(".technical-contents").slideToggle("fast", function() {
+        // Animation complete.
+      });
     });
 
 
