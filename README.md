@@ -44,6 +44,7 @@ Build using the `./build_book` script.
         * also just make it smaller overall width?
     + make physical page numbers agree with printed page numbers
     + icon for `.technical` divs?
+        * use the title of the div too
     + some figures are just TOO BIG (e.g. that relative phase/probability p graph for decoherence)
     + `.idea` and `.technical` envs have two problems:
         * they start with a single space
