@@ -35,8 +35,9 @@ A typical combination of these operations is shown in the following diagram:
 \end{quantikz}
 ```
 
-Let's explain what this diagram is expressing.
-First, we prepare our system of interest in an input state $\rho$.
+Let's explain what this diagram is really saying.
+
+First, as always, we prepare our system of interest in an input state $\rho$.
 
 Next we dilate the system by "**adding**" (or "**taking into account**") an auxiliary system^[Depending on the context, the auxiliary system is either called the **ancilla** (usually when we can control it) or the **environment** (usually when we cannot control it).] which is large enough to include everything our system will interact with, and also large enough to be in a pure state $\ket{a}$.
 Mathematically, we do this by tensoring the input state $\rho$ with $\proj{a}$ to obtain $\proj{a}\otimes\rho$ (here we place the auxiliary system first and our system of interest second).
@@ -75,26 +76,27 @@ This will set the stage for our subsequent discussion of quantum error correctio
 ## Random unitaries
 
 As a first step toward understanding the quantum description of an evolving open system, consider a "two-qubit universe" in which we observe *only one* of the qubits.
-Let us revisit the controlled-$\texttt{NOT}$ gate, in which two qubits undergo the unitary transformation
+Let's revisit the controlled-$\texttt{NOT}$ gate, in which two qubits undergo the unitary transformation
 $$
   U
   = \proj{0}\otimes\id +\proj{1}\otimes X
   = \diag{\id}{X}
 $$
-and let us focus on the transformation of the target qubit alone.
+but we're going to focus on the transformation of the target qubit alone.
 We know that it depends on the state of the control qubit:
 
-- if the input state of the control qubit is $\ket{0}$, the target qubit evolves unitarily according to the identity operator $\id$;
-- if the input state of the control qubit is $\ket{1}$, the target qubit evolves unitarily according to the bit flip operator $X$;
-- but for input states of the control that are superpositions of $\ket{0}$ and $\ket{1}$ the evolution of the target qubit is *not* unitary.
+- if the input state of the control qubit is $\ket{0}$, the target qubit evolves (*unitarily*) according to the identity operator $\id$;
+- if the input state of the control qubit is $\ket{1}$, the target qubit evolves (*unitarily*) according to the bit flip operator $X$;
+- ... but for input states of the control that are *superpositions* of $\ket{0}$ and $\ket{1}$ the evolution of the target qubit is *not* unitary.
 
 To justify this last point, note that, if the control qubit is in the state $\alpha_0\ket{0}+\alpha_1\ket{1}$ and the target qubit is in some state $\ket{\psi}$, then the output state can be written as
 $$
   \alpha_0\ket{0}\otimes\id\ket{\psi} + \alpha_1\ket{1}\otimes X\ket{\psi}
 $$
 which shows that the control and the target become entangled.
-The target qubit alone ends up in the statistical mixture of states $\ket{\psi}$ (with probability $|\alpha_0|^2$) and $X\ket{\psi}$ (with probability $|\alpha_1|^2$).
-This can be easily verified by expressing the above output state of the two qubits as the density matrix
+The target qubit alone ends up in the statistical mixture of states $\ket{\psi}$ with probability $|\alpha_0|^2$ and $X\ket{\psi}$ with probability $|\alpha_1|^2$.
+
+We can verify this by expressing the above output state of the two qubits as the density matrix
 $$
   \begin{aligned}
     |\alpha_0|^2\proj{0}\otimes \id\proj{\psi}\id
@@ -105,13 +107,14 @@ $$
 $$
 and then tracing over the control qubit, which gives^[Recall that, for the basis states, $\tr\ket{i}\bra{j}=\braket{i}{j}=\delta_{ij}$.]
 $$
-  |\alpha_0|^2 \id\proj{\psi}\id
-  + |\alpha_1|^2 X\proj{\psi} X.
+  |\alpha_0|^2 \id\proj{\psi}\id + |\alpha_1|^2 X\proj{\psi} X.
 $$
-We can then say that the input state of the target qubit evolves either according to the identity operator (with probability $|\alpha_0|^2$) or according to the operator $X$ (with probability $|\alpha_1|^2$).
+Then we can say that the input state of the target qubit evolves either according to the identity operator (with probability $|\alpha_0|^2$) or according to the $X$ operator (with probability $|\alpha_1|^2$).
 
-This argument works even if the target qubit is initially in a mixed state, since we are dealing with a linear transformation, and any mixed state can be expressed as a statistical ensemble of pure states (via the convex decomposition of a density matrix).
-Thus, in general, we can express the evolution of the target qubit^[We can also focus on the evolution of the control qubit: see [the examples and exercises section](#control-controlled-NOT). In fact, we can choose any subset of qubits for our inputs and outputs. For example, our input could be the control qubit, and the output could be *both* the control *and* the target qubits.] as
+**TO-DO: continue from here**
+
+This argument works even if the target qubit is initially in a mixed state: we are dealing with a linear transformation, and any mixed state can be expressed as a statistical ensemble of pure states (via the convex decomposition of a density matrix).
+So, in general, we can express the evolution of the target qubit^[We can also focus on the evolution of the control qubit: see [the examples and exercises section](#control-controlled-NOT). In fact, we can choose any subset of qubits for our inputs and outputs. For example, our input could be the control qubit, and the output could be *both* the control *and* the target qubits.] as
 
 $$
   \rho\longmapsto
