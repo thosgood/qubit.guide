@@ -152,104 +152,20 @@ However, if we do not have access to the control system, then there is very litt
 In this case the best we can do is to apply the inverse of the *most likely* unitary, which will then recover the input state, *but only with some probability of success*.
 In order to do better than that we have to look at slightly different channels.
 
-First though, a fundamental example of a random unitary evolution: a **single-qubit Pauli channel** applies one of the Pauli operators, $X$, $Y$ or $Z$, chosen randomly with some prescribed probabilities $p_x$, $p_y$ and $p_z$, giving
+First though, a fundamental example of a random unitary evolution:
+
+::: {.idea latex=""}
+A **single-qubit Pauli channel** applies one of the Pauli operators, $X$, $Y$ or $Z$, chosen randomly with some prescribed probabilities $p_x$, $p_y$ and $p_z$, giving
 $$
   \rho\longmapsto
   p_0 \id \rho\id + p_x X\rho X+ p_y Y\rho Y+  p_z Z\rho Z.
 $$
 The Pauli operators represent **quantum errors**: bit-flip $X$, phase-flip $Z$, and the composition of the two $Y=iXZ$.
+:::
 
 
 
 ## Random isometries
-
-**TO-DO: continue from here**
-
-There is another invertible operation in quantum theory: an **isometry**, which is a combination of adding another quantum system and then applying a unitary transformation to the resulting composite system.
-So let us take a quick look at a simple generalisation of random unitaries, namely random isometries $V_i$, which give
-$$
-  \rho\longmapsto
-  \rho' = \sum_{i=1} p_i V_i \rho V^\dagger_i.
-$$
-An isometry $V$ is similar to a unitary operator except that it maps states in the Hilbert space $\mathcal{H}$ to states in a larger Hilbert space $\mathcal{H}'$ (cf. {the appendix on isometries}(#isometries)).
-Here $\mathcal{H}$ is associated with the input and $\mathcal{H}'=\mathcal{H}_\mathcal{A}\otimes\mathcal{H}$ with the dilated system (i.e. the ancilla $\mathcal{A}$ plus our system of interest).
-Isometries satisfy $V^\dagger V=\id$, and they are usually implemented by adding an ancilla in a fixed state and then applying a unitary operation to the resulting composed system.
-They can be then reversed by applying the inverse of that unitary and discarding the ancilla.
-
-Now, if $\mathcal{H}'$ is sufficiently larger than $\mathcal{H}$, and if the images $\mathcal{H}'_i$ of $\mathcal{H}$ in $\mathcal{H}'$ under the different isometries $V_i$ do not overlap^[That is, if the subspaces $\mathcal{H}'_i$ are mutually orthogonal.], then we can reverse the action of the channel:
-we can, at least in principle, perform a measurement on $\mathcal{H}'$, defined by the partition $\mathcal{H}'=\mathcal{H}'_1\oplus\mathcal{H}'_2\oplus\ldots$, and find out which subspace contains the output state;
-once we know which subspace the input was sent to, we know which particular isometry $V_k$ was applied by the channel;
-then we simply apply $V^\dagger_k$.
-
-In order to see this consider the following simple, but important, example, which we will revisit several times in different disguises.
-
-Alice constructs a quantum channel which is a mixture of four isometries.
-The input is a single qubit, and the output is a dilated system composed of three qubits.
-She prepares the input qubit in a state^[Our arguments here can be easily extended to any mixed state $\rho$, but for simplicity we consider the case of a pure state.] $\ket{\psi}$ and then combines it with the two ancillary qubits which are in a fixed state $\ket{0}\ket{0}$.
-Then she applies one of the four, randomly chosen, unitary operations to the three qubits, to generate the following four isometries:
-$$
-  \begin{aligned}
-    V_1 &= \ket{000}\bra{0} + \ket{111}\bra{1}
-  \\V_2 &= \ket{001}\bra{0} + \ket{110}\bra{1}
-  \\V_3 &= \ket{010}\bra{0} + \ket{101}\bra{1}
-  \\V_4 &= \ket{100}\bra{0} + \ket{011}\bra{1}.
-  \end{aligned}
-$$
-
-The three qubits, which form the output of the channel, are given to Bob, whose task is to recover the original state $\ket{\psi}$ of the input qubit.
-In this scenario, Bob, who knows the four isometries, can find out which particular isometry was applied.
-He knows that^[**!!!TO-DO!!! picture**]
-
-- $V_1$ maps $\mathcal{H}$ to $\mathcal{H}'_1$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{000}$ and $\ket{111}$;
-- $V_2$ maps $\mathcal{H}$ to $\mathcal{H}'_2$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{001}$ and $\ket{110}$;
-- $V_3$ maps $\mathcal{H}$ to $\mathcal{H}'_3$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{010}$ and $\ket{101}$;
-- $V_4$ maps $\mathcal{H}$ to $\mathcal{H}'_4$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{100}$ and $\ket{011}$.
-
-Given that these subspaces are mutually orthogonal, and $\mathcal{H}'=\mathcal{H}'_1\oplus\mathcal{H}'_2\oplus\mathcal{H}'_3\oplus\mathcal{H}'_4$, Bob can perform a measurement defined by the projectors on these subspaces.
-For example, if Alice randomly picked $V_2$, then the input state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$ will be mapped to the output state $\alpha_0\ket{001}+\alpha_1\ket{110}$ in the $\mathcal{H}'_2$ subspace.
-Bob's measurement will then detect $\mathcal{H}'_2$ as the subspace where the output state resides, but the measurement (i.e. the corresponding projection) will not affect any state in that subspace.
-Bob can now simply apply $V_2^\dagger$ and obtain $\ket{\psi}$.
-
-Just in case you are curious (as you should be!), below is a diagram of how the four isometries are implemented.
-How would you reverse these operations?
-
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
-\[
-  V_1 =
-  \begin{quantikz}[ampersand replacement=\&]
-    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \hphantomgate{X}\qw \& \qw
-  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
-  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
-  \end{quantikz}
-  \qquad\qquad
-  V_2 =
-  \begin{quantikz}[ampersand replacement=\&]
-    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \gate{X} \& \qw
-  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
-  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
-  \end{quantikz}
-\]
-\[
-  V_3 =
-  \begin{quantikz}[ampersand replacement=\&]
-    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \qw \& \qw
-  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \gate{X} \& \qw
-  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
-  \end{quantikz}
-  \qquad\qquad
-  V_4 =
-  \begin{quantikz}[ampersand replacement=\&]
-    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \qw \& \qw
-  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
-  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \gate{X} \& \qw
-  \end{quantikz}
-\]
-```
-
-Single unitaries or isometries apart, it turns out that the only reversible, or **correctable**, channels (i.e. channels in which the input state can be recovered) are exactly the mixtures of mutually orthogonal isometries $V^\dagger_i V_j=\delta_{ij}\id$.
-We shall return to these channels later on.
-
-**TO-DO: merge this with the below, which was originally an appendix!!!!!**
 
 In many applications, including quantum communication and quantum error correction, it is useful to encode a quantum state of one system into a quantum state of a larger system.
 Such operations are described by *isometries*.^[The word isometric (like pretty much most of the fancy words you come across in this course) comes from Greek, meaning "of the same measures": *isos* means "equal", and *metron* means "a measure", and so an "isometry" is a transformation that preserves distances.]
@@ -329,7 +245,7 @@ $$
   \longmapsto
   \ket{\psi}\ket{b}
   \longmapsto
-  U(\ket{\psi}\ket{b}
+  U(\ket{\psi}\ket{b})
 $$
 for any vector $\ket{\psi}\in\mathcal{H}_\mathcal{A}$.
 
@@ -342,19 +258,24 @@ $$
   V^\dagger V =\id.
 $$
 
+Now suppose we have isometries $V_1,\ldots,V_n\colon\mathcal{H}\to\mathcal{H}'$.
+If $\mathcal{H}'$ is "sufficiently bigger" than $\mathcal{H}$, and if the images $\mathcal{H}'_i\coloneqq V_i(\mathcal{H})$ do not "overlap" (that is, if the subspaces $\mathcal{H}'_i$ are mutually orthogonal), then we can reverse the action of the channel:
+we can, at least in principle, perform a measurement on $\mathcal{H}'$, defined by the partition $\mathcal{H}'=\mathcal{H}'_1\oplus\mathcal{H}'_2\oplus\ldots\oplus\mathcal{H}'_n$, and find out which subspace contains the output state;
+once we know which subspace the input was sent to, we know which particular isometry $V_k$ was applied by the channel;
+then we simply apply $V^\dagger_k$.
 
-An example which we will later return to is that of the **three-qubit code**.
-Take a qubit in some pure state $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, introduce two auxiliary qubits in a fixed state $\ket{0}\ket{0}$, and apply a unitary operation to the three qubits, namely two controlled-$\texttt{NOT}$ gates:
+Here is a simple, but important, example, which we will revisit several times in different disguises: that of the **three-qubit code**.
+Take a qubit in some pure state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$, introduce two auxiliary qubits in a fixed state $\ket{0}\ket{0}$, and apply a unitary operation to the three qubits, namely two controlled-$\texttt{NOT}$ gates:
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
 \begin{equation*}
   \begin{quantikz}
-    \lstick{$\alpha\ket{0}+\beta\ket{1}$}
+    \lstick{$\alpha_0\ket{0}+\alpha_1\ket{1}$}
     & \ctrl{1}
     & \ctrl{2}
     & \qw
     & \qw
-    \rstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+    \rstick[wires=3]{$\alpha_0\ket{000}+\alpha_1\ket{111}$}
     \\
     \lstick{$\ket{0}$}
     & \targ{}
@@ -378,20 +299,20 @@ $$
 $$
 acts via
 $$
-  \alpha\ket{0}+\beta\ket{1}
-  \longmapsto \alpha\ket{000}+\beta\ket{111}.
+  \alpha_0\ket{0}+\alpha_1\ket{1}
+  \longmapsto \alpha_0\ket{000}+\alpha_1\ket{111}.
 $$
 This three qubit-encoding can be reversed by the mirror image circuit:
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
 \begin{equation*}
   \begin{quantikz}
-    \lstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+    \lstick[wires=3]{$\alpha_0\ket{000}+\alpha_1\ket{111}$}
     & \ctrl{2}
     & \ctrl{1}
     & \qw
     & \qw
-    \rstick{$\alpha\ket{0}+\beta\ket{1}$}
+    \rstick{$\alpha_0\ket{0}+\alpha_1\ket{1}$}
     \\
     & \qw
     & \targ{}
@@ -407,6 +328,78 @@ This three qubit-encoding can be reversed by the mirror image circuit:
   \end{quantikz}
 \end{equation*}
 ```
+
+This isometry is just one member of a family, as we now explain.
+
+Alice constructs a quantum channel which is a mixture of four isometries.
+The input is a single qubit, and the output is a dilated system composed of three qubits.
+She prepares the input qubit in a state^[Our arguments here can be easily extended to any mixed state $\rho$, but for simplicity we consider the case of a pure state.] $\ket{\psi}$ and then combines it with the two ancillary qubits which are in a fixed state $\ket{0}\ket{0}$.
+Then she applies one of the four, randomly chosen, unitary operations to the three qubits, to generate the following four isometries:
+$$
+  \begin{aligned}
+    V_1 &= \ket{000}\bra{0} + \ket{111}\bra{1}
+  \\V_2 &= \ket{001}\bra{0} + \ket{110}\bra{1}
+  \\V_3 &= \ket{010}\bra{0} + \ket{101}\bra{1}
+  \\V_4 &= \ket{100}\bra{0} + \ket{011}\bra{1}.
+  \end{aligned}
+$$
+
+The three qubits, which form the output of the channel, are given to Bob, whose task is to recover the original state $\ket{\psi}$ of the input qubit.
+In this scenario, Bob, who knows the four isometries, can find out which particular isometry was applied.
+He knows that
+
+- $V_1$ maps $\mathcal{H}$ to $\mathcal{H}'_1$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{000}$ and $\ket{111}$;
+- $V_2$ maps $\mathcal{H}$ to $\mathcal{H}'_2$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{001}$ and $\ket{110}$;
+- $V_3$ maps $\mathcal{H}$ to $\mathcal{H}'_3$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{010}$ and $\ket{101}$;
+- $V_4$ maps $\mathcal{H}$ to $\mathcal{H}'_4$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{100}$ and $\ket{011}$.
+
+Given that these subspaces are mutually orthogonal, and $\mathcal{H}'=\mathcal{H}'_1\oplus\mathcal{H}'_2\oplus\mathcal{H}'_3\oplus\mathcal{H}'_4$, Bob can perform a measurement defined by the projectors on these subspaces.
+For example, if Alice randomly picked $V_2$, then the input state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$ will be mapped to the output state $\alpha_0\ket{001}+\alpha_1\ket{110}$ in the $\mathcal{H}'_2$ subspace.
+Bob's measurement will then detect $\mathcal{H}'_2$ as the subspace where the output state resides, but the measurement (i.e. the corresponding projection) will not affect any state in that subspace.
+Bob can now simply apply $V_2^\dagger$ and obtain $\ket{\psi}$.
+
+Just in case you are curious (as you should be!), below is a diagram of how the four isometries are implemented.
+How would you reverse these operations?
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
+\[
+  V_1 =
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \hphantomgate{X}\qw \& \qw
+  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
+  \end{quantikz}
+  \qquad\qquad
+  V_2 =
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \gate{X} \& \qw
+  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
+  \end{quantikz}
+\]
+\[
+  V_3 =
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \gate{X} \& \qw
+  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
+  \end{quantikz}
+  \qquad\qquad
+  V_4 =
+  \begin{quantikz}[ampersand replacement=\&]
+    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
+  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \gate{X} \& \qw
+  \end{quantikz}
+\]
+```
+
+::: {.idea}
+Apart from single unitaries or isometries, it turns out that the only reversible, or **correctable**, channels (i.e. channels in which the input state can be recovered) are exactly the mixtures of mutually orthogonal isometries $V^\dagger_i V_j=\delta_{ij}\id$.
+We shall return to such channels later on.
+:::
+
+
 
 
 
