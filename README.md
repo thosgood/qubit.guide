@@ -49,5 +49,6 @@ Build using the `./build_book` script.
     + `.idea` and `.technical` envs have two problems:
         * they start with a single space
         * they don't have paragraph line breaks
+        * they sometimes have more space at the bottom than at the top?
 - check footnotes don't spill over into subsequent pages
-- smaller format pdf version ("book-sized", with footnotes at the bottom)
+- make a smaller format pdf version ("book-sized", with footnotes at the bottom)

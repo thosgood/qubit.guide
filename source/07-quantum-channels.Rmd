@@ -111,20 +111,17 @@ $$
 $$
 Then we can say that the input state of the target qubit evolves either according to the identity operator (with probability $|\alpha_0|^2$) or according to the $X$ operator (with probability $|\alpha_1|^2$).
 
-**TO-DO: continue from here**
-
-This argument works even if the target qubit is initially in a mixed state: we are dealing with a linear transformation, and any mixed state can be expressed as a statistical ensemble of pure states (via the convex decomposition of a density matrix).
+This argument works even if the target qubit is initially in a mixed state: we are dealing with a linear transformation, and any mixed state can be expressed as a statistical ensemble of pure states (via the convex decomposition $\rho=\sum_i p_i\proj{\psi_i}$ of a density matrix).
 So, in general, we can express the evolution of the target qubit^[We can also focus on the evolution of the control qubit: see [the examples and exercises section](#control-controlled-NOT). In fact, we can choose any subset of qubits for our inputs and outputs. For example, our input could be the control qubit, and the output could be *both* the control *and* the target qubits.] as
-
 $$
   \rho\longmapsto
   \rho'= |\alpha_0|^2 \id\rho\id + |\alpha_1|^2 X\rho X
 $$
 where $\rho$ and $\rho'$ are the input and the output states, respectively.
-We may think about this input-output relation as a mathematical representation of a quantum communication channel in which an input qubit is bit-flipped (via the operator $X$) with some prescribed probability.
-But we may also take a more "global" view and see the action of the channel as arising from a unitary evolution on a larger (dilated) system, here composed of two qubits.
+We may think about this input-output relation as a mathematical representation of a quantum communication channel in which an input qubit is bit-flipped (via the operator $X$) with some prescribed probability $|\alpha_1|^2$.
+But we may also take a more "global" view and see the action of the channel as arising from a unitary evolution on a larger (dilated) system, here composed of two qubits (namely the target *and* the control).
 
-Our discussion can easily be extended beyond the qubits to cover any conditional dynamics of the type
+Our discussion can easily be extended beyond two qubits to cover any conditional dynamics of the type
 $$
   U
   = \sum_i \proj{i}\otimes U_i
@@ -143,16 +140,16 @@ $$
 and, by the same sequence of arguments as before, we obtain the evolution of the target system alone, and express it as
 $$
   \rho\longmapsto
-  \rho' = \sum_{i=1} p_i U_i \rho U^\dagger_i
+  \rho' = \sum_{i=1} |\alpha_i|^2 U_i \rho U^\dagger_i.
 $$
-where $p_i=|\alpha_i|^2$.
-That is, the state of the target system is modified by the unitary $U_i$, chosen randomly with probability $p_i$.
+That is, the state of the target system is modified by the unitary $U_i$ chosen randomly with probability $p_i=|\alpha_i|^2$.
 
-The reason we are paying particular attention to the random unitaries is that each unitary is invertible, and, as such, they offer a sliver of hope for reversing the action of the channel.
-If we can learn, post factum, which particular unitary operation $U_i$ was chosen then we can simply apply the inverse of that unitary and recover the original state.
+The reason we are paying particular attention to random unitaries is that each unitary is invertible, and, as such, offers a sliver of hope for being able to *reverse* the overall action of the channel.
+Indeed, if we can learn, post factum, which particular unitary operation $U_i$ was chosen, then we can simply apply the inverse $U_i^{-1}=U_i^\dagger$ of that unitary and recover the original state.
 For example, if we can measure the control system in the $\ket{i}$ basis, then measuring the outcome to be $k$ tells us that we have to apply $U_k^\dagger$ to the target to recover its input state.
+
 However, if we do not have access to the control system, then there is very little we can do: *we cannot figure out which particular unitary was applied by inspecting the target system alone*.
-In this case the best we can do is to apply the inverse of the most likely unitary, which will then recover the input state, *but only with some probability of success*.
+In this case the best we can do is to apply the inverse of the *most likely* unitary, which will then recover the input state, *but only with some probability of success*.
 In order to do better than that we have to look at slightly different channels.
 
 First though, a fundamental example of a random unitary evolution: a **single-qubit Pauli channel** applies one of the Pauli operators, $X$, $Y$ or $Z$, chosen randomly with some prescribed probabilities $p_x$, $p_y$ and $p_z$, giving
@@ -165,6 +162,8 @@ The Pauli operators represent **quantum errors**: bit-flip $X$, phase-flip $Z$, 
 
 
 ## Random isometries
+
+**TO-DO: continue from here**
 
 There is another invertible operation in quantum theory: an **isometry**, which is a combination of adding another quantum system and then applying a unitary transformation to the resulting composite system.
 So let us take a quick look at a simple generalisation of random unitaries, namely random isometries $V_i$, which give
