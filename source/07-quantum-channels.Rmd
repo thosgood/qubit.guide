@@ -890,54 +890,74 @@ For more on this, see [the remarks on Markov approximation at the end of this ch
 
 <div class="video" title="CPTP maps" data-videoid="9EkOiqaoPRw"></div>
 
+A while back we upgraded from working with state vectors $\ket{\psi}$ to working with density operators $\rho$, which are positive^[It's a small abuse of notation, but we often simply say "positive" to mean "positive semi-definite" or "non-negative". We write $\rho\geq0$ to mean that $\rho$ is positive.] Hermitian operators $\rho$ with $\tr\rho=1$, where "positive" means that $\braket{v|\rho}{v}\geq0$ for all $\ket{v}$ (or, equivalently, that all its eigenvalues are non-negative real numbers).
 It is easy to verify that quantum channels preserve positivity and trace, but the converse is not true!
-You may find it surprising, but there are linear maps that preserve positivity and the trace, but which are *not* quantum channels.
-The matrix transpose operation $\rho\mapsto\rho'=\rho^T$ is a good example of such an unphysical operation: it preserves both trace and positivity, and if $\rho$ is a density matrix then so too is $\rho'=\rho^T$, but the transpose *cannot* be written in the Stinespring (or the Kraus) form;
-it is not induced by a unitary operation on some larger Hilbert space, and it cannot be implemented.
-So, we then ask, *what is* the class of physically admissible maps?
+That is, there are linear maps that preserve positivity and the trace, but which are *not* quantum channels, and thus which are not "physical operations".
 
-Mathematically speaking, a quantum channel $\mathcal{E}$ is represented by a map
-^[Recall that, given a pair of Hilbert spaces $\mathcal{H}$ and $\mathcal{H}'$, we denote the set of (bounded) linear operators from $\mathcal{H}$ to $\mathcal{H}'$ by $\mathcal{B}(\mathcal{H},\mathcal{H}')$. We write $\mathcal{B}(\mathcal{H})$ as shorthand for $\mathcal{B(H,H)}$]
+The matrix transpose operation $\rho\mapsto\rho^T$ is a good example of such an unphysical operation: it preserves both trace and positivity, and if $\rho$ is a density matrix then so too is $\rho^T$, but we will show that the transpose *cannot* be written in the Stinespring (or the Kraus) form;
+it is not induced by a unitary operation on some larger Hilbert space, and it cannot be physically implemented.
+So, we then ask, *what is* the class of physically admissible maps?
+That is, how can we classify which maps are quantum channels and which are not?
+
+First, some notation.
+We say that a linear operator $f\colon\mathcal{H}\to\mathcal{H}'$ between Hilbert spaces is **bounded** if there exists some real number $B>0$ such that $\|f(x)\|_{\mathcal{H}'}\leq B\|x\|_{\mathcal{H}}$ for every vector $x\in\mathcal{H}$.
+Given a pair of Hilbert spaces $\mathcal{H}$ and $\mathcal{H}'$, we denote the set of bounded linear operators from $\mathcal{H}$ to $\mathcal{H}'$ by $\mathcal{B}(\mathcal{H},\mathcal{H}')$.
+We write $\mathcal{B}(\mathcal{H})$ as shorthand for $\mathcal{B(H,H)}$.
+
+::: {.technical title="Unbounded operators" latex=""}
+One reason to care so much about *bounded* operators is the following fact: *a linear operator between normed vector spaces is bounded if and only if it is continuous*.
+
+Another important fact is that the set $\mathcal{B}(\mathcal{H},\mathcal{H}')$ is more than just a mere set: it has both topological structure (it has a norm and forms a Banach space under this norm) and algebraic structure (it is an associative algebra over $\mathbb{C}$), along with the bonus feature of a particularly well-behaved [**involution**](https://en.wikipedia.org/wiki/Involution_(mathematics)) given by the [**adjoint**](https://en.wikipedia.org/wiki/Hermitian_adjoint).
+Formally, $\mathcal{B}(\mathcal{H},\mathcal{H}')$ is the prototypical example of a [**C*-algebra**](https://en.wikipedia.org/wiki/C*-algebra).
+
+Now here is another example of where working only with finite-dimensional spaces greatly simplifies the mathematics: if $X$ and $Y$ are normed vector spaces, with $X$ finite dimensional, then *every linear map $f\colon X\to Y$ is bounded (or, equivalently, continuous)*.
+
+In the infinite-dimensional setting, it is important to know whether or not a given operator is bounded, but it turns out that certain unbounded operators are still very useful.
+There are some [technical details](https://en.wikipedia.org/wiki/Unbounded_operator), but such operators [are used to model observables](https://en.wikipedia.org/wiki/Hilbert_space#Unbounded_operators) in the Hilbert-space formalism of quantum mechanics.
+:::
+
+Then, mathematically speaking, a quantum channel $\mathcal{E}$ is a specific type of map
 $$
   \mathcal{E}\colon \mathcal{B}(\mathcal{H}) \to \mathcal{B}(\mathcal{H}')
 $$
-mapping states (i.e. density operators) on some Hilbert space $\mathcal{H}$ to states on some, possibly different, Hilbert space $\mathcal{H}'$.
-But we are not interested in just any such maps, of course --- the statistical interpretation of quantum theory imposes certain properties on the subset of maps in which we are interested.
+that sends states (i.e. density operators) on some Hilbert space $\mathcal{H}$ to states on some (possibly different) Hilbert space $\mathcal{H}'$.
+But we are not interested in just *any* such maps, of course --- the statistical interpretation of quantum theory imposes certain properties on the subset of maps in which we are interested.
 
-- Firstly, for such a map $\mathcal{E}$ to be a channel it must *respect the mixing of states*.
-    Consider an ensemble of systems, with a fraction $p_1$ of them in the state $\rho_1$, and the remaining $p_2$ of them in the state $\rho_2$.
-    The overall ensemble is described by $\rho=p_1\rho_1+p_2\rho_2$.
-    If we apply $\mathcal{E}$ to each member of the ensemble individually, then the overall ensemble will be described by the density operator $\rho'=\mathcal{E}(\rho)$, which is given by $\rho'=p_1\mathcal{E}(\rho_1)+p_2\mathcal{E}(\rho_2)$.
-    We conclude that $\mathcal{E}$ must be a *linear map*.
+Firstly, for such a map $\mathcal{E}$ to be a channel it must *respect the mixing of states*.
+Consider an ensemble of systems, with a fraction $p_1$ of them in the state $\rho_1$, and the remaining $p_2$ of them in the state $\rho_2$.
+The overall ensemble is described by $\rho=p_1\rho_1+p_2\rho_2$.
+If we apply $\mathcal{E}$ to each member of the ensemble individually, then the overall ensemble will be described by the density operator $\rho'=\mathcal{E}(\rho)$, which should be given by $\rho'=p_1\mathcal{E}(\rho_1)+p_2\mathcal{E}(\rho_2)$.
+We conclude that $\mathcal{E}$ must be a *linear map*.
 
-- Next, since $\mathcal{E}$ must *map density operators to density operators* it must be both *positive* ($\mathcal{E}(\rho)\geq0$ whenever $\rho\geq0$) and *trace preserving* ($\tr\mathcal{E}(\rho)=\tr\rho$ for all $\rho$).
+Next, since $\mathcal{E}$ must *map density operators to density operators*, it has to be both *positive* ($\mathcal{E}(\rho)\geq0$ whenever $\rho\geq0$) and *trace preserving* ($\tr\mathcal{E}(\rho)=\tr\rho$ for all $\rho$).
 
-- Finally comes a subtle point.
-    It turns out that being positive is not good enough;
-    we must further require that the map $\mathcal{E}$ *remains positive even when extended to act on a part of a larger system*.
-    Suppose that Alice and Bob share a bipartite system $\mathcal{AB}$ in an entangled state $\rho_\mathcal{AB}$, and, whilst Alice does nothing, Bob applies the local operation $\mathcal{E}$ to his subsystems, and his subsystems only.
-    Then the resulting map on the whole bipartite system is given by $\id\otimes\mathcal{E}$, and this must give a proper density operator $\rho'_\mathcal{AB}$ of the composed system.
-    It turns out that this is a strictly stronger property than mere positivity;
-    we are asking for something called **complete positivity**.
-    Needless to say, complete positivity of $\mathcal{E}$ implies positivity, but the converse does not hold: there are maps which are positive but not completely positive.
-    The matrix transpose operation $\rho\rightarrow \rho'=\rho^T$ is a classic example of such a map.
+Finally comes a subtle point.
+It turns out that being positive is not good enough;
+we must further require that the map $\mathcal{E}$ *remains positive even when extended to act on a part of a larger system*.
+Suppose that Alice and Bob share a bipartite system $\mathcal{AB}$ in an entangled state $\rho_\mathcal{AB}$, and, whilst Alice does nothing, Bob applies the operation $\mathcal{E}$ to his subsystems, and his subsystems only.
+Then the resulting map on the whole bipartite system is given by $\id\otimes\mathcal{E}$, and we require that this *also* give a density operator $\rho'_\mathcal{AB}$ of the composed system.
+It turns out that this is a *strictly stronger* property than mere positivity;
+we are asking for something called **complete positivity**.
+Needless to say, complete positivity of $\mathcal{E}$ implies positivity, but the converse does not hold: there are maps which are positive but not completely positive.
+The matrix transpose operation $\rho\rightarrow\rho^T$ is a classic example of such a map.
 
-In fact, we can study the matrix transpose a bit further.
-Consider the transpose operation on a single qubit: $T\colon(\ket{i}\bra{j})\mapsto\ket{j}\bra{i}$ (for $i,j\in\{0,1\}$).
-It preserves both trace and positivity, and if $\rho$ is a density matrix then so too is $\rho'=\rho^T$.
-However, if the input qubit is part of a two qubit system, initially in the entangled state $\ket{\Omega}=\frac{1}{\sqrt{2}}(\ket{0}\ket{0}+\ket{1}\ket{1})$, and the transpose is applied to *only one* of the two qubits (say, the second one), then the density matrix of the two qubits evolves under the action of the partial transpose $\id\otimes T$ as
+Let's study this matrix transpose example a bit more.
+Consider the transpose operation on a single qubit: $T\colon\ket{i}\bra{j}\mapsto\ket{j}\bra{i}$ (for $i,j\in\{0,1\}$).
+It preserves both trace and positivity, and if $\rho$ is a density matrix then so too is $T(\rho)=\rho^T$.
+However, if the input qubit is part of a two qubit system, initially in the entangled state $\ket{\Omega}=\frac{1}{\sqrt{2}}(\ket{0}\ket{0}+\ket{1}\ket{1})$, and the transpose is applied to *only one* of the two qubits (say, the second one), then the density matrix of the two qubits evolves under the action of the **partial transpose** $\id\otimes T$ as
 $$
   \begin{aligned}
     \proj{\Omega}
     = \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes \ket{i}\bra{j}
-    &\xmapsto{\id\otimes T}
-    \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes T( \ket{i}\bra{j})
-  \\&= \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes \ket{j}\bra{i}.
+    \xmapsto{\id\otimes T}
+    &\frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes T( \ket{i}\bra{j})
+  \\= &\frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes \ket{j}\bra{i}.
   \end{aligned}
 $$
-The output is the $\texttt{SWAP}$ matrix, since it describes the $\texttt{SWAP}$ operation: $\ket{j}\ket{i}\mapsto\ket{i}\ket{j}$.
+The output is known as the $\texttt{SWAP}$ matrix, since it describes the $\texttt{SWAP}$ operation: $\ket{j}\ket{i}\mapsto\ket{i}\ket{j}$.
 Since this operation squares to the identity, we know that its eigenvalues must be either $\pm1$: states which are symmetric under interchange of the two qubits have eigenvalue $1$, while antisymmetric states have eigenvalue $-1$.
-So the $\texttt{SWAP}$ matrix has negative eigenvalues, which means that $\id\otimes T$ does *not* preserve positivity, and therefore $T$ is *not* a completely positive map.
+In particular then, the $\texttt{SWAP}$ matrix has negative eigenvalues, which means that $\id\otimes T$ does *not* preserve positivity (since $\id\otimes T$ applied to the positive operator $\proj{\Omega}$ is *not* positive), and therefore $T$ is *not* a completely positive map.
+
 If you prefer to see this more explicitly, then you can use the matrix representation of $\proj{\Omega}$, apply the partial transpose $\id\otimes T$, and then inspect the resulting matrix:
 $$
   \frac12\left[
@@ -958,26 +978,23 @@ $$
   \\0 & 0 & 0 & 1
   \end{array}\right].
 $$
-That is, the partial transpose $\id\otimes T$ maps the density matrix of a maximally entangled state $\proj{\Omega}$ to the $\texttt{SWAP}$ matrix, which has one negative eigenvalue ($-1$) and thus is not a density matrix.
+So the partial transpose $\id\otimes T$ maps the density matrix $\proj{\Omega}$ of a maximally entangled state $\ket{\Omega}$ to the $\texttt{SWAP}$ matrix, which has a negative eigenvalue (namely $-1$) and thus is *not* a density matrix (since it is not positive).
 
-So we have seen that, at the very least, we want to be considering *completely positive trace-preserving* maps, but how do we know whether or not there are any restrictions left to impose?
+We have seen that, at the very least, we want to be considering *completely positive trace-preserving* maps, but how do we know whether or not there are any further restrictions left to impose?
 Needless to say, here is where mathematics alone cannot guide us, since we are trying to characterise maps which are *physically admissible*, and mathematics knows nothing about the reality of our universe!
-However, one thing that we can do is compare our abstract approach with the derivations of quantum channels defined in terms of the Stinespring (or the Kraus) representation.
-As it happens, we can show that a map is completely positive and trace preserving if and only if it can be written in the Stinespring (or the Kraus) form.
+However, one thing that we can do is compare our abstract approach with the derivations of quantum channels defined in terms of the Stinespring (or Kraus) representation.
+As it happens, we can (and will!) show that a map is completely positive and trace preserving *if and only if* it can be written in the Stinespring (or Kraus) form.
 In other words:
 
 ::: {.idea latex=""}
-Quantum channels are exactly the completely positive trace-preserving (CPTP) maps.
+Quantum channels are *exactly* the completely positive trace-preserving (CPTP) maps.
 :::
 
 One direction of this claim is much simpler than the other.
-Any channel $\mathcal{E}$ must be completely positive, since the Kraus decomposition guarantees positivity of both $\mathcal{E}$ *and* the extended map $\id\otimes\mathcal{E}$: if $\mathcal{E}$ has the Kraus decomposition $\sum_i E_i\cdot E_i^\dagger$, then the extended channel $\id\otimes\mathcal{E}$ has the Kraus decomposition $\sum_i(\id\otimes E_i)\cdot(\id\otimes E_i^\dagger)$, which means that $\id\otimes\mathcal{E}$ is also a positive map, and so $\mathcal{E}$ is completely positive.
-Showing that CPTP maps are quantum channels is less obvious, and, in order to prove this, we will now introduce a very convenient tool called the **Choi matrix**^[Man-Duen Choi was brought up in Hong Kong. He received his Ph.D. degree under the guidance of Chandler Davis at Toronto. He taught at the University of California, Berkeley, from 1973 to 1976, and has worked since then at the University of Toronto. His research has been mainly in operator algebras, operator theory, and polynomial rings. He is particularly interested in examples/counterexamples and two-by-two matrix manipulations.], which is yet another way to characterise linear maps between operators.
+Any quantum channel $\mathcal{E}$ must be completely positive, since the Kraus decomposition guarantees positivity of both $\mathcal{E}$ *and* the extended map $\id\otimes\mathcal{E}$, since if $\mathcal{E}$ has Kraus decomposition $\sum_i E_i E_i^\dagger$, then the extended channel $\id\otimes\mathcal{E}$ has Kraus decomposition $\sum_i(\id\otimes E_i)(\id\otimes E_i^\dagger)$, which means that $\id\otimes\mathcal{E}$ is also a positive map, whence $\mathcal{E}$ is completely positive.
 
-::: {.technical title="Unbounded operators" latex=""}
-- **!!TO-DO: tim footnote: here we work only with finite dimensional spaces, and if $X$ is f.d. then every linear operator $f\colon X\to Y$ between normed vector spaces is continuous (and thus bounded)!!**
-- talk about [unbounded operators](https://en.wikipedia.org/wiki/Hilbert_space#Unbounded_operators)
-:::
+Conversely, showing that CPTP maps are quantum channels is less simple.
+In order to prove this, we will now introduce a very convenient tool called the **Choi matrix**^[Man-Duen Choi was brought up in Hong Kong. He received his Ph.D. degree under the guidance of Chandler Davis at Toronto. He taught at the University of California, Berkeley, from 1973 to 1976, and has worked since then at the University of Toronto. His research has been mainly in operator algebras, operator theory, and polynomial rings. He is particularly interested in examples/counterexamples and $2\times2$ matrix manipulations.], which gives yet another way to characterise linear maps between operators.
 
 
 
