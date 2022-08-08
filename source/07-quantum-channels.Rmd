@@ -644,10 +644,8 @@ These two representations are equivalent, and we can easily switch between them:
     In terms of matrices, this corresponds to simply "stacking up" the matrices $E_i$ to form the block column (as shown in Figure \@ref(fig:unitary-isometry)), which gives us the matrix representation of $V$.
     If we want to go further, from an isometry $V$ to a unitary $U$, then the next step is somewhat arbitrary: we can choose all the remaining block columns of $U$ however we please, *as long as* we end up with a unitary matrix $U$.
 
-In summary:
-
 ::: {.idea latex=""}
-All linear transformations of density operators that can be written in the Stinespring (or, equivalently, Kraus) form represent *physically realisable operations*, and we call them **quantum channels**.^[Quantum channels are also known as **superoperators** --- this way physicists remind themselves that these transformations take operators to operators.]
+All linear transformations of density operators that can be written in the Stinespring (or, equivalently, Kraus) form represent *physically realisable operations* --- we call them **quantum channels**, or **superoperators**.^[Physicists like the terminology "superoperators", since it makes it clear that these transformations send operators to operators.]
 :::
 
 We note again that the Kraus decomposition is *not unique*: the operators $E_i$ depend on the choice of the ancilla basis.
@@ -722,7 +720,7 @@ General quantum channels, however, may deform it further, into [spheroids](https
     the original Bloch sphere shrinks into a prolate spheroid aligned with the $z$-axis;
     for the specific case of $p=\frac{1}{2}$, the Bloch sphere degenerates to the $[-1,1]$ interval on the $z$-axis.
 
-- **Depolarising channel.**
+- **Depolarising channel with probability $p$.**
     $$
       \rho\longmapsto (1-p)\rho + \frac{p}{3}\left(X\rho X+Y\rho Y+Z\rho Z\right).
     $$
@@ -734,24 +732,25 @@ General quantum channels, however, may deform it further, into [spheroids](https
 
 There are two interesting points that must be mentioned here.
 The first one is about the interpretation of the action of the channel in terms of Kraus operators: our narrative may change when we switch to a different set of effects.^[Recall that Kraus operators are also sometimes called "effects".]
-For example, take the phase-flip channel with $p=\frac{1}{2}$ and switch from the effects
+For example, take the phase-flip channel with $p=\frac{1}{2}$ and switch from the effects $E_i$ to $F_j$ as follows:
 $$
-  \begin{aligned}
-    E_1 &= \frac{1}{\sqrt{2}}\id
-  \\E_2 &= \frac{1}{\sqrt{2}}Z
-  \end{aligned}
+  \left\{
+    \begin{aligned}
+      E_1 &= \frac{1}{\sqrt{2}}\id
+    \\E_2 &= \frac{1}{\sqrt{2}}Z
+    \end{aligned}
+  \right\}
+  \longmapsto
+  \left\{
+    \begin{aligned}
+      F_1 &= \frac{1}{\sqrt{2}}(E_1+E_2)=\proj{0}
+    \\F_2 &= \frac{1}{\sqrt{2}}(E_1-E_2)=\proj{1}.
+    \end{aligned}
+  \right\}
 $$
-to
-$$
-  \begin{aligned}
-    F_1 &= \frac{1}{\sqrt{2}}(E_1+E_2)=\proj{0}
-  \\F_2 &= \frac{1}{\sqrt{2}}(E_1-E_2)=\proj{1}.
-  \end{aligned}
-$$
-These two sets of Kraus operators $\{E_1,E_2\}$ and $\{F_1,F_2\}$ describe the same channel, but the *narrative* is different.
-The first set of effects tells us that the channel chooses randomly, with the same probability, between two options (let the qubit pass undisturbed or apply the phase-flip $Z$);
+These two sets of Kraus operators $\{E_1,E_2\}$ and $\{F_1,F_2\}$ describe the same channel, but the *narrative* is different:
+the first set of effects tells us that the channel chooses randomly, with the same probability, between two options (let the qubit pass undisturbed or apply the phase-flip $Z$);
 the second set tells us that channel essentially performs the measurement in the standard basis, but the outcome of the measurement is not revealed.
-In general:
 
 ::: {.idea latex=""}
 Describing actions of quantum channels purely in terms of their effects (i.e. Kraus operators) can be ambiguous.
@@ -839,7 +838,7 @@ $$
 $$
 
 You might wonder why we explicitly called the above composition "sequential" --- isn't this how we always compose functions?
-In actual fact, since we have access to tensor products, there is another sort of composition, namely **parallel** composition: if we have systems $\mathcal{A}$ and $\mathcal{B}$ with channels $\mathcal{E}_\mathcal{A}$ acting on $\mathcal{A}$ and $\mathcal{E}_\mathcal{B}$ acting on $\mathcal{B}$, then the parallel composition is denoted by $\mathcal{E}_\mathcal{A}\otimes\mathcal{E}_\mathcal{B}$, acting on the joint system $\mathcal{A}\otimes\mathcal{B}$, and with Kraus operators given by the $A_i\otimes B_j$.
+In actual fact, since we have access to tensor products, there is another sort of composition, namely **parallel**^[You might also call this **simultaneous** composition, to contrast with *sequential* composition, but "parallel" is by far the most commonly accepted terminology.] composition: if we have systems $\mathcal{A}$ and $\mathcal{B}$ with channels $\mathcal{E}_\mathcal{A}$ acting on $\mathcal{A}$ and $\mathcal{E}_\mathcal{B}$ acting on $\mathcal{B}$, then the parallel composition is denoted by $\mathcal{E}_\mathcal{A}\otimes\mathcal{E}_\mathcal{B}$, acting on the joint system $\mathcal{A}\otimes\mathcal{B}$, and with Kraus operators given by the $A_i\otimes B_j$.
 The normalisation condition again follows from a simple calculation:
 $$
   \begin{aligned}
