@@ -691,7 +691,8 @@ In particular, this unitary equivalence of the Kraus operators implies that the 
 ## Single-qubit channels
 
 The best way to familiarise ourselves with the concept of a quantum channel is to study a few examples, and we will start with the simplest case: **single-qubit channels**.
-The single-qubit case is special since we can visualise the action of the channel by looking at the corresponding deformation of the Bloch sphere.
+The single-qubit case is special since we can visualise the action of the channel by looking at the corresponding deformation of the Bloch ball.
+
 Recall that an arbitrary density matrix for a single qubit can be written in the form
 $$
   \begin{aligned}
@@ -701,11 +702,11 @@ $$
   \end{aligned}
 $$
 where $\vec{s}$ is the Bloch vector of the qubit with components $(s_x, s_y, s_z)$, and $X$, $Y$, and $Z$ are the Pauli operators.
-Recall that unitary operations rotate the Bloch sphere.
-In particular the $X$, $Y$, and $Z$ --- viewed as unitary transformations --- rotate the Bloch sphere by $180^\circ$ around the $x$, $y$, and $z$ axes, respectively.
-General quantum channels, however, may deform it further, into spheroids with a displaced centre, as the following examples show.
+Recall also that unitary operations *rotate* the Bloch sphere.
+In particular the $X$, $Y$, and $Z$ operators --- viewed as unitary transformations --- rotate the Bloch sphere by $180^\circ$ around the $x$-, $y$-, and $z$-axis, respectively.
+General quantum channels, however, may deform it further, into [spheroids](https://en.wikipedia.org/wiki/Spheroid) with a displaced centre, as the following examples show.
 
-- *A bit-flip with probability $p$:*
+- **Bit-flip with probability $p$.**
     $$
       \rho \longmapsto (1-p)\rho+pX\rho X.
     $$
@@ -713,7 +714,7 @@ General quantum channels, however, may deform it further, into spheroids with a 
     the original Bloch sphere shrinks into a prolate spheroid aligned with the $x$-axis;
     for the specific case of $p=\frac{1}{2}$, the Bloch sphere degenerates to the $[-1,1]$ interval on the $x$-axis.
 
-- *A phase-flip with probability $p$:*
+- **Phase-flip with probability $p$.**
     $$
       \rho \longmapsto (1-p)\rho+pZ\rho Z.
     $$
@@ -721,18 +722,18 @@ General quantum channels, however, may deform it further, into spheroids with a 
     the original Bloch sphere shrinks into a prolate spheroid aligned with the $z$-axis;
     for the specific case of $p=\frac{1}{2}$, the Bloch sphere degenerates to the $[-1,1]$ interval on the $z$-axis.
 
-- *The depolarising channel:*
+- **Depolarising channel.**
     $$
       \rho\longmapsto (1-p)\rho + \frac{p}{3}\left(X\rho X+Y\rho Y+Z\rho Z\right).
     $$
     Here the qubit remains intact with probability $1-p$, while a quantum error occurs with probability $p$.
-    The error can be of any one of three types: bit-flip $X$, phase-flip $Z$, or and both bit- and phase-flip $Y$; each type of error is equally likely.
+    The error can be of any one of three types: bit-flip $X$, phase-flip $Z$, or both bit- and phase-flip $Y$; each type of error is equally likely.
     For $p<\frac{3}{4}$, the original Bloch sphere contracts uniformly under the action of the channel, and the Bloch vector shrinks by the factor $1-\frac{4}{3}p$;
     for the specific case of $p=\frac{3}{4}$, the Bloch sphere degenerates to the point at the centre of the sphere;
     for $p>\frac{3}{4}$, the Bloch sphere is flipped, and the Bloch vector starts pointing in the opposite direction increasing the magnitude up to $\frac{1}{3}$ (which occurs for $p=1$).
 
 There are two interesting points that must be mentioned here.
-The first one is about the interpretation of the action of the channel in terms of Kraus operators: our narrative may change when we switch to a different set of effects.
+The first one is about the interpretation of the action of the channel in terms of Kraus operators: our narrative may change when we switch to a different set of effects.^[Recall that Kraus operators are also sometimes called "effects".]
 For example, take the phase-flip channel with $p=\frac{1}{2}$ and switch from the effects
 $$
   \begin{aligned}
@@ -748,7 +749,7 @@ $$
   \end{aligned}
 $$
 These two sets of Kraus operators $\{E_1,E_2\}$ and $\{F_1,F_2\}$ describe the same channel, but the *narrative* is different.
-The first set of effects tells us that the channel chooses randomly, with the same probability, between the two options: let the qubit pass undisturbed or apply the phase-flip $Z$;
+The first set of effects tells us that the channel chooses randomly, with the same probability, between two options (let the qubit pass undisturbed or apply the phase-flip $Z$);
 the second set tells us that channel essentially performs the measurement in the standard basis, but the outcome of the measurement is not revealed.
 In general:
 
@@ -768,10 +769,12 @@ This is due to *complete* positivity (instead of mere positivity) of quantum cha
 We mentioned that quantum channels are combinations of
 
 1. adding a physical system in a fixed state (via tensoring),
-2. discarding a physical system (taking a partial trace),
-3. and unitary transformations.
+3. unitary transformations, and
+2. discarding a physical system (taking a partial trace).
 
-For consistency let us note that each of these operations admits an operator-sum decomposition. This is obvious for unitary evolution ($\rho\mapsto U\rho U^\dagger$), but perhaps less so for the other two operations.
+As expected from the fact that the Stinespring point of view is equivalent to the Kraus point of view, each of these operations admits an operator-sum decomposition.
+This is obvious for unitary evolution ($\rho\mapsto U\rho U^\dagger$), but perhaps less so for the other two operations.
+One reason to care about this is that the Kraus decomposition gives a tidy way of describing *composition* of quantum channels.
 
 - **Adding a system.**
     Any quantum system can be expanded by bringing in an auxiliary system in a fixed state $\ket{a}$.
@@ -791,8 +794,8 @@ For consistency let us note that each of these operations admits an operator-sum
       \\&= V\rho V^\dagger
       \end{aligned}
     $$
-    where $V=\id\otimes\ket{a}$.
-    We note that $V^\dagger V = \id\otimes\braket{a|a} =\id$ is the identity in the Hilbert space associated with the system, and so $V$ is an isometry.
+    where $V=\ket{a}\otimes\id$.
+    We note that $V^\dagger V=\braket{a}{a}\otimes\id=\id$ is the identity in the Hilbert space associated with the system, and so $V$ is an isometry.
     Indeed, this transformation is an *isometric embedding*.
 
 - **Discarding a system.**
@@ -809,9 +812,9 @@ For consistency let us note that each of these operations admits an operator-sum
       \end{aligned}
     $$
     where the vectors $\ket{i}$ form an orthonormal basis in the Hilbert space associated with the auxiliary system.
-    Again, we can check that the Kraus operators $E_i=\bra{i}\otimes\id$ satisfy the completeness relation $\sum_i E^\dagger_i E_i =\id\otimes\id$ (using the fact that $\sum_i\proj{i}=\id$).
+    Again, we can check that the Kraus operators $E_i=\ket{i}\otimes\id$ satisfy the completeness relation $\sum_i E^\dagger_i E_i =\id\otimes\id$ (using the fact that $\sum_i\proj{i}=\id$).
 
-Any *sequential* composition of two quantum channels $\mathcal{E}$ and $\mathcal{F}$ with Kraus operators $\{A_i\}_{i\in I}$ and $\{B_j\}_{j\in J}$ (respectively) is another quantum channel^[Here we have tacitly assumed that the dimensions agree, i.e. that the output of $\mathcal{E}$ and the input of $\mathcal{F}$ are of the same dimension, so that the composition makes sense.] described by the Kraus operators $\{B_jA_i\}_{i\in I,j\in J}$.
+Any **sequential** composition of two quantum channels $\mathcal{E}$ and $\mathcal{F}$ with Kraus operators $\{A_i\}_{i\in I}$ and $\{B_j\}_{j\in J}$ (respectively) is another quantum channel^[Here we have tacitly assumed that the dimensions agree, i.e. that the output of $\mathcal{E}$ and the input of $\mathcal{F}$ are of the same dimension, so that the composition makes sense.] described by the Kraus operators $\{B_jA_i\}_{i\in I,j\in J}$.
 Showing this is rather straightforward, at least in the operator-sum representation: let
 $$
   \begin{aligned}
@@ -851,8 +854,7 @@ Now that we know how to compose quantum channels in terms of Kraus operators, we
 Before moving on, we make a small (but important) remark:
 
 ::: {.idea latex=""}
-When we compose quantum channels, each channel needs its own independent ancilla;
-*do not share ancillas between different channels*.
+When we compose quantum channels, each channel needs its own independent ancilla --- *do not share ancillas between different channels*.
 :::
 
 For example, say we have three channels, $\mathcal{E}_1$, $\mathcal{E}_2$, and $\mathcal{E}_3$, with $\mathcal{E}_i$ defined by the unitary $U_i$ and the state $\ket{a_i}$ of its ancilla.
@@ -880,7 +882,8 @@ Then the (sequential) composition $\mathcal{E}_3\circ\mathcal{E}_2\circ\mathcal{
 \end{quantikz}
 ```
 
-For more on this, see [the appendix on Markov approximation](#markov-approximation).
+where each $\mathcal{E}_i$ has its own associated ancilla $\ket{a_i}$.
+For more on this, see [the remarks on Markov approximation at the end of this chapter](#markov-approximation).
 
 
 
