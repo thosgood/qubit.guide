@@ -335,6 +335,22 @@ Nevertheless, the construction is both interesting and useful (and very recent!)
 > C Eltschka, M Huber, S Morelli, and J Siewert, "The shape of higher-dimensional state space: Bloch-ball analog for a qutrit". *Quantum* **5** (2021), DOI: [10.22331/q-2021-06-29-485](https://doi.org/10.22331/q-2021-06-29-485).
 :::
 
+We can still use the Bloch ball when working with *multiple* qubits at once, but we have to be careful because things don't always work nicely, precisely because the state space of multiple qubits is *not* just a product of Bloch balls.
+This is already apparent just by looking at state vectors instead of density operators.
+
+For example, say that we have a system with two qubits, and we wish to understand how they move about the Bloch sphere under some unitary evolution.
+If our qubits are initially in state $\ket{a}\ket{b}$, then evolve to the state $U\ket{a}\ket{b}$.
+Simple!
+But now say that, before applying our unitary $U$, we first *rotated* the Bloch ball so that our qubits were in some other state $\ket{a'}\ket{b'}$, and *then* applied our unitary $U$ to this rotated state.
+A natural question to ask is if there exists some rotation that takes the first result $U\ket{a}\ket{b}$ to the second result $U\ket{a'}\ket{b'}$.
+In other words, if we denote our rotation by $R$, then does there exist a rotation $S$ such that $U\circ R = S\circ U$?
+
+The answer is most definitely *no*, as shown by a reasonably simple example: consider the controlled-$\texttt{NOT}$ gate acting on two qubits initially in some state $\ket{0}\ket{\psi}$, and where the rotation $R$ takes $\ket{0}\ket{\psi}$ to $\ket{\psi'}\ket{0}$.
+Then $(U\circ R)\ket{a}\ket{b}=\ket{\psi'}\ket{\psi'}$, and $U\ket{a}\ket{b}=\ket{0}\ket{\psi}$.
+But we cannot transform the latter into the former by a simple rotation of the sphere, since the latter has two distinct Bloch vectors, whereas the former has a single repeated one, and rotations never "collapse" two distinct vectors into one.
+The key point here is that the angles between the Bloch vectors can *change* upon applying unitary operations, and the amount by which they change can depend on the Bloch vectors themselves, whereas rotations keep these relative angles *constant*.
+
+In summary, the Bloch ball is really useful for understanding a single density operator and how it evolves, or even for comparing two density operators, but one has to be careful when trying to use it to talk about multiple qubits evolving together in a single system --- the Bloch ball is the state space for a *single* qubit, and the state space of multiple qubits is *not* just a product of Bloch balls!
 
 
 

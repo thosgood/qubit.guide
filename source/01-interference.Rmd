@@ -313,26 +313,38 @@ We can understand this interference better if we follow the two internal states 
 Suppose we are interested in the probability that the atom, initially in state $\ket{0}$, will be found, after completing its journey through the three cavities, in state $\ket{1}$.
 As you can see in Figure \@ref(fig:ramsey-figure-2), this can happen in two ways, as indicated by the two thick paths connecting the input state $\ket{0}$ on the left with the output state $\ket{1}$ on the right.
 Again, let $U_{ij}$ denote the probability amplitude that input $\ket{j}$ generates output $\ket{i}$ (for $i,j=0,1$).
+
 We can see from the diagram that
 $$
   \begin{aligned}
     U_{10}
     &= \frac{1}{\sqrt2} e^{i\varphi_0}\frac{1}{\sqrt2} + \frac{1}{\sqrt2} e^{i\varphi_1}\frac{-1}{\sqrt2}
-  \\&= \frac12 e^{i\varphi_0} - \frac12 e^{i\varphi_1}
-  \\&= -ie^{i\frac{\varphi_0+\varphi_1}{2}}\sin\frac{\varphi}{2},
+  \\&= \frac12 \left(e^{i\varphi_0}-e^{i\varphi_1}\right)
   \end{aligned}
 $$
-where $\varphi = \varphi_1-\varphi_0$ is the relative phase.
+and then using the trick of writing $x=\frac{x+y}{2}+\frac{x-y}{2}$ and $y=\frac{x+y}{2}-\frac{x-y}{2}$, followed by using Euler's formula^[$e^{i\alpha}=\cos\alpha+i\sin\alpha$], gives us that
+$$
+  \begin{aligned}
+    U_{10}
+  \\&= \frac12 \left(e^{i\varphi_0}-e^{i\varphi_1}\right)
+  \\&= \frac12\left(e^{i\frac{\varphi_0+\varphi_1}{2}}e^{i\frac{\varphi_0-\varphi_1}{2}}\right)
+  \\&= -ie^{i\frac{\varphi_0+\varphi_1}{2}}\sin\frac{\varphi_1-\varphi_0}{2}
+  \end{aligned}
+$$
+where the relative phase $\varphi=\varphi_1-\varphi_0$ shows up yet again.
 
-The corresponding probability (that an atom, initially in state $\ket{0}$, will be found in state $\ket{1}$) is then^[From the classical probability theory perspective the resonant interaction induces a random switch between $\ket{0}$ and $\ket{1}$ (why?) and the dispersive interaction has no effect on these two states (why?). One random switch followed by another random switch is exactly the same as a single random switch (if you flip a coin twice and just observe the last result, this is probabilistically the same as just flipping the coin once), which gives $\frac12$ for the probability that input $\ket{0}$ becomes output $\ket{1}$.]
+The corresponding probability (i.e. that an atom, initially in state $\ket{0}$, will be found in state $\ket{1}$) is then^[From the classical probability theory perspective the resonant interaction induces a random switch between $\ket{0}$ and $\ket{1}$ (why?) and the dispersive interaction has no effect on these two states (why?). One random switch followed by another random switch is exactly the same as a single random switch (if you flip a coin twice and just observe the last result, this is probabilistically the same as just flipping the coin once), which gives $\frac12$ for the probability that input $\ket{0}$ becomes output $\ket{1}$.]
 $$
   \begin{aligned}
     P_{10}
     &= \vert U_{10}\vert^2
-  \\&= \left\vert \frac12 e^{i\varphi_0} - \frac12 e^{i\varphi_1}\right\vert^2
-  \\&= \frac12 - \frac12\cos\varphi.
+  \\&= \left\vert -ie^{i\frac{\varphi_0+\varphi_1}{2}}\sin\frac{\varphi_1-\varphi_0}{2} \right\vert^2
+  \\&= \left\vert \sin\frac{\varphi_1-\varphi_0}{2} \right\vert^2
+  \\&= \frac12\left(1 - \cos\varphi)
   \end{aligned}
 $$
+where we use the fact that $|i|^2=1$ and $|e^{i\alpha}|^2=1$ for any $\alpha$, along with the [double angle formula](https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Double-angle_formulae) $\cos2\theta=1-2\sin^2\theta$.
+
 You should recognise the first term $\frac12$ as the "classical" probability and the second one $-\frac12\cos\varphi$ as the interference term.
 We can repeat such calculations for any other pair of input--output states.
 This approach works fine here but, in general, tracking all possible paths in evolving quantum systems can become messy when the number of input and output states increases.
