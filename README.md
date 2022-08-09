@@ -11,10 +11,9 @@ Build using the `./build_book` script.
 
 - **only one footnote per paragraph**
 - **search for TO-DO**
-- add more questions from problem sheets
 - look at all internal links and check that their text isn't anything like "Chapter 3" or whatever (i.e. (*ideally*) nothing that isn't permutation invariant!)
 - rewrite `.circuit` and `.scenario` to use `content: attr(title)".";`?
-
+    + affects both HTML and PDF output
 
 ### Web
 
@@ -22,6 +21,8 @@ Build using the `./build_book` script.
     + favicon
         * `favicon: "favicon.ico"` in the `index.Rmd` YAML
     + banner image below homepage title?
+        * would have to work in both light and dark modes! (or alternatively have a separate image for each)
+- separator in nav bar doesn't change in dark mode
 - pretty urls
     + note that these already sort of work (i.e. you can happily delete the trailing `.html` from any page's url), but the *TOC* is all ugly links
     + this is gonna have to be a hack: see [`bookdown/issues/1298`](https://github.com/rstudio/bookdown/issues/1298)
@@ -36,9 +37,9 @@ Build using the `./build_book` script.
     + talk about technical divs
     + explain that web version exists
 - *general PDF styling*
-    + FONT
+    + ***FONT***
     + "Part X" pages
-    + make the tables (in e.g. "phase gates galore") in the pdf version look good
+    + make the tables (e.g. in "phase gates galore") in the pdf version look good
     + title page
     + **"last updated" date**
     + TOC spacing (e.g. the §11.10 number overlaps with the subsection title)
@@ -46,7 +47,7 @@ Build using the `./build_book` script.
     + make physical page numbers agree with printed page numbers
     + icon for `.technical` divs?
         * use the title of the div too
-    + some figures are just TOO BIG (e.g. that relative phase/probability p graph for decoherence)
+    + some figures are just TOO BIG (e.g. that relative phase/probability graph for decoherence)
     + `.idea` and `.technical` envs have two problems:
         * they start with a single space
         * they don't have paragraph line breaks

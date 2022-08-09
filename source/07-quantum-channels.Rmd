@@ -904,7 +904,7 @@ We say that a linear operator $f\colon\mathcal{H}\to\mathcal{H}'$ between Hilber
 Given a pair of Hilbert spaces $\mathcal{H}$ and $\mathcal{H}'$, we denote the set of bounded linear operators from $\mathcal{H}$ to $\mathcal{H}'$ by $\mathcal{B}(\mathcal{H},\mathcal{H}')$.
 We write $\mathcal{B}(\mathcal{H})$ as shorthand for $\mathcal{B(H,H)}$.
 
-::: {.technical title="Unbounded operators" latex=""}
+::: {.technical title="Bounded and unbounded operators" latex=""}
 One reason to care so much about *bounded* operators is the following fact: *a linear operator between normed vector spaces is bounded if and only if it is continuous*.
 
 Another important fact is that the set $\mathcal{B}(\mathcal{H},\mathcal{H}')$ is more than just a mere set: it has both topological structure (it has a norm and forms a Banach space under this norm) and algebraic structure (it is an associative algebra over $\mathbb{C}$), along with the bonus feature of a particularly well-behaved [**involution**](https://en.wikipedia.org/wiki/Involution_(mathematics)) given by the [**adjoint**](https://en.wikipedia.org/wiki/Hermitian_adjoint).
@@ -1126,9 +1126,8 @@ $$
   = \frac{1}{d} \sum_{ij} \ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})
 $$
 where $d=\dim\mathcal{H}$.
-:::
 
-Pictorially, we might represent the Choi matrix by something like
+Pictorially, we might represent this by something like
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
 \begin{equation*}
@@ -1139,6 +1138,7 @@ Pictorially, we might represent the Choi matrix by something like
   \end{quantikz}
 \end{equation*}
 ```
+:::
 
 In this form, the Choi--Jamiołkowski isomorphism gives us a simple necessary and sufficient condition for a linear map to be a quantum channel:
 
@@ -1222,11 +1222,11 @@ All together this gives us the reverse implication: *if the Choi matrix $\wideti
 ## The mathematics of "can" and "cannot"
 
 So what is channel-state duality good for?
-To start with, it can be used to asses whether or not a given map $\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ can actually be implemented, i.e. if it is a physically realisable CPTP map.
+To start with, it can be used to asses whether or not a given map $\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ can actually be physically implemented, i.e. if it is a CPTP map.
 Indeed, all we have to do is to check if the corresponding Choi matrix is a density matrix.
 Let's look at a simple example.
 
-Consider the map
+Consider the map^[Again, $\delta_{ij}$ is the Kronecker delta, which is equal to $1$ if $i=j$ and equal to $0$ if $i\neq j$.]
 $$
   \mathcal{E}\colon \ket{i}\bra{j}
   \longmapsto p\ket{j}\bra{i}+(1-p)\delta_{ij} \frac{1}{2}\ket{i}\bra{j}
@@ -1235,40 +1235,44 @@ where $0\leq p\leq1$ is some fixed parameter.
 This map acts on a density operator $\rho$ via
 $$
   \rho
-  \longmapsto \rho'
-  = p\rho^T +(1-p) \frac{1}{2}\id
+  \longmapsto p\rho^T +(1-p) \frac{1}{2}\id
 $$
-where $\rho^T$ is the transpose of $\rho$.
+(where $\rho^T$ is the transpose of $\rho$).
 
 But is this map a quantum channel?
 That is, *does it represent a physical process that can be implemented in a lab*?
 
-The expression for $\mathcal{E}$, i.e. the convex sum, can be interpreted as follows: take the input state $\rho$ and either (i) apply the transpose, or (ii) replace it with the maximally mixed state (with probabilities $p$ and $1-p$, respectively).
-This is fine, except that the transpose operation is not completely positive, and, as such, *is not physically admissible* --- it cannot be implemented.
-But does it mean that the map $\mathcal{E}$ itself cannot be implemented?
+We can interpret the convex-sum expression
+$$
+  \mathcal{E}(\ket{i}\bra{j})
+  = p\ket{j}\bra{i}+(1-p)\delta_{ij} \frac{1}{2}\ket{i}\bra{j}
+$$
+as follows: take the input state $\rho$ and either (i) apply the transpose, with probability $p$, or (ii) replace it with the maximally mixed state, with probability $1-p$.
+This is fine, except that the transpose operation is *not* completely positive, and, as such, *is not physically admissible* --- it cannot be implemented.
+But does this mean that the map $\mathcal{E}$ itself cannot be implemented?
 Not necessarily!
 
 In fact, the answer depends on the value of $p$.
 The case $p=0$ corresponds to just replacing the input with the maximally mixed state, which is something that can be easily implemented.
 However, as $p$ increases from $0$ to $1$, at some critical point the map switches from *completely positive* to merely *positive*.
-In order to find this critical value of $p$, we first calculate the $\mathcal{E} (\ket{i}\bra{j})$, as follows:
+In order to find this critical value of $p$, we first calculate $\mathcal{E} (\ket{i}\bra{j})$ for $i,j\in\{0,1\}$ as follows:
 $$
   \begin{aligned}
     \ket{0}\bra{0}
     &= \begin{bmatrix}1&0\\0&0\end{bmatrix}
-    \longmapsto
+    \xmapsto{\mathcal{E}}
     \begin{bmatrix}\frac{1+p}{2}&0\\0&\frac{1-p}{2}\end{bmatrix}
   \\\ket{0}\bra{1}
     &= \begin{bmatrix}0&1\\0&0\end{bmatrix}
-    \longmapsto
+    \xmapsto{\mathcal{E}}
     \begin{bmatrix}0&0\\p&0\end{bmatrix},
   \\\ket{1}\bra{0}
     &= \begin{bmatrix}0&0\\1&0\end{bmatrix}
-    \longmapsto
+    \xmapsto{\mathcal{E}}
     \begin{bmatrix}0&p\\0&0\end{bmatrix}
   \\\ket{1}\bra{1}
     &= \begin{bmatrix}0&0\\0&1\end{bmatrix}
-    \longmapsto
+    \xmapsto{\mathcal{E}}
     \begin{bmatrix}\frac{1-p}{2}&0\\0&\frac{1+p}{2}\end{bmatrix},
   \end{aligned}
 $$
@@ -1293,8 +1297,7 @@ $$
    \end{array}
   \right]
 $$
-which lets us apply channel-state duality: *$\mathcal{E}$ is completely positive (and hence physically realisable) if and only if $\widetilde{\mathcal{E}}\geq0$*;
-the latter is true only when $p\leq\frac13$ (note that the eigenvalues of $\widetilde{\mathcal{E}}$ are $\frac{1}{4}(1+p)$ and $\frac{1}{4}(1-3p)$).
+which lets us apply channel-state duality: *$\mathcal{E}$ is completely positive (and hence physically realisable) if and only if $\widetilde{\mathcal{E}}\geq0$*, and the latter is true only when $p\leq\frac13$ (note that the eigenvalues of $\widetilde{\mathcal{E}}$ are $\frac{1}{4}(1+p)$ and $\frac{1}{4}(1-3p)$).
 
 
 
@@ -1302,26 +1305,30 @@ the latter is true only when $p\leq\frac13$ (note that the eigenvalues of $\wide
 
 <div class="video" title="Properties of Kraus representations" data-videoid="YxnTjuRwvdg"></div>
 
-One thing that is very important is that *channel-state duality gives us more than just a one-to-one correspondence* between states $\widetilde{\mathcal{E}}$ and channels $\mathcal{E}$ --- it *also* gives a one-to-one correspondence between vectors in the statistical ensemble $\widetilde{\mathcal{E}}$ and the Kraus operators in the decomposition of $\mathcal{E}$.
-From this viewpoint, we see that the freedom to choose the Kraus operators representing a channel in many different ways is really the same thing as the freedom to choose the ensemble of pure states representing a density operator in many different ways.
+::: {.idea}
+Channel-state duality gives us more than just a one-to-one correspondence between states $\widetilde{\mathcal{E}}$ and channels $\mathcal{E}$ --- it *also* gives a one-to-one correspondence between vectors in the statistical ensemble $\widetilde{\mathcal{E}}$ and the Kraus operators in the decomposition of $\mathcal{E}$.
+:::
 
-We already know that two mixtures $\{p_k, \ket{\psi_k}\}$ and $\{q_l, \ket{\phi_l}\}$ described by the same density operator
+With the above in mind, we see that the freedom to choose the Kraus operators representing a channel in many different ways is really the same thing as the freedom to choose the ensemble of pure states representing a density operator in many different ways.
+
+We already know that if two mixtures^[The number of vectors contributing to each mixture (and hence the number of corresponding Kraus operators) may be different, but we can always simply extend the smaller set to the required size by adding zero operators.] $(p_k, \ket{\psi_k})$ and $(q_l, \ket{\phi_l})$ are described by the same density operator
 $$
-  \widetilde{\mathcal{E}}
-  = \sum_k\proj{\widetilde\psi_k}
-  = \sum_l\proj{\widetilde\phi_l},
+  \sum_k\proj{\widetilde\psi_k}
+  = \widetilde{\mathcal{E}}
+  = \sum_l\proj{\widetilde\phi_l}
 $$
-(where $\ket{\widetilde \psi_k}=\sqrt{p_k}\ket{\psi_k}$ and $\ket{\widetilde \phi_l}=\sqrt{q_l}\ket{\phi_l}$) are related: there exists some unitary $R$ such that
+(where $\ket{\widetilde \psi_k}=\sqrt{p_k}\ket{\psi_k}$ and $\ket{\widetilde \phi_l}=\sqrt{q_l}\ket{\phi_l}$) then they are related to one another: there exists some unitary $R$ such that
 $$
   \ket{\widetilde \psi_k}
   = \sum_{l} R_{kl} \ket{\widetilde \phi_l}.
 $$
-Using the aforementioned fact that any vector $\ket{\psi}$ in $\mathcal{H}\otimes\mathcal{H}'$ can be written as $\ket{\psi}=\id\otimes V\ket{\Omega}$, this implies the same unitary freedom in choosing the Kraus operators.^[The number of vectors contributing to each mixture (and hence the number of corresponding Kraus operators) may be different, so we simply extend the smaller set to the required size by adding zero operators.]
+Using the aforementioned fact that any vector $\ket{\psi}$ in $\mathcal{H}\otimes\mathcal{H}'$ can be written as $\ket{\psi}=\id\otimes V\ket{\Omega}$, this implies the same unitary freedom in choosing the Kraus operators.
 
-How many Kraus operators do we really need?
-Channel-state duality tells us that the *minimal* number of Kraus operators needed to express $\mathcal{E}$ in the operator-sum form is given by the rank of its Choi matrix $\widetilde{\mathcal{E}}$, and so we need no more than $dd'$ such operators.
-In fact, this minimal set of Kraus operators corresponds to the spectral decomposition of $\widetilde{\mathcal{E}}$.
-Indeed, if $\widetilde{\mathcal{E}}=\sum_k\proj{\widetilde{v}_k}$ and $\ket{\widetilde{v}_k}=(\id\otimes E_k)\ket{\Omega}$, then the orthogonality of $\ket{\widetilde{v}_k}$ and $\ket{\widetilde{v}_l}$ implies the orthogonality (in the Hilbert--Schmidt sense^[Recall that the Hilbert--Schmidt product $(A|B)$ of two operators $A$ and $B$ is defined by $(A|B)=\frac12\tr A^\dagger B$.]) of the corresponding Kraus operators, $E_k$ and $E_l$.
+So how many Kraus operators do we really need?
+Channel-state duality tells us that the *minimal* number of Kraus operators needed to express $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ in the operator-sum form is given by the rank of its Choi matrix $\widetilde{\mathcal{E}}$, i.e. we need *no more than* $dd'$ such operators (where $d=\dim\mathcal{H}$ and $d'=\dim\mathcal{H}'$).
+In fact, this minimal set of Kraus operators corresponds to the *spectral decomposition* of $\widetilde{\mathcal{E}}$.
+
+Indeed, if $\widetilde{\mathcal{E}}=\sum_k\proj{\widetilde{v}_k}$ and $\ket{\widetilde{v}_k}=(\id\otimes E_k)\ket{\Omega}$, then the orthogonality of $\ket{\widetilde{v}_k}$ and $\ket{\widetilde{v}_l}$ implies the orthogonality (in the Hilbert--Schmidt sense^[Recall that the Hilbert--Schmidt product $(A|B)$ of two operators $A$ and $B$ is defined by $(A|B)=\frac12\tr A^\dagger B$.]) of the corresponding Kraus operators $E_k$ and $E_l$.
 In order to see this, we write $\braket{\widetilde{v}_k}{\widetilde{v}_l}$ as
 $$
   \begin{aligned}
@@ -1341,7 +1348,7 @@ $$
   \end{aligned}
 $$
 (using the fact that $\braket{i}{j}=\delta_{ij}$ and $\sum_i\proj{i}=\id$).
-In summary then, *$\braket{\widetilde{v}_k}{\widetilde{v}_l}=0$ implies that $\tr E_k^\dagger E_l=0$*.
+So we have shown that *if $\braket{\widetilde{v}_k}{\widetilde{v}_l}=0$ then $\tr E_k^\dagger E_l=0$*.
 
 ::: {.idea latex=""}
 A linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ is completely positive if and only if it admits an operator-sum decomposition of the form
@@ -1361,49 +1368,50 @@ Note that, for *any* $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\m
 
 ## Correctable channels
 
-Another question that we might ask ourselves is if we can *reverse the action of a quantum channel, recovering the input state*.
-Let us first make precise what we mean by this.
+Another question that we might ask ourselves is when we can *reverse* the action of a quantum channel, recovering the input state.
+This is something that we have already mentioned once or twice, but let us now make precise what we mean by this.
 
 ::: {.idea latex=""}
-We say that a quantum channel $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ is **correctable** if there exists a **recovery channel** $\mathcal{R}\colon\mathcal{B}(\mathcal{H}')\to\mathcal{B}(\mathcal{H})$ such that the composition $\mathcal{R}\circ\mathcal{E}$ is the identity channel.
+We say that a quantum channel $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ is **correctable** if there exists a **recovery channel** $\mathcal{R}\colon\mathcal{B}(\mathcal{H}')\to\mathcal{B}(\mathcal{H})$ such that the composition $\mathcal{R}\circ\mathcal{E}$ is the identity channel on $\mathcal{B}(\mathcal{H})$.
 :::
 
-The action of any unitary operation $U$ can, of course, be reversed by simply applying the inverse operation, $U^\dagger$;
+The action of any individual unitary operation $U$ can, of course, be reversed by simply applying the inverse operation, $U^\dagger$;
 the same holds for any isometry $V$, because $V^\dagger V=\id$.
 For example, the process of first adding an auxiliary system in a fixed state and then applying a unitary $U$ to the composite system can be reversed by first applying $U^\dagger$ to the composed system and then discarding the auxiliary system.
-So how about a statistical mixture of unitaries?
-Or, in general, a statistical mixture of isometries?
+But the important question is if this is still true for a *statistical mixture* of unitaries, or, more generally, a *statistical mixture* of isometries?
 
-If all we know is that an isometry $V_i$ is chosen randomly according to some distribution $\{p_i\}_{i\in I}$, then the best we can do in an attempt to reverse the random process is to apply $V_k^\dagger$, where $k\in I$ is such that $p_k$ is the largest of all the $p_i$.
+If all we know is that an isometry $V_i$ is chosen randomly according to some distribution $\{p_i\}_{i\in I}$, then the best we can do in an attempt to reverse the random process is to pick the largest of the $p_i$, say $p_k$, and then apply $V_k^\dagger$.
 Clearly, this approach succeeds in reversing the action of the channel with probability $p_k$.
-However, if there were a way to determine, post factum, which particular isometry was chosen, then, of course, we could perfectly reverse the action of the channel.
+However, if there were a way to determine, post factum, which particular isometry was chosen, then we could, of course, perfectly reverse the action of the channel.
 
 Consider a channel $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ given by
 $$
   \mathcal{E}\colon\rho
   \longmapsto \rho'
-  =\sum_i p_i V_i\rho V^\dagger_i
+  = \sum_i p_i V_i\rho V^\dagger_i
 $$
 in which the isometries $V_i$ are mutually orthogonal (i.e. $V_i^\dagger V_j =\delta_{ij}\id$).
-Let $\mathcal{H}'_i$ be the image of $\mathcal{H}$ under $V_i$;
-these images are subspaces in $\mathcal{H}'$, and they are mutually orthogonal. Indeed, for any vector $\ket{v}$ in $\mathcal{H}$, the vectors $V_i\ket{v}\in \mathcal{H}'_i$ and $V_j\ket{v}\in \mathcal{H}'_j$ are orthogonal:
+Let $\mathcal{H}'_i$ be the image of $\mathcal{H}$ under $V_i$.
+These images are subspaces in $\mathcal{H}'$, and they are also mutually orthogonal: for any vector $\ket{v}$ in $\mathcal{H}$, the vectors $V_i\ket{v}\in \mathcal{H}'_i$ and $V_j\ket{v}\in \mathcal{H}'_j$ are orthogonal, since
 $$
   \bra{v}V_i^\dagger V_j\ket{v}
   = \delta_{ij} \bra{v}\id\ket{v}
   = \delta_{ij}.
 $$
-We can now perform a measurement defined by the projections onto these mutually orthogonal subspaces $\mathcal{H}'_i$, and find out which particular isometry was chosen (and then perfectly reverse its action by applying the inverse isometry).
+We can now perform a measurement defined by the projections onto these mutually orthogonal subspaces $\mathcal{H}'_i$ and find out which particular isometry was chosen (and then perfectly reverse its action by applying the inverse isometry).
 
 Note that, for a measurement on $\mathcal{H}'$ to be well defined, we need to decompose $\mathcal{H}'$ into mutually orthogonal subspaces.
 That is, the direct sum $\bigoplus_i\mathcal{H}'_i$ might not "fill up" the space $\mathcal{H}'$, so we might need to pad out with whatever is "left over" in order to obtain the decomposition of the whole $\mathcal{H}'$ into mutually orthogonal subspaces.
 That extra subspace with which we pad out the direct sum is *not* in the image of the channel: we will never see the result of the measurement corresponding to the projection onto that subspace.
 However, we *need* to add it in order to obtain a complete decomposition of $\mathcal{H}'$.
-Here the Kraus operators $E_i=\sqrt{p_i}V_i$ satisfy
+
+Here we have Kraus operators $E_i=\sqrt{p_i}V_i$ that satisfy
 $$
   E^\dagger_i E_j
   = \sqrt{p_i p_j}\delta_{ij}\id
 $$
-but remember that *the operator-sum decomposition is not unique*, and so the same channel can be described by another, unitarily related, set of Kraus operators, $K_i = \sum_k U_{ik}E_k$, which then satisfy
+but remember that *the operator-sum decomposition is not unique*, and so the same channel can be described by another, unitarily related, set of Kraus operators, say $K_i = \sum_k U_{ik}E_k$.
+These other operators satisfy
 $$
   \begin{aligned}
     K_i^\dagger K_j
@@ -1414,14 +1422,14 @@ $$
   \end{aligned}
 $$
 where $\sigma_{ij}$ are elements of a density matrix with eigenvalues $p_i$.
-If this condition is satisfied, then the action of the channel can be reversed, and the original state $\rho$ can be recovered.
+So the existence of such a density matrix implies that the action of the channel can be reversed, and the original state $\rho$ can be recovered.
 
-Conversely, if the channel $\mathcal{E}$ is correctable, then the above condition above holds.
+Conversely, if the channel $\mathcal{E}$ is correctable, then such a density matrix exists.
 Indeed, in terms of Kraus representations for $\mathcal{E}$ and $\mathcal{R}$, we require that
 $$
-  \mathcal{R}\circ\mathcal{E}(\rho)
-  = \sum_{lj} R_l E_j \rho R^\dagger_l E^\dagger_j
-  = \rho
+  \rho
+  = (\mathcal{R}\circ\mathcal{E})(\rho)
+  \equiv \sum_{lj} R_l E_j \rho R^\dagger_l E^\dagger_j
 $$
 for any state $\rho$.
 This means that identity channel $\mathcal{R}\circ\mathcal{E}=\id$ must have all the Kraus operators proportional to the identity:
@@ -1440,15 +1448,17 @@ $$
 $$
 where $\sigma_{ij} = \sum_l \lambda^*_{il}\lambda_{jl}$.
 Clearly, $\sigma_{ij}$ is a positive matrix such that $\tr(\sigma_{ij})=1$ and $\sum_i\sigma_{ii}=\sum_{il}|\lambda_{il}|^2=1$.
+
 So the condition $E_i^\dagger E_j = \sigma_{ij}\id$ is both necessary *and* sufficient in order for the channel $\mathcal{E}$ to be correctable.
-In summary:
 
 ::: {.idea latex=""}
 Let $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ be a quantum channel with Kraus decomposition $\mathcal{E}(\rho)=\sum_i E_i\rho E^\dagger_i$.
 Then the following statements are equivalent:
 
 i. $\mathcal{E}$ is correctable;
+
 ii. $E_i^\dagger E_j = \sigma_{ij}\id$ for some density matrix $\sigma_{ij}$;
+
 iii. there exists a set of orthogonal isometries $\{V_i\}$ and a probability distribution $\{p_i\}$ such that
     $$
     \mathcal{E} (\rho) = \sum_i p_i V_i\rho V^\dagger_i
@@ -1461,6 +1471,8 @@ iii. there exists a set of orthogonal isometries $\{V_i\}$ and a probability dis
 ## *Remarks and exercises* {#remarks-and-exercises-7}
 
 ### The Markov approximation {#markov-approximation}
+
+**TO-DO: move this to the end of 7.7**
 
 Composition of quantum channels^[Unitary evolutions form a group; quantum channels form a semigroup. Quantum operations are invertible only if they are either unitary operations or simple isometric embeddings (such as the process of bringing in the environment in some fixed state and then *immediately* discarding it, without any intermediate interaction).] in the Kraus representation is rather straightforward, but do not be deceived by its mathematical simplicity!
 We must remember that *quantum channels do not capture all possible quantum evolutions*: the assumption that the system and the environment are *not initially correlated* is crucial, and it does impose some restrictions on the applicability of our formalism.
@@ -1846,7 +1858,7 @@ $$
   \rho\longmapsto (1-p)\rho + \frac{p}{3}\left(X\rho X+Y\rho Y+Z\rho Z\right).
 $$
 In the depolarising channel, a qubit in state $\rho$ remains intact with probability $1-p$, or is otherwise transformed with one of the Pauli operators $X$, $Y$, and $Z$, each chosen randomly with probability $p/3$.
-Show, using the [Pauli twirl](#puali-twirl) or otherwise, that we can rewrite the depolarising channel as
+Show, using the [Pauli twirl](#pauli-twirl) or otherwise, that we can rewrite the depolarising channel as
 $$
   \rho \longmapsto \rho'
   = \left(1-\frac{4}{3} p\right) \rho + \frac{4}{3}p\frac{1}{2}\id.
