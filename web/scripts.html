@@ -41,7 +41,7 @@
 
     // 2. Videos
 
-    // TO-DO: make it so that the entire .video div is clickable
+    // TO-DO: make it so that the icon is also clickable
 
     // Create an icon and a toggle link
     $("div.video").each(function() {
@@ -56,11 +56,12 @@
     });
 
     // Toggle showing the video
-    // TO-DO: make this work how .technical divs do:
+    // TO-DO: make video toggle work how .technical divs work:
     //        1. `display: none;` in gitbook-custom.css for lite-youtube
     //        2. insertAfter the lite-youtube
     //        3. have video-toggle just do a slideToggle()
-    $('.video-toggle').click(function() {
+    //        4. (works if you click the icon too)
+    $(".video-toggle").click(function() {
       var parent = $(this).parent();
       var video_id = parent.data("videoid");
       var possible_video = $(this).siblings("lite-youtube");
@@ -75,8 +76,6 @@
 
 
     // 3. Technical divs
-
-    // TO-DO: make it so that the entire .technical div is clickable
 
     $("div.technical").each(function() {
       // Add an hr and wrap the contents in another div
@@ -93,8 +92,15 @@
       }).prependTo(this);
     });
 
-    // Toggle showing the technical contents
+    // Toggle showing the technical contents:
+    // either by clicking the title...
     $(".technical-toggle").click(function() {
+      $(this).next(".technical-contents").slideToggle("fast", function() {
+        // Animation complete.
+      });
+    });
+    // ...or by clicking the icon
+    $(".technical.fa").click(function() {
       $(this).next(".technical-contents").slideToggle("fast", function() {
         // Animation complete.
       });

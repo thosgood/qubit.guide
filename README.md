@@ -30,7 +30,6 @@ Build using the `./build_book` script.
 - make embedded videos slide in/out rather than just appear/disappear
 - improve sidenote y-positioning using jquery
     + find the previous `.footnote-ref` in the DOM and align with that
-- **make it so that the *entire* `.technical` or `.video` div is actually the clickable area**
 
 ### PDF
 
