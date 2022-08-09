@@ -978,7 +978,7 @@ $$
   \\0 & 0 & 0 & 1
   \end{array}\right].
 $$
-So the partial transpose $\id\otimes T$ maps the density matrix $\proj{\Omega}$ of a maximally entangled state $\ket{\Omega}$ to the $\texttt{SWAP}$ matrix, which has a negative eigenvalue (namely $-1$) and thus is *not* a density matrix (since it is not positive).
+So the partial transpose $\id\otimes T$ maps the density matrix $\proj{\Omega}$ of a maximally mixed state $\ket{\Omega}$ to the $\texttt{SWAP}$ matrix, which has a negative eigenvalue (namely $-1$) and thus is *not* a density matrix (since it is not positive).
 
 We have seen that, at the very least, we want to be considering *completely positive trace-preserving* maps, but how do we know whether or not there are any further restrictions left to impose?
 Needless to say, here is where mathematics alone cannot guide us, since we are trying to characterise maps which are *physically admissible*, and mathematics knows nothing about the reality of our universe!
@@ -1105,14 +1105,14 @@ $$
 $$
 This isomorphism is **non-canonical**: it depends on the choice of the basis.
 But it is still a pretty useful isomorphism!
-The Choi--Jamiołkowski isomorphism is of this kind (i.e. non-canonical) --- it works in the basis in which you express a maximally entangled state $\ket{\Omega}=\sum_i\ket{i}\ket{i}$.
+The Choi--Jamiołkowski isomorphism is of this kind (i.e. non-canonical) --- it works in the basis in which you express a maximally mixed state $\ket{\Omega}=\sum_i\ket{i}\ket{i}$.
 :::
 
 Mathematically, it is not too surprising that the matrix elements of an operator on a tensor product can be reorganised and reinterpreted as the matrix elements of an operator between operator spaces.
 What is interesting, and perhaps not so obvious, however, is that the positivity conditions for maps correspond exactly to conditions on their Choi matrices under this correspondence.
 That is, this one-to-one correspondence between linear maps $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ and matrices $\widetilde{\mathcal{E}}$ acting on the tensor product $\mathcal{H}\otimes\mathcal{H}'$ descends to a one-to-one correspondence between quantum channels and some specific family of matrices (which we will shortly discuss).
 In other words, we can classify quantum channels as being exactly those linear maps that have a certain image under the Choi--Jamiołkowski isomorphism!
-In order to see this, let us express the Choi matrix as the result of $\id\otimes\mathcal{E}$ acting on the maximally entangled state
+In order to see this, let us express the Choi matrix as the result of $\id\otimes\mathcal{E}$ acting on the maximally mixed state
 $$
   \ket{\Omega}\coloneqq\frac{1}{d}\sum_i\ket{i}\ket{i}
 $$
@@ -1209,7 +1209,7 @@ $$
 \end{CD}
 $$
 We start in the top-left corner with a quantum channel $\mathcal{E}$.
-This channel is a CPTP map, which means (in particular) that $\id\otimes\mathcal{E}$ takes a maximally entangled state $\ket{\Omega}$ to a density matrix $\widetilde{\mathcal{E}}$.
+This channel is a CPTP map, which means (in particular) that $\id\otimes\mathcal{E}$ takes a maximally mixed state $\ket{\Omega}$ to a density matrix $\widetilde{\mathcal{E}}$.
 This is our first implication: *if $\mathcal{E}$ is a quantum channel, then its Choi matrix $\widetilde{\mathcal{E}}$ is a density matrix*.
 The reverse implication goes as follows.
 The density matrix $\widetilde{\mathcal{E}}$ can be expressed as a mixture of pure states $\proj{\widetilde\psi_k}$ (taking us to the bottom-right corner in the diagram).
@@ -1470,15 +1470,52 @@ iii. there exists a set of orthogonal isometries $\{V_i\}$ and a probability dis
 
 ## *Remarks and exercises* {#remarks-and-exercises-7}
 
+
+### Purifications and isometries
+
+All purifications of a density operator are related by an isometry acting on the purifying system.
+That is, if $\rho$ is a density operator on $\mathcal{H}$, and $\ket{\psi_A}\in \mathcal{H}\otimes\mathcal{H}_\mathcal{A}$ and $\ket{\psi_B}\in\mathcal{H}\otimes\mathcal{H}_B$ are two purifications of $\rho$ with $\dim\mathcal{H}_\mathcal{A}\leq\dim\mathcal{H}_\mathcal{B}$, then
+$$
+  \ket{\psi_B}=(\id\otimes V)\ket{\psi_A}
+$$
+for some isometry $V$.
+
+To show this, we start with the spectral decomposition of $\rho$
+$$
+  \rho = \sum_i p_i\proj{i}
+$$
+and note that
+$$
+  \begin{aligned}
+    \ket{\psi_A}
+    &= \sum_i \sqrt{p_i} \ket{i}\otimes\ket{a_i}
+  \\\ket{\psi_B}
+    &= \sum_i \sqrt{p_i} \ket{i}\otimes\ket{b_i}
+  \end{aligned}
+$$
+which defines an isometry $V=\sum_i \ket{b_i}\bra{a_i}$ satisfying the desired equation.
+
+This observation leads to a way of relating *all* convex decompositions of a given density operator: let $(p_k,\ket{\psi_k})$ and $(q_l,\ket{\phi_l})$ be convex decompositions of a density operator $\rho$;
+then there exists an isometry $V$ such that these two decompositions
+$$
+  \sum_{k=1}^n\proj{\widetilde{\psi}_k}
+  = \rho
+  = \sum_{l=1}^m\proj{\widetilde{\phi}_l}
+$$
+(where $n\geq m$, and $\ket{\widetilde{\psi}_k}=\sqrt{p_k}\ket{\psi_k}$ and $\ket{\widetilde{ \phi}_l}=\sqrt{q_l}\ket{\phi_l}$) are related:
+$$
+  \ket{\widetilde{\psi}_k} = \sum_{l} V_{kl} \ket{\widetilde{\phi}_l}.
+$$
+
+
+
 ### The Markov approximation {#markov-approximation}
 
-**TO-DO: move this to the end of 7.7**
-
-Composition of quantum channels^[Unitary evolutions form a group; quantum channels form a semigroup. Quantum operations are invertible only if they are either unitary operations or simple isometric embeddings (such as the process of bringing in the environment in some fixed state and then *immediately* discarding it, without any intermediate interaction).] in the Kraus representation is rather straightforward, but do not be deceived by its mathematical simplicity!
+Composition of quantum channels^[Unitary evolutions form a group; quantum channels form a [**semigroup**](https://en.wikipedia.org/wiki/Semigroup). Quantum operations are invertible only if they are either unitary operations or simple isometric embeddings (such as the process of bringing in the environment in some fixed state and then *immediately* discarding it, without any intermediate interaction).] in the Kraus representation is rather straightforward, but do not be deceived by its mathematical simplicity!
 We must remember that *quantum channels do not capture all possible quantum evolutions*: the assumption that the system and the environment are *not initially correlated* is crucial, and it does impose some restrictions on the applicability of our formalism.
 Compare, for example, the following two scenarios.
 
-Firstly:
+Firstly:^[Here we have reverted to the convention of writing the ancilla/environment *after* the system of interest instead of *before*.]
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
 \begin{equation*}
@@ -1489,8 +1526,8 @@ Firstly:
 \end{equation*}
 ```
 
-Here the system, initially in state $\rho$, undergoes two stages of evolution, and the environment is *not* discarded after the first unitary evolution $U_A$; the environment persists and participates in the second unitary evolution $U_B$.
-In this case the evolutions $\rho\mapsto\rho'$ and $\rho\mapsto\rho''$ are both well defined quantum channels, but the evolution $\rho'\mapsto\rho''$ is *not*: it falls outside the remit of our formalism because the input state of the system and the state of the environment are *not independent*.
+Here the system, initially in state $\rho$, undergoes two stages of evolution, and the environment, initially in state $\ket{e}$, is *not* discarded after the first unitary evolution $U_A$; the environment persists and participates in the second unitary evolution $U_B$.
+In this case the evolutions $\rho\mapsto\rho'$ and $\rho\mapsto\rho''$ are both well defined quantum channels, *but the evolution $\rho'\mapsto\rho''$ is not*: it falls outside the remit of our formalism because the input state of the system and the state of the environment are *not independent*.
 
 Secondly:
 
@@ -1512,8 +1549,7 @@ For example, suppose that our system is an atom, surrounded by the electromagnet
 Let the field start in the vacuum state.
 If the atom emits a photon into the environment, then the photon quickly propagates away, and the immediate vicinity of the atom appears to be empty, i.e. resets to the vacuum state.
 In this approximate model, we assume that the environment quickly forgets about the state resulting from any previous evolution.
-This is known as the **Markov approximation**;
-in a quantum Markov process the environment has essentially no memory.
+This is known as the **Markov approximation** --- in a quantum Markov process the environment has essentially no memory.
 
 
 
@@ -1522,31 +1558,34 @@ in a quantum Markov process the environment has essentially no memory.
 Positive maps that are not completely positive are not completely useless.
 True, they cannot describe any quantum dynamics, but still they have useful applications --- for example, they can help us to determine if a given state is entangled or not.
 
-Recall: a quantum state of a bipartite system $\mathcal{AB}$ described by the density matrix $\varrho_{\mathcal{AB}}$ is said to be **separable** if $\varrho_{\mathcal{AB}}$ is of the form
+Recall that a quantum state of a bipartite system $\mathcal{AB}$ described by the density matrix $\varrho_{\mathcal{AB}}$ is said to be **separable** if $\varrho_{\mathcal{AB}}$ can be written in the form
 $$
   \varrho_{\mathcal{AB}}
   = \sum_k p_k \rho_{\mathcal{A},k} \otimes\rho_{\mathcal{B},k}
 $$
-where $p_k \geq 0$ and $\sum_{k=1} p_k=1$; otherwise $\varrho_{\mathcal{AB}}$ is said to be **entangled**.
+where $\rho_{\mathcal{A},k}$ are density matrices on $\mathcal{A}$ and $\rho_{\mathcal{B},k}$ are density matrices on $\mathcal{B}$ (and where $p_k \geq 0$ and $\sum_k p_k=1$); otherwise $\varrho_{\mathcal{AB}}$ is said to be **entangled**.
 If we apply the partial transpose $\id\otimes T$ to this state, then it remains separable, since, as we have seen, the transpose $\rho^B$ is a legal density matrix.
 
+In separable states, one subsystem does not really know about the existence of the other, and so applying a positive map to one part produces a proper density operator, and thus does *not* reveal the unphysical character of the map.
+So, for *any separable state* $\rho$, we have $(\id\otimes T)\rho\geq 0$.
+
 ::: {.idea data-latex=""}
-Positive maps, such as the transpose, can be quite deceptive: you have to include other systems in order to detect their unphysical character.
+Positive (but not completely positive) maps, such as the transpose, can be quite deceptive: you have to include other systems in order to detect their unphysical character.
+
+In particular, positive maps appear to be completely positive *on separable states*.
 :::
 
-In separable states, one subsystem does not really know about the existence of the other, and so applying a positive map to one part produces a proper density operator, and thus does _not_ reveal the unphysical character of the map.
-So, for _any separable state_ $\rho$, we have $(\id\otimes T)\rho\geq 0$.
-
-As an example, consider a quantum state of two qubits which is a mixture of the maximally entangled state $\ket{\psi} = \frac{1}{\sqrt 2}(\ket{00} + \ket{11})$ and the maximally mixed state described by the density matrix
+As an example, consider a quantum state $\rho_p$ of two qubits which is a mixture of the maximally mixed^[Recall that a state is said to be **maximally mixed** if the outcomes of *any* measurement on that state are completely random.] state $\ket{\Omega} = \frac{1}{\sqrt 2}(\ket{00} + \ket{11})$ and the identity matrix with respective probabilities $p$ and $1-p$.
+That is,
 $$
   \rho_p
-  = p\proj{\psi} + \frac{(1-p)}{4}\id\otimes\id,
+  = p\proj{\Omega} + \frac{(1-p)}{4}\id\otimes\id.
 $$
-where $p\in [0,1]$.
-If we apply the partial transpose $\id\otimes T$ to this state, and check for which values of $p$ the resulting matrix is a density matrix, we see that, for all $p\in[\frac{1}{3},1]$, the density operator $\rho$ describes an entangled state.
+If we apply the partial transpose $\id\otimes T$ to this state, and check for which values of $p$ the resulting matrix is a density matrix, we can show that the density operator $\rho_p$ describes an entangled state for all $p\in[\frac{1}{3},1]$.
 
-Note that the implication "if separable then the partial transpose is positive" does not imply the converse: there exist entangled states for which the partial transpose is positive, and they are known as the **entangled PPT states**^["PPT" stands for _positive partial transpose_.]
-However, for _two_ qubits, the PPT states are exactly the separable states.
+We say that a state is a **PPT state**^["PPT" stands for *positive partial transpose*.] if its partial transpose is positive.
+An important thing to note is that separable states are PTT, but the converse is generally *not* true: there exist entangled PPT states.
+However, in the specific case of *two* qubits, the converse *is* true: the PPT states are exactly the separable states.
 
 ```{r,engine='tikz',fig.width=2}
 \begin{tikzpicture}
@@ -1561,14 +1600,9 @@ However, for _two_ qubits, the PPT states are exactly the separable states.
 
 
 
-
-
-
-
-
 ### Partial inner product
 
-The tensor product structure brings with it the possibility to do "partial things" beyond just the partial trace.
+Tensor products bring the possibility to do "partial things" beyond just the partial trace.
 Given $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$, any vector $\ket{x}\in\mathcal{H}_{\mathcal{A}}$ defines an anti-linear map $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\to\mathcal{H}_{\mathcal{B}}$ called the **partial inner product with $\ket{x}$.**
 It is first defined on the product vectors $\ket{a}\otimes\ket{b}$ by the formula
 $$
@@ -1622,17 +1656,17 @@ Let us step through the following simple circuit:
 \end{equation*}
 ```
 
-This time we are interested in the evolution of the control qubit: the control qubit will be our system, and the target qubit, initially in a fixed state $\ket{0}$, will play the role of an ancilla.
+This time we are interested in the evolution of the *control* qubit: the control qubit will be our system, and the target qubit, initially in a fixed state $\ket{0}$, will play the role of an ancilla.
 
-We can calculate the Kraus operators
+We can calculate the Kraus operators:
 $$
-  A_i = (\id\otimes\bra{i}) U (\id\otimes\ket{0})
+  E_i = (\id\otimes\bra{i}) U (\id\otimes\ket{0})
 $$
-which we simply write as $A_i=\bra{i}U\ket{0}$, for $i=0,1$.
-We see that
+which we simply write as $E_i=\bra{i}U\ket{0}$ (for $i=0,1$).
+Expanding out the definition of $U$, we see that
 $$
   \begin{aligned}
-    A_i = \bra{i}U\ket{0}
+    E_i = \bra{i}U\ket{0}
     &= \bra{i} (\proj{0}\otimes\id + \proj{1}\otimes X) \ket{0}
   \\&= \proj{0}\bra{i}\id\ket{0} + \proj{1}\bra{i}X\ket{0}
   \\&= \proj{i}
@@ -1640,7 +1674,7 @@ $$
 $$
 We can also check the normalisation condition:
 $$
-  A_0^\dagger A_0 + A_1^\dagger A_1
+  E_0^\dagger E_0 + E_1^\dagger E_1
   = \proj{0} + \proj{1}
   =\id.
 $$
@@ -1650,18 +1684,18 @@ $$
   \begin{aligned}
     \ket{\psi}\ket{0}
     \longmapsto
-    & A_0\ket{\psi}\ket{0} + A_1\ket{\psi}\ket{1}
+    & E_0\ket{\psi}\ket{0} + E_1\ket{\psi}\ket{1}
   \\=& \proj{0}\ket{\psi}\ket{0} + \proj{1}\ket{\psi}\ket{1}
-  \\=& \braket{0|\psi}\ket{0}\ket{0} + \braket{1|\psi}\ket{1}\ket{1}
+  \\=& \braket{0}{\psi}\ket{0}\ket{0} + \braket{1}{\psi}\ket{1}\ket{1}
   \end{aligned}
 $$
-which is a familiar $\texttt{c-NOT}$ entangling process: if $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$ then $\ket{\psi}\ket{0}$ becomes $\alpha_0\ket{0}\ket{0}+\alpha_1\ket{1}\ket{1}$.
+which is a familiar $\texttt{c-NOT}$ entangling process: if $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$ then $\ket{\psi}\ket{0}$ evolves into $\alpha_0\ket{0}\ket{0}+\alpha_1\ket{1}\ket{1}$.
 
 The evolution of the control qubit alone can be expressed in the Kraus form as
 $$
   \begin{aligned}
     \rho \longmapsto \rho'
-    &= A_0\rho A_0^\dagger + A_1\rho A_1^\dagger
+    &= E_0\rho E_0^\dagger + E_1\rho E_1^\dagger
   \\&= \proj{0}\rho\proj{0} + \proj{1}\rho\proj{1}
   \\&= \rho_{00}\proj{0} + \rho_{11}\proj{1}.
   \end{aligned}
@@ -1682,7 +1716,7 @@ $$
 $$
 
 As we can see, the diagonal elements of $\rho$ survive, and the off-diagonal elements (the **coherences**) disappear.
-The two Kraus operators, $A_0=\proj{0}$ and $A_1=\proj{1}$, define the measurement in the standard basis, and so you may think about this operation as being equivalent to *measuring the control qubit in the standard basis and then just forgetting the result*.
+The two Kraus operators, $E_0=\proj{0}$ and $E_1=\proj{1}$, define the measurement in the standard basis, and so you may think about this operation as being equivalent to *measuring the control qubit in the standard basis and then just forgetting the result*.
 
 
 ### Surprisingly identical channels
@@ -1723,7 +1757,7 @@ $$
 
 You can also check that the two channels can be implemented by the following two circuits:
 
-(ref:two-channels-caption) The $\texttt{c-NOT}$ gate appears here as the measurement gate. The target qubit measures the control qubit in the standard basis (operation $\mathcal{A}$ on the left) or in the Hadamard basis (operation $\mathcal{B}$ on the right). The extra Hadamard gate on the target qubit has no effect on the control qubit.
+(ref:two-channels-caption) The $\texttt{c-NOT}$ gate appears here as the measurement gate. The target qubit (on the bottom) measures the control qubit (on the top) in the standard basis (operation $\mathcal{A}$ on the left) or in the Hadamard basis (operation $\mathcal{B}$ on the right). The extra Hadamard gate on the target qubit has no effect on the control qubit.
 
 ```{r two-channels,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8,fig.cap='(ref:two-channels-caption)'}
 \begin{equation*}
@@ -1758,6 +1792,24 @@ You can also check that the two channels can be implemented by the following two
 ```
 
 
+### Rotating Kraus operators
+
+Mathematically speaking, Kraus operators $E_k$ are vectors in a $dd'$-dimensional Hilbert space, with the Hilbert--Schmidt inner product $\tr E^\dagger_k E_l$.
+So, our intuition tells us, in order to describe any quantum channel with $\dim\mathcal{H}=\dim\mathcal{H}'=d$, we should need no more than $d^2$ Kraus operators.
+We can pick an orthonormal basis of operators $\{B_i\}$ and express each Kraus vector in this basis as $E_k=\sum c_{ki} B_i$ (where $i=1,\ldots,d^2$ and $k=1,\ldots,n$, with $n$ possibly much larger than $d^2$).
+This gives us
+$$
+  \begin{aligned}
+    \rho
+    \longmapsto
+    & \sum_{ij} B_i\rho B^\dagger_j \left(\sum _k c_{ki}c^\star_{kj}\right)
+  \\=& \sum_{ij} B_i\rho B^\dagger_j  C_{ij}
+  \end{aligned}
+$$
+The matrix $C_{ij}$ is positive semidefinite, and hence unitarily diagonalisable: $C_{ij}=\sum_k U_{ik} d_k U^\dagger_{kj}$ for some unitary $U$ and some $d_k\geq0$.
+We can then unitarily "rotate" our operator basis and use the $C_k=\sum_j U_{jk}B_j \sqrt{d_k}$ as our new Kraus operators.
+
+
 ### Independent ancilla
 
 Another way to understand the freedom in the operator-sum representation is to realise that, once the system and the ancilla cease to interact, any operation on the ancilla alone has no effect on the state of the system.
@@ -1765,30 +1817,29 @@ Another way to understand the freedom in the operator-sum representation is to r
 (ref:operators-sum-freedom-caption) The quantum channel $\rho\mapsto\rho'$ is not affected by the choice of a unitary $R$, and so these two processes are the same.
 
 ```{r operators-sum-freedom,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8,fig.cap='(ref:operators-sum-freedom-caption)'}
-\[
+\begin{equation*}
   \begin{quantikz}
-    \lstick{input $\rho$}
+    \lstick{$\rho$}
     & \gate[wires=2]{U}
-    & \rstick{$\rho'$ output} \qw
+    & \rstick{$\rho'$} \qw
     \\
     \lstick{$\ket{e}$}
     & \hphantom{really wide}
     & \rstick{discard} \qw
   \end{quantikz}
-\]
-\[
+  \qquad
   \begin{quantikz}
-   \lstick{input $\rho$}
+   \lstick{$\rho$}
     & \gate[wires=2]{U}
     & \qw
-    & \rstick{$\rho'$ output} \qw
+    & \rstick{$\rho'$} \qw
   \\
     \lstick{$\ket{e}$}
     & \hphantom{really wide}
     & \gate{R}
     & \rstick{discard} \qw
   \end{quantikz}
-\]
+\end{equation*}
 ```
 
 That is, the two unitaries $U$ and $(\id\otimes R)U$ (where $R$ acts only on the ancilla) describe the same channel, even though the Kraus operators $E_k=\bra{e_k}U\ket{e}$ for the latter are
@@ -1816,35 +1867,43 @@ $$
 $$
 
 
-### Cooling down
-
-We can show that the process of cooling a qubit to its ground state, described the map $\mathcal{E}(\rho)=\proj{0}$, is a quantum channel.
-Indeed, the set of Kraus operators is $\proj{0}$ and $\ket{0}\bra{1}$, and all Bloch vectors are mapped to the Bloch vector representing state $\proj{0}$.
-
-
-### Unchanged reduced density operator
-
-Show that, for any operator $\rho$ on $\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$, and, for any operator $R$ on $\mathcal{H}_\mathcal{B}$, we have
-$$
-  \tr_\mathcal{B} \left[(\id\otimes R) \rho (\id\otimes R^\dagger)\right]
-  = \tr_\mathcal{B} \rho.
-$$
-That is, the reduced density operator $\rho_\mathcal{A}=\tr_\mathcal{B} \rho$ is not affected by $R$.
-
-*Hint: show this for operators $\rho$ which are tensor products $\rho=A\otimes B$ and then extend the result to any operator $\rho$.*
-
-
 ### Order matters?
 
 We know that, given a fixed state of the environment, the unitaries $U$ and $(\id\otimes R)U$ (where $R$ acts only on the environment) define the same quantum channel.
 Is the same true for $U$ and $U(\id\otimes R)$ --- do these two unitaries define the same quantum channel as one another?
 
 
+### Unchanged reduced density operator
+
+Show that, for any operator $\rho$ on $\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}$ and any operator $R$ on $\mathcal{H}_\mathcal{B}$, we have
+$$
+  \tr_\mathcal{B} \left[(\id\otimes R) \rho (\id\otimes R^\dagger)\right]
+  = \tr_\mathcal{B} \rho.
+$$
+That is, the reduced density operator $\rho_\mathcal{A}=\tr_\mathcal{B} \rho$ is not affected by $R$.
+
+*Hint: show this for separable operators $\rho=A\otimes B$ and then extend the result to any operator $\rho$ by linearity.*
+
+
+### Cooling down
+
+We can show that the process of cooling a qubit to its ground state, described the map $\mathcal{E}(\rho)=\proj{0}$, is a quantum channel.
+Indeed, the set of Kraus operators is $\proj{0}$ and $\ket{0}\bra{1}$, and all Bloch vectors are mapped to the Bloch vector representing state $\proj{0}$.
+
+
+### No pancakes
+
+Consider a single-qubit operation which causes the $z$-component of the Bloch vector to shrink while preserving the values of the $x$- and $y$-components.
+Under such an operation, the Bloch sphere is mapped to an oblate spheroid which touches the Bloch sphere along its equator.
+
+Explain why we cannot physically implement such a map.
+
+
 ### Pauli twirl {#pauli-twirl}
 
-Show that randomly applying the Pauli operators $\id$, $X$, $Y$, and $Z$, with uniform probability, to any density operator $\rho$ of a single qubit results in the maximally mixed state
+Show that randomly applying the Pauli operators $\id$, $X$, $Y$, and $Z$, with uniform probability, to any density operator $\rho$ of a single qubit (an operation known as the **Pauli twirl**) results in the maximally mixed state
 $$
-  \frac{1}{4} \id\rho\id +\frac{1}{4} X\rho X + \frac{1}{4} Y\rho Y + \frac{1}{4} X\rho Z
+  \frac{1}{4} \id\rho\id +\frac{1}{4} X\rho X + \frac{1}{4} Y\rho Y + \frac{1}{4} Z\rho Z
   = \frac{1}{2}\id.
 $$
 
@@ -1853,21 +1912,19 @@ $$
 
 <div class="video" title="The depolarising channel" data-videoid="lnPP5rk593M"></div>
 
-The "most popular" Pauli channel is the **depolarising channel**
+The "most popular" Pauli channel^[Recall that a single-qubit Pauli channel is a channel that applies one of the Pauli operators, $X$, $Y$ or $Z$, chosen randomly with some prescribed probabilities $p_x$, $p_y$ and $p_z$.] is the **depolarising channel**
 $$
   \rho\longmapsto (1-p)\rho + \frac{p}{3}\left(X\rho X+Y\rho Y+Z\rho Z\right).
 $$
 In the depolarising channel, a qubit in state $\rho$ remains intact with probability $1-p$, or is otherwise transformed with one of the Pauli operators $X$, $Y$, and $Z$, each chosen randomly with probability $p/3$.
+
 Show, using the [Pauli twirl](#pauli-twirl) or otherwise, that we can rewrite the depolarising channel as
 $$
   \rho \longmapsto \rho'
   = \left(1-\frac{4}{3} p\right) \rho + \frac{4}{3}p\frac{1}{2}\id.
 $$
 
-(For $p\leq\frac{3}{4}$ we can thus say that the channel either does nothing or, with probability $\frac{4}{3}p$, throws away the initial quantum state and replaces it by the maximally mixed state.)
-
-
-### Depolarising channel and the Bloch sphere
+In particular then, we can say that, for $p\leq\frac34$, the channel either does nothing or, with probability $\frac{4}{3}p$, throws away the initial quantum state and replaces it by the maximally mixed state.)
 
 It is also instructive to see how the depolarising channel acts on the Bloch sphere.
 An arbitrary density matrix for a single qubit can be written as
@@ -1885,25 +1942,6 @@ The Bloch vector shrinks by a factor of $1-\frac{4}{3}p$.
 This means that, for $p\leq\frac{3}{4}$, the Bloch sphere contracts uniformly under the action of the channel;
 for $p=\frac{3}{4}$, the sphere is contracted to a single point at its centre;
 and for $\frac{3}{4}\leq p\leq1$, the Bloch vector is flipped, and starts pointing in the opposite direction.
-
-
-### Complete positivity of a certain map
-
-Let $\mathcal{E}$ be the linear map on a single qubit defined by
-$$
-  \begin{aligned}
-    \mathcal{E}(\id)
-    &= \id
-  \\\mathcal{E}(\sigma_x)
-    &= a_x\sigma_x
-  \\\mathcal{E}(\sigma_y)
-    &= a_y\sigma_y
-  \\\mathcal{E}(\sigma_z)
-    &= a_z\sigma_z
-  \end{aligned}
-$$
-where $a_x$, $a_y$, and $a_z$ are some fixed real numbers.
-Using the Choi matrix of $\mathcal{E}$, determine the range of $x$, $y$, $z$ for which the map $\mathcal{E}$ is *positive*, and the range for which it is *completely positive*.
 
 
 ### Toffoli gate
@@ -1931,16 +1969,43 @@ Consider the [**Toffoli gate**](https://en.wikipedia.org/wiki/Toffoli_gate)
 Express $\rho'$ as a function of $\rho$ in the Kraus representation.
 
 
+### Trace preserving and partial trace
+
+Show that $\mathcal{E}$ is trace preserving if and only if $\tr_\mathcal{B}\widetilde{\mathcal{E}} = d\id$.
+(Here the partial trace is over the second system in our definition $\widetilde{\mathcal{E}}=\id\otimes\mathcal{E}\proj{\Omega}$).
+
+*Hint: show that $\tr\mathcal{E}(\ket{i}\bra{j})=\delta_{ij}$.*
+
+
+### Complete positivity of a certain map
+
+Let $\mathcal{E}$ be the linear map on a single qubit defined by
+$$
+  \begin{aligned}
+    \mathcal{E}(\id)
+    &= \id
+  \\\mathcal{E}(\sigma_x)
+    &= a_x\sigma_x
+  \\\mathcal{E}(\sigma_y)
+    &= a_y\sigma_y
+  \\\mathcal{E}(\sigma_z)
+    &= a_z\sigma_z
+  \end{aligned}
+$$
+where $a_x$, $a_y$, and $a_z$ are some fixed real numbers.
+Using the Choi matrix of $\mathcal{E}$, determine the range of $a_x$, $a_y$, $a_z$ for which the map $\mathcal{E}$ is *positive*, and the range for which it is *completely positive*.
+
+
 ### Duals
 
 We say that $\mathcal{E}^\star\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ is the **dual** of a linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ if
 $$
-  \tr \mathcal{E}^\star (X)Y = \tr X\mathcal{E}(Y)
+  \tr [\mathcal{E}^\star (X)Y] = \tr [X\mathcal{E}(Y)]
 $$
 for any operators $X$ and $Y$ in $\mathcal{B}(\mathcal{H})$.
 
-1. Show that, if $\mathcal{E}$ is trace preserving, then $\mathcal{E}^\star$ is unital.
-1. Show that, if $\mathcal{E}=\sum_i E_i\cdot E_i^\dagger$, then $\sum_i E^\dagger_i\cdot E_i$ is an operator-sum decomposition of $\mathcal{E}^\star$.
+1. Show that, if $\mathcal{E}$ is trace preserving, then $\mathcal{E}^\star$ is **unital** (i.e. that it sends the identity to the identity, or equivalently that its Kraus operators $F_j$ satisfy $\sum_j F_jF_j^\dagger=\id$).
+2. Show that, if $\sum_i E_i E_i^\dagger$ is an operator-sum decomposition of $\mathcal{E}$, then $\sum_i E^\dagger_i E_i$ is an operator-sum decomposition of $\mathcal{E}^\star$.
 
 
 ### Trace, transpose, Choi
@@ -1948,87 +2013,53 @@ for any operators $X$ and $Y$ in $\mathcal{B}(\mathcal{H})$.
 Let $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$, and let $d=\dim\mathcal{H}$ and $d'=\dim\mathcal{H}'$.
 Show that, for any $(d\times d)$ matrix $X$ and any $(d'\times d')$ matrix $Y$,
 $$
-  \tr\mathcal{E}(X)Y
-  = \tr\widetilde{\mathcal{E}} (X^T\otimes Y).
+  \tr[\mathcal{E}(X)Y]
+  = \tr[\widetilde{\mathcal{E}} (X^T\otimes Y)].
 $$
 
 (For example, if we are interested in the component $\mathcal{E}(X)_{ij}=\bra{i}\mathcal{E}(X)\ket{j}$, then we can take $Y=\ket{j}\bra{i}$.)
 
 
-### Purifications and isometries
+### Tricks with a maximally mixed state
 
-All purifications of a density operator are related by an isometry acting on the purifying system.
-That is, if $\rho$ is a density operator on $\mathcal{H}$, and $\ket{\psi_A}\in \mathcal{H}\otimes\mathcal{H}_\mathcal{A}$ and $\ket{\psi_B}\in\mathcal{H}\otimes\mathcal{H}_B$ ($\dim\mathcal{H}_\mathcal{A}\leq\dim\mathcal{H}_\mathcal{B}$) are two purifications of $\rho$, then
+A maximally mixed state of a bipartite system can be written, using the Schmidt decomposition^[As discussed in [a previous appendix](#the-schmidt-decomposition).], as
 $$
-  \ket{\psi_B}=(\id\otimes V)\ket{\psi_A}.
+  \ket{\Omega}
+  = \frac{1}{\sqrt d}\sum_i \ket{i}\ket{i}
 $$
-
-To show this, we start with the spectral decomposition of $\rho$
+whence
 $$
-  \rho = \sum_i p_i\proj{i}
-$$
-and note that
-$$
-  \begin{aligned}
-    \ket{\psi_A}
-    &= \sum_i \sqrt{p_i} \ket{i}\otimes\ket{a_i}
-  \\\ket{\psi_B}
-    &= \sum_i \sqrt{p_i} \ket{i}\otimes\ket{b_i}
-  \end{aligned}
-$$
-define an isometry $V=\sum_i \ket{b_i}\bra{a_i}$ satisfying the desired equation.
-
-This observation leads to a way of relating *all* convex decompositions of a given density operator: let $\{p_k,\ket{\psi_k}\}$ and $\{q_l,\ket{\phi_l}\}$ be convex decompositions of a density operator $\rho$;
-then there exists an isometry $V$ such that these two decompositions
-$$
-  \rho
-  = \sum_{k=1}^n\proj{\widetilde{\psi}_k}
-  = \sum_{l=1}^m\proj{\widetilde{\phi}_l},
-$$
-(where $n\geq m$, and $\ket{\widetilde{\psi}_k}=\sqrt{p_k}\ket{\psi_k}$ and $\ket{\widetilde{ \phi}_l}=\sqrt{q_l}\ket{\phi_l}$) are related:
-$$
-  \ket{\widetilde{\psi}_k} = \sum_{l} V_{kl} \ket{\widetilde{\phi}_l}.
-$$
-
-
-### Tricks with a maximally entangled state
-
-A maximally entangled state of a bipartite system can be written, using the Schmidt decomposition, as
-$$
-  \begin{aligned}
-    \ket{\Omega}
-    &= \frac{1}{\sqrt d}\sum_i \ket{i}\ket{i}
-  \\\proj{\Omega}
-    &= \frac{1}{d} \sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{j}
-  \end{aligned}
+  \proj{\Omega}
+  = \frac{1}{d} \sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{j}
 $$
 Each subsystem is of dimension $d$, and all the Schmidt coefficients are equal.
-Here are few useful tricks involving a maximally entangled state.
+Here are few useful tricks involving a maximally mixed state.
 
 - If we take the transpose in the Schmidt basis of $\ket{\Omega}$, then
     $$
       \bra{\Omega}A\otimes B\ket{\Omega} = \frac{1}{d}\tr(A^T B).
     $$
 
-- Any pure state of the bipartite system $\ket{\psi}=\sum_{ij} c_{ij}\ket{i}\ket{j}$ can be written as
+- Any pure state $\ket{\psi}=\sum_{ij} c_{ij}\ket{i}\ket{j}$ of the bipartite system can be written as
     $$
       (C\otimes\id)\ket{\Omega} = (\id\otimes C^T)\ket{\Omega}.
     $$
     This implies that
     $$
-      (U\otimes\overline{U})\ket{\Omega}=\ket{\Omega}
+      (U\otimes U^\star)\ket{\Omega}=\ket{\Omega}
     $$
-    (where $\overline{U}$ denotes the matrix given by taking the complex conjugate, entry-wise, of $U$, i.e. _without_ also taking the transpose).
+    (where $U^\star$ denotes the matrix given by taking the complex conjugate, entry-wise, of $U$, i.e. *without* also taking the transpose).
 
-- The swap operation, $S\colon\ket{i}\ket{j}\mapsto\ket{j}\ket{i}$, can be expressed as^[We write $X^{T_{\mathcal{A}}}$ to mean the partial transpose over $\mathcal{A}$, i.e. $T\otimes\mathcal{I}$.]
+- The swap operation $\texttt{SWAP}=S\colon\ket{i}\ket{j}\mapsto\ket{j}\ket{i}$ can be expressed as
     $$
       \begin{aligned}
         S
         &= d \proj{\Omega}^{T_{\mathcal{A}}}
       \\&= d \sum_{ij} \big(\ket{i}\bra{j}\big)^T\otimes\ket{i}\bra{j}
-      \\&= d \sum_{ij} \ket{j}\bra{i}\otimes\ket{i}\bra{j}.
+      \\&= d \sum_{ij} \ket{j}\bra{i}\otimes\ket{i}\bra{j}
       \end{aligned}
     $$
+    where we write $X^{T_{\mathcal{A}}}$ to mean the partial transpose over $\mathcal{A}$, i.e. $T\otimes\id$.
     This implies that
     $$
       \tr[(A\otimes B)S] = \tr AB
@@ -2037,37 +2068,3 @@ Here are few useful tricks involving a maximally entangled state.
     $$
       (A\otimes\id)S = S(\id\otimes A).
     $$
-
-
-### Trace preserving and partial trace
-
-Show that $\mathcal{E}$ is trace preserving if and only if $\tr_\mathcal{B}\widetilde{\mathcal{E}} = d\id$.
-(Here the partial trace is over the second system in our definition $\widetilde{\mathcal{E}} =\mathcal{I}\otimes\mathcal{E}\proj{\Omega}$).
-
-*Hint: show that $\tr\mathcal{E}(\ket{i}\bra{j}=\delta_{ij}$.*
-
-
-### Rotating Kraus operators
-
-Mathematically speaking, Kraus operators $E_k$ are vectors in a $dd'$-dimensional Hilbert space, with the Hilbert--Schmidt inner product $\tr E^\dagger_k E_l$.
-So, our intuition tells us, in order to describe any quantum channel with $\dim\mathcal{H}=\dim\mathcal{H}'=d$, we should need no more than $d^2$ Kraus operators.
-We can pick an orthonormal basis of operators $\{B_i\}$ and express each Kraus vector in this basis as $E_k=\sum c_{ki} B_i$ (where $i=1,\ldots,d^2$ and $k=1,\ldots,n$, with $n$ possibly much larger than $d^2$).
-This gives us 
-$$
-  \begin{aligned}
-    \rho
-    \longmapsto
-    & \sum_{ij} B_i\rho B^\dagger_j \left(\sum _k c_{ki}c^\star_{kj}\right)
-  \\=& \sum_{ij} B_i\rho B^\dagger_j  C_{ij}
-  \end{aligned}
-$$
-The matrix $C_{ij}$ is positive semidefinite, and hence unitarily diagonalisable: $C_{ij}=\sum_k U_{ik} d_k U^\dagger_{kj}$ for some unitary $U$ and some $d_k\geq0$.
-We can then unitarily "rotate" our operator basis and use the $C_k=\sum_j U_{jk}B_j \sqrt{d_k}$ as our new Kraus operators.
-
-
-### No pancakes
-
-Consider a single-qubit operation which causes the $z$-component of the Bloch vector to shrink while preserving the values of the $x$- and $y$-components.
-Under such an operation, the Bloch sphere is mapped to an oblate spheroid which touches the Bloch sphere along its equator.
-
-Explain why we cannot physically implement such a map.
