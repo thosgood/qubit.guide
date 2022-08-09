@@ -3,12 +3,12 @@
 > About the fundamental tool of quantum computing: **entanglement**, via the formalism of **tensor products**, which was the missing ingredient from our previous formalism of quantum theory.
 > Also about various **controlled gates**, including the always useful **controlled-$\texttt{NOT}$**.
 
-We now know everything we need to know about a single qubit and its quantum behaviour.
+We now know everything we need to know^[For our purposes! Of course, there is a *lot* that we could still ask, but we leave these questions to quantum physicists, or scientists working in a lab.] about a single qubit and its quantum behaviour.
 But if we want to understand quantum computation --- a complicated quantum interference of many interacting qubits --- then we will need few more mathematical tools.
 Stepping up from one qubit to two or more is a bigger leap than you might expect.
-Already, with just two qubits, we will encounter the remarkable phenomenon of quantum entanglement and have a chance to discuss some of the most puzzling features of quantum theory that took people decades to understand.
+Already, with just two qubits, we will encounter the remarkable phenomenon of **quantum entanglement** and have a chance to discuss some of the most puzzling features of quantum theory that took people decades to understand.
 
-<lite-youtube videoid="SkKF48vijiw" playlabel="Play: Overview of entanglement"></lite-youtube>
+<div class="video" title="Overview of entanglement" data-videoid="SkKF48vijiw"></div>
 
 
 
@@ -16,10 +16,11 @@ Already, with just two qubits, we will encounter the remarkable phenomenon of qu
 ## A small history
 
 The notion of **quantum entanglement** was the subject of many early debates that focused on the meaning of quantum theory.
-Back in the 1930s, Albert Einstein, Niels Bohr, Werner Heisenberg, and Erwin Schrödinger (to mention just the usual suspects) were trying hard to understand its conceptual consequences.^[E. Schrödinger, Discussion of probability relations between separated system, _Mathematical Proceedings of the Cambridge Philosophical Society_ **31** (1935), pp. 555--563.]
-Einstein, the most sceptical of them all, claimed that it was pointing toward the fatal flaw in quantum theory, and referred to it as "_spooky action-at-a-distance_".
+Back in the 1930s, Albert Einstein, Niels Bohr, Werner Heisenberg, and Erwin Schrödinger (to mention just the usual suspects) were trying hard to understand its conceptual consequences.^[E. Schrödinger, "Discussion of probability relations between separated system". *Mathematical Proceedings of the Cambridge Philosophical Society* **31** (1935), pp. 555--563.]
+Einstein, the most sceptical of them all, claimed that it was pointing toward the fatal flaw in quantum theory, and referred to it as "spooky action at a distance" ("*spukhafte Fernwirkung*").
 In contrast, Schrödinger was much more prepared to accept quantum theory exactly as it was formulated, along with all its predictions, no matter how weird they might be.
-In his 1935 paper, which introduced quantum entanglement, he wrote "I would not call it _one_ but rather _the_ characteristic trait of quantum mechanics, the one that enforces its entire departure from classical lines of thought".
+In his 1935 paper, which introduced quantum entanglement, he wrote "I would not call it *one* but rather *the* characteristic trait of quantum mechanics, the one that enforces its entire departure from classical lines of thought".
+
 Today we still talk a lot about quantum entanglement, but more often it is viewed as a physical resource which enables us to communicate with perfect security, build very precise atomic clocks, and even teleport small quantum objects!
 But what exactly is quantum entanglement?
 
@@ -29,19 +30,19 @@ But what exactly is quantum entanglement?
 
 ## One, two, many...
 
-<lite-youtube videoid="Y52d8Awh96g" playlabel="Play: Dimension argument for entanglement"></lite-youtube>
+<div class="video" title="Dimension argument for entanglement" data-videoid="Y52d8Awh96g"></div>
 
 In classical physics, the transition from a single object to a composite system of many objects is trivial: in order to describe the state of, say, 42 objects at any given moment of time, it is sufficient to describe the state of each of the objects separately.
 Indeed, the classical state of 42 point-like particles is described by specifying the position and the momentum of each particle.
 
 ::: {.idea latex=""}
-In the _classical_ world, "the whole is the sum of its parts", but the _quantum_ world is very different.
+In the *classical* world, "the whole is *exactly* the sum of its parts"; in the *quantum* world, Aristotle had it right when he said "the whole is *greater than* the sum of its parts".
 :::
 
 Consider, for example, a pair of qubits.
 Suppose that each one is described by a state vector: the first one by $\ket{a}$, and the second one by $\ket{b}$.
 One might therefore think that the most general state of the two qubits should be represented by a pair of state vectors, $\ket{a}\ket{b}$, with one for each qubit.
-Indeed, such a state is certainly possible, but there are other states that _cannot_ be expressed in this form.
+Indeed, such a state is certainly possible, but there are other states that *cannot* be expressed in this form.
 In order to write down the most general state of two qubits we first focus on the basis states.
 
 For a single qubit we have been using the standard basis $\{\ket{0},\ket{1}\}$.
@@ -55,37 +56,39 @@ $$
   \end{array}
 $$
 Within each ket, the first symbol refers to the first qubit, and the second to the second, and we have tacitly assumed that we can distinguish the two qubits by their location, or some other means.
-Now, the most general state of the two qubits is a normalised linear combination of these four basis states, i.e. a vector of the form
+
+Now, the most general state of the two qubits (a **bipartite** state) is a normalised linear combination of these four basis states, i.e. a vector of the form
 $$
   \ket{\psi}
   = c_{00}\ket{00} + c_{01}\ket{01} + c_{10}\ket{10} + c_{11}\ket{11}.
 $$
 Physical interpretation aside, let us count how many real parameters are needed to specify this state.
 Six, right?
-We have four complex numbers (eight real parameters) restricted by the normalisation condition, along with the fact that states differing only by a global phase factor are equivalent, which leaves us with six real parameters.
-Now, by the same line of argument, we need only two real parameters to specify the state of a single qubit, and hence need four real parameters to specify any state of two qubits of the form $\ket{a}\ket{b}$.
-So it cannot be the case that every state of two qubits can be expressed as a pair of states $\ket{a}\ket{b}$, simply for "dimension reasons".
+We have four complex numbers (the $c_{ij}$), which gives *eight* real parameters; we then restrict by the normalisation condition, along with the fact that states differing only by a global phase factor are equivalent, which leaves us with *six* real parameters.
+Now, by the same line of argument, we need only *two* real parameters to specify the state of a single qubit, and hence need *four* real parameters to specify any state of two qubits of the form $\ket{a}\ket{b}$.
+
+But four is less than six!
+So it *cannot* be the case that every state of two qubits can be expressed as a pair of states $\ket{a}\ket{b}$, simply for "dimension reasons".
 
 For example, compare the two states of two qubits,
 $$
-  \begin{gathered}
-    \frac{1}{\sqrt 2}\ket{00} + \frac{1}{\sqrt 2}\ket{01}
-  \\\text{and}
-  \\\frac{1}{\sqrt 2}\ket{00} + \frac{1}{\sqrt 2}\ket{11}.
-  \end{gathered}
+  \frac{1}{\sqrt{2}}\ket{00} + \frac{1}{\sqrt{2}}\ket{01}
+  \quad\text{and}\quad
+  \frac{1}{\sqrt{2}}\ket{00} + \frac{1}{\sqrt{2}}\ket{11}.
 $$
 The first one is **separable**, i.e. we can view it as a pair of state vectors where each one pertains to one of the two qubits:
 $$
-  \frac{1}{\sqrt 2}\ket{00} + \frac{1}{\sqrt 2}\ket{01}
-  = \underbrace{\vphantom{\frac{1}{\sqrt 2}}\ket{0}}_{\text{qubit 1}}
+  \frac{1}{\sqrt{2}}\ket{00} + \frac{1}{\sqrt{2}}\ket{01}
+  = \frac{1}{\sqrt{2}}
   \;\;
-  \underbrace{\frac{1}{\sqrt 2}(\ket{0}+\ket{1})}_{\text{qubit 2}},
+  \underbrace{\vphantom{\frac{1}{\sqrt{2}}}\ket{0}}_{\text{qubit 1}}
+  \;\;
+  \underbrace{(\ket{0}+\ket{1})}_{\text{qubit 2}},
 $$
-The second state, however, does _not_ admit such a decomposition: there do _not_ exist any $\psi_1,\psi_2$ such that
+The second state, however, does *not* admit such a decomposition: there do *not* exist *any* $\psi_1,\psi_2$ such that
 $$
-  \frac{1}{\sqrt 2}\ket{00} + \frac{1}{\sqrt 2}\ket{11}
-  =
-  \ket{\psi_1}\ket{\psi_2}
+  \frac{1}{\sqrt{2}}\ket{00} + \frac{1}{\sqrt{2}}\ket{11}
+  = \ket{\psi_1}\ket{\psi_2}
 $$
 and so we say that it is an **entangled** state.
 Informally, any bipartite state that cannot be viewed as a pair of two states pertaining to the constituent subsystems is said to be entangled.
@@ -98,19 +101,20 @@ With this discussion in our minds, we can now give more formal account of the st
 
 ## Quantum theory, formally (continued)
 
-Recalling [Chapter 4](#measurements), where we said that we were missing a key part of the formalism of quantum theory, we can now fill in this hole.
+We [previously](#quantum-theory-formally) said that we were missing a key part in our formalism of quantum theory, but we can now fill in this hole.
 Our mathematical formalism of choice behind the quantum theory of composite systems is based on the **tensor product** of Hilbert spaces.
 
 ### Tensor products {#tensor-products}
 
 Let the states of some system $\mathcal{A}$ be described by vectors in an $n$-dimensional Hilbert space $\mathcal{H}_{\mathcal{A}}$, and the states of some system $\mathcal{B}$ by vectors in an $m$-dimensional Hilbert space $\mathcal{H}_{\mathcal{B}}$.
-The combined system of $\mathcal{A}$ and $\mathcal{B}$ is then described by vectors in the $(nm)$-dimensional **tensor product space** $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$.
+The combined system of $\mathcal{A}$ and $\mathcal{B}$ is then described by vectors in the $nm$-dimensional **tensor product space** $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$.
 Given bases $\{\ket{a_1},\ldots,\ket{a_n}\}$ of $\mathcal{H}_{\mathcal{A}}$ and $\{\ket{b_1},\ldots,\ket{b_m}\}$ of $\mathcal{H}_{\mathcal{B}}$, we form a basis of the tensor product by taking the ordered pairs $\ket{a_i}\otimes\ket{b_j}$, for $i=1,\ldots,n$ and $j=1,\ldots,m$.
+For brevity, we sometimes write $\ket{a_i}\otimes\ket{b_j}$ as $\ket{a_i}\ket{b_j}$, or simply $\ket{a_ib_j}$.
 The tensor product space $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ then consists of all linear combination of such tensor product basis vectors:^[If the bases $\{\ket{a_i}\}$ and $\{\ket{b_j}\}$ are orthonormal then so too is the tensor product basis $\{\ket{a_i}\otimes\ket{b_j}\}$.]
 $$
   \ket{\psi}
   = \sum_{ij} c_{ij}\ket{a_i}\otimes\ket{b_j}.
-\tag{5.3.1}
+\tag{$\ddagger$}
 $$
 
 The tensor product operation $\otimes$ is distributive:
@@ -122,24 +126,25 @@ $$
     = \alpha_1\ket{a_1}\otimes\ket{b} + \alpha_2\ket{a_2}\otimes\ket{b}.
   \end{gathered}
 $$
+
 The tensor product of Hilbert spaces is again a Hilbert space: the inner products on $\mathcal{H}_{\mathcal{A}}$ and $\mathcal{H}_{\mathcal{B}}$ give a natural inner product on $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$, defined for any two product vectors by
 $$
   \left( \bra{a'}\otimes\bra{b'} \right) \left( \ket{a}\otimes\ket{b} \right)
   = \braket{a'}{a}\braket{b'}{b}
 $$
-and extended by linearity to sums of tensor products of vectors, and, by associativity^[$({\mathcal{H}}_a \otimes {\mathcal{H}}_b)\otimes {\mathcal{H}}_c = {\mathcal{H}}_a \otimes ({\mathcal{H}}_b\otimes {\mathcal{H}}_c)$.], to any number of subsystems.
-Note that the bra corresponding to the tensor product state $\ket{a}\otimes\ket{b}$ is written as $(\ket{a}\otimes\ket{b})^\dagger = \bra{a}\otimes\bra{b}$, where the order of the factors on either side of $\otimes$ does not change when the dagger operation is applied.
+and extended by linearity to sums of tensor products of vectors, and, by associativity^[Associativity means that $({\mathcal{H}}_a \otimes {\mathcal{H}}_b)\otimes {\mathcal{H}}_c = {\mathcal{H}}_a \otimes ({\mathcal{H}}_b\otimes {\mathcal{H}}_c)$.], to any number of subsystems.
+Note that the bra corresponding to the tensor product state $\ket{a}\otimes\ket{b}$ is written as $(\ket{a}\otimes\ket{b})^\dagger = \bra{a}\otimes\bra{b}$, where the order of the factors on either side of $\otimes$ does *not* change when the dagger operation is applied.
 
-Some joint states of $\mathcal{A}$ and $\mathcal{B}$ can be expressed as a single tensor product, say $\ket{\psi}=\ket{a}\otimes\ket{b}$ (often written as $\ket{a}\ket{b}$, or $\ket{a, b}$, or even $\ket{ab}$), meaning that the subsystem $\mathcal{A}$ is in state $\ket{a}$, and the subsystem $\mathcal{B}$ in state $\ket{b}$.
-If we expand $\ket{a}=\sum_i\alpha_i\ket{a_i}$ and $\ket{b}=\sum_i\beta_j\ket{b_j}$, then $\ket{\psi}=\sum_{ij}\alpha_i\beta_j\ket{a_i}\otimes\ket{b_j}$ and we see that, for all such states, the coefficients $c_{ij}$ in Equation (5.3.1) are of a rather special form:
+Some joint states of $\mathcal{A}$ and $\mathcal{B}$ can be expressed as a single tensor product, say $\ket{\psi}=\ket{a}\otimes\ket{b}$, meaning that the subsystem $\mathcal{A}$ is in state $\ket{a}$, and the subsystem $\mathcal{B}$ in state $\ket{b}$.
+If we expand $\ket{a}=\sum_i\alpha_i\ket{a_i}$ and $\ket{b}=\sum_i\beta_j\ket{b_j}$, then $\ket{\psi}=\sum_{ij}\alpha_i\beta_j\ket{a_i}\otimes\ket{b_j}$ and we see that, for all such states, the coefficients $c_{ij}$ in Equation ($\ddagger$) are of a rather special form:
 $$
   c_{ij} = \alpha_i\beta_j.
 $$
-We call such states **separable** (or just **product states**).
+We call such states **separable** (or **product states**).
 States that are not separable are said to be **entangled**.
 
 A useful fact about tensor products is that $\lambda a\otimes b = a\otimes\lambda b$ (where $a$ and $b$ are vectors, and $\lambda$ is a scalar).
-This means that we don't need to worry about brackets, and can write something like $\lambda(a\otimes b)$.
+This means that we don't need to worry about where exactly we put $\lambda$, and can write something like $\lambda(a\otimes b)$.
 
 We will also need the concept of the tensor product of two operators.
 If $A$ is an operator on $\mathcal{H}_{\mathcal{A}}$ and $B$ an operator on $\mathcal{H}_{\mathcal{B}}$, then the tensor product operator $A\otimes B$ is an operator on $\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}$ defined by its action on product vectors via
@@ -152,8 +157,21 @@ $$
   = \sum_{ij}c_{ij} A\ket{a_i}\otimes B\ket{b_j}.
 $$
 
-::: {.technical}
-**!!TO-DO: talk about tensor products via universal properties etc.**
+::: {.technical title="The universal property of the tensor product" latex=""}
+We have described the tensor product in terms of how it acts on bases, and then extended everything by linearity, distributivity, and associativity.
+But there are other, more abstract approaches to defining the tensor product.
+
+For example, given two vector spaces $V$ and $W$, we can construct their tensor product $V\otimes W$ as a *quotient* of the cartesian product $V\times W$ (whose elements are simply pairs $(v,w)$ of vectors in $V$ and vectors in $W$) by the subspace spanned by the relations that we want the tensor product to satisfy: $(v_1+v_2,w)-(v_1,w)-(v_2,w)$, $(v,w_1+w_2)-(v,w_1)-(v,w_2)$, $(\lambda v,w)-\lambda(v,w)$, and $(v,\lambda w)-\lambda(v,w)$.
+
+But really this is hinting at the so-called [**universal property**](https://en.wikipedia.org/wiki/Universal_property) that defines the tensor product without giving a choice of explicit construction: the tensor product of $V$ and $W$ is defined to be any vector space $A$ along with a bilinear map $\otimes\colon V\times W\to A$ such that, for any *other* vector space $Z$ along with a bilinear map $f\colon V\times W\to Z$, there exists a *unique* linear map $\tilde{f}\colon A\to Z$ such that $f=\tilde{f}\circ\otimes$.
+In the language of category theory, the tensor product is the **initial object** amongst vector spaces endowed with a bilinear map from $V\times W$; any other vector space $Z$ with a bilinear map $V\times W\to Z$ *factors through* the tensor product.
+
+One specific reason to care about giving a definition in terms of universal property is that this guarantees (by some [abstract nonsense](https://en.wikipedia.org/wiki/Abstract_nonsense)) that the resulting object will be unique ("up to unique isomorphism") whenever it exists, so you don't need to worry about proving this separately.
+
+Tensor products are much more general than just for vector spaces: they can be [defined for modules](https://en.wikipedia.org/wiki/Tensor_product_of_modules) (which are like vector spaces over an arbitrary commutative ring, instead of over a field), and abelian groups are, it turns out, exactly "modules over $\mathbb{Z}$", so they also have a notion of tensor product.
+Going a bit deeper, we can define tensor products for **complexes** of modules and **sheaves** of modules, and these constructions are absolutely fundamental to modern algebraic geometry.
+
+Going even deeper still (and now far beyond the purview of this book), tensor products are generalised by the notion of [**monoidal categories**](https://en.wikipedia.org/wiki/Monoidal_category).
 :::
 
 
@@ -165,7 +183,7 @@ $$
 
 Let's see how this formalism works for qubits.
 The $n$-fold tensor product of vectors from the standard basis $\{\ket{0},\ket{1}\}$ represent binary strings of length $n$.
-For example, for $n=3$,^[We often drop the $\otimes$ symbol, especially when we deal with the standard tensor product basis. For example, a state of a quantum register composed of four qubits holding the binary string $1001$ may be written as $\ket{1}\otimes\ket{0}\otimes\ket{0}\otimes\ket{1}$, as $\ket{1}\ket{0}\ket{0}\ket{1}$, or even simply as $\ket{1001}$.]
+For example, for $n=3$,
 $$
   \begin{aligned}
     \ket{0}\otimes\ket{1}\otimes\ket{1}
@@ -174,19 +192,20 @@ $$
     & \equiv \ket{111}.
   \end{aligned}
 $$
-A _classical_ register composed of three bits can store _only one_ of these two binary strings at any time; a _quantum_ register composed of three qubits can store _both of them_ in a superposition.
+A *classical* **register** (that is, a collection of bits) composed of three bits can store *only one* of these two binary strings at any time; a *quantum* register composed of three qubits can store *both of them* in a superposition.
 
-Indeed, if we start with the state $\ket{011}$ and apply the Hadamard gate to the first qubit (which is the same as applying $H\otimes\id\otimes\id$), then, given that linear combinations distribute over tensor products, we obtain^[We often simply write $H\otimes H\otimes H$ as $H^{\otimes 3}$.]
+Indeed, if we start with the state $\ket{011}$ and apply the Hadamard gate to the first qubit (which is the same as applying $H\otimes\id\otimes\id$), then, given that linear combinations distribute over tensor products, we obtain
 $$
   \begin{aligned}
     \ket{011}
-    \longmapsto
+    \xmapsto{H\otimes\id\otimes\id}
     &\frac{1}{\sqrt2} \big(\ket{0} + \ket{1}\big) \otimes\ket{1}\otimes\ket{1}
-  \\\equiv
+  \\=
     &\frac{1}{\sqrt2} \big(\ket{011} + \ket{111}\big).
   \end{aligned}
 $$
-In fact, we can even prepare this register in a superposition of all eight possible binary strings: if we apply the tensor product operation $H\otimes H\otimes H$ to the state $\ket{0}\otimes\ket{0}\otimes\ket{0} = \ket{000}$ then we get
+
+In fact, we can even prepare this register in a superposition of all eight possible binary strings of length $3$ at once: if we apply the tensor product operation $H\otimes H\otimes H$ to the state $\ket{0}\otimes\ket{0}\otimes\ket{0} = \ket{000}$ then we get
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
 \begin{equation*}
@@ -214,7 +233,7 @@ In fact, we can even prepare this register in a superposition of all eight possi
 \end{equation*}
 ```
 
-The resulting state is exactly a superposition of all binary string of length 3, and can also be written as
+The resulting state is exactly a superposition of *all* binary string of length $3$, and can also be written as
 $$
   \frac{1}{\sqrt2} \big(\ket{0} + \ket{1}\big)
   \otimes
@@ -224,7 +243,7 @@ $$
 $$
 
 In general, the tensor product operation $H^{\otimes n}$, which means "apply the Hadamard gate to each of your $n$ qubits", is known as the **Hadamard transform**, and it maps product states to product states.
-Like the Hadamard gate in the typical quantum interference circuit, the Hadamard transform opens and closes a multi-qubit interference.
+Like the Hadamard gate in the typical quantum interference circuit, the Hadamard transform opens (and closes) multi-qubit interference.
 
 
 
@@ -234,7 +253,7 @@ Like the Hadamard gate in the typical quantum interference circuit, the Hadamard
 ## Separable or entangled?
 
 ::: {.idea latex=""}
-_Most_ vectors in $\mathcal{H}_a\otimes \mathcal{H}_b$ are entangled and _cannot_ be written as product states $\ket{a}\otimes\ket{b}$ with $\ket{a}\in\mathcal{H}_a$ and $\ket{b}\in\mathcal{H}_b$.
+*Most* vectors in $\mathcal{H}_a\otimes \mathcal{H}_b$ are entangled and *cannot* be written as product states $\ket{a}\otimes\ket{b}$ with $\ket{a}\in\mathcal{H}_a$ and $\ket{b}\in\mathcal{H}_b$.
 :::
 
 In order to see this, let us write any joint state $\ket{\psi}$ of $\mathcal{A}$ and $\mathcal{B}$ in a product basis as
@@ -245,22 +264,93 @@ $$
   \\&= \sum_i\ket{a_i}\otimes\left(\sum_j c_{ij}\ket{b_j}\right)
   \\&= \sum_i\ket{a_i}\otimes\ket{\phi_i}
   \end{aligned}
-\tag{5.5.1}
+\tag{$\ddagger$}
 $$
 where the $\ket{\phi_i}=\sum_j c_{ij}\ket{b_j}$ are vectors in $\mathcal{H}_{\mathcal{B}}$ that need not be normalised.
-For any _product_ state, these vectors have a special form.
+
+Now, for any *product* state, these vectors have a special form.
 Indeed, if $\ket{\psi}= \ket{a}\otimes\ket{b}$ then, after expanding the first state in the $\ket{a_i}$ basis, we obtain
 $$
   \ket{\psi}
   = \sum_{i}\ket{a_i}\otimes\left(\sum_i\alpha_i\ket{b}\right).
 $$
-This expression has the same form as Equation (5.5.1) with $\ket{\phi_i}=\alpha_i\ket{b}$, i.e. each of the $\ket{\phi_i}$ vectors in this expansion is a multiple of the same vector $\ket{b}$.
-Conversely, if $\ket{\phi_i} = \alpha_i\ket{b}$ for all $i$ in Equation (5.5.1), then $\ket{\psi}$ must be a product state.^[Even though an entangled state cannot be written as a tensor product, it can always be written as a linear combination of vectors from the tensor product basis. In fact, any state of $n$ qubits $\ket{\psi}$ can be expressed in the standard _product_ basis. In general, given $n$ qubits, we need $2(2^n-1)$ real parameters to describe their state vector, but only $2n$ to describe separable states.]
-So if we want to identify which joint states are product states and which are not, we simply write the joint state according to Equation (5.5.1) and check if all the vectors $\ket{\phi_i}$ are multiples of a single vector.
+This expression has the same form as Equation ($\ddagger$) with $\ket{\phi_i}=\alpha_i\ket{b}$, i.e. each of the $\ket{\phi_i}$ vectors in this expansion is a multiple of the same vector $\ket{b}$.
+
+Conversely, if $\ket{\phi_i} = \alpha_i\ket{b}$ for all $i$ in Equation ($\ddagger$), then $\ket{\psi}$ must be a product state.^[Even though an entangled state cannot be written as a single tensor product, it can always be written as a *linear combination* of tensor products, since these form a basis.]
+So if we want to identify which joint states are product states and which are not, we simply write the joint state according to Equation ($\ddagger$) and check if all the vectors $\ket{\phi_i}$ are multiples of a single vector.
 Needless to say, if we choose the states $\ket{\phi}$ randomly, it is very unlikely that this condition is satisfied, and we almost certainly pick an entangled state.
+In general, given $n$ qubits, we need $2(2^n-1)$ real parameters to describe their state vector, but only $2n$ to describe separable states --- as $n$ grows larger, $2n$ becomes much *much* smaller than $2(2^n-1)$.
+
+::: {.technical title="The Segre embedding" latex=""}
+The problem of deciding whether or not a given state is separable is, in general, a hard problem (i.e. [NP-hard](https://en.wikipedia.org/wiki/NP-hardness)).
+Because of this, it is interesting to try to understand the notion of separability from different points of view, and it turns out that algebraic geometry yet again has something interesting to say.
+The theory relies on the notion of [**projective space**](https://en.wikipedia.org/wiki/Projective_space), which is a non-trivial topic to try to introduce here, so we do so only briefly, and at a very high speed.
+
+We have repeatedly said that we only really care about state vectors *up to global phase*, i.e. that $\ket{\psi}$ and $\ket{\psi'}$ are "the same" if there exists some $\theta$ such that $\ket{\psi}=e^{i\theta}\ket{\psi'}$.
+Combining this with our unitality requirement (that we want $|\braket{\psi}{\psi}|^2=1$), we are led to studying the equivalence relation
+$$
+  v\sim w \iff v=\lambda w \text{ for some }\lambda\in\mathbb{C}\setminus\{0\}
+$$
+on our Hilbert space.
+Geometrically, this can be understood as *the space of lines through the origin*, i.e. of $1$-dimensional subspaces, but the geometry of projective space is a subject that really deserves many *many* pages to delve into, and so we won't talk about this point of view here.
+
+Algebraically, it turns out that we can describe the space of such equivalence classes using **homogeneous coordinates**.
+Defining **projective $n$-space** as
+$$
+  \mathbb{P}^n
+  \coloneqq \mathbb{C}^{n+1}/\sim
+$$
+(where $\sim$ is the equivalence relation defined above), it turns out that points in $\mathbb{P}^n$ are described by coordinates
+$$
+  [a_0:a_1:\ldots:a_n]
+$$
+where $a_i\in\mathbb{C}$ are *not all simultaneously zero* (i.e. there exists at least one $i\in\{0,\ldots,n\}$ such that $a_i\neq0$) and where we impose that
+$$
+  [a_0:a_1:\ldots:a_n]
+  = [\lambda a_0:\lambda a_1:\ldots:\lambda a_n]
+$$
+for any $\lambda\in\mathbb{C}\setminus\{0\}$.
+
+Why is this useful?
+Well, given any pure state $\alpha_0\ket{0}+\alpha_1\ket{1}$ of a qubit, we obtain a unique point in $\mathbb{P}^1$, namely $[\alpha_0:\alpha_1]$ (since $|\braket{\psi}{\psi}|^2=1$ tells us that at least one of $\alpha_0$ and $\alpha_1$ is non-zero);
+conversely, given any point $[a_0:a_1]\in\mathbb{P}^1$, we can multiply by an appropriate $\lambda\in\mathbb{C}\setminus\{0\}$ to assume that $|a_0|^2+|a_1|^2=1$, and thus obtain a unique (up to global phase) pure state $a_0\ket{0}+a_1\ket{1}$.
+That is, *points in the [**(complex) projective line**](https://en.wikipedia.org/wiki/Riemann_sphere) $\mathbb{P}^1$ correspond to pure states of a qubit*.
+
+Next, we can always express a pure state of *two* qubits in the form
+$$
+  \beta_0\ket{00} + \beta_1\ket{01} + \beta_2\ket{10} + \beta_3\ket{11}
+$$
+and we similarly find a correspondence with points $[z_0:z_1:z_2:z_3]$ in $\mathbb{P}^3$ (given, in one direction, by setting $z_i\coloneqq\beta_i$).
+
+What is of interest to us here is a particular map known as the [**Segre embedding**](https://en.wikipedia.org/wiki/Segre_embedding):
+$$
+  \begin{aligned}
+    \sigma\colon\mathbb{P}^1\times\mathbb{P}^1
+    &\longrightarrow\mathbb{P}^3
+  \\([a_0:a_1],[b_0:b_n])
+    &\longmapsto
+    [a_0b_0:a_0b_1:a_1b_0:a_1b_1].
+  \end{aligned}
+$$
+First of all, one needs to check that this does indeed give a well defined function (i.e. that the resulting coordinate always has at least one non-zero component, and that it is invariant under multiplication by a non-zero scalar $\lambda\in\mathbb{C}\setminus\{0\}$).
+But it turns out that, not only is this a well defined function, but it is actually a "geometric" function, in that it respects the "geometric structure" of projective space.
+We won't concern ourselves here with what that means, but we note that it is *even more* well behaved than this: as its name suggests, it actually gives an **embedding** (i.e. a "geometric" injection) of the $2$-dimensional space $\mathbb{P}^1\times\mathbb{P}^1$ into the $3$-dimensional space $\mathbb{P}^3$.
+
+The image of the Segre embedding is called the **Segre variety**, and you can check that it is given by the set of points
+$$
+  \Sigma
+  \coloneqq \operatorname{Im}(\sigma)
+  = \big\{ [z_0:z_1:z_2:z_3]\in\mathbb{P}^3 \mid z_0z_3-z_1z_2=0 \big\}
+$$
+(in algebraic-geometry language, it is the **zero-locus** of a single polynomial).
+
+Now here is the punchline to all this geometric meandering: *a state $\ket{\phi}$ of two qubits is separable if and only if its corresponding point in $\mathbb{P}^3$ lies in the Segre variety $\Sigma$*.
+
+For more, see e.g. Cirici, Salvadó, and Taron's "Characterization of quantum entanglement via a hypercube of Segre embeddings" ([arXiv:2008.09583](https://arxiv.org/abs/2008.09583)).
+:::
 
 Quantum entanglement is one of the most fascinating aspects of quantum theory.
-We will now explore some of its implications.
+We will now explore some of its computational implications.
 
 
 
@@ -269,10 +359,10 @@ We will now explore some of its implications.
 
 ## Controlled-NOT
 
-<lite-youtube videoid="1PJonQOi5M8" playlabel="Play: Controlled-NOT"></lite-youtube>
+<div class="video" title="Controlled-NOT" data-videoid="1PJonQOi5M8"></div>
 
 How do entangled states arise in real physical situations?
-The short answer is that _entanglement is the result of interactions_.
+The short answer is that *entanglement is the result of interactions*.
 It is easy to see that tensor product operations $U_1\otimes\ldots\otimes U_n$ map product states to product states:
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6}
@@ -295,10 +385,10 @@ It is easy to see that tensor product operations $U_1\otimes\ldots\otimes U_n$ m
 ```
 
 and so any collection of separable qubits remains separable.
-
 As soon as qubits start interacting with one another, however, they become entangled, and things start to get really interesting.
 We will describe interactions that cannot be written as tensor products of unitary operations on individual qubits.
-The most popular two-qubit entangling gate is the **controlled-$\texttt{NOT}$** (or $\texttt{c-NOT}$), also known as the **controlled-$X$** gate.^[Here the $X$ refers to the Pauli operator $\sigma_x\equiv X$ that implements the bit-flip.]
+
+The most popular two-qubit entangling gate is the **controlled-$\texttt{NOT}$** (or $\texttt{c-NOT}$), also known as the **controlled-$X$** gate.^[Here, $X\equiv\sigma_x$ refers to the Pauli operator that implements the bit-flip.]
 The gate acts on two qubits: it flips the second qubit (referred to as the **target**) if the first qubit (referred to as the **control**) is $\ket{1}$, and does nothing if the control qubit is $\ket{0}$.
 In the standard basis $\{\ket{00},\ket{01},\ket{10},\ket{11}\}$, it is represented by the following unitary matrix:
 
@@ -308,7 +398,7 @@ In the standard basis $\{\ket{00},\ket{01},\ket{10},\ket{11}\}$, it is represent
 | $\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&\begin{matrix}0&1\\1&0\end{matrix}\end{array}\right]$ |
 :::
 
-We can also represent the $\texttt{c-NOT}$ gate using the circuit notation, as in Figure \@ref(fig:c-not-diagram).
+We represent the $\texttt{c-NOT}$ gate in circuit notation as shown in Figure \@ref(fig:c-not-diagram).
 
 (ref:c-not-diagram-caption) Where $x,y\in\{0,1\}$, and $\oplus$ denotes $\texttt{XOR}$, or addition modulo 2.
 
@@ -330,7 +420,7 @@ $$
   \texttt{c-NOT}
   = \proj{0}\otimes\id + \proj{1}\otimes X
 $$
-where $X$ is the Pauli bit-flip operation.
+(where $X$ is the Pauli bit-flip operation).
 
 The $\texttt{c-NOT}$ gate lets us do many interesting things, and can act in a rather deceptive way.
 Let us now study some of these things.
@@ -342,7 +432,7 @@ Let us now study some of these things.
 
 ### The Bell states, and the Bell measurement
 
-<lite-youtube videoid="jWzTMtFiG8k" playlabel="Play: Bell states"></lite-youtube>
+<div class="video" title="Bell states" data-videoid="jWzTMtFiG8k"></div>
 
 We start with the generation of entanglement.
 Here is a simple circuit that demonstrates the entangling power of $\texttt{c-NOT}$:^[John Stewart Bell (1928--1990) was a Northern Irish physicist.]
@@ -377,25 +467,25 @@ $$
   \\\xmapsto{\texttt{c-NOT}}& \frac{1}{\sqrt2}\ket{0}\ket{0} + \frac{1}{\sqrt2}\ket{1}\ket{1}
   \end{aligned}
 $$
-resulting in the entangled output $\frac{1}{\sqrt 2}(\ket{00}+\ket{11})$.
+resulting in the entangled output $\frac{1}{\sqrt{2}}(\ket{00}+\ket{11})$.
 In fact, this circuit implements the unitary operation which maps the standard computational basis into the four entangled states, known as the **Bell states**.
 
 ::: {.idea latex=""}
-The **Bell states**, $\ket{\psi_{ij}}$, as generated by the above circuit:
+The **Bell states** $\ket{\psi_{ij}}$ are those generated by the above circuit:
 $$
   \begin{aligned}
     \ket{00}
     &\mapsto
-    \ket{\psi_{00}} = \frac{1}{\sqrt 2}(\ket{00}+\ket{11})
+    \ket{\psi_{00}} = \frac{1}{\sqrt{2}}(\ket{00}+\ket{11})
   \\\ket{01}
     &\mapsto
-    \ket{\psi_{01}} = \frac{1}{\sqrt 2}(\ket{01}+\ket{10})
+    \ket{\psi_{01}} = \frac{1}{\sqrt{2}}(\ket{01}+\ket{10})
   \\\ket{10}
     &\mapsto
-    \ket{\psi_{10}} = \frac{1}{\sqrt 2}(\ket{00}-\ket{11})
+    \ket{\psi_{10}} = \frac{1}{\sqrt{2}}(\ket{00}-\ket{11})
   \\\ket{11}
     &\mapsto
-    \ket{\psi_{11}} = \frac{1}{\sqrt 2}(\ket{01}-\ket{10})
+    \ket{\psi_{11}} = \frac{1}{\sqrt{2}}(\ket{01}-\ket{10})
   \end{aligned}
 $$
 The more standard notation for these states, however, is the following:
@@ -411,8 +501,8 @@ $$
 :::
 
 The Bell states form an orthonormal basis in the Hilbert space $\mathcal{H}_1\otimes\mathcal{H}_2$ of two qubits.
-We can perform measurements in the Bell basis: the easiest way to do it in practice is to "rotate" the Bell basis to the standard basis, and then perform the measurement in the standard basis.^[For any state $\ket{\psi}$ of two qubits, the amplitude $\braket{\psi_{xy}}{\psi}$ can be written as $\braket{xy}{U^\dagger|\psi}$, where $U^\dagger$ is such that $\ket{\psi_{xy}} = U\ket{xy}$.]
-Indeed, if we reverse the circuit, then we get a circuit which maps the Bell state $\ket{\psi_{xy}}$ to the corresponding state $\ket{xy}$ in the standard basis.
+We can perform measurements in the Bell basis: the easiest way to do it in practice is to "rotate" the Bell basis to the standard basis, and then perform the measurement in the standard basis.^[For any state $\ket{\psi}$ of two qubits, the amplitude $\braket{\psi_{ij}}{\psi}$ can be written as $\braket{ij}{U^\dagger|\psi}$, where $U^\dagger$ is such that $\ket{\psi_{ij}} = U\ket{ij}$.]
+Indeed, if we reverse the circuit (running it from right to left), then we get a circuit which maps the Bell state $\ket{\psi_{ij}}$ to the corresponding state $\ket{ij}$ in the standard basis.
 This unitary mapping allows us to "implement" the projections on Bell states by applying the reversed circuit followed by the usual qubit-by-qubit measurement in the standard basis.
 
 
@@ -422,10 +512,10 @@ This unitary mapping allows us to "implement" the projections on Bell states by 
 
 ### Quantum teleportation
 
-<lite-youtube videoid="lbrO_0EImZ4" playlabel="Play: Quantum teleportation"></lite-youtube>
+<div class="video" title="Quantum teleportation" data-videoid="lbrO_0EImZ4"></div>
 
-A wonderful fact, that sounds more like science fiction than actual science, is the following: _an unknown quantum state can be teleported from one location to another._
-Consider the following circuit:^[_Divide et impera_, or "divide and conquer": a good approach to solving problems in mathematics (and in life). Start with the smaller circuits in the dashed boxes.]
+A wonderful fact, that sounds more like science fiction than actual science, is the following: *an unknown quantum state can be teleported from one location to another.*
+Consider the following circuit, which is built from a Bell state generator followed by an "offset" inverse Bell state generator:^[_Divide et impera_, or "divide and conquer": a good approach to solving problems in mathematics (and in life). Start with the smaller circuits in the dashed boxes, which we have just seen introduced above.]
 
 :::: {.circuit latex=""}
 ::: {.circuit_title}
@@ -459,7 +549,7 @@ Consider the following circuit:^[_Divide et impera_, or "divide and conquer": a 
 ::::
 
 The first input qubit (counting from the top) is in some arbitrary state.
-After the action of the part of the circuit in the first dashed box (counting from the left), the state of the three qubits reads^[We neglect to write the normalisation factors.]
+After the action of the part of the circuit in the first dashed box (counting from the left), the state of the three qubits reads^[We don't worry about writing the normalisation factors.]
 $$
   \big( \alpha\ket{0}+\beta\ket{1} \big)
   \big( \ket{00}+\ket{11} \big).
@@ -491,7 +581,7 @@ $$
     10 \mapsto Z
     &\quad 11 \mapsto ZX
   \end{array}
-\tag{5.6.2}
+\tag{$\circledast$}
 $$
 (e.g. if $x=0$ and $y=1$, then we choose $X$).
 We then apply this transformation to the third qubit, which restores the original state of the first qubit.
@@ -499,10 +589,9 @@ We then apply this transformation to the third qubit, which restores the origina
 If you understand how this circuit works then you are ready for quantum teleportation.
 Here is a dramatic version.
 
-
 > Suppose three qubits, which look very similar, are initially in the possession of an absent-minded Oxford student, Alice.
 > The first qubit is in a precious quantum state and this state is needed urgently for an experiment in Cambridge.
-> The other two qubits are entangled, in the $\ket{\psi_{00}}$ state. Alice's colleague, Bob, pops in to collect the qubit.
+> The other two qubits are entangled, in the $\Phi^+=\ket{\psi_{00}}$ state. Alice's colleague, Bob, pops in to collect the qubit.
 > Once he is gone, Alice realises that, by mistake, she gave him not the first but the third qubit: the one which is entangled with the second qubit.
 > 
 > ```{r, engine='tikz',fig.width=4}
@@ -517,7 +606,7 @@ Here is a dramatic version.
 >   \node at (5,-0.75) {Bob,};
 >   \node at (5,-1.1) {in Cambridge};
 >   %
->   \draw [<->,dashed] (0.5,0) to node [above] {\small$\frac{1}{\sqrt2}(\ket{00}+\ket{11})$} (4.5,0);
+>   \draw [<->,dashed] (0.5,0) to node [above] {\small$\Phi^+=\frac{1}{\sqrt2}(\ket{00}+\ket{11})$} (4.5,0);
 > \end{tikzpicture}
 > ```
 > 
@@ -525,26 +614,35 @@ Here is a dramatic version.
 > However, Alice and Bob are both very clever and they both diligently attended their "Introduction to Quantum Information Science" classes.
 > Can Alice rectify her mistake and save Cambridge science?
 > 
-> Hmmm... (pause for thought)...
+> Hmm... *(pause for thought)*
 > 
 > Of course: Alice can teleport the state of the first qubit!
 > She performs the Bell measurement on the first two qubits, which gives her two binary digits, $x$ and $y$.
-> She then broadcasts $x$ and $y$ to Bob, who chooses the corresponding transformation, as in Equation (5.6.2), performs it, and recovers the original state.
+> She then broadcasts $x$ and $y$ to Bob, who chooses the corresponding transformation, as in Equation ($\circledast$), performs it, and recovers the original state.
 
-This raises a natural "philosophical" question: what do we really _mean_ by teleportation?
+This raises a natural "philosophical" question: what do we really *mean* by teleportation?
 A key part of this question is understanding what happens to our original qubit when we teleport it.
-As it turns out, it must necessarily be _destroyed_, as we now explain.
+Note that the actual physical electron (or whatever implementation of qubits we are using) does not suddenly move through space --- what is teleported is the *state* of the qubit, but the argument can be made that if two qubits are entirely indistinguishable from any measurements then they really are "the same" in every way that matters, and so the qubit which now has the original qubit's state "is the same as" the original qubit.
+As it turns out, this process necessarily *destroys* the original qubit's state, as we now explain.
 
+::: {.technical title="Teleportation experiments and verification" latex=""}
+The first actual teleportation experiment was successfully achieved in 1997 ([arXiv:quant-ph/9710013](https://arxiv.org/abs/quant-ph/9710013)); in 2012 a record distance was set: an entangled photon pair was used to teleport a state 143 kilometres/88 miles ([arXiv:1205.3909](https://arxiv.org/abs/1205.3909)); in 2017, successful ground-to-satellite teleportation was achieved ([arXiv:](https://arxiv.org/abs/1707.00934)).
+This is not science fiction!
 
+But there is a fundamental question to ask: if the original state is destroyed, then how can we really verify that teleportation has taken place?
+We can't compare the purportedly teleported state to the original one!
+The answer to this involves certain [no-go theorems](https://en.wikipedia.org/wiki/No-go_theorem) and statistical methods, where we can show that classical physics gives some strict upper bound on a certain fidelity, but which is clearly surpassed by these physical experiments.
+We will better explain the ideas behind these sorts of arguments later on, when we introduce [Bell's theorem](#bells-theorem).
+:::
 
 
 
 
 ### Thou shalt not clone
 
-<lite-youtube videoid="sy3I932usMQ" playlabel="Play: Quantum cloning"></lite-youtube>
+<div class="video" title="Quantum cloning" data-videoid="sy3I932usMQ"></div>
 
-Let us now look at something that controlled-$\texttt{NOT}$ _seems_ to be doing but, in fact, _isn't_.
+Let us now look at something that the controlled-$\texttt{NOT}$ *seems* to be doing but, in fact, *isn't*.
 It is easy to see that the $\texttt{c-NOT}$ can copy the bit value of the first qubit:
 $$
   \ket{x}\ket{0} \xmapsto{\texttt{c-NOT}} \ket{x}\ket{x}
@@ -554,11 +652,11 @@ so one might suppose that this gate could also be used to copy superpositions, s
 $$
   \ket{\psi}\ket{0} \xmapsto{\texttt{c-NOT}} \ket{\psi}\ket{\psi}
 $$
-for any $\ket{\psi}$.
+for *any* $\ket{\psi}$.
 
-**This is not so!**
+*This is not true!*
 
-The unitarity of the $\texttt{c-NOT}$ means that it turns superpositions in the control qubit into _entanglement_ of the control and the target: if the control qubit is in the a superposition state $\ket{\psi} = \alpha\ket{0}+\beta\ket{1}$ (with $\alpha,\beta\neq0$), and the target is in $\ket{0}$, then the $\texttt{c-NOT}$ gate generates the entangled state
+The unitarity of the $\texttt{c-NOT}$ means that it turns *superpositions* in the control qubit into *entanglement* of the control and the target: if the control qubit is in the a superposition state $\ket{\psi} = \alpha\ket{0}+\beta\ket{1}$ (with $\alpha,\beta\neq0$), and the target is in $\ket{0}$, then the $\texttt{c-NOT}$ gate generates the entangled state
 $$
   \big( \alpha\ket{0}+\beta\ket{1} \big) \ket{0}
   \xmapsto{\texttt{c-NOT}}
@@ -566,7 +664,7 @@ $$
 $$
 In fact, it is _impossible_ to clone an unknown quantum state, and we can prove this!
 
-To prove this via contradiction, let's assume that we _could_ build a universal quantum cloner, and then take any two normalised states $\ket{\psi}$ and $\ket{\phi}$ that are _non-identical_ (i.e. $|\braket{\psi}{\phi}|\neq1$) and _non-orthogonal_ (i.e. $\braket{\psi}{\phi}\neq0$).
+To prove this via contradiction, let us assume that we *could* build a universal quantum cloner, and then take any two normalised states $\ket{\psi}$ and $\ket{\phi}$ that are *non-identical* (i.e. $|\braket{\psi}{\phi}|\neq1$) and *non-orthogonal* (i.e. $\braket{\psi}{\phi}\neq0$).
 If we then run our hypothetical cloning machine we get
 $$
   \begin{aligned}
@@ -602,7 +700,7 @@ Universal quantum cloners are _impossible_.
 ### Controlled-phase
 
 Needless to say, not everything is about the controlled-$\texttt{NOT}$ gate.
-Another common two-qubit gate is the **controlled-phase** gate $\texttt{c-}P_\varphi$.
+Another common two-qubit gate is the **controlled-phase** gate, denoted $\texttt{c-}P_\varphi$.
 
 ::: {.idea latex=""}
 | controlled-phase |
@@ -686,7 +784,7 @@ and then the controlled-$Z$ operation flips the sign in front of $\ket{11}$
 \end{equation*}
 ```
 
-which results in the entangled state.
+which results in an entangled state.
 
 
 
@@ -697,8 +795,7 @@ which results in the entangled state.
 Both the above two-qubit controlled gates (i.e. $\texttt{c-NOT}$ and $\texttt{c-}P_\varphi$) are specific examples of the more general construction of a **controlled-$U$ gate**:
 $$
   \texttt{c-}U
-  =
-  \proj{0}\otimes\id + \proj{1}\otimes U
+  = \proj{0}\otimes\id + \proj{1}\otimes U
 $$
 where $U$ is an arbitrary single-qubit unitary transformation $U$.
 
@@ -764,12 +861,12 @@ Consider the following circuit.
   \end{quantikz}
 \end{equation*}
 ```
-where $\ket{u}$ is an _eigenstate_ of $U$ (that is, $U\ket{u} = e^{i\varphi}\ket{u}$ for some $\varphi$).
+where $\ket{u}$ is an _eigenstate_ of $U$, so that $U\ket{u} = e^{i\varphi}\ket{u}$ for some $\varphi$.
 ::::
 
 This should look familiar: it is the usual interference circuit, but with the phase gate replaced by a controlled-$U$ gate, which will mimic the phase gate, as we shall soon see.
 Note that the second qubit is prepared in state $\ket{u}$, which is _required to be an eigenstate of $U$_.
-The circuit effects the following sequence of transformations (omitting the normalisation factors):
+The circuit effects the following sequence of transformations:^[Omitting, as per usual, the normalisation factors.]
 $$
   \begin{aligned}
     \ket{0}\ket{u}
@@ -787,39 +884,39 @@ $$
     \right) \ket{u}.
   \end{aligned}
 $$
-Note that the second qubit does _not_ get entangled with the first one: it remains in its original state $\ket{u}$.
+Note that the second qubit does *not* get entangled with the first one: it remains in its original state $\ket{u}$.
 However, the interaction between the two qubits introduces a phase shift on the first qubit.
 This may look like an unnecessarily complicated way of introducing phase shifts, but, as we shall soon see, this is how quantum computers do it.
-Let me give you a preview of things to come.
+Here is a preview of things to come.
 
 Consider the following $x$-controlled-$U$ operation:
 $$
-  \begin{gathered}
-    \left[
-      \begin{array}{cccc}
-        \id & 0 & 0 & 0
-      \\0 & \id & 0 & 0
-      \\0 & 0 & \id & 0
-      \\0 & 0 & 0 & X
-      \end{array}
-    \right]
-  \\[1em]
-    =\proj{00}\otimes\id
-  \\+ \proj{01}\otimes\id
-  \\+ \proj{10}\otimes\id
-  \\+ \proj{11}\otimes X.
-  \end{gathered}
+  \left[
+    \begin{array}{cccc}
+      \id & 0 & 0 & 0
+    \\0 & \id & 0 & 0
+    \\0 & 0 & \id & 0
+    \\0 & 0 & 0 & X
+    \end{array}
+  \right]
+  = \begin{aligned}
+    \proj{00}&\otimes\id
+  \\+\,\,\proj{01}&\otimes\id
+  \\+\,\,\proj{10}&\otimes\id
+  \\+\,\,\proj{11}&\otimes X.
+  \end{aligned}
 $$
-The first register is of size $2$, and the second register is of size $1$.
+The first register is of size $2$ (corresponding to the top-left $2\times 2$ block, which is simply the identity matrix), and the second register is of size $1$ (corresponding to the two bottom-right $1\times1$ blocks, namely an identity matrix and $X$).
 If the first register is prepared in state $\ket{11}$, then the qubit in the second register is flipped (by the Pauli bit-flip $X$); otherwise, nothing happens.
+
 This unitary operation is a quantum version of the Boolean function evaluation: it corresponds to the Boolean function
 $$
   \begin{aligned}
-    f\colon\{0,1\}^2 &\to \{0,1\}
-  \\00&\mapsto0
-  \\01&\mapsto0
-  \\10&\mapsto0
-  \\11&\mapsto1.
+    f\colon\{0,1\}^2 &\longrightarrow \{0,1\}
+  \\00&\longmapsto0
+  \\01&\longmapsto0
+  \\10&\longmapsto0
+  \\11&\longmapsto1.
   \end{aligned}
 $$
 If $f(x)=1$, then we flip the bit value in the second register (with operation $X$); if $f(x)=0$, then we do nothing.
@@ -827,7 +924,7 @@ If $f(x)=1$, then we flip the bit value in the second register (with operation $
 Now, prepare the qubit in the second register in state $\ket{0}-\ket{1}$, which is an eigenstate of $X$ with eigenvalue $e^{\pi i}=-1$.
 So whenever $X$ is applied to the second register, the phase factor $-1$ appears in front of the corresponding term in the first register.
 If we prepare the first register in the superposition $\ket{00}+\ket{01}+\ket{10}+\ket{11}$ then the result of applying the above $x$-controlled-$U$ operation is the entangled state $\ket{00}+\ket{01}+\ket{10}-\ket{11}$.
-That is, _the phase kick-back mechanism introduced a relative phase in the equally-weighted superposition of all binary strings of length two_.
+That is, *the phase kick-back mechanism introduces a relative phase in the equally-weighted superposition of all binary strings of length two*.
 
 ::: {.idea latex=""}
 Phase kick-back is how we control quantum interference in quantum computation.
@@ -842,7 +939,7 @@ We will return to this topic later on, when we discuss quantum evaluation of Boo
 
 ### Universality, revisited
 
-<lite-youtube videoid="IzyAY6US5C4" playlabel="Play: Universal sets of gates (for multiple qubits)"></lite-youtube>
+<div class="video" title="Universal sets of gates (for multiple qubits)" data-videoid="IzyAY6US5C4"></div>
 
 We will come across few more gates in this course, but at this stage you already know all the elementary unitary operations that are needed to construct any unitary operation on any number of qubits:
 
@@ -851,18 +948,17 @@ We will come across few more gates in this course, but at this stage you already
 - the $\texttt{c-NOT}$
 
 These gates form a **universal set of gates**: with $O(4^{n}n)$ of these gates, we can construct any $n$-qubit unitary operation.^[Recall the big-$O$ asymptotic notation: given a _positive_ function $f(n)$, we write $O(f(n))$ to mean "bounded above by $c\,f(n)$ for some constant $c > 0$ (for sufficiently large $n$)". For example, $15n^2+4n+7$ is $O(n^2)$.]
-We should mention that there are many universal sets of gates.
+We should mention that there are many different universal sets of gates.
 In fact, almost any gate that can entangle two qubits can be used as a universal gate.
 
-We are particularly interested in any _finite_ universal set of gates (such as the one containing the Hadamard, $P_{\frac{\pi}{4}}$ (the $T$ gate), and the $\texttt{c-NOT}$), which can approximate any unitary operation on $n$ qubits with arbitrary precision.
+We are particularly interested in any *finite* universal set of gates (such as the one containing the Hadamard, $P_{\frac{\pi}{4}}$ (the $T$ gate), and the $\texttt{c-NOT}$) that can approximate any unitary operation on $n$ qubits with arbitrary precision.
 The price to pay is the number of gates --- better precision requires more gates.
-We shall elaborate on this later.
 
 
 
 
 
-### Density operators and the like
+### Density operators, and other things to come
 
 The existence of entangled states leads to an obvious question: if we cannot attribute a state vector to an individual qubit, then how can we describe its quantum state?
 In the next few chapters we will see that, when we limit our attentions to a part of a larger system, states are not represented by vectors, measurements are not described by orthogonal projections, and evolution is not unitary.
@@ -870,9 +966,9 @@ As a spoiler, here is a dictionary of some of the new concepts that will soon be
 
 | | | |
 | -: | :-: | :- |
-| state vectors | $\longmapsto$ | density operators |
-| unitary evolutions | $\longmapsto$ | completely-positive trace-preserving maps |
-| orthogonal projectors | $\longmapsto$ | positive operator-valued measures |
+| state vectors | $\rightsquigarrow$ | density operators |
+| orthogonal projectors | $\rightsquigarrow$ | positive operator-valued measures |
+| unitary evolutions | $\rightsquigarrow$ | completely-positive trace-preserving maps |
 
 
 
@@ -882,38 +978,39 @@ As a spoiler, here is a dictionary of some of the new concepts that will soon be
 
 ## Why qubits, subsystems, and entanglement?
 
-<lite-youtube videoid="0AU6U7bcEh0" playlabel="Play: Why qubits?"></lite-youtube>
+<div class="video" title="Why qubits?" data-videoid="0AU6U7bcEh0"></div>
 
 One question that is rather natural to ask at this point is the following:
 
 > If entanglement is so fragile and difficult to control, then why bother?
-> Why not perform the whole computation in one physical system that has as many quantum states as we normally have labels for the states of qubits, so that we can label these quantum states in the same way as we normally label the qubits, and give _them_ computational meaning?
+> Why not perform your computations in one singly physical system that has as many quantum states as we normally have labels for the states of qubits?
+> Then we could label these quantum states in the same way as we normally label the qubits, and give *them* computational meaning.
 
-This suggestion, although possible, gives a very inefficient way of representing data (it is describing the **unary encoding**).
-For serious computations _we need subsystems_.
+This suggestion, although possible, gives a very inefficient way of representing data, known as the **unary encoding**.
+For serious computations, we *need* subsystems.
 Here is why.
 
 Suppose you have $n$ physical objects, and each object has $k$ distinguishable states.
-If you can access each object _separately_ and put it into any of the $k$ states, then, with only $n$ operations, you can prepare any of the $k^{n}$ different configurations of the combined systems.
+If you can access each object *separately* and put it into any of the $k$ states, then, with only $n$ operations, you can prepare any of the $k^{n}$ different configurations of the combined systems.
 Without any loss of generality, let us take $k=2$ and refer to each object of this type as a **physical bit**.
 We label the two states of a physical bit as $0$ and $1$.
-Any collection of $n$ physical bits can be prepared in $2^{n}$ different configurations, which can be used to store up to $2^{n}$ messages/binary strings/different numbers.
-In order to represent numbers from $0$ to $N-1$ we just have to choose $n$ such that $N\leq 2^n$.
+So any collection of $n$ physical bits can be prepared in $2^{n}$ different configurations, which can be used to store up to $2^{n}$ numbers (or binary strings, or messages, or however you want to interpret these things).
+In order to represent numbers from $0$ to $N-1$ we just have to choose $n$ such that $2^n\geq N$.
 
-Suppose the two states in the physical bit are separated by the energy difference $\Delta E$.
-Then a preparation of any particular configuration will cost no more than $E=n \Delta E=(\log_2 N)\Delta E$ units of energy.
+Suppose the two states in the physical bit are separated by the energy difference $\Delta_E>0$, i.e. that it costs $\Delta_E$ units of energy to to switch a physical bit from one state to the other.
+Then a preparation of any particular configuration will cost no more than $E=n \Delta_E=(\log_2 N)\Delta_E$ units of energy.^[For simplicity here, we're assuming that $N=2^n$.]
 
-In contrast, if we choose to encode $N$ configurations into one chunk of matter, say, into the first $N$ energy states of a single harmonic oscillator with the interstate energy separation $\Delta E$ then, in the worst case, one has to use $E=N\Delta E$ units of energy, e.g. to go from the ground state (labelled as $0$) to the most excited state (labelled as $N$).
-For large $N$ this gives an exponential gap in the energy expenditure between the binary encoding using physical bits and unary encoding, using energy levels of harmonic oscillators.
+In contrast, if we choose to encode $N$ configurations into one chunk of matter, say, into the first $N$ energy states of a single harmonic oscillator with the same energy separation $\Delta_E$ between states, then, in the worst case (i.e. going from the ground state $0$ to the most excited state $N$) one has to use $E=N\Delta_E$ units of energy.
+For large $N$ this gives an exponential gap in the energy expenditure between the binary encoding using physical bits, and the unary encoding using energy levels of harmonic oscillators: $(\log_2 N)\Delta_E$ vs $N\Delta_E$.
 
-One can, of course, try to switch from harmonic oscillators to quantum systems which have a finite spread in the energy spectrum.
-For example, by operating on the energy states of the hydrogen atom one can encode any number from $0$ to $N-1$, and one is guaranteed not to spend more than $E_{\mathrm{max}}=$ $13.6\,\mathrm{eV}$ (otherwise the atom is ionised).
-The snag is that, in this case, some of the electronic states will be separated by the energy difference to the order of $E_{\mathrm{max}}/N$, and to drive the system selectively from one state to another one has to tune into the frequency $E_{\mathrm{max}}/\hbar N$, which requires a sufficiently long wave-packet (so that the frequency is well defined), and consequently the
+Of course, you might try to switch to a different choice of realisation for the unary encoding, such as a quantum system that has a finite spread in the energy spectrum.
+For example, by operating on the energy states of the hydrogen atom, you can encode any number from $0$ to $N-1$, and we are guaranteed not to spend more than $E_{\mathrm{max}}=$ $13.6\,\mathrm{eV}$ (otherwise the atom is ionised).
+The snag is that, in this case, some of the electronic states will be separated by an energy difference to the order of $E_{\mathrm{max}}/N$, and to drive the system selectively from one state to another one has to tune into the frequency $E_{\mathrm{max}}/\hbar N$, which requires a sufficiently long [**wave packet**](https://en.wikipedia.org/wiki/Wave_packet) in order for the frequency to be well defined, and consequently the
 interaction time is of order $N(\hbar/E_{\mathrm{max}})$.
 
-That is, we have to trade energy for time.
+That is, we spend *less energy*, but the trade off is that we have to spend *more time*.
 
-It turns out that whichever way we try to represent the number $N$ using the unary encoding (i.e. using $N$ different states of a single chunk of matter), we end up depleting our physical resources (such as energy, time, space) at a much greater rate than in the case when we use subsystems.
+It turns out that whichever way we try to represent the number $N$ in the unary encoding (i.e. using $N$ different states of a single chunk of matter), we end up depleting our physical resources (such as energy or time, or even space) at a much greater rate than in the case when we use subsystems.
 This plausibility argument indicates that, for efficient processing of information, the system must be divided into subsystems --- for example, into physical bits.
 
 
@@ -925,23 +1022,23 @@ This plausibility argument indicates that, for efficient processing of informati
 
 ### Entangled or not?
 
-<lite-youtube videoid="lHTSQxii0t0" playlabel="Play: Shared randomness"></lite-youtube>
+<div class="video" title="Shared randomness" data-videoid="lHTSQxii0t0"></div>
 
 Let a joint state of $\mathcal{A}$ and $\mathcal{B}$ be written in a product basis as
 $$
   \ket{\psi} = \sum_{ij} c_{ij}\ket{a_i}\otimes\ket{b_j}.
 $$
-Assume that $\mathcal{H}_a$ and $\mathcal{H}_b$ are of the same dimension.
+Assume that $\mathcal{H}_{\mathcal{A}}$ and $\mathcal{H}_{\mathcal{B}}$ are of equal dimension.
 
 1. Show that, if $\ket{\psi}$ is a product state, then $\det (c_{ij}) = 0$.
 
-2. Show that the converse ($\det(c_{ij})=0$ implies that $\ket{\psi}$ is a product state) holds only for qubits. Explain why.
+2. Show that the converse ($\det(c_{ij})=0\implies\ket{\psi}=\ket{a}\ket{b}$) holds only for qubits. Explain why.
 
 3. Deduce that the state
     $$
       \frac12\big(\ket{00} + \ket{01} + \ket{10} + (-1)^k\ket{11}\big)
     $$
-    is entangled for $k=1$ and unentangled for $k=0$. Express the latter case explicitly as a product state.
+    is entangled for odd values of $k$ and unentangled for even values of $k$. Express the latter case explicitly as a product state.
 
 There is a lot of interesting physics behind the previous innocuous-looking mathematical statement.
 For example, think again about the state $(\ket{00}+\ket{11})/\sqrt2$.
@@ -951,18 +1048,19 @@ But after your measurement the two qubits are either in state $\ket{00}$ or in $
 Now, why might that be disturbing?
 Well, imagine the second qubit to be light-years away from the first one.
 It seems that the measurement of the first qubit affects the second qubit right away, which seems to imply faster-than-light communication!
-This is what Einstein called "spooky action as a distance".^["Spooky action at a distance" is a loose translation of the German "spukhafte Fernwirkung", which is the phrase that Albert Einstein used in his 1947 letter to Max Born.]
+This is what Einstein called "spooky action as a distance" in his 1947 letter to Max Born.
+
 But can you actually use this effect to send a message faster than light?
 What would happen if you tried?
 
-Hopefully you can see that it would not work, since the result of the measurement is random --- you cannot choose the bit value you want to send.
-We shall return to this, and other related phenomena, later on.
+Hopefully you can see that it would not work, since the result of the measurement is random: you cannot choose the bit value you want to send.
+We shall return to this, and other related phenomena, later on --- it is not at all a lost cause!
 
 
 
 ### SWAP circuit
 
-Show that, for any states $\ket{\psi_1}$ and $\ket{\psi_2}$, the circuit below implements the $\texttt{SWAP}$ operation $\ket{\psi_1}\ket{\psi_2} \mapsto \ket{\psi_2}\ket{\psi_1}$.
+Show that, for any states $\ket{\psi_1}$ and $\ket{\psi_2}$ of two qubits, the circuit below implements the $\texttt{SWAP}$ operation $\ket{\psi_1}\ket{\psi_2} \mapsto \ket{\psi_2}\ket{\psi_1}$.
 
 :::: {.circuit latex=""}
 ::: {.circuit_title}
@@ -990,7 +1088,7 @@ Show that, for any states $\ket{\psi_1}$ and $\ket{\psi_2}$, the circuit below i
 
 ### Controlled-NOT circuit
 
-Show that the circuit below implements the controlled-$\texttt{NOT}$ gate.
+Show that the circuit below gives another implementation of the controlled-$\texttt{NOT}$ gate.
 
 :::: {.circuit latex=""}
 ::: {.circuit_title}
@@ -1046,19 +1144,21 @@ $$
   \ket{\psi}
   = \frac{1}{\sqrt3}\big( \ket{01} - \ket{10} + i\ket{11} \big).
 $$
-The measurement $M$ gives two outcomes: $0$ and $1$.
+The measurement $M$ gives two possible outcomes: $0$ and $1$.
 What are the probabilities of each outcome, and what is the post-measurement state in each case?
-Further, what is actually being measured here?
+
+What is this circuit actually measuring?
 
 
 ### Arbitrary controlled-U on two qubits
 
-Any unitary operation $U$ on a single qubit can be expressed as
+[Recall](#universality-again) that any unitary operation $U$ on a single qubit can be expressed as
 $$
   U = B^\dagger XBA^\dagger XA
 $$
-where $X\equiv\sigma_x$ is the Pauli bit-flip operator, and $A$ and $B$ are unitaries.
-Suppose that you can implement any single qubit gate, and that you have a bunch of controlled-$\texttt{NOT}$ gates at your disposal.
+for some unitaries $A$ and $B$, where $X\equiv\sigma_x$ is the Pauli bit-flip operator.
+
+Suppose that you can implement any single-qubit gate, and that you have a bunch of controlled-$\texttt{NOT}$ gates at your disposal.
 How would you implement any controlled-$U$ operation on two qubits?
 
 
@@ -1070,7 +1170,7 @@ One qubit is sent to Alice, and one to Bob, who then both perform measurements i
 1. What is the probability that Alice and Bob will register identical results?
     Can any correlations they observe be used for instantaneous communication?
 
-2. Prior to the measurements in the computational basis, Alice and Bob apply unitary operations $R_\alpha$ and $R_\beta$ (respectively) to their respective qubits:
+2. Prior to the measurements in the computational basis, Alice and Bob apply unitary operations $R_\alpha$ and $R_\beta$ (respectively), for some fixed values $\alpha,\beta\in\mathbb{R}$, to their respective qubits:
 
     ```{r,engine='tikz',fig.width=4}
     \definecolor{primary}{RGB}{177,98,78}
@@ -1086,7 +1186,7 @@ One qubit is sent to Alice, and one to Bob, who then both perform measurements i
     \end{tikzpicture}
     ```
 
-    The gate $R_\theta$ is defined by its action on the basis states:
+    where the gate $R_\theta$ is defined by its action on the basis states:
     $$
       \begin{aligned}
         \ket{0}
@@ -1107,10 +1207,14 @@ One qubit is sent to Alice, and one to Bob, who then both perform measurements i
 
 3. What is the probability that Alice and Bob's outcomes are identical?
 
+4. What is the geometric interpretation of the operator $R_\theta$?
 
-### Quantum dense coding
 
-**!!!TO-DO!!!**
+### Quantum dense coding {#quantum-dense-coding}
+
+::: {.todo}
+<!-- TO-DO -->
+:::
 
 
 ### Playing with conditional unitaries
@@ -1121,13 +1225,13 @@ The swap gate $S$ on two qubits is defined first on product vectors by $S\colon\
     Which Bell states span the _symmetric subspace_ (i.e. the space spanned by all eigenvectors with eigenvalue $1$), and which the _antisymmetric_ one (i.e. that spanned by eigenvectors with eigenvalue $-1$)?
     Can $S$ have any eigenvalues apart from $\pm1$?
 
-2. Show that $P_\pm = \frac12(\id\pm S)$ are two orthogonal projectors which form the decomposition of the identity and project on the symmetric and antisymmetric subspaces.
+2. Show that $P_\pm = \frac12(\id\pm S)$ are two orthogonal projectors which form the decomposition of the identity and project onto the symmetric and antisymmetric subspaces.
     Decompose the state vector $\ket{a}\ket{b}$ of two qubits into symmetric and antisymmetric components.
 
-3. Consider the quantum circuit below, composed of two Hadamard gates, one controlled-$S$ operation (also known as the **controlled-swap**, or **Fredkin** gate), and the measurement $M$ in the computational basis.
+3. Consider the quantum circuit below, composed of two Hadamard gates, one controlled-$S$ operation (also known as the **controlled-swap**, or [**Fredkin** gate](https://en.wikipedia.org/wiki/Fredkin_gate)), and the measurement $M$ in the computational basis.
     Suppose that the state vectors $\ket{a}$ and $\ket{b}$ are normalised but _not_ orthogonal to one another.
-    Step through the execution of this network, writing down the quantum states of the three qubits after each computational step.
-    What are the probabilities of observing $0$ or $1$ when the measurement $M$ is performed?
+    Step through the execution of this network, writing down the quantum states of the three qubits after each of the four computational steps.
+    What are the probabilities of observing $0$ or $1$ when the measurement $M$ is finally performed?
 
 :::: {.circuit latex=""}
 ::: {.circuit_title}
@@ -1160,27 +1264,20 @@ The swap gate $S$ on two qubits is defined first on product vectors by $S\colon\
 
 4. Explain why this quantum network implements projections on the symmetric and antisymmetric subspaces of the two qubits.
 
-5. Two qubits are transmitted through a quantum channel which applies the same, randomly chosen, unitary operation $U$ to each of them.
-    Show that the symmetric and antisymmetric subspaces are invariant under $U\otimes U$.
+5. Two qubits are transmitted through a quantum channel which applies the same randomly chosen unitary operation $U$ to each of them, i.e. $U\otimes U$.
+    Show that the symmetric and antisymmetric subspaces are invariant under this operation.
 
 6. Polarised photons are transmitted through an optical fibre.
     Due to the variation of the refractive index along the fibre, the polarisation of each photon is rotated by the same unknown angle.
     This makes communication based on polarisation encoding unreliable.
-    However, if you can prepare any polarisation state of the two photons then you can still use the channel to communicate without any errors.
-    How can this be achieved?
+    However, if you are able to prepare *any* polarisation state of the two photons then you can still use the channel to communicate without any errors --- how?
 
-
-
-
-
-
-## *Appendices*
 
 ### Tensor products in components
 
 In our discussion of tensor products we have so far taken a rather abstract approach.
 There are, however, situations in which we have to put numbers in, and write tensor products of vectors and matrices explicitly.
-For example, here is the standard basis of two qubits written explicitly as column vectors:
+For example, here is the standard basis of two qubits written explicitly as column vectors:^[We always use the lexicographic order $00<01<10<11$.]
 $$
   \begin{aligned}
     \ket{00} &\equiv \ket{0}\otimes\ket{0}
@@ -1227,7 +1324,7 @@ are given by
 $$
   (A\otimes B)_{ik,jl} = A_{ij}B_{kl}
 $$
-where $ik\in\{00,01,10,11\}$ labels the rows, and $kl\in\{00,01,10,11\}$ labels columns, when forming the block matrix:^[We always use the lexicographic order $00<01<10<11$.]
+where $ik\in\{00,01,10,11\}$ labels the rows, and $kl\in\{00,01,10,11\}$ labels columns, when forming the block matrix:
 $$
   \begin{aligned}
     A\otimes B
@@ -1247,6 +1344,10 @@ $$
   \right]
   \end{aligned}
 $$
+
+::: {.technical title="The Kronecker product" latex=""}
+This product $A\otimes B$ also known as the [**Kronecker product**](https://en.wikipedia.org/wiki/Kronecker_product) of matrices, which generalises the [**outer product**](https://en.wikipedia.org/wiki/Outer_product) of two vectors that we have [already seen](#outer-products).
+:::
 
 The tensor product induces a natural partition of matrices into blocks.
 Multiplication of block matrices works pretty much the same as regular matrix multiplication (assuming the dimensions of the sub-matrices are appropriate), except that the entries are now matrices rather than numbers, and so may not commute.
@@ -1275,62 +1376,67 @@ Multiplication of block matrices works pretty much the same as regular matrix mu
     (where $X$, $Y$, and $Z$ are the Pauli matrices).
 
 2. Using the block matrix form of $A\otimes B$ expressed in terms of $A_{ij}$ and $B_{ij}$ (as described above), explain how the following operations are performed on the block matrix:
-    - transposition $(A\otimes B)^T$; partial transpositions $A^T\otimes B$ and $A\otimes B^T$;
-    - trace $\tr (A\otimes B)$; partial traces $(\tr A )\otimes B$ and $A\otimes (\tr B)$.
+    - transposition $(A\otimes B)^T$;
+    - **partial transpositions** $A^T\otimes B$ and $A\otimes B^T$;
+    - trace $\tr (A\otimes B)$;
+    - **partial traces** $(\tr A)\otimes B$ and $A\otimes(\tr B)$.
 
-    Consider the Hadamard transform $H\otimes H\otimes H$ on three qubits, which is described by a $(2^3\times2^3)$ matrix.
-    We know that
-    $$
-      H = \frac{1}{\sqrt2}\bmqty{1&1\\1&-1}
-    $$
-    and so we can calculate that
-    $$
-      H\otimes H
-      = \frac12
-      \left[
-      \,
-        \begin{array}{c|c}
-          \mqty{1&1\\1&-1}
-          & \mqty{1&1\\1&-1}
-        \\\hline
-          \mqty{1&1\\1&-1}
-          & \mqty{-1&-1\\-1&1}
-        \end{array}
-      \,
-      \right]
-    $$
-    and thus that
-    $$
-      H\otimes H\otimes H
-      = \frac12
-      \left[
-      \,
-        \begin{array}{c|c|c|c}
-          \mqty{1&1\\1&-1}
-          & \mqty{1&1\\1&-1}
-          & \mqty{1&1\\1&-1}
-          & \mqty{1&1\\1&-1}
-        \\\hline
-          \mqty{1&1\\1&-1}
-          & \mqty{-1&-1\\-1&1}
-          & \mqty{1&1\\1&-1}
-          & \mqty{-1&-1\\-1&1}
-        \\\hline
-          \mqty{1&1\\1&-1}
-          & \mqty{1&1\\1&-1}
-          & \mqty{-1&-1\\-1&1}
-          & \mqty{-1&-1\\-1&1}
-        \\\hline
-          \mqty{1&1\\1&-1}
-          & \mqty{-1&-1\\-1&1}
-          & \mqty{-1&-1\\-1&1}
-          & \mqty{1&1\\1&-1}
-        \end{array}
-      \,
-      \right].
-    $$
-    The rows and columns of $H\otimes H\otimes H$ are labelled by the triples $000,001,\ldots,111$.
-    Now, suppose we apply $H\otimes H\otimes H$ to the state $\ket{110}$:
+
+### Hadamard transforms in components
+
+Consider the Hadamard transform $H\otimes H\otimes H$ on three qubits, which is described by a $(2^3\times2^3)$ matrix.
+We know that
+$$
+  H = \frac{1}{\sqrt2}\bmqty{1&1\\1&-1}
+$$
+and so we can calculate that
+$$
+  H\otimes H
+  = \frac12
+  \left[
+  \,
+    \begin{array}{c|c}
+      \mqty{1&1\\1&-1}
+      & \mqty{1&1\\1&-1}
+    \\\hline
+      \mqty{1&1\\1&-1}
+      & \mqty{-1&-1\\-1&1}
+    \end{array}
+  \,
+  \right]
+$$
+and thus that
+$$
+  H\otimes H\otimes H
+  = \frac12
+  \left[
+  \,
+    \begin{array}{c|c|c|c}
+      \mqty{1&1\\1&-1}
+      & \mqty{1&1\\1&-1}
+      & \mqty{1&1\\1&-1}
+      & \mqty{1&1\\1&-1}
+    \\\hline
+      \mqty{1&1\\1&-1}
+      & \mqty{-1&-1\\-1&1}
+      & \mqty{1&1\\1&-1}
+      & \mqty{-1&-1\\-1&1}
+    \\\hline
+      \mqty{1&1\\1&-1}
+      & \mqty{1&1\\1&-1}
+      & \mqty{-1&-1\\-1&1}
+      & \mqty{-1&-1\\-1&1}
+    \\\hline
+      \mqty{1&1\\1&-1}
+      & \mqty{-1&-1\\-1&1}
+      & \mqty{-1&-1\\-1&1}
+      & \mqty{1&1\\1&-1}
+    \end{array}
+  \,
+  \right].
+$$
+The rows and columns of $H\otimes H\otimes H$ are labelled by the triples $000,001,\ldots,111$.
+Now, suppose we apply $H\otimes H\otimes H$ to the state $\ket{110}$:
 
 ``` {r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \begin{equation*}
@@ -1358,32 +1464,33 @@ Multiplication of block matrices works pretty much the same as regular matrix mu
 \end{equation*}
 ```
 
-3. The output state is a superposition of all binary strings: $\sum_x c_x\ket{x}$, with $x\in\{0,1\}^3$.
+1. The output state is a superposition of all binary strings: $\sum_{x\in\{0,1\}^3} c_x\ket{x}$.
     Where in the $H^{\otimes 3}$ matrix will you find the coefficients $c_x$?
 
-    Now, do you want to write down $H\otimes H\otimes H\otimes H$?
-    I don't think so.
-    This is an exponentially growing monster and you may soon run out of space if you actually do try to write it down.
-    Instead, let's spot the pattern of the entries $\pm1$ in these matrices.
+Do you want to write down $H\otimes H\otimes H\otimes H$?
+Probably not!
+This is an exponentially growing monster and you may soon run out of space if you actually do try to write it down.
+Instead, let us try to spot the pattern of the entries $\pm1$ in these matrices.
 
-4. Consider the Hadamard gate matrix $H_{ab}$, where $a,b=0,1$ are the labels for the rows and the columns.
-    Observe that $H_{ab}=(-1)^{ab}/\sqrt{2}$.
-    (This may look like a fancy way of writing the entries of the Hadamard matrix but it will pay off in a moment).
-    Using the fact that $(A\otimes B)_{ik,jl} = A_{ij}B_{kl}$, or any other method, analyse the pattern of the $\pm1$ in the tensor product of Hadamard matrices.
+Consider again the single-qubit Hadamard gate matrix $H=(H_{ab})$, where $a,b=0,1$ are the labels for the rows and the columns.
+Observe that $H_{ab}=(-1)^{ab}/\sqrt{2}$.
+(This may look like a needlessly fancy way of writing the entries of the Hadamard matrix, but it will pay off in a moment).
+
+2. Using the fact that $(A\otimes B)_{ik,jl} = A_{ij}B_{kl}$, or any other method, analyse the pattern of the $\pm1$ in the tensor product of Hadamard matrices.
     What is the entry $H^{\otimes 4}_{0101,1110}$?
 
-5. For any two binary strings $a=(a_1,\ldots, a_n)$ and $b =(b_1,\ldots , b_n)$ of the same length we can define their "scalar" product as $a\cdot b = (a_1b_1\oplus \ldots \oplus a_n b_n)$.
-    Show that, up to the constant $(1/\sqrt{2})^n$, the entry $H^{\otimes n}_{a,b}$, for any $n$ and for any binary strings $a$ and $b$ of length $n$, is $(-1)^{a\cdot b}$.
+3. For any two binary strings $a=(a_1,\ldots, a_n)$ and $b =(b_1,\ldots , b_n)$ of the same length we can define their "scalar" product as $a\cdot b = (a_1b_1\oplus \ldots \oplus a_n b_n)$.
+    Show that, up to the constant $(1/\sqrt{2})^n$, the entry $H^{\otimes n}_{a,b}$ is $(-1)^{a\cdot b}$ for any $n$ and for any binary strings $a$ and $b$ of length $n$.
 
-6. Show that $H^{\otimes n}$ acts as
+4. Show that $H^{\otimes n}$ acts as
     $$
       \ket{a}
       \longmapsto
-      \left(\frac{1}{\sqrt 2}\right)^n
+      \left(\frac{1}{\sqrt{2}}\right)^n
       \sum_{b\in\{0,1\}^n} (-1)^{a\cdot b}\ket{b}
     $$
 
-7. A quantum register of $10$ qubits holds the binary string $0110101001$.
+5. A quantum register of $10$ qubits holds the binary string $0110101001$.
     The Hadamard Transform is then applied to this register yielding a superposition of all binary strings of length $10$.
     What is the sign in front of the $\ket{0101010101}$ term?
 
@@ -1392,29 +1499,30 @@ Multiplication of block matrices works pretty much the same as regular matrix mu
 
 
 
-### The Schmidt decomposition
+### The Schmidt decomposition {#the-schmidt-decomposition}
 
 An arbitrary vector in the Hilbert space $\mathcal{H}_{\mathcal{A}}\otimes \mathcal{H}_{\mathcal{B}}$ can be expanded in a product basis as
 $$
   \ket{\psi}
   = \sum_{ij} c_{ij}\ket{a_i}\ket{b_j}.
 $$
-Moreover, for each particular joint state $\ket{\psi}$, we can find orthonormal bases, $\{\ket{\widetilde{a_i}}\}$ in $\mathcal{H}_{\mathcal{A}}$ and $\{\ket{\widetilde{b_j}}\}$ in $\mathcal{H}_{\mathcal{B}}$, such that $\ket{\psi}$ can be expressed as
+Moreover, for any given joint state $\ket{\psi}$, we can find orthonormal bases, $\{\ket{\tilde{a}_i}\}$ in $\mathcal{H}_{\mathcal{A}}$ and $\{\ket{\tilde{b}_j}\}$ in $\mathcal{H}_{\mathcal{B}}$, such that $\ket{\psi}$ can be expressed as
 $$
   \ket{\psi}
   = \sum_{i} d_{i}\ket{\tilde a_i}\ket{\tilde b_i},
 $$
-where the coefficients $d_i$ are non-negative numbers.
+where the coefficients $d_i$ are *non-negative* numbers.
 This is known as the **Schmidt decomposition** of $\ket{\psi}$.
-Any bipartite state can be expressed in this form, but remember that _the bases used depend on the state being expanded_.
-Indeed, given two bipartite states $\ket{\psi}$ and $\ket{\phi}$, we usually _cannot_ perform the Schmidt decomposition using the _same_ orthonormal bases in $\mathcal{H}_{\mathcal{A}}$ and $\mathcal{H}_{\mathcal{B}}$.
+
+Any bipartite state can be expressed in this form, but remember that *the bases used depend on the state being expanded*.
+Indeed, given two bipartite states $\ket{\psi}$ and $\ket{\phi}$, we usually *cannot* perform the Schmidt decomposition using the *same* orthonormal bases in $\mathcal{H}_{\mathcal{A}}$ and $\mathcal{H}_{\mathcal{B}}$.
 The number of terms in the Schmidt decomposition is, at most, the minimum of $\dim\mathcal{H}_{\mathcal{A}}$ and $\dim\mathcal{H}_{\mathcal{B}}$.
 
-The Schmidt decomposition follows from the **singular value decomposition**  or **SVD**): _any_ $(n\times m)$ matrix  $C$ can be written as
+The Schmidt decomposition follows from the [**singular value decomposition**](https://en.wikipedia.org/wiki/Singular_value_decomposition)  (often abbreviated to **SVD**): *any* $(n\times m)$ matrix  $C$ can be written as
 $$
   C = UDV
 $$
-where $U$ and $V$ are (respectively) $(n\times n)$ and $(m\times m)$ unitary matrices and $D$ is an $(n\times m)$ diagonal matrix with real, non-negative elements in descending order $d_1\geq d_2\geq\ldots\geq d_{\min{(n,m)}}$ (and with the rest of the matrix is filled with zeros).
+where $U$ and $V$ are (respectively) $(n\times n)$ and $(m\times m)$ unitary matrices, and $D$ is an $(n\times m)$ diagonal matrix with real, non-negative elements in descending order $d_1\geq d_2\geq\ldots\geq d_{\min{(n,m)}}$ (and with the rest of the matrix is filled with zeros).
 The elements $d_k$ are called the **singular values** of $C$.
 
 You can visualize the SVD by thinking of $C$ as representing a linear
@@ -1423,9 +1531,9 @@ the $n$-dimensional space; the singular values are the lengths of
 the semi-axes of that ellipsoid; the matrices $U$ and $V$ carry
 information about the locations of those axes and the vectors in
 the first space which map into them.
-Thus SVD tells us that the transformation $C$ is composed of rotating the unit ball (transformation $V$), stretching the axes by factors $d_k$, and then rotating the resulting ellipsoid (transformation $U$).
+Thus SVD tells us that the transformation $C$ consists of rotating the unit ball (transformation $V$), stretching the $k$-th axis by a factor of $d_k$, and then rotating the resulting ellipsoid (transformation $U$).
 
-Using the index notation $C_{ij} = \sum_k U_{ik}d_k V_{kj}$, we can thus apply SVD to $c_{ij}$,
+Using the index notation $C_{ij} = \sum_k U_{ik}d_k V_{kj}$, we can thus apply SVD to $c_{ij}$:
 $$
   \begin{aligned}
     \ket{\psi}
@@ -1437,10 +1545,18 @@ $$
 The Schmidt decomposition of a separable state of the form
 $\ket{a}\otimes\ket{b}$ is trivially just this state.
 The Bell states $\Psi^+$ and $\Phi^+$ are already written in their Schmidt form, whereas $\Psi^-$ and $\Phi^-$ can be easily expressed in the Schmidt form.
-For example, for $\ket{\Psi^-}$ we have $d_1 = d_2 = \frac{1}{\sqrt 2}$, and the Schmidt basis is $\ket{\bar a_1} =\ket{0}, \ket{\bar a_2}=\ket{1}$, $\ket{\bar b_1} = \ket{1}, \ket{\bar b_2}=-\ket{0}$.
+For example, for $\ket{\Psi^-}$ we have $d_1 = d_2 = \frac{1}{\sqrt{2}}$, and the Schmidt basis is
+$$
+  \begin{aligned}
+    \ket{\tilde{a}_1} &= \ket{0}
+  \\\ket{\tilde{a}_2} &= \ket{1}
+  \\\ket{\tilde{b}_1} &= \ket{1}
+  \\\ket{\tilde{b}_2} &= -\ket{0}.
+  \end{aligned}
+$$
 The number of non-zero singular values of $c_{ij}$ is called the **rank** of $c_{ij}$, or the rank of the corresponding quantum state, or sometimes, the **Schmidt number**.
-Clearly, all bipartite states of rank one are separable.
+You should be able to see that all bipartite states of rank-one are separable.
 
-The Schmidt decomposition is _almost_ unique.
+The Schmidt decomposition is *almost* unique.
 The ambiguity arises when we have two or more identical singular values, as, for example, in the case of the Bell states.
 Then any unitary transformation of the basis vectors corresponding to a degenerate singular value, both in $\mathcal{H}_a$ and in $\mathcal{H}_b$, generates another set of basis vectors.

@@ -6,7 +6,7 @@ if [[ `basename "$PWD"` != "qubit.guide" ]]; then
     echo "Script must be run from the main qubit.guide directory" >&2
     exit 1
 else
-    echo "Building site..."
+    echo "Building book..."
 fi
 
 
@@ -20,3 +20,10 @@ R -e "bookdown::render_book('index.Rmd','bookdown::pdf_book',config_file='_bookd
 ## Small book PDF
 # R -e "bookdown::render_book('index.Rmd','bookdown::pdf_book',config_file='_bookdown.yml',output_options=list(template='latex-template-6x9.tex'))"
 # to-do: rename resulting files
+
+
+# 3. Post-build changes (i.e. messy hacks)
+
+# Replace some gitbook js files with our custom version
+cp web/plugin-bookdown.js book/libs/gitbook-2.6.7/js/plugin-bookdown.js
+cp web/plugin-fontsettings.js book/libs/gitbook-2.6.7/js/plugin-fontsettings.js

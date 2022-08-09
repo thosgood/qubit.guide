@@ -3,21 +3,21 @@
 > About understanding the square root of $\texttt{NOT}$ via a physical implementation using **symmetric beam-splitters**.
 > More about the Bloch sphere, via the omnipresent **Pauli matrices**, which can be described in a more algebraic way.
 
-Before moving on, we first study two of the subjects from [Chapter 2](#qubits) in more depth: the square root of $\texttt{NOT}$, and the Bloch sphere.
+Before introducing too many new ideas, we first want to study two things we've already seen in more depth, namely the square root of $\texttt{NOT}$, and the Bloch sphere.
 
-The goal for the latter is to be able to visualise sequences of unitary operations on a qubit as sequences of rotations, and to see the action of some quantum circuits without getting engaged in lengthy calculations.
+The goal for the latter is to be able to visualise sequences of unitary operations on a qubit as sequences of rotations, and to see the action of some quantum circuits without getting engaged in lengthy calculations; this also leads us back to the question of universal sets of gates.
 The goal for the former is to study a way of implementing this gate using physical experiments, and then studying a related construction (the so-called **Mach--Zehnder interferometer**).
 
 
 
 
 
-## Physics against logic, via beamsplitters {#beamsplitters-against-logic}
+## Physics against logic, via beam-splitters {#beamsplitters-against-logic}
 
-A symmetric beam-splitter is a cube of glass which reflects half the light that impinges upon it, while allowing the remaining half to pass through unaffected.
-For our purposes it can be viewed as a device which has two input and two output ports which we label as $\ket{0}$ and $\ket{1}$, as in Figure \@ref(fig:beam-splitter).
+A **symmetric beam-splitter** is a cube of glass which reflects half the light that impinges upon it, while allowing the remaining half to pass through unaffected.
+For our purposes it can simply be viewed as a device that has two input and two output ports, which we label with $\ket{0}$ and $\ket{1}$ as in Figure \@ref(fig:beam-splitter).
 
-```{r beam-splitter,engine='tikz',fig.width=2,fig.cap='A beam-splitter.'}
+```{r beam-splitter,engine='tikz',fig.width=2,fig.cap='A symmetric beam-splitter, with input ports on the bottom and the left sides, and output ports on the top and the right sides.'}
 \usetikzlibrary{arrows.meta}
 \tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
 \tikzset{process/.style={thick,-{Latex},shorten >=0.1cm,shorten <=0.1cm}}
@@ -34,14 +34,16 @@ For our purposes it can be viewed as a device which has two input and two output
 ```
 
 When we aim a single photon at such a beam-splitter using one of the input ports, we notice that the photon doesn't split in two: we can place photo-detectors wherever we like in the apparatus, fire in a photon, and verify that if any of the photo-detectors registers a hit, none of the others do.
-In particular, if we place a photo-detector behind the beam-splitter in each of the two possible exit beams, the photon is detected with equal probability at either detector, no matter whether the photon was initially fired from input port $\ket{0}$ or $\ket{1}$.
+In particular, if we place a photo-detector behind the beam-splitter in each of the two possible exit beams, the photon is detected with equal probability at either detector, no matter whether the photon was initially fired into input port $\ket{0}$ or $\ket{1}$.
 
-It may seem obvious that, at the very least, the photon is _either_ in the transmitted beam $\ket{0}$ _or_ in the reflected beam $\ket{1}$ during any one run of this experiment.
+If we fire the photon into the input port $\ket{0}$, it may seem obvious that, at the very least, the photon is _either_ in the **transmitted** beam $\ket{0}$ _or_ in the **reflected** beam $\ket{1}$ during any one run of this experiment.
 Thus we may be tempted to think of the beam-splitter as a random binary switch which, with equal probability, transforms any binary input into one of the two possible outputs.
-However, that is not necessarily the case.
-Let us introduce a second beam-splitter and place two normal mirrors so that both paths intersect at the second beam-splitter, resulting in something resembling the Mach-Zehnder interferometer (see \@ref(fig:two-beam-splitters)).
+However, as you might expect (now having already learnt about the double-slit experiment), *this is not necessarily the case*.
+Let us introduce a second beam-splitter and place two normal mirrors so that both paths intersect at the second beam-splitter, as well as putting a detector at each output port of the second beam-splitter (see Figure \@ref(fig:two-beam-splitters)).
 
-```{r two-beam-splitters,engine='tikz',fig.width=5,fig.cap='Two beam-splitters with mirrors, so that a photon travels through both.'}
+(ref:two-beam-splitters-caption) Two beam-splitters with mirrors, arranged so that the photon travels through both, along with two detectors. We label the detectors in such a way that, if a photon enters input $\ket{i}$ and is *transmitted* (not reflected) through both beam-splitters, then it is detected by detector $i$.
+
+```{r two-beam-splitters,engine='tikz',fig.width=5,fig.cap='(ref:two-beam-splitters-caption)'}
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{decorations.markings}
 \tikzset{beamsplitter/.pic={\draw [fill=gray!10] (-0.4,-0.4) -- (-0.4,0.4) -- (0.4,0.4);\draw [fill=gray!40] (-0.4,-0.4) -- (0.4,-0.4) -- (0.4,0.4);\draw (-0.4,-0.4) -- (0.4,0.4);}}
@@ -67,17 +69,18 @@ Let us introduce a second beam-splitter and place two normal mirrors so that bot
 \end{tikzpicture}
 ```
 
-Now, the axiom of additivity in probability theory says that whenever something can happen in several alternative ways we add probabilities for each way considered separately.
+Recall the Kolmogorov additivity axiom in classical probability theory: whenever something can happen in several alternative ways, we add probabilities for each way considered separately.
 We might argue that a photon fired into the input port $\ket{0}$ can reach the detector $0$ in two _mutually exclusive_ ways: either by two consecutive reflections or by two consecutive transmissions.
-Each reflection happens with probability $1/2$ and each transmission happens with probability $1/2$ thus the total probability of reaching detector 0 is a sum of the probability of the two consecutive reflections ($1/2\times 1/2 = 1/4$) and the probability of the two consecutive transmissions ($1/2\times 1/2 = 1/4$) which gives probability $1/2$.
+Each reflection happens with probability $1/2$, and each transmission happens with probability $1/2$, so the total probability of a photon fired into input $\ket{0}$ reaching detector $0$ is the sum of the probability of the two consecutive reflections ($1/2\times 1/2 = 1/4$) and the probability of the two consecutive transmissions ($1/2\times 1/2 = 1/4$), which gives a probability of $1/2$.
 This is summarised in Figure \@ref(fig:classical-guess-double-beam-splitter), and makes perfect sense --- a random switch followed by a random switch should give nothing else but a random switch.
-However, if we set up such an experiment, that is not what happens!
+
+However, if we set up such an experiment in a lab, *this is not what happens*!
 
 ::: {.idea latex=""}
 There is no reason why probability theory (or any other _a priori_ mathematical construct for that matter) should make any meaningful statements about outcomes of physical experiments.
 :::
 
-(ref:classical-guess-double-beam-splitter-caption) The two possible classical scenarios. Note that this is **not** what actually happens in the real physical world!
+(ref:classical-guess-double-beam-splitter-caption) The two possible classical scenarios. Note that this is *not* what actually happens in the real physical world!
 
 ```{r classical-guess-double-beam-splitter,engine='tikz',fig.cap='(ref:classical-guess-double-beam-splitter-caption)'}
 \usetikzlibrary{arrows.meta}
@@ -102,7 +105,7 @@ There is no reason why probability theory (or any other _a priori_ mathematical 
     \draw [thick,gray!70,dashed] (0,0) to (0,3) to (5,3);
     \node at (-1.5,0) {$\ket{0}$};
     \node at (2.5,-1.5) {two consecutive transmissions:};
-    \node at (2.5,-2.5) {probability amplitude = $\frac{i}{\sqrt2}\frac{i}{\sqrt2}=-\frac12$};
+    \node at (2.5,-2.5) {probability amplitude = $\frac{1}{\sqrt2}\frac{1}{\sqrt2}=\frac12$};
   \end{scope}
   \begin{scope}[shift={(8,0)}]
     \draw (0,0) pic {beamsplitter};
@@ -123,33 +126,35 @@ There is no reason why probability theory (or any other _a priori_ mathematical 
 \end{tikzpicture}
 ```
 
-In experimental reality, when the optical paths between the two beam-splitters are the same, the photon fired from input port $\ket{0}$ _always_ strikes detector 1 and _never_ detector 0 (and the photon fired from input port $\ket{1}$ _always_ strikes detector 0 and _never_ detector 1).
-Thus a beam-splitter acts as the square root of $\texttt{NOT}$ gate.
+In experimental reality, when the optical paths between the two beam-splitters are the same, the photon fired from input port $\ket{0}$ *always* strikes detector 1 and *never* detector $0$ (and the photon fired from input port $\ket{1}$ *always* strikes detector $0$ and *never* detector $1$).
+In other words, *a beam-splitter is a physical implementation of a $\sqrt{\texttt{NOT}}$ gate*.
 
-The action of the beam-splitter --- in fact, the action of any quantum device --- can be described by tabulating the amplitudes of transitions between its input and output ports.^[Note that gate $B$ is not the same square root of $\texttt{NOT}$ as the one described previously. In fact, there are infinitely many ways of implementing this "impossible" logical operation.]
+The action of the beam-splitter --- in fact, the action of any quantum device --- can be described by tabulating the amplitudes of transitions between its input and output ports.^[Note that gate $B$ is not the same square root of $\texttt{NOT}$ as the one we have already seen. In fact, there are infinitely many ways of implementing this "impossible" logical operation.]
 $$
   B = 
   \begin{bmatrix}
   B_{00} & B_{01}\\
   B_{10} & B_{11}
   \end{bmatrix}
-  =
-  \begin{bmatrix}
+  = \begin{bmatrix}
   \frac{1}{\sqrt 2} & \frac{i}{\sqrt 2}\\
   \frac{i}{\sqrt 2} & \frac{1}{\sqrt 2}
   \end{bmatrix}.
 $$
 The matrix element $B_{lk}$, where $k,l=0,1$, represents the amplitude of transition from input  $\ket{k}$ to output  $\ket{l}$ (watch the order of indices).
-Each reflection (entries $B_{01}$ and $B_{10}$) happens with amplitude $i/\sqrt{2}$ and each transmission  (entries $B_{00}$ and $B_{11}$) happens with amplitude $1/\sqrt{2}$.
-Thus the total amplitude that a photon fired from input port $\ket{0}$ will reach detector $0$ is the sum of the amplitude of the two consecutive reflections ($i/\sqrt{2}\times i/{\sqrt 2} = -1/2$) and the amplitude of the two consecutive transmissions ($1/{\sqrt 2}\times 1/{\sqrt 2} = 1/2$) which gives the total amplitude $0$.
-The resulting probability is then zero.
-Unlike probabilities, amplitudes can cancel out each other out.
+Each reflection (entries $B_{01}$ and $B_{10}$) happens with amplitude $i/\sqrt{2}$, and each transmission  (entries $B_{00}$ and $B_{11}$) happens with amplitude $1/\sqrt{2}$.
+So the total amplitude that a photon fired from input port $\ket{0}$ will reach detector $0$ is the sum of the amplitude of the two consecutive reflections ($i/\sqrt{2}\times i/{\sqrt 2} = -1/2$) and the amplitude of the two consecutive transmissions ($1/{\sqrt 2}\times 1/{\sqrt 2} = 1/2$) which gives the total amplitude $0$, and thus a resulting probability of *zero*.
+
+::: {.idea latex=""}
+Unlike probabilities, amplitudes can cancel out each other out, witnessing destructive interference.
+:::
+
 We can now go on and calculate the amplitude that the photon will reach detector $1$.
-In this case we will get $i$, which gives probability $1$.
+In this case we will get $i$, which gives probability $1$ (since $|i|^2=1$).
 We can then switch to input $\ket{1}$ and repeat our calculations.
 All possible paths and associated amplitudes are shown in \@ref(fig:paths-and-amplitudes-two-beam-splitters).
 
-```{r paths-and-amplitudes-two-beam-splitters,engine='tikz',fig.cap='All possible transitions and their amplitudes when we compose two beam-splitters $B$.'}
+```{r paths-and-amplitudes-two-beam-splitters,engine='tikz',fig.cap='All possible transitions and their amplitudes when we compose two beam-splitters, as described by the matrix $B$ above.'}
 \tikzset{centrelabel/.style={pos=0.5,fill=white}}
 \tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
 \newcommand{\ket}[1]{|#1\rangle}
@@ -185,8 +190,7 @@ $$
     \frac{1}{\sqrt 2} & \frac{i}{\sqrt 2}\\
     \frac{i}{\sqrt 2} & \frac{1}{\sqrt 2}
   \end{bmatrix}
-  =
-  \begin{bmatrix}
+  = \begin{bmatrix}
   0 & i\\
   i & 0
   \end{bmatrix}
@@ -197,13 +201,11 @@ $$
   X = \texttt{NOT} = \begin{bmatrix}0&1\\1&0\end{bmatrix}.
 $$
 
-Recalling [Chapter 2](#qubits), we see that beam-splitters give a physical way of constructing the square root of $\texttt{NOT}$.
-
 ::: {.idea latex=""}
------------------- ------------------------------- --------------------------------------------------------
-**bit-flip**         $\texttt{NOT}\equiv X$             $\begin{bmatrix}0&1\\1&0\end{bmatrix}$
-**beam-splitter**   $\sqrt{\texttt{NOT}}\equiv B$   $\frac{1}{\sqrt2}\begin{bmatrix}1&i\\i&1\end{bmatrix}$
------------------- ------------------------------- --------------------------------------------------------
+|  |  |  |
+|:-|:-|:-|
+**bit-flip** | $\texttt{NOT}\equiv X$ | $\begin{bmatrix}0&1\\1&0\end{bmatrix}$
+**beam-splitter** | $\sqrt{\texttt{NOT}}\equiv B$ | $\frac{1}{\sqrt2}\begin{bmatrix}1&i\\i&1\end{bmatrix}$
 :::
 
 
@@ -213,9 +215,9 @@ Recalling [Chapter 2](#qubits), we see that beam-splitters give a physical way o
 
 ## Quantum interference, revisited (still about beam-splitters)
 
-One of the simplest quantum devices in which quantum interference can be controlled is a **Mach--Zehnder interferometer** --- see Figure \@ref(fig:mach-zehnder).^[You can play around with a virtual Mach--Zehnder interferometer at [Virtual Lab by Quantum Flytrap](https://lab.quantumflytrap.com/lab/mach-zehnder). (There are also lots of other things you can do in this virtual lab: [go have a look!](https://quantumflytrap.com/lab-how-to/)).]
+One of the simplest quantum devices in which quantum interference can be controlled is a **Mach--Zehnder interferometer** --- see Figure \@ref(fig:mach-zehnder).^[You can play around with a virtual Mach--Zehnder interferometer at [Quantum Flytrap's *Virtual Lab*](https://lab.quantumflytrap.com/lab/mach-zehnder). (There are also lots of other things you can do in this virtual lab --- [go have a look!](https://quantumflytrap.com/lab-how-to/)).]
 
-(ref:mach-zehnder-caption) The [Mach-Zehnder interferometer](https://en.wikipedia.org/wiki/Mach-Zehnder_interferometer), with the input photon represented by the coloured dot. This experimental set-up is named after the physicists Ludwig Mach and Ludwig Zehnder, who proposed it back in 1890s.
+(ref:mach-zehnder-caption) The [Mach--Zehnder interferometer](https://en.wikipedia.org/wiki/Mach--Zehnder_interferometer), with the input photon represented by the coloured dot. This experimental set-up is named after the physicists [Ludwig Mach](https://en.wikipedia.org/wiki/Ludwig_Mach) and [Ludwig Zehnder](https://en.wikipedia.org/wiki/Ludwig_Zehnder), who proposed it back in 1890s.
 
 ```{r mach-zehnder,engine='tikz',fig.cap='(ref:mach-zehnder-caption)'}
 \usetikzlibrary{arrows.meta}
@@ -241,39 +243,41 @@ One of the simplest quantum devices in which quantum interference can be control
   \node [smallblob=primary] at (-1.4,0) {};
   \node at (-2.3,0) {Input $\ket{0}$};
   \node at (0,-1.5) {Input $\ket{1}$};
-  \node [fill=white] at (0,2) {Beam 1};
-  \node [fill=white] at (4,1) {Beam 0};
+  % \node [fill=white] at (0,2) {Beam 1};
+  % \node [fill=white] at (4,1) {Beam 0};
 \end{tikzpicture}
 ```
 
-It consists of two beam-splitters (the square boxes, bottom left and top right) and two slivers of glass of different thickness which are inserted into each of the optical paths connecting the two beam-splitters.
+This is a slightly modified version of the construction shown in Figure \@ref(fig:two-beam-splitters), where we have added two slivers of glass of different thickness into each of the optical paths connecting the two beam-splitters
 The slivers are usually referred to as "phase shifters" and their thicknesses, $\varphi_0$ and $\varphi_1$, are measured in units of the photon's wavelength multiplied by $2\pi$.
-The two inputs ports of the interferometer are labelled as $\ket{0}$ and $\ket{1}$, and each of the two output ports, also labelled as $0$ and $1$, terminates in a photodetector.^[The two diagonal objects in the top-left and bottom-right corners of \@ref(fig:mach-zehnder) are simply mirrors to make the two possible paths meet at the second beam-splitter.]
+These phase shifters are so called because they modify the probability amplitudes by phase factors $e^{i\varphi_0}$ and $e^{i\varphi_1}$ (respectively).
+The only other change that we make is replacing the *symmetric* beam-splitters with **non-symmetric** ones, i.e. they no longer transmit or reflect with equal probability, but instead reflect with some (fixed) probability amplitude $i\sqrt{R}$ and transmit with some probability amplitude $\sqrt{T}$, where $R+T=1$.
+As before, the two inputs ports of the interferometer are labelled as $\ket{0}$ and $\ket{1}$, and each of the two output ports, also labelled as $0$ and $1$, terminates in a photodetector.
 
-A photon (the coloured dot in the figure) impinges on the first beam-splitter from one of the two input ports (here input 1) and begins its journey towards one of the two photodetectors.
+A photon (the coloured dot in the figure) impinges on the first beam-splitter from one of the two input ports (here input $\ket{0}$) and begins its journey towards one of the two photodetectors.
 Let^[We will often use $i$ as an index even though it is also used for the imaginary unit. Hopefully, no confusion will arise for it should be clear from the context which one is which.] $U_{ij}$ denote the probability amplitude that the photon initially in input port $j=0,1$ ends up in detector $i=0,1$.
-At each of the two beam-splitters the photon is transmitted with the probability amplitude $\sqrt{T}$ and reflected with the probability amplitude $i\sqrt{R}$, with $R+T=1$, and the two phase shifters modify the amplitudes by phase factors $e^{i\varphi_0}$ and $e^{i\varphi_1}$, respectively.
-In quantum theory we almost always start with the amplitudes, and once we have a full expression for the amplitude of a given outcome we square its absolute value to get the corresponding probability.
 
-For example, let us calculate  $U_{00}$.
-We notice that there are two alternative ways for the photon in the input port $0$ to end up in the output port $0$.
-It can take the lower path, through the phase shifter $\varphi_0$, or the upper path, through the phase shifter $\varphi_1$.
+::: {.idea latex=""}
+In quantum theory we almost always work with probability *amplitudes*, and only once we have a full expression for the amplitude of a given outcome do we square its absolute value to get the corresponding probability.
+:::
+
+For example, let us calculate $U_{00}$.
+We notice that there are two alternative ways for the photon in the input port $\ket{0}$ to end up at the output port $0$: It can take the lower path, through the phase shifter $\varphi_0$, or the upper path, through the phase shifter $\varphi_1$.
 The lower path implies two consecutive transmissions at the beam-splitters and the phase factor $e^{i\varphi_0}$, whereas the upper path implies two consecutive reflections and the phase factor $e^{i\varphi_1}$.
-Once the photon ends in the output port $0$ there is no way of knowing which path was taken, thus we add the amplitudes pertaining to each path.
+Once the photon ends in the output port $0$ there is no way of knowing which path was taken, so we add the amplitudes pertaining to each path.
 The resulting amplitude is
 $$
   U_{00}
-  = \sqrt{T} e^{i\varphi_0} \sqrt{T}
-  + i\sqrt{R} e^{i\varphi_1} i \sqrt{R},
+  = \sqrt{T} e^{i\varphi_0} \sqrt{T} + i\sqrt{R} e^{i\varphi_1} i \sqrt{R},
 $$
-and the corresponding probability $P_{00}=|U_{00}|^2$ reads
+and the corresponding probability $P_{00}=|U_{00}|^2$ is
 $$
   \begin{aligned}
     P_{00}
     & = \left\vert
           \sqrt{T}e^{i\varphi_0}\sqrt{T} + i\sqrt{R}e^{i\varphi_1}i\sqrt{R}
         \right\vert^2
-      = \left\vert
+  \\&= \left\vert
           Te^{i\varphi_0} - Re^{i\varphi_1}
         \right\vert^2
   \\& = T^2 + R^2
@@ -283,8 +287,8 @@ $$
 
 The "classical" part of this expression, $T^2+R^2$, basically says that the photon undergoes either two consecutive transmissions with probability $T^2$, or two consecutive reflections with probability $R^2$.
 The probability of being transmitted through any phase shifter is always $1$, hence the phase shifters play no role in the classical description of this process.
-But the classical description is not correct, as the experiments show, whence the interference term $2TR\cos(\varphi_1-\varphi_0)$ in which the phase shifters play the essential role.
-Depending on the _relative_ phase $\varphi=\varphi_1-\varphi_0$ the probability that the detector $0$ "clicks" can vary from $(T-R)^2$, for $\varphi=0$, to $1$, for $\varphi=\pi$.
+But the classical description is *not* correct --- it doesn't agree with physical experiments! --- whence the interference term $2TR\cos(\varphi_1-\varphi_0)$ in which the phase shifters play the essential role.
+Depending on the _relative_ phase $\varphi=\varphi_1-\varphi_0$ the probability that the detector $0$ "clicks" after having fired a photon into input $\ket{0}$ can vary from $(T-R)^2$ to $1$.
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
 \definecolor{secondary}{RGB}{91,132,177}
@@ -292,15 +296,16 @@ Depending on the _relative_ phase $\varphi=\varphi_1-\varphi_0$ the probability 
   \begin{axis}[
     xmin=0,xmax=5,
     xlabel=relative phase,
-    ylabel=$\Pr(\mbox{detector 0 clicks})$,
+    ylabel=$P_{00}$,
     ymin=0,ymax=1.1,
     axis lines=middle,
-    xtick={0},
-    xticklabels={$0$},
+    xtick={0.05,1.05,2.1},
+    xticklabels={$0$,$\pi$,$2\pi$},very thick,
     ytick={0.16,0.58,1},
     yticklabels={$(T-R)^2$,$T^2+R^2$,1},very thick,
     xlabel style={font=\Large, anchor=north,at={(axis description cs:0.8,0)}},
     ylabel style={font=\Large, anchor=south,at={(axis description cs:0.15,1.05)}},
+    xticklabel style={font=\Large},
     yticklabel style={font=\Large}
   ]
     \addplot[domain=0:1.6*pi,samples=200,secondary,line width=2pt]{0.58-0.42*cos(deg(3*x))};
@@ -311,9 +316,9 @@ Depending on the _relative_ phase $\varphi=\varphi_1-\varphi_0$ the probability 
 \end{tikzpicture}
 ```
 
-If we do not care about the experimental details, we can represent the action of the Mach--Zehnder interferometer in terms of a diagram: see \@ref(fig:mach-zehnder-diagram).
+If we do not care about the experimental details, we can represent the action of the Mach--Zehnder interferometer in terms of a diagram, as in Figure \@ref(fig:mach-zehnder-diagram).
 
-```{r mach-zehnder-diagram,engine='tikz',fig.cap='The Mach-Zehnder interferometer represented as an abstract diagram.'}
+```{r mach-zehnder-diagram,engine='tikz',fig.cap='The Mach--Zehnder interferometer represented as an abstract diagram.'}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
@@ -346,7 +351,7 @@ If we do not care about the experimental details, we can represent the action of
 ```
 
 Here we can follow, from left to right, the multiple different paths that a photon can take in between specific input and output ports.
-The amplitude along any given path is just the product of the amplitudes pertaining to the path segments (Rule 1), while the overall amplitude is the sum of the amplitudes for the many different paths (Rule 2). You can, for example, see that the probability amplitude $U_{10}$ is given by
+The amplitude along any given path is just the product of the amplitudes pertaining to the path segments ([Rule 1](#two-basic-rules)), while the overall amplitude is the sum of the amplitudes for the many different paths ([Rule 2](#two-basic-rules)). You can, for example, see that the probability amplitude $U_{10}$ is given by
 $$
   U_{10}
   = \sqrt{T}e^{i\varphi_0}i\sqrt{R} + i\sqrt{R}e^{i\varphi_1}\sqrt{T}
@@ -363,16 +368,16 @@ $$
 $$
 Again, the first term is of "classical" origin and represents probabilities corresponding to each path: one reflection followed by one transmission plus one transmission followed by one reflection, that is, $RT+TR=2RT$.
 The second term is the interference term.
-Clearly, the photon entering port $1$ will end up in one of the two detectors, hence,
+Clearly, the photon entering port $\ket{0}$ will end up in one of the two detectors, hence
 $$
   P_{00} + P_{10}
   = R^2 + 2RT + T^2
   = (T+R)^2
   = 1.
 $$
-The action of the interferometer is thus fully described^[In general, any isolated quantum device, including a quantum computer, can be described by a matrix of probability amplitudes $U_{ij}$ that input $j$ generates output $i$. Watch the order of indices.] by the four probability amplitudes $U_{ij}$ ($i,j=0,1$).
+The action of the interferometer is thus fully described^[*Any* isolated quantum device can fully be described by the matrix of probability amplitudes $U_{ij}$ that input $j$ generates output $i$.] by the four probability amplitudes $U_{ij}$ ($i,j=0,1$).
 
-The most popular instance of a Mach--Zehnder interferometer involves only symmetric beam-splitters $(R=T=\frac12)$ and is fully described by the matrix
+The most popular instance of a Mach--Zehnder interferometer involves only *symmetric* beam-splitters (i.e. $R=T=\frac12$) and is fully described by the matrix^[Really, when you write down the matrices describing the action of the symmetric beam-splitters and the phase gates, and then multiply them all together (which is an exercise worth doing!), you actually obtain $ie^{i\frac{\varphi_0+\varphi_1}{2}}U$ rather than $U$, but as we have already said, we can ignore global phase factors.]
 $$
   U =
   \begin{bmatrix}
@@ -381,21 +386,18 @@ $$
   \end{bmatrix}
 $$
 where $\varphi=\varphi_1-\varphi_0$.
-In fact, when you do all the calculations^[That is, when you write down the matrices describing the action of the symmetric beam-splitters and the phase gates, and then multiply them all together (which is an exercise worth doing).] you obtain $ie^{i\frac{\varphi_0+\varphi_1}{2}}U$ rather than $U$, but the global phase factor $ie^{i\frac{\varphi_0+\varphi_1}{2}}$ is common to all the amplitudes in the matrix and as such it does not contribute to the resulting probabilities.
-
-To better understand why we don't worry about global phase factors, think about the eigenvalues of a matrix $A$ and of the matrix $\mu A$, where $\mu$ is a complex number with $|\mu|=1$.
 
 
 
 
 
 
-## The Pauli matrices, algebraically
+## The Pauli matrices, algebraically {#pauli-matrices-algebraically}
 
-Matrices form a vector space: you can add them, and you can multiply them by a scalar.
-One possible choice of a basis in the vector space of $(2\times 2)$ matrices is the set of matrices $\{M_{00},M_{01},M_{10},M_{11}\}$, where the entries of $M_{ij}$ are all $0$ except for the $ij$-th entry, which is $1$ (e.g. $M_{01}=\begin{bmatrix}0&1\\0&0\end{bmatrix}$).
-However, it turns out that there is a different basis which offers lots of insights into the structure of the general single-qubit unitary transformations, namely $\{\id,X,Y,Z\}$, i.e. the identity matrix and the three Pauli matrices.^[In this chapter we are concerned only with the _single-qubit_ Pauli operators. There are analogous _multi-qubit_ Pauli operators, but be careful: these do not satisfy all the same properties! For example, anti-commutativity (explained below) is special to the _single-qubit_ case.]
-We have already defined the Pauli operators in [Chapter 2](#qubits), but we recall their definition here along with a different notation that we sometimes use.
+Matrices (of a fixed size, with entries in a fixed field) form a vector space: you can add them, and you can multiply them by a scalar.
+One possible choice of a basis in the vector space of $(2\times 2)$ matrices (over any field) is the set of matrices $\{M_{00},M_{01},M_{10},M_{11}\}$, where the entries of $M_{ij}$ are all $0$ except for the $ij$-th entry, which is $1$ (e.g. $M_{01}=\left[\begin{smallmatrix}0&1\\0&0\end{smallmatrix}\right]$).
+However, it turns out that there is a different basis which offers lots of insights into the structure of the general single-qubit unitary transformations, namely $\{\id,X,Y,Z\}$, i.e. the identity matrix and the three Pauli matrices.^[In this chapter we are concerned only with the *single-qubit* Pauli operators. There are analogous *multi-qubit* Pauli operators, but be careful: these do not satisfy all the same properties! For example, anti-commutativity (explained below) is special to the *single-qubit* case.]
+We [have already defined the Pauli operators](#pauli-operators), but we recall their definition here.
 
 ::: {.idea latex=""}
 | | | |
@@ -406,9 +408,9 @@ We have already defined the Pauli operators in [Chapter 2](#qubits), but we reca
 | **Phase-flip** | $Z\equiv\sigma_z = \begin{bmatrix}1&0\\0&-1\end{bmatrix}$ |
 :::
 
-Recalling [Chapter 2](#qubits), we know that the Pauli operators (as well as the identity operator) are unitary and Hermitian, square to the identity, and anti-commute.^[$$\begin{aligned}XY+YX&=0,\\XZ+ZX&=0,\\YZ+ZY&=0.\end{aligned}$$]
+[Recall](#pauli-operators) that the Pauli operators (as well as the identity operator) are unitary and Hermitian, square to the identity, and anti-commute.^[$$\begin{aligned}XY+YX&=0,\\XZ+ZX&=0,\\YZ+ZY&=0.\end{aligned}$$]
 
-Any $(2\times 2)$ complex matrix $A$ has a unique expansion in the form
+The fact that $\{\id,X,Y,Z\}$ forms a basis for $(2\times2)$ complex matrices is equivalent to the statement that *any* $(2\times 2)$ complex matrix $A$ has a *unique* expansion in the form
 $$
   \begin{aligned}
     A &=
@@ -416,13 +418,16 @@ $$
       a_0 + a_z & a_x - i a_y
     \\a_x +i a_y &  a_0 - a_z
     \end{bmatrix}
-  \\&= a_0\id + a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
-  \\&= a_0\id + \vec{a}\cdot\vec{\sigma}.
+  \\&= a_0\id + a_x \sigma_x + a_y \sigma_y + a_z \sigma_z.
   \end{aligned}
 $$
 for some complex numbers $a_0$, $a_x$, $a_y$, and $a_z$.
-Here, $\vec{a}$ is a vector with three complex components $(a_x, a_y, a_z)$, and $\vec{\sigma}$ represents the "vector" of Pauli matrices $(\sigma_x,\sigma_y,\sigma_z)$.
-The algebraic properties of the Pauli matrices can be neatly compacted (see the exercises) into a single expression:
+
+If we define vectors $\vec{a}=(a_x, a_y, a_z)$ and $\vec{\sigma}=(\sigma_x,\sigma_y,\sigma_z)$, then we can write the above expansion very concisely:
+$$
+  A = a_0\id + \vec{a}\cdot\vec{\sigma}.
+$$
+The algebraic properties of the Pauli matrices can then be neatly compacted (see [the exercises](#remarks-and-exercises-3)) into a single expression:
 
 ::: {.idea latex=""}
 The **multiplication rule**:
@@ -432,16 +437,7 @@ $$
 $$
 :::
 
-We also introduce the inner product of two matrices:
-
-::: {.idea latex=""}
-The **Hilbert--Schmidt product**:^[The $\frac12$ coefficient here is simply the normalisation factor, which changes if we consider _multi-qubit_ Pauli operators.]
-$$
-  (A|B) = \frac12 \tr A^\dagger B.
-$$
-:::
-
-Recall that the trace of a square matrix $A$, denoted by $\tr A$, is defined to be the sum of the elements on the main diagonal of $A$, and defines a linear mapping: for any scalars $\alpha$ and $\beta$,
+Recall that the **trace** of a square matrix $A$, denoted by $\tr A$, is defined to be the sum of the elements on the main diagonal of $A$, and defines a linear mapping: for any scalars $\alpha$ and $\beta$,
 $$
   \tr (\alpha A+\beta B) = \alpha\tr A +\beta\tr B.
 $$
@@ -451,23 +447,33 @@ $$
 $$
 Note, however, that this does _not_ imply that e.g. $\tr(ABC)=\tr(ACB)$.
 
+We can also define an **inner product** on the vector space of matrices:^[The $\frac12$ coefficient here is simply the normalisation factor, which changes if we consider _multi-qubit_ Pauli operators.]
+
+::: {.idea latex=""}
+The **Hilbert--Schmidt product** of $A$ and $B$ is given by
+$$
+  (A|B) = \frac12 \tr A^\dagger B.
+$$
+:::
 
 
 
 
 
-## Unitaries as rotations
 
-Now we can finish off what we started in [Chapter 2](#qubits): we know how single-qubit state vectors correspond to points on the Bloch sphere, but now we can study how $(2\times 2)$ unitary matrices correspond to _rotations_ of this sphere.
+## Unitaries as rotations {#unitaries-as-rotations}
 
-Geometrically speaking, the group of unitaries $\mathrm{U}(2)$ is a three-dimensional sphere $S^3$ in $\mathbb{R}^4$.
-We often fix the determinant to be $+1$ and express $(2\times 2)$ unitaries as
+Now we can finish off [our previous discussion of the Bloch sphere](#the-bloch-sphere): we know how single-qubit state vectors correspond to points on the Bloch sphere, but now we can study how $(2\times 2)$ unitary matrices correspond to *rotations* of this sphere.
+
+Geometrically speaking, the group of $(2\times2)$ unitaries $\mathrm{U}(2)$ is a three-dimensional sphere $S^3$ in $\mathbb{R}^4$.
+We often make the additional assumption that the determinant is equal to $+1$, and can then express these matrices as
 $$
   U = u_0\id + i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z).
 $$
-Such matrices form a popular subgroup of $\mathrm{U}(2)$; it is called the **special** (meaning the determinant is equal to $1$) unitary group, and denoted by $\mathrm{SU}(2)$.
+Such matrices form a very important subgroup of $\mathrm{U}(2)$, called the **special** (meaning the determinant is equal to $1$) unitary group, and denoted by $\mathrm{SU}(2)$.
+
 In quantum theory, any two unitary matrices that differ by some global multiplicative phase factor represent the same physical operation, so we are "allowed to" fix the determinant to be $+1$, and thus restrict ourselves to considering matrices in $\mathrm{SU}(2)$.
-This is a sensible approach, practised by many theoretical physicists, but again, for some historical reasons, the convention in quantum information science does not follow this approach.
+This is a sensible approach, practised by many theoretical physicists, but again, for some historical reasons, this convention is not usually followed in quantum information science.
 For example, phase gates are usually written as
 $$
   P_\alpha = \diag{1}{e^{i\alpha}}
@@ -476,7 +482,7 @@ rather than
 $$
   P_\alpha = \diag{e^{-i\frac{\alpha}{2}}}{e^{\,i\frac{\alpha}{2}}}
 $$
-Still, sometimes the $T$ gate
+Still, as we've already mentioned, sometimes the $T$ gate
 $$
   T
   = \diag{1}{e^{i\pi/4}}
@@ -484,20 +490,21 @@ $$
 $$
 is called the $\pi/8$ gate, because of its $\mathrm{SU}(2)$ form.
 
-So let us write any $(2\times 2)$ unitary, up to an overall phase factor, as
+Here we're going to work with $\mathrm{SU}(2)$, so that we can write any $(2\times 2)$ unitary (i.e. up to an overall phase factor) as
 $$
   U
   = u_0\id + i(u_x \sigma_x + u_y \sigma_y + u_z \sigma_z)
   = u_0\id + i{\vec{u}}\cdot{\vec{\sigma}}
 $$
 where $u_0^2+|\vec{u}|^2=1$.
-This additional unitarity restriction allows us to parametrise $u_0$ and $\vec{u}$ in terms of a real unit vector $\vec{n}$, parallel to $\vec{u}$, and a real angle $\theta$ so that^[As you can see, we often make progress and gain insights simply by choosing a convenient parametrisation.]
+
+This last restriction on $u_0$ and $\vec{u}$ allows us to parametrise $u_0$ and $\vec{u}$ in terms of a real unit vector $\vec{n}$, parallel to $\vec{u}$, and a real angle $\theta$, in such a way that^[As you can see, we often make progress and gain insights simply by choosing a convenient parametrisation.]
 $$
   U
   = (\cos\theta)\id + (i\sin\theta){\vec{n}}\cdot{\vec{\sigma}}.
 $$
 
-An alternative way of writing this expression is^[Although this looks neat and tidy, the normal convention is to parametrise so that $U=e^{i\frac{-\theta}{2}\vec{n}\cdot\vec{\sigma}}$, and then the direction follows from the right-hand rule, and the rotation corresponds to that in the Bloch sphere. It is a useful exercise to show that you can write $U$ in this way as well.]
+An alternative way of writing this expression is
 $$
   U
   = e^{i\theta {\vec{n}}\cdot{\vec{\sigma}}},
@@ -507,22 +514,20 @@ Indeed, any unitary matrix can always be written in the exponential form as
 $$
   \begin{aligned}
     e^{iA}
-    &\equiv \id + iA + \frac{(i A)^2}{1\cdot 2} + \frac{(i A)^3}{1\cdot 2\cdot 3} \ldots
+    &= \id + iA + \frac{(i A)^2}{1\cdot 2} + \frac{(i A)^3}{1\cdot 2\cdot 3} \ldots
   \\&= \sum_{n=0}^\infty \frac{(i A)^n}{n!}
   \end{aligned}
 $$
-where $A$ is a Hermitian matrix.
-
-::: {.idea latex=""}
-Writing unitary matrices in the form $e^{iA}$ is analogous to writing complex numbers of unit modulus as $e^{i\alpha}$ (the so-called **polar form**).
-:::
+where $A$ is an anti-Hermitian matrix.
+This is analogous to writing complex numbers of unit modulus as $e^{i\alpha}$.
 
 Now comes a remarkable connection between two-dimensional unitary matrices and ordinary three-dimensional rotations:
 
 ::: {.idea latex=""}
 The unitary $U = e^{i\theta \vec{n}\cdot\vec{\sigma}}$ represents a clockwise rotation through the angle $2\theta$ about the axis defined by $\vec{n}$.
-(**N.B.** $2\theta$, _not_ $\theta$).
 :::
+
+The fact that the angle is $2\theta$, not $\theta$, comes from our choice of parametrisation; the "better" convention^[It is a good exercise to show that you can write any $U$ in this way as well.] is to parametrise so that $U=e^{i\frac{-\theta}{2}\vec{n}\cdot\vec{\sigma}}$, and then the direction follows from the right-hand rule, and the rotation corresponds to that in the Bloch sphere.
 
 For example,
 $$
@@ -545,7 +550,7 @@ $$
 $$
 represent rotations by $2\theta$ about the $x$-, $y$- and $z$-axis, respectively.
 
-(ref:exponential-rotation-caption) $e^{i\theta\vec{n}\cdot\vec{\sigma}}$ rotates the vector $\vec{s}$ about $\vec{n}$ by angle $2\theta$, sending it to a point on the blue circle, whose centre is passed through by $\vec{n}$.
+(ref:exponential-rotation-caption) The matrix $e^{i\theta\vec{n}\cdot\vec{\sigma}}$ rotates the vector $\vec{s}$ about $\vec{n}$ by angle $2\theta$, sending it to a point on the blue circle, which is defined by being the unique circle whose centre is passed through by $\vec{n}$ and containing $\vec{s}$.
 
 ```{r,engine='tikz',fig.width=4,fig.cap='(ref:exponential-rotation-caption)'}
 \usetikzlibrary{arrows.meta}
@@ -595,11 +600,22 @@ $$
   \\&= (-i)e^{i \frac{\pi}{2} \frac{1}{\sqrt 2}(\sigma_x+\sigma_z)}
   \end{aligned}
 $$
-(which, up to the overall multiplicative phase factor of $-i$, is equal to $e^{i \frac{\pi}{2} \frac{1}{\sqrt 2}(\sigma_x+\sigma_z)}$) represents rotation about the diagonal $(x+z)$-axis through the angle $\pi$.
+represents (since we can ignore the global phase factor of $-i$) rotation about the diagonal $(x+z)$-axis by an angle of $\pi$.
 
-In somewhat abstract terms, we make the connection between unitaries and rotations by looking how the unitary group $\mathrm{U}(2)$ acts on the three-dimensional Euclidian space of $(2\times 2)$ Hermitian matrices _with zero trace_.
-All such matrices $S$ can be written as $S=\vec{s}\cdot\vec{\sigma}$ for some real $\vec{s}$, i.e. each matrix is represented by a Euclidean vector $\vec{s}$ in $\mathbb{R}^3$.
-Now, $U\in \mathrm{U}(2)$ acts on the Euclidean space of such matrices by $S\mapsto S' = USU^\dagger$, i.e.
+In somewhat abstract terms, we make the connection between unitaries and rotations by looking how the unitary group $\mathrm{U}(2)$ acts on the three-dimensional vector space $V$ of $(2\times 2)$ Hermitian matrices *with zero trace*.
+All such matrices $S\in V$ can be written as $S=\vec{s}\cdot\vec{\sigma}$ for some real $\vec{s}$, i.e. each matrix is represented by a Euclidean vector $\vec{s}$ in $\mathbb{R}^3$.
+
+::: {.technical title="Traceless matrices" latex=""}
+The vector space of **traceless matrices** (i.e. matrices $S$ such that $\tr S=0$) might seem like an odd one, but it's actually one of the fundamental examples of a structure which is fundamental to modern mathematical physics, namely that of a [**Lie algebra**](https://en.wikipedia.org/wiki/Lie_algebra).
+These arise when studying [**Lie groups**](https://en.wikipedia.org/wiki/Lie_group) --- which are a combination of groups and manifolds, i.e. "a geometric space which has an algebraic structure" --- via the notion of a [**tangent space**](https://en.wikipedia.org/wiki/Tangent_space).
+
+In particular, the space of $(n\times n)$ traceless **skew-Hermitian** ($A^\dagger=-A$) matrices is the Lie algebra known as $\mathfrak{su}(2)$, which is the Lie algebra of $\mathrm{SU}(2)$, since the latter is indeed a *Lie* group.
+
+You might be wondering why we have suddenly switched to *skew*-Hermitian instead of Hermitian, but this is really [just a mathematician/physicist convention](https://en.wikipedia.org/wiki/Special_unitary_group#Fundamental_representation): you can go from one to the other by simply multiplying by $i$.
+For example, mathematicians would usually prefer to work with $i\sigma_x$, $i\sigma_y$, and $i\sigma_z$ instead of the Pauli matrices $\sigma_x$, $\sigma_y$, and $\sigma_z$ themselves; the former are skew-Hermitian, the latter are Hermitian.
+:::
+
+Now, $U\in\mathrm{U}(2)$ acts on the space $V$ by $S\mapsto S' = USU^\dagger$, i.e.
 $$
   \vec{s}\cdot\vec{\sigma}
   \longmapsto
@@ -607,37 +623,41 @@ $$
   = U(\vec{s}\cdot\vec{\sigma})U^\dagger
 \tag{$\ddagger$}
 $$
-This is a linear map $\mathbb{R}^3\to\mathbb{R}^3$, and is thus given by some $(3\times 3)$ real-valued matrix:
+This gives a linear map $\mathbb{R}^3\to\mathbb{R}^3$, and is thus given by some $(3\times 3)$ real-valued matrix:
 $$
   R_U\colon \mathbb{R}^3\to\mathbb{R}^3.
 $$
-We note that this map is an isometry (a distance preserving operation), since it preserves the scalar product in the Euclidean space: for any two vectors $\vec{s}$ and $\vec{v}$,
+
+Next, note that this map is an isometry (a distance preserving operation), since it preserves the scalar product in the Euclidean space: for any two vectors $\vec{s}$ and $\vec{t}$,
 $$
   \begin{aligned}
-    \vec{s'}\cdot\vec{v'}
-    &= \frac12\tr [S'V']
-  \\&= \frac12\tr [(USU^\dagger)(UVU^\dagger)]
-  \\&= \frac12\tr [SV]
-  \\&= \vec{s}\cdot\vec{v}
+    \vec{s'}\cdot\vec{t'}
+    &= \frac12\tr [S'T']
+  \\&= \frac12\tr [(USU^\dagger)(UTU^\dagger)]
+  \\&= \frac12\tr [ST]
+  \\&= \vec{s}\cdot\vec{t}
   \end{aligned}
 $$
-(where $S=\vec{s}\cdot\vec{\sigma}$ and $V=\vec{v}\cdot\vec{\sigma}$) using the cyclic property of the trace.
-This means that the matrix $R_U$ is _orthogonal_.^[Orthogonal transformations preserve the length of vectors as well as the angles between them.]
+(where $S=\vec{s}\cdot\vec{\sigma}$ and $T=\vec{t}\cdot\vec{\sigma}$) using the cyclic property of the trace.
+This means that the matrix $R_U$ is **orthogonal**.^[Orthogonal transformations preserve the length of vectors as well as the angles between them.]
 
-Furthermore, we can show^[We can also see that $\det R_U=1$ from the fact that any matrix in $\mathrm{U}(2)$ can be smoothly connected to the identity.] that $\det R_U=1$.
-But the only isometries in three dimensional Euclidian space (which are described by orthogonal matrices with determinant $1$) are rotations.
-
-Thus, in the mathematical lingo, we have established a homomorphism^[Recall that a homomorphism is a structure-preserving map between two algebraic structures of the same type, in our case two groups. An isomorphism between algebraic structures of the same type is one-to-one homomorphism.]
+Furthermore, we can show^[You might hear people say that $\det R_U=1$ follows from the fact that any matrix in $\mathrm{U}(2)$ can be "smoothly connected to the identity".] that $\det R_U=1$.
+But the *only* isometries in three dimensional Euclidean space (which are described by orthogonal matrices with determinant $1$) are rotations.
+Thus, in the mathematical lingo, we have established a group homomorphism^[Recall that a **homomorphism** is a structure-preserving map between two algebraic structures of the same type, in our case two groups. An **isomorphism** between algebraic structures of the same type is a homomorphism that has an inverse homomorphism.]
 $$
   \begin{aligned}
     \mathrm{U}(2) &\longrightarrow \mathrm{SO}(3)
   \\U &\longmapsto R_U
   \end{aligned}
 $$
-where $\mathrm{SO}(3)$ stands for the special orthogonal group in three dimensions (the group of all rotations about the origin of three-dimensional Euclidean space $\mathbb{R}^3$ under the operation of composition).
-It is quite clear from Equation ($\ddagger$) that unitary matrices differing only by a global multiplicative phase factor (e.g. $U$ and $e^{i\gamma}U$) represent the same rotation.
+where $\mathrm{SO}(3)$ stands for the **special orthogonal group** in three dimensions --- the group of all rotations about the origin of three-dimensional Euclidean space $\mathbb{R}^3$ under the operation of composition, which can be represented by the group of $(3\times3)$ orthogonal (and thus *real*) matrices.
+It follows from Equation ($\ddagger$) that unitary matrices differing only by a global multiplicative phase factor (e.g. $U$ and $e^{i\varphi}U$) represent the same rotation.
 
-Physicists, however, usually prefer a more direct demonstration, which goes roughly like this.
+::: {.technical title="Versors" latex=""}
+This mathematical argument is secretly using the language of unit [**quaternions**](https://en.wikipedia.org/wiki/Quaternion), also known as [**versors**](https://en.wikipedia.org/wiki/Versor), since these provide a very convenient way of describing [spatial rotation](https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation), and are often used in e.g. 3D computer graphics software.
+:::
+
+Physicists, however, usually prefer a more direct demonstration of this rotation interpretation, which might go roughly as follows.
 Consider the map $\vec{s} \mapsto \vec{s'}$ induced by $U=e^{i \alpha \vec{n}\cdot\vec{\sigma}}$.
 For small values of $\alpha$, we can write
 $$
@@ -671,13 +691,12 @@ which we recognise as a good old textbook formula for an infinitesimal clockwise
 
 
 
+## Universality, again {#universality-again}
 
-## Universality, again
-
-<lite-youtube videoid="OKlNfNGuFZo" playlabel="Play: Universal sets of gates (for a single qubit)"></lite-youtube>
+<div class="video" title="Universal sets of gates (for a single qubit)" data-videoid="OKlNfNGuFZo"></div>
 
 Although this may all seem tediously abstract, it is surprisingly useful.
-Take another look at the single qubit interference circuit
+Take another look at the single-qubit interference circuit
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
 \begin{quantikz}
@@ -704,7 +723,7 @@ $$
 $$
 
 ::: {.idea latex=""}
-The single qubit interference circuit has a simple geometrical meaning: it shows how a rotation about the $z$-axis, induced by the phase gate $P_\varphi$, is turned, by the two Hadamard gates, into a rotation about the $x$-axis.
+The single-qubit interference circuit has a simple geometrical meaning: it shows how a rotation about the $z$-axis, induced by the phase gate $P_\varphi$, is turned, by the two Hadamard gates, into a rotation about the $x$-axis.
 :::
 
 Now, take a look at this circuit:
@@ -716,8 +735,8 @@ Now, take a look at this circuit:
 ```
 
 What does it represent?
-The central part is a rotation by $\varphi$ about the $x$-axis, but is it is sandwiched between two rotations about the $z$-axis.
-Now we have to appeal to your knowledge of classical mechanics: you may recall that any rotation in the Euclidean space can be performed as a sequence of three rotations: one about $z$-axis, one about $x$-axis, and one more about the $z$-axis.
+The central part is a rotation by $\varphi$ about the $x$-axis, sandwiched between two rotations about the $z$-axis.
+Recall [our previous discussion about a universal set of gates](#composition-of-rotations): any rotation in the Euclidean space can be performed as a sequence of three rotations: one about $z$-axis, one about $x$-axis, and one more about the $z$-axis.
 In this context, this implies that any unitary $U$, up to a global phase factor, can be written as
 $$
   \begin{aligned}
@@ -732,9 +751,11 @@ $$
   \end{aligned}
 $$
 
-Thus once you are given a couple of Hadamard gates and an infinite supply of phase gates, so that you can choose the three phases you need, you can construct an arbitrary unitary operation on a single qubit. Needless to say, the two axes in question, $z$ and $x$, do not have any special status, geometrically speaking --- if we have rotations about any two orthogonal^[In fact, even this condition isn't necessary! See Figure \@ref(fig:two-families-of-circles)] axes then we can create any one-qubit unitary that we want.
+That is, once you are given a pair of Hadamard gates and an infinite supply of phase gates (so that you can choose the three phases you need) you can construct an *arbitrary* unitary operation on a single qubit.
 
-(ref:two-families-of-circles-caption) If we can move along the two families of circles, then from any point on the sphere we can reach any other point. The two axes do not even have to be orthogonal: any two different axes will do. Can you see why?
+It is important to note that the two axes in question, $z$ and $x$, do not have any special status, geometrically speaking --- if we have rotations about any two orthogonal^[In fact, even this orthogonality condition isn't necessary! See Figure \@ref(fig:two-families-of-circles)] axes then we can create any one-qubit unitary that we want.
+
+(ref:two-families-of-circles-caption) If we can move along the two families of circles, then from any point on the sphere we can reach any other point. The two axes do not even have to be orthogonal: any two different (i.e. non-collinear) axes will do! Can you see why?
 
 ```{r two-families-of-circles,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4,fig.cap='(ref:two-families-of-circles-caption)'}
 \tdplotsetmaincoords{60}{125}
@@ -763,7 +784,7 @@ Thus once you are given a couple of Hadamard gates and an infinite supply of pha
 \end{tikzpicture}
 ```
 
-Consider the following circuit:
+Now consider the following circuit:
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5}
 \begin{quantikz}
@@ -779,10 +800,10 @@ Consider the following circuit:
 ```
 
 where both $A$ and $B$ are unitary operations.
-We claim that _any_ unitary $U$ can be represented in this form.
+We claim that *any* unitary $U$ can be represented in this form, for some $A$ and $B$.
 
 Again, we can prove this geometrically.
-The circuit represents two rotations by $180^\circ$ about two axes obtained by rotating the $z$-axis with unitaries $A$ and $B$, respectively.
+The circuit represents two rotations by $180^\circ$ about the two axes obtained by rotating the $z$-axis via unitaries $A$ and $B$, respectively.
 Any rotation in the three-dimensional space is the composition of two rotations by $180^\circ$, as shown in Figure \@ref(fig:two-rotations-by-180).
 The resulting axis of rotation is perpendicular to the two axes about which rotations by $180^\circ$ are performed, and the angle of the composed rotation is twice the angle between the two axes.
 
@@ -807,7 +828,7 @@ The resulting axis of rotation is perpendicular to the two axes about which rota
   \draw [fill=secondary!40] (0,0) to (10:1.3) to [bend right] (25:1.3) to cycle;
   \node [secondary] at (17.5:1.7) {$\alpha/2$};
   \draw [ultra thick,secondary] (205:1.5) to (25:1.5);
-  \draw [ultra thick,secondary] (190:1.5) to (10:1.5);
+  \draw [ultra thick,secondary] (190:1.6) to (10:1.6);
 \end{tikzpicture}
 ```
 
@@ -818,24 +839,122 @@ The resulting axis of rotation is perpendicular to the two axes about which rota
 
 ## Some quantum dynamics {#some-quantum-dynamics}
 
-The time evolution of a quantum state is a unitary process which is generated by a Hermitian operator called the **Hamiltonian**, which we also^[Hopefully it will always be clear from the context which $H$ refers to Hamiltonian and which $H$ to Hadamard. Don't confuse the two!] denote by $H$.
-The Hamiltonian contains a complete specification of all interactions within the system under consideration.
-In an isolated system, the state vector $\ket{\psi(t)}$ changes smoothly in time according to the **Schrödinger equation**:
+We will finish this chapter with a short aside on some more fundamental quantum theory.
+Although this isn't our main focus --- we will happily black box away this stuff, happy in the knowledge that some scientists in a lab somewhere have already packaged everything up into nice quantum logic gates that we can use --- it is a nice opportunity to talk about other aspects of the subject that might be of interest.
+
+The time evolution of a quantum state is a unitary process which is generated by a Hermitian operator called the **Hamiltonian**, which we denote by $\hat{H}$.
+The Hamiltonian contains a complete specification of all interactions within the system under consideration --- in general, it may change over time.
+In an isolated system, the state vector $\ket{\psi(t)}$ changes smoothly in time according to the [**Schrödinger equation**](https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation):
 $$
   \frac{\mathrm{d}}{\mathrm{d}t} \ket{\psi(t)}
-  =-\frac{i}{\hbar} H \ket{\psi(t)}.
+  =-\frac{i}{\hbar} \hat{H}\ket{\psi(t)}.
+$$
+In the same way that [Newton's second law](https://en.wikipedia.org/wiki/Newton's_laws_of_motion#Second) describes certain future behaviour of a classical system given some initial knowledge, Schrödinger's equation describes the future behaviour of a quantum system given some initial knowledge.
+
+::: {.technical title="Lagrangian and Hamiltonian mechanics" latex=""}
+The first approach towards classical mechanics that you might meet is the **Newtonian** framework, where we talk about the equations that are satisfied by **forces**.
+It is Newton's second law that we usually apply the most in order to describe the behaviour of classical systems, and it is usually stated as $\mathbf{F}=m\mathbf{a}$, where $m$ is mass and $\mathbf{a}$ is acceleration.
+But really the notion of "force" is not a fundamental one --- a slightly more instructive way of writing Newton's second law for a system whose mass can change over time is as $\mathbf{F}=\frac{\mathrm{d}\mathbf{p}}{\mathrm{d}t}$, where $\mathbf{p}=m\mathbf{v}$ is (linear) **momentum**: the product of mass (a scalar) with velocity (a vector).
+
+Instead of talking about *forces* within a system, we can instead describe things entirely in terms of either *position and velocity* (where the latter is just the time derivative of the former) --- using coordinates $(\mathbf{q},\dot{\mathbf{q}})$, where $\mathbf{q}$ (confusingly) stands for "position", and we write $\dot{\mathbf{q}}$ to mean $\frac{\mathrm{d}}{\mathrm{d}t}\mathbf{q}$ --- or *position and momentum* --- using coordinates $(\mathbf{q},\mathbf{p})$, where (again, confusingly) $\mathbf{p}$ stands for momentum.
+
+If we take either of these two approaches, then we have a suitable replacement for Newton's second law:
+
+1. The first approach results in [**Lagrangian mechanics**](https://en.wikipedia.org/wiki/Lagrangian_mechanics), where we have some function $\mathcal{L}(t,\mathbf{q}(t),\dot{\mathbf{q}}(t))$ called the **Lagrangian**, and study the [**Euler--Lagrange equations**](https://en.wikipedia.org/wiki/Euler%E2%80%93Lagrange_equation)
+    $$
+      \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial\mathcal{L}}{\partial \dot{\mathbf{q}}}\right)
+      = \frac{\partial\mathcal{L}}{\partial\mathbf{q}}
+    $$
+    which is a second-order differential equation.
+2. The second approach results in [**Hamiltonian mechanics**], where we have some function $\mathcal{H}(t,\mathbf{p}(t),\mathbf{q}(t))$ called the **Hamiltonian**, and study the **Hamilton equations**
+    $$
+      \begin{aligned}
+        \frac{\mathrm{d}\mathbf{q}}{\mathrm{d}t}
+        &= \frac{\partial\mathcal{H}}{\partial\mathbf{p}}
+      \\\frac{\mathrm{d}\mathbf{p}}{\mathrm{d}t}
+        &= \frac{\partial\mathcal{H}}{\partial\mathbf{q}}
+      \end{aligned}
+    $$
+    which is a pair of first-order differential equations.
+
+These two important functions, the Lagrangian and the Hamiltonian, are given by the total energies of the system: the former is the *difference* of the kinetic and potential energies; the latter is the *sum* of the kinetic and potential energies.
+
+There are many situations where one framework is more useful than the other, but in quantum physics we normally find the Hamiltonian approach more easier than the Lagrangian, since momentum is a conserved quantity, whereas velocity is not.
+In fact, the Hamiltonian approach is hidden all over the place: the position and momentum operators in quantum physics are truly fundamental, and will show up again when we talk about [uncertainty principles](#compatible-observables-and-uncertainty).
+:::
+
+Here $\hbar$ is a very (*very*) small number known as the [**Planck constant**](https://en.wikipedia.org/wiki/Planck_constant).
+Physicists often pick a unit system such that $\hbar$ is equal to $1$, to make calculations simpler.
+But in SI units, $2\pi\hbar$ is *exactly*^[The kilogram is now *defined* in SI in terms of the Planck constant, the speed of light, and the atomic transition frequency of of caesium-133.] equal to $6.62607015\times10^{-34}$ joules per hertz.
+
+As a historical note, Planck's constant $\hbar$ has its roots right in the very birth of quantum physics, since it shows up in the equation for the energy of a photon.
+More generally, in 1923 [de Broglie](https://en.wikipedia.org/wiki/Louis_de_Broglie) postulated that the ratio between the momentum and quantum wavelength of *any* particle would be $2\pi\hbar$.
+Even before this, it turned up in 1905 when Einstein stated his support for Planck's idea that light is not just a wave, but simultaneously consists of tiny packets of energy, called **quanta** (whence the name quantum physics!), which we now call electrons.^[The whole history of quantum physics, arguably starting with the [black-body problem](https://en.wikipedia.org/wiki/Planck%27s_law), accounting for the [Rayleigh--Jeans law](https://en.wikipedia.org/wiki/Rayleigh%E2%80%93Jeans_law), and leading on to the discovery of the [photoelectric effect](https://en.wikipedia.org/wiki/Photoelectric_effect), is a wonderful story, but one that we do not have the space to tell here.]
+We will see the Planck constant turn up again when we talk about [**uncertainty principles**](#compatible-observables-and-uncertainty).
+
+Back to quantum dynamics.
+For **time-independent** Hamiltonians $\hat{H}(t)=\hat{H}$, the formal solution of the Schrödinger equation is given by
+$$
+  \ket{\psi(t)}
+  = e^{-\frac{i}{\hbar}\hat{H}t}\ket{\psi(0)}.
+$$
+Note that the function $\ket{\psi(t)}$ thus obtained is **separable**: it is written as a product of two functions $e^{-\frac{i}{\hbar}\hat{H}t}\cdot\ket{\psi(0)}$, where the first is purely time dependant, and the second has no time dependence.
+In fact, the time dependent part is exactly the phase factor $U(t)=e^{-\frac{i}{\hbar}\hat{H}t}$, and we know that this does not affect the resulting probabilities: $|\ket{\psi(t)}|^2=|U(t)|^2|\ket{\psi(0)}|^2=|\ket{\psi(0)}|^2$.
+This means that $|\ket{\psi(t)}|^2$ is constant throughout time --- we call such a state **stationary**, or refer to it as a **standing wave**.
+
+::: {.technical title="Quantum confinement" latex=""}
+We will *not* delve into a proper study of the Schrödinger equation --- this is the subject of entire books already, and deserves a lengthy treatment --- but it is nice to mention at least one worked example (although we will skip almost all of the details!), since its applications are commonplace in day-to-day life.
+
+In the time-independent case, the Schrödinger equation can simply be written as $\hat{H}\ket{\psi}=E\ket{\psi}$, where $E$ is the total energy of the system.
+When written like this, we can sneak a glimpse at what the Hamiltonian is really all about: it is some operator whose eigenstates are solutions of the Schrödinger equation, and whose eigenvalues are the corresponding energy levels.
+
+One particularly instructive situation to consider is that of [a particle in a box](https://en.wikipedia.org/wiki/Particle_in_a_box): we have some $1$-dimensional region of space in which a particle is free to move around, but outside of this finite segment there is infinite potential energy, restricting the particle from moving beyond this region.
+It turns out that, in this case, the Hamiltonian is given by
+$$
+  \hat{H} = -\frac{\hbar^2}{2m}\frac{\mathrm{d}^2}{\mathrm{d}x^2}
+$$
+and the general solution to the resulting Schrödinger equation can be shown to be
+$$
+  \psi(x) = C\sin(kx)+D\cos(kx)
+$$
+where $k=n\pi/L$ for some positive integer $n$, and where $L$ is the length of the potential-free region.
+This implies (after some algebra) that the energy $E=E_n$ of the solution with $k=n\pi/L$ is equal to
+$$
+  E_n = \frac{(2\pi n\hbar)}{8mL^2}.
 $$
 
-For **time-independent** Hamiltonians (i.e. where $\ket{\psi(t)}=\ket{\psi}$ has no $t$-dependence), the formal solution of this reads^[Here $\hbar$ denotes **Planck's constant**, which has the value $\hbar = 1.05\times 10^{-34}\,\text{ Js}$. However, theorists always choose to work with a system of units where $\hbar = 1$.]
-$$
-  \begin{gathered}
-    \ket{\psi(t)}
-    = U(t)\ket{\psi(0)}
-  \\\quad\text{where}\quad
-    U(t)
-    = e^{-\frac{i}{\hbar}Ht}.
-  \end{gathered}
-$$
+What is utterly unique and important to quantum physics is not really this specific fraction, but the fact that *the possible energy levels of the system are purely discrete* --- energy cannot be any real value, as is the case in the classical world, but it can only take values within some discrete set $\{E_1,E_2,\ldots\}$.
+
+But what are the applications of this particle in a box?
+Well, this phenomena of a system having a *discrete* energy spectrum when restrained to small enough spaces is known as [**quantum confinement**](https://en.wikipedia.org/wiki/Quantum_confinement), and [**quantum well lasers**](https://en.wikipedia.org/wiki/Quantum_well_laser) are laser diodes which have a small enough active region for this confinement to occur.
+Such lasers are arguably the most important component of fiber optic communications, which form the underlying foundations of the internet itself.
+:::
+
+Before moving on to understand the relevance of this to what we have already been discussing, let us take a moment to see why we might have expected to stumble across such a solution as $e^{-\frac{i}{\hbar}\hat{H}t}$ (or, from the opposite point of view, how we could derive the Schrödinger equation).
+We start with state vectors, which we want to evolve according to transition operators --- we have already justified why we should think about representing these transitions by matrices (namely because matrices simply package up all the multiplication and addition in the "right" way).
+But now we want these evolutions to be *continuous*, whatever that might formally mean.
+
+For a start, this means that we want not only to be able to multiply the matrices that represent these transitions, but also to do the inverse: take any transition and "chop it up" into smaller time chunks, viewing any evolution $T$ as a sequence $T_nT_{n-1}\ldots T_1$ of evolutions $T_i$ that take place on a shorter time scale.
+Directly then, we want to be able to consider *roots* (square roots, cube roots, and so on) of our matrices, which means that they must at the very least have complex entries.
+
+But let us try to take this continuity requirement a bit more seriously: say that any transition $T$ is parametrised by a real parameter $t$, which we will think of as "time".
+It makes sense to ask for $T(t+t')=T(t)T(t')$ for any $t,t'\in\mathbb{R}$, and to say that "at time $0$, things are exactly how we found them", i.e. $T(0)=\id$.
+But we know how to solve for such requirements: take $T(t)=\exp(tX)$, where $X$ is an arbitrary complex matrix!
+This also solves the problem of wanting to take roots, since $T(t)^{\frac{1}{n}}=T(t/n)$, and $T(t)^{-1}=T(-t)$.
+
+Next, as we've already mentioned, complex matrices have a polar form --- analogous to how any $z\in\mathbb{C}$ can be written as $z=re^{i\varphi}$, we can write any complex matrix $Z$ as $Z=RU$, where $R$ is positive semi-definite and $U$ is unitary.
+In this decomposition, just as for the polar decomposition $z=re^{i\varphi}$, the $R$ corresponds to "stretching" and the $U$ corresponds to "rotation".
+But we don't want to have to worry about convergence issues, and the idea of "exponential stretching" sounds like it might give us some problems, so let us just consider $Z=RU$ with $R=\id$, i.e. just *unitary* matrices.
+And if we want $T(t)$ to be unitary, then it suffices to take $X$ to be anti-Hermitian.
+
+In summary, from just asking for our evolutions to be continuous and not have any convergence issues, we end up with the conclusion that we are interested in evolutions described by exponentials of anti-Hermitian matrices, i.e. $U(t)=\exp(itX)$ for some Hermitian matrix $X$.
+
+::: {.technical title="Stone's theorem" latex=""}
+This correspondence between so-called **one-parameter unitary groups** --- families $(U_t)_{t\in\mathbb{R}}$ of unitary operators (satisfying some analytic property) --- and Hermitian operators, given by $U_t=e^{itA}$, is known as [**Stone's theorem (on one-parameter unitary groups)**](https://en.wikipedia.org/wiki/Stone%27s_theorem_on_one-parameter_unitary_groups).
+
+For example, if we consider the **translation** operators $T_t$, which are defined by $T_t(\psi)(x)=\psi(x+t)$, then we have the corresponding Hermitian operator $-i\frac{\mathrm{d}}{\mathrm{d}x}$, which is known (for good reason) as the [**momentum operator**](https://en.wikipedia.org/wiki/Momentum_operator).
+In fancy words, this says that *$1$-dimensional motion is infinitesimally generated by momentum*.
+:::
 
 Now, to relate this to the earlier parts of this chapter, we note that the Hamiltonian of a qubit can always be written in the form $H = E_0\id +\omega(\vec{n}\cdot\vec{\sigma})$, hence
 $$
@@ -848,7 +967,9 @@ $$
 which is a rotation with angular frequency $\omega$ about the axis defined by the unit vector $\vec n$.
 
 
-**!!!TO-DO!!! the $4\pi$ world of qubits**
+::: {.todo}
+<!-- TO-DO: the $4\pi$ world of qubits-->
+:::
 
 
 
@@ -860,7 +981,7 @@ which is a rotation with angular frequency $\omega$ about the axis defined by th
 
 ### Quantum bomb tester
 
-You have been drafted by the government to help in the demining effort in a former war-zone.^[This is a slightly modified version of a bomb-testing problem described by Avshalom Elitzur and Lev Vaidman in _Quantum-mechanical interaction-free measurement_, Found. Phys. **47** (1993), 987-997.]
+You have been drafted by the government to help in the demining effort in a former war-zone.^[This is a slightly modified version of a bomb-testing problem described by Avshalom Elitzur and Lev Vaidman in _Quantum-mechanical interaction-free measurement_, Found. Phys. **47** (1993), pp. 987--997.]
 In particular, retreating forces have left very sensitive bombs in some of the sealed rooms.
 The bombs are configured such that if even one photon of light is absorbed by the fuse (i.e. if someone looks into the room), the bomb will go off.
 Each room has an input and output port which can be hooked up to external devices.
@@ -949,7 +1070,7 @@ You would like to know whether a particular room has a bomb in it with as much c
 ```
 
 2. Assume that the two beam splitters in the interferometer are different.
-  Say the first beam-splitter reflects incoming light with probability $r$ and transmits with probability $t=1-r$, and the second one transmits with probability $r$ and reflects with probability $t$.
+  Say the first beam-splitter reflects incoming light with probability $R$ and transmits with probability $T=1-R$, but the second one transmits with probability $R$ and reflects with probability $T$ (that is, the two beam-splitters are *asymmetric*, but "inverse" to one another).
   Would the new setup improve the overall success rate of the detection of a bomb without blowing it up?
 
 3. There exists a scheme, involving many beam-splitters and something called the **quantum Zeno effect**, such that the success rate for detecting a bomb without blowing it up approaches 100%.
@@ -957,7 +1078,7 @@ You would like to know whether a particular room has a bomb in it with as much c
 
 ### Orthonormal Pauli basis
 
-Show that $\{\id,\sigma_x,\sigma_y,\sigma_z\}$ is an orthonormal basis with respect to the Hilbert-Schmidt product in the space of complex $(2\times 2)$ matrices.
+Show that $\{\id,\sigma_x,\sigma_y,\sigma_z\}$ is an orthonormal basis of the space of complex $(2\times 2)$ matrices with respect to the Hilbert-Schmidt product.
 
 
 ### Pauli matrix expansion coefficients
@@ -983,20 +1104,23 @@ In these notes, we usually deal with matrices that are Hermitian ($A=A^\dagger$)
 It is easy to see that, if $A$ is Hermitian, then $a_0$ and the three components of $\vec{a}$ are all real.
 The $(2\times 2)$ unitaries are usually parametrised as
 $$
-  U = e^{i\gamma}\Big(u_0\id + i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
+  U = e^{i\varphi}\Big(u_0\id + i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
 $$
-where $e^{i\gamma}$ is an overall multiplicative phase factor, with $\gamma$ real, and $u_0$ and the three components $u_x$, $u_y$, $u_z$ are all real numbers.
+where $e^{i\varphi}$ is an overall multiplicative phase factor, with $\varphi$ real, and $u_0$ and the three components $u_x$, $u_y$, $u_z$ are all real numbers.
 
 2. Show that the unitarity condition implies that
     $$
       u_0^2 + u_x^2 + u_y^2 + u_z^2 = 1
     $$
-    and show, using this parametrisation, that the determinant of $U$ is $e^{i2\gamma}$.
+    and show, using this parametrisation, that the determinant of $U$ is $e^{i2\varphi}$.
 
 
 ### Linear algebra of the Pauli vector
 
-1. Show that $\frac12\tr(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}$. *(You may find [a certain identity involving the cross product](#cross-product-identity) helpful.)*
+In what follows, we use the notation from [our algebraic treatment of Pauli operators](#pauli-matrices-algebraically), where we defined the **Pauli vector** $\vec{\sigma}$.
+
+1. Show that $\frac12\tr(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}$.
+    *Hint: you may find [a certain identity involving the cross product](#cross-product-identity) helpful.*
 
 2. Show that any $\vec{n}\cdot\vec{\sigma}$ has eigenvalues $\pm|\vec{n}|$.
 
@@ -1017,20 +1141,21 @@ where $e^{i\gamma}$ is an overall multiplicative phase factor, with $\gamma$ rea
       = e^{i \theta \vec{n}\cdot\vec{\sigma}}
       = (\cos\theta)\id + (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
     $$
-    (The argument here is the same as the argument that $e^{i\theta}=\cos\theta +i\sin\theta$).
+    *Hint: the argument here is the same as the argument that $e^{i\theta}=\cos\theta +i\sin\theta$.*
 
 
 ### Special orthogonal matrix calculations
 
 1. Show that $\tr\sigma_x\sigma_y\sigma_z = 2i$.
 
-2. Consider
+2. Let $U$ be a unitary matrix, and write $\vec{e}_x$, $\vec{e}_y$, and $\vec{e}_z$ to mean the unit vectors along the $x$-, $y$-, and $z$-axis, (respectively).
+    We define new unit vectors $\vec{f}_x$, $\vec{f}_y$, and $\vec{f}_z$ by applying $U$ to our existing unit vectors.
+    Then
     $$
-      U(\vec e_k\cdot\sigma_k)U^\dagger=U\sigma_kU^\dagger={\vec f_k}\cdot\vec\sigma.
+      U(\vec{e}_k\cdot\sigma_k)U^\dagger=U\sigma_kU^\dagger={\vec{f}_k}\cdot\vec\sigma.
     $$
-    So $U$ maps the unit vectors $\vec e_x$, $\vec e_y$, and $\vec z_z$, (along the $x$-, $y$-, and $z$-axis, respectively), to new unit vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$.
     We already know that, in Euclidean space, this transformation is described by a $(3\times 3)$ orthogonal matrix $R_U$.
-    How are the three vectors $\vec f_x$, $\vec f_y$, and $\vec f_z$ related to the entries in matrix $R_U$?
+    How are the three vectors $\vec{f}_x$, $\vec{f}_y$, and $\vec{f}_z$ related to the entries in matrix $R_U$?
 
 3. Show that
     $$
@@ -1057,7 +1182,7 @@ $$
 $$
 represents an anticlockwise rotation about the $z$-axis through the angle $\varphi$.
 
-**Hint.** It might be helpful to start with the $\mathrm{SU}(2)$ version of the phase gate:
+*Hint: it might be helpful to start with the $\mathrm{SU}(2)$ version of the phase gate:*
 $$
   \begin{aligned}
     P_\varphi
@@ -1107,7 +1232,7 @@ $$
 ### Swiss Granite Fountain
 
 In the Singapore Botanic Gardens, there is a sculpture by Ueli Fausch called "Swiss Granite Fountain".
-It is a spherical granite ball which measures 80cm in diameter and weighs 700kg, and is kept afloat by strong water pressure directed through the basal block.
+It is a spherical granite ball which measures 80cm in diameter and weighs 700kg, and is kept afloat by strong water pressure directed through a basal block.
 It is easy to set the ball in motion, and it keeps rotating in whatever way you start for a long time.
 Suppose you are given access to this ball only near the top, so that you can push it to make it rotate around any horizontal axis, but you don't have enough of a grip to make it turn around the vertical axis.
 Can you make it rotate around the vertical axis anyway?
@@ -1115,7 +1240,7 @@ Can you make it rotate around the vertical axis anyway?
 
 ### Dynamics in a magnetic field
 
-A qubit (spin one-half particle) initially in state $\ket{0}$ (spin up) is placed in a uniform magnetic field.
+A qubit initially in state $\ket{0}$ is placed in a uniform magnetic field.
 The interaction between the field and the qubit is described by the Hamiltonian
 $$
   H

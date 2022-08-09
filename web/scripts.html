@@ -1,21 +1,123 @@
+<!-- KaTeX for maths rendering -->
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./web/MathJax2KaTeX.js"></script>
+<!-- footnotes in the margin -->
 <script type="text/javascript" src="./web/sidenotes.js"></script>
+<!-- embedded YouTube videos -->
 <script type="text/javascript" src="./web/lite-yt-embed.js"></script>
 
 <script type="text/javascript">
   $document.ready(function() {
-    $('div.font-settings button.size-3').map(function() {
-      this.setAttribute("class", "button size-2")
-      if (this.innerText == "Sepia") {
-        this.setAttribute("style", "display: none;");
+    // 1. Header bar customisations
+
+    // "Font Settings" customisation
+    // N.B. This is now done in the `build_book` script
+    //      by replacing plugin-fontsettings.js with a custom version
+    // $('div.font-settings button.size-3').map(function() {
+    //   // removing the Sepia colour option (thus going from 3-col to 2-col)
+    //   this.setAttribute("class", "button size-2");
+    //   if (this.innerText == "Sepia") {
+    //     this.setAttribute("style", "display: none;");
+    //   }
+    //   // nicer colour scheme names
+    //   if (this.innerText == "White") {
+    //     this.innerText = "Light";
+    //   }
+    //   if (this.innerText == "Night") {
+    //     this.innerText = "Dark";
+    //   }
+    // });
+
+    // Vertical divider between "internal" and "external" buttons
+    // N.B. This is now done in the `build_book` script
+    //      by replacing plugin-fontsettings.js with a custom version
+    // $('div.font-settings').after('<span class="header-divider-slash">/</span>');
+
+    // Change the "View Source" icon from an eye to "</>"
+    // N.B. this is now done in the `build_book` script
+    //      by replacing plugin-bookdown.js with a custom version
+    // $('a[title="View Source"]').children()[0].setAttribute("class", "fa fa-code");
+
+
+    // 2. Videos
+
+    // TO-DO: make it so that the icon is also clickable
+    //        (and then make sure the CSS has cursor: pointer)
+
+    // Create an icon and a toggle link
+    $("div.video").each(function() {
+      jQuery("<i>", {
+          class: "fa fa-video-camera"
+      }).appendTo(this);
+      var title = $(this).attr("title");
+      jQuery("<a>", {
+          class: "video-toggle",
+          text: title
+      }).appendTo(this);
+    });
+
+    // Toggle showing the video
+    // TO-DO: make video toggle work how .technical divs work:
+    //        1. `display: none;` in gitbook-custom.css for lite-youtube
+    //        2. insertAfter the lite-youtube
+    //        3. have video-toggle just do a slideToggle()
+    //        4. (works if you click the icon too)
+    $(".video-toggle").click(function() {
+      var parent = $(this).parent();
+      var video_id = parent.data("videoid");
+      var possible_video = $(this).siblings("lite-youtube");
+      if (possible_video.length) {
+        possible_video[0].remove();
+      } else {
+        jQuery("<lite-youtube>", {
+            videoid: video_id
+        }).insertAfter($(this));
       }
-      if (this.innerText == "White") {
-        this.innerText = "Light";
-      }
-      if (this.innerText == "Night") {
-        this.innerText = "Dark";
-      }
+    });
+
+
+    // 3. Technical divs
+
+    $("div.technical").each(function() {
+      // Add an hr and wrap the contents in another div
+      jQuery("<hr>").prependTo(this);
+      $(this).wrapInner('<div class="technical-contents"></div>');
+      // Create an icon and toggle link
+      var title = $(this).attr("title");
+      jQuery("<a>", {
+          class: "technical-toggle",
+          text: title
+      }).prependTo(this);
+      jQuery("<i>", {
+          class: "fa fa-search-plus"
+      }).prependTo(this);
+    });
+
+    // Toggle showing the technical contents, either by clicking the title
+    // or clicking the icon
+    $(".technical-toggle, .technical > .fa").click(function() {
+      $(this).siblings(".technical-contents").slideToggle("fast", function() {
+        // Animation complete.
+      });
+    });
+
+
+    // 4. To-do divs
+
+    $("div.todo").each(function() {
+      // Create an icon
+      jQuery("<i>", {
+          class: "fa fa-cogs"
+      }).prependTo(this);
+    });
+
+
+    // 5. Other stuff
+
+    // Class and new-tab-opening for external links
+    $("a[href^='http']").each(function() {
+      this.setAttribute("class", "external-link");
+      this.setAttribute("target", "_blank");
     });
   });
 </script>

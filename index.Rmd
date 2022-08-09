@@ -1,8 +1,8 @@
---- 
+---
 published: false
 title: "Introduction to Quantum Information Science"
 author: "[Artur Ekert](https://www.arturekert.org/) and [Tim Hosgood](https://thosgood.com)"
-date: "Last updated: `r format(Sys.Date(), format='%d %B %Y')`"
+date: "Last updated: `r format(Sys.Date(), format='%d %B %Y')` [(see change history)](https://github.com/thosgood/qubit.guide/commits/main)"
 description: "An introductory series of lectures on quantum computing."
 output:
   bookdown::gitbook:
@@ -66,21 +66,41 @@ output:
 
 For the past however-many years, [Artur Ekert](https://www.arturekert.com/) has been teaching the masters course "Introduction to Quantum Information" at the University of Oxford.
 During this time, many versions of accompanying lecture notes have come and gone, with constant improvements and changes being made.
-The version that you will find on this website has been carefully edited by [Tim Hosgood](https://thosgood.com) into a cohesive "book", containing additional exercises and topics.
+The version that you will find on this website was originally edited by [Tim Hosgood](https://thosgood.com) into a cohesive "book", and both authors have since then added extra comments, exercises, and examples.
 
-For more information, see the [accompanying website](https://arturekert.org/iqis).
+> *Although almost complete, this book is still a work-in-progress --- a few sections are missing, but we are constantly updating and filling in the gaps!*
 
 
 ## Plan and intended audience {-}
 
 In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.
 
-<!-- TO-DO: write about intended audience and our philosophy of what this book is aiming to do -->
+There are many introductions to quantum information science, so it seems like a good idea to start with an explanation of why this particular one exists.
+When learning such a subject, located somewhere in between mathematics, physics, and computer science, there are many possible approaches, with one main factor being "how far along the informal--formal scale do I want to be?".
+In these notes we take the following philosophy: it can be both interesting and fun to cover lots of ground quickly and see as much as possible on a surface level, but it's also good to know that there is a lot of important stuff that you'll miss by doing this.
+In practice, this means that we don't worry to much about high-level mathematics.
+That is not to say that we do not use mathematics "properly" --- you'll find a perfectly formal treatment of e.g. quantum channels via completely positive trace-preserving maps in the language of linear algebra --- but rather than putting too many footnotes with technical caveats and explanations throughout the main text, we opt to collect them all together into one big "warning" here:
 
-The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find some particular chapters easy, while others find them difficult.
-The following will be assumed as prerequisites: elementary probability theory, complex numbers, vectors and matrices, tensor products, and Dirac bra-ket notation.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory) would be helpful, but is not at all essential.
-Some of these fundamentals are covered [at the end of this chapter](#preliminaries).
+> *The mathematics underlying quantum theory is a vast and in-depth subject, most of which we will never touch upon, some of which we will only allude to, and the rest of which we will cover only in the level of detail necessary to our overarching goal*.^[However, since mathematicians were involved in the writing of this book, we have not been able to resist *some* digressions here and there.]
+
+"What", then, "is the overarching goal?" one might ask.
+Our answer is this:
+
+> *To help an eager reader understand what quantum information science is all about, and for them to realise which facets of it they would like to study in more detail*.
+
+But this does not mean that our treatment is cursory!
+In fact, by the end of this book you will have learnt a fair bit more than what might usually be covered in a standard quantum information science course that you would find in a mathematics masters degree, for example.
+
+The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find certain chapters easy, while others find the same ones difficult --- so if things seem hard to you, then don't worry: the next chapter might feel much easier!
+The only real prerequisites are a working knowledge of complex numbers and vectors and matrices; some previous exposure to elementary probability theory and Dirac bra-ket notation (for example) would be helpful, but we provide crash-course introductions to some topics like these [at the end of this chapter](#preliminaries).
+A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory, algorithms) would be helpful, but is *not at all* essential.
+
+Of course, even if you aren't familiar with the formal mathematics, then that shouldn't stop you from reading this book if you want to.
+You might be surprised at how much you can [black box](https://en.wikipedia.org/wiki/Black_box) the bits that you don't understand!
+The caveat stands, however, that, to *really* get to grips with this subject, at least some knowledge of maths is necessary --- but this is not a bad thing!
+
+Finally, throughout this text you will find some technical asides (marked with the <i class="fa fa-search-plus"></i> icon).
+These are *not at all* necessary reading, but are just there to provide the exceptionally eager reader (or perhaps those with a more formal mathematical background) with some extra context, as well as some pointers towards further reading.
 
 
 ```{r, child = if (knitr::is_html_output()) '_web-instructions.Rmd'}
@@ -88,53 +108,9 @@ Some of these fundamentals are covered [at the end of this chapter](#preliminari
 
 
 
-## Topics {-}
-
-- Fundamentals of quantum theory
-  + addition of probability amplitudes
-  + quantum interference
-  + mathematical description of states and evolution of closed quantum systems (Hilbert space, unitary evolution)
-  + measurements (projectors, Born rule)
-  + Pauli matrices
-- Distinguishability of quantum states
-- The Bloch sphere
-  + parametrisation
-  + action of quantum gates on the Bloch vector
-- The definition of quantum entanglement (the tensor product structure)
-- The no-cloning theorem, and quantum teleportation
-- Quantum gates
-  + phase gate
-  + Hadamard
-  + controlled-$\texttt{NOT}$
-  + SWAP
-  + the Hadamard-phase-Hadamard network
-  + phase "kick-back" induced by controlled-$U$
-  + phase "kick-back" induced by quantum Boolean function evaluation
-- Quantum algorithms
-  + Deutsch
-  + Bernstein-Vazirani
-  + Simon
-- Bell's theorem
-  + Quantum correlations
-  + CHSH inequality
-- Density matrices
-  + partial trace
-  + statistical mixture of pure states
-  + Born rule for density matrices
-  + quantum entanglement in terms of density matrices
-- Completely positive maps
-  + Kraus operators
-  + the Choi matrix
-  + positive versus completely positive maps
-  + partial-transpose
-- The simple model of decoherence
-- Quantum error correction of bit-flip and phase-flip errors
-
-
-
 ## Acknowledgements {-}
 
-We thank the following for their helpful comments and corrections: Zhenyu Cai, Jedrzej Burkat.
+We thank the following for their helpful comments and corrections: Zhenyu Cai, Jedrzej Burkat, Maryam Khaqan.
 We also appreciate the work of Yihui Xie in developing the [Bookdown package](https://bookdown.org/yihui/bookdown/) with which this e-book was built.
 
 
@@ -142,52 +118,142 @@ We also appreciate the work of Yihui Xie in developing the [Bookdown package](ht
 
 # Some mathematical preliminaries {.unnumbered #preliminaries}
 
-Here we quickly recall most of the fundamental mathematical results that we will rely on in the rest of this book, namely *linear algebra over the complex numbers*.
-If an equation like $\tr\ket{a}\bra{b}=\braket{a}{b}$ makes sense to you, then you can safely skip over this and get started directly with [Chapter 1](#quantum-interference).
+Here we quickly recall most of the fundamental mathematical results that we will rely on in the rest of this book, most importantly *linear algebra over the complex numbers*.
+However, we will not introduce everything from the ground up.
+Most notably, we will assume that the reader understands what a **matrix** is, and how it represents a **linear transformation**.
+
+If an equation like $\tr\ket{a}\bra{b}=\braket{a}{b}$ makes sense to you, then you can safely skip over this section and get started directly with [Chapter 1](#quantum-interference).
+
+As a small note on notation, we generally write "$x\coloneqq y$" to mean "$x$ is defined to be (equal to) $y$", and "$x\equiv y$" to mean "$x$ is just another name for $y$", but sometimes we simply just write "$x=y$".
 
 
-## Euclidean vectors
+## Complex numbers
 
-We assume that you are familiar with Euclidean vectors --- those arrow-like geometric objects which are used to represent physical quantities, such as velocities, or forces.
+It would be naive (and presumptuous) to argue that any one mathematical object is somehow "the most fundamental" or "the most useful" --- any two mathematicians will almost certainly have completely opposite views on any given candidate object^[These differing opinions are a good thing! Different researchers care about different things, and that's one reason why we get so much beautiful mathematics found in the intersections] --- but it would be hard to find an area of maths in which the complex numbers do not show up in some form or another.
+From algebraic geometry to fluid mechanics to number theory to statistics, complex numbers have many applications.
+Because of this, it seems only fair to introduce them first, since they also play a starring role in the story of quantum information science.
+
+Although we will try to tell their story from the ground up, it would be unfair to expect a reader who has never come across them before to immediately understand and have a working knowledge of them, so we do recommend that you are at least reasonably comfortable with the main ideas of what a complex number actually is and how you can "do algebra" with them if you want to get the most out of reading this book.^[But do *not* consider this a concrete requirement for starting to work through this book --- reading stuff even if you think you might not understand it can be an exciting thing to do!]
+
+Starting with just $0$ and $1$, we can build a variety of interesting and useful mathematical structures.
+Firstly, asking to be able to *add* these two things together gives us an infinity of numbers to play around with, since we end up with $1$, $1+1$, $1+1+1$, ..., and so on.
+For convenience, it's good to come up with some neat notational shorthand, whence the introduction of arabic numerals: $1$, $2=1+1$, $3=1+1+1$, ..., and so on.
+We call the result --- these numbers $0,1,2,\ldots$ along with the ability to add them (with $0$ being an **additive identity**, i.e. adding it to any number does absolutely nothing) --- the **monoid** of **natural numbers**, and we denote it by $\mathbb{N}$.
+
+Next we could ask for the ability to "undo" addition, or, as we usually call it, *subtraction*.
+This means that we need to introduce negative versions of all of our natural numbers, and gives us the **abelian group** of **integers**, denoted^[The choice of the letter "Z" comes from the German word *Zahlen*, meaning "numbers".] $\mathbb{Z}$.
+
+One step up from addition on the arithmetic ladder is *multiplication*, but we can already multiply things in $\mathbb{Z}$ since the product of any two integers is always just another integer.
+Things get a bit more complicated when we ask for the inverse of this operation: *division*, which is to multiplication what subtraction is to addition (what mathematicians call an **inverse operation**).
+If we want to be able to divide any two integers then we need to throw in all possible fractions, giving us the **commutative ring** of **rational numbers**, denoted^[The choice of the letter "Q" comes from the word "quotient", which is (here) a synonym for "division".] $\mathbb{Q}$.
+
+For the next construction, we step out of the world of *algebra* and enter that of *analysis*: it turns out that there are lots of numbers which cannot be expressed as fractions, but instead lie in between the rational numbers.
+In fact, as a famous proof shows, there are so many such numbers that they outnumber the rational ones "infinity-to-one", in a sense which we could (but won't) make very precise.
+Some well-known examples of so-called **irrational numbers** include mathematical constants such as the ratio $\pi\approx3.14$ of the circumference of *any* circle to its diameter, and the number $e\approx2.718$ you get if you somehow calculate the infinite sum $1+\frac{1}{2!}+\frac{1}{3!}+\ldots$ (where $n!=n\times(n-1)\times(n-2)\times\ldots\times2\times1$).
+If we include all of these, filling in all the holes found inside $\mathbb{Q}$, then we end up with the **field** of **real numbers**, denoted by $\mathbb{R}$.
+
+So now we have a mathematical description of numbers which we can add, subtract, multiply, divide, and "take infinite sums of".
+What is there left to do?
+Well, if we think of multiplication as repeated addition ("$5\times3$ is just $5+5+5$"), then we can ask what repeated multiplication looks like, and the answer is *exponentiation*: "$5^3$ is just $5\times5\times5$".
+Of course, since real numbers are closed under multiplication^[We say that a collection of objects is **closed** under an operation to mean that, when you apply this operation, the result is also an element of the collection you started with. So, as we have already said, $\mathbb{Z}$ is closed under multiplication, but not under division.] we know that they will be closed under exponentiation too.
+But the pattern we've seen so far suggests that the problem might actually lie in the *inverse* of this operation: if we take some real number $y$ and some natural number $n$, does there exist a real number $x$ such that $x^a=y$?
+We don't have to go far to find out that the answer is *no*: if we take $y=-1$ and $a=2$, then we're simply asking if there exists a real square root of $-1$, and we can prove that such a thing cannot exist.^[Let $x$ be any real number. Then $x^2$ is never a negative number (consider a case-by-case analysis: when $x$ is positive, when $x$ is negative, and when $x$ is $0$), and so can never be equal to $-1$.]
+If we somehow fill in all the missing numbers (i.e. those of the form $\sqrt[n]{y}$ for any real number $y$ and any natural number $n$) then we end up with the **algebraically closed field** of **complex numbers**, denoted by $\mathbb{C}$.
+
+What is very surprising is that the story, in some sense, ends here: once you've thrown in all these $n$-th roots of real numbers, you don't need to add anything more when you consider things like [repeated exponentiation](https://en.wikipedia.org/wiki/Tetration), no matter how high up the ladder you go!
+In fact, the complex numbers are the subject of the loftily-titled **fundamental theorem of algebra**: if you pick any $(n+1)$-many complex numbers $z_0,z_1,\ldots,z_n$, then there exists at least one complex number $a$ such that $z_na^n+z_{n-1}a^{n-1}+\ldots+z_2a^2+z_1a+z_0$ is equal to $0$.
+It is hard to overstate the importance of this theorem.
+
+But what do complex numbers actually *look* like?
+Every step up until now has seemed pretty easy to visualise: we can imagine what an element of $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}$, or $\mathbb{R}$ looks like.^[Although it turns out that irrational numbers (i.e. numbers which are in $\mathbb{R}$ but not in $\mathbb{Q}$) are actually a lot less well-behaved than you might imagine, and tend to defy intuition in sneaky ways.]
+Two particularly useful ways of expressing complex numbers are as pairs of real numbers (writing a complex number $z$ as $x+iy$ for some real numbers $x,y$, where $i=\sqrt{-1}$, since $i$ is somehow enough to generate all the other non-real complex numbers) or in **polar form**, also known as **Euler form** (writing $z$ as $re^{i\varphi}$ for some real numbers $r,\varphi$, and where $e\approx2.718$ is the so-called [**Euler's number**](https://en.wikipedia.org/wiki/E_(mathematical_constant)) that we saw earlier).
+Both methods have their advantages, and it is helpful to be familiar with both, along with the story that translates from one to the other (namely, trigonometry!).
+
+You do not have to know much about this whole story of algebraic fields, but it helps to know the basics, so here are some exercises that should help you to become more familiar.^[Note that we have not really given you enough information in this section to be able to solve all these exercises, but that is intentional! Sometimes we like to ask questions and not answer them, with the hope that you will enjoy getting to do some research by yourself.]
+
+a. The set $\mathbb{Q}$ of rational numbers and the set $\mathbb{R}$ of real numbers are both fields, but the set $\mathbb{Z}$ of integers is not. Why not?
+b. What does it mean to say that the field of complex numbers is **algebraically closed**?
+c. Evaluate each of the following quantities:
+  $$
+    1+e^{-i\pi},
+    \quad
+    |1+i|,
+    \quad
+    (1+i)^{42},
+    \quad
+    \sqrt{i},
+    \quad
+    2^i,
+    \quad
+    i^i.
+  $$
+d. Here is a simple proof that $+1=-1$: $$1=\sqrt{1}=\sqrt{(-1)(-1)}=\sqrt{-1}\sqrt{-1}=i^2=-1.$$ What is wrong with it?
+
+## Euclidean vectors and vector spaces
+
+We assume that you are familiar with Euclidean vectors --- those arrow-like geometric objects which are used to represent physical quantities, such as trajectories, velocities, or forces.
 You know that any two velocities can be added to yield a third, and the multiplication of a "velocity vector" by a real number is another "velocity vector".
-So a **linear combination** of vectors is another vector.
+So a **linear combination** of vectors is another vector: if $v$ and $w$ are vectors, and $\lambda$ and $\mu$ are numbers (rational, real, or complex, for example), then $\lambda v+\mu w$ is another vector.
 Mathematicians have simply taken these properties and defined vectors as _anything_ that we can add and multiply by numbers, as long as everything behaves in a nice enough way.
 This is basically what an Italian mathematician Giuseppe Peano (1858--1932) did in a chapter of his 1888 book with an impressive title: _Calcolo geometrico secondo l'Ausdehnungslehre di H. Grassmann preceduto dalle operazioni della logica deduttiva_.
-
-
-## Vector spaces
-
 Following Peano, we define a **vector space** as a mathematical structure in which the notion of linear combination "makes sense".
 
-More formally, a **complex vector space** is a set $V$ such that, given any two **vectors** $a$ and $b$ (that is, any two elements of $V$) and any two complex numbers $\alpha$ and $\beta$, we can form the linear combination^[As we said, there are certain "nice properties" that these things must satisfy. Addition of vectors must be commutative and associative, with an identity (the zero vector, which will always be written as $\mathbf{0}$ ) and an inverse for each $v$ (written as $-v$). Multiplication by complex numbers must obey the two distributive laws: $(\alpha+\beta)v = \alpha v+\beta v$ and $\alpha (v+w) = \alpha v+\alpha w$.] $\alpha a+\beta b$, which is also a vector in $V$.
+More formally, a **complex vector space** is a set $V$ such that, given any two **vectors** $a$ and $b$ (that is, any two elements of $V$) and any two complex numbers $\alpha$ and $\beta$, we can form the linear combination $\alpha a+\beta b$, which is also a vector in $V$.
+There are certain "nice properties" that vector spaces things must satisfy. Addition of vectors must be commutative and associative, with an identity (the zero vector, which is often written as $\mathbf{0}$) and an inverse for each $v$ (written as $-v$). Multiplication by complex numbers must obey the two distributive laws: $(\alpha+\beta)v = \alpha v+\beta v$ and $\alpha (v+w) = \alpha v+\alpha w$.
+
+::: {.technical title="Modules over a ring" latex=""}
+A more succinct way of defining a vector space is as an abelian group endowed with a scalar action of a field.
+This showcases vector spaces as a particularly well behaved example of a more general object: **modules over a ring**.
+:::
 
 A **subspace** of $V$ is any subset of $V$ which is closed under vector addition and multiplication by complex numbers.
 Here we start using the Dirac bra-ket notation and write vectors in a somewhat fancy way as $\ket{\text{label}}$, where the "label" is anything that serves to specify what the vector is.
-For example, $\ket{\uparrow}$ and $\ket{\downarrow}$ may refer to an electron with spin up or down along some prescribed direction and $\ket{0}$ and $\ket{1}$ may describe a quantum bit (a "qubit") holding either logical $0$ or $1$.
+For example, $\ket{\uparrow}$ and $\ket{\downarrow}$ may refer to an electron with spin up or down along some prescribed direction, and $\ket{0}$ and $\ket{1}$ may describe a quantum bit holding either logical $0$ or $1$.
+As a maybe more familiar example, the set of binary strings of length $n$ is a vector space over the field $\mathbb{Z}/2\mathbb{Z}$ of integers mod $2$; in the case $n=2$ we can write down all the vectors in this vector space in this notation: $\ket{00}$, $\ket{01}$, $\ket{10}$, $\ket{11}$, where e.g. $\ket{10}+\ket{11}=\ket{01}$ (addition is taken mod $2$).
 These are often called **ket** vectors, or simply **kets**.
 (We will deal with "bras" in a moment).
-A **basis** in $V$ is a collection of vectors $\ket{e_1},\ket{e_2},\ldots,\ket{e_n}$ such that every vector $\ket{v}$ in $V$ can be written (in _exactly_ one way) as a linear combination of the basis vectors; $\ket{v}=\sum_i v_i\ket{e_i}$.
-The number of elements in a basis is called the **dimension** of $V$.
-(Showing that this definition is independent of the basis that we choose is a "fun" linear algebra exercise).
-The most common $n$-dimensional complex vector space is the space of ordered $n$-tuples of complex numbers, usually written as column vectors:
+
+A **basis** in $V$ is a collection of vectors $\ket{e_1},\ket{e_2},\ldots,\ket{e_n}$ such that every vector $\ket{v}$ in $V$ can be written (in _exactly_ one way) as a linear combination of the basis vectors: $\ket{v}=\sum_{i=1}^n v_i\ket{e_i}$.
+The number of elements in a basis is called the **dimension** of $V$.^[Showing that this definition is independent of the basis that we choose is a "fun" linear algebra exercise.]
+The most common, and prototypical, $n$-dimensional complex vector space (and the space which we will be using most of the time) is the space of ordered $n$-tuples of complex numbers, usually written as column vectors:
+$$
+  \ket{a}
+  = \begin{bmatrix}a_1\\a_2\\\vdots\\a_n\end{bmatrix}
+$$
+with a basis given by the column vectors $\ket{e_i}$ that are $0$ in every row except for a $1$ in the $i$-th row:
+$$
+  \ket{e_1}
+  = \begin{bmatrix}1\\0\\\vdots\\0\end{bmatrix}
+  \qquad
+  \ket{e_2}
+  = \begin{bmatrix}0\\1\\\vdots\\0\end{bmatrix}
+  \qquad\ldots\qquad
+  \ket{e_n}
+  = \begin{bmatrix}0\\0\\\vdots\\1\end{bmatrix}
+$$
+and where addition of vectors is done **component-wise**, so that
+$$
+  \left(\sum_{i=1}^n v_i\ket{e_i}\right)+\left(\sum_{i=1}^n w_i\ket{e_i}\right)
+  = \sum_{i=1}^n (v_i+w_i)\ket{e_i}
+$$
+or, in column vectors,
 $$
   \begin{gathered}
-    \ket{a}
-    = \begin{bmatrix}a_1\\a_2\\\vdots\\a_n\end{bmatrix}
+    \ket{v}
+    = \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
     \qquad
-    \ket{b}
-    = \begin{bmatrix}b_1\\b_2\\\vdots\\b_n\end{bmatrix}
+    \ket{w}
+    = \begin{bmatrix}w_1\\w_2\\\vdots\\w_n\end{bmatrix}
   \\\alpha\ket{a}+\beta\ket{b}
-    = \begin{bmatrix}\alpha a_1+\beta b_1\\\alpha a_2+\beta b_2\\\vdots\\\alpha a_n+\beta b_n\end{bmatrix}
+    = \begin{bmatrix}\alpha v_1+\beta w_1\\\alpha v_2+\beta w_2\\\vdots\\\alpha v_n+\beta w_n\end{bmatrix}
   \end{gathered}
 $$
 
-In fact, this is the space we will use most of the time.
-Throughout the course we will deal only with vector spaces of _finite_ dimensions.
-This is sufficient for all our purposes and we will avoid many mathematical subtleties associated with infinite dimensional spaces, for which we would need to tools of **functional analysis**.
+Throughout the course we will deal only with vector spaces of *finite* dimensions.
+This is sufficient for all our purposes and we will avoid many mathematical subtleties associated with infinite dimensional spaces, for which we would need the tools of **functional analysis**.
 
 
-## Bras and kets
+## Bras and kets {#bras-and-kets}
 
 An **inner product** on a vector space $V$ (over the complex numbers) is a function that assigns to each pair of vectors $\ket{u},\ket{v}\in V$ a complex number $\braket{u}{v}$, and satisfies the following conditions:
 
@@ -203,8 +269,22 @@ $$
 $$
 for any complex constants $c_1$ and $c_2$.
 
-With any physical system we associate a complex vector space with an inner product, known as a **Hilbert space**^[The term "Hilbert space" used to be reserved for an infinite-dimensional inner product space that is **complete**, i.e. such that every Cauchy sequence in the space converges to an element in the space. Nowadays, as in these notes, the term includes finite-dimensional spaces, which automatically satisfy the condition of completeness.] $\mathcal{H}$.
+To any physical system we associate^[The question of *how* exactly we construct this associated space is a subtle one in the case of arbitrary physical systems, but we shall see that this is relatively straightforward when working with the types of systems that we consider in this book.] a complex vector space with an inner product, known as a **Hilbert space** $\mathcal{H}$.
 The inner product between vectors $\ket{u}$ and $\ket{v}$ in ${\mathcal{H}}$ is written as $\braket{u}{v}$.
+
+::: {.technical title="Finite-dimensional functional analysis" latex=""}
+If $V$ is a vector space with an inner product $\langle-,-\rangle$, then this gives us a **norm** on $V$ by defining $\|x\|=\sqrt{\langle x,x\rangle}$ and thus a **metric** by defining $d(x,y)=\|y-x\|$.
+We say that a sequence $(x_n)$ in $V$ is **Cauchy** if its elements "eventually always get closer", i.e. if for all $\varepsilon>0$ there exists some $N\in\mathbb{N}$ such that for all $m,n>N$ we have $\|x_n-x_m\|<\varepsilon$.
+We say that a normed space is **complete** if *every Cauchy sequence converges in that space*, i.e. if the limits of sequences that *should* exist actually *do* exist.
+
+Now one useful fact is the following: on a *finite dimensional* vector space, all norms are equivalent.
+(Note that this does *not* mean that $\|x\|_1=\|x\|_2$ for any two norms $\|-\|_1$ and $\|-\|_2$, but simply that they "induce the same topology" --- feel free to look up the precise definition elsewhere).
+This follows from another useful fact: in a *finite dimensional* vector space, the unit ball is compact.
+By a short topological argument, we can use these facts to show that what we claimed, namely that every *finite dimensional* inner product space is complete (with respect to the norm induced by the inner product, and thus with respect to *any* norm, since all norms are equivalent).
+
+In the infinite dimensional case these facts are *not* true, and we have a special name for those inner product spaces which *are* complete: **Hilbert spaces**.
+So working in the finite dimensional case means that "we do not have to worry about analysis", in that the completeness property comes for free the moment we have an inner product, and we can freely refer to inner product spaces as Hilbert spaces.
+:::
 
 For example, for column vectors $\ket{u}$ and $\ket{v}$ in $\mathbb{C}^n$ written as
 $$
@@ -244,14 +324,14 @@ Elements of ${\mathcal{H}}^\star$ are **linear functionals**, that is, linear ma
 A linear functional $\bra{u}$ acting on a vector $\ket{v}$ in $\mathcal{H}$ gives a complex number $\braket{u}{v}$.
 
 ::: {.idea latex=""}
-All Hilbert spaces of the same dimension are isomorphic, so the differences between quantum systems cannot be really understood without additional structure. This structure is provided by a specific algebra of operators acting on $\mathcal{H}$.
+All Hilbert spaces of the same (finite) dimension are isomorphic, so the differences between quantum systems cannot be really understood without additional structure. This structure is provided by a specific algebra of operators acting on $\mathcal{H}$.
 :::
 
 
 ## Daggers
 
 Although $\mathcal{H}$ and $\mathcal{H}^\star$ are not identical spaces --- the former is inhabited by kets, and the latter by bras --- they are closely related.
-There is a bijective map from one to the other, $\ket{v}\leftrightarrow \bra{v}$, denoted by a **dagger**:^["Is this a $\dagger$ which I see before me..."]
+There is a bijective map from one to the other given by $\ket{v}\leftrightarrow \bra{v}$, and denoted by a **dagger**:^["Is this a $\dagger$ which I see before me..."]
 $$
   \begin{aligned}
     \bra{v}
@@ -262,7 +342,7 @@ $$
 $$
 We usually omit the parentheses when it is obvious what the dagger operation applies to.
 
-The dagger operation, also known as **Hermitian conjugation**, is _antilinear_: 
+The dagger operation, also known as **Hermitian conjugation**, is _antilinear_:
 $$
   \begin{aligned}
     (c_1\ket{v_1}+c_2\ket{v_2})^\dagger
@@ -272,12 +352,15 @@ $$
   \end{aligned}
 $$
 Also, when applied twice, the dagger operation is the identity map.
-In the matrix representation,^[Recall that the conjugate transpose, or the Hermitian conjugate, of an $(n\times m)$ matrix $A$ is an $(m\times n)$ matrix $A^\dagger$, obtained by interchanging the rows and columns of $A$ and taking complex conjugates of each entry in $A$, i.e. $A^\dagger_{ij}=A^\star_{ji}$. In mathematics texts it is often denoted by ${}^\star$ rather than ${}^\dagger$.]
+
+You might already be familiar with Hermitian conjugation under another name: the **conjugate transpose**^[In mathematics texts this operation is often denoted by ${}^\star$ rather than ${}^\dagger$, but we reserve the former for complex conjugation *without* matrix transposition. Note, however, that scalars can be thought of as $(1\times1)$ matrices, and in this special case we have that $\dagger=\star$.] of an $(n\times m)$ matrix $A$ is an $(m\times n)$ matrix $A^\dagger$, obtained by interchanging the rows and columns of $A$ and taking complex conjugates of each entry in $A$, i.e. $A^\dagger_{ij}=A^\star_{ji}$.
+In particular then,
 $$
   \ket{v} = \begin{bmatrix}v_1\\v_2\\\vdots\\v_n\end{bmatrix}
   \overset{\dagger}{\longleftrightarrow}
   \bra{v} = \begin{bmatrix}v_1^\star,&v_2^\star,&\ldots,&v_n^\star\end{bmatrix}.
 $$
+
 
 
 ## Geometry
@@ -309,19 +392,21 @@ $$
     &= \sum_j \braket{v}{i}\bra{i}.
   \end{aligned}
 $$
-But _do not confuse $\ket{0}$ with the zero vector_!
-We _never_ write the zero vector as $\ket{0}$, but only ever as $0$, without any bra or ket decorations (so e.g. $\ket{v}+0=\ket{v}$).
+But *do not confuse $\ket{0}$ with the zero vector*!
+We *never* write the zero vector as $\ket{0}$, but only ever as $0$, without any bra or ket decorations (so e.g. $\ket{v}+0=\ket{v}$).
+
+Now that we have some notion of geometry, we can explain a bit more about this idea of associating a Hilbert space to a quantum system --- we will use some terminology that we have not yet introduced, but all will be explained in due time.
 
 ::: {.idea latex=""}
-- With any _isolated_ quantum system, which can be prepared in $n$ _perfectly distinguishable_ states, we can associate a Hilbert space $\mathcal{H}$ of dimension $n$ such that each vector $\ket{v}\in\mathcal{H}$ of unit length (i.e. $\braket{v}{v} =1$) represents a quantum state of the system.
+To any *isolated* quantum system, which can be prepared in $n$ **perfectly distinguishable** states, we can associate a Hilbert space $\mathcal{H}$ of dimension $n$ such that each vector $\ket{v}\in\mathcal{H}$ of unit length $\braket{v}{v}=1$ represents a quantum state of the system.
+The overall phase of the vector has no physical significance: $\ket{v}$ and $e^{i\varphi}\ket{v}$ (for any real $\varphi$) both describe the same state.
+:::
 
-- The overall phase of the vector has no physical significance: $\ket{v}$ and $e^{i\varphi}\ket{v}$ (for any real $\varphi$) both describe the same state.
+We note here one more fact that also won't yet make sense, but which won't hurt to have hidden away in the back of your mind.
 
-- The inner product $\braket{u}{v}$ is the _probability amplitude_ that a quantum system prepared in state $\ket{v}$ will be found in state $\ket{u}$ upon measurement.
-
-- States corresponding to orthogonal vectors (i.e. $\braket{u}{v}=0$) are _perfectly distinguishable_, since, if we prepare the system in state $\ket{v}$, then it will never be found in state $\ket{u}$, and vice versa.
-    In particular, states forming orthonormal bases are always perfectly distinguishable from each other.
-    Choosing such states, as we shall see in a moment, is equivalent to choosing a particular quantum measurement.
+::: {.idea latex=""}
+The inner product $\braket{u}{v}$ is the **probability amplitude** that a quantum system prepared in state $\ket{v}$ will be found in state $\ket{u}$ upon measurement.
+This means that states corresponding to orthogonal vectors (i.e. $\braket{u}{v}=0$) are perfectly distinguishable: if we prepare the system in state $\ket{v}$, then it will never be found in state $\ket{u}$, and vice versa.
 :::
 
 
@@ -334,11 +419,11 @@ $$
 for any vectors $\ket{v_1},\ket{v_2}$ and any complex numbers $c_1,c_2$.
 We will focus mostly on **endomorphisms**, that is, maps from $\mathcal{H}$ to $\mathcal{H}$, and we will call them **operators**.
 The symbol $\id$ is reserved for the identity operator that maps every element of $\mathcal{H}$ to itself (i.e. $\id\ket{v}=\ket{v}$ for all $\ket{v}\in\mathcal{H}$).
-The product $AB$ of two operators $A$ and $B$ is the operator obtained by first applying $B$ to some ket $\ket{v}$ and then $A$ to the ket which results from applying $B$:
+The product $BA$ of two operators $A$ and $B$ is the operator obtained by first applying $A$ to some ket $\ket{v}$ and then $B$ to the ket which results from applying $A$:
 $$
-  (AB)\ket{v} = A(B\ket{v}).
+  (BA)\ket{v} = B(A\ket{v}).
 $$
-The order _does_ matter: in general, $AB\neq BA$.
+The order _does_ matter: in general, $BA\neq AB$.
 In the exceptional case in which $AB=BA$, one says that these two operators **commute**.
 The inverse of $A$, written as $A^{-1}$, is the operator that satisfies $AA^{-1}=\id=A^{-1}A$.
 For finite-dimensional spaces, one only needs to check _one_ of these two conditions, since any one of the two implies the other, whereas, on an infinite-dimensional space, _both_ must be checked.
@@ -355,10 +440,12 @@ $$
 An operator $A$ is said to be
 
 - **normal** if $AA^\dagger = A^\dagger A$,
-- **unitary** if $AA^\dagger = A^\dagger A = \id$,
+- **unitary** if $A^\dagger=A^{-1}$
 - **Hermitian** (or **self-adjoint**) if $A^\dagger = A$.
 
-Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.
+In particular then, being unitary implies being normal, since if $A^\dagger=A^{-1}$ then $AA^\dagger=A^\dagger A$, since both of these are equal to $\id$.
+
+Any *physically admissible* evolution of an isolated quantum system is represented by a unitary operator.^[This is an *axiom*, justified by experimental evidence, and also by some sort of mathematical intuition. So, in this book, we take this as a *fact* that we do not question. It is, however, very interesting to question it: *why should we assume this to be true?*]
 Note that unitary operators preserve the inner product: given a unitary operator $U$ and two kets $\ket{a}$ and $\ket{b}$, and defining $\ket{a'}=U\ket{a}$ and $\ket{b'}=U\ket{b}$, we have that
 $$
   \begin{gathered}
@@ -370,13 +457,13 @@ $$
 Preserving the inner product implies preserving the norm induced by this product, i.e. unit state vectors are mapped to unit state vectors, i.e. _unitary operations are the isometries of the Euclidean norm_.
 
 
-## Outer products
+## Outer products {#outer-products}
 
 Apart from the inner product $\braket{u}{v}$, which is a complex number, we can also form the **outer product** $\ket{u}\bra{v}$, which is a linear map (operator) on $\mathcal{H}$ (or on $\mathcal{H}^\star$, depending how you look at it).
 This is what physicists like (and what mathematicians dislike!) about Dirac notation: a certain degree of healthy ambiguity.
 
 - The result of $\ket{u}\bra{v}$ acting on a ket $\ket{x}$ is $\ket{u}\braket{v}{x}$, i.e. the vector $\ket{u}$ multiplied by the complex number $\braket{v}{x}$.
-- Similarly, the result of $\ket{u}\bra{v}$ acting on a bra $\bra{y}$ is $\braket{y}{u}\bra{v}$, i.e. the functional $\bra{v}$ multiplied by the complex number $\braket{y}{u}$.
+- Similarly, the result of $\ket{u}\bra{v}$ acting on a bra $\bra{y}$ is $\braket{y}{u}\bra{v}$, i.e. the linear functional $\bra{v}$ multiplied by the complex number $\braket{y}{u}$.
 
 The product of two maps, $A=\ket{a}\bra{b}$ followed by $B=\ket{c}\bra{d}$, is a linear map $BA$, which can be written in Dirac notation as
 $$
@@ -384,14 +471,14 @@ $$
 $$
 i.e. the inner product (complex number) $\braket{d}{a}$ times the outer product (linear map) $\ket{c}\bra{b}$.
 
-Any operator on $\mathcal{H}$ can be expressed as a sum of outer products. Given an orthonormal basis $\{\ket{e_i}\}$, any operator which maps the basis vectors $\ket{e_i}$ to vectors $\ket{f_i}$ can be written as $\sum_i\ket{f_i}\bra{e_i}$, where the sum is over all the vectors in the orthonormal basis.
-If the vectors $\{\ket{f_i}\}$ also form an orthonormal basis then the operator simply "rotates" one orthonormal basis into another.
+Any operator on $\mathcal{H}$ can be expressed as a sum of outer products. Given an orthonormal basis $\{\ket{e_i}\}_{i=1,\ldots,n}$, any operator which maps the basis vectors $\ket{e_i}$ to vectors $\ket{f_i}$ can be written as $\sum_{i=1}^n\ket{f_i}\bra{e_i}$.
+If the vectors $\{\ket{f_i}\}$ *also* form an orthonormal basis then the operator simply "rotates" one orthonormal basis into another.
 These are unitary operators which preserve the inner product.
 In particular, if each $\ket{e_i}$ is mapped to $\ket{e_i}$, then we obtain the identity operator:
 $$
   \sum_i\ket{e_i}\bra{e_i}=\id.
 $$ 
-This relation holds for _any_ orthonormal basis, and it is one of the most ubiquitous and useful formulas in quantum theory.
+This relation holds for _any_ orthonormal basis, and it is one of the most ubiquitous and useful formulas in quantum theory, known as **completeness**.^[Not to be confused with "completeness" in the sense of Hilbert spaces.]
 For example, for any vector $\ket{v}$ and for any orthonormal basis $\{\ket{e_i}\}$, we have
 $$
   \begin{aligned}
@@ -403,8 +490,17 @@ $$
   \end{aligned}
 $$
 where $v_i=\braket{e_i}{v}$ are the components of $\ket{v}$.
-Finally, note that the adjoint of $\ket{a}\bra{b}$ is $\ket{b}\bra{a}$.
 
+Finally, note that calculating the adjoint of an outer product boils down to just swapping the order:
+$$
+  (\ket{a}\bra{b})^\dagger = \ket{b}\bra{a}.
+$$
+
+::: {.technical title="Dagger compact categories" latex=""}
+This whole package of stuff and properties and structure (i.e. finite dimensional Hilbert spaces with linear maps and the dagger) bundles up into an abstract framework called a [**dagger compact category**](https://en.wikipedia.org/wiki/Dagger_compact_category).
+We will not delve into the vast world of category theory in this book, and to reach an understanding of all the ingredients that go into the one single definition of dagger compact categories would take more than a single chapter.
+But it's a good idea to be aware that there are researchers in quantum information science who work *entirely* from this approach, known as [**categorical quantum mechanics**](https://en.wikipedia.org/wiki/Categorical_quantum_mechanics).
+:::
 
 ## The trace
 
@@ -413,12 +509,15 @@ $$
   \tr\colon \ket{b}\bra{a} \longmapsto \braket{a}{b}.
 $$
 We have just seen that any linear operator can be written as a sum of outer products, and so we can extend the definition of trace (by linearity) to any operator.
-Alternatively, for any square matrix $A$, the trace of $A$ is defined to be the sum of its diagonal elements:
+Equivalently, for any square matrix $A$, the trace of $A$ can be defined to be the sum of its diagonal elements:
 $$
   \tr A = \sum_k \bra{e_k}A\ket{e_k} = \sum_k A_{kk}.
 $$
-You can show, using this definition or otherwise, that the trace is cyclic (i.e. $\tr(AB) = \tr(BA)$) and linear (i.e. $\tr(\alpha A+\beta B) = \alpha\tr(A)+\beta\tr(B)$, where $A$ and $B$ are square matrices and $\alpha$ and $\beta$ complex numbers).
-Moreover,
+In fact, the trace of $A$ is equal to the sum of the eigenvalues of $A$, even in the case where $A$ is not diagonalisable.
+
+You can show, using this definition or otherwise, that the trace is cyclic^[Note that "cyclic" does not mean the same thing as "permutation invariant"! It is *not* true in general that $\tr(ABC)=\tr(CBA)$, but only that $\tr(ABC)=\tr(BCA)=\tr(CAB)$, i.e. we can only *cyclically* permute the operators.] ($\tr(AB) = \tr(BA)$) and linear ($\tr(\alpha A+\beta B) = \alpha\tr(A)+\beta\tr(B)$, where $A$ and $B$ are square matrices and $\alpha$ and $\beta$ complex numbers).
+
+To recover the first definition from the second, we argue as follows:
 $$
   \begin{aligned}
     \tr\ket{b}\bra{a}
@@ -432,20 +531,28 @@ Here, the second term can be viewed both as the sum of the diagonal elements of 
 We have used the decomposition of the identity, $\sum_k\ket{e_k}\bra{e_k}=\id$.
 Given that we can decompose the identity by choosing any orthonormal basis, it is clear that the trace does _not_ depend on the choice of the basis.
 
-::: {.technical}
-**!!TO-DO: mention what this whole package of data all bundled up looks like from the categorical pov!!**
-:::
 
+## Some useful identities {#some-useful-identities}
 
-## Some useful identities
+Here is a summary of some particularly useful equalities concerning bras, kets, inner products, outer products, traces, and operators, that we will be using time and time again.
+In all of these, $\ket{a},\ket{b}\in\mathcal{H}$ are kets, $A,B,C$ are operators on $\mathcal{H}$, and $\alpha,\beta\in\mathbb{C}$ are scalars.
+
+Dagger for bras and kets:
 
 - $\ket{a}^\dagger = \bra{a}$
 - $\bra{a}^\dagger = \ket{a}$
-- $(\alpha\ket{a}+\beta\ket{b})^\dagger = \alpha^\star\bra{a}+\beta^\star\bra{b}$
 - $(\ket{a}\bra{b})^\dagger = \ket{b}\bra{a}$
-- $(AB)^\dagger=B^\dagger A^\dagger$
-- $(\alpha A+\beta B)^\dagger=\alpha^\star A^\dagger+\beta^\star B^\dagger$
-- $(A^\dagger)^\dagger=A$
-- $\tr(\alpha A+ \beta B) = \alpha \tr(A)+\beta\tr(B)$
-- $\tr\ket{a}\bra{b} = \braket{b}{a}$
+- $(\alpha\ket{a}+\beta\ket{b})^\dagger = \alpha^\star\bra{a}+\beta^\star\bra{b}$
+
+Dagger for operators:
+
+- $(AB)^\dagger = B^\dagger A^\dagger$
+- $(A^\dagger)^\dagger = A$
+- $(\alpha A+\beta B)^\dagger = \alpha^\star A^\dagger+\beta^\star B^\dagger$
+
+Trace:
+
+- $\tr(\alpha A+\beta B) = \alpha \tr(A)+\beta\tr(B)$
 - $\tr(ABC) = \tr(CAB) = \tr(BCA)$
+- $\tr\ket{a}\bra{b} = \braket{b}{a}$
+- $\tr (A\ket{a}\bra{b}) = \braket{b}{A|a} = \tr(\ket{a}\bra{b}A)$
