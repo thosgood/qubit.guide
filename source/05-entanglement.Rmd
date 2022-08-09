@@ -282,9 +282,71 @@ Needless to say, if we choose the states $\ket{\phi}$ randomly, it is very unlik
 In general, given $n$ qubits, we need $2(2^n-1)$ real parameters to describe their state vector, but only $2n$ to describe separable states --- as $n$ grows larger, $2n$ becomes much *much* smaller than $2(2^n-1)$.
 
 ::: {.technical title="The Segre embedding" latex=""}
-**TO-DO:** talk about Segre embedding, cf. <https://en.wikipedia.org/wiki/Separable_state#Characterization_via_algebraic_geometry>
+The problem of deciding whether or not a given state is separable is, in general, a hard problem (i.e. [NP-hard](https://en.wikipedia.org/wiki/NP-hardness)).
+Because of this, it is interesting to try to understand the notion of separability from different points of view, and it turns out that algebraic geometry yet again has something interesting to say.
+The theory relies on the notion of [**projective space**](https://en.wikipedia.org/wiki/Projective_space), which is a non-trivial topic to try to introduce here, so we do so only briefly, and at a very high speed.
 
-**TO-DO:** Cirici, Salvadó, and Taron's "Characterization of quantum entanglement via a hypercube of Segre embeddings" ([arXiv:2008.09583](https://arxiv.org/abs/2008.09583)).
+We have repeatedly said that we only really care about state vectors *up to global phase*, i.e. that $\ket{\psi}$ and $\ket{\psi'}$ are "the same" if there exists some $\theta$ such that $\ket{\psi}=e^{i\theta}\ket{\psi'}$.
+Combining this with our unitality requirement (that we want $|\braket{\psi}{\psi}|^2=1$), we are led to studying the equivalence relation
+$$
+  v\sim w \iff v=\lambda w \text{ for some }\lambda\in\mathbb{C}\setminus\{0\}
+$$
+on our Hilbert space.
+Geometrically, this can be understood as *the space of lines through the origin*, i.e. of $1$-dimensional subspaces, but the geometry of projective space is a subject that really deserves many *many* pages to delve into, and so we won't talk about this point of view here.
+
+Algebraically, it turns out that we can describe the space of such equivalence classes using **homogeneous coordinates**.
+Defining **projective $n$-space** as
+$$
+  \mathbb{P}^n
+  \coloneqq \mathbb{C}^{n+1}/\sim
+$$
+(where $\sim$ is the equivalence relation defined above), it turns out that points in $\mathbb{P}^n$ are described by coordinates
+$$
+  [a_0:a_1:\ldots:a_n]
+$$
+where $a_i\in\mathbb{C}$ are *not all simultaneously zero* (i.e. there exists at least one $i\in\{0,\ldots,n\}$ such that $a_i\neq0$) and where
+$$
+  [a_0:a_1:\ldots:a_n]
+  = [\lambda a_0:\lambda a_1:\ldots:\lambda a_n]
+$$
+for any $\lambda\in\mathbb{C}\setminus\{0\}$.
+
+Why is this useful?
+Well, given any pure state $\alpha_0\ket{0}+\alpha_1\ket{1}$ of a qubit, we obtain a unique point in $\mathbb{P}^1$, namely $[\alpha_0:\alpha_1]$ (since $|\braket{\psi}{\psi}|^2=1$ tells us that at least one of $\alpha_0$ and $\alpha_1$ is non-zero);
+conversely, given any point $[a_0:a_1]\in\mathbb{P}^1$, we can multiply by an appropriate $\lambda\in\mathbb{C}\setminus\{0\}$ to assume that $|a_0|^2+|a_1|^2=1$, and thus obtain a unique (up to global phase) pure state $a_0\ket{0}+a_1\ket{1}$.
+That is, *points in the [**(complex) projective line**](https://en.wikipedia.org/wiki/Riemann_sphere) $\mathbb{P}^1$ correspond to pure states of a qubit*.
+
+Next, we can always express a pure state of *two* qubits in the form
+$$
+  \beta_0\ket{00} + \beta_1\ket{01} + \beta_2\ket{10} + \beta_3\ket{11}
+$$
+and we similarly find a correspondence with points $[z_0:z_1:z_2:z_3]$ in $\mathbb{P}^3$ (given, in one direction, by setting $z_i\coloneqq\beta_i$).
+
+What is of interest to us here is a particular map known as the [**Segre embedding**](https://en.wikipedia.org/wiki/Segre_embedding):
+$$
+  \begin{aligned}
+    \sigma\colon\mathbb{P}^1\times\mathbb{P}^1
+    &\longrightarrow\mathbb{P}^3
+    ([a_0:a_1],[b_0:b_n])
+    &\longmapsto
+    [a_0b_0:a_0b_1:a_1b_0:a_1b_1].
+  \end{aligned}
+$$
+First of all, one needs to check that this does indeed give a well defined function (i.e. that the resulting coordinate always has at least one non-zero component, and that it is invariant under multiplication by a non-zero scalar $\lambda\in\mathbb{C}\setminus\{0\}$).
+But it turns out that, not only is this a well defined function, but it is actually a "geometric" function, in that it respects the "geometric structure" of projective space.
+We won't concern ourselves here with what that means, but we note that it is *even more* well behaved than this: as its name suggests, it actually gives an **embedding** (i.e. a "geometric" injection) of the $2$-dimensional space $\mathbb{P}^1\times\mathbb{P}^1$ into the $3$-dimensional space $\mathbb{P}^3$.
+
+The image of the Segre embedding is called the **Segre variety**, and you can check that it is given by the set of points
+$$
+  \Sigma
+  \coloneqq \operatorname{Im}(\sigma)
+  = \big\{ [z_0:z_1:z_2:z_3]\in\mathbb{P}^3 \mid z_0z_3-z_1z_2=0 \big\}
+$$
+(in algebraic-geometry language, it is the **zero-locus** of a single polynomial).
+
+Now here is the punchline to all this geometric meandering: *a state $\ket{\phi}$ of two qubits is separable if and only if its corresponding point in $\mathbb{P}^3$ lies in the Segre variety $\Sigma$*.
+
+For more, see e.g. Cirici, Salvadó, and Taron's "Characterization of quantum entanglement via a hypercube of Segre embeddings" ([arXiv:2008.09583](https://arxiv.org/abs/2008.09583)).
 :::
 
 Quantum entanglement is one of the most fascinating aspects of quantum theory.

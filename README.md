@@ -9,6 +9,7 @@ Build using the `./build_book` script.
 
 ### General
 
+- **make github actions FAIL if PDF build(s) are unsuccessful**
 - **only one footnote per paragraph**
 - **search for TO-DO**
 - look at all internal links and check that their text isn't anything like "Chapter 3" or whatever (i.e. (*ideally*) nothing that isn't permutation invariant!)
