@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Quantum gates | Introduction to Quantum Information Science</title>
+  <title>4.6 Compatible observables and the uncertainty relation | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Quantum gates | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="4.6 Compatible observables and the uncertainty relation | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="An introductory series of lectures on quantum computing." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Quantum gates | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="4.6 Compatible observables and the uncertainty relation | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="2.12-remarks-and-exercises-2.html"/>
-<link rel="next" href="3.1-beamsplitters-against-logic.html"/>
+<link rel="prev" href="4.5-observables.html"/>
+<link rel="next" href="4.7-quantum-communication.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -338,15 +338,117 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="quantum-gates" class="section level1 hasAnchor">
-<h1><span class="header-section-number">Chapter 3</span> Quantum gates<a href="3-quantum-gates.html#quantum-gates" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<blockquote>
-<p>About understanding the square root of <eq env="math">\texttt{NOT}</eq> via a physical implementation using <strong>symmetric beam-splitters</strong>.
-More about the Bloch sphere, via the omnipresent <strong>Pauli matrices</strong>, which can be described in a more algebraic way.</p>
-</blockquote>
-<p>Before introducing too many new ideas, we first want to study two things we’ve already seen in more depth, namely the square root of <eq env="math">\texttt{NOT}</eq>, and the Bloch sphere.</p>
-<p>The goal for the latter is to be able to visualise sequences of unitary operations on a qubit as sequences of rotations, and to see the action of some quantum circuits without getting engaged in lengthy calculations; this also leads us back to the question of universal sets of gates.
-The goal for the former is to study a way of implementing this gate using physical experiments, and then studying a related construction (the so-called <strong>Mach–Zehnder interferometer</strong>).</p>
+<div id="compatible-observables-and-uncertainty" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.6</span> Compatible observables and the uncertainty relation<a href="4.6-compatible-observables-and-uncertainty.html#compatible-observables-and-uncertainty" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Now that we have explained how observables correspond to normal operators, we can try to understand what implications follow from the fact that matrix multiplication does <em>not</em> generally commute: <eq env="math">AB\neq BA</eq>.
+We can start by trying to figure out when exactly two given operators <eq env="math">A</eq> and <eq env="math">B</eq> will or will not commute, ideally in terms of eigenvectors (since this will let us talk about outcomes and their numerical values, using the language we have just built up).
+An important definition is the following: if a basis <eq env="math">\{|e_1\rangle,\ldots,|e_n\rangle\}</eq> is such that each <eq env="math">|e_k\rangle</eq> is an eigenvector of an operator <eq env="math">A</eq>, then we call it an <strong>eigenbasis of <eq env="math">A</eq></strong>.</p>
+<p>First of all, assume that <eq env="math">A</eq> and <eq env="math">B</eq> do commute, so that <eq env="math">AB=BA</eq>, and let <eq env="math">|e\rangle</eq> be some eigenvector of <eq env="math">A</eq> with eigenvalue <eq env="math">\lambda</eq>.
+Then
+<eq env="displaymath">
+  \begin{aligned}
+    AB|e\rangle
+    &amp;= BA|e\rangle
+  \\&amp;= B\lambda|e\rangle
+  \\&amp;= \lambda(B|e\rangle)
+  \end{aligned}
+</eq>
+which says that <eq env="math">B|e\rangle</eq> is also an eigenvector of <eq env="math">A</eq>, with eigenvalue <eq env="math">\lambda</eq>.
+If <eq env="math">\lambda\neq0</eq>, then this says<a href="#fn78" class="footnote-ref" id="fnref78"><sup>78</sup></a> that <eq env="math">B|e\rangle</eq> is proportional to <eq env="math">|e\rangle</eq>, which is simply saying that <eq env="math">|e\rangle</eq> is also an eigenvector of <eq env="math">B</eq>.
+This means that any eigenbasis of <eq env="math">A</eq> is also an eigenbasis of <eq env="math">B</eq>.
+Another way of saying this is that <eq env="math">A</eq> and <eq env="math">B</eq> are <strong>simultaneously diagonalisable</strong>: there exists a basis in which both <eq env="math">A</eq> and <eq env="math">B</eq> are diagonal, namely any common eigenbasis of the two.</p>
+<p>Conversely, say that <eq env="math">A</eq> and <eq env="math">B</eq> have some common eigenbasis <eq env="math">\{|e_1\rangle,\ldots,|e_n\rangle\}</eq>, with <eq env="math">A|e_k\rangle=\alpha_k</eq> and <eq env="math">B|e_k\rangle=\beta_k</eq>.
+To show that <eq env="math">AB=BA</eq>, it suffices to show that <eq env="math">(AB)|\psi\rangle=(BA)|\psi\rangle</eq> for any state <eq env="math">|\psi\rangle</eq>.
+But we can write any <eq env="math">|\psi\rangle</eq> in the common eigenbasis as <eq env="math">|\psi\rangle=\sum_k\lambda_k|e_k\rangle</eq> for some <eq env="math">\lambda_k</eq>, and then
+<eq env="displaymath">
+  \begin{aligned}
+    (AB)|\psi\rangle
+    &amp;= AB\sum_k\lambda_k|e_k\rangle
+  \\&amp;= \sum_k\lambda_k AB|e_k\rangle
+  \\&amp;= \sum_k\lambda_k A\beta_k|e_k\rangle
+  \\&amp;= \sum_k\lambda_k \beta_k A|e_k\rangle
+  \\&amp;= \sum_k\lambda_k \beta_k\alpha_k|e_k\rangle
+  \end{aligned}
+</eq>
+and <eq env="math">\alpha_k</eq> and <eq env="math">\beta_k</eq> commute, since thy are just complex numbers.
+This means that running the same calculation for <eq env="math">(BA)|\psi\rangle</eq> would give exactly the same result, and so <eq env="math">AB=BA</eq>.</p>
+<div class="idea">
+<p>Two operators <eq env="math">A</eq> and <eq env="math">B</eq> commute if and only if there exists some common eigenbasis.
+In this case, we say that <eq env="math">A</eq> and <eq env="math">B</eq> are <strong>compatible</strong>; if <eq env="math">A</eq> and <eq env="math">B</eq> do not commute then we say that they are <strong>incompatible</strong>.</p>
+</div>
+<p>We have said that eigenvectors <eq env="math">|e_k\rangle</eq> of an operator <eq env="math">A</eq> correspond to outcomes of the observable, where the eigenvalue <eq env="math">\lambda_k</eq> is the associated numerical value.
+So if we have two compatible operators <eq env="math">A</eq> and <eq env="math">B</eq>, then we have a complete system of measurements for <em>both</em> observables at once, given by their common eigenbasis, say <eq env="math">\{|e_1\rangle,\ldots,|e_k\rangle\}</eq>.
+What does this mean in terms of measurements?
+Well, if we measure <eq env="math">A</eq> on some system initially in state <eq env="math">|\psi\rangle</eq>, then we know that the system will collapse into one of the states <eq env="math">|e_k\rangle</eq>.
+But this is also an eigenvector for <eq env="math">B</eq>, so measuring <eq env="math">B</eq> won’t affect the state at all, and similarly for a subsequent measurement of <eq env="math">A</eq>.</p>
+<p>If, however, <eq env="math">A</eq> and <eq env="math">B</eq> are incompatible operators, then things are very different.
+If we measure <eq env="math">A</eq>, then <eq env="math">B</eq>, and then <eq env="math">A</eq> again, there is absolutely no guarantee that the two measurements of <eq env="math">A</eq> will be the same.
+In other words, measuring <eq env="math">B</eq> somehow makes the system “forget” the result of the first measurement of <eq env="math">A</eq>.
+We see this in the lab if we measure <em>position</em> and <em>momentum</em> of a particle: taking the momentum measurement “spreads out” the position of the particle throughout space, meaning that a position measurement taken immediately prior will have no reason to be the same as a position measurement taken immediately afterwards.</p>
+<p>Incompatible operators turn up all over the place, and actually turn out to be very interesting — sometimes it’s <em>good</em> when things don’t work too simply!
+One particularly interesting question we can ask is the following: <em>can we quantify how far away from being compatible two incompatible operators are?</em>
+We can make this question more mathematically concrete by rephrasing it slightly, asking if we can find at least <em>some</em> states that are <em>close</em> to being common eigenstates.</p>
+<p>Imagine preparing a huge number of systems into the same initial state <eq env="math">|\psi\rangle</eq>, and then measuring <eq env="math">A</eq> on half of them and <eq env="math">B</eq> on the other half.
+Doing so we can obtain the expected values <eq env="math">\langle A\rangle</eq> and <eq env="math">\langle B\rangle</eq>, and we can calculate (using classical statistics) the <strong>standard deviation</strong> of these variables, <eq env="math">\sigma_A</eq> and <eq env="math">\sigma_B</eq> (respectively).
+The standard deviation of a random variable is basically a measurement of “how close to the expected value are all the resulting values”.<a href="#fn79" class="footnote-ref" id="fnref79"><sup>79</sup></a>
+The smaller the standard deviation, the more “well defined” the measurement is.
+In particular, given any single operator <eq env="math">A</eq>, we can always make the standard deviation exactly <eq env="math">0</eq>, by just preparing our system in an eigenstate of <eq env="math">A</eq>.
+If <eq env="math">A</eq> and <eq env="math">B</eq> are compatible, then we can simultaneously make <eq env="math">\sigma_A</eq> and <eq env="math">\sigma_B</eq> exactly <eq env="math">0</eq> as well, since we know that <eq env="math">A</eq> and <eq env="math">B</eq> have a common eigenbasis.</p>
+<p>The really interesting, purely quantum, phenomena, however, comes when <eq env="math">A</eq> and <eq env="math">B</eq> are incompatible: we can prove that the standard deviations cannot both be made simultaneously arbitrarily small.</p>
+<div class="idea">
+<p>The <strong>uncertainty principle</strong> for operators <eq env="math">A</eq> and <eq env="math">B</eq> says that
+<eq env="displaymath">
+  \sigma_A\sigma_B
+  \geqslant
+  \left|\frac{1}{2i}\langle[A,B]\rangle\right|
+</eq>
+where <eq env="math">[A,B]=AB-BA</eq> is the <strong>commutator</strong>.</p>
+</div>
+<p>This says that there does not exist <em>any</em> state for which <eq env="math">\sigma_A\sigma_B</eq> is less that some specific value, which is determined entirely by the operators <eq env="math">A</eq> and <eq env="math">B</eq>.
+Of course, if <eq env="math">A</eq> and <eq env="math">B</eq> are compatible, then <eq env="math">[A,B]=0</eq>, and so the uncertainty principle doesn’t tell us anything at all — it simply says that the product of two non-negative numbers is greater than or equal to <eq env="math">0</eq>, which is always the case!</p>
+<p>You might recognise the name, having maybe heard elsewhere of <a href="https://en.wikipedia.org/wiki/Uncertainty_principle"><strong>Heisenberg’s uncertainty principle</strong></a>, which is indeed a special case of this: one can show that the commutator of the (one-dimensional) position and momentum operators is exactly <eq env="math">i\hbar</eq> (where <eq env="math">\hbar</eq> is again the very small number known as the <a href="https://en.wikipedia.org/wiki/Planck_constant"><strong>Planck constant</strong></a>), whence <eq env="math">\sigma_x\sigma_p\geqslant\frac{\hbar}{2}</eq>.</p>
+<div class="technical" title="Quantization">
+<p>We said that <eq env="math">\hbar</eq> is very small, and this is fundamental to the relationship between quantum and classic physics.
+Most of the things that we deal with in day-to-day life are on the macroscopic level, and are many many orders of magnitude larger than the Planck constant.
+Indeed, if we wave our hands quite a lot, then we can say that “we see quantum effects only when dealing with things on the same order of magnitude as the Planck constant”.
+For example, a single photon of green light (roughly midway through the visible spectrum) has energy <eq env="math">\approx3.5\times10^{-19}</eq> joules, whereas a <a href="https://en.wikipedia.org/wiki/Mole_(unit)">mole</a> of such photons (which is a “reasonable” number to encounter when talking about things that actually look green in day-to-day life) has energy <eq env="math">\approx200\times10^{3}</eq> joules, so we would expect a single photon to exhibit quantum behaviour much more measurably than, for example, the light emitted from a green light bulb.</p>
+<p>In a way which we shall not make precise, the fact that <eq env="math">\hbar</eq> is strictly greater than zero (albeit very small) is what makes quantum physics inherently <em>discrete</em>, in contrast to classical physics which treats things like energy <em>continuously</em>.
+Quite wondrously, it is very often the case that taking a limit <eq env="math">\hbar\to0</eq> in some formula in quantum physics recovers the corresponding formula in classical physics — this is known as the <a href="https://en.wikipedia.org/wiki/Classical_limit"><strong>classical limit</strong></a> or <a href="https://en.wikipedia.org/wiki/Correspondence_principle"><strong>correspondence principle</strong></a>.
+This isn’t unique to quantum physics: special relativity reduces to classical mechanics if we take all velocities to be much smaller than the speed of light; general relativity reduces to the classical theory of gravity if we take all gravitational fields to be weak enough; statistical mechanics reduces to thermodynamics when we take the number of particles to be large enough; and so on.</p>
+<p>This idea, that classical systems can be recovered from quantum ones by taking <eq env="math">\hbar\to0</eq>, poses a question: <em>can we go in the other direction?</em>
+That is, given some classical theory that we know agrees with physical experiments, can we formulate some corresponding quantum version which we might hope to be correct on much smaller scales?
+Trying to answer this question has led to some incredibly deep (and very technical) mathematics known as <a href="https://en.wikipedia.org/wiki/Quantization_(physics)"><strong>quantization theory</strong></a>, with <a href="https://en.wikipedia.org/wiki/Geometric_quantization"><strong>geometric quantization</strong></a> and <a href="https://en.wikipedia.org/wiki/Wigner%E2%80%93Weyl_transform#Deformation_quantization"><strong>deformation quantization</strong></a> being two key areas.</p>
+</div>
+<p>Before moving on, let us consider one more quantum phenomena that arises when we look at incompatible operators.
+Suppose that we have three operators, say <eq env="math">A</eq>, <eq env="math">B</eq>, and <eq env="math">C</eq>, and we wish to let these act on our quantum system sequentially, but throwing away any results which are not a given outcome.
+That is, if we start (for simplicity) with some eigenstate <eq env="math">|a\rangle</eq> of <eq env="math">A</eq>, then we want to know the probability of measuring some specific output <eq env="math">|c\rangle</eq>.
+But we know how to calculate this!</p>
+<p>First of all, we know the probability of measuring outcome <eq env="math">|c\rangle</eq> <em>given that <eq env="math">|a\rangle</eq> first evolves into the intermediate state <eq env="math">|b_k\rangle</eq></em>: this is the probability of <eq env="math">|a\rangle</eq> evolving under <eq env="math">B</eq> into <eq env="math">|b_k\rangle</eq> multiplied by the probability of <eq env="math">|b_k\rangle</eq> evolving under <eq env="math">C</eq> into <eq env="math">|c\rangle</eq>, i.e.
+<eq env="displaymath">
+  \Pr(c|b_k) = |\langle c|b_k\rangle|^2|\langle b_k|a\rangle|^2.
+</eq>
+Then to obtain the probability of measuring outcome <eq env="math">|c\rangle</eq> we can just sum over all possible intermediate states:
+<eq env="displaymath">
+  \Pr(c) = \sum_{k}|\langle c|b_k\rangle|^2|\langle b_k|a\rangle|^2.
+</eq></p>
+<p>But now, if we forget entirely about <eq env="math">B</eq> then we could calculate <eq env="math">\Pr(c)</eq> in a different way: it is simply given by
+<eq env="displaymath">
+  \Pr(c) = |\langle c|a\rangle|^2.
+</eq>
+Using the fact that <eq env="math">\sum_{k}|b_k\rangle\langle b_k|=\mathbf{1}</eq>, we can rewrite this as
+<eq env="displaymath">
+  \Pr(c) = \left|\sum_k\langle c|b_k\rangle\langle b_k|a\rangle\right|^2
+</eq>
+and this is <em>not generally equal</em> to the previous expression for <eq env="math">\Pr(c)</eq>.
+In fact, you can show that these two expressions agree <em>if and only if</em> <eq env="math">[A,B]=0</eq> or <eq env="math">[B,C]=0</eq>, i.e. if and only if either <eq env="math">A</eq> and <eq env="math">B</eq> or <eq env="math">B</eq> and <eq env="math">C</eq> are compatible.</p>
+<p>We briefly discuss an explicit scenario of where three evolutions behave in such a paradoxical way later on, <a href="9-bells-theorem.html#bells-theorem">when we introduce Bell’s theorem</a>, in what is sometimes known as the <strong>quantum Venn diagram paradox</strong>.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="78">
+<li id="fn78"><p>To make this argument fully formal, and to deal with the case where <eq env="math">\lambda</eq> is degenerate, isn’t too hard, but we don’t want to get too involved with the necessary linear algebra here.<a href="4.6-compatible-observables-and-uncertainty.html#fnref78" class="footnote-back">↩︎</a></p></li>
+<li id="fn79"><p>For example, if the random variable is <a href="https://en.wikipedia.org/wiki/Normal_distribution">normally distributed</a>, then around 68% of the results will lie within one standard deviation from the expected value.<a href="4.6-compatible-observables-and-uncertainty.html#fnref79" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <!-- KaTeX for maths rendering -->
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" integrity="sha384-z1fJDqw8ZApjGO3/unPWUPsIymfsJmyrDVWC8Tv/a1HeOtGmkwNd/7xUS0Xcnvsx" crossorigin="anonymous"></script>
@@ -476,8 +578,8 @@ The goal for the former is to study a way of implementing this gate using physic
           </div>
         </div>
       </div>
-<a href="2.12-remarks-and-exercises-2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="3.1-beamsplitters-against-logic.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.5-observables.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.7-quantum-communication.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -516,7 +618,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/qubit.guide/blob/main/source/03-pauli-bloch.Rmd",
+"link": "https://github.com/thosgood/qubit.guide/blob/main/source/04-measurement.Rmd",
 "text": null
 },
 "download": ["qubit_guide.pdf"],

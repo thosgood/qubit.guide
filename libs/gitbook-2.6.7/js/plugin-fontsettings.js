@@ -128,15 +128,11 @@ gitbook.require(["gitbook", "lodash", "jQuery"], function(gitbook, _, $) {
                 ],
                 [
                     {
-                        text: 'White',
+                        text: 'Light',
                         onClick: _.partial(changeColorTheme, 0)
                     },
                     {
-                        text: 'Sepia',
-                        onClick: _.partial(changeColorTheme, 1)
-                    },
-                    {
-                        text: 'Night',
+                        text: 'Dark',
                         onClick: _.partial(changeColorTheme, 2)
                     }
                 ]
@@ -148,5 +144,4 @@ gitbook.require(["gitbook", "lodash", "jQuery"], function(gitbook, _, $) {
         init(opts);
     });
 });
-
 

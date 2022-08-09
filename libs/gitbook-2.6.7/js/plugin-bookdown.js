@@ -1,8 +1,20 @@
+// Custom version of https://github.com/rstudio/bookdown/blob/main/inst/resources/gitbook/js/plugin-bookdown.js
+
 gitbook.require(["gitbook", "lodash", "jQuery"], function(gitbook, _, $) {
 
   var gs = gitbook.storage;
 
   gitbook.events.bind("start", function(e, config) {
+
+    // Add separator to sidebar
+    gitbook.toolbar.createButton({
+        text: '/',
+        label: 'Separator',
+        className: 'header-divider-slash',
+        onClick: function(e) {
+            e.preventDefault();
+        }
+    });
 
     // add the Edit button (edit on Github)
     var edit = config.edit;
@@ -31,7 +43,7 @@ gitbook.require(["gitbook", "lodash", "jQuery"], function(gitbook, _, $) {
     // add the View button (file view on Github)
     var view = config.view;
     if (view && view.link) gitbook.toolbar.createButton({
-      icon: 'fa fa-eye',
+      icon: 'fa fa-code',
       label: view.text || 'View Source',
       position: 'left',
       onClick: function(e) {
