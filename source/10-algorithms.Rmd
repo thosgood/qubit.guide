@@ -5,12 +5,14 @@
 > About quantum interference in disguise: Hadamard, **function evaluation**, Hadamard.
 > Also about the early quantum algorithms and how they deal with querying oracles, searching for a needle in a haystack, and estimating periodicity of certain functions.
 
-Classical computers essentially evaluate functions: given $n$-bits of input they produce $m$-bits of output that are uniquely determined by the input; that is, they find the value of
+To boil down the theory of classical computers to a single sentence, we can say that they essentially evaluate functions: given $n$-bits of input, they produce $m$-bits of output that are uniquely determined by the input.
+In other words, (very simple) classical computers encode binary functions
 $$
   f\colon \{0,1\}^n \to \{0,1\}^m
 $$
-for a particular specified $n$-bit argument.
-A function with an $m$-bit value is equivalent to $m$ Boolean functions, each with a one-bit value, so we may just as well say that the basic task performed by a computer is the evaluation of Boolean functions
+and then compute the value of the output for any particular specified $n$-bit argument.
+But we can make an even further simplification: a binary function with an $m$-bit output value is equivalent to $m$-many binary functions with $1$-bit output values (which we call **Boolean functions**).
+In other words, we might just as well say that the basic task performed by a computer is the evaluation of Boolean functions
 $$
   f\colon \{0,1\}^n \to  \{0,1\}.
 $$
@@ -23,14 +25,14 @@ How can we adapt this to the world of quantum computing?
 
 <div class="video" title="Quantum function evaluation" data-videoid="x_umQRMcwtA"></div>
 
-_In quantum computation, all elementary operations are reversible_ (unitary), so we compute Boolean functions in a reversible fashion as
+In quantum computation, *all elementary operations are reversible* (i.e. unitary), so we need to compute Boolean functions in a reversible fashion --- we can do so as follows:
 $$
   \ket{x}\ket{y} \mapsto \ket{x}\ket{y\oplus f(x)}.
 $$
 
-The corresponding circuit diagram (for $n=3$) is shown in Figure \@ref(fig:n-equals-3-circuit-diagram).
+The corresponding circuit diagram (for an input register of $n=3$ qubits) is shown in Figure \@ref(fig:n-equals-3-circuit-diagram).
 
-(ref:n-equals-3-circuit-diagram-caption) Computing some $f\colon\{0,1\}^3\to\{0,1\}$ in a quantum manner.
+(ref:n-equals-3-circuit-diagram-caption) Computing some $f\colon\{0,1\}^3\to\{0,1\}$ in a quantum manner, where $x\in\{0,1\}^3$, $y\in\{0,1\}$, and $\oplus$ denotes $\texttt{XOR}$, or addition modulo $2$.
 
 ```{r n-equals-3-circuit-diagram,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.cap='(ref:n-equals-3-circuit-diagram-caption)'}
 \begin{equation*}
@@ -51,58 +53,60 @@ The corresponding circuit diagram (for $n=3$) is shown in Figure \@ref(fig:n-equ
 \end{equation*}
 ```
 
-Here we use two registers: the first one (counting from the top to the bottom of the circuit diagram) stores the arguments $x$, and the second one the values $f(x)$.
+Here we use two registers: the first^[Reading the circuit diagram from top to bottom.] one stores the argument(s) $\ket{x}$ (where $x\in\{0,1\}^n$ is our binary string input), and the second one the value $f(x)$.
 More precisely, the value $f(x)$ is added bit-wise to the pre-existing binary value $y$ of the second register.
 We usually set $y=0$ to get
 $$
-  \ket{x}\ket{0} \mapsto \ket{x}\ket{f(x)}.
+  \ket{x}\ket{0} \longmapsto \ket{x}\ket{f(x)}.
 $$
 
 Quantum Boolean function evaluation is a special case of the generalised $x$-controlled-$U$ on two registers:
 $$
-  \sum_x \proj{x}\otimes U_x
+  \sum_{x\in\{0,1\}^n} \proj{x}\otimes U_x
 $$
-where $U_x$ is either the identity $\id$ (when $f(x)=0$) or the bit-flip^[Do not confuse the capital $X$, which is the Pauli flip operator $\sigma_x$, with the small $x$, which is a binary string stored in the first register and the argument of our Boolean function $f$.] $X$ (when $f(x)=1$).
-We may also write this as
+where $U_x$ is either the identity $\id$ (when $f(x)=0$) or the bit-flip^[Do not confuse the capital $X$ (the Pauli bit-flip operator $\sigma_x$) with the small $x$ (a binary string stored in the first register, and the argument of our Boolean function $f$).] $X$ (when $f(x)=1$).
+We can write this very succinctly as
 $$
   \sum_x \proj{x}\otimes X^{f(x)}.
 $$
 
 
-### Example
+### A worked example
 
 Consider the Boolean function $f\colon\{0,1\}^2\to\{0,1\}$ given by
 $$
   f(x)
-  =
-  \begin{cases}
-    1 &\text{if $x=01$,}
-  \\0 &\text{otherwise.}
+  = \begin{cases}
+    1 &\text{if $x=01$;}
+  \\0 &\text{otherwise}
   \end{cases}
 $$
-The evaluation $\ket{x}\ket{y} \mapsto \ket{x}\ket{y\oplus f(x)}$ can be tabulated explicitly as
+which we might call the **indicator** (or **characteristic**) function for the binary string $01$, sometimes denoted $\chi_{01}$.
+The evaluation $\ket{x}\ket{y} \mapsto \ket{x}\ket{y\oplus f(x)}$ can be tabulated explicitly:
 $$
   \begin{array}{cc}
-    \ket{00}\ket{0} \mapsto \ket{00}\ket{0}
-    & \ket{00}\ket{1} \mapsto \ket{00}\ket{1}
-  \\\ket{01}\ket{0} \mapsto \ket{01}\ket{1}
-    & \ket{01}\ket{1} \mapsto \ket{01}\ket{0}
-  \\\ket{10}\ket{0} \mapsto \ket{10}\ket{0}
-    & \ket{10}\ket{1} \mapsto \ket{10}\ket{1}
-  \\\ket{11}\ket{0} \mapsto \ket{11}\ket{0}
-    & \ket{11}\ket{1} \mapsto \ket{11}\ket{1}
+    \ket{00}\ket{0} \longmapsto \ket{00}\ket{0}
+    & \ket{00}\ket{1} \longmapsto \ket{00}\ket{1}
+  \\\ket{01}\ket{0} \longmapsto \ket{01}\ket{1}
+    & \ket{01}\ket{1} \longmapsto \ket{01}\ket{0}
+  \\\ket{10}\ket{0} \longmapsto \ket{10}\ket{0}
+    & \ket{10}\ket{1} \longmapsto \ket{10}\ket{1}
+  \\\ket{11}\ket{0} \longmapsto \ket{11}\ket{0}
+    & \ket{11}\ket{1} \longmapsto \ket{11}\ket{1}
   \end{array}
 $$
-and the expression $\sum_x \ket{x}\bra{x}\otimes X^{f(x)}$ becomes
+and then
 $$
   \begin{aligned}
-    &\proj{00} \otimes \id
+    \sum_x \ket{x}\bra{x}\otimes X^{f(x)}
+    = &\proj{00} \otimes \id
   \\+ &\proj{01} \otimes X
   \\+ &\proj{10} \otimes \id
   \\+ &\proj{11} \otimes \id.
   \end{aligned}
 $$
-Finally, the matrix form looks like
+
+Finally, the matrix form looks as follows:
 $$
   \left[
   \,
@@ -131,9 +135,9 @@ $$
   \right]
 $$
 As you can see, this is a diagonal block matrix: a $(4\times 4)$ matrix with $(2\times 2)$ matrices as entries.
-The rows and the columns of the $(4\times 4)$ matrix are labelled by the binary strings $00, 01, 10, 11$, and the $(2\times 2)$ matrices on the diagonal represent operations applied to the qubit in the second register.
-Here all of them are the identity $\id$ except the $(01, 01)$ entry, which represents the bit-flip $X$.
-This is because $f(01)=1$, and $f(x)=0$ for all other binary strings $x$.
+The rows and the columns of the $(4\times 4)$ matrix are labelled by^[We always use the [**lexicographic order**](https://en.wikipedia.org/wiki/Lexicographic_order) $00<01<10<11$.] the binary strings $00, 01, 10, 11$, and the $(2\times 2)$ matrices on the diagonal represent operations applied to the qubit in the second register.
+Here, all of these matrices on the diagonal are the identity $\id$ except for the $(01,01)$ entry (i.e. the second one), which is the bit-flip $X$.
+This is because $f(01)=1$ (and so we want to turn the control value $y=0$ into $y=1$, which is achieved by applying the bit-flip operator), but $f(x)=0$ for all other binary strings $x$ (and so we want to leave the control value $y=0$ as it is).
 
 
 
