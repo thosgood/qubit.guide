@@ -18,6 +18,7 @@ Build using the `./build_book` script.
 
 ### Web
 
+- check that all videos appear at the top of the page
 - *general web styling*
     + favicon
         * `favicon: "favicon.ico"` in the `index.Rmd` YAML
