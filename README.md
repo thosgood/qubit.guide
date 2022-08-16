@@ -13,6 +13,7 @@ Build using the `./build_book` script.
 - **only one footnote per paragraph**
 - **search for TO-DO**
 - look at all internal links and check that their text isn't anything like "Chapter 3" or whatever (i.e. (*ideally*) nothing that isn't permutation invariant!)
+    + oh! can you just use \@ref(section-name) to get "Section 2.1" or whatever?
 - rewrite `.circuit` and `.scenario` to use `content: attr(title)".";`?
     + affects both HTML and PDF output
 
@@ -31,6 +32,7 @@ Build using the `./build_book` script.
 - make embedded videos slide in/out rather than just appear/disappear
 - improve sidenote y-positioning using jquery
     + find the previous `.footnote-ref` in the DOM and align with that
+- extra output (added to downloads) that uses the single page html bookdown format **with mathjax**
 
 ### PDF
 
@@ -58,3 +60,4 @@ Build using the `./build_book` script.
     + **they can't break midway (e.g. Segre embedding)**
 - check footnotes don't spill over into subsequent pages
 - make a smaller format pdf version ("book-sized", with footnotes at the bottom)
+    + also a large print pdf version
