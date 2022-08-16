@@ -16,7 +16,7 @@ This is intrinsically linked to **Bell's theorem**, which proves the technical s
 
 
 
-## Quantum correlations
+## Quantum correlations {#quantum-correlations}
 
 Consider two entangled qubits in the **singlet**^[We say that a system is **singlet** if all the qubits involved are entangled. This is related to the notion of [**singlet states**](https://en.wikipedia.org/wiki/Singlet_state) in quantum mechanics, which are those with zero net angular momentum.] state
 $$
@@ -144,7 +144,7 @@ That's it!
 Such a simple and yet profound mathematical statement about correlations, which we refer simply to as the **CHSH inequality**.
 
 ::: {.idea latex=""}
-There is absolutely *no quantum theory involved* in the CSHS inequality
+There is absolutely *no quantum theory involved* in the CHSH inequality
 $$
   -2 \leq \av{S} \leq 2
 $$
@@ -154,7 +154,7 @@ $$
     \av{A_1 B_1} - \av{A_1 B_2} + \av{A_2 B_1} + \av{A_2 B_2}
   | \leq 2
 $$
-(which is just another way of phrasing the CSHS inequality).
+(which is just another way of phrasing the CHSH inequality).
 :::
 
 There are essentially *two* (very important) assumptions here:
@@ -163,9 +163,11 @@ There are essentially *two* (very important) assumptions here:
 2. **Locality.** Alice's choice of measurements (choosing between $A_1$ and $A_2$) does not affect the outcomes of Bob's measurement, and vice versa.
 
 We will not discuss the locality assumption here in detail, but let us just give one brief comment.
-In the hidden variable world a, statement such as  "if Bob were to measure $B_1$ then he would register $+1$" must be either true or false (and not "undecidable" or some other such thing!) *prior to Bob's measurement*.
+In the hidden variable world a, statement such as "if Bob were to measure $B_1$ then he would register $+1$" must be either true or false (and not "undecidable" or some other such thing!) *prior to Bob's measurement*.
 Without the locality hypothesis, such a statement is ambiguous, since the value of $B_1$ could depend on whether $A_1$ or $A_2$ will be chosen by Alice.
 We do not want this since it implies *instantaneous communication* --- it means that, say, Alice by making a choice between $A_1$ and $A_2$ affects Bob's results: Bob can immediately "see" what Alice "does".
+
+Now let's see how quantum theory *fundamentally disagrees* with the CHSH inequality.
 
 
 
@@ -175,27 +177,32 @@ We do not want this since it implies *instantaneous communication* --- it means 
 
 <div class="video" title="Device-independent tests and Bell inequalities (continued)" data-videoid="P-hk1GnAE6k"></div>
 
-In quantum theory the observables $A_1$, $A_2$, $B_1$, $B_2$ become $2\times 2$ Hermitian matrices with two eigenvalues $\pm 1$, and $\av{S}$ becomes the expected value of the $(4\times 4)$ **CHSH matrix**
+Continuing this story of Alice and Bob with their observables and pairs of qubits, let us first rephrase things in the formalism of quantum mechanics that we've been building up.
+The observables $A_1$, $A_2$, $B_1$, $B_2$ become $2\times 2$ Hermitian matrices, each with the two eigenvalues $\pm 1$, and $\av{S}$ becomes the expected value of the $4\times 4$ **CHSH matrix**
 $$
-  S
-  = A_1\otimes(B_1-B_2) + A_2\otimes(B_1+B_2).
+  S = A_1\otimes(B_1-B_2) + A_2\otimes(B_1+B_2).
 $$
-
 We can now evaluate $\av{S}$ using quantum theory.
-For example, if the two qubits are in the singlet state, then we know that
-\[
-  \av{A\otimes B} = -\vec{a}\cdot\vec{b}.
-\]
-We choose vectors $\vec{a}_1$, $\vec{a}_2$, $\vec{b}_1$, and $\vec{b}_2$ as shown in Figure \@ref(fig:choice-of-as-and-bs), and then, with these choices,
+
+If the two qubits are in the singlet state
 $$
-\begin{gathered}
+  \ket{\psi}
+  = \frac{1}{\sqrt 2} \left( \ket{01}-\ket{10} \right)
+$$
+then [we have already seen](#quantum-correlations) that
+$$
+  \av{A\otimes B} = -\vec{a}\cdot\vec{b}.
+$$
+So if we choose vectors $\vec{a}_1$, $\vec{a}_2$, $\vec{b}_1$, and $\vec{b}_2$ as shown in Figure \@ref(fig:choice-of-as-and-bs), then the corresponding matrices^[That is, $A_1=\vec{a}_1\cdot\vec{\sigma}$, and so on.] satisfy
+$$
+\begin{aligned}
   \av{A_1\otimes B_1}
-  = \av{A_2\otimes B_1}
+  &= \av{A_2\otimes B_1}
   = \av{A_2\otimes B_2}
   = \frac{1}{\sqrt 2}
 \\\av{A_1\otimes B_2}
-   = -\frac{1}{\sqrt 2}.
-\end{gathered}
+  &= -\frac{1}{\sqrt 2}.
+\end{aligned}
 $$
 
 (ref:choice-of-as-and-bs-caption) The relative angle between the two perpendicular pairs is $45^\circ$.
@@ -211,19 +218,18 @@ $$
 \end{tikzpicture}
 ```
 
-Thus
+Plugging these values in, we get that
 $$
   \av{A_1 B_1} - \av{A_1 B_2} + \av{A_2 B_1} + \av{A_2 B_2}
   = -2\sqrt{2},
 $$
-which obviously violates CHSH inequality.
+which obviously violates CHSH inequality: $-2\sqrt{2}$ is strictly less than $-2$!
 
-To be clear, this violation has been observed in a number of painstakingly careful experiments.
-The early efforts were truly heroic, and the experiments had many layers of complexity.
-Today, however, such experiments are routine.
+But here is the really important part of this discussion: this violation of the CHSH has been observed in a number of painstakingly careful experiments --- this is not purely theoretical!
+The early efforts in these experiments were truly heroic, with many many layers of complexity; today, however, such experiments are routine.
 
 ::: {.idea latex=""}
-The behaviour of entangled quantum systems cannot be explained by any local hidden variables.
+The behaviour of entangled quantum systems *cannot* be explained by any local hidden variables.
 :::
 
 
@@ -234,9 +240,9 @@ The behaviour of entangled quantum systems cannot be explained by any local hidd
 
 > An upper bound on **quantum** correlations.
 
-One may ask if $|\av{S}|= 2\sqrt{2}$ is the maximal violation of the CHSH inequality, and the answer is "yes, it is": quantum correlations cannot achieve any value of $|\av{S}|$ larger than $2\sqrt{2}$.
-This is because, for any state $\ket{\psi}$, the expected value $\av{S} = \braket{\psi}{S|\psi}$ cannot exceed the largest eigenvalue of $S$, and we can put an upper bound on the largest eigenvalues of $S$.
-To start with, the largest eigenvalue (in absolute value) of a Hermitian matrix $M$, denoted by $\|M\|$, is a matrix norm, and it has the following properties:
+One may ask if $|\av{S}|= 2\sqrt{2}$ is the *maximal* violation of the CHSH inequality, and the answer is "yes, it is": *quantum* correlations *always* satisfy the bound $|\av{S}|\leq2\sqrt{2}$.
+This is because, no matter which state $\ket{\psi}$ we pick, the expected value $\av{S} = \braket{\psi}{S|\psi}$ cannot exceed the largest eigenvalue of $S$, and we can put an upper bound on the largest eigenvalues of $S$.
+To start with, taking the largest eigenvalue (in absolute value) of a Hermitian matrix $M$, which we denote by $\|M\|$, gives a matrix norm, i.e. it has the following properties:
 $$
 \begin{aligned}
   \|M\otimes N\|
@@ -247,21 +253,35 @@ $$
   & \leq \|M\| + \|N\|
 \end{aligned}
 $$
-Given that $\|A_i\|=1$ and $\|B_j\|=1$ ($i,j=1,2$), it is easy to show that $\|S\| < 4$.
-One can, however, derive a tighter bound.
-We can show (do it) that
+
+Given that $\|A_k\|=\|B_k\|=1$ (for $k=1,2$), it is easy to use these properties to show that $\|S\|\leq4$, but this is a much weaker bound than we want.
+However, one can show^[**Exercise.** Prove this!] that
 $$
   S^2
   = 4(\id\otimes\id) + [A_1,A_2]\otimes[B_1,B_2].
 $$
-The norm of each of the commutators ($\|[A_1, A_2]\|$ and $\|[B_1, B_2]\|$) cannot exceed $2$, and $\|S^2\|=\|S\|^2$, which all together gives
+
+Now, the norms of the commutators $\|[A_1, A_2]\|$ and $\|[B_1, B_2]\|$ are bounded by^[**Exercise.** Prove this!] $2$, and $\|S^2\|=\|S\|^2$.
+All together, this gives
 $$
-  \|S\|
-  < 2\sqrt{2}
-  \implies
-  |\av{S}| < 2\sqrt{2}.
+  \begin{aligned}
+    \|S^2\|
+    &\leq8
+  \\\implies \|S\|
+    &\leq2\sqrt{2}
+  \\\implies |\av{S}|
+    &\leq2\sqrt{2}
+  \end{aligned}
 $$
 This result is known as the **Tsirelson inequality**.
+
+::: {.idea}
+In classical probability theory, the (absolute value of the) average value of the CHSH quantity
+$$
+  S = A_1(B_1 - B_2) + A_2(B_1 + B_2)
+$$
+is bounded by $2$ (and this bound can be attained); in quantum theory, it is bounded by $2\sqrt{2}$ (and this bound can also be attained).
+:::
 
 
 
