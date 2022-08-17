@@ -212,7 +212,7 @@ Let us now see how quantum Boolean function evaluation introduces phase shifts i
 
 
 
-## Oracles and query complexity
+## Oracles, and our first quantum algorithm
 
 The computational power of quantum interference was discovered by counting how many times certain Boolean functions have to be evaluated in order to find the answer to a given problem.
 Imagine a "black box" (sometimes also called an **oracle**) that computes some fixed Boolean function, but whose inner workings are unknown to us.
@@ -306,7 +306,7 @@ $$
     \ket{0}
     &\xmapsto{H}
     \ket{0}+\ket{1}
-  \\&\xmapsto{f}
+  \\&\xmapsto{U_f}
     (-1)^{f(0)}\ket{0} + (-1)^{f(1)}\ket{1}
   \\&\quad=
     \ket{0} + (-1)^{f(0)\oplus f(1)}\ket{1}
@@ -436,12 +436,12 @@ or even simply
 Now, stepping through the execution of the circuit (and ignoring the second register, which, as per usual, remains in the state $\ket{-}$ throughout), we obtain
 $$
   \begin{aligned}
-    \ket{0}
-    &\xmapsto{H}
+    \ket{0^{\otimes n}}
+    &\xmapsto{H^{\otimes n}}
     \left(\frac{1}{\sqrt{2}}\right)^n \sum_{x\in\{0,1\}^n} \ket{x}
-  \\&\xmapsto{f}
+  \\&\xmapsto{U_f}
     \left(\frac{1}{\sqrt{2}}\right)^n \sum_{x\in\{0,1\}^n} (-1)^{a\cdot x}\ket{x}
-  \\&\xmapsto{H}
+  \\&\xmapsto{H^{\otimes n}}
     \left(\frac{1}{\sqrt{2}}\right)^n \sum_{x\in\{0,1\}^n}
     \left[
       (-1)^{a\cdot x} \left(\frac{1}{\sqrt{2}}\right)^n
@@ -756,14 +756,14 @@ The circuit that solves this problem, shown below, has a familiar Hadamard--func
 ```
 ::::
 
-Let's follow the evolution of the two registers in this circuit.
-We start off by preparing the equally-weighted superposition of all $n$-bit strings, and then query the oracle:
+This time, let's follow the evolution of *both* registers throughout this circuit.
+We start off by preparing the equally-weighted superposition of all $n$-bit strings with the first Hadamard, and then query the oracle:
 $$
   \begin{aligned}
     \ket{0^{\otimes n}}\ket{0^{\otimes n}}
-    &\longmapsto
+    &\xmapsto{H^{\otimes n}\otimes\id}
     \frac{1}{\sqrt{2^n}} \sum_x \ket{x}\ket{0^{\otimes n}}
-  \\&\longmapsto
+  \\&\xmapsto{U_f}
     \frac{1}{\sqrt{2^n}} \sum_x \ket{x}\ket{f(x)}.
   \end{aligned}
 $$
@@ -773,40 +773,40 @@ $$
 \tag{$\ddagger$}
 $$
 
-Now, if we measure the second register _before_ applying the second Hadamard transform to the first, we obtain one of the $2^{n-1}$ possible values of $f(x)$, each equally likely.^[As we shall see in a moment, the actual measurement on the second register is not actually necessary.]
+But if we measure^[As we shall see in a moment, the actual measurement on the second register is not actually necessary.] the second register *before* applying the second Hadamard transform to the first register, we obtain one of the $2^{n-1}$ possible values of $f(x)$, each equally likely.
+Let's study the implications of this.
 
 Suppose that the outcome of the measurement is $f(a)$.
 Given that both $a$ and $a\oplus s$ are mapped to $f(a)$ by $f$, the first register then collapses to the state
 $$
   \frac{1}{\sqrt{2}}\big( \ket{a} + \ket{a\oplus s} \big).
 $$
-
 The subsequent Hadamard transform on the first register then gives us the final state^[We write $s^\perp$ to mean the set of all $y\in\{0,1\}^n$ such that $y\cdot s=0$.]
 $$
   \begin{aligned}
-    \frac{1}{\sqrt{2^{n+1}}} \sum_y \Big((-1)^{a\cdot y}+(-1)^{(a\oplus s)\cdot y}\Big) \ket{y}\ket{f(a)}
-    &=
-    \frac{1}{\sqrt{2^{n+1}}} \sum_y (-1)^{a\cdot y}
+    &\frac{1}{\sqrt{2^{n+1}}} \sum_y \Big((-1)^{a\cdot y}+(-1)^{(a\oplus s)\cdot y}\Big) \ket{y}\ket{f(a)}
+  \\= &\frac{1}{\sqrt{2^{n+1}}} \sum_y (-1)^{a\cdot y}
       \Big( 1 + (-1)^{s\cdot y} \Big) \ket{y}\ket{f(a)}
-  \\&=
-    \frac{1}{\sqrt{2^{n-1}}} \sum_{y\in s^\perp}
+  \\= &\frac{1}{\sqrt{2^{n-1}}} \sum_{y\in s^\perp}
       (-1)^{a\cdot y} \ket{y}\ket{f(a)}
   \end{aligned}
 $$
-where we have used the fact that $(a\oplus s)\cdot y = (a\cdot y)\oplus(s\cdot y)$, and that $1+(-1)^{s\cdot y}$ can have only two values: either $2$ (when $s\cdot y = 0$), or $0$ (when $s\cdot y = 1$).
-Now we measure the first register: the outcome is selected at random from all possible values of $y$ such that $a\cdot y = 0$, each occurring with probability $1/(2^{n-1})$.
+where we have used the fact that $(a\oplus s)\cdot y = (a\cdot y)\oplus(s\cdot y)$, and that $1+(-1)^{s\cdot y}$ can have only two values: either $2$ (when $s\cdot y = 0$) or $0$ (when $s\cdot y = 1$).
+Now we finally measure the first register: the outcome is selected at random from all possible values of $y$ such that $a\cdot y = 0$, each occurring with probability $1/(2^{n-1})$.
 
-In fact, we do not have to measure the second register at all: it was a mathematical shortcut, simply taken for pedagogical purposes.
-Instead of collapsing the state to just one term in a superposition, we can express Equation ($\ddagger$) as^[Recall that the image of $f$ is the set of all $z\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ satisfying $f(x)=z$.]
+In fact, we did not have to measure the second register at all: it was a mathematical shortcut, simply taken for pedagogical purposes.
+Instead of collapsing the state to just one term in a superposition, we can express Equation ($\ddagger$) as
 $$
-  \frac{1}{2^n} \sum_{y,f(a)}
+  \begin{aligned}
+    \frac{1}{2^n} \sum_{y,f(a)}
     \Big( (-1)^{a\cdot y} + (-1)^{(a\oplus s)\cdot y} \Big) \ket{y}\ket{f(a)}
-  = \frac{1}{2^n} \sum_{y,f(a)} (-1)^{a\cdot y}
+  \\= &\frac{1}{2^n} \sum_{y,f(a)} (-1)^{a\cdot y}
     \Big( 1 + (-1)^{s\cdot y} \Big) \ket{y}\ket{f(a)}
+  \end{aligned}
 $$
-where the summation over $f(a)$ means summing over all binary strings in the image of $f$.
-
-The output of the algorithm is then
+where the summation over $f(a)$ means summing over all binary strings in the image of $f$, i.e. over the set of all $z\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ with $f(x)=z$.
+<!-- TO-DO: but what does "a" mean then? is it just an arbitrary choice of preimage? -->
+Then the final output of the algorithm is
 $$
   \frac{1}{2^{n-1}} \sum_{y\in s^\perp} \ket{y}
     \sum_{f(a)} (-1)^{a\cdot y} \ket{f(a)}
@@ -814,7 +814,7 @@ $$
 and, again, the measurement outcome is selected at random from all possible values of $y$ such that $s\cdot y=0$.
 
 We are not quite done yet: we cannot infer $s$ from a _single_ output $y$.
-However, once we have found $n-1$ linearly independent^[Here, **linearly independent** means that no string in the set $\{y_1,\ldots,y_n\}$ can be expressed as the bitwise sum of some other strings in this set.] strings $y_1,y_2,\ldots,y_{n-1}$, we can solve the $n-1$ equations
+However, once we have found $n-1$ linearly independent strings^[It is important to note that we are talking about the pure "abstract" *binary strings*, and not the corresponding states in the Hilbert space. Concretely, this means that **linearly independent** here means "no string in the set $\{y_1,\ldots,y_n\}$ can be expressed as the bitwise sum of some other strings in this set". That is, we are working with the $\mathbb{Z}/2\mathbb{Z}$-vector space of strings, not the $\mathbb{C}$-vector space of states!] $y_1,y_2,\ldots,y_{n-1}$, we can solve the $n-1$ equations
 $$
   \left\{
   \begin{aligned}
@@ -826,44 +826,10 @@ $$
   \right\}
 $$
 to determine a unique value of $s$.
-(Note that we only need $n-1$ values, and not $n$, because $s=0$ will always be a solution, but we have explicitly assumed that this is not the case, and so it suffices to narrow down the space of possible solutions to consist of _two_ elements, since then we know that we can just take the non-zero one.)
+(Note that we only need $n-1$ values, and not $n$, because $s=0$ will always be a solution, but we have explicitly assumed that this is not the case in our statement of the scenario, and so it suffices to narrow down the space of possible solutions to consist of *two* elements, since then we know that we can just take the non-zero one.)
 
 So we run this algorithm repeatedly, each time obtaining another value of $y$ that satisfies $s\cdot y = 0$.
 Every time we find some new value of $y$ that is linearly independent of all previous ones, we can discard half the potential candidates for $s$.
-The probability that $y_1,\ldots,y_{n-1}$ are linearly independent is
-$$
-  \left( 1 - \frac{1}{2^{n-1}} \right)
-  \left( 1 - \frac{1}{2^{n-2}} \right)
-  \ldots
-  \left( 1 - \frac{1}{2} \right).
-\tag{6.4.3.2}
-$$
-
-Indeed, suppose that we have $k$ linearly independent binary strings $y_1,\ldots,y_k$.
-Then these strings span a subspace of size $2^k$, consisting of all binary strings of the form $\bigoplus_{i=1}^k b_i y_i$, where $b_1,\ldots,b_k\in\{0,1\}$.
-Now suppose we obtain some $y_{k+1}$.
-It will be linearly independent from the $y_1,\ldots,y_k$ if and only if it lies _outside_ the subspace spanned by the $y_1,\ldots,y_k$, which occurs with probability $1-(2^k)/(2^n)$.
-We can bound Equation (6.4.3.2) from below:^[Use the inequality $$\begin{aligned}(1-x)(1-y)&= 1 - x - y - xy\\&\geq 1 - (x+y)\end{aligned}$$ which holds for any $0<x,y<1$.]
-the probability of obtaining a linearly independent set $\{y_1,\ldots,y_{n-1}\}$ by running the algorithm $n-1$ times (i.e. not having to discard any values and run again) is
-$$
-  \prod_{k=1}^{n-1}
-  \left(
-    1-\frac{1}{2^k}
-  \right)
-  \geq
-  \left[
-    1 -
-    \left(
-      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac14
-    \right)
-  \right]
-  \cdot \frac{1}{2}
-  >
-  \frac14.
-$$
-
-We conclude that we can determine $s$ with some constant probability of error after repeating the algorithm $O(n)$ times.
-The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.
 
 (ref:simons-diagramatically-caption) Picture all possible binary strings as dots, but with the string $s$ denoted by a star. Every linearly independent $y_{k+1}$ lets us "zoom in" twice as close towards $s$.
 
@@ -899,6 +865,41 @@ The exponential separation that this algorithm demonstrates between quantum and 
   \end{scope}
 \end{tikzpicture}
 ```
+
+Now, the probability that $(n-1)$-many outputs $y_1,\ldots,y_{n-1}$ are linearly independent is
+$$
+  \left( 1-\frac{1}{2^{n-1}} \right)
+  \left( 1-\frac{1}{2^{n-2}} \right)
+  \ldots
+  \left( 1-\frac{1}{2} \right).
+\tag{$\circledast$}
+$$
+To see this, suppose that we have $k$ linearly independent binary strings $y_1,\ldots,y_k$.
+Then these strings span a subspace with $2^k$ elements, consisting of all binary strings of the form $\bigoplus_{i=1}^k b_i y_i$, where $b_1,\ldots,b_k\in\{0,1\}$.
+Now suppose we obtain some $y_{k+1}$.
+It will be linearly independent from the $y_1,\ldots,y_k$ if and only if it lies *outside* the subspace spanned by the $y_1,\ldots,y_k$, which occurs with probability $1-(2^k)/(2^n)$.
+
+We can bound Equation ($\circledast$) from below:^[Use the inequality $$\begin{aligned}(1-x)(1-y)&= 1 - x - y - xy\\&\geq 1 - (x+y)\end{aligned}$$ which holds for any $0<x,y<1$.]
+the probability of obtaining a linearly independent set $\{y_1,\ldots,y_{n-1}\}$ by running the algorithm $n-1$ times (i.e. not having to discard any values and run again) is
+$$
+  \prod_{k=1}^{n-1}
+  \left(
+    1-\frac{1}{2^k}
+  \right)
+  \geq
+  \left[
+    1 -
+    \left(
+      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac14
+    \right)
+  \right]
+  \cdot \frac{1}{2}
+  >
+  \frac14.
+$$
+
+We conclude that we can determine $s$ with some constant probability of error after repeating the algorithm $O(n)$ times.
+The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.
 
 
 
