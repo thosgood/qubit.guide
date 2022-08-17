@@ -284,9 +284,9 @@ and is described by the matrix product $VU$ (note the order in which we multiply
 Let us now describe what is probably the most important sequence of operations performed on a single qubit: a generic **single-qubit interference**.
 It is typically constructed as a sequence of three elementary operations:
 
-1. the Hadamard gate
-2. a phase-shift gate
-3. the Hadamard gate again.
+1. the **Hadamard gate**
+2. a **phase-shift gate**
+3. the **Hadamard gate** again.
 
 We represent it graphically as
 
@@ -300,13 +300,22 @@ We represent it graphically as
 \end{quantikz}
 ```
 
+where the definitions of the Hadamard and phase-shift gates are as in \@ref(qubits-gates-and-circuits):
+
 ::: {.idea latex=""}
 |  |  |  |
 |:-|:-|:-|
-**Hadamard** | $H = \frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\frac1{\sqrt{2}}(\ket{0}+\ket{1})\\\ket{1}&\longmapsto&\frac1{\sqrt{2}}(\ket{0}-\ket{1})\end{array}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})\\\ket{1}&\longmapsto&\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})\end{array}$
+**Hadamard** | $H = \frac{1}{\sqrt{2}}\begin{bmatrix}1&1\\1&-1\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})\\\ket{1}&\longmapsto&\frac{1}{\sqrt{2}}(\ket{0}-\ket{1})\end{array}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})\\\ket{1}&\longmapsto&\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})\end{array}$
 **Phase-shift** | $P_\varphi = \begin{bmatrix}1&0\\0&e^{i\varphi}\end{bmatrix}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&e^{i\varphi}\ket{1}\end{array}$ | $\begin{array}{lcr}\ket{0}&\longmapsto&\ket{0}\\\ket{1}&\longmapsto&e^{i\varphi}\ket{1}\end{array}$
 :::
 
+Note that we sometimes use the notation $\ket{+}$ and $\ket{-}$ when talking about Hadamard gates, where
+$$
+  \begin{aligned}
+    \ket{+} &\coloneqq H\ket{0} \frac{1}{\sqrt}(\ket{0}+\ket{1})
+  \\\ket{-} &\coloneqq H\ket{1} \frac{1}{\sqrt}(\ket{0}-\ket{1}).
+  \end{aligned}
+$$
 
 You will see this specific sequence of gates over and over again, for it is quantum interference that gives quantum computation additional capabilities.^[Indeed, you have already seen this sequence: recall our study of Ramsey interferometry (Section \@ref(interferometers)), and note how this is essentially the same!]
 
@@ -322,7 +331,7 @@ The motto to keep in mind is that *the power of quantum computing comes from qua
 
 The product of the three matrices $HP_\varphi H$ describes the action of the whole circuit: it gives the transition amplitudes between states $\ket{0}$ and $\ket{1}$ at the input and the output as
 $$
-  \frac{1}{\sqrt 2}
+  \frac{1}{\sqrt{2}}
   \begin{bmatrix}
     1 & 1
   \\1 & -1
@@ -331,7 +340,7 @@ $$
     1 & 0
   \\0 & e^{i\varphi}
   \end{bmatrix}
-  \frac{1}{\sqrt 2}
+  \frac{1}{\sqrt{2}}
   \begin{bmatrix}
     1 & 1
   \\1 & -1
@@ -349,11 +358,11 @@ $$
   \begin{aligned}
     \ket{0}
     &\xmapsto{H}
-    \frac{1}{\sqrt2} \left(
+    \frac{1}{\sqrt{2}} \left(
       \ket{0}+\ket{1}
     \right)
   \\&\xmapsto{P_\phi}
-    \frac{1}{\sqrt2} \left(
+    \frac{1}{\sqrt{2}} \left(
       \ket{0}+e^{i\phi}\ket{1}
     \right)
   \\&\xmapsto{H}
@@ -404,12 +413,12 @@ Experimental physicists routinely construct such "impossible" gates in their lab
 It is a physically admissible operation described by the unitary matrix^[There are infinitely many unitary operations that act as the square root of $\texttt{NOT}$.]
 $$
   \sqrt{\texttt{NOT}}
-  = \frac{1}{\sqrt2}
+  = \frac{1}{\sqrt{2}}
   \begin{bmatrix}
     1+i & 1-i
   \\1-i & 1+i
   \end{bmatrix}
-  = \frac{1}{\sqrt2}
+  = \frac{1}{\sqrt{2}}
   \begin{bmatrix}
     e^{i\frac{\pi}{4}} & e^{-i\frac{\pi}{4}}
   \\e^{-i\frac{\pi}{4}} & e^{i\frac{\pi}{4}}
@@ -417,12 +426,12 @@ $$
 $$
 Indeed,
 $$
-  \frac{1}{\sqrt2}
+  \frac{1}{\sqrt{2}}
   \begin{bmatrix}
     1+i & 1-i
   \\1-i & 1+i
   \end{bmatrix}
-  \frac{1}{\sqrt2}
+  \frac{1}{\sqrt{2}}
   \begin{bmatrix}
     1+i & 1-i
   \\1-i & 1+i
@@ -445,14 +454,14 @@ $$
   \node [dot] (m1) at (1,0) {};
   \node [dot,label=right:{$0$}] (o0) at (2,1) {};
   \node [dot,label=right:{$1$}] (o1) at (2,0) {};
-  \draw [thick] (i0) to node [centrelabel] {$\frac{1+i}{\sqrt2}$} (1,1);
-  \draw [thick] (i0) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt2}$} (1,0);
-  \draw [thick] (i1) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt2}$} (1,1);
-  \draw [thick] (i1) to node [centrelabel] {$\frac{1+i}{\sqrt2}$} (1,0);
-  \draw [thick] (m0) to node [centrelabel] {$\frac{1+i}{\sqrt2}$} (o0);
-  \draw [thick] (m0) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt2}$} (o1);
-  \draw [thick] (m1) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt2}$} (o0);
-  \draw [thick] (m1) to node [centrelabel] {$\frac{1+i}{\sqrt2}$} (o1);
+  \draw [thick] (i0) to node [centrelabel] {$\frac{1+i}{\sqrt{2}}$} (1,1);
+  \draw [thick] (i0) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt{2}}$} (1,0);
+  \draw [thick] (i1) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt{2}}$} (1,1);
+  \draw [thick] (i1) to node [centrelabel] {$\frac{1+i}{\sqrt{2}}$} (1,0);
+  \draw [thick] (m0) to node [centrelabel] {$\frac{1+i}{\sqrt{2}}$} (o0);
+  \draw [thick] (m0) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt{2}}$} (o1);
+  \draw [thick] (m1) to node [pos=0.25,fill=white] {$\frac{1-i}{\sqrt{2}}$} (o0);
+  \draw [thick] (m1) to node [centrelabel] {$\frac{1+i}{\sqrt{2}}$} (o1);
   %
   \node at (2.5,0.5) {$=$};
   %
@@ -477,7 +486,7 @@ We could also step through the circuit diagram and follow the evolution of the s
 \begin{tikzpicture}
   \begin{scope}[xscale=3]
     \node (input) at (-1.5,0) {$\ket{0}$};
-    \node (inter) at (0,0) {$\frac{1}{\sqrt 2}\left[e^{i\frac{\pi}{4}}\ket{0}+e^{-i\frac{\pi}{4}}\ket{1}\right]$};
+    \node (inter) at (0,0) {$\frac{1}{\sqrt{2}}\left[e^{i\frac{\pi}{4}}\ket{0}+e^{-i\frac{\pi}{4}}\ket{1}\right]$};
     \node (output) at (1.5,0) {$\ket{1}$};
     \draw[|->] (input) to node[label=above:{$\sqrt{\texttt{NOT}}$}]{} (inter);
     \draw[|->] (inter) to node[label=above:{$\sqrt{\texttt{NOT}}$}]{} (output);
@@ -489,7 +498,7 @@ Or, if you prefer to work with column vectors and matrices, you can write the tw
 $$
   \begin{bmatrix}0\\1\end{bmatrix}
   \,\longleftarrow\!\!\!\vert\,\,
-  \frac{1}{\sqrt 2}
+  \frac{1}{\sqrt{2}}
   \begin{bmatrix}
     e^{i\frac{\pi}{4}}
   \\e^{-i\frac{\pi}{4}}
@@ -497,7 +506,7 @@ $$
   \,\longleftarrow\!\!\!\vert\,\,
   \begin{bmatrix}1\\0\end{bmatrix}
 $$
-where each "$\longleftarrow\!\!\!\vert$" denotes multiplication by $\frac{1}{\sqrt2}\begin{bmatrix}e^{i\frac{\pi}{4}}&e^{-i\frac{\pi}{4}}\\e^{-i\frac{\pi}{4}}&e^{i\frac{\pi}{4}}\end{bmatrix}$.
+where each "$\longleftarrow\!\!\!\vert$" denotes multiplication by $\frac{1}{\sqrt{2}}\begin{bmatrix}e^{i\frac{\pi}{4}}&e^{-i\frac{\pi}{4}}\\e^{-i\frac{\pi}{4}}&e^{i\frac{\pi}{4}}\end{bmatrix}$.
 
 One way or another, quantum theory explains the behaviour of $\sqrt{\texttt{NOT}}$, and so, reassured by the physical experiments^[One such experiment (which we will soon discuss, in Section \@ref(beamsplitters-against-logic)) is the so-called Mach-Zehnder interferometer.] that corroborate this theory, logicians are now entitled to propose a new logical operation $\sqrt{\texttt{NOT}}$.
 Why?
@@ -573,7 +582,7 @@ One "high-level" way of dealing with this, in the language of gauge theory, is t
 
 <div class="video" title="Pauli gates, Clifford gates, and the T-gate" data-videoid="WN7sJpsX_G0"></div>
 
-Adding to our collection of common single-qubit gates, we now look at the three **Pauli operators**^[We use the standard basis $\{\ket{0},\ket{1}\}$ most of the time, and so often refer to operators as matrices.] $\sigma_x$, $\sigma_y$, and $\sigma_z$, also denoted by $X$, $Y$, and $Z$, respectively.
+Adding to our collection of common single-qubit gates, we now look at the three **Pauli operators**^[Most of the time we refer to "operators" as "matrices", where the implicit assumption is that we are using the standard basis $\{\ket{0},\ket{1}\}$.] $\sigma_x$, $\sigma_y$, and $\sigma_z$, also denoted by $X$, $Y$, and $Z$, respectively.
 These three operators, combined with the identity, satisfy a lot of nice formal properties, which we shall examine briefly here, and then return to in more detail later on, in Section \@ref(pauli-matrices-algebraically).
 
 ::: {.idea latex=""}

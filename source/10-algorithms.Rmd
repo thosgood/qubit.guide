@@ -53,7 +53,7 @@ The corresponding circuit diagram (for an input register of $n=3$ qubits) is sho
 \end{equation*}
 ```
 
-Here we use two registers: the first^[Reading the circuit diagram from top to bottom.] one stores the argument(s) $\ket{x}$ (where $x\in\{0,1\}^n$ is our binary string input), and the second one the value $f(x)$.
+Here we use two registers: the first^[Reading the circuit diagram from top to bottom.] one stores the arguments $\ket{x}$ (where $x\in\{0,1\}^n$ is our binary string input), and the second one the value $f(x)$.
 More precisely, the value $f(x)$ is added bit-wise to the pre-existing binary value $y$ of the second register.
 We usually set $y=0$ to get
 $$
@@ -98,11 +98,11 @@ $$
 and then
 $$
   \begin{aligned}
-    \sum_x \ket{x}\bra{x}\otimes X^{f(x)}
+    \sum_{x\in\{0,1\}^2} \ket{x}\bra{x}\otimes X^{f(x)}
     = &\proj{00} \otimes \id
-  \\+ &\proj{01} \otimes X
+    + \proj{01} \otimes X
   \\+ &\proj{10} \otimes \id
-  \\+ &\proj{11} \otimes \id.
+    + \proj{11} \otimes \id.
   \end{aligned}
 $$
 
@@ -156,28 +156,28 @@ This is because $f(01)=1$ (and so we want to turn the control value $y=0$ into $
 
 
 
-## More phase kick-back
+## More phase kick-back {#more-phase-kick-back}
 
 <div class="video" title="Phase kick-back" data-videoid="iSCYkhkWVjw"></div>
 
-What makes quantum evaluation of Boolean functions really interesting --- and what truly sets it apart from classical evaluation --- is its action on a *superposition* of different inputs $x$.
-For example,
+What makes quantum evaluation of Boolean functions really interesting --- and what truly sets it apart from classical evaluation --- is its action on a *superposition of different inputs*.
+For example,^[We make two notational simplifications: we usually don't worry about normalisation factors, and we often just write $\sum_x$ to mean $\sum_{x\in\{0,1\}^n}$.]
 $$
   \sum_{x}\ket{x}\ket{0}
   \longmapsto
   \sum_{x}\ket{x}\ket{f(x)}
 $$
-produces $f(x)$ for _all_ $x$ in a _single_ run (note that we have dropped the normalisation factor).
-It is more instructive to see the effect of the function evaluation when the qubit in the second register is prepared in the state $\ket{-} = \frac{1}{\sqrt 2}(\ket{0} - \ket{1}$, since then
+produces $f(x)$ for *all* $x$ in a *single* run.
+However, it is more instructive to see the effect of quantum function evaluation when the qubit in the second register is prepared in the state $\ket{-}\coloneqq\frac{1}{\sqrt{2}}(\ket{0}-\ket{1})=H\ket{1}$, since then
 $$
   \sum_x\ket{x}\ket{-}
   \longmapsto
   \sum_x (-1)^{f(x)}\ket{x}\ket{-}
 $$
 (as shown in Figure \@ref(fig:n-equals-3-minus-circuit-diagram)).
-Whenever $f(x)=1$, the bit flip $X$ is applied to the qubit in the second register.
+In words, whenever $f(x)=1$, the bit flip $X$ is applied to the qubit in the second register.
 
-(ref:n-equals-3-minus-circuit-diagram-caption) Computing some $f\colon\{0,1\}^3\to\{0,1\}$ with the second-register qubit in state $\ket{-}$.
+(ref:n-equals-3-minus-circuit-diagram-caption) Computing some $f\colon\{0,1\}^3\to\{0,1\}$ with the second register in state $\ket{-}$.
 
 ```{r n-equals-3-minus-circuit-diagram,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.cap='(ref:n-equals-3-minus-circuit-diagram-caption)'}
 \begin{equation*}
@@ -198,9 +198,10 @@ Whenever $f(x)=1$, the bit flip $X$ is applied to the qubit in the second regist
 \end{equation*}
 ```
 
-The reason for defining the state $\ket{-}$ as we do is that it is the eigenstate of $X$ with eigenvalue $-1$.
+The reason for defining the state $\ket{-}$ as we do is that it is the eigenstate of $X$ with eigenvalue $-1$, i.e. $X\ket{-}=-\ket{-}$.
 So, due the phase kick-back, whenever $f(x)=1$, the phase factor $-1$ appears in front of the corresponding term $\ket{x}$.
 As you can see, the second register stays in state $\ket{-}$ all the way through the computation --- it is the first register where things happen.
+
 Let us now see how quantum Boolean function evaluation introduces phase shifts in quantum interference experiments, and how such experiments can be viewed as computations.
 
 
@@ -211,9 +212,10 @@ Let us now see how quantum Boolean function evaluation introduces phase shifts i
 ## Oracles and query complexity
 
 The computational power of quantum interference was discovered by counting how many times certain Boolean functions have to be evaluated in order to find the answer to a given problem.
-Imagine a "black box" (also called an **oracle**) that computes some fixed Boolean function, but whose inner workings are unknown to us, and a scenario in which one wants to learn about a given property of the Boolean function but has to "pay" (in energy, or in money!) for each use (often referred to as a **query**) of the box.
-In such a setting, the objective is to minimise number of queries to the oracle while finding out as much information as possible about the function computed by the oracle.
-For this purpose, we ignore everything that happens inside the black box: the Boolean function evaluation counts as just _one_ computational step.
+Imagine a "black box" (sometimes also called an **oracle**) that computes some fixed Boolean function, but whose inner workings are unknown to us.
+Then imagine that we are in a scenario where we want to learn about some given property of the Boolean function, but we have to "pay" (in energy, time, money, or anything!) for each use (often referred to as a **query**) of the box.
+In such a setting, the objective is to minimise number of queries to the oracle while finding out as much information as possible about the function that it computes.
+For this purpose, we ignore everything that happens inside the black box: in our rules of the game, the Boolean function evaluation counts as just *one* computational step.
 
 
 
@@ -425,16 +427,16 @@ $$
   \begin{aligned}
     \ket{0}
     &\xmapsto{H}
-    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} \ket{x}
+    \left(\frac{1}{\sqrt{2}}\right)^n \sum_{x\in\{0,1\}^n} \ket{x}
   \\&\xmapsto{f}
-    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} (-1)^{a\cdot x}\ket{x}
+    \left(\frac{1}{\sqrt{2}}\right)^n \sum_{x\in\{0,1\}^n} (-1)^{a\cdot x}\ket{x}
   \\&\xmapsto{H}
-    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n}
+    \left(\frac{1}{\sqrt{2}}\right)^n \sum_{x\in\{0,1\}^n}
     \left[
-      (-1)^{a\cdot x} \left(\frac{1}{\sqrt2}\right)^n
+      (-1)^{a\cdot x} \left(\frac{1}{\sqrt{2}}\right)^n
       \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x} \ket{y}
     \right]
-  \\&\quad= \left(\frac12\right)^n \sum_{y\in\{0,1\}^n}
+  \\&\quad= \left(\frac{1}{2}\right)^n \sum_{y\in\{0,1\}^n}
     \left[
       \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
     \right]
@@ -446,7 +448,7 @@ where we write the second Hadamard transform as
 $$
   \ket{x}
   \mapsto
-  \left(\frac{1}{\sqrt2}\right)^n \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x}\ket{y}
+  \left(\frac{1}{\sqrt{2}}\right)^n \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x}\ket{y}
 $$
 and where we have used the fact (which you should prove!) that, for any $y\in\{0,1\}^n$,
 $$
@@ -822,7 +824,7 @@ $$
       \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac14
     \right)
   \right]
-  \cdot \frac12
+  \cdot \frac{1}{2}
   >
   \frac14.
 $$
