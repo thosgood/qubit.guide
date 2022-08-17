@@ -414,7 +414,7 @@ You might also see other notation to denote this, such as
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \begin{equation*}
   \begin{quantikz}
-    \lstick{$\ket{0^n}$}
+    \lstick{$\ket{0^{\otimes n}}$}
     &[2mm] \gate{H}\qwbundle{n}
     & \qw
   \end{quantikz}
@@ -426,7 +426,7 @@ or even simply
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \begin{equation*}
   \begin{quantikz}
-    \lstick{$\ket{0^n}$}
+    \lstick{$\ket{0^{\otimes n}}$}
     & \gate{H}\qwbundle[alternate]{}
     & \qwbundle[alternate]{}
   \end{quantikz}
@@ -602,25 +602,29 @@ $$
     &= \frac{1}{\sqrt{N}}\sum_{x\in\{0,1\}^n}\ket{x}
   \\&= \frac{1}{\sqrt{N}}\sum_{x\in f^{-1}(0)}\ket{x} + \frac{1}{\sqrt{N}}\sum_{x\in f^{-1}(1)}\ket{x}
   \\&= \sqrt{\frac{N-M}{N}}\ket{a} + \sqrt{\frac{M}{N}}\ket{b}
-  \\&= (\cos\vartheta)\ket{a} + (\sin\vartheta)\ket{b}
+  \\&= (\cos\theta)\ket{a} + (\sin\theta)\ket{b}
   \end{aligned}
 $$
 where we use the fact that
 $$
   \sqrt{\frac{N-M}{N}}^2 + \sqrt{\frac{M}{N}}^2
   = 1
-  = \sin^2\vartheta+\cos^2\vartheta
+  = \sin^2\theta+\cos^2\theta
 $$
-to parametrise $\sqrt{\frac{N-M}{N}}$ as $\cos\vartheta$ and $\sqrt{\frac{M}{N}}$ as $\sin\vartheta$ (with $\vartheta\approx\sqrt{\frac{M}{N}}$, since $N\gg M$).
+to parametrise $\sqrt{\frac{N-M}{N}}$ as $\cos\theta$ and $\sqrt{\frac{M}{N}}$ as $\sin\theta$ (with $\theta\approx\sqrt{\frac{M}{N}}$, since $N\gg M$).
 
-The state $\ket{s}$ is our starting input for our sequence of Grover iterations, and we will show that applying $G$, when restricting to the plane spanned by $\ket{a}$ and $\ket{b}$, amounts to applying a rotation by angle $2\vartheta$.
+The state $\ket{s}$ is our starting input for our sequence of Grover iterations, and we will show that applying $G$, when restricting to the plane spanned by $\ket{a}$ and $\ket{b}$, amounts to applying a rotation by angle $2\theta$.
 Grover's search algorithm can then be understood as a sequence of rotations which take the input state $\ket{s}$ towards the target state $\ket{b}$.
 
-To see this, note that the oracle induces the unitary transformation
+To see this, note that the unitary transformation induced by the oracle
 $$
   f\colon \ket{x} \mapsto (-1)^{f(x)}\ket{x}
 $$
-which we shall write as $I_a = 2\proj{a}-\id$, and interpret as a reflection through the $\ket{a}$-axis.
+can be written as
+$$
+  I_a \coloneqq 2\proj{a}-\id
+$$
+which we can interpret^[**TO-DO**: explain how!] as a reflection through the $\ket{a}$-axis.
 Some further algebraic manipulation shows that $I_a = 2\proj{a}-\id = \id-2\proj{b}$.
 Now, in particular, evaluation of $f_0$ can be written as $2\proj{0}-\id$, and thus thought of as a reflection through the $\ket{0}$-axis.
 If we sandwich $f_0$ in between two Hadamards then we obtain $I_s = 2\proj{s}-\id$, which is reflection through the $\ket{s}$-axis.
@@ -629,11 +633,11 @@ $$
   G = I_s I_a.
 $$
 
-Now recall the purely geometric fact that if we have two intersecting lines $L_1$ and $L_2$ in two-dimensional Euclidean space, meeting with angle $\theta$, then reflecting an object through $L_1$ and then reflecting the resulting image through $L_2$ is the same as simply rotating the original object around the point of intersection $L_1\cap L_2$ by an angle of $2\theta$.
+Now recall the purely geometric fact that if we have two intersecting lines $L_1$ and $L_2$ in two-dimensional Euclidean space, meeting with angle $\alpha$, then reflecting an object through $L_1$ and then reflecting the resulting image through $L_2$ is the same as simply rotating the original object around the point of intersection $L_1\cap L_2$ by an angle of $2\alpha$.
 
-The angle between $\ket{a}$ and $\ket{s}$ is $\vartheta$, so each time $G$ is applied the vector is rotated (around the origin) by an angle of $2\vartheta$ towards the $\ket{b}$-axis.
+The angle between $\ket{a}$ and $\ket{s}$ is $\theta$, so each time $G$ is applied the vector is rotated (around the origin) by an angle of $2\theta$ towards the $\ket{b}$-axis.
 All that remains to do is to just choose the "right" number $r$ of steps such that we end up as close to the $\ket{b}$-axis as possible.
-The state $\ket{s}$ starts at angle $\vartheta$ to $\ket{a}$, and we should perform our final (and only) measurement when this angle is $\pi/2$, i.e. when $(2r+1)\vartheta = \pi/2$, which gives
+The state $\ket{s}$ starts at angle $\theta$ to $\ket{a}$, and we should perform our final (and only) measurement when this angle is $\pi/2$, i.e. when $(2r+1)\theta = \pi/2$, which gives
 $$
   r \approx \frac{\pi}{4}\sqrt{\frac{N}{M}}.
 $$
@@ -643,14 +647,14 @@ $$
 \definecolor{secondary}{RGB}{91,132,177}
 \usetikzlibrary{arrows.meta}
 \newcommand{\ket}[1]{|#1\rangle}
-\begin{tikzpicture}[scale=1]
+\begin{tikzpicture}[scale=1.4]
   \begin{scope}
     \draw (0,0) circle (1cm);
     \draw [->] (0,-1.4) to (0,1.4) node [above] {$\ket{b}$};
     \draw [->] (-1.4,0) to (1.4,0) node [right] {$\ket{a}$};
     %
     \draw [thin] (0,0) to (0:0.7) to [bend right,dashed] (20:0.7) to cycle;
-    \node at (10:0.6) {\footnotesize$\vartheta$};
+    \node at (10:0.6) {\footnotesize$\theta$};
     \draw [-Latex,primary] (0,0) to (20:1) node [right] {$\ket{s}$};
   \end{scope}
   \node at (0,-1.7) {the initial state};
@@ -659,31 +663,19 @@ $$
     \draw [->] (0,-1.4) to (0,1.4) node [above] {$\ket{b}$};
     \draw [->] (-1.4,0) to (1.4,0) node [right] {$\ket{a}$};
     %
-    \draw [thin] (0,0) to (-20:0.7) to [bend right=1.8cm] (20:0.7) to cycle;
-    \node at (-10:0.6) {\footnotesize$\vartheta$};
-    \node at (10:0.6) {\footnotesize$\vartheta$};
-    \draw [-Latex,primary] (0,0) to (20:1) node [right] {$\ket{s}$};
-    \draw [-Latex,secondary] (0,0) to (-20:1) node [right] {$I_a\ket{s}$};
-  \end{scope}
-  \node at (4,-1.7) {applying $I_a$};
-  \begin{scope}[shift={(8,0)}]
-    \draw (0,0) circle (1cm);
-    \draw [->] (0,-1.4) to (0,1.4) node [above] {$\ket{b}$};
-    \draw [->] (-1.4,0) to (1.4,0) node [right] {$\ket{a}$};
-    %
     \draw [thin] (0,0) to (-20:0.7) to [bend right=1.8cm] (60:0.7) to cycle;
-    \node at (-10:0.6) {\footnotesize$\vartheta$};
-    \node at (10:0.6) {\footnotesize$\vartheta$};
-    \node at (40:0.55) {\footnotesize$2\vartheta$};
+    \node at (-10:0.6) {\footnotesize$\theta$};
+    \node at (10:0.6) {\footnotesize$\theta$};
+    \node at (40:0.55) {\footnotesize$2\theta$};
     \draw [-Latex,primary] (0,0) to (20:1) node [right] {$\ket{s}$};
     \draw [-Latex,secondary] (0,0) to (60:1) node [above right] {$I_sI_a\ket{s}$};
     \draw [-Latex,secondary] (0,0) to (-20:1) node [right] {$I_a\ket{s}$};
   \end{scope}
-  \node at (8,-1.7) {applying $G=I_sI_a$};
+  \node at (4,-1.7) {applying $G=I_sI_a$};
 \end{tikzpicture}
 ```
 
-So the quantum algorithm searches an unsorted list of $N$ items in roughly $\sqrt{N}$ steps: it offers a *quadratic* speed-up when compared to classical search, which can be of immense practical importance.
+So the quantum algorithm searches an unsorted list of $N$ items in roughly^[Recall that $M\ll N$, so $\sqrt{\frac{N}{M}}\approx\sqrt{N}$.] $\sqrt{N}$ steps: it offers a *quadratic* speed-up when compared to classical search, which can be of immense practical importance.
 For example, cracking some of the more popular modern ciphers, such as [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard), essentially requires a search among *many* binary strings (called **keys**).
 If these can be checked at a rate of, say, one million keys per second, then a classical computer would need over a thousand years to find the correct key, while a quantum computer using Grover's algorithm would find it in less than four minutes.
 
@@ -693,39 +685,39 @@ If these can be checked at a rate of, say, one million keys per second, then a c
 
 <div class="video" title="Simon's algorithm" data-videoid="sxIdRKTdRRU"></div>
 
-Here we will see the simplest quantum algorithm that shows an exponential speed-up compared to the best classical algorithm.
+Here we will see the simplest quantum algorithm that offers an *exponential* speed-up when compared to the best possible classical algorithm.
 
 ::: {.scenario latex=""}
 We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}^n$, but we are promised that $f$ satisfies, for all $x\in\{0,1\}^n$,
 $$
   f(x) = f(x\oplus s)
 $$
-for some fixed $s\in\{0,1\}^n$, which we call the **period** of $f$.^[This is equivalent to saying that $f$ is **two-to-one**: for any $y\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ with $f(x)=y$, there exists exactly one other $x'\neq x$ such that $f(x')=y$ as well.]
-So that the problem is non-trivial (i.e. so that $f$ really is two-to-one), we assume that $s$ is _not_ the string of $n$ zeros.
+for some fixed $s\in\{0,1\}^n$, which we call the **period** of $f$.^[Asking for $f$ to be periodic is equivalent to asking that $f$ be **two-to-one**: for any $y\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ with $f(x)=y$, there exists *exactly one other* $x'\neq x$ such that $f(x')=y$ as well.]
+(We assume that $s$ is *not* the string of $n$ zeros, otherwise the problem becomes trivial.)
 
 Our task is to determine, using the fewest queries possible, the value of the $n$-bit string $s$.
 :::
 
 Classically, this problem is exponentially hard.
 We will not go through a detailed proof of this fact, but the intuition is reasonably simple: since there is no structure in the function $f$ that would help us find its period $s$, the best we can do is evaluate $f$ on random inputs and hope that we find some distinct $x$ and $x'$ such that $f(x)=f(x')$, and then we know that $s=x\oplus y$.
-After having made $m$ queries to the oracle, we have a list of $m$ values of the tuple $(x,f(x))$; there are $m(m-1)/2$ possible pairs which could match within this list, and the probability that a randomly chosen pair match is $1/2^{n-1}$.
+After having made $m$ queries to the oracle, we have a list of $m$-many tuples $(x,f(x))$; there are $m(m-1)/2$ possible pairs which could match within this list, and the probability that a randomly chosen pair match is $1/2^{n-1}$.
 This means that the probability of there being at least one matching pair within the list of $m$ tuples is less than $m^2/2^n$.
-Clearly, the chance of finding a matching pair is negligible if the oracle is queried on fewer than $\sqrt{2^n}$ inputs.
+This means that the chance of finding a matching pair is negligible if the oracle is queried on fewer than $m=\sqrt{2^n}$ inputs.
 
-The quantum case, on the other hand, gives a result with high probability within a _linear_ number of steps.
-The circuit that solves this problem, shown below, has a familiar Hadamard--function--Hadamard structure, but the second register has been expanded to $n$ qubits.
+The quantum case, on the other hand, gives a result (again, with "high" probability) within a *linear* number of steps.
+The circuit that solves this problem, shown below, has a familiar Hadamard--function--Hadamard structure, but the second register has now been expanded to $n$ qubits.
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
 (Simon's problem).
 :::
-_First register: $n$ qubits. Second register: $n$ qubits._
+*First register: $n$ qubits. Second register: $n$ qubits.*
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
 \begin{equation*}
     \begin{quantikz}
-      \lstick[wires=4]{$\ket{0^n}$}
+      \lstick[wires=4]{$\ket{0^{\otimes n}}$}
       & \gate{H}
       & \ctrl{4}
       & \gate{H}
@@ -743,7 +735,7 @@ _First register: $n$ qubits. Second register: $n$ qubits._
       & \gate{H}
       & \qw
     \\[2em]
-      \lstick[wires=4]{$\ket{0^n}$}
+      \lstick[wires=4]{$\ket{0^{\otimes n}}$}
       & \qw
       & \gate[wires=4,nwires={3}]{f}
       & \qw
@@ -768,9 +760,9 @@ Let's follow the evolution of the two registers in this circuit.
 We start off by preparing the equally-weighted superposition of all $n$-bit strings, and then query the oracle:
 $$
   \begin{aligned}
-    \ket{0^n}\ket{0^n}
+    \ket{0^{\otimes n}}\ket{0^{\otimes n}}
     &\longmapsto
-    \frac{1}{\sqrt{2^n}} \sum_x \ket{x}\ket{0^n}
+    \frac{1}{\sqrt{2^n}} \sum_x \ket{x}\ket{0^{\otimes n}}
   \\&\longmapsto
     \frac{1}{\sqrt{2^n}} \sum_x \ket{x}\ket{f(x)}.
   \end{aligned}
