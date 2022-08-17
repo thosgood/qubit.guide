@@ -478,8 +478,12 @@ $$
   \end{cases}
 $$
 
-In other words, if you take the sum^[Even if you don't immediately see how this sum works for $z\neq a$ (writing $\ket{z}$ to mean the output), you can first calculate the probability that the output is $z=a$. In this case it is easy to see that the sum is $2^n$, and that in the final state $\sum_z\alpha_z\ket{z}$ the term $z=a$ has amplitude $1$. Thus, by normalisation, all the other terms must be equal to $0$.] over $x$, then all the terms always cancel out *unless* $a\oplus y = 00\ldots0$, but this happens *if and only if* $y=a$.
+In other words, if you take the sum over $x$, then all the terms always cancel out *unless* $a\oplus y = 00\ldots0$, but this happens *if and only if* $y=a$.
 Then the standard bit-by-bit measurement of the first register gives the value of $a$ and solves the problem with a single call to the oracle.
+
+Alternatively, if you don't immediately see how this sum works for $z\neq a$ (where we write $\ket{z}$ to mean the output), you can first calculate the probability that the output is $z=a$.
+In this case it is easy to see that the sum is $2^n$, and that in the final state $\sum_z\lambda_z\ket{z}$ the term $z=a$ has amplitude $1$.
+Thus, by normalisation, all the other terms must be equal to $0$.
 
 
 ## Grover's search algorithm
@@ -513,7 +517,7 @@ In contrast, there is a quantum search algorithm, implemented by the circuit bel
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
 \begin{equation*}
   \begin{quantikz}
-    \lstick[wires=4]{$\ket{0^n}$}
+    \lstick[wires=4]{$\ket{0^{\otimes n}}$}
     & \gate{H}
     & \qw
     & \ctrl{4}
@@ -571,11 +575,15 @@ $$
 Yet again, we can recognise the typical Hadamard, function evaluation, Hadamard sequence, and yet again we can see that the second register (the bottom qubit, in state $\ket{-}$) plays an auxiliary role: the real action takes place in the first register.
 However, unlike the previous algorithms, a single call to the oracle does not do very much, and we have to build up the quantum interference in the first register through repeated calls to the oracle (without any intermediate measurements!).
 
-Here, the basic step is the **Grover iteration operator $G$**, which is the boxed part of the circuit that we repeat over and over: $(H^{\otimes n}\otimes\id)\circ U_{f_0}\circ(H^{\otimes n}\otimes\id)\circ U_f$.
-After^[Recall the big-$O$ notation introduced in Exercise \@ref(big-o).] $O(2^{n/2})$ applications of $G$, we measure the first register bit-by-bit and obtain the value of $\ket{z}$, which is such that, *with "high" probability*, $f(z)=1$.
+Here, the basic step is the **Grover iteration operator $G$**, which is the boxed part of the circuit that we repeat over and over:
+$$
+  G = (H^{\otimes n}\otimes\id) U_{f_0}(H^{\otimes n}\otimes\id) U_f.
+$$
+
+After^[Recall the big-$O$ notation introduced in Exercise \@ref(big-o).] $O(2^{n/2})$ applications of $G$, we measure the first register bit-by-bit and obtain the value of $\ket{z}=\ket{z_1z_2\ldots z_n}$, which is such that, *with "high" probability*, $f(z)=1$.
 In order to actually *see* how this algorithm works, and to justify our use of the phrase "with high probability", we can take a more geometric approach.
 
-First, we define two orthonormal vectors in the Hilbert space of the first register:^[In fact, we shall completely ignore the second register from now on.]
+First, we define two orthonormal vectors in the Hilbert space describing the first register:^[Once again, we shall completely ignore the second register from now on, since all the interesting stuff happens in the first.]
 $$
   \begin{aligned}
     \ket{a}
@@ -584,21 +592,28 @@ $$
     &= \frac{1}{\sqrt{M}} \sum_{x\in f^{-1}(1)} \!\!\!\!\ket{x}
   \end{aligned}
 $$
-where $f^{-1}(i) = \{x\in\{0,1\}^n \mid f(x)=i\}$.
-These two vectors span a two-dimensional subspace in which the search will take place.
+where $f^{-1}(i)\coloneqq\{x\in\{0,1\}^n\mid f(x)=i\}$.
+Since these vectors are orthonormal, they are, in particular, linearly independent, and so their span is a two-dimensional subspace --- this is the subspace in which our search will take place.
 
-This subspace contains the equally-weighted superposition $\ket{s}$ of all binary strings of length $n$:^[We often omit from our notation the fact that the sum is over all $x\in\{0,1\}^n$, leaving it (hopefully) implicitly understood from the context.]
+Using the fact that $f^{-1}(0)$ and $f^{-1}(1)$ form a **partition**^[A **partition** of a set $X$ is a collection of disjoint subsets $X_1,\ldots,X_m\subseteq X$ whose union is all of $X$, i.e. $X_i\cap X_j=\varnothing$ for all $i\neq j$, and $X_1\cup\ldots\cup X_m=X$.] of the space $\{0,1\}^n$, we see that the two-dimensional span of $\ket{a}$ and $\ket{b}$ contains, in particular, the equally-weighted superposition $\ket{s}=H^{\otimes n}\ket{0^{\otimes n}}$ of all binary strings of length $n$:
 $$
   \begin{aligned}
     \ket{s}
-    &= \frac{1}{\sqrt{N}} \sum_x\ket{x}
+    &= \frac{1}{\sqrt{N}}\sum_{x\in\{0,1\}^n}\ket{x}
+  \\&= \frac{1}{\sqrt{N}}\sum_{x\in f^{-1}(0)}\ket{x} + \frac{1}{\sqrt{N}}\sum_{x\in f^{-1}(1)}\ket{x}
   \\&= \sqrt{\frac{N-M}{N}}\ket{a} + \sqrt{\frac{M}{N}}\ket{b}
-  \\&= (\cos\alpha)\ket{a} + (\sin\alpha)\ket{b}
+  \\&= (\cos\vartheta)\ket{a} + (\sin\vartheta)\ket{b}
   \end{aligned}
 $$
-where we have parametrised $\sqrt{\frac{N-M}{N}}$ as $\cos\alpha$, and $\sqrt{\frac{M}{N}}$ as $\sin\alpha$, with $\alpha\approx\sqrt{\frac{M}{N}}$, since $N\gg M$.
+where we use the fact that
+$$
+  \sqrt{\frac{N-M}{N}}^2 + \sqrt{\frac{M}{N}}^2
+  = 1
+  = \sin^2\vartheta+\cos^2\vartheta
+$$
+to parametrise $\sqrt{\frac{N-M}{N}}$ as $\cos\vartheta$ and $\sqrt{\frac{M}{N}}$ as $\sin\vartheta$ (with $\vartheta\approx\sqrt{\frac{M}{N}}$, since $N\gg M$).
 
-The state $\ket{s}$ is our starting input for our sequence of Grover iterations, and we will show that, applying $G$, when restricting to the plane spanned by $\ket{a}$ and $\ket{b}$, amounts to applying a rotation by angle $2\alpha$.
+The state $\ket{s}$ is our starting input for our sequence of Grover iterations, and we will show that applying $G$, when restricting to the plane spanned by $\ket{a}$ and $\ket{b}$, amounts to applying a rotation by angle $2\vartheta$.
 Grover's search algorithm can then be understood as a sequence of rotations which take the input state $\ket{s}$ towards the target state $\ket{b}$.
 
 To see this, note that the oracle induces the unitary transformation
@@ -606,19 +621,19 @@ $$
   f\colon \ket{x} \mapsto (-1)^{f(x)}\ket{x}
 $$
 which we shall write as $I_a = 2\proj{a}-\id$, and interpret as a reflection through the $\ket{a}$-axis.
-In particular, evaluation of $f_0$ can be written as $2\proj{0}-\id$, and thus thought of as a reflection through the $\ket{0}$-axis.
+Some further algebraic manipulation shows that $I_a = 2\proj{a}-\id = \id-2\proj{b}$.
+Now, in particular, evaluation of $f_0$ can be written as $2\proj{0}-\id$, and thus thought of as a reflection through the $\ket{0}$-axis.
 If we sandwich $f_0$ in between two Hadamards then we obtain $I_s = 2\proj{s}-\id$, which is reflection through the $\ket{s}$-axis.
-The Grover iteration operator $G$ is the composition
+By definition then, the Grover iteration operator $G$ is the composition
 $$
   G = I_s I_a.
 $$
-Note also that $I_a = 2\proj{a}-\id = \id-2\proj{b}$.
 
-Now recall the purely geometric fact that (working in $2$-dimensional Euclidean space), if we have two intersecting lines $L_1$ and $L_2$, meeting with angle $\theta$, then reflecting an object through $L_1$ and then reflecting the resulting image through $L_2$ is the same as simply rotating the original object around the point of intersection $L_1\cap L_2$ by $2\theta$.
+Now recall the purely geometric fact that if we have two intersecting lines $L_1$ and $L_2$ in two-dimensional Euclidean space, meeting with angle $\theta$, then reflecting an object through $L_1$ and then reflecting the resulting image through $L_2$ is the same as simply rotating the original object around the point of intersection $L_1\cap L_2$ by an angle of $2\theta$.
 
-The angle between $\ket{a}$ and $\ket{s}$ is $\alpha$, and so, each time $G$ is applied, the vector is rotated (around the origin) by $2\alpha$ towards the $\ket{b}$-axis.
-We just have to choose the right number $r$ of steps such that we end up as close to the $\ket{b}$-axis as possible.
-The state $\ket{s}$ starts at angle $\alpha$ to $\ket{a}$, and we should perform our final (and only) measurement when this angle is $\pi/2$, i.e. when $(2r+1)\alpha = \pi/2$, which gives
+The angle between $\ket{a}$ and $\ket{s}$ is $\vartheta$, so each time $G$ is applied the vector is rotated (around the origin) by an angle of $2\vartheta$ towards the $\ket{b}$-axis.
+All that remains to do is to just choose the "right" number $r$ of steps such that we end up as close to the $\ket{b}$-axis as possible.
+The state $\ket{s}$ starts at angle $\vartheta$ to $\ket{a}$, and we should perform our final (and only) measurement when this angle is $\pi/2$, i.e. when $(2r+1)\vartheta = \pi/2$, which gives
 $$
   r \approx \frac{\pi}{4}\sqrt{\frac{N}{M}}.
 $$
@@ -628,14 +643,14 @@ $$
 \definecolor{secondary}{RGB}{91,132,177}
 \usetikzlibrary{arrows.meta}
 \newcommand{\ket}[1]{|#1\rangle}
-\begin{tikzpicture}[scale=1.4]
+\begin{tikzpicture}[scale=1]
   \begin{scope}
     \draw (0,0) circle (1cm);
     \draw [->] (0,-1.4) to (0,1.4) node [above] {$\ket{b}$};
     \draw [->] (-1.4,0) to (1.4,0) node [right] {$\ket{a}$};
     %
     \draw [thin] (0,0) to (0:0.7) to [bend right,dashed] (20:0.7) to cycle;
-    \node at (10:0.6) {\footnotesize$\alpha$};
+    \node at (10:0.6) {\footnotesize$\vartheta$};
     \draw [-Latex,primary] (0,0) to (20:1) node [right] {$\ket{s}$};
   \end{scope}
   \node at (0,-1.7) {the initial state};
@@ -644,20 +659,32 @@ $$
     \draw [->] (0,-1.4) to (0,1.4) node [above] {$\ket{b}$};
     \draw [->] (-1.4,0) to (1.4,0) node [right] {$\ket{a}$};
     %
+    \draw [thin] (0,0) to (-20:0.7) to [bend right=1.8cm] (20:0.7) to cycle;
+    \node at (-10:0.6) {\footnotesize$\vartheta$};
+    \node at (10:0.6) {\footnotesize$\vartheta$};
+    \draw [-Latex,primary] (0,0) to (20:1) node [right] {$\ket{s}$};
+    \draw [-Latex,secondary] (0,0) to (-20:1) node [right] {$I_a\ket{s}$};
+  \end{scope}
+  \node at (4,-1.7) {applying $I_a$};
+  \begin{scope}[shift={(8,0)}]
+    \draw (0,0) circle (1cm);
+    \draw [->] (0,-1.4) to (0,1.4) node [above] {$\ket{b}$};
+    \draw [->] (-1.4,0) to (1.4,0) node [right] {$\ket{a}$};
+    %
     \draw [thin] (0,0) to (-20:0.7) to [bend right=1.8cm] (60:0.7) to cycle;
-    \node at (-10:0.6) {\footnotesize$\alpha$};
-    \node at (10:0.6) {\footnotesize$\alpha$};
-    \node at (40:0.55) {\footnotesize$2\alpha$};
+    \node at (-10:0.6) {\footnotesize$\vartheta$};
+    \node at (10:0.6) {\footnotesize$\vartheta$};
+    \node at (40:0.55) {\footnotesize$2\vartheta$};
     \draw [-Latex,primary] (0,0) to (20:1) node [right] {$\ket{s}$};
     \draw [-Latex,secondary] (0,0) to (60:1) node [above right] {$I_sI_a\ket{s}$};
     \draw [-Latex,secondary] (0,0) to (-20:1) node [right] {$I_a\ket{s}$};
   \end{scope}
-  \node at (4,-1.7) {applying $G=I_sI_a$};
+  \node at (8,-1.7) {applying $G=I_sI_a$};
 \end{tikzpicture}
 ```
 
-So the quantum algorithm searches an unsorted list of $N$ items in roughly $\sqrt{N}$ steps: it offers a _quadratic_ speed-up when compared to classical search, which can be of immense practical importance.
-For example, cracking some of the popular ciphers, such as AES (Advanced Encryption Standard), essentially requires a search among _many_ binary strings (called **keys**).
+So the quantum algorithm searches an unsorted list of $N$ items in roughly $\sqrt{N}$ steps: it offers a *quadratic* speed-up when compared to classical search, which can be of immense practical importance.
+For example, cracking some of the more popular modern ciphers, such as [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard), essentially requires a search among *many* binary strings (called **keys**).
 If these can be checked at a rate of, say, one million keys per second, then a classical computer would need over a thousand years to find the correct key, while a quantum computer using Grover's algorithm would find it in less than four minutes.
 
 
