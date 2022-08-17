@@ -69,6 +69,7 @@ We can write this very succinctly as
 $$
   \sum_{x\in\{0,1\}^n} \proj{x}\otimes X^{f(x)}.
 $$
+Because of this, we sometimes denote the quantum evaluation of the function $f$ by $U_f$, which is a gate on the $(n+1)$ qubits $\ket{x}\ket{y}$.
 
 
 ### A worked example
@@ -347,13 +348,7 @@ Let us now follow a tour through the three early quantum algorithms, where each 
 
 
 
-## Three more quantum algorithms
-
-Following Deutsch's algorithm, there are three more fundamental quantum algorithms that we will study here.
-Each one was designed to solve a different specific problem, but they all share some similarity: this omnipresent sequence of Hadamard, function evaluation, Hadamard.
-
-
-### The Bernstein-Vazirani algorithm
+## The Bernstein--Vazirani algorithm
 
 <div class="video" title="The Bernstein-Vazirani algorithm" data-videoid="60OHCftlqbA"></div>
 
@@ -470,7 +465,7 @@ To see that this output is indeed equal to $\ket{a}$, we can use the fact^[**Exe
 $$
   \sum_{x\in\{0,1\}^n} (-1)^{x\cdot y}
   = \begin{cases}
-    0 &\text{if $y\neq0$}
+    0 &\text{if $y\neq0$;}
   \\2^n &\text{if $y=0$}
   \end{cases}
 $$
@@ -478,7 +473,7 @@ which, in our case, tells us that
 $$
   \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
   = \begin{cases}
-    0 &\text{if $y\neq a$}
+    0 &\text{if $y\neq a$;}
   \\2^n &\text{if $y=a$.}
   \end{cases}
 $$
@@ -487,15 +482,15 @@ In other words, if you take the sum^[Even if you don't immediately see how this 
 Then the standard bit-by-bit measurement of the first register gives the value of $a$ and solves the problem with a single call to the oracle.
 
 
-### Grover's search algorithm
+## Grover's search algorithm
 
-The next algorithm we will study aims to solve the problem of searching for a specific item in an _unsorted_ database.
+The next algorithm we will study aims to solve the problem of searching for a specific item in an *unsorted* database.
 Think about an old-fashioned phone book: the entries are typically sorted alphabetically, by the name of the person that you want to find.
 However, what if you were in the opposite situation: you had a phone number and wanted to find the corresponding person's name?
 The phone book is not sorted in that way, and to find the number (and hence name) with, say, 50% probability, you would need to search through, on average, 50% of the entries.
-In a large phone book, this would take a long time.
+Needless to say, in a large phone book this would take a long time.
 
-While this might seem like a rather contrived problem (a computer database should always maintain an index on any searchable field), many problems in computer science can be cast in this form, i.e. that of an **unstructured search**.
+While this might seem like a rather contrived problem (a computer database *should* always maintain an index on any searchable field), many problems in computer science can be cast in this form, i.e. that of an **unstructured search**.
 
 ::: {.scenario latex=""}
 We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}$.
@@ -503,16 +498,16 @@ We are presented with an oracle that computes some unknown function $f\colon\{0,
 Our task is to find, using the fewest queries possible, an input $x\in\{0,1\}^n$ such that $f(x)=1$.
 :::
 
-Suppose that we know that, amongst the $N=2^n$ binary strings, there are $M\ll N$ which are "tagged", i.e. on which $f$ evaluates to $1$.
-There is no structure in the database, and so any classical search requires around $N/M$ steps, i.e. the function $f$ must be evaluated roughly $N/M$ times.
+Suppose that we know that, amongst the $N=2^n$ binary strings, there are $M\ll N$ which are **tagged**, i.e. strings on which $f$ evaluates to $1$.
+Since there is no structure in the database, any classical search requires around $N/M$ steps, i.e. the function $f$ must be evaluated roughly $N/M$ times.
 
-In contrast, there is a quantum search algorithm, implemented by the circuit below, that was proposed in 1996 by Lov Grover, and which requires only roughly $\sqrt{N/M}$ steps.
+In contrast, there is a quantum search algorithm, implemented by the circuit below, that was proposed in 1996 by [Lov Grover](https://en.wikipedia.org/wiki/Lov_Grover), and which requires only roughly $\sqrt{N/M}$ steps.
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
 (Grover's search).
 :::
-_First register: $n$ qubits. Second register: $1$ qubit._
+*First register: $n$ qubits. Second register: $1$ qubit.*
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
@@ -522,7 +517,7 @@ _First register: $n$ qubits. Second register: $1$ qubit._
     & \gate{H}
     & \qw
     & \ctrl{4}
-      \gategroup[wires=5,steps=4,background,style={rounded corners,dashed,ultra thick,inner sep=0.5em},label style={yshift=0.4em}]{repeat $O(2^{n/2})$ times}
+      \gategroup[wires=5,steps=4,background,style={rounded corners,dashed,ultra thick,inner sep=0.5em},label style={yshift=0.4em}]{Grover iteration operator $G$\\(repeat $O(2^{n/2})$ times)}
     & \gate{H}
     & \ctrl{4}
     & \gate{H}
@@ -563,15 +558,22 @@ _First register: $n$ qubits. Second register: $1$ qubit._
 \end{equation*}
 ```
 
-where $f_0$ tags the binary string of $n$ zeros: $f_0(x)=1$ if $x=00\ldots0$, and $f_0(x)=0$ otherwise. 
+where $f_0$ tags the binary string consisting of $n$ zeros:
+$$
+  f_0(x)
+  = \begin{cases}
+    1 &\text{if $x=00\ldots0$;}
+  \\0 &\text{otherwise.}
+  \end{cases}
+$$
 ::::
 
-We can recognise the typical Hadamard, function evaluation, Hadamard sequence, and we can see that the second register (the bottom qubit, in state $\ket{-}$) plays an auxiliary role: the real action takes place in the first register.
+Yet again, we can recognise the typical Hadamard, function evaluation, Hadamard sequence, and yet again we can see that the second register (the bottom qubit, in state $\ket{-}$) plays an auxiliary role: the real action takes place in the first register.
 However, unlike the previous algorithms, a single call to the oracle does not do very much, and we have to build up the quantum interference in the first register through repeated calls to the oracle (without any intermediate measurements!).
 
-Here, the basic step is the **Grover iteration operator $G$**, which is the boxed part of the circuit that we repeat over and over.
-After $O(2^{n/2})$ applications of $G$, we measure the first register bit-by-bit and obtain the value of $\ket{z}$, which is such that, _with "high" probability_, $f(z)=1$.
-In order to actually _see_ how this algorithm works, and to justify our claim that it gives what we are searching for "with high probability", we can take a more geometric approach.
+Here, the basic step is the **Grover iteration operator $G$**, which is the boxed part of the circuit that we repeat over and over: $(H^{\otimes n}\otimes\id)\circ U_{f_0}\circ(H^{\otimes n}\otimes\id)\circ U_f$.
+After^[Recall the big-$O$ notation introduced in Exercise \@ref(big-o).] $O(2^{n/2})$ applications of $G$, we measure the first register bit-by-bit and obtain the value of $\ket{z}$, which is such that, *with "high" probability*, $f(z)=1$.
+In order to actually *see* how this algorithm works, and to justify our use of the phrase "with high probability", we can take a more geometric approach.
 
 First, we define two orthonormal vectors in the Hilbert space of the first register:^[In fact, we shall completely ignore the second register from now on.]
 $$
@@ -660,7 +662,7 @@ If these can be checked at a rate of, say, one million keys per second, then a c
 
 
 
-### Simon's problem
+## Simon's problem
 
 <div class="video" title="Simon's algorithm" data-videoid="sxIdRKTdRRU"></div>
 
