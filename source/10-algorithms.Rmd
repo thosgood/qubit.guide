@@ -143,13 +143,15 @@ This is because $f(01)=1$ (and so we want to turn the control value $y=0$ into $
 
 
 
-## Hadamard and quantum Fourier transforms
+## Hadamard and quantum Fourier transforms {#hadamard-and-quantum-fourier-transforms}
 
 <div class="video" title="Hadamard and quantum Fourier transforms" data-videoid="qF9Wpgaqqww"></div>
 
 ::: {.todo}
 <!-- TO-DO -->
 :::
+
+<!-- TO-DO: make sure to mention that the Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$ -->
 
 
 
@@ -226,7 +228,7 @@ For this purpose, we ignore everything that happens inside the black box: in our
 
 <div class="video" title="Deutsch's algorithm" data-videoid="DyINHZoOcLQ"></div>
 
-We start, once more, with the simplest quantum interference circuit:
+We start, once more, with the simplest quantum interference circuit
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \begin{equation*}
@@ -240,36 +242,44 @@ We start, once more, with the simplest quantum interference circuit:
 \end{equation*}
 ```
 
-Suppose you can prepare the input, you can read the output, you _cannot_ see the phase shifter, _but_ you are promised that the phase shifter is set to either $\varphi=0$ or $\varphi=\pi$.
-Can you tell which value $\varphi$ has been set to?
+but let's turn this into a black-box scenario, as described above:
 
-Of course you can!
+- we are allowed to prepare the input in any state that we like;
+- we are allowed to read the output;
+- *but* all we know about the value of $\varphi$ is that it is either $0$ or $\pi$, and we are *not* allowed to "look inside" the phase gate to see which value it is!
 
-One way of doing it is to set your input to $\ket{0}$ and check the output: for $\varphi=0$ the output is always $\ket{0}$, and for $\varphi=\pi$ it is always $\ket{1}$.
-A single run of the interference experiment is sufficient to determine the difference.
-The first quantum algorithm, proposed by David Deutsch in 1985, is very much related to this effect, but where the phase setting is determined by the Boolean function evaluation via the phase kick-back.
+With these rules, can we figure out which value $\varphi$ has been set to?
+
+Of course we can --- we're quantum information scientists!
+
+One way of doing it is to prepare the input in the state $\ket{0}$ and check the output: if $\varphi=0$ then the output is always $\ket{0}$, and if $\varphi=\pi$ then it is always $\ket{1}$.
+In other words, a *single run* of the interference experiment is sufficient to determine the difference.
+
+The very first quantum algorithm, proposed by [David Deutsch](https://en.wikipedia.org/wiki/David_Deutsch) in 1985, is very much related to this effect, but where the phase setting is determined by the Boolean function evaluation via the phase kick-back.
 
 ::: {.scenario latex=""}
 We are presented with an oracle that computes some unknown function $f\colon\{0,1\}\to\{0,1\}$.
-Note that there are only four possibilities for what $f$ can be: it could be one of two constant functions (i.e. those where $f(0)=f(1)$), or one of two "balanced" functions (i.e. those where $f(0)\neq f(1)$).
+Note that there are only four possibilities for what $f$ can be: it could be one of two **constant** functions (i.e. those where $f(0)=f(1)$), or one of two **balanced** functions (i.e. those where $f(0)\neq f(1)$).
 
 |    | $f(0)$ | $f(1)$ |
 | -: | :----: | :----: |
-| constant | $\mqty{0\\1}$ | $\mqty{0\\1}$ |
-| balanced | $\mqty{0\\1}$ | $\mqty{1\\0}$ |
+| constant | $0$ | $0$ |
+| constant | $1$ | $1$ |
+| balanced | $0$ | $1$ |
+| balanced | $1$ | $0$ |
 
 Our task is to determine, using the fewest queries possible, whether the function computed by the oracle is constant or balanced.
 :::
 
-Note that we are _not_ asked for the particular values $f(0)$ and $f(1)$, but _only whether the two values are the same or different_.
-Classical intuition tells us that we have to evaluate both $f(0)$ and $f(1)$ and compare them, which involves evaluating $f$ _twice_.
-But, in the quantum setting, we can solve this problem with a _single_ function evaluation, using the following circuit.
+Note that we are *not* asked for the particular values $f(0)$ and $f(1)$, but *only whether the two values are the same or different*.
+Classical intuition tells us that we have to evaluate both $f(0)$ and $f(1)$ and compare them, which involves evaluating $f$ *twice*.
+But, in the quantum setting, we can solve this problem with a *single* function evaluation, using the following circuit.^[The original Deutsch algorithm provides the correct answer with probability 50%. Here we present a modified/improved version.]
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
 (Deutsch's).
 :::
-_First register: $1$ qubit. Second register: $1$ qubit._
+*First register: $1$ qubit. Second register: $1$ qubit.*
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \begin{equation*}
@@ -304,7 +314,7 @@ $$
   \end{aligned}
 $$
 
-This evolution can be represented by the circuit diagram
+The evolution of the first qubit is thus identical to that described by the circuit diagram
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \begin{equation*}
@@ -319,12 +329,18 @@ This evolution can be represented by the circuit diagram
 ```
 
 where the relative phase is $\varphi = (-1)^{f(0)\oplus f(1)}$.
-The first qubit ends in state $\ket{0}$ if the function $f$ is constant, and in state $\ket{1}$ if the function is balanced, and the standard measurement distinguishes these two cases with certainty.^[The original Deutsch algorithm provides the correct answer with probability 50%. Here we have presented a modified/improved version.]
+The first qubit ends in state $\ket{0}$ if the function $f$ is constant, and in state $\ket{1}$ if the function is balanced, and the standard measurement distinguishes these two cases with certainty.
 
 Deutsch's result laid the foundation for the new field of quantum computation, and was followed by several other quantum algorithms for various problems.
-They all seem to rest on the same generic sequence: a Hadamard transform, followed by a function evaluation, followed by another Hadamard (or Fourier) transform.^[The Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$.]
+They all seem to rest on the same generic sequence:
+
+- a Hadamard transform;
+- function evaluation;
+- another Hadamard (or Fourier) transform.^[As explained in Section \@ref(hadamard-and-quantum-fourier-transforms), the Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$.]
+
 As we shall see in a moment, in some cases (such as in Grover's search algorithm) this sequence is repeated several times.
-Let me now take you through the three early quantum algorithms, each one offering a higher-order speed-up when compared to their classical analogues than the last.
+
+Let us now follow a tour through the three early quantum algorithms, where each one offers a higher-order speed-up when compared to their classical analogues than the last: firstly linear, then quadratic, and finally exponential.
 
 
 
@@ -333,7 +349,7 @@ Let me now take you through the three early quantum algorithms, each one offerin
 
 ## Three more quantum algorithms
 
-Along with Deutsch's algorithm, there are three more fundamental quantum algorithms that we will study here.
+Following Deutsch's algorithm, there are three more fundamental quantum algorithms that we will study here.
 Each one was designed to solve a different specific problem, but they all share some similarity: this omnipresent sequence of Hadamard, function evaluation, Hadamard.
 
 
@@ -347,21 +363,21 @@ $$
   f(x) = a\cdot x
   \equiv (a_1\cdot x_1) \oplus \ldots \oplus (a_n\cdot x_n)
 $$
-for some fixed $a\in\{0,1\}^n$.
+for some fixed binary string $a=a_1a_2\ldots a_n\in\{0,1\}^n$.
 
 Our task is to determine, using the fewest queries possible, the value of the $n$-bit string $a$.
 :::
 
-It's quite easy to see how to do this classically: if we input the value $x=00\ldots010\ldots0$, with the $1$ in the $m$-th bit, then $f(x)$ is simply the $m$-th bit of $a$; after $n$ such calls, we can evaluate every bit value.
-It is also clear that there cannot exist a better classical algorithm: each call to the oracle teaches us exactly one bit of information, and since we must learn $n$ bits, we must query it $n$ times.
+It's quite easy to see how to do this classically: if we input the value $x=00\ldots010\ldots0$, where the $m$-th bit is a $1$ and all other bits are $0$, then $f(x)$ is simply the $m$-th bit of $a$; after $n$ such calls, we will know every bit value, and thus know $a$.
+It is also clear that there *cannot* exist a better classical algorithm: each call to the oracle teaches us exactly one bit of information, and since we must learn $n$ bits, we must query it $n$ times.
 
-In contrast, by running the circuit below, it is possible to determine the value of $a$ with a _single_ (!) call to the oracle.
+In contrast, by running the circuit below, it is possible to determine the value of $a$ with a *single* call to the oracle!
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
 (Bernstein-Vazirani).
 :::
-_First register: $n$ qubits. Second register: $1$ qubit._
+*First register: $n$ qubits. Second register: $1$ qubit.*
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
@@ -397,7 +413,7 @@ _First register: $n$ qubits. Second register: $1$ qubit._
 ```
 ::::
 
-N.B. The "$\ldots$" in the circuit means "there are more wires here but they are identical (apart from the numbering) to the ones above".
+A quick note on notation: the "$\ldots$" in the circuit means "there are more wires here but they are identical (apart from the numbering) to the ones above".
 You might also see other notation to denote this, such as
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
@@ -422,7 +438,7 @@ or even simply
 \end{equation*}
 ```
 
-Now, stepping through the execution of the circuit (and ignoring the second register, which remains in state $\ket{-}$ throughout), we obtain
+Now, stepping through the execution of the circuit (and ignoring the second register, which, as per usual, remains in the state $\ket{-}$ throughout), we obtain
 $$
   \begin{aligned}
     \ket{0}
@@ -441,38 +457,34 @@ $$
       \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
     \right]
     \ket{y}
-  \\&\quad=\ket{a}
   \end{aligned}
 $$
 where we write the second Hadamard transform as
 $$
   \ket{x}
-  \mapsto
-  \left(\frac{1}{\sqrt{2}}\right)^n \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x}\ket{y}
+  \longmapsto
+  \left(\frac{1}{\sqrt{2}}\right)^n \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x}\ket{y}.
 $$
-and where we have used the fact (which you should prove!) that, for any $y\in\{0,1\}^n$,
+
+To see that this output is indeed equal to $\ket{a}$, we can use the fact^[**Exercise.** Prove this!] that, for any $y\in\{0,1\}^n$,
 $$
   \sum_{x\in\{0,1\}^n} (-1)^{x\cdot y}
-  =
-  \begin{cases}
+  = \begin{cases}
     0 &\text{if $y\neq0$}
   \\2^n &\text{if $y=0$}
   \end{cases}
 $$
-
-This lets us write^[Even if you don't immediately see how this sum works for $z\neq a$ (writing $\ket{z}$ to mean the output), you can first calculate the probability that the output is $z=a$. In this case it is easy to see that the sum is $2^n$, and that in the final state $\sum_z\alpha_z\ket{z}$ the term $z=a$ has amplitude $1$. Thus, by normalisation, all the other terms must be equal to $0$.]
+which, in our case, tells us that
 $$
   \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
-  =
-  \begin{cases}
+  = \begin{cases}
     0 &\text{if $y\neq a$}
   \\2^n &\text{if $y=a$.}
   \end{cases}
 $$
-If you take the sum over $x$, then all the terms always cancel out _unless_ $a\oplus y = 00\ldots0$, i.e. _unless $y=a$_.
-Thus the standard bit-by-bit measurement of the first register gives the value of $a$ and solves the problem with a single call to the oracle.
 
-Note that the algorithm follows the same pattern as Deutsch's algorithm: Hadamard, function evaluation, Hadamard, i.e. a generic quantum interference pattern.
+In other words, if you take the sum^[Even if you don't immediately see how this sum works for $z\neq a$ (writing $\ket{z}$ to mean the output), you can first calculate the probability that the output is $z=a$. In this case it is easy to see that the sum is $2^n$, and that in the final state $\sum_z\alpha_z\ket{z}$ the term $z=a$ has amplitude $1$. Thus, by normalisation, all the other terms must be equal to $0$.] over $x$, then all the terms always cancel out *unless* $a\oplus y = 00\ldots0$, but this happens *if and only if* $y=a$.
+Then the standard bit-by-bit measurement of the first register gives the value of $a$ and solves the problem with a single call to the oracle.
 
 
 ### Grover's search algorithm
