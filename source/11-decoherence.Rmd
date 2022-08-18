@@ -1,11 +1,11 @@
 # Decoherence and basic quantum error correction {#decoherence-and-basic-quantum-error-correction}
 
 > About the one big problem that hinders us from physically implementing everything that we've learnt so far: **decoherence**.
-> However, also about how we can start to deal with it via some elementary **error correction**.
+> But also about how we can start to deal with it via some elementary **error correction**.
 
-In principle we know how to build a quantum computer: we can start with simple quantum logic gates and try to integrate them together into quantum networks.
-However, if we keep on putting quantum gates together into networks we will quickly run into some serious practical problems.
-The more interacting qubits involved, the harder it is to prevent them from getting entangled with the environment.
+As the adage goes, "in theory, theory and practice rarely differ; in practice, they often do".
+*In theory*, we know how to build a quantum computer: we can start with simple quantum logic gates and try to integrate them together into quantum networks.
+However, if we keep on putting quantum gates together into networks we will quickly run into some serious problems *in practice*: the more interacting qubits involved, the harder it is to prevent them from getting entangled with the environment.
 This unwelcome entanglement, also known as **decoherence**, destroys the interference, and thus the power, of quantum computing.
 
 
@@ -14,7 +14,7 @@ This unwelcome entanglement, also known as **decoherence**, destroys the interfe
 
 ## Decoherence simplified
 
-Consider the following qubit-environment interaction:
+Consider the following interaction between a qubit and its environment:
 $$
   \begin{aligned}
     \ket{0}\ket{e} &\longmapsto \ket{0}\ket{e_{00}}
@@ -22,31 +22,27 @@ $$
   \end{aligned}
 $$
 where $\ket{e}$, $\ket{e_{00}}$, and $\ket{e_{11}}$ are the states of the environment, which not need to be orthogonal.^[The reason we use two indices in $\ket{e_{00}}$ and $\ket{e_{11}}$ will become clear in a moment, when we consider more general interaction with the environment.]
-Let $\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$ be the initial state of the qubit.
-The environment is essentially trying to _measure_ the qubit and, as the result, the two get entangled:
+Now assume that the qubit is initially in some general state $\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$.
+The resulting qubit-environment interaction is essentially the environment trying to *measure* the qubit and, as the result, entangling the two together:
 $$
   \Big( \alpha\ket{0} + \beta\ket{1} \Big) \ket{e}
   \longmapsto
   \alpha \ket{0}\ket{e_{00}} + \beta \ket{1} \ket{e_{11}}.
 $$
-This state can also be written as
+
+Now we can also write this evolution as
 $$
   \begin{aligned}
     \Big( \alpha\ket{0} + \beta\ket{1} \Big) \ket{e}
     \longmapsto
     & \Big( \alpha\ket{0} + \beta\ket{1} \Big) \frac{\ket{e_{00}}+\ket{e_{11}}}{2}
   \\+& \Big( \alpha\ket{0} - \beta\ket{1} \Big) \frac{\ket{e_{00}}-\ket{e_{11}}}{2}.
+  \\=& \id\ket{\psi}\ket{e_{\mathbf{1}}} + Z\ket{\psi}\ket{e_Z},
   \end{aligned}
 $$
-or as
-$$
-  \ket{\psi}\ket{e}
-  \longmapsto
-  \id\ket{\psi}\ket{e_{\mathbf{1}}} + Z\ket{\psi}\ket{e_Z},
-$$
 where $\ket{e_{\mathbf{1}}} = \frac{1}{2}(\ket{e_{00}} + \ket{e_{11}})$ and $\ket{e_Z} = \frac{1}{2}(\ket{e_{00}} - \ket{e_{11}})$.
-We may interpret this expression by saying that two things can happen to the qubit: nothing $\id$ (first term), or phase-flip $Z$ (second term).
-_This, however, should not be taken literally unless the states of the environment, $\ket{e_{\mathbf{1}}}$ and $\ket{e_Z}$, are orthogonal._^[Why not?]
+We can roughly interpret this expression as saying that two things can happen to the qubit: *nothing* $\id$ (first term), or *phase-flip* $Z$ (second term).
+This, however, *should not be taken literally* unless the states of the environment, $\ket{e_{\mathbf{1}}}$ and $\ket{e_Z}$, are orthogonal.^[Why not?]
 
 This process is what we refer to as **decoherence**.
 
@@ -60,7 +56,17 @@ This process is what we refer to as **decoherence**.
 
 <div class="video" title="Decoherence vs interference" data-videoid="ZPfdKNzjWbo"></div>
 
-Suppose the qubit undergoes the usual interference experiment, but, in between the two Hadamard gates, it is affected by **decoherence** (denoted by $\times$), which acts as described above (i.e. $\ket{0}\ket{e}\mapsto\ket{0}\ket{e_{00}}$ and $\ket{1}\ket{e}\mapsto\ket{1}\ket{e_{11}}$).
+Suppose a qubit undergoes the usual single-qubit interference evolution, but, between the phase gate and the second Hadamard gate, it is affected by **decoherence**:
+$$
+  \begin{aligned}
+    \times\colon
+    \ket{0}\ket{e}
+    &\longmapsto \ket{0}\ket{e_{00}}
+  \\\ket{1}\ket{e}
+    &\longmapsto \ket{1}\ket{e_{11}}
+  \end{aligned}
+$$
+as described by Figure \@ref(fig:decoherence-interference).
 
 ```{r decoherence-interference,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4.5,fig.cap='The usual interference experiment, but with decoherence.'}
 \begin{quantikz}
@@ -83,7 +89,7 @@ $$
   \\& \xmapsto{H} \ket{0}\Big( \ket{e_{00}} + e^{i\phi}\ket{e_{11}} \Big) + \ket{1}\Big( \ket{e_{00}} - e^{i\phi}\ket{e_{11}} \Big).
   \end{aligned}
 $$
-If we write $\braket{e_{00}}{e_{11}} = ve^{i\alpha}$, then the final probabilities of $0$ and $1$ oscillate with $\phi$ as
+Writing $\braket{e_{00}}{e_{11}}=ve^{i\alpha}$ for $v\in\mathbb{R}_{\geq0}$ and $\alpha\in[0,2\pi)$, the final probability $P_k$ of measuring the output to be in state $\ket{k}$ oscillates with $\phi$ as
 $$
   \begin{aligned}
     P_{0}(\phi) &= \frac{1}{2}\big(1 + v\cos(\phi + \alpha)\big),
@@ -126,10 +132,10 @@ $$
 \end{tikzpicture}
 ```
 
-As we can see in Figure \@ref(fig:visibility-suppression), the interference pattern is suppressed by a factor $v$, which we call the **visibility**.
-As $v=|\braket{e_{00}}{e_{11}}|$ decreases, we lose all the advantages of quantum interference.
-For example, in Deutsch's algorithm we obtain the correct answer with probability at most $\frac{1}{2}(1+v)$.
-For $\braket{e_{00}}{e_{11}} = 0$, the **perfect decoherence** case, the network outputs $0$ or $1$ with equal probabilities, i.e. _it is useless as a computing device_.
+As we can see in Figure \@ref(fig:visibility-suppression), the interference pattern is **suppressed** by a factor $v$, which we call the **visibility**.
+As $v=|\braket{e_{00}}{e_{11}}|$ gets closer and closer to $0$, we lose all the advantages of quantum interference.
+For example, in Deutsch's algorithm (Section \@ref(deutschs-algorithm)) we would obtain the correct answer with probability at most $\frac{1}{2}(1+v)$.
+For $\braket{e_{00}}{e_{11}} = 0$, the case of **perfect decoherence**, the network outputs $0$ or $1$ with equal probabilities, i.e. *it is useless as a computing device*.
 
 ::: {.idea latex=""}
 It is clear that we want to avoid decoherence, or at least diminish its impact on our computing device.
