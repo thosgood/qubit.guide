@@ -195,14 +195,15 @@ In this case (i.e. when $\braket{e_{\mathbf{1}}}{e_Z}=0$) we can indeed say that
 
 <div class="video" title="Quantum errors" data-videoid="JTWNu73Ip1A"></div>
 
-The most general qubit-environment interaction
+The most general qubit-environment interaction is of the form
 $$
   \begin{aligned}
-    \ket{0}\ket{e} &\longmapsto \ket{0}\ket{e_{00}} + \ket{1}\ket{e_{01}},
-  \\\ket{1}\ket{e} &\longmapsto \ket{1}\ket{e_{10}} + \ket{0}\ket{e_{11}},
+    \ket{0}\ket{e} &\longmapsto \ket{0}\ket{e_{00}} + \ket{1}\ket{e_{01}}
+  \\\ket{1}\ket{e} &\longmapsto \ket{1}\ket{e_{10}} + \ket{0}\ket{e_{11}}
   \end{aligned}
 $$
-where the states of the environment are neither normalised nor orthogonal, leads to decoherence
+where the states of the environment are neither normalised nor orthogonal.
+This leads to decoherence
 $$
   \begin{aligned}
     \Big( \alpha\ket{0} + \beta\ket{1} \Big) \ket{e} \longmapsto
@@ -212,59 +213,53 @@ $$
   \\+& \Big( \alpha\ket{1} - \beta\ket{0} \Big) \frac{\ket{e_{01}}-\ket{e_{10}}}{2}.
   \end{aligned}
 $$
-We can also write this as
+which can be written as
 $$
 \ket{\psi}\ket{e} \longmapsto  \id \ket{\psi}\ket{e_{\mathbf{1}}} + Z\ket{\psi} \ket{e_Z} +X\ket{\psi} \ket{e_X} + Y\ket{\psi} \ket{e_Y}.
 $$
+
 The intuition behind this expression is that four things can happen to the qubit:
 
-1. nothing ($\id$),
-2. phase-flip ($Z$),
-3. bit-flip ($X$), or
+1. nothing ($\id$)
+2. phase-flip ($Z$)
+3. bit-flip ($X$)
 4. both bit-flip and phase-flip ($Y$).
 
-This is certainly the case when the states $\ket{e_{\mathbf{1}}}, \ket{e_X}, \ket{e_Y}$ and $\ket{e_Z}$ are mutually orthogonal, otherwise we cannot perfectly distinguish between the four alternatives.
+This is certainly the case when the states $\ket{e_{\mathbf{1}}}, \ket{e_X}, \ket{e_Y}$ and $\ket{e_Z}$ are mutually orthogonal, but if this is not so then we cannot perfectly distinguish between the four alternatives.
 
 ::: {.idea latex=""}
-What is important here is the discretisation of errors, and the fact that we can reduce quantum errors to _two types_: bit-flip errors $X$, and phase-flip errors $Z$.
+The important thing is the *discretisation of errors*, and the fact that we can reduce quantum errors in this scenario to *two types*: bit-flip errors $X$, and phase-flip errors $Z$.
 :::
 
-In general, given $n$ qubits in state $\ket{\psi}$ and the environment in state $\ket{e}$ the joint evolution can be expanded as
+In general, given $n$ qubits in state $\ket{\psi}$, and an environment in state $\ket{e}$, the joint evolution can be expanded as^[The sum is from $i=1$ to $4^n$ because there are $4^n$ different (tensor products of) Pauli operators acting on $n$ qubits.]
 $$
-\ket{\psi}\ket{e} \longmapsto \sum_i E_i\ket{\psi}\ket{e_i},
+  \ket{\psi}\ket{e} \longmapsto \sum_{i=1}^{4^n} E_i\ket{\psi}\ket{e_i},
 $$
-where the $E_i$ are the $n$-fold tensor products of the Pauli operators and the $\ket{e_i}$ are the corresponding states of the environment, which are not assumed to be normalised or mutually orthogonal.
-A typical operator $E_i$ acting on five qubits may look like this,
+where the $E_i$ are the $n$-fold tensor products of the Pauli operators and the $\ket{e_i}$ are the corresponding states of the environment (which, again, are not assumed to be normalised or mutually orthogonal).
+For example, in the case $n=5$, a typical operator $E_i$ may look like
 $$
   X\otimes Z \otimes \id \otimes \id \otimes Y
   \equiv XZ\id\id Y.
 $$
-We can say that $E_i$ represents an error consisting of the bit ($X$) error on the first qubit, phase ($Z$) error on the second qubit and both bit and phase ($Y$) error on the fifth qubit.
-Again, _this is not quite accurate if the corresponding states of the environment are not mutually orthogonal_, but it gives the right kind of intuition nonetheless.
-Here the index $i$ in $E_i$ ranges from $1$ to $4^5=1024$, because there are $4^5$ different Pauli operators acting on $5$ qubits.
+We say that such an $E_i$ represents an error consisting of the bit ($X$) error on the first qubit, phase ($Z$) error on the second qubit and both bit and phase ($Y$) error on the fifth qubit.
+Again, *this is not entirely accurate if the corresponding states of the environment are not mutually orthogonal*, but it gives the right kind of intuition nonetheless.
 
-
-
-
-
-## Same evolution, different errors
-
-We can always pick up an orthonormal basis $\ket{u_i}$ in the environment and express the system--environment evolution as
+Of course, we can always pick an orthonormal basis $\ket{u_j}$ of the environment and express the system-environment evolution as
 $$
   \begin{aligned}
     \ket{\psi}\ket{e}
-    \longmapsto &\sum_{ij} E_i\ket{\psi}\ket{u_j}\braket{u_j}{e_i}
+    \longmapsto &\sum_{i,j} E_i\ket{\psi}\ket{u_j}\braket{u_j}{e_i}
     \\&= \sum_{j}\Big( \sum_i \braket{u_j}{e_i} E_i\Big)\ket{\psi}\ket{u_j}
     \\&= \sum_j M_j\ket{\psi}\ket{u_j}.
   \end{aligned}
 $$
-The new "error" operators $M_j$ satisfy $\sum_j M_j^\dagger M_j =\id$ and, in general, they are _not_ unitary.
+The new "error" operators $M_j$ satisfy $\sum_j M_j^\dagger M_j =\id$ but are *not*, in general, unitary.
 Now, the evolution of the density operator $\proj{\psi}$ can be written as 
 $$
   \proj{\psi}\longmapsto \sum_j M_j\proj{\psi} M_j^\dagger.
 $$
 Which particular errors you choose depends of your choice of the basis in the environment.
-If, instead of $\ket{u_j}$, you pick up a different basis, say $\ket{v_k}$, then
+If, instead of $\ket{u_j}$, you pick a different basis, say $\ket{v_k}$, then
 $$
   \begin{aligned}
     \ket{\psi}\ket{e}
@@ -278,7 +273,7 @@ and, consequently,
 $$
   \proj{\psi}\longmapsto \sum_k N_k\proj{\psi} N_k^\dagger.
 $$
-The new "errors" satisfy $\sum_k N_k^\dagger N_k = \id$, and the error operators $N_k$ and $M_j$ are related by the unitary matrix $U_{kj}=\braket{v_k}{u_j}$. 
+The new "errors" still satisfy $\sum_k N_k^\dagger N_k = \id$, and the error operators $N_k$ and $M_j$ are related by the unitary matrix $U_{kj}=\braket{v_k}{u_j}$.
 
 
 
