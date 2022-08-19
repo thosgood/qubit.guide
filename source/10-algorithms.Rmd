@@ -789,7 +789,7 @@ $$
 But if we measure^[As we shall see in a moment, the actual measurement on the second register is not actually necessary.] the second register *before* applying the second Hadamard transform to the first register, we obtain one of the $2^{n-1}$ possible values of $f(x)$, each equally likely.
 Let's study the implications of this.
 
-Suppose that the outcome of the measurement is $f(a)$.
+Suppose that the outcome of the measurement is $f(a)$ for some $a\in\{0,1\}^n$.
 Given that both $a$ and $a\oplus s$ are mapped to $f(a)$ by $f$, the first register then collapses to the state
 $$
   \frac{1}{\sqrt{2}}\big( \ket{a} + \ket{a\oplus s} \big).
@@ -811,14 +811,13 @@ In fact, we did not have to measure the second register at all: it was a mathema
 Instead of collapsing the state to just one term in a superposition, we can express Equation ($\ddagger$) as
 $$
   \begin{aligned}
-    \frac{1}{2^n} \sum_{y,f(a)}
+    &\frac{1}{2^n} \sum_{y,f(a)}
     \Big( (-1)^{a\cdot y} + (-1)^{(a\oplus s)\cdot y} \Big) \ket{y}\ket{f(a)}
   \\= &\frac{1}{2^n} \sum_{y,f(a)} (-1)^{a\cdot y}
     \Big( 1 + (-1)^{s\cdot y} \Big) \ket{y}\ket{f(a)}
   \end{aligned}
 $$
-where the summation over $f(a)$ means summing over all binary strings in the image of $f$, i.e. over the set of all $z\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ with $f(x)=z$.
-<!-- TO-DO: but what does "a" mean then? is it just an arbitrary choice of preimage? -->
+where the summation over $f(a)$ means summing over all binary strings in the image of $f$, which is a convenient shorthand for the more complicated formal statement: for all $z\in\{0,1\}^n$, since our function $f$ is two-to-one, we know that the preimage $f^{-1}(z)$ has either *two* elements or *none*; if it's the latter, then we don't include $z$ in our sum; if it's the former, we *pick one* and call it $a$ (knowing that the other, by the setup, must be $a\oplus s$, which you can see appearing in the first equation above).
 Then the final output of the algorithm is
 $$
   \frac{1}{2^{n-1}} \sum_{y\in s^\perp} \ket{y}
