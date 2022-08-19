@@ -281,41 +281,64 @@ The new "errors" still satisfy $\sum_k N_k^\dagger N_k = \id$, and the error ope
 
 ## Some errors can be corrected on some states
 
-Alice prepares a quantum object in some state $\ket{\psi}$ and sends it to Bob.
-The object is intercepted by a malicious Eve who changes its state by applying one of the prescribed unitary operations $U_1,\ldots, U_n$, with probabilities $p_1,\ldots, p_n$, respectively.
-Alice and Bob know the set of possible unitaries (errors), and the associated probabilities, but they do not know which particular unitary operation was chosen by Eve.
+In another one of their escapades, Alice prepares a quantum object in some state $\ket{\psi}$ and sends it to Bob.
+But en route, the object is intercepted by a malicious third party, Eve, who changes its state by applying one of a prescribed list of unitary operations $U_1,\ldots,U_n$, chosen with probability $p_1,\ldots,p_n$, respectively.
+Let's assume that Alice and Bob know the set of possible unitaries (which we can think of as errors), along with the associated probabilities, but they do *not* know which particular unitary operation was chosen by Eve in this run of their experiment.
 Can Bob reconstruct the state $\ket{\psi}$?
-The answer is affirmative, at least for _some states_ $\ket{\psi}$.
 
-Let $\mathcal{H}$ be the Hilbert space pertaining to the object, and let $\mathcal{C}$ be a subspace of $\mathcal{H}$.
-Suppose $\ket{\psi}\in\mathcal{C}$, and that, for each vector in $\mathcal{C}$, we have
+The answer is "yes, but only *sometimes*" --- it depends on the original state $\ket{\psi}$.
+
+Let $\mathcal{H}$ be the Hilbert space pertaining to the object, and let $\mathcal{C}$ be a subspace of $\mathcal{H}$ that contains $\ket{\psi}$.
+Write $\mathcal{C}_i$ to denote the subspace of $\mathcal{H}$ given by the image of $U_i$ applied to $\mathcal{C}$, i.e.
 $$
-  \bra{\psi}U^\dagger_i U_j\ket{\psi} = \delta_{ij}
+  \mathcal{C}_i \coloneqq \{U_i\ket{\phi} \mid \ket{\phi}\in\mathcal{C}\}.
 $$
-Any error $U_k$ transforms the subspace $\mathcal{C}$ into the subspace $\mathcal{C}_k$, which is orthogonal to $\mathcal{C}$ and also to any other subspace $\mathcal{C}_j$ for $j\neq k$.
-All Bob has to do is
-- perform a measurement, defined by projectors on the subspaces $\mathcal{C}_j$ for $j=1,\ldots n$,
-- identify $k$, and
+Suppose that these subspaces are all orthogonal to one another: for each $\ket{\phi}\in\mathcal{C}$, we have
+$$
+  \bra{\phi}U^\dagger_i U_j\ket{\phi} = \delta_{ij}
+$$
+(and if none of the $U_i$ are equal to the identity, then we also ask for each $\mathcal{C}_i$ to be orthogonal to $\mathcal{C}$).
+Assume that the unitary applied by Eve was $U_k$.
+Then all Bob has to do to reconstruct $\ket{\psi}$ is
+
+- perform a measurement, defined by projectors on the subspaces $\mathcal{C}_i$ for $i=1,\ldots n$
+- identify $k$
 - apply $U_k^\dagger$.
 
-As an example, consider an object composed of three qubits and the subspace $\mathcal{C}$ spanned by the two basis vectors $\ket{000}$ and $\ket{111}$.
-Suppose Eve applies one of the following four unitary operations: $U_0=\id\otimes\id\otimes \id$, $U_1 =X\otimes\id\otimes \id$, $U_2 =\id \otimes X\otimes \id$, and $U_3=\id\otimes\id\otimes X$.
-That is, the identity, or bit-flip on the first, second, or third qubit.
-Each operation is chosen randomly with the same probability of $1/4$.
-It is easy to see that the four operations generate four subspaces:
+Things hopefully become clearer with an example.
+Consider an object composed of three qubits, and define the subspace $\mathcal{C}$ to be the span of the two basis vectors $\ket{000}$ and $\ket{111}$.
+Suppose Eve applies one of the following four unitary operations, each with equal probability:
 $$
   \begin{aligned}
-    \mathcal{C} = \Big\langle\ket{000},\ket{111}\Big\rangle &\qquad \mathcal{C}_1 = \Big\langle\ket{100},\ket{011}\Big\rangle
-  \\\mathcal{C}_2 = \Big\langle\ket{010},\ket{101}\Big\rangle& \qquad \mathcal{C}_3 = \Big\langle\ket{001},\ket{110}\Big\rangle.
+    U_0 &= \id\otimes\id\otimes \id
+  \\U_1 &= X\otimes\id\otimes \id
+  \\U_2 &= \id \otimes X\otimes \id
+  \\U_3 &= \id\otimes\id\otimes X
   \end{aligned}
 $$
-The eight dimensional Hilbert space of the three qubits is then decomposed into the sum of orthogonal subspaces
+That is, the identity, or the bit-flip on the first, second, or third qubit.
+These four operations generate the four subspaces
 $$
-\mathcal{C} \oplus \mathcal{C}_1 \oplus\mathcal{C}_2 \oplus \mathcal{C}_3
+  \begin{aligned}
+    \mathcal{C} = \mathcal{C}_0 &= \Big\langle\ket{000},\ket{111}\Big\rangle
+  \\\mathcal{C}_1 &= \Big\langle\ket{100},\ket{011}\Big\rangle
+  \\\mathcal{C}_2 &= \Big\langle\ket{010},\ket{101}\Big\rangle
+  \\\mathcal{C}_3 &= \Big\langle\ket{001},\ket{110}\Big\rangle.
+  \end{aligned}
 $$
-So suppose Alice prepares $\ket{\psi}=\alpha\ket{000}+\beta\ket{111}$ and Eve applies the bit-flip to the third qubit.
-This generates the state $\id\otimes\id\otimes X\ket{\psi}=\alpha\ket{001}+\beta\ket{110}\in \mathcal{C}_3$.
-The projective measurement on these subspaces tells Bob that the new state is in the subspace $\mathcal{C}_3$, and hence the original state can be recovered by the operation $\id\otimes\id\otimes X$.
+which actually span the eight-dimensional Hilbert space $\mathcal{H}$ of the three qubits, giving us a decomposition into orthogonal subspaces:
+$$
+  \mathcal{H}
+  \cong \mathcal{C}_0 \oplus \mathcal{C}_1 \oplus\mathcal{C}_2 \oplus \mathcal{C}_3
+$$
+
+So suppose Alice prepares $\ket{\psi}=\alpha\ket{000}+\beta\ket{111}$ (which is indeed a vector in $\mathcal{C}$), and Eve ends up applying $U_3$, the bit-flip to the third qubit.
+This generates the state
+$$
+  (\id\otimes\id\otimes X)\ket{\psi}
+  = \alpha\ket{001}+\beta\ket{110} \in \mathcal{C}_3.
+$$
+The projective measurement on these subspaces tells Bob that the new state is in the subspace $\mathcal{C}_3$, and hence the original state can be recovered by the operation $U_3^\dagger=\id\otimes\id\otimes X$.
 
 
 
