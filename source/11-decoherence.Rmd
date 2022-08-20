@@ -346,30 +346,34 @@ The projective measurement on these subspaces tells Bob that the new state is in
 
 ## Repetition codes
 
-In order to give a sense of how quantum error correction actually works, let us begin with a *classical* example of a repetition code.
-Suppose a transmission channel flips each bit in transit with probability $p$.
-If this error rate is considered too high then it can be decreased by encoding each bit into, say, three bits:
+In order to give a sense of how quantum error correction actually works, let us begin with a *classical* example of a **repetition code**.
+
+Suppose that Alice is communicating to Bob over a channel which, with some probability $p$, flips each (classical) bit that she transmits.^[This scenario could arise from the channel being noisy, damaged, or even maliciously modified by Eve.]
+Even if Bob *knows* that these potential flips are happening, he cannot always compensate for the errors introduced.
+It could be the case that he receives the binary message, converts it into alphabetic characters, and reads "Hello Bpb".
+Then he would likely think to himself that Alice had intended to send "Hello Bob", and no problems would arise.
+But if the transmitted message instead read "Hellp Bob", then he might be less sure --- maybe Alice had just meant to send "Hello Bob", but maybe she had instead meant to send "Help Bob".
+Of course, if the probability $p$ is high enough, then the actual messages that Bob receives could be more along the lines of "ytlF#kb2F", and at this point both he and Alice decide that they need some way to accommodate for the error-inducing communications channel.
+
+One thing that they might try is to encode each bit into *three* bits:
 $$
   \begin{aligned}
     0 &\mapsto 000
   \\1 &\mapsto 111.
   \end{aligned}
 $$
-That is, each time we want to send logical $0$, we send three physical bits, all in state $0$; each time we want to send logical $1$, we send three physical bits, all in state $1$.
-The receiver decodes the bit value by a "majority vote" of the three bits.
-If only one error occurs, then this error correction procedure is foolproof.
-In general, the net probability of error is just the likelihood that two or three errors occur, which is $3p^2(1-p) + p^3 < p$.
-Thus the three bit code improves the reliability of the information transfer.
-The *quantum* case, however, is more complicated, because we have both bit-flip *and* phase-flip errors.
+That is, each time Alice wants to send a single logical $0$, she instead sends three physical bits, all in state $0$; each time she wants to send a single logical $1$, she instead sends three physical bits, all in state $1$.
+Bob decodes the bit value by a "majority vote" of the three bits.
+If only one error occurs in a given "block" of three bits, then this error correction procedure is foolproof.
+In general, the net probability of error in a received block is just the likelihood that either two or three errors occur, which is $3p^2(1-p) + p^3$.
+If $p<\frac12$, then this probability is indeed less than $p$, and so the three-bit code improves the reliability of the information transfer.
 
+The *quantum* case, however, is more complicated, because we have to worry about both bit-flip *and* phase-flip errors.
 
+But let's start simply: how can we protect a qubit against a *single bit-flip error* $X$?
+It turns out that we can actually rely on the same triple-repetition code, but we just need to use the language of quantum operations.
 
-
-
-## Quantum error correction
-
-In order to protect a qubit against bit-flips (incoherent $X$ rotations), we rely on the same repetition code, but both encoding and error correction is now done by quantum operations.
-We take a qubit in some unknown pure state $\alpha\ket{0} + \beta\ket{1}$, introduce two auxiliary qubits, and encode it into three qubits as
+Given some qubit in an unknown pure state $\alpha\ket{0} + \beta\ket{1}$, we encode it into three qubits by using $\texttt{c-NOT}$ gates:
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
 \begin{equation*}
@@ -396,10 +400,9 @@ We take a qubit in some unknown pure state $\alpha\ket{0} + \beta\ket{1}$, intro
 \end{equation*}
 ```
 
-Suppose that at most one qubit is then flipped (say, the second one).
-The encoded state then becomes $\alpha\ket{010} + \beta\ket{101}$.
-Decoding requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
-Instead we introduce another two additional qubits, both in state $\ket{0}$, and apply the following network:
+Suppose that the *second* qubit is flipped by our noisy channel, so that the encoded state becomes $\alpha\ket{010} + \beta\ket{101}$.
+Decoding this requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
+So instead we introduce another *two additional* qubits, which we refer to as **ancilla bits**, both in state $\ket{0}$, and apply the following **encoding network**:
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
 \begin{equation*}
@@ -410,76 +413,59 @@ Instead we introduce another two additional qubits, both in state $\ket{0}$, and
     & \qw
     & \qw
     & \qw
-    &{\mathrm{id}}
     \\
     & \qw
     & \ctrl{2}
     & \ctrl{3}
     & \qw
     & \qw
-    &{X}
     \\
     & \qw
     & \qw
     &\qw
     & \ctrl{2}
     & \qw
-    &{\mathrm{id}}
     \\
     \lstick{$\ket{0}$}
     & \targ{}
     & \targ{}
     & \qw
     & \qw
-    & \meterD{1}
+    & \meter{}
     \\
     \lstick{$\ket{0}$}
     & \qw
     & \qw
     & \targ{}
     & \targ{}
-    & \meterD{1}
+    & \meter{}
   \end{quantikz}
 \end{equation*}
 ```
 
-We measure the two auxiliary qubits, also known as **ancilla bits**, and the result of the measurement, known as the **error syndrome**, tells us how to reset the three qubits of the code.
-The theory behind this network runs as follows.
+We measure the two ancilla bits (in the standard basis), and the result of the measurement, known as the **error syndrome**, tells us how to reset the three qubits of the code, as follows.
 
-If qubits one and two (counting from the top) are the same, then the first ancilla is in the $\ket{0}$ state.
-Similarly, if qubits two and three are the same, then the second ancilla is in the $\ket{0}$ state.
-However, if they are different, then the corresponding ancilla is in the $\ket{1}$ state.
-Hence, the four possible error syndromes --- $\ket{00}$, $\ket{01}$, $\ket{10}$, and $\ket{11}$ --- each indicate a different possibility: no errors, an error in the third, first, or second qubits, respectively.
-In our example, we would measure $\ket{11}$, revealing that both qubits 1 and 2, and qubits 2 and 3, are different.
-Thus it is qubit 2 that has an error.
-Knowing the error, we can go back and fix it, simply by applying $X$ to qubit 2.
+The first ancilla compares qubits one and two (counting from the top), and the second ancilla compares qubits two and three: if the ancilla is measured and found to be the $\ket{0}$ state, then it means that the corresponding qubits were in the *same* state; if it is found in the $\ket{1}$ state, then the corresponding qubits were in *different* states.
+Hence, the four possible error syndromes --- $\ket{00}$, $\ket{01}$, $\ket{10}$, and $\ket{11}$ --- each indicate a different possibility: no errors, or an error in the third, first, or second qubits, respectively.
+In our example we would measure $\ket{11}$, revealing that the first two qubits were in different states, as were the last two qubits, and so the second qubit must have been flipped.
+Knowing the error, we can go back and fix it, simply by applying $X$ to the second qubit.
 The net result is the state $\alpha\ket{000} + \beta\ket{111}$, which is then turned into $(\alpha\ket{0} + \beta\ket{1})\ket{0}\ket{0}$ by running the mirror image of the encoding network.
 
+This three-qubit code^[The code is called a "three-qubit code" because this is how many we need to *encode* it, but to *decode* it we actually need *five* qubits, since we need the ancillas.] that we have just demonstrated is sufficient to protect a qubit against single bit-flips, but not phase-flips.
+But if we know that we *only* have to worry about phase-flips, not bit-flips, then this is actually enough!
+Recall that $HZH=X$, and so it is enough to sandwich the decoherence area in between the Hadamard gates: they will turn phase-flips into bit-flips, and we have just seen how to protect our qubits against $X$-errors.
+Then the encoded state $\alpha\ket{0}+\beta\ket{1}$ now reads $\alpha\ket{+++}+\beta\ket{---}$, where $\ket{\pm}=\ket{0}\pm\ket{1}$.
+That is, to deal with phase-flips instead of bit-flips, we simply use the $\{\ket{+},\ket{-}\}$ basis instead of the $\{\ket{0},\ket{1}\}$ basis.
 
-
-
-
-## Turning bit-flips into phase-flips
-
-The three-qubit code that we have just demonstrated is sufficient to protect a qubit against single bit-flips, but not phase-flips.
-But this is good enough.
-Recall that $HZH=X$, and so it is enough to sandwich the decoherence area in between the Hadamard gates: they will turn phase flips into bit flips, and we already know hot to protect our qubits against $Z$-errors.
-The encoded state $\alpha\ket{0} + \beta\ket{1}$ now reads $\alpha\ket{+++}+\beta\ket{---}$, where $\ket{\pm}=\ket{0}\pm\ket{1}$.
-
-
-
-
-
-## Dealing with bit-flip and phase-flip errors
-
-We can now put the bit-flip and phase-flip codes together: first we encode the qubit using the phase-flip code, and then we encode each of the three qubits of the code using the bit-flip code.
-This gives an error correction scheme that allows us to protect against both types of error, thus yielding a code that encodes a single logical qubit across nine physical qubits, protecting against a single quantum error on any of the nine qubits.
+Finally then, we can consider how to deal with *both* types of errors at once.
+First we encode the qubit using the phase-flip code, and then we encode each of the resulting three qubits of the code using the bit-flip code.
+This gives an error correction scheme that allows us to protect against both types of error by encoding a single logical qubit across *nine* physical qubits, protecting against a *single* quantum error on any of the nine qubits.
 
 If we want to preserve a quantum state for a long time without doing any computations, or if we want to send it through a noisy communications channel, we can just encode the state using a quantum code and decode it when we are done.
 Computation on encoded states using noisy gates requires few more tricks.
 
 ::: {.todo}
-<!-- TO-DO: write more -->
+<!-- TO-DO: expand on this last sentence? -->
 :::
 
 
