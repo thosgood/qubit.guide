@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 9 Bell’s theorem | Introduction to Quantum Information Science</title>
+  <title>7.13 Remarks and exercises | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 9 Bell’s theorem | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="7.13 Remarks and exercises | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="An introductory series of lectures on quantum computing." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 9 Bell’s theorem | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="7.13 Remarks and exercises | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="8-quantum-cryptography.html"/>
-<link rel="next" href="9.html"/>
+<link rel="prev" href="7.html"/>
+<link rel="next" href="8-quantum-cryptography.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -331,23 +331,446 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bells-theorem" class="section level1 hasAnchor">
-<h1><span class="header-section-number">Chapter 9</span> Bell’s theorem<a href="9-bells-theorem.html#bells-theorem" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<blockquote>
-<p>About <strong>quantum correlations</strong>, which are stronger than any correlations allowed by classical physics, and about the <strong>CHSH inequality</strong> (a variant of <strong>Bell’s theorem</strong>) which demonstrates this fact.</p>
-</blockquote>
-<p>Every now and then, it is nice to put down your lecture notes and go and see how things actually work in the real world.
-What is particularly wonderful (and maybe surprising) about quantum theory is that it turns up in many places where we might not expect it to.
-One such example is in the polarisation of light, where we stumble across an intriguing paradox.</p>
-<p>The (much-simplified) one sentence introduction to light polarisation is this: light is made of <a href="https://en.wikipedia.org/wiki/Transverse_wave"><strong>transverse</strong></a> waves, and transverse waves have a “direction”, which we call <strong>polarisation</strong>; a <strong>polarising filter</strong> only allows waves of a certain polarisation to pass through.
-If we take two polarising filters, and place them on top of each other with their polarisations oriented at <eq env="math">90^\circ</eq> to one another, then basically no light will pass through, since the only light that can pass through the first filter is orthogonally polarised with respect to the second filter, and is thus blocked from passing through.
-But then, if we take a third filter, and place it in between the other two, at an angle in the middle of both (i.e. at <eq env="math">45^\circ</eq>), then somehow <em>more</em> light is let through than if the middle filter weren’t there at all.<a href="#fn142" class="footnote-ref" id="fnref142"><sup>142</sup></a></p>
-<p>This is intrinsically linked to <strong>Bell’s theorem</strong>, which proves the technical sounding statement that “any local real hidden variable theory must satisfy certain statistical properties”, which is <em>not</em> satisfied in reality, as many quantum mechanical experiments (such as the above) show!</p>
+<div id="remarks-and-exercises-7" class="section level2 hasAnchor">
+<h2><span class="header-section-number">7.13</span> <em>Remarks and exercises</em><a href="7.html#remarks-and-exercises-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="purifications-and-isometries" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.1</span> Purifications and isometries<a href="7.html#purifications-and-isometries" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>All purifications of a density operator are related by an isometry acting on the purifying system.
+That is, if <eq env="math">\rho</eq> is a density operator on <eq env="math">\mathcal{H}</eq>, and <eq env="math">|\psi_A\rangle\in \mathcal{H}\otimes\mathcal{H}_\mathcal{A}</eq> and <eq env="math">|\psi_B\rangle\in\mathcal{H}\otimes\mathcal{H}_B</eq> are two purifications of <eq env="math">\rho</eq> with <eq env="math">\dim\mathcal{H}_\mathcal{A}\leqslant\dim\mathcal{H}_\mathcal{B}</eq>, then
+<eq env="displaymath">
+  |\psi_B\rangle=(\mathbf{1}\otimes V)|\psi_A\rangle
+</eq>
+for some isometry <eq env="math">V</eq>.</p>
+<p>To show this, we start with the spectral decomposition of <eq env="math">\rho</eq>
+<eq env="displaymath">
+  \rho = \sum_i p_i|i\rangle\langle i|
+</eq>
+and note that
+<eq env="displaymath">
+  \begin{aligned}
+    |\psi_A\rangle
+    &amp;= \sum_i \sqrt{p_i} |i\rangle\otimes|a_i\rangle
+  \\|\psi_B\rangle
+    &amp;= \sum_i \sqrt{p_i} |i\rangle\otimes|b_i\rangle
+  \end{aligned}
+</eq>
+which defines an isometry <eq env="math">V=\sum_i |b_i\rangle\langle a_i|</eq> satisfying the desired equation.</p>
+<p>This observation leads to a way of relating <em>all</em> convex decompositions of a given density operator: let <eq env="math">(p_k,|\psi_k\rangle)</eq> and <eq env="math">(q_l,|\phi_l\rangle)</eq> be convex decompositions of a density operator <eq env="math">\rho</eq>;
+then there exists an isometry <eq env="math">V</eq> such that these two decompositions
+<eq env="displaymath">
+  \sum_{k=1}^n|\widetilde{\psi}_k\rangle\langle\widetilde{\psi}_k|
+  = \rho
+  = \sum_{l=1}^m|\widetilde{\phi}_l\rangle\langle\widetilde{\phi}_l|
+</eq>
+(where <eq env="math">n\geqslant m</eq>, and <eq env="math">|\widetilde{\psi}_k\rangle=\sqrt{p_k}|\psi_k\rangle</eq> and <eq env="math">|\widetilde{ \phi}_l\rangle=\sqrt{q_l}|\phi_l\rangle</eq>) are related:
+<eq env="displaymath">
+  |\widetilde{\psi}_k\rangle = \sum_{l} V_{kl} |\widetilde{\phi}_l\rangle.
+</eq></p>
 </div>
+<div id="markov-approximation" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.2</span> The Markov approximation<a href="7.html#markov-approximation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Composition of quantum channels<a href="#fn136" class="footnote-ref" id="fnref136"><sup>136</sup></a> in the Kraus representation is rather straightforward, but do not be deceived by its mathematical simplicity!
+We must remember that <em>quantum channels do not capture all possible quantum evolutions</em>: the assumption that the system and the environment are <em>not initially correlated</em> is crucial, and it does impose some restrictions on the applicability of our formalism.
+Compare, for example, the following two scenarios.</p>
+<p>Firstly:<a href="#fn137" class="footnote-ref" id="fnref137"><sup>137</sup></a></p>
+<p><img src="qubit_guide_files/figure-html/unnamed-chunk-60-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here the system, initially in state <eq env="math">\rho</eq>, undergoes two stages of evolution, and the environment, initially in state <eq env="math">|e\rangle</eq>, is <em>not</em> discarded after the first unitary evolution <eq env="math">U_A</eq>; the environment persists and participates in the second unitary evolution <eq env="math">U_B</eq>.
+In this case the evolutions <eq env="math">\rho\mapsto\rho'</eq> and <eq env="math">\rho\mapsto\rho''</eq> are both well defined quantum channels, <em>but the evolution <eq env="math">\rho'\mapsto\rho''</eq> is not</em>: it falls outside the remit of our formalism because the input state of the system and the state of the environment are <em>not independent</em>.</p>
+<p>Secondly:</p>
+<p><img src="qubit_guide_files/figure-html/unnamed-chunk-61-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here we have two stages of evolution, as before, but we <em>discard</em> the environment after the first unitary, and start the second unitary evolution in a fresh tensor-product state, with a <em>new</em> environment;
+the two stages involve <em>independent environments</em>.
+In this case<a href="#fn138" class="footnote-ref" id="fnref138"><sup>138</sup></a> all three evolutions (<eq env="math">\rho\mapsto\rho'</eq>, <eq env="math">\rho'\mapsto\rho''</eq>, and <eq env="math">\rho\mapsto\rho''</eq>) are well defined quantum channels, and they compose: if <eq env="math">\mathcal{E}_\mathcal{A}</eq> describes the evolution from <eq env="math">\rho</eq> to <eq env="math">\rho'</eq>, and <eq env="math">\mathcal{E}_\mathcal{B}</eq> from <eq env="math">\rho'</eq> to <eq env="math">\rho''</eq>, then the composition <eq env="math">\mathcal{E}_\mathcal{B}\circ\mathcal{E}_\mathcal{A}</eq> describes the evolution from <eq env="math">\rho</eq> to <eq env="math">\rho''</eq>.</p>
+<p>In practice we often deal with complex environments that have internal dynamics that “hides” any entanglement with the system as quickly as it arises.
+For example, suppose that our system is an atom, surrounded by the electromagnetic field (which serves as the environment).
+Let the field start in the vacuum state.
+If the atom emits a photon into the environment, then the photon quickly propagates away, and the immediate vicinity of the atom appears to be empty, i.e. resets to the vacuum state.
+In this approximate model, we assume that the environment quickly forgets about the state resulting from any previous evolution.
+This is known as the <strong>Markov approximation</strong> — in a quantum Markov process the environment has essentially no memory.</p>
+</div>
+<div id="what-use-are-positive-maps" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.3</span> What use are positive maps?<a href="7.html#what-use-are-positive-maps" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Positive maps that are not completely positive are not completely useless.
+True, they cannot describe any quantum dynamics, but still they have useful applications — for example, they can help us to determine if a given state is entangled or not.</p>
+<p>Recall that a quantum state of a bipartite system <eq env="math">\mathcal{AB}</eq> described by the density matrix <eq env="math">\varrho_{\mathcal{AB}}</eq> is said to be <strong>separable</strong> if <eq env="math">\varrho_{\mathcal{AB}}</eq> can be written in the form
+<eq env="displaymath">
+  \varrho_{\mathcal{AB}}
+  = \sum_k p_k \rho_{\mathcal{A},k} \otimes\rho_{\mathcal{B},k}
+</eq>
+where <eq env="math">\rho_{\mathcal{A},k}</eq> are density matrices on <eq env="math">\mathcal{A}</eq> and <eq env="math">\rho_{\mathcal{B},k}</eq> are density matrices on <eq env="math">\mathcal{B}</eq> (and where <eq env="math">p_k \geqslant 0</eq> and <eq env="math">\sum_k p_k=1</eq>); otherwise <eq env="math">\varrho_{\mathcal{AB}}</eq> is said to be <strong>entangled</strong>.
+If we apply the partial transpose <eq env="math">\mathbf{1}\otimes T</eq> to this state, then it remains separable, since, as we have seen, the transpose <eq env="math">\rho^B</eq> is a legal density matrix.</p>
+<p>In separable states, one subsystem does not really know about the existence of the other, and so applying a positive map to one part produces a proper density operator, and thus does <em>not</em> reveal the unphysical character of the map.
+So, for <em>any separable state</em> <eq env="math">\rho</eq>, we have <eq env="math">(\mathbf{1}\otimes T)\rho\geqslant 0</eq>.</p>
+<div class="idea">
+<p>Positive (but not completely positive) maps, such as the transpose, can be quite deceptive: you have to include other systems in order to detect their unphysical character.</p>
+<p>In particular, positive maps appear to be completely positive <em>on separable states</em>.</p>
+</div>
+<p>As an example, consider a quantum state <eq env="math">\rho_p</eq> of two qubits which is a mixture of the maximally mixed<a href="#fn139" class="footnote-ref" id="fnref139"><sup>139</sup></a> state <eq env="math">|\Omega\rangle = \frac{1}{\sqrt{2}}(|00\rangle + |11\rangle)</eq> and the identity matrix with respective probabilities <eq env="math">p</eq> and <eq env="math">1-p</eq>.
+That is,
+<eq env="displaymath">
+  \rho_p
+  = p|\Omega\rangle\langle\Omega| + \frac{(1-p)}{4}\mathbf{1}\otimes\mathbf{1}.
+</eq>
+If we apply the partial transpose <eq env="math">\mathbf{1}\otimes T</eq> to this state, and check for which values of <eq env="math">p</eq> the resulting matrix is a density matrix, we can show that the density operator <eq env="math">\rho_p</eq> describes an entangled state for all <eq env="math">p\in[\frac{1}{3},1]</eq>.</p>
+<p>We say that a state is a <strong>PPT state</strong><a href="#fn140" class="footnote-ref" id="fnref140"><sup>140</sup></a> if its partial transpose is positive.
+An important thing to note is that separable states are PTT, but the converse is generally <em>not</em> true: there exist entangled PPT states.
+However, in the specific case of <em>two</em> qubits, the converse <em>is</em> true: the PPT states are exactly the separable states.</p>
+<p><img src="qubit_guide_files/figure-html/unnamed-chunk-62-1.png" width="192" style="display: block; margin: auto;" /></p>
+</div>
+<div id="partial-inner-product" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.4</span> Partial inner product<a href="7.html#partial-inner-product" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Tensor products bring the possibility to do “partial things” beyond just the partial trace.
+Given <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}</eq>, any vector <eq env="math">|x\rangle\in\mathcal{H}_{\mathcal{A}}</eq> defines an anti-linear map <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\to\mathcal{H}_{\mathcal{B}}</eq> called the <strong>partial inner product with <eq env="math">|x\rangle</eq>.</strong>
+It is first defined on the product vectors <eq env="math">|a\rangle\otimes|b\rangle</eq> by the formula
+<eq env="displaymath">
+  |a\rangle\otimes|b\rangle
+  \longmapsto \langle x|a\rangle|b\rangle
+</eq>
+and then extended to other vectors in <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}</eq> by linearity.
+Similarly, any <eq env="math">|y\rangle\in\mathcal{H}_{\mathcal{B}}</eq> defines a map <eq env="math">\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\to\mathcal{H}_{\mathcal{A}}</eq> via
+<eq env="displaymath">
+  |a\rangle\otimes|b\rangle
+  \longmapsto |a\rangle\langle y|b\rangle
+</eq></p>
+<p>For example, the partial inner product of
+<eq env="displaymath">
+  |\psi\rangle=c_{00}|00\rangle+c_{01}|01\rangle+c_{10}|10\rangle+c_{11}|11\rangle\in\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}
+</eq>
+with of <eq env="math">|0\rangle\in\mathcal{H}_{\mathcal{A}}</eq> is
+<eq env="displaymath">
+  \langle 0|\psi\rangle = c_{00}|0\rangle + c_{01}|1\rangle
+</eq>
+and the partial inner product of the same <eq env="math">|\psi\rangle</eq> with <eq env="math">|1\rangle\in\mathcal{H}_{\mathcal{B}}</eq> is
+<eq env="displaymath">
+  \langle 1|\psi\rangle = c_{01}|0\rangle + c_{11}|1\rangle.
+</eq></p>
+</div>
+<div id="control-controlled-NOT" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.5</span> The “control” part of controlled-NOT<a href="7.html#control-controlled-NOT" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider a single-qubit channel induced by the action of the <eq env="math">\texttt{c-NOT}</eq> gate.
+Recall that the unitary operator associated with the <eq env="math">\texttt{c-NOT}</eq> gate can be written as
+<eq env="displaymath">
+  U = |0\rangle\langle 0|\otimes\mathbf{1}+ |1\rangle\langle 1|\otimes X
+</eq>
+where is <eq env="math">X</eq> is the Pauli <eq env="math">\sigma_x</eq> gate (i.e. the <eq env="math">\texttt{NOT}</eq> gate).
+Let us step through the following simple circuit:</p>
+<p><img src="qubit_guide_files/figure-html/unnamed-chunk-63-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>This time we are interested in the evolution of the <em>control</em> qubit: the control qubit will be our system, and the target qubit, initially in a fixed state <eq env="math">|0\rangle</eq>, will play the role of an ancilla.</p>
+<p>We can calculate the Kraus operators:
+<eq env="displaymath">
+  E_i = (\mathbf{1}\otimes\langle i|) U (\mathbf{1}\otimes|0\rangle)
+</eq>
+which we simply write as <eq env="math">E_i=\langle i|U|0\rangle</eq> (for <eq env="math">i=0,1</eq>).
+Expanding out the definition of <eq env="math">U</eq>, we see that
+<eq env="displaymath">
+  \begin{aligned}
+    E_i = \langle i|U|0\rangle
+    &amp;= \langle i| (|0\rangle\langle 0|\otimes\mathbf{1}+ |1\rangle\langle 1|\otimes X) |0\rangle
+  \\&amp;= |0\rangle\langle 0|\langle i|\mathbf{1}|0\rangle + |1\rangle\langle 1|\langle i|X|0\rangle
+  \\&amp;= |i\rangle\langle i|
+\end{aligned}
+</eq>
+We can also check the normalisation condition:
+<eq env="displaymath">
+  E_0^\dagger E_0 + E_1^\dagger E_1
+  = |0\rangle\langle 0| + |1\rangle\langle 1|
+  =\mathbf{1}.
+</eq></p>
+<p>The unitary action of the gate when the state of the target qubit is fixed at <eq env="math">|0\rangle</eq> can be written as
+<eq env="displaymath">
+  \begin{aligned}
+    |\psi\rangle|0\rangle
+    \longmapsto
+    &amp; E_0|\psi\rangle|0\rangle + E_1|\psi\rangle|1\rangle
+  \\=&amp; |0\rangle\langle 0||\psi\rangle|0\rangle + |1\rangle\langle 1||\psi\rangle|1\rangle
+  \\=&amp; \langle 0|\psi\rangle|0\rangle|0\rangle + \langle 1|\psi\rangle|1\rangle|1\rangle
+  \end{aligned}
+</eq>
+which is a familiar <eq env="math">\texttt{c-NOT}</eq> entangling process: if <eq env="math">|\psi\rangle=\alpha_0|0\rangle+\alpha_1|1\rangle</eq> then <eq env="math">|\psi\rangle|0\rangle</eq> evolves into <eq env="math">\alpha_0|0\rangle|0\rangle+\alpha_1|1\rangle|1\rangle</eq>.</p>
+<p>The evolution of the control qubit alone can be expressed in the Kraus form as
+<eq env="displaymath">
+  \begin{aligned}
+    \rho \longmapsto \rho'
+    &amp;= E_0\rho E_0^\dagger + E_1\rho E_1^\dagger
+  \\&amp;= |0\rangle\langle 0|\rho|0\rangle\langle 0| + |1\rangle\langle 1|\rho|1\rangle\langle 1|
+  \\&amp;= \rho_{00}|0\rangle\langle 0| + \rho_{11}|1\rangle\langle 1|.
+  \end{aligned}
+</eq>
+Then, in the matrix form, if the initial state of the control qubit is <eq env="math">|\psi\rangle=\alpha_0|0\rangle+\alpha_1|1\rangle</eq>, we get
+<eq env="displaymath">
+  \begin{bmatrix}
+    |\alpha|_0^2 &amp; \alpha_0\alpha_0^\star
+  \\\alpha_0^\star\alpha_1 &amp; |\alpha_1|^2
+  \end{bmatrix}
+  = \rho
+  \longmapsto
+  \rho' =
+  \begin{bmatrix}
+    |\alpha_0|^2 &amp; 0
+  \\0 &amp; |\alpha_1|^2
+  \end{bmatrix}.
+</eq></p>
+<p>As we can see, the diagonal elements of <eq env="math">\rho</eq> survive, and the off-diagonal elements (the <strong>coherences</strong>) disappear.
+The two Kraus operators, <eq env="math">E_0=|0\rangle\langle 0|</eq> and <eq env="math">E_1=|1\rangle\langle 1|</eq>, define the measurement in the standard basis, and so you may think about this operation as being equivalent to <em>measuring the control qubit in the standard basis and then just forgetting the result</em>.</p>
+</div>
+<div id="surprisingly-identical-channels" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.6</span> Surprisingly identical channels<a href="7.html#surprisingly-identical-channels" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let us now compare two single qubit-quantum channels: <eq env="math">\mathcal{A}(\rho)=\sum_k A_k\rho A^\dagger_k</eq>, defined by the Kraus operators
+<eq env="displaymath">
+  \begin{aligned}
+    A_1 = |0\rangle\langle 0|
+    &amp;= \begin{bmatrix}1&amp;0\\0&amp;0\end{bmatrix}
+  \\A_2 = |1\rangle\langle 1|
+  &amp;= \begin{bmatrix}0&amp;0\\0&amp;1\end{bmatrix}
+  \end{aligned}
+</eq>
+and <eq env="math">\mathcal{B}(\rho)=\sum_k B_k\rho B^\dagger_k</eq>, defined by the Kraus operators
+<eq env="displaymath">
+  \begin{aligned}
+    B_1 = \frac{\mathbf{1}}{\sqrt{2}}
+    &amp;= \frac{1}{\sqrt{2}}\begin{bmatrix}1&amp;0\\0&amp;1\end{bmatrix}
+  \\B_2 = \frac{Z}{\sqrt{2}}
+    &amp;= \frac{1}{\sqrt{2}}\begin{bmatrix}1&amp;0\\0&amp;-1\end{bmatrix}.
+  \end{aligned}
+</eq></p>
+<p>We are familiar with the first channel from the previous example (<a href="7.html#control-controlled-NOT">7.13.5</a>): it performs the measurement in the standard basis, but <em>doesn’t</em> reveal the outcome of this measurement.
+The second channel chooses randomly, with equal probability, between two options: it will either let the qubit pass undisturbed, or apply the phase-flip <eq env="math">Z</eq>.</p>
+<p>These two apparently very different physical processes correspond to the same quantum channel: <eq env="math">\mathcal{A}(\rho)=\mathcal{B}(\rho)</eq> for any <eq env="math">\rho</eq>.
+Indeed, you can check that <eq env="math">B_1=(A_1+A_2)/\sqrt{2}</eq> and <eq env="math">B_2=(A_1-A_2)/\sqrt{2}</eq>, whence
+<eq env="displaymath">
+  \begin{aligned}
+    \mathcal{B}(\rho)
+    &amp;= B_1\rho B_1^\dagger + B_2\rho B_2^\dagger
+  \\&amp;= \frac{1}{2} (A_1+A_2)\rho (A_1+A_2)^\dagger + \frac{1}{2} (A_1-A_2)\rho (A_1-A_2)^\dagger
+  \\&amp;=  A_1\rho A_1^\dagger + A_2\rho A_2^\dagger
+  \\&amp;= \mathcal{A}(\rho).
+  \end{aligned}
+</eq></p>
+<p>You can also check that the two channels can be implemented by the following two circuits:</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:two-channels"></span>
+<img src="qubit_guide_files/figure-html/two-channels-1.png" alt="The \texttt{c-NOT} gate appears here as the measurement gate. The target qubit (on the bottom) measures the control qubit (on the top) in the standard basis (operation \mathcal{A} on the left) or in the Hadamard basis (operation \mathcal{B} on the right). The extra Hadamard gate on the target qubit has no effect on the control qubit." width="768" />
+<p class="caption">
+Figure 7.2: The <eq env="math">\texttt{c-NOT}</eq> gate appears here as the measurement gate. The target qubit (on the bottom) measures the control qubit (on the top) in the standard basis (operation <eq env="math">\mathcal{A}</eq> on the left) or in the Hadamard basis (operation <eq env="math">\mathcal{B}</eq> on the right). The extra Hadamard gate on the target qubit has no effect on the control qubit.
+</p>
+</div>
+</div>
+<div id="independent-ancilla" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.7</span> Independent ancilla<a href="7.html#independent-ancilla" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Another way to understand the freedom in the operator-sum representation is to realise that, once the system and the ancilla cease to interact, any operation on the ancilla alone has no effect on the state of the system.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:operators-sum-freedom"></span>
+<img src="qubit_guide_files/figure-html/operators-sum-freedom-1.png" alt="The quantum channel \rho\mapsto\rho' is not affected by the choice of a unitary R, and so these two processes are the same." width="768" />
+<p class="caption">
+Figure 7.3: The quantum channel <eq env="math">\rho\mapsto\rho'</eq> is not affected by the choice of a unitary <eq env="math">R</eq>, and so these two processes are the same.
+</p>
+</div>
+<p>That is, the two unitaries <eq env="math">U</eq> and <eq env="math">(\mathbf{1}\otimes R)U</eq> (where <eq env="math">R</eq> acts only on the ancilla) describe the same channel, even though the Kraus operators <eq env="math">E_k=\langle e_k|U|e\rangle</eq> for the latter are
+<eq env="displaymath">
+  \begin{aligned}
+    F_k
+    &amp;= \langle e_k|(\mathbf{1}\otimes R)U|e\rangle
+  \\&amp;= \sum_j \langle e_k|R|e_j\rangle\langle e_j|U|e\rangle
+  \\&amp;= \sum_j R_{kj}E_j
+  \end{aligned}
+</eq>
+Indeed, the unitary evolution <eq env="math">(\mathbf{1}\otimes R) U</eq> gives
+<eq env="displaymath">
+  \rho\otimes|e\rangle\langle e|
+  \longmapsto
+  \sum_{kl} E_k \rho E_l^\dagger \otimes R|e_k\rangle\langle e_l| R^\dagger
+</eq>
+and the subsequent trace over the environment gives
+<eq env="displaymath">
+  \begin{aligned}
+    \operatorname{tr}_E \sum_{kl} E_k \rho E_l^\dagger \otimes R|e_k\rangle\langle e_l| R^\dagger
+    &amp;= \sum_{kl} E_k \rho E_l^\dagger \langle e_l| R^\dagger R|e_k\rangle
+  \\&amp;= \sum_{k} E_k \rho E_k^\dagger.
+  \end{aligned}
+</eq></p>
+</div>
+<div id="order-matters" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.8</span> Order matters?<a href="7.html#order-matters" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We know that, given a fixed state of the environment, the unitaries <eq env="math">U</eq> and <eq env="math">(\mathbf{1}\otimes R)U</eq> (where <eq env="math">R</eq> acts only on the environment) define the same quantum channel.
+Is the same true for <eq env="math">U</eq> and <eq env="math">U(\mathbf{1}\otimes R)</eq> — do these two unitaries define the same quantum channel as one another?</p>
+</div>
+<div id="unchanged-reduced-density-operator" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.9</span> Unchanged reduced density operator<a href="7.html#unchanged-reduced-density-operator" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Show that, for any operator <eq env="math">\rho</eq> on <eq env="math">\mathcal{H}_\mathcal{A}\otimes\mathcal{H}_\mathcal{B}</eq> and any operator <eq env="math">R</eq> on <eq env="math">\mathcal{H}_\mathcal{B}</eq>, we have
+<eq env="displaymath">
+  \operatorname{tr}_\mathcal{B} \left[(\mathbf{1}\otimes R) \rho (\mathbf{1}\otimes R^\dagger)\right]
+  = \operatorname{tr}_\mathcal{B} \rho.
+</eq>
+That is, the reduced density operator <eq env="math">\rho_\mathcal{A}=\operatorname{tr}_\mathcal{B} \rho</eq> is not affected by <eq env="math">R</eq>.</p>
+<p><em>Hint: show this for separable operators <eq env="math">\rho=A\otimes B</eq> and then extend the result to any operator <eq env="math">\rho</eq> by linearity.</em></p>
+</div>
+<div id="cooling-down" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.10</span> Cooling down<a href="7.html#cooling-down" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We can show that the process of cooling a qubit to its ground state, described the map <eq env="math">\mathcal{E}(\rho)=|0\rangle\langle 0|</eq>, is a quantum channel.
+Indeed, the set of Kraus operators is <eq env="math">|0\rangle\langle 0|</eq> and <eq env="math">|0\rangle\langle 1|</eq>, and all Bloch vectors are mapped to the Bloch vector representing state <eq env="math">|0\rangle\langle 0|</eq>.</p>
+</div>
+<div id="no-pancakes" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.11</span> No pancakes<a href="7.html#no-pancakes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider a single-qubit operation which causes the <eq env="math">z</eq>-component of the Bloch vector to shrink while preserving the values of the <eq env="math">x</eq>- and <eq env="math">y</eq>-components.
+Under such an operation, the Bloch sphere is mapped to an oblate spheroid which touches the Bloch sphere along its equator.</p>
+<p>Explain why we cannot physically implement such a map.</p>
+</div>
+<div id="pauli-twirl" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.12</span> Pauli twirl<a href="7.html#pauli-twirl" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Show that randomly applying the Pauli operators <eq env="math">\mathbf{1}</eq>, <eq env="math">X</eq>, <eq env="math">Y</eq>, and <eq env="math">Z</eq>, with uniform probability, to any density operator <eq env="math">\rho</eq> of a single qubit (an operation known as the <strong>Pauli twirl</strong>) results in the maximally mixed state
+<eq env="displaymath">
+  \frac{1}{4} \mathbf{1}\rho\mathbf{1}+\frac{1}{4} X\rho X + \frac{1}{4} Y\rho Y + \frac{1}{4} Z\rho Z
+  = \frac{1}{2}\mathbf{1}.
+</eq></p>
+</div>
+<div id="depolarising-channel" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.13</span> Depolarising channel<a href="7.html#depolarising-channel" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="video" title="The depolarising channel" data-videoid="lnPP5rk593M">
+
+</div>
+<p>The “most popular” Pauli channel<a href="#fn141" class="footnote-ref" id="fnref141"><sup>141</sup></a> is the <strong>depolarising channel</strong>
+<eq env="displaymath">
+  \rho\longmapsto (1-p)\rho + \frac{p}{3}\left(X\rho X+Y\rho Y+Z\rho Z\right).
+</eq>
+In the depolarising channel, a qubit in state <eq env="math">\rho</eq> remains intact with probability <eq env="math">1-p</eq>, or is otherwise transformed with one of the Pauli operators <eq env="math">X</eq>, <eq env="math">Y</eq>, and <eq env="math">Z</eq>, each chosen randomly with probability <eq env="math">p/3</eq>.</p>
+<p>Show, using the Pauli twirl (Exercise <a href="7.html#pauli-twirl">7.13.12</a>) or otherwise, that we can rewrite the depolarising channel as
+<eq env="displaymath">
+  \rho \longmapsto \rho'
+  = \left(1-\frac{4}{3} p\right) \rho + \frac{4}{3}p\frac{1}{2}\mathbf{1}.
+</eq></p>
+<p>In particular then, we can say that, for <eq env="math">p\leqslant\frac34</eq>, the channel either does nothing or, with probability <eq env="math">\frac{4}{3}p</eq>, throws away the initial quantum state and replaces it by the maximally mixed state.)</p>
+<p>It is also instructive to see how the depolarising channel acts on the Bloch sphere.
+An arbitrary density matrix for a single qubit can be written as
+<eq env="displaymath">
+  \frac{1}{2}(\mathbf{1}+\vec{s}\cdot\vec{\sigma}),
+</eq>
+where <eq env="math">\vec{s}</eq> is the Bloch vector, and <eq env="math">\vec{\sigma}=(\sigma_x,\sigma_y,\sigma_z)</eq> is the vector of Pauli matrices.
+The depolarising channel maps this state to
+<eq env="displaymath">
+  \frac{1}{2}\left[
+    \mathbf{1}+ \left(1-\frac{4}{3}p\right)\vec{s}\cdot\vec{\sigma}
+  \right].
+</eq>
+The Bloch vector shrinks by a factor of <eq env="math">1-\frac{4}{3}p</eq>.
+This means that, for <eq env="math">p\leqslant\frac{3}{4}</eq>, the Bloch sphere contracts uniformly under the action of the channel;
+for <eq env="math">p=\frac{3}{4}</eq>, the sphere is contracted to a single point at its centre;
+and for <eq env="math">\frac{3}{4}\leqslant p\leqslant 1</eq>, the Bloch vector is flipped, and starts pointing in the opposite direction.</p>
+</div>
+<div id="toffoli-gate" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.14</span> Toffoli gate<a href="7.html#toffoli-gate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Consider the <a href="https://en.wikipedia.org/wiki/Toffoli_gate"><strong>Toffoli gate</strong></a></p>
+<p><img src="qubit_guide_files/figure-html/unnamed-chunk-64-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Express <eq env="math">\rho'</eq> as a function of <eq env="math">\rho</eq> in the Kraus representation.</p>
+</div>
+<div id="trace-preserving-and-partial-trace" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.15</span> Trace preserving and partial trace<a href="7.html#trace-preserving-and-partial-trace" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Show that <eq env="math">\mathcal{E}</eq> is trace preserving if and only if <eq env="math">\operatorname{tr}_\mathcal{B}\widetilde{\mathcal{E}} = d\mathbf{1}</eq>.
+(Here the partial trace is over the second system in our definition <eq env="math">\widetilde{\mathcal{E}}=\mathbf{1}\otimes\mathcal{E}|\Omega\rangle\langle\Omega|</eq>).</p>
+<p><em>Hint: show that <eq env="math">\operatorname{tr}\mathcal{E}(|i\rangle\langle j|)=\delta_{ij}</eq>.</em></p>
+</div>
+<div id="complete-positivity-of-a-certain-map" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.16</span> Complete positivity of a certain map<a href="7.html#complete-positivity-of-a-certain-map" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let <eq env="math">\mathcal{E}</eq> be the linear map on a single qubit defined by
+<eq env="displaymath">
+  \begin{aligned}
+    \mathcal{E}(\mathbf{1})
+    &amp;= \mathbf{1}
+  \\\mathcal{E}(\sigma_x)
+    &amp;= a_x\sigma_x
+  \\\mathcal{E}(\sigma_y)
+    &amp;= a_y\sigma_y
+  \\\mathcal{E}(\sigma_z)
+    &amp;= a_z\sigma_z
+  \end{aligned}
+</eq>
+where <eq env="math">a_x</eq>, <eq env="math">a_y</eq>, and <eq env="math">a_z</eq> are some fixed real numbers.
+Using the Choi matrix of <eq env="math">\mathcal{E}</eq>, determine the range of <eq env="math">a_x</eq>, <eq env="math">a_y</eq>, <eq env="math">a_z</eq> for which the map <eq env="math">\mathcal{E}</eq> is <em>positive</em>, and the range for which it is <em>completely positive</em>.</p>
+</div>
+<div id="duals" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.17</span> Duals<a href="7.html#duals" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We say that <eq env="math">\mathcal{E}^\star\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')</eq> is the <strong>dual</strong> of a linear map <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')</eq> if
+<eq env="displaymath">
+  \operatorname{tr}[\mathcal{E}^\star (X)Y] = \operatorname{tr}[X\mathcal{E}(Y)]
+</eq>
+for any operators <eq env="math">X</eq> and <eq env="math">Y</eq> in <eq env="math">\mathcal{B}(\mathcal{H})</eq>.</p>
+<ol style="list-style-type: decimal">
+<li>Show that, if <eq env="math">\mathcal{E}</eq> is trace preserving, then <eq env="math">\mathcal{E}^\star</eq> is <strong>unital</strong> (i.e. that it sends the identity to the identity, or equivalently that its Kraus operators <eq env="math">F_j</eq> satisfy <eq env="math">\sum_j F_jF_j^\dagger=\mathbf{1}</eq>).</li>
+<li>Show that, if <eq env="math">\sum_i E_i E_i^\dagger</eq> is an operator-sum decomposition of <eq env="math">\mathcal{E}</eq>, then <eq env="math">\sum_i E^\dagger_i E_i</eq> is an operator-sum decomposition of <eq env="math">\mathcal{E}^\star</eq>.</li>
+</ol>
+</div>
+<div id="trace-transpose-choi" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.18</span> Trace, transpose, Choi<a href="7.html#trace-transpose-choi" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')</eq>, and let <eq env="math">d=\dim\mathcal{H}</eq> and <eq env="math">d'=\dim\mathcal{H}'</eq>.
+Show that, for any <eq env="math">(d\times d)</eq> matrix <eq env="math">X</eq> and any <eq env="math">(d'\times d')</eq> matrix <eq env="math">Y</eq>,
+<eq env="displaymath">
+  \operatorname{tr}[\mathcal{E}(X)Y]
+  = \operatorname{tr}[\widetilde{\mathcal{E}} (X^T\otimes Y)].
+</eq></p>
+<p>(For example, if we are interested in the component <eq env="math">\mathcal{E}(X)_{ij}=\langle i|\mathcal{E}(X)|j\rangle</eq>, then we can take <eq env="math">Y=|j\rangle\langle i|</eq>.)</p>
+</div>
+<div id="tricks-with-a-maximally-mixed-state" class="section level3 hasAnchor">
+<h3><span class="header-section-number">7.13.19</span> Tricks with a maximally mixed state<a href="7.html#tricks-with-a-maximally-mixed-state" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A maximally mixed state of a bipartite system can be written, using the Schmidt decomposition (from <a href="5.html#the-schmidt-decomposition">5.9.11</a>), as
+<eq env="displaymath">
+  |\Omega\rangle
+  = \frac{1}{\sqrt d}\sum_i |i\rangle|i\rangle
+</eq>
+whence
+<eq env="displaymath">
+  |\Omega\rangle\langle\Omega|
+  = \frac{1}{d} \sum_{ij}|i\rangle\langle j|\otimes|i\rangle\langle j|
+</eq>
+Each subsystem is of dimension <eq env="math">d</eq>, and all the Schmidt coefficients are equal.
+Here are few useful tricks involving a maximally mixed state.</p>
+<ul>
+<li><p>If we take the transpose in the Schmidt basis of <eq env="math">|\Omega\rangle</eq>, then
+<eq env="displaymath">
+    \langle\Omega|A\otimes B|\Omega\rangle = \frac{1}{d}\operatorname{tr}(A^T B).
+  </eq></p></li>
+<li><p>Any pure state <eq env="math">|\psi\rangle=\sum_{ij} c_{ij}|i\rangle|j\rangle</eq> of the bipartite system can be written as
+<eq env="displaymath">
+    (C\otimes\mathbf{1})|\Omega\rangle = (\mathbf{1}\otimes C^T)|\Omega\rangle.
+  </eq>
+This implies that
+<eq env="displaymath">
+    (U\otimes U^\star)|\Omega\rangle=|\Omega\rangle
+  </eq>
+(where <eq env="math">U^\star</eq> denotes the matrix given by taking the complex conjugate, entry-wise, of <eq env="math">U</eq>, i.e. <em>without</em> also taking the transpose).</p></li>
+<li><p>The swap operation <eq env="math">\texttt{SWAP}=S\colon|i\rangle|j\rangle\mapsto|j\rangle|i\rangle</eq> can be expressed as
+<eq env="displaymath">
+    \begin{aligned}
+      S
+      &amp;= d |\Omega\rangle\langle\Omega|^{T_{\mathcal{A}}}
+    \\&amp;= d \sum_{ij} \big(|i\rangle\langle j|\big)^T\otimes|i\rangle\langle j|
+    \\&amp;= d \sum_{ij} |j\rangle\langle i|\otimes|i\rangle\langle j|
+    \end{aligned}
+  </eq>
+where we write <eq env="math">X^{T_{\mathcal{A}}}</eq> to mean the partial transpose over <eq env="math">\mathcal{A}</eq>, i.e. <eq env="math">T\otimes\mathbf{1}</eq>.
+This implies that
+<eq env="displaymath">
+    \operatorname{tr}[(A\otimes B)S] = \operatorname{tr}AB
+  </eq>
+and that
+<eq env="displaymath">
+    (A\otimes\mathbf{1})S = S(\mathbf{1}\otimes A).
+  </eq></p></li>
+</ul>
+
+</div>
+</div>
+<!-- </div> -->
+
+
+
 <div class="footnotes">
 <hr />
-<ol start="142">
-<li id="fn142"><p>For the more visually inclined, there is a <a href="https://www.youtube.com/watch?v=zcqZHYo7ONs">video on YouTube by minutephysics</a> about this experiment, or you can play with a virtual version at <a href="https://lab.quantumflytrap.com/lab/bell-inequality?mode=detections">Virtual Lab by Quantum Flytrap</a>.<a href="9-bells-theorem.html#fnref142" class="footnote-back">↩︎</a></p></li>
+<ol start="136">
+<li id="fn136"><p>Unitary evolutions form a group; quantum channels form a <a href="https://en.wikipedia.org/wiki/Semigroup"><strong>semigroup</strong></a>. Quantum operations are invertible only if they are either unitary operations or simple isometric embeddings (such as the process of bringing in the environment in some fixed state and then <em>immediately</em> discarding it, without any intermediate interaction).<a href="7.html#fnref136" class="footnote-back">↩︎</a></p></li>
+<li id="fn137"><p>Here we have reverted to the convention of writing the ancilla/environment <em>after</em> the system of interest instead of <em>before</em>.<a href="7.html#fnref137" class="footnote-back">↩︎</a></p></li>
+<li id="fn138"><p>A <strong>quantum Markov process</strong>! <a href="https://en.wikipedia.org/wiki/Andrey_Markov">Andrey Markov</a> (1929–2012) was a Russian mathematician best known for his work on stochastic processes.<a href="7.html#fnref138" class="footnote-back">↩︎</a></p></li>
+<li id="fn139"><p>Recall that a state is said to be <strong>maximally mixed</strong> if the outcomes of <em>any</em> measurement on that state are completely random.<a href="7.html#fnref139" class="footnote-back">↩︎</a></p></li>
+<li id="fn140"><p>“PPT” stands for <em>positive partial transpose</em>.<a href="7.html#fnref140" class="footnote-back">↩︎</a></p></li>
+<li id="fn141"><p>Recall that a single-qubit Pauli channel is a channel that applies one of the Pauli operators, <eq env="math">X</eq>, <eq env="math">Y</eq> or <eq env="math">Z</eq>, chosen randomly with some prescribed probabilities <eq env="math">p_x</eq>, <eq env="math">p_y</eq> and <eq env="math">p_z</eq>.<a href="7.html#fnref141" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <!-- KaTeX for maths rendering -->
@@ -478,8 +901,8 @@ But then, if we take a third filter, and place it in between the other two, at a
           </div>
         </div>
       </div>
-<a href="8-quantum-cryptography.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="9.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="7.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="8-quantum-cryptography.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -518,7 +941,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/qubit.guide/blob/main/source/09-EPR-bell.Rmd",
+"link": "https://github.com/thosgood/qubit.guide/blob/main/source/07-quantum-channels.Rmd",
 "text": null
 },
 "download": ["qubit_guide.pdf"],

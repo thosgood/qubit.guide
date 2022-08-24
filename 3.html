@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 9 Bell’s theorem | Introduction to Quantum Information Science</title>
+  <title>3.7 Remarks and exercises | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 9 Bell’s theorem | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="3.7 Remarks and exercises | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="An introductory series of lectures on quantum computing." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 9 Bell’s theorem | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="3.7 Remarks and exercises | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="8-quantum-cryptography.html"/>
-<link rel="next" href="9.html"/>
+<link rel="prev" href="3.html"/>
+<link rel="next" href="4-measurements.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -331,23 +331,228 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="bells-theorem" class="section level1 hasAnchor">
-<h1><span class="header-section-number">Chapter 9</span> Bell’s theorem<a href="9-bells-theorem.html#bells-theorem" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<blockquote>
-<p>About <strong>quantum correlations</strong>, which are stronger than any correlations allowed by classical physics, and about the <strong>CHSH inequality</strong> (a variant of <strong>Bell’s theorem</strong>) which demonstrates this fact.</p>
-</blockquote>
-<p>Every now and then, it is nice to put down your lecture notes and go and see how things actually work in the real world.
-What is particularly wonderful (and maybe surprising) about quantum theory is that it turns up in many places where we might not expect it to.
-One such example is in the polarisation of light, where we stumble across an intriguing paradox.</p>
-<p>The (much-simplified) one sentence introduction to light polarisation is this: light is made of <a href="https://en.wikipedia.org/wiki/Transverse_wave"><strong>transverse</strong></a> waves, and transverse waves have a “direction”, which we call <strong>polarisation</strong>; a <strong>polarising filter</strong> only allows waves of a certain polarisation to pass through.
-If we take two polarising filters, and place them on top of each other with their polarisations oriented at <eq env="math">90^\circ</eq> to one another, then basically no light will pass through, since the only light that can pass through the first filter is orthogonally polarised with respect to the second filter, and is thus blocked from passing through.
-But then, if we take a third filter, and place it in between the other two, at an angle in the middle of both (i.e. at <eq env="math">45^\circ</eq>), then somehow <em>more</em> light is let through than if the middle filter weren’t there at all.<a href="#fn142" class="footnote-ref" id="fnref142"><sup>142</sup></a></p>
-<p>This is intrinsically linked to <strong>Bell’s theorem</strong>, which proves the technical sounding statement that “any local real hidden variable theory must satisfy certain statistical properties”, which is <em>not</em> satisfied in reality, as many quantum mechanical experiments (such as the above) show!</p>
+<div id="remarks-and-exercises-3" class="section level2 hasAnchor">
+<h2><span class="header-section-number">3.7</span> <em>Remarks and exercises</em><a href="3.html#remarks-and-exercises-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="quantum-bomb-tester" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.7.1</span> Quantum bomb tester<a href="3.html#quantum-bomb-tester" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>You have been drafted by the government to help in the demining effort in a former war-zone.<a href="#fn66" class="footnote-ref" id="fnref66"><sup>66</sup></a>
+In particular, retreating forces have left very sensitive bombs in some of the sealed rooms.
+The bombs are configured such that if even one photon of light is absorbed by the fuse (i.e. if someone looks into the room), the bomb will go off.
+Each room has an input and output port which can be hooked up to external devices.
+An empty room will let light go from the input to the output ports unaffected, whilst a room with a bomb will explode if light is shone into the input port and the bomb absorbs even just one photon — see Figure <a href="3.html#fig:bomb-detecting-scenario">3.10</a>.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:bomb-detecting-scenario"></span>
+<img src="qubit_guide_files/figure-html/bomb-detecting-scenario-1.png" alt="Left — the passage of a photon through an empty room. Right — the passage of a photon through a room containing a bomb." width="672" />
+<p class="caption">
+Figure 3.10: <em>Left</em> — the passage of a photon through an empty room. <em>Right</em> — the passage of a photon through a room containing a bomb.
+</p>
 </div>
+<p>Your task is to find a way of determining whether a room has a bomb in it without blowing it up, so that specialised (limited and expensive) equipment can be devoted to defusing that particular room.
+You would like to know whether a particular room has a bomb in it with as much certainty as possible.</p>
+<ol style="list-style-type: decimal">
+<li>To start with, consider the setup in Figure <a href="3.html#fig:mach-zehnder-bomb-tester">3.11</a>, where the input and output ports are hooked up in the lower arm of a Mach–Zehnder interferometer.
+<ol style="list-style-type: lower-alpha">
+<li>Assume an empty room.
+Send a photon to input port <eq env="math">|0\rangle</eq>.
+Which detector, at the output port, will register the photon?</li>
+<li>Now assume that the room does contain a bomb.
+Again, send a photon to input port <eq env="math">|0\rangle</eq>.
+Which detector will register the photon and with which probability?</li>
+<li>Design a scheme that allows you — at least some of the time — to decide whether a room has a bomb in it without blowing it up.
+If you iterate the procedure, what is its overall success rate for the detection of a bomb without blowing it up?</li>
+</ol></li>
+</ol>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:mach-zehnder-bomb-tester"></span>
+<img src="qubit_guide_files/figure-html/mach-zehnder-bomb-tester-1.png" alt="The Mach--Zehnder interferometer hooked up to the bomb-testing room." width="672" />
+<p class="caption">
+Figure 3.11: The Mach–Zehnder interferometer hooked up to the bomb-testing room.
+</p>
+</div>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Assume that the two beam splitters in the interferometer are different.
+Say the first beam-splitter reflects incoming light with probability <eq env="math">R</eq> and transmits with probability <eq env="math">T=1-R</eq>, but the second one transmits with probability <eq env="math">R</eq> and reflects with probability <eq env="math">T</eq> (that is, the two beam-splitters are <em>asymmetric</em>, but “inverse” to one another).
+Would the new setup improve the overall success rate of the detection of a bomb without blowing it up?</p></li>
+<li><p>There exists a scheme, involving many beam-splitters and something called the <strong>quantum Zeno effect</strong>, such that the success rate for detecting a bomb without blowing it up approaches 100%.
+Try to work it out, or find a solution on the internet.</p></li>
+</ol>
+</div>
+<div id="orthonormal-pauli-basis" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.7.2</span> Orthonormal Pauli basis<a href="3.html#orthonormal-pauli-basis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Show that <eq env="math">\{\mathbf{1},\sigma_x,\sigma_y,\sigma_z\}</eq> is an orthonormal basis of the space of complex <eq env="math">(2\times 2)</eq> matrices with respect to the Hilbert-Schmidt product.</p>
+</div>
+<div id="pauli-matrix-expansion-coefficients" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.7.3</span> Pauli matrix expansion coefficients<a href="3.html#pauli-matrix-expansion-coefficients" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Recall that any <eq env="math">(2\times 2)</eq> complex matrix <eq env="math">A</eq> has a unique expansion in the form
+<eq env="displaymath">
+  \begin{aligned}
+    A &amp;=
+    \begin{bmatrix}
+      a_0 + a_z &amp; a_x - i a_y
+    \\a_x +i a_y &amp;  a_0 - a_z
+    \end{bmatrix}
+  \\&amp;= a_0\mathbf{1}+ a_x \sigma_x + a_y \sigma_y + a_z \sigma_z
+  \\&amp;= a_0\mathbf{1}+ \vec{a}\cdot\vec{\sigma}.
+  \end{aligned}
+\tag{$\star$}
+</eq>
+for some complex numbers <eq env="math">a_0</eq>, <eq env="math">a_x</eq>, <eq env="math">a_y</eq>, and <eq env="math">a_z</eq>.</p>
+<ol style="list-style-type: decimal">
+<li>Show that the coefficients <eq env="math">a_k</eq> (for <eq env="math">k=x,y,z</eq>) are given by the inner product <eq env="math">a_k = (\sigma_k|A) = \frac{1}{2}\operatorname{tr}\sigma_k A</eq>.</li>
+</ol>
+<p>In these notes, we usually deal with matrices that are Hermitian (<eq env="math">A=A^\dagger</eq>) or unitary (<eq env="math">AA^\dagger=\mathbf{1}</eq>).
+It is easy to see that, if <eq env="math">A</eq> is Hermitian, then <eq env="math">a_0</eq> and the three components of <eq env="math">\vec{a}</eq> are all real.
+The <eq env="math">(2\times 2)</eq> unitaries are usually parametrised as
+<eq env="displaymath">
+  U = e^{i\varphi}\Big(u_0\mathbf{1}+ i(u_x\sigma_x + u_y\sigma_y + u_z\sigma_z)\Big)
+</eq>
+where <eq env="math">e^{i\varphi}</eq> is an overall multiplicative phase factor, with <eq env="math">\varphi</eq> real, and <eq env="math">u_0</eq> and the three components <eq env="math">u_x</eq>, <eq env="math">u_y</eq>, <eq env="math">u_z</eq> are all real numbers.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Show that the unitarity condition implies that
+<eq env="displaymath">
+   u_0^2 + u_x^2 + u_y^2 + u_z^2 = 1
+ </eq>
+and show, using this parametrisation, that the determinant of <eq env="math">U</eq> is <eq env="math">e^{i2\varphi}</eq>.</li>
+</ol>
+</div>
+<div id="linear-algebra-of-the-pauli-vector" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.7.4</span> Linear algebra of the Pauli vector<a href="3.html#linear-algebra-of-the-pauli-vector" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In what follows, we use the notation from our algebraic treatment of Pauli operators in Section <a href="3.html#pauli-matrices-algebraically">3.3</a>, where we defined the <strong>Pauli vector</strong> <eq env="math">\vec{\sigma}</eq>.</p>
+<ol style="list-style-type: decimal">
+<li><p>Show that <eq env="math">\frac{1}{2}\operatorname{tr}(\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma}) = \vec{a}\cdot\vec{b}</eq>.
+<em>Hint: you may find Exercise <a href="2.html#cross-product-identity">2.12.2</a> helpful.</em></p></li>
+<li><p>Show that any <eq env="math">\vec{n}\cdot\vec{\sigma}</eq> has eigenvalues <eq env="math">\pm|\vec{n}|</eq>.</p></li>
+<li><p>Show that, if <eq env="math">\vec{n}\cdot\vec{m}=0</eq>, then the operators <eq env="math">\vec{n}\cdot\vec{\sigma}</eq> and <eq env="math">\vec{m}\cdot\vec{\sigma}</eq> anticommute.</p></li>
+</ol>
+</div>
+<div id="matrix-euler-formula" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.7.5</span> Matrix Euler formula<a href="3.html#matrix-euler-formula" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li><p>Show that, if <eq env="math">A^2=\mathbf{1}</eq>, then we can manipulate the power series expansion of <eq env="math">e^{iA}</eq> into a simple expression: for any real <eq env="math">\alpha</eq>,
+<eq env="displaymath">
+   e^{i\alpha A}
+   = (\cos\alpha)\mathbf{1}+ (i\sin\alpha)A.
+ </eq></p></li>
+<li><p>Show that any <eq env="math">(2\times 2)</eq> unitary matrix <eq env="math">U</eq> can be written, up to an overall multiplicative phase factor, as
+<eq env="displaymath">
+   U
+   = e^{i \theta \vec{n}\cdot\vec{\sigma}}
+   = (\cos\theta)\mathbf{1}+ (i\sin\theta)\vec{n}\cdot\vec{\sigma}.
+ </eq>
+<em>Hint: the argument here is the same as the argument that <eq env="math">e^{i\theta}=\cos\theta +i\sin\theta</eq>.</em></p></li>
+</ol>
+</div>
+<div id="special-orthogonal-matrix-calculations" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.7.6</span> Special orthogonal matrix calculations<a href="3.html#special-orthogonal-matrix-calculations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li><p>Show that <eq env="math">\operatorname{tr}\sigma_x\sigma_y\sigma_z = 2i</eq>.</p></li>
+<li><p>Let <eq env="math">U</eq> be a unitary matrix, and write <eq env="math">\vec{e}_x</eq>, <eq env="math">\vec{e}_y</eq>, and <eq env="math">\vec{e}_z</eq> to mean the unit vectors along the <eq env="math">x</eq>-, <eq env="math">y</eq>-, and <eq env="math">z</eq>-axis, respectively.
+We define new unit vectors <eq env="math">\vec{f}_x</eq>, <eq env="math">\vec{f}_y</eq>, and <eq env="math">\vec{f}_z</eq> by applying <eq env="math">U</eq> to our existing unit vectors.
+Then
+<eq env="displaymath">
+   U(\vec{e}_k\cdot\sigma_k)U^\dagger=U\sigma_kU^\dagger={\vec{f}_k}\cdot\vec\sigma.
+ </eq>
+We already know that, in Euclidean space, this transformation is described by a <eq env="math">(3\times 3)</eq> orthogonal matrix <eq env="math">R_U</eq>.
+How are the three vectors <eq env="math">\vec{f}_x</eq>, <eq env="math">\vec{f}_y</eq>, and <eq env="math">\vec{f}_z</eq> related to the entries in matrix <eq env="math">R_U</eq>?</p></li>
+<li><p>Show that
+<eq env="displaymath">
+   \begin{aligned}
+     \operatorname{tr}\sigma_x\sigma_y\sigma_z
+     &amp;= \operatorname{tr}({\vec f_x}\cdot\vec\sigma)( {\vec f_y}\cdot\vec\sigma)({\vec f_z}\cdot\vec\sigma)
+   \\&amp;= 2i\det R_U
+   \end{aligned}
+ </eq>
+(which implies that <eq env="math">\det R_U=1</eq>).</p></li>
+<li><p>Use the orthonormality of the Pauli basis along with Equation (<eq env="math">\ddagger</eq>) to show that the elements of the matrix <eq env="math">R=R_U</eq> can be expressed in terms of those of the matrix <eq env="math">U</eq>, in the form
+<eq env="displaymath">
+   R_{ij}=\frac{1}{2}\operatorname{tr}\left(\sigma_i U\sigma_j U^\dagger\right).
+ </eq>
+Here, <eq env="math">i</eq> and <eq env="math">j</eq> take values in <eq env="math">\{1,2,3\}</eq>, and <eq env="math">\sigma_1\equiv\sigma_x</eq>, <eq env="math">\sigma_2\equiv\sigma_y</eq>, <eq env="math">\sigma_3\equiv\sigma_z</eq>.</p></li>
+</ol>
+</div>
+<div id="phase-as-rotation" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.7.7</span> Phase as rotation<a href="3.html#phase-as-rotation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Show that the phase gate
+<eq env="displaymath">
+  P_\varphi = \begin{bmatrix}1&amp;0\\0&amp;e^{i\varphi}\end{bmatrix}
+</eq>
+represents an anticlockwise rotation about the <eq env="math">z</eq>-axis through the angle <eq env="math">\varphi</eq>.</p>
+<p><em>Hint: it might be helpful to start with the <eq env="math">\mathrm{SU}(2)</eq> version of the phase gate:</em>
+<eq env="displaymath">
+  \begin{aligned}
+    P_\varphi
+    &amp;= e^{-i\frac{\varphi}{2}\sigma_z}
+  \\&amp;= \begin{bmatrix}
+      e^{-i \frac{\varphi}{2}}&amp; 0
+    \\0 &amp; e^{i \frac{\varphi}{2}}
+    \end{bmatrix}
+    \quad\longrightarrow\quad
+    R
+  \\&amp;= \begin{bmatrix}
+      \cos \varphi &amp; -\sin \varphi &amp; 0
+    \\\sin \varphi &amp; \cos \varphi &amp; 0
+    \\0 &amp; 0 &amp; 1
+    \end{bmatrix}
+  \end{aligned}
+</eq></p>
+</div>
+<div id="geometry-of-the-hadamard" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.7.8</span> Geometry of the Hadamard<a href="3.html#geometry-of-the-hadamard" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li><p>Express the Hadamard gate <eq env="math">H</eq> in terms of <eq env="math">\vec{n}\cdot\vec{\sigma}</eq>, and show that
+<eq env="displaymath">
+  \begin{aligned}
+ HZH&amp;=X
+  \\HXH&amp;=Z
+  \\HYH&amp;=-Y.
+  \end{aligned}
+</eq></p></li>
+<li><p>Show that the Hadamard gate <eq env="math">H</eq> turns rotations about the <eq env="math">x</eq>-axis into rotations about the <eq env="math">z</eq>-axis, and vice versa.
+That is,
+<eq env="displaymath">
+   \begin{aligned}
+     H \left(
+       e^{-i\frac{\varphi}{2}Z}
+     \right) H
+     &amp;= e^{-i\frac{\varphi}{2}X}
+   \\H \left(
+       e^{-i\frac{\varphi}{2}X}
+     \right) H
+     &amp;= e^{-i\frac{\varphi}{2}Z}.
+   \end{aligned}
+ </eq></p></li>
+</ol>
+</div>
+<div id="swiss-granite-fountain" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.7.9</span> Swiss Granite Fountain<a href="3.html#swiss-granite-fountain" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In the Singapore Botanic Gardens, there is a sculpture by Ueli Fausch called “Swiss Granite Fountain”.
+It is a spherical granite ball which measures 80cm in diameter and weighs 700kg, and is kept afloat by strong water pressure directed through a basal block.
+It is easy to set the ball in motion, and it keeps rotating in whatever way you start for a long time.
+Suppose you are given access to this ball only near the top, so that you can push it to make it rotate around any horizontal axis, but you don’t have enough of a grip to make it turn around the vertical axis.
+Can you make it rotate around the vertical axis anyway?</p>
+</div>
+<div id="dynamics-in-a-magnetic-field" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.7.10</span> Dynamics in a magnetic field<a href="3.html#dynamics-in-a-magnetic-field" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A qubit initially in state <eq env="math">|0\rangle</eq> is placed in a uniform magnetic field.
+The interaction between the field and the qubit is described by the Hamiltonian
+<eq env="displaymath">
+  H
+  = \omega
+  \begin{bmatrix}
+    0 &amp; - i
+  \\i &amp; 0
+  \end{bmatrix}
+</eq>
+where <eq env="math">\omega</eq> is proportional to the strength of the field.<a href="#fn67" class="footnote-ref" id="fnref67"><sup>67</sup></a>
+What is the state of the qubit after time <eq env="math">t=\pi/4\omega</eq>?</p>
+
+</div>
+</div>
+<!-- </div> -->
 <div class="footnotes">
 <hr />
-<ol start="142">
-<li id="fn142"><p>For the more visually inclined, there is a <a href="https://www.youtube.com/watch?v=zcqZHYo7ONs">video on YouTube by minutephysics</a> about this experiment, or you can play with a virtual version at <a href="https://lab.quantumflytrap.com/lab/bell-inequality?mode=detections">Virtual Lab by Quantum Flytrap</a>.<a href="9-bells-theorem.html#fnref142" class="footnote-back">↩︎</a></p></li>
+<ol start="66">
+<li id="fn66"><p>This is a slightly modified version of a bomb-testing problem described by Avshalom Elitzur and Lev Vaidman in <em>Quantum-mechanical interaction-free measurement</em>, Found. Phys. <strong>47</strong> (1993), pp. 987–997.<a href="3.html#fnref66" class="footnote-back">↩︎</a></p></li>
+<li id="fn67"><p>In Earth’s magnetic field, which is about <eq env="math">0.5</eq> gauss, the value of <eq env="math">\omega</eq> is of the order of <eq env="math">10^6</eq> cycles per second.<a href="3.html#fnref67" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <!-- KaTeX for maths rendering -->
@@ -478,8 +683,8 @@ But then, if we take a third filter, and place it in between the other two, at a
           </div>
         </div>
       </div>
-<a href="8-quantum-cryptography.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="9.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4-measurements.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -518,7 +723,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/thosgood/qubit.guide/blob/main/source/09-EPR-bell.Rmd",
+"link": "https://github.com/thosgood/qubit.guide/blob/main/source/03-pauli-bloch.Rmd",
 "text": null
 },
 "download": ["qubit_guide.pdf"],
