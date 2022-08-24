@@ -11,7 +11,7 @@ Build using the `./build_book` script.
 
 - **make github actions FAIL if PDF build(s) are unsuccessful**
 - **only one footnote per paragraph**
-- **search for TO-DO**
+- **search for `TO-DO` and `.todo`**
 - look at all internal links and check that their text isn't anything like "Chapter 3" or whatever (i.e. (*ideally*) nothing that isn't permutation invariant!)
 - rewrite `.circuit` and `.scenario` to use `content: attr(title)".";`?
     + affects both HTML and PDF output
