@@ -1,12 +1,14 @@
 # Bell's theorem {#bells-theorem}
 
-> About **quantum correlations**, which are stronger than any correlations allowed by classical physics, and about the [**CHSH inequality**](https://en.wikipedia.org/wiki/CHSH_inequality) which demonstrates this fact, and which is a variant of **Bell's theorem**.
+> About **quantum correlations**, which are stronger than any correlations allowed by classical physics, and about the **CHSH inequality** (a variant of **Bell's theorem**) which demonstrates this fact.
 
 Every now and then, it is nice to put down your lecture notes and go and see how things actually work in the real world.
-What is wonderful (and surprising) about quantum theory is that it turns up in many places that we might not expect it to, such as in the polarisation of light, where we stumble across an intriguing paradox.
+What is particularly wonderful (and maybe surprising) about quantum theory is that it turns up in many places where we might not expect it to.
+One such example is in the polarisation of light, where we stumble across an intriguing paradox.
 
-If we take two polarising filters, and place them on top of each other with their polarisations oriented at $90^\circ$ to one another, then basically no light will pass through, since the only light passing through the first filter is orthogonally polarised with respect to the second filter, and is thus blocked.
-But then, if we take a third filter, and place it in between the other two, at an angle in the middle of both (i.e. at $45^\circ$), then somehow _more_ light is let through than if the middle filter weren't there at all.^[For the more visually inclined, there is a [video on YouTube by minutephysics](https://www.youtube.com/watch?v=zcqZHYo7ONs) about this experiment, or you can play with a virtual version at [Virtual Lab by Quantum Flytrap](https://lab.quantumflytrap.com/lab/bell-inequality?mode=detections).]
+The (much-simplified) one sentence introduction to light polarisation is this: light is made of [**transverse**](https://en.wikipedia.org/wiki/Transverse_wave) waves, and transverse waves have a "direction", which we call **polarisation**; a **polarising filter** only allows waves of a certain polarisation to pass through.
+If we take two polarising filters, and place them on top of each other with their polarisations oriented at $90^\circ$ to one another, then basically no light will pass through, since the only light that can pass through the first filter is orthogonally polarised with respect to the second filter, and is thus blocked from passing through.
+But then, if we take a third filter, and place it in between the other two, at an angle in the middle of both (i.e. at $45^\circ$), then somehow *more* light is let through than if the middle filter weren't there at all.^[For the more visually inclined, there is a [video on YouTube by minutephysics](https://www.youtube.com/watch?v=zcqZHYo7ONs) about this experiment, or you can play with a virtual version at [Virtual Lab by Quantum Flytrap](https://lab.quantumflytrap.com/lab/bell-inequality?mode=detections).]
 
 This is intrinsically linked to **Bell's theorem**, which proves the technical sounding statement that "any local real hidden variable theory must satisfy certain statistical properties", which is _not_ satisfied in reality, as many quantum mechanical experiments (such as the above) show!
 
@@ -14,60 +16,64 @@ This is intrinsically linked to **Bell's theorem**, which proves the technical s
 
 
 
-## Quantum correlations
+## Quantum correlations {#quantum-correlations}
 
-Consider two entangled qubits in the *singlet*^[We say that a system is *singlet* if all the qubits involved are entangled. This is related to the notion of singlet states in quantum mechanics, which are those with zero net angular momentum, i.e. with overall spin equal to zero.] state
+Consider two entangled qubits in the **singlet**^[We say that a system is **singlet** if all the qubits involved are entangled. This is related to the notion of [**singlet states**](https://en.wikipedia.org/wiki/Singlet_state) in quantum mechanics, which are those with zero net angular momentum.] state
 $$
   \ket{\psi}
-  = \frac{1}{\sqrt 2} \left( \ket{01}-\ket{10} \right)
+  = \frac{1}{\sqrt{2}} \left( \ket{01}-\ket{10} \right)
 $$
-and note that the projector $\proj{\psi}$ can be written as^[There are other, more elementary, ways of deriving this result but here I want you to hone your skills. Now that you've learned about projectors, traces, and Pauli operators, why not put them to good use?]
+and note that the projector $\proj{\psi}$ can be written as
 $$
   \proj{\psi}
   = \frac{1}{4} \left(
     \id\otimes\id - \sigma_x\otimes\sigma_x - \sigma_y\otimes\sigma_y - \sigma_z\otimes \sigma_z
-  \right).
+  \right)
 $$
-Any single-qubit observable with values $\pm 1$ can be represented by the operator
+where $\sigma_x$, $\sigma_y$, and $\sigma_z$ are our old friends the Pauli matrices.
+
+Also recall that any single-qubit observable^[Here we say "observable" instead of "Hermitian operator" (and "value" instead of "eigenvalue") simply because it is a useful skill to be able to switch between being able to speak like a physicist and like a mathematician!] with values $\pm1$ can be represented by the operator
 $$
   \vec{a}\cdot\vec\sigma
   = a_x\sigma_x + a_y\sigma_y + a_z\sigma_z,
 $$
 where $\vec{a}$ is a unit vector in the three-dimensional Euclidean space.
-Suppose Alice and Bob choose measurements defined by vectors $\vec{a}$ and $\vec{b}$, respectively.
-For example, if the two qubits are spin-half particles, they may measure the spin components along the directions $\vec{a}$ and $\vec{b}$.
-We write the corresponding observable as the tensor product
+
+So if Alice and Bob both choose observables, then we can characterise their choice^[For example, if the two qubits are spin-half particles, they may measure the spin components along the directions $\vec{a}$ and $\vec{b}$.] by vectors $\vec{a}$ and $\vec{b}$, respectively.
+If Alice measures the first qubit in our singlet state $\ket{\psi}$, and Bob the second, then the corresponding observable is described by the tensor product
 $$
   A\otimes B
   = (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma).
 $$
 The eigenvalues of $A\otimes B$ are the products of eigenvalues of $A$ and $B$.
 Thus $A\otimes B$ has two eigenvalues: $+1$, corresponding to the instances when Alice and Bob registered identical outcomes, i.e. $(+1,+1)$ or $(-1,-1)$; and $-1$, corresponding to the instances when Alice and Bob registered different outcomes, i.e. $(+1,-1)$ or $(-1,+1)$.
-This means that the expected value of $A\otimes B$, in any state, has a simple interpretation:
+
+This means that the expected value^[Recall Section \@ref(observables): the expected value of an operator $E$ in the state $\ket{\phi}$ is equal to $\braket{\phi|E}{\phi}$.] of $A\otimes B$, in any state, has a simple interpretation:
 $$
     \av{A\otimes B} = \Pr (\text{outcomes are the same}) - \Pr (\text{outcomes are different}).
 $$
-This expression can take any numerical value from $-1$ (perfect anti-correlations) through $0$ (no correlations) to $+1$ (perfect correlations).
-We now evaluate the expectation value in the singlet state:
+This expression can take any real value in the interval $[-1,1]$, where $-1$ means we have **perfect anti-correlations**, $0$ means **no correlations**, and $+1$ means **perfect correlations**.
+
+We can evaluate the expectation value in the singlet state:
 $$
 \begin{aligned}
   \bra{\psi}A\otimes B\ket{\psi}
-  & = \tr\left[
+  & = \tr\Big[
       (\vec{a}\cdot\vec\sigma)\otimes(\vec{b}\cdot\vec\sigma) \proj{\psi}
-    \right]
-\\& = -\frac{1}{4} \tr\left[
+    \Big]
+\\& = -\frac{1}{4} \tr\Big[
       (\vec{a}\cdot\vec\sigma)\sigma_x \otimes(\vec{a}\cdot\vec\sigma)\sigma_x
       + (\vec{a}\cdot\vec\sigma)\sigma_y \otimes(\vec{a}\cdot\vec\sigma)\sigma_y
       + (\vec{a}\cdot\vec\sigma)\sigma_z \otimes(\vec{a}\cdot\vec\sigma)\sigma_z
-    \right]
-\\& = -\frac{1}{4} \tr\left[
+    \Big]
+\\& = -\frac{1}{4} \tr\Big[
       (a_x b_x + a_y b_y + a_z b_z) \id\otimes\id
-    \right]
+    \Big]
 \\& = -\vec{a}\cdot\vec{b}
 \end{aligned}
 $$
-where we have used the fact that $\tr(\vec{a}\cdot\vec\sigma)\sigma_k = a_k$ ($k=x,y,z$).
-So if Alice and Bob choose the same observable, $\vec{a} = \vec{b}$, then their outcomes will be always opposite: whenever Alice registers $+1$ (resp. $-1$) Bob is bound to register $-1$ (resp. $+1$).
+where we have used the fact that $\tr(\vec{a}\cdot\vec\sigma)\sigma_k = a_k$ (for $k=x,y,z$).
+So if Alice and Bob choose the same observable $\vec{a} = \vec{b}$, then the expected value $\av{A\otimes B}$ will be equal to $-1$, and their outcomes will *always* be opposite: whenever Alice registers $+1$ (resp. $-1$) Bob is bound to register $-1$ (resp. $+1$).
 
 
 
@@ -75,21 +81,21 @@ So if Alice and Bob choose the same observable, $\vec{a} = \vec{b}$, then their 
 
 ## Hidden variables
 
-For simplicity, we're *local* hidden variable theories --- we discuss this assumption briefly after talking about the [CHSH inequality](#chsh-inequality).
-
 The story of "hidden variables" dates back to 1935 and grew out of Einstein's worries about the completeness of quantum theory.
-Consider, for example, a qubit.
-No quantum state of a qubit can be a simultaneous eigenstate of two non-commuting operators, say $\sigma_x$ and $\sigma_z$.
-If the qubit has a definite value of $\sigma_x$ its value of $\sigma_z$ must be indeterminate, and vice versa.
-If we take quantum theory to be a complete description of the world, then we must accept that it is impossible for both $\sigma_x$ and $\sigma_z$ to have definite values for the same qubit at the same time.^[Here it's important that we're really talking about so-called *local* hidden variable theories. We discuss this assumption briefly after talking about the [CHSH inequality](#chsh-inequality).]
-Einstein felt very uncomfortable about all this.
-He argued that quantum theory is incomplete, and that observables $\sigma_x$ and $\sigma_z$ may both have simultaneous definite values, although we only have knowledge of one of them at a time.
+Consider, for example, a single qubit.
+Recalling our previous discussion on compatible operators (Section \@ref(compatible-observables-and-uncertainty)), we know that no quantum state of a qubit can be a simultaneous eigenstate of two *non-commuting* operators, such as $\sigma_x$ and $\sigma_z$.
+Physically, this means that if the qubit has a definite value of $\sigma_x$ then its value of $\sigma_z$ must be indeterminate, and vice versa.
+If we take quantum theory to be a complete description of the world, then we must accept that it is impossible for both $\sigma_x$ and $\sigma_z$ to have definite values for the same qubit at the same time.^[Here it's important that we're really talking about so-called **local** hidden variable theories. We discuss this assumption briefly after talking about the **CHSH inequality** in Section \@ref(chsh-inequality).]
+Einstein felt very uncomfortable about all this: he argued that quantum theory is incomplete, and that observables $\sigma_x$ and $\sigma_z$ may both have simultaneous definite values, although we only have knowledge of one of them at a time.
 This is the hypothesis of **hidden variables**.
+
 In this view, the indeterminacy found in quantum theory is merely due to our ignorance of these "hidden variables" that are present in nature but not accounted for in the theory.
-Einstein came up with a number of pretty good arguments for the existence of "hidden variables".
-Probably the most compelling one was described in his 1935 paper (known as "the EPR paper"), co-authored with his younger colleagues, Boris Podolsky and Nathan Rosen.
+Einstein came up with a number of pretty good arguments for the existence of "hidden variables", perhaps the most compelling of which was described in his 1935 paper (known as "the EPR paper"), co-authored with his younger colleagues, Boris Podolsky and Nathan Rosen.
 It stood for almost three decades as the most significant challenge to the completeness of quantum theory.
-Then, in 1964, John Bell showed that this (local) hidden variable hypothesis can be tested and refuted.
+Then, in 1964, John Bell showed that the (local) hidden variable hypothesis can be tested and refuted.
+
+::: {.todo}
+:::
 
 <!--
 ::: {.technical title="No-go theorems" latex=""}
@@ -114,47 +120,54 @@ there are other similar theorems, called **no-go theorems**:
 
 <div class="video" title="Device-independent tests and Bell inequalities" data-videoid="xFj9Mf9LGso"></div>
 
-We will describe the most popular version of Bell's argument, introduced in 1969 by John Clauser, Michael Horne, Abner Shimony, and Richard Holt (whence the name "CHSH").
-Let us assume that the results of any measurement on any individual system are predetermined.
-Any probabilities we may use to describe the system merely reflect our ignorance of these hidden variables.
+We will describe the most popular version of Bell's argument, introduced in 1969 by [John Clauser](https://en.wikipedia.org/wiki/John_Clauser), [Michael Horne](https://en.wikipedia.org/wiki/Michael_Horne_(physicist)), [Abner Shimony](https://en.wikipedia.org/wiki/Abner_Shimony), and [Richard Holt](https://en.wikipedia.org/wiki/Richard_Holt_(physicist)) (whence the name "CHSH").
 
-Now, imagine the following scenario.
-Alice and Bob, two characters with a predilection for wacky experiments, are equipped with appropriate measuring devices and sent to two distant locations.
-Somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob.
-Let us label the two qubits in each pair as $\mathcal{A}$ and $\mathcal{B}$ respectively, and let us assume that both Alice and Bob have well defined values of their observables.
-We ask Alice and Bob to measure one of the two pre-agreed observables.
+Let us start by making this assumption that the results of any measurement on any individual system are predetermined --- any probabilities we may use to describe the system merely reflect our ignorance of these hidden variables.
+
+Imagine the following scenario.
+Alice and Bob, our two characters with a predilection for wacky experiments, are equipped with appropriate measuring devices and sent to two distant locations.
+Assume that Alice and Bob each have a choice of *two* observables that they can measure, each with well defined^[This corresponds to our "hidden variable" assumption, i.e. that observables *always* have *definite* values.] values $+1$ and $-1$ --- say Alice can choose between observables $A_1$ and $A_2$, and Bob between $B_1$ and $B_2$.
+Now, somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob, which we will label $\mathcal{A}$ and $\mathcal{B}$, respectively.
 For each incoming qubit, Alice and Bob choose randomly, and independently from each other, which particular observable will be measured.
-Alice chooses between $A_1$ and $A_2$, and Bob between $B_1$ and $B_2$.
-Each observable has value $+1$ or $-1$, and so we are allowed to think about them as random variables $A_k$ and $B_k$, for $k=1,2$, which take values $\pm 1$.
-Let us define a new random variable, the **CHSH quantity** $S$, as
+This means we can think of the observables as random variables $A_k,B_k$ (for $k=1,2$) that take values $\pm1$.
+Using these, we can define a new random variable: the **CHSH quantity**
 $$
   S = A_1(B_1 - B_2) + A_2(B_1 + B_2).
 $$
-It is easy to see that one of the terms $B_1\pm B_2$ must be equal to zero and the other to $\pm 2$, hence $S=\pm2$.
-The average value of $S$ must lie somewhere in-between, i.e.
+
+By a case-by-case analysis of the four possible outcomes for the pair $(B_1,B_2)$, we see that one of the terms $B_1\pm B_2$ must be equal to zero and the other to $\pm 2$ (basically depending on if $B_1=B_2$ or not), and so (looking at the four possible outcomes for the pair $(A_1,A_2)$) we see that $S=\pm2$.
+But the average value of $S$ must lie in between these two possible outcomes, i.e.
 $$
   -2 \leq \av{S} \leq 2.
 $$
 That's it!
 Such a simple and yet profound mathematical statement about correlations, which we refer simply to as the **CHSH inequality**.
-No quantum theory is involved because the CHSH inequality is not specific to quantum theory: it does not really matter what kind of physical process is behind the appearance of binary values of $A_1$, $A_2$, $B_1$, and $B_2$; it is a statement about correlations, and for all classical correlations we must have
+
+::: {.idea latex=""}
+There is absolutely *no quantum theory involved* in the CHSH inequality
+$$
+  -2 \leq \av{S} \leq 2
+$$
+because the CHSH inequality is not specific to quantum theory: it does not really matter what kind of physical process is behind the appearance of binary values of $A_1$, $A_2$, $B_1$, and $B_2$; it is merely a statement about correlations, and for all classical correlations we must have
 $$
   |
     \av{A_1 B_1} - \av{A_1 B_2} + \av{A_2 B_1} + \av{A_2 B_2}
-  | \leq 2.
+  | \leq 2
 $$
+(which is just another way of phrasing the CHSH inequality).
+:::
 
-There are essentially two two assumptions here:
+There are essentially *two* (very important) assumptions here:
 
-1. **Hidden variables**: observables have definite values; and
-2. **Locality**: Alice's choice of measurements ($A_1$  or $A_2$) does not affect the outcomes of Bob's measurement, and vice versa.
+1. **Hidden variables.** Observables have definite values.
+2. **Locality.** Alice's choice of measurements (choosing between $A_1$ and $A_2$) does not affect the outcomes of Bob's measurement, and vice versa.
 
-We will not discuss the locality assumption here in detail but let me comment on it briefly.
-In the hidden variable world a, statement such as  "if Bob were to measure $B_1$ then he would register $+1$" must be either true or false _prior to Bob's measurement_.
+We will not discuss the locality assumption here in detail, but let us just give one brief comment.
+In the hidden variable world a, statement such as "if Bob were to measure $B_1$ then he would register $+1$" must be either true or false (and not "undecidable" or some other such thing!) *prior to Bob's measurement*.
 Without the locality hypothesis, such a statement is ambiguous, since the value of $B_1$ could depend on whether $A_1$ or $A_2$ will be chosen by Alice.
-We do not want this for it implies the instantaneous communication.
-It means that, say, Alice by making a choice between $A_1$ and $A_2$, affects Bob's results.
-Bob can immediately "see" what Alice "does".
+We do not want this since it implies *instantaneous communication* --- it means that, say, Alice by making a choice between $A_1$ and $A_2$ affects Bob's results: Bob can immediately "see" what Alice "does".
+
+Now let's see how quantum theory *fundamentally disagrees* with the CHSH inequality.
 
 
 
@@ -164,27 +177,32 @@ Bob can immediately "see" what Alice "does".
 
 <div class="video" title="Device-independent tests and Bell inequalities (continued)" data-videoid="P-hk1GnAE6k"></div>
 
-In quantum theory the observables $A_1$, $A_2$, $B_1$, $B_2$ become $2\times 2$ Hermitian matrices with two eigenvalues $\pm 1$, and $\av{S}$ becomes the expected value of the $(4\times 4)$ **CHSH matrix**
+Continuing this story of Alice and Bob with their observables and pairs of qubits, let us first rephrase things in the formalism of quantum mechanics that we've been building up.
+The observables $A_1$, $A_2$, $B_1$, $B_2$ become $(2\times 2)$ Hermitian matrices, each with the two eigenvalues $\pm 1$, and $\av{S}$ becomes the expected value of the $(4\times 4)$ **CHSH matrix**
 $$
-  S
-  = A_1\otimes(B_1-B_2) + A_2\otimes(B_1+B_2).
+  S = A_1\otimes(B_1-B_2) + A_2\otimes(B_1+B_2).
 $$
-
 We can now evaluate $\av{S}$ using quantum theory.
-For example, if the two qubits are in the singlet state, then we know that
-\[
-  \av{A\otimes B} = -\vec{a}\cdot\vec{b}.
-\]
-We choose vectors $\vec{a}_1$, $\vec{a}_2$, $\vec{b}_1$, and $\vec{b}_2$ as shown in Figure \@ref(fig:choice-of-as-and-bs), and then, with these choices,
+
+If the two qubits are in the singlet state
 $$
-\begin{gathered}
+  \ket{\psi}
+  = \frac{1}{\sqrt{2}} \left( \ket{01}-\ket{10} \right)
+$$
+then we have already seen (Section \@ref(quantum-correlations)) that
+$$
+  \av{A\otimes B} = -\vec{a}\cdot\vec{b}.
+$$
+So if we choose vectors $\vec{a}_1$, $\vec{a}_2$, $\vec{b}_1$, and $\vec{b}_2$ as shown in Figure \@ref(fig:choice-of-as-and-bs), then the corresponding matrices^[That is, $A_1=\vec{a}_1\cdot\vec{\sigma}$, and so on.] satisfy
+$$
+\begin{aligned}
   \av{A_1\otimes B_1}
-  = \av{A_2\otimes B_1}
+  &= \av{A_2\otimes B_1}
   = \av{A_2\otimes B_2}
-  = \frac{1}{\sqrt 2}
+  = \frac{1}{\sqrt{2}}
 \\\av{A_1\otimes B_2}
-   = -\frac{1}{\sqrt 2}.
-\end{gathered}
+  &= -\frac{1}{\sqrt{2}}.
+\end{aligned}
 $$
 
 (ref:choice-of-as-and-bs-caption) The relative angle between the two perpendicular pairs is $45^\circ$.
@@ -200,19 +218,18 @@ $$
 \end{tikzpicture}
 ```
 
-Thus
+Plugging these values in, we get that
 $$
   \av{A_1 B_1} - \av{A_1 B_2} + \av{A_2 B_1} + \av{A_2 B_2}
   = -2\sqrt{2},
 $$
-which obviously violates CHSH inequality.
+which obviously violates CHSH inequality: $-2\sqrt{2}$ is strictly less than $-2$!
 
-To be clear, this violation has been observed in a number of painstakingly careful experiments.
-The early efforts were truly heroic, and the experiments had many layers of complexity.
-Today, however, such experiments are routine.
+But here is the really important part of this discussion: this violation of the CHSH has been observed in a number of painstakingly careful experiments --- this is not purely theoretical!
+The early efforts in these experiments were truly heroic, with many many layers of complexity; today, however, such experiments are routine.
 
 ::: {.idea latex=""}
-The behaviour of entangled quantum systems cannot be explained by any local hidden variables.
+The behaviour of entangled quantum systems *cannot* be explained by any local hidden variables.
 :::
 
 
@@ -223,9 +240,9 @@ The behaviour of entangled quantum systems cannot be explained by any local hidd
 
 > An upper bound on **quantum** correlations.
 
-One may ask if $|\av{S}|= 2\sqrt{2}$ is the maximal violation of the CHSH inequality, and the answer is "yes, it is": quantum correlations cannot achieve any value of $|\av{S}|$ larger than $2\sqrt{2}$.
-This is because, for any state $\ket{\psi}$, the expected value $\av{S} = \braket{\psi}{S|\psi}$ cannot exceed the largest eigenvalue of $S$, and we can put an upper bound on the largest eigenvalues of $S$.
-To start with, the largest eigenvalue (in absolute value) of a Hermitian matrix $M$, denoted by $\|M\|$, is a matrix norm, and it has the following properties:
+One may ask if $|\av{S}|= 2\sqrt{2}$ is the *maximal* violation of the CHSH inequality, and the answer is "yes, it is": *quantum* correlations *always* satisfy the bound $|\av{S}|\leq2\sqrt{2}$.
+This is because, no matter which state $\ket{\psi}$ we pick, the expected value $\av{S} = \braket{\psi}{S|\psi}$ cannot exceed the largest eigenvalue of $S$, and we can put an upper bound on the largest eigenvalues of $S$.
+To start with, taking the largest eigenvalue (in absolute value) of a Hermitian matrix $M$, which we denote by $\|M\|$, gives a matrix norm, i.e. it has the following properties:
 $$
 \begin{aligned}
   \|M\otimes N\|
@@ -236,21 +253,35 @@ $$
   & \leq \|M\| + \|N\|
 \end{aligned}
 $$
-Given that $\|A_i\|=1$ and $\|B_j\|=1$ ($i,j=1,2$), it is easy to show that $\|S\| < 4$.
-One can, however, derive a tighter bound.
-We can show (do it) that
+
+Given that $\|A_k\|=\|B_k\|=1$ (for $k=1,2$), it is easy to use these properties to show that $\|S\|\leq4$, but this is a much weaker bound than we want.
+However, one can show^[**Exercise.** Prove this!] that
 $$
   S^2
   = 4(\id\otimes\id) + [A_1,A_2]\otimes[B_1,B_2].
 $$
-The norm of each of the commutators ($\|[A_1, A_2]\|$ and $\|[B_1, B_2]\|$) cannot exceed $2$, and $\|S^2\|=\|S\|^2$, which all together gives
+
+Now, the norms of the commutators $\|[A_1, A_2]\|$ and $\|[B_1, B_2]\|$ are bounded by^[**Exercise.** Prove this!] $2$, and $\|S^2\|=\|S\|^2$.
+All together, this gives
 $$
-  \|S\|
-  < 2\sqrt{2}
-  \implies
-  |\av{S}| < 2\sqrt{2}.
+  \begin{aligned}
+    \|S^2\|
+    &\leq8
+  \\\implies \|S\|
+    &\leq2\sqrt{2}
+  \\\implies |\av{S}|
+    &\leq2\sqrt{2}
+  \end{aligned}
 $$
 This result is known as the **Tsirelson inequality**.
+
+::: {.idea}
+In classical probability theory, the (absolute value of the) average value of the CHSH quantity
+$$
+  S = A_1(B_1 - B_2) + A_2(B_1 + B_2)
+$$
+is bounded by $2$ (and this bound can be attained); in quantum theory, it is bounded by $2\sqrt{2}$ (and this bound can also be attained).
+:::
 
 
 

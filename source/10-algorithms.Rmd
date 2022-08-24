@@ -1,20 +1,22 @@
 # Quantum algorithms {#quantum-algorithms}
 
-> About quantum interference in disguise: **Hadamard, function evaluation, Hadamard**.
+<div class="video" title="Overview" data-videoid="pzC4pUK8s8A"></div>
+
+> About quantum interference in disguise: Hadamard, **function evaluation**, Hadamard.
 > Also about the early quantum algorithms and how they deal with querying oracles, searching for a needle in a haystack, and estimating periodicity of certain functions.
 
-Classical computers essentially evaluate functions: given $n$-bits of input they produce $m$-bits of output that are uniquely determined by the input; that is, they find the value of
+To boil down the theory of classical computers to a single sentence, we can say that they essentially evaluate functions: given $n$-bits of input, they produce $m$-bits of output that are uniquely determined by the input.
+In other words, (very simple) classical computers encode binary functions
 $$
   f\colon \{0,1\}^n \to \{0,1\}^m
 $$
-for a particular specified $n$-bit argument.
-A function with an $m$-bit value is equivalent to $m$ Boolean functions, each with a one-bit value, so we may just as well say that the basic task performed by a computer is the evaluation of Boolean functions
+and then compute the value of the output for any particular specified $n$-bit argument.
+But we can make an even further simplification: a binary function with an $m$-bit output value is equivalent to $m$-many binary functions with $1$-bit output values (which we call **Boolean functions**).
+In other words, we might just as well say that the basic task performed by a computer is the evaluation of Boolean functions
 $$
   f\colon \{0,1\}^n \to  \{0,1\}.
 $$
 How can we adapt this to the world of quantum computing?
-
-<div class="video" title="Overview" data-videoid="pzC4pUK8s8A"></div>
 
 
 ## Quantum Boolean function evaluation
@@ -23,14 +25,14 @@ How can we adapt this to the world of quantum computing?
 
 <div class="video" title="Quantum function evaluation" data-videoid="x_umQRMcwtA"></div>
 
-_In quantum computation, all elementary operations are reversible_ (unitary), so we compute Boolean functions in a reversible fashion as
+In quantum computation, *all elementary operations are reversible* (i.e. unitary), so we need to compute Boolean functions in a reversible fashion --- we can do so as follows:
 $$
   \ket{x}\ket{y} \mapsto \ket{x}\ket{y\oplus f(x)}.
 $$
 
-The corresponding circuit diagram (for $n=3$) is shown in Figure \@ref(fig:n-equals-3-circuit-diagram).
+The corresponding circuit diagram (for an input register of $n=3$ qubits) is shown in Figure \@ref(fig:n-equals-3-circuit-diagram).
 
-(ref:n-equals-3-circuit-diagram-caption) Computing some $f\colon\{0,1\}^3\to\{0,1\}$ in a quantum manner.
+(ref:n-equals-3-circuit-diagram-caption) Computing some $f\colon\{0,1\}^3\to\{0,1\}$ in a quantum manner, where $x\in\{0,1\}^3$, $y\in\{0,1\}$, and $\oplus$ denotes $\texttt{XOR}$, or addition modulo $2$.
 
 ```{r n-equals-3-circuit-diagram,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.cap='(ref:n-equals-3-circuit-diagram-caption)'}
 \begin{equation*}
@@ -51,58 +53,61 @@ The corresponding circuit diagram (for $n=3$) is shown in Figure \@ref(fig:n-equ
 \end{equation*}
 ```
 
-Here we use two registers: the first one (counting from the top to the bottom of the circuit diagram) stores the arguments $x$, and the second one the values $f(x)$.
+Here we use two registers: the first^[Reading the circuit diagram from top to bottom.] one stores the arguments $\ket{x}$ (where $x\in\{0,1\}^n$ is our binary string input), and the second one the value $f(x)$.
 More precisely, the value $f(x)$ is added bit-wise to the pre-existing binary value $y$ of the second register.
 We usually set $y=0$ to get
 $$
-  \ket{x}\ket{0} \mapsto \ket{x}\ket{f(x)}.
+  \ket{x}\ket{0} \longmapsto \ket{x}\ket{f(x)}.
 $$
 
 Quantum Boolean function evaluation is a special case of the generalised $x$-controlled-$U$ on two registers:
 $$
-  \sum_x \proj{x}\otimes U_x
+  \sum_{x\in\{0,1\}^n} \proj{x}\otimes U_x
 $$
-where $U_x$ is either the identity $\id$ (when $f(x)=0$) or the bit-flip^[Do not confuse the capital $X$, which is the Pauli flip operator $\sigma_x$, with the small $x$, which is a binary string stored in the first register and the argument of our Boolean function $f$.] $X$ (when $f(x)=1$).
-We may also write this as
+where $U_x$ is either the identity $\id$ (when $f(x)=0$) or the bit-flip^[Do not confuse the capital $X$ (the Pauli bit-flip operator $\sigma_x$) with the small $x$ (a binary string stored in the first register, and the argument of our Boolean function $f$).] $X$ (when $f(x)=1$).
+We can write this very succinctly as
 $$
-  \sum_x \proj{x}\otimes X^{f(x)}.
+  \sum_{x\in\{0,1\}^n} \proj{x}\otimes X^{f(x)}.
 $$
+Because of this, we sometimes denote the quantum evaluation of the function $f$ by $U_f$, which is a gate on the $(n+1)$ qubits $\ket{x}\ket{y}$.
 
 
-### Example
+### A worked example
 
 Consider the Boolean function $f\colon\{0,1\}^2\to\{0,1\}$ given by
 $$
   f(x)
-  =
-  \begin{cases}
-    1 &\text{if $x=01$,}
-  \\0 &\text{otherwise.}
+  = \begin{cases}
+    1 &\text{if $x=01$;}
+  \\0 &\text{otherwise}
   \end{cases}
 $$
-The evaluation $\ket{x}\ket{y} \mapsto \ket{x}\ket{y\oplus f(x)}$ can be tabulated explicitly as
+which we might call the **indicator** (or **characteristic**) function for the binary string $01$, sometimes denoted $\chi_{01}$.
+The evaluation $\ket{x}\ket{y} \mapsto \ket{x}\ket{y\oplus f(x)}$ can be tabulated explicitly:
 $$
   \begin{array}{cc}
-    \ket{00}\ket{0} \mapsto \ket{00}\ket{0}
-    & \ket{00}\ket{1} \mapsto \ket{00}\ket{1}
-  \\\ket{01}\ket{0} \mapsto \ket{01}\ket{1}
-    & \ket{01}\ket{1} \mapsto \ket{01}\ket{0}
-  \\\ket{10}\ket{0} \mapsto \ket{10}\ket{0}
-    & \ket{10}\ket{1} \mapsto \ket{10}\ket{1}
-  \\\ket{11}\ket{0} \mapsto \ket{11}\ket{0}
-    & \ket{11}\ket{1} \mapsto \ket{11}\ket{1}
+    \ket{00}\ket{0} \longmapsto \ket{00}\ket{0}
+    & \ket{00}\ket{1} \longmapsto \ket{00}\ket{1}
+  \\\ket{01}\ket{0} \longmapsto \ket{01}\ket{1}
+    & \ket{01}\ket{1} \longmapsto \ket{01}\ket{0}
+  \\\ket{10}\ket{0} \longmapsto \ket{10}\ket{0}
+    & \ket{10}\ket{1} \longmapsto \ket{10}\ket{1}
+  \\\ket{11}\ket{0} \longmapsto \ket{11}\ket{0}
+    & \ket{11}\ket{1} \longmapsto \ket{11}\ket{1}
   \end{array}
 $$
-and the expression $\sum_x \ket{x}\bra{x}\otimes X^{f(x)}$ becomes
+and then
 $$
   \begin{aligned}
-    &\proj{00} \otimes \id
-  \\+ &\proj{01} \otimes X
+    \sum_{x\in\{0,1\}^2} \ket{x}\bra{x}\otimes X^{f(x)}
+    = &\proj{00} \otimes \id
+    + \proj{01} \otimes X
   \\+ &\proj{10} \otimes \id
-  \\+ &\proj{11} \otimes \id.
+    + \proj{11} \otimes \id.
   \end{aligned}
 $$
-Finally, the matrix form looks like
+
+Finally, the matrix form looks as follows:
 $$
   \left[
   \,
@@ -131,15 +136,15 @@ $$
   \right]
 $$
 As you can see, this is a diagonal block matrix: a $(4\times 4)$ matrix with $(2\times 2)$ matrices as entries.
-The rows and the columns of the $(4\times 4)$ matrix are labelled by the binary strings $00, 01, 10, 11$, and the $(2\times 2)$ matrices on the diagonal represent operations applied to the qubit in the second register.
-Here all of them are the identity $\id$ except the $(01, 01)$ entry, which represents the bit-flip $X$.
-This is because $f(01)=1$, and $f(x)=0$ for all other binary strings $x$.
+The rows and the columns of the $(4\times 4)$ matrix are labelled by^[We always use the [**lexicographic order**](https://en.wikipedia.org/wiki/Lexicographic_order) $00<01<10<11$.] the binary strings $00, 01, 10, 11$, and the $(2\times 2)$ matrices on the diagonal represent operations applied to the qubit in the second register.
+Here, all of these matrices on the diagonal are the identity $\id$ except for the $(01,01)$ entry (i.e. the second one), which is the bit-flip $X$.
+This is because $f(01)=1$ (and so we want to turn the control value $y=0$ into $y=1$, which is achieved by applying the bit-flip operator), but $f(x)=0$ for all other binary strings $x$ (and so we want to leave the control value $y=0$ as it is).
 
 
 
 
 
-## Hadamard and quantum Fourier transforms
+## Hadamard and quantum Fourier transforms {#hadamard-and-quantum-fourier-transforms}
 
 <div class="video" title="Hadamard and quantum Fourier transforms" data-videoid="qF9Wpgaqqww"></div>
 
@@ -147,33 +152,35 @@ This is because $f(01)=1$, and $f(x)=0$ for all other binary strings $x$.
 <!-- TO-DO -->
 :::
 
+<!-- TO-DO: make sure to mention that the Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$ -->
 
 
 
 
 
-## More phase kick-back
+
+## More phase kick-back {#more-phase-kick-back}
 
 <div class="video" title="Phase kick-back" data-videoid="iSCYkhkWVjw"></div>
 
-What makes the quantum evaluation of Boolean functions really interesting is its action on a superposition of different inputs $x$.
-For example,
+What makes quantum evaluation of Boolean functions really interesting --- and what truly sets it apart from classical evaluation --- is its action on a *superposition of different inputs*.
+For example,^[We make two notational simplifications: we usually don't worry about normalisation factors, and we often just write $\sum_x$ to mean $\sum_{x\in\{0,1\}^n}$.]
 $$
   \sum_{x}\ket{x}\ket{0}
   \longmapsto
   \sum_{x}\ket{x}\ket{f(x)}
 $$
-produces $f(x)$ for _all_ $x$ in a _single_ run (note that we have dropped the normalisation factor).
-It is more instructive to see the effect of the function evaluation when the qubit in the second register is prepared in the state $\ket{-} = \frac{1}{\sqrt 2}(\ket{0} - \ket{1}$, since then
+produces $f(x)$ for *all* $x$ in a *single* run.
+However, it is more instructive to see the effect of quantum function evaluation when the qubit in the second register is prepared in the state $\ket{-}\coloneqq\frac{1}{\sqrt{2}}(\ket{0}-\ket{1})=H\ket{1}$, since then
 $$
   \sum_x\ket{x}\ket{-}
   \longmapsto
   \sum_x (-1)^{f(x)}\ket{x}\ket{-}
 $$
 (as shown in Figure \@ref(fig:n-equals-3-minus-circuit-diagram)).
-Whenever $f(x)=1$, the bit flip $X$ is applied to the qubit in the second register.
+In words, whenever $f(x)=1$, the bit flip $X$ is applied to the qubit in the second register.
 
-(ref:n-equals-3-minus-circuit-diagram-caption) Computing some $f\colon\{0,1\}^3\to\{0,1\}$ with the second-register qubit in state $\ket{-}$.
+(ref:n-equals-3-minus-circuit-diagram-caption) Computing some $f\colon\{0,1\}^3\to\{0,1\}$ with the second register in state $\ket{-}$.
 
 ```{r n-equals-3-minus-circuit-diagram,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.cap='(ref:n-equals-3-minus-circuit-diagram-caption)'}
 \begin{equation*}
@@ -194,9 +201,10 @@ Whenever $f(x)=1$, the bit flip $X$ is applied to the qubit in the second regist
 \end{equation*}
 ```
 
-The reason for defining the state $\ket{-}$ as we do is that it is the eigenstate of $X$ with eigenvalue $-1$.
+The reason for defining the state $\ket{-}$ as we do is that it is the eigenstate of $X$ with eigenvalue $-1$, i.e. $X\ket{-}=-\ket{-}$.
 So, due the phase kick-back, whenever $f(x)=1$, the phase factor $-1$ appears in front of the corresponding term $\ket{x}$.
 As you can see, the second register stays in state $\ket{-}$ all the way through the computation --- it is the first register where things happen.
+
 Let us now see how quantum Boolean function evaluation introduces phase shifts in quantum interference experiments, and how such experiments can be viewed as computations.
 
 
@@ -204,23 +212,24 @@ Let us now see how quantum Boolean function evaluation introduces phase shifts i
 
 
 
-## Oracles and query complexity
+## Oracles, and our first quantum algorithm
 
 The computational power of quantum interference was discovered by counting how many times certain Boolean functions have to be evaluated in order to find the answer to a given problem.
-Imagine a "black box" (also called an **oracle**) that computes some fixed Boolean function, but whose inner workings are unknown to us, and a scenario in which one wants to learn about a given property of the Boolean function but has to "pay" (in energy, or in money!) for each use (often referred to as a **query**) of the box.
-In such a setting, the objective is to minimise number of queries to the oracle while finding out as much information as possible about the function computed by the oracle.
-For this purpose, we ignore everything that happens inside the black box: the Boolean function evaluation counts as just _one_ computational step.
+Imagine a "black box" (sometimes also called an **oracle**) that computes some fixed Boolean function, but whose inner workings are unknown to us.
+Then imagine that we are in a scenario where we want to learn about some given property of the Boolean function, but we have to "pay" (in energy, time, money, or anything!) for each use (often referred to as a **query**) of the box.
+In such a setting, the objective is to minimise number of queries to the oracle while finding out as much information as possible about the function that it computes.
+For this purpose, we ignore everything that happens inside the black box: in our rules of the game, the Boolean function evaluation counts as just *one* computational step.
 
 
 
 
 
 
-### Deutsch's algorithm
+### Deutsch's algorithm {#deutschs-algorithm}
 
 <div class="video" title="Deutsch's algorithm" data-videoid="DyINHZoOcLQ"></div>
 
-We start, once more, with the simplest quantum interference circuit:
+We start, once more, with the simplest quantum interference circuit
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \begin{equation*}
@@ -234,36 +243,44 @@ We start, once more, with the simplest quantum interference circuit:
 \end{equation*}
 ```
 
-Suppose you can prepare the input, you can read the output, you _cannot_ see the phase shifter, _but_ you are promised that the phase shifter is set to either $\varphi=0$ or $\varphi=\pi$.
-Can you tell which value $\varphi$ has been set to?
+but let's turn this into a black-box scenario, as described above:
 
-Of course you can!
+- we are allowed to prepare the input in any state that we like;
+- we are allowed to read the output;
+- *but* all we know about the value of $\varphi$ is that it is either $0$ or $\pi$, and we are *not* allowed to "look inside" the phase gate to see which value it is!
 
-One way of doing it is to set your input to $\ket{0}$ and check the output: for $\varphi=0$ the output is always $\ket{0}$, and for $\varphi=\pi$ it is always $\ket{1}$.
-A single run of the interference experiment is sufficient to determine the difference.
-The first quantum algorithm, proposed by David Deutsch in 1985, is very much related to this effect, but where the phase setting is determined by the Boolean function evaluation via the phase kick-back.
+With these rules, can we figure out which value $\varphi$ has been set to?
+
+Of course we can --- we're quantum information scientists!
+
+One way of doing it is to prepare the input in the state $\ket{0}$ and check the output: if $\varphi=0$ then the output is always $\ket{0}$, and if $\varphi=\pi$ then it is always $\ket{1}$.
+In other words, a *single run* of the interference experiment is sufficient to determine the difference.
+
+The very first quantum algorithm, proposed by [David Deutsch](https://en.wikipedia.org/wiki/David_Deutsch) in 1985, is very much related to this effect, but where the phase setting is determined by the Boolean function evaluation via the phase kick-back.
 
 ::: {.scenario latex=""}
 We are presented with an oracle that computes some unknown function $f\colon\{0,1\}\to\{0,1\}$.
-Note that there are only four possibilities for what $f$ can be: it could be one of two constant functions (i.e. those where $f(0)=f(1)$), or one of two "balanced" functions (i.e. those where $f(0)\neq f(1)$).
+Note that there are only four possibilities for what $f$ can be: it could be one of two **constant** functions (i.e. those where $f(0)=f(1)$), or one of two **balanced** functions (i.e. those where $f(0)\neq f(1)$).
 
 |    | $f(0)$ | $f(1)$ |
 | -: | :----: | :----: |
-| constant | $\mqty{0\\1}$ | $\mqty{0\\1}$ |
-| balanced | $\mqty{0\\1}$ | $\mqty{1\\0}$ |
+| constant | $0$ | $0$ |
+| constant | $1$ | $1$ |
+| balanced | $0$ | $1$ |
+| balanced | $1$ | $0$ |
 
 Our task is to determine, using the fewest queries possible, whether the function computed by the oracle is constant or balanced.
 :::
 
-Note that we are _not_ asked for the particular values $f(0)$ and $f(1)$, but _only whether the two values are the same or different_.
-Classical intuition tells us that we have to evaluate both $f(0)$ and $f(1)$ and compare them, which involves evaluating $f$ _twice_.
-But, in the quantum setting, we can solve this problem with a _single_ function evaluation, using the following circuit.
+Note that we are *not* asked for the particular values $f(0)$ and $f(1)$, but *only whether the two values are the same or different*.
+Classical intuition tells us that we have to evaluate both $f(0)$ and $f(1)$ and compare them, which involves evaluating $f$ *twice*.
+But, in the quantum setting, we can solve this problem with a *single* function evaluation, using the following circuit.^[The original Deutsch algorithm provides the correct answer with probability 50%. Here we present a modified/improved version.]
 
 :::: {.circuit latex=""}
-::: {.circuit_title}
+::: {.circuit-title}
 (Deutsch's).
 :::
-_First register: $1$ qubit. Second register: $1$ qubit._
+*First register: $1$ qubit. Second register: $1$ qubit.*
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \begin{equation*}
@@ -289,7 +306,7 @@ $$
     \ket{0}
     &\xmapsto{H}
     \ket{0}+\ket{1}
-  \\&\xmapsto{f}
+  \\&\xmapsto{U_f}
     (-1)^{f(0)}\ket{0} + (-1)^{f(1)}\ket{1}
   \\&\quad=
     \ket{0} + (-1)^{f(0)\oplus f(1)}\ket{1}
@@ -298,7 +315,7 @@ $$
   \end{aligned}
 $$
 
-This evolution can be represented by the circuit diagram
+The evolution of the first qubit is thus identical to that described by the circuit diagram
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \begin{equation*}
@@ -313,25 +330,25 @@ This evolution can be represented by the circuit diagram
 ```
 
 where the relative phase is $\varphi = (-1)^{f(0)\oplus f(1)}$.
-The first qubit ends in state $\ket{0}$ if the function $f$ is constant, and in state $\ket{1}$ if the function is balanced, and the standard measurement distinguishes these two cases with certainty.^[The original Deutsch algorithm provides the correct answer with probability 50%. Here we have presented a modified/improved version.]
+The first qubit ends in state $\ket{0}$ if the function $f$ is constant, and in state $\ket{1}$ if the function is balanced, and the standard measurement distinguishes these two cases with certainty.
 
 Deutsch's result laid the foundation for the new field of quantum computation, and was followed by several other quantum algorithms for various problems.
-They all seem to rest on the same generic sequence: a Hadamard transform, followed by a function evaluation, followed by another Hadamard (or Fourier) transform.^[The Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$.]
+They all seem to rest on the same generic sequence:
+
+- a Hadamard transform;
+- function evaluation;
+- another Hadamard (or Fourier) transform.^[As explained in Section \@ref(hadamard-and-quantum-fourier-transforms), the Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$.]
+
 As we shall see in a moment, in some cases (such as in Grover's search algorithm) this sequence is repeated several times.
-Let me now take you through the three early quantum algorithms, each one offering a higher-order speed-up when compared to their classical analogues than the last.
+
+Let us now follow a tour through the three early quantum algorithms, where each one offers a higher-order speed-up when compared to their classical analogues than the last: firstly linear, then quadratic, and finally exponential.
 
 
 
 
 
 
-## Three more quantum algorithms
-
-Along with Deutsch's algorithm, there are three more fundamental quantum algorithms that we will study here.
-Each one was designed to solve a different specific problem, but they all share some similarity: this omnipresent sequence of Hadamard, function evaluation, Hadamard.
-
-
-### The Bernstein-Vazirani algorithm
+## The Bernstein--Vazirani algorithm
 
 <div class="video" title="The Bernstein-Vazirani algorithm" data-videoid="60OHCftlqbA"></div>
 
@@ -341,21 +358,21 @@ $$
   f(x) = a\cdot x
   \equiv (a_1\cdot x_1) \oplus \ldots \oplus (a_n\cdot x_n)
 $$
-for some fixed $a\in\{0,1\}^n$.
+for some fixed binary string $a=a_1a_2\ldots a_n\in\{0,1\}^n$.
 
 Our task is to determine, using the fewest queries possible, the value of the $n$-bit string $a$.
 :::
 
-It's quite easy to see how to do this classically: if we input the value $x=00\ldots010\ldots0$, with the $1$ in the $m$-th bit, then $f(x)$ is simply the $m$-th bit of $a$; after $n$ such calls, we can evaluate every bit value.
-It is also clear that there cannot exist a better classical algorithm: each call to the oracle teaches us exactly one bit of information, and since we must learn $n$ bits, we must query it $n$ times.
+It's quite easy to see how to do this classically: if we input the value $x=00\ldots010\ldots0$, where the $m$-th bit is a $1$ and all other bits are $0$, then $f(x)$ is simply the $m$-th bit of $a$; after $n$ such calls, we will know every bit value, and thus know $a$.
+It is also clear that there *cannot* exist a better classical algorithm: each call to the oracle teaches us exactly one bit of information, and since we must learn $n$ bits, we must query it $n$ times.
 
-In contrast, by running the circuit below, it is possible to determine the value of $a$ with a _single_ (!) call to the oracle.
+In contrast, by running the circuit below, it is possible to determine the value of $a$ with a *single* call to the oracle!
 
 :::: {.circuit latex=""}
-::: {.circuit_title}
+::: {.circuit-title}
 (Bernstein-Vazirani).
 :::
-_First register: $n$ qubits. Second register: $1$ qubit._
+*First register: $n$ qubits. Second register: $1$ qubit.*
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
@@ -391,13 +408,13 @@ _First register: $n$ qubits. Second register: $1$ qubit._
 ```
 ::::
 
-N.B. The "$\ldots$" in the circuit means "there are more wires here but they are identical (apart from the numbering) to the ones above".
+A quick note on notation: the "$\ldots$" in the circuit means "there are more wires here but they are identical (apart from the numbering) to the ones above".
 You might also see other notation to denote this, such as
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \begin{equation*}
   \begin{quantikz}
-    \lstick{$\ket{0^n}$}
+    \lstick{$\ket{0^{\otimes n}}$}
     &[2mm] \gate{H}\qwbundle{n}
     & \qw
   \end{quantikz}
@@ -409,75 +426,75 @@ or even simply
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \begin{equation*}
   \begin{quantikz}
-    \lstick{$\ket{0^n}$}
+    \lstick{$\ket{0^{\otimes n}}$}
     & \gate{H}\qwbundle[alternate]{}
     & \qwbundle[alternate]{}
   \end{quantikz}
 \end{equation*}
 ```
 
-Now, stepping through the execution of the circuit (and ignoring the second register, which remains in state $\ket{-}$ throughout), we obtain
+Now, stepping through the execution of the circuit (and ignoring the second register, which, as per usual, remains in the state $\ket{-}$ throughout), we obtain
 $$
   \begin{aligned}
-    \ket{0}
-    &\xmapsto{H}
-    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} \ket{x}
-  \\&\xmapsto{f}
-    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n} (-1)^{a\cdot x}\ket{x}
-  \\&\xmapsto{H}
-    \left(\frac{1}{\sqrt2}\right)^n \sum_{x\in\{0,1\}^n}
+    \ket{0^{\otimes n}}
+    &\xmapsto{H^{\otimes n}}
+    \left(\frac{1}{\sqrt{2}}\right)^n \sum_{x\in\{0,1\}^n} \ket{x}
+  \\&\xmapsto{U_f}
+    \left(\frac{1}{\sqrt{2}}\right)^n \sum_{x\in\{0,1\}^n} (-1)^{a\cdot x}\ket{x}
+  \\&\xmapsto{H^{\otimes n}}
+    \left(\frac{1}{\sqrt{2}}\right)^n \sum_{x\in\{0,1\}^n}
     \left[
-      (-1)^{a\cdot x} \left(\frac{1}{\sqrt2}\right)^n
+      (-1)^{a\cdot x} \left(\frac{1}{\sqrt{2}}\right)^n
       \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x} \ket{y}
     \right]
-  \\&\quad= \left(\frac12\right)^n \sum_{y\in\{0,1\}^n}
+  \\&\quad= \left(\frac{1}{2}\right)^n \sum_{y\in\{0,1\}^n}
     \left[
       \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
     \right]
     \ket{y}
-  \\&\quad=\ket{a}
   \end{aligned}
 $$
 where we write the second Hadamard transform as
 $$
   \ket{x}
-  \mapsto
-  \left(\frac{1}{\sqrt2}\right)^n \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x}\ket{y}
+  \longmapsto
+  \left(\frac{1}{\sqrt{2}}\right)^n \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x}\ket{y}.
 $$
-and where we have used the fact (which you should prove!) that, for any $y\in\{0,1\}^n$,
+
+To see that this output is indeed equal to $\ket{a}$, we can use the fact^[**Exercise.** Prove this!] that, for any $y\in\{0,1\}^n$,
 $$
   \sum_{x\in\{0,1\}^n} (-1)^{x\cdot y}
-  =
-  \begin{cases}
-    0 &\text{if $y\neq0$}
+  = \begin{cases}
+    0 &\text{if $y\neq0$;}
   \\2^n &\text{if $y=0$}
   \end{cases}
 $$
-
-This lets us write^[Even if you don't immediately see how this sum works for $z\neq a$ (writing $\ket{z}$ to mean the output), you can first calculate the probability that the output is $z=a$. In this case it is easy to see that the sum is $2^n$, and that in the final state $\sum_z\alpha_z\ket{z}$ the term $z=a$ has amplitude $1$. Thus, by normalisation, all the other terms must be equal to $0$.]
+which, in our case, tells us that
 $$
   \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
-  =
-  \begin{cases}
-    0 &\text{if $y\neq a$}
+  = \begin{cases}
+    0 &\text{if $y\neq a$;}
   \\2^n &\text{if $y=a$.}
   \end{cases}
 $$
-If you take the sum over $x$, then all the terms always cancel out _unless_ $a\oplus y = 00\ldots0$, i.e. _unless $y=a$_.
-Thus the standard bit-by-bit measurement of the first register gives the value of $a$ and solves the problem with a single call to the oracle.
 
-Note that the algorithm follows the same pattern as Deutsch's algorithm: Hadamard, function evaluation, Hadamard, i.e. a generic quantum interference pattern.
+In other words, if you take the sum over $x$, then all the terms always cancel out *unless* $a\oplus y = 00\ldots0$, but this happens *if and only if* $y=a$.
+Then the standard bit-by-bit measurement of the first register gives the value of $a$ and solves the problem with a single call to the oracle.
+
+Alternatively, if you don't immediately see how this sum works for $z\neq a$ (where we write $\ket{z}$ to mean the output), you can first calculate the probability that the output is $z=a$.
+In this case it is easy to see that the sum is $2^n$, and that in the final state $\sum_z\lambda_z\ket{z}$ the term $z=a$ has amplitude $1$.
+Thus, by normalisation, all the other terms must be equal to $0$.
 
 
-### Grover's search algorithm
+## Grover's search algorithm
 
-The next algorithm we will study aims to solve the problem of searching for a specific item in an _unsorted_ database.
+The next algorithm we will study aims to solve the problem of searching for a specific item in an *unsorted* database.
 Think about an old-fashioned phone book: the entries are typically sorted alphabetically, by the name of the person that you want to find.
 However, what if you were in the opposite situation: you had a phone number and wanted to find the corresponding person's name?
 The phone book is not sorted in that way, and to find the number (and hence name) with, say, 50% probability, you would need to search through, on average, 50% of the entries.
-In a large phone book, this would take a long time.
+Needless to say, in a large phone book this would take a long time.
 
-While this might seem like a rather contrived problem (a computer database should always maintain an index on any searchable field), many problems in computer science can be cast in this form, i.e. that of an **unstructured search**.
+While this might seem like a rather contrived problem (a computer database *should* always maintain an index on any searchable field), many problems in computer science can be cast in this form, i.e. that of an **unstructured search**.
 
 ::: {.scenario latex=""}
 We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}$.
@@ -485,26 +502,26 @@ We are presented with an oracle that computes some unknown function $f\colon\{0,
 Our task is to find, using the fewest queries possible, an input $x\in\{0,1\}^n$ such that $f(x)=1$.
 :::
 
-Suppose that we know that, amongst the $N=2^n$ binary strings, there are $M\ll N$ which are "tagged", i.e. on which $f$ evaluates to $1$.
-There is no structure in the database, and so any classical search requires around $N/M$ steps, i.e. the function $f$ must be evaluated roughly $N/M$ times.
+Suppose that we know that, amongst the $N=2^n$ binary strings, there are $M\ll N$ which are **tagged**, i.e. strings on which $f$ evaluates to $1$.
+Since there is no structure in the database, any classical search requires around $N/M$ steps, i.e. the function $f$ must be evaluated roughly $N/M$ times.
 
-In contrast, there is a quantum search algorithm, implemented by the circuit below, that was proposed in 1996 by Lov Grover, and which requires only roughly $\sqrt{N/M}$ steps.
+In contrast, there is a quantum search algorithm, implemented by the circuit below, that was proposed in 1996 by [Lov Grover](https://en.wikipedia.org/wiki/Lov_Grover), and which requires only roughly $\sqrt{N/M}$ steps.
 
 :::: {.circuit latex=""}
-::: {.circuit_title}
+::: {.circuit-title}
 (Grover's search).
 :::
-_First register: $n$ qubits. Second register: $1$ qubit._
+*First register: $n$ qubits. Second register: $1$ qubit.*
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
 \begin{equation*}
   \begin{quantikz}
-    \lstick[wires=4]{$\ket{0^n}$}
+    \lstick[wires=4]{$\ket{0^{\otimes n}}$}
     & \gate{H}
     & \qw
     & \ctrl{4}
-      \gategroup[wires=5,steps=4,background,style={rounded corners,dashed,ultra thick,inner sep=0.5em},label style={yshift=0.4em}]{repeat $O(2^{n/2})$ times}
+      \gategroup[wires=5,steps=4,background,style={rounded corners,dashed,ultra thick,inner sep=0.5em},label style={yshift=0.4em,align=center}]{Grover iteration operator $G$\\(repeat $O(2^{n/2})$ times)}
     & \gate{H}
     & \ctrl{4}
     & \gate{H}
@@ -545,17 +562,28 @@ _First register: $n$ qubits. Second register: $1$ qubit._
 \end{equation*}
 ```
 
-where $f_0$ tags the binary string of $n$ zeros: $f_0(x)=1$ if $x=00\ldots0$, and $f_0(x)=0$ otherwise. 
+where $f_0$ tags the binary string consisting of $n$ zeros:
+$$
+  f_0(x)
+  = \begin{cases}
+    1 &\text{if $x=00\ldots0$;}
+  \\0 &\text{otherwise.}
+  \end{cases}
+$$
 ::::
 
-We can recognise the typical Hadamard, function evaluation, Hadamard sequence, and we can see that the second register (the bottom qubit, in state $\ket{-}$) plays an auxiliary role: the real action takes place in the first register.
+Yet again, we can recognise the typical Hadamard, function evaluation, Hadamard sequence, and yet again we can see that the second register (the bottom qubit, in state $\ket{-}$) plays an auxiliary role: the real action takes place in the first register.
 However, unlike the previous algorithms, a single call to the oracle does not do very much, and we have to build up the quantum interference in the first register through repeated calls to the oracle (without any intermediate measurements!).
 
-Here, the basic step is the **Grover iteration operator $G$**, which is the boxed part of the circuit that we repeat over and over.
-After $O(2^{n/2})$ applications of $G$, we measure the first register bit-by-bit and obtain the value of $\ket{z}$, which is such that, _with "high" probability_, $f(z)=1$.
-In order to actually _see_ how this algorithm works, and to justify our claim that it gives what we are searching for "with high probability", we can take a more geometric approach.
+Here, the basic step is the **Grover iteration operator $G$**, which is the boxed part of the circuit that we repeat over and over:
+$$
+  G = (H^{\otimes n}\otimes\id) U_{f_0}(H^{\otimes n}\otimes\id) U_f.
+$$
 
-First, we define two orthonormal vectors in the Hilbert space of the first register:^[In fact, we shall completely ignore the second register from now on.]
+After^[Recall the big-$O$ notation introduced in Exercise \@ref(big-o).] $O(2^{n/2})$ applications of $G$, we measure the first register bit-by-bit and obtain the value of $\ket{z}=\ket{z_1z_2\ldots z_n}$, which is such that, *with "high" probability*, $f(z)=1$.
+In order to actually *see* how this algorithm works, and to justify our use of the phrase "with high probability", we can take a more geometric approach.
+
+First, we define two orthonormal vectors in the Hilbert space describing the first register:^[Once again, we shall completely ignore the second register from now on, since all the interesting stuff happens in the first.]
 $$
   \begin{aligned}
     \ket{a}
@@ -564,41 +592,65 @@ $$
     &= \frac{1}{\sqrt{M}} \sum_{x\in f^{-1}(1)} \!\!\!\!\ket{x}
   \end{aligned}
 $$
-where $f^{-1}(i) = \{x\in\{0,1\}^n \mid f(x)=i\}$.
-These two vectors span a two-dimensional subspace in which the search will take place.
+where $f^{-1}(i)\coloneqq\{x\in\{0,1\}^n\mid f(x)=i\}$ is the **preimage** of $i$.
+Since these vectors are orthonormal, they are, in particular, linearly independent, and so their span is a two-dimensional subspace --- this is the subspace in which our search will take place.
 
-This subspace contains the equally-weighted superposition $\ket{s}$ of all binary strings of length $n$:^[We often omit from our notation the fact that the sum is over all $x\in\{0,1\}^n$, leaving it (hopefully) implicitly understood from the context.]
+Using the fact that $f^{-1}(0)$ and $f^{-1}(1)$ form a **partition**^[A **partition** of a set $X$ is a collection of disjoint subsets $X_1,\ldots,X_m\subseteq X$ whose union is all of $X$, i.e. $X_i\cap X_j=\varnothing$ for all $i\neq j$, and $X_1\cup\ldots\cup X_m=X$.] of the space $\{0,1\}^n$, we see that the two-dimensional span of $\ket{a}$ and $\ket{b}$ contains, in particular, the equally-weighted superposition $\ket{s}=H^{\otimes n}\ket{0^{\otimes n}}$ of all binary strings of length $n$:
 $$
   \begin{aligned}
     \ket{s}
-    &= \frac{1}{\sqrt{N}} \sum_x\ket{x}
+    &= \frac{1}{\sqrt{N}}\sum_{x\in\{0,1\}^n}\ket{x}
+  \\&= \frac{1}{\sqrt{N}}\sum_{x\in f^{-1}(0)}\ket{x} + \frac{1}{\sqrt{N}}\sum_{x\in f^{-1}(1)}\ket{x}
   \\&= \sqrt{\frac{N-M}{N}}\ket{a} + \sqrt{\frac{M}{N}}\ket{b}
-  \\&= (\cos\alpha)\ket{a} + (\sin\alpha)\ket{b}
+  \\&= (\cos\theta)\ket{a} + (\sin\theta)\ket{b}
   \end{aligned}
 $$
-where we have parametrised $\sqrt{\frac{N-M}{N}}$ as $\cos\alpha$, and $\sqrt{\frac{M}{N}}$ as $\sin\alpha$, with $\alpha\approx\sqrt{\frac{M}{N}}$, since $N\gg M$.
+where we use the fact that
+$$
+  \sqrt{\frac{N-M}{N}}^2 + \sqrt{\frac{M}{N}}^2
+  = 1
+  = \sin^2\theta+\cos^2\theta
+$$
+to parametrise $\sqrt{\frac{N-M}{N}}$ as $\cos\theta$ and $\sqrt{\frac{M}{N}}$ as $\sin\theta$ (with $\theta\approx\sqrt{\frac{M}{N}}$, since $N\gg M$).
 
-The state $\ket{s}$ is our starting input for our sequence of Grover iterations, and we will show that, applying $G$, when restricting to the plane spanned by $\ket{a}$ and $\ket{b}$, amounts to applying a rotation by angle $2\alpha$.
+The state $\ket{s}$ is our starting input for our sequence of Grover iterations, and we will show that applying $G$, when restricting to the plane spanned by $\ket{a}$ and $\ket{b}$, amounts to applying a rotation by angle $2\theta$.
 Grover's search algorithm can then be understood as a sequence of rotations which take the input state $\ket{s}$ towards the target state $\ket{b}$.
 
-To see this, note that the oracle induces the unitary transformation
+To see this, note that the unitary transformation induced by the oracle
 $$
   f\colon \ket{x} \mapsto (-1)^{f(x)}\ket{x}
 $$
-which we shall write as $I_a = 2\proj{a}-\id$, and interpret as a reflection through the $\ket{a}$-axis.
-In particular, evaluation of $f_0$ can be written as $2\proj{0}-\id$, and thus thought of as a reflection through the $\ket{0}$-axis.
+can be written as^[To prove this, it suffices to check that these two transformations agree on the standard basis; since $f^{-1}(0)$ and $f^{-1}(1)$ form a partition, we know that any element (and, in particular, any basis element) is either in the preimage of $0$ or of $1$; if it is in the former, then $I_a$ acts as the identity; if the latter, then $I_a$ acts as $-\id$.]
+$$
+  I_a \coloneqq 2\proj{a}-\id
+$$
+which we can interpret as a reflection through the $\ket{a}$-axis: we see that
+$$
+  \begin{aligned}
+    I_a\ket{a}
+    &= 2\proj{a}\ket{a}-\ket{a}
+  \\&= 2\ket{a}-\ket{a}
+  \\&= \ket{a}
+  \\I_a\ket{b}
+    &= 2\proj{a}\ket{b}-\ket{b}
+  \\&= -\ket{b}
+  \end{aligned}
+$$
+and since $-\ket{b}$ is a vector that points in the opposite direction from $\ket{b}$, it must be a reflection; since it $-\ket{b}$ is still orthogonal to $\ket{a}$, the reflection must be in the $\ket{a}$-axis.
+
+Some further algebraic manipulation shows that $I_a = 2\proj{a}-\id = \id-2\proj{b}$.
+Now, in particular, evaluation of $f_0$ can be written as $2\proj{0}-\id$, and thus thought of as a reflection through the $\ket{0}$-axis.
 If we sandwich $f_0$ in between two Hadamards then we obtain $I_s = 2\proj{s}-\id$, which is reflection through the $\ket{s}$-axis.
-The Grover iteration operator $G$ is the composition
+By definition then, the Grover iteration operator $G$ is the composition
 $$
   G = I_s I_a.
 $$
-Note also that $I_a = 2\proj{a}-\id = \id-2\proj{b}$.
 
-Now recall the purely geometric fact that (working in $2$-dimensional Euclidean space), if we have two intersecting lines $L_1$ and $L_2$, meeting with angle $\theta$, then reflecting an object through $L_1$ and then reflecting the resulting image through $L_2$ is the same as simply rotating the original object around the point of intersection $L_1\cap L_2$ by $2\theta$.
+Now recall the purely geometric fact that if we have two intersecting lines $L_1$ and $L_2$ in two-dimensional Euclidean space, meeting with angle $\alpha$, then reflecting an object through $L_1$ and then reflecting the resulting image through $L_2$ is the same as simply rotating the original object around the point of intersection $L_1\cap L_2$ by an angle of $2\alpha$.
 
-The angle between $\ket{a}$ and $\ket{s}$ is $\alpha$, and so, each time $G$ is applied, the vector is rotated (around the origin) by $2\alpha$ towards the $\ket{b}$-axis.
-We just have to choose the right number $r$ of steps such that we end up as close to the $\ket{b}$-axis as possible.
-The state $\ket{s}$ starts at angle $\alpha$ to $\ket{a}$, and we should perform our final (and only) measurement when this angle is $\pi/2$, i.e. when $(2r+1)\alpha = \pi/2$, which gives
+The angle between $\ket{a}$ and $\ket{s}$ is $\theta$, so each time $G$ is applied the vector is rotated (around the origin) by an angle of $2\theta$ towards the $\ket{b}$-axis.
+All that remains to do is to just choose the "right" number $r$ of steps such that we end up as close to the $\ket{b}$-axis as possible.
+The state $\ket{s}$ starts at angle $\theta$ to $\ket{a}$, and we should perform our final (and only) measurement when this angle is $\pi/2$, i.e. when $(2r+1)\theta = \pi/2$, which gives
 $$
   r \approx \frac{\pi}{4}\sqrt{\frac{N}{M}}.
 $$
@@ -615,7 +667,7 @@ $$
     \draw [->] (-1.4,0) to (1.4,0) node [right] {$\ket{a}$};
     %
     \draw [thin] (0,0) to (0:0.7) to [bend right,dashed] (20:0.7) to cycle;
-    \node at (10:0.6) {\footnotesize$\alpha$};
+    \node at (10:0.6) {\footnotesize$\theta$};
     \draw [-Latex,primary] (0,0) to (20:1) node [right] {$\ket{s}$};
   \end{scope}
   \node at (0,-1.7) {the initial state};
@@ -625,9 +677,9 @@ $$
     \draw [->] (-1.4,0) to (1.4,0) node [right] {$\ket{a}$};
     %
     \draw [thin] (0,0) to (-20:0.7) to [bend right=1.8cm] (60:0.7) to cycle;
-    \node at (-10:0.6) {\footnotesize$\alpha$};
-    \node at (10:0.6) {\footnotesize$\alpha$};
-    \node at (40:0.55) {\footnotesize$2\alpha$};
+    \node at (-10:0.6) {\footnotesize$\theta$};
+    \node at (10:0.6) {\footnotesize$\theta$};
+    \node at (40:0.55) {\footnotesize$2\theta$};
     \draw [-Latex,primary] (0,0) to (20:1) node [right] {$\ket{s}$};
     \draw [-Latex,secondary] (0,0) to (60:1) node [above right] {$I_sI_a\ket{s}$};
     \draw [-Latex,secondary] (0,0) to (-20:1) node [right] {$I_a\ket{s}$};
@@ -636,49 +688,49 @@ $$
 \end{tikzpicture}
 ```
 
-So the quantum algorithm searches an unsorted list of $N$ items in roughly $\sqrt{N}$ steps: it offers a _quadratic_ speed-up when compared to classical search, which can be of immense practical importance.
-For example, cracking some of the popular ciphers, such as AES (Advanced Encryption Standard), essentially requires a search among _many_ binary strings (called **keys**).
+So the quantum algorithm searches an unsorted list of $N$ items in roughly^[Recall that $M\ll N$, so $\sqrt{\frac{N}{M}}\approx\sqrt{N}$.] $\sqrt{N}$ steps: it offers a *quadratic* speed-up when compared to classical search, which can be of immense practical importance.
+For example, cracking some of the more popular modern ciphers, such as [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard), essentially requires a search among *many* binary strings (called **keys**).
 If these can be checked at a rate of, say, one million keys per second, then a classical computer would need over a thousand years to find the correct key, while a quantum computer using Grover's algorithm would find it in less than four minutes.
 
 
 
-### Simon's problem
+## Simon's problem
 
 <div class="video" title="Simon's algorithm" data-videoid="sxIdRKTdRRU"></div>
 
-Here we will see the simplest quantum algorithm that shows an exponential speed-up compared to the best classical algorithm.
+Here we will see the simplest quantum algorithm that offers an *exponential* speed-up when compared to the best possible classical algorithm.
 
 ::: {.scenario latex=""}
 We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}^n$, but we are promised that $f$ satisfies, for all $x\in\{0,1\}^n$,
 $$
   f(x) = f(x\oplus s)
 $$
-for some fixed $s\in\{0,1\}^n$, which we call the **period** of $f$.^[This is equivalent to saying that $f$ is **two-to-one**: for any $y\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ with $f(x)=y$, there exists exactly one other $x'\neq x$ such that $f(x')=y$ as well.]
-So that the problem is non-trivial (i.e. so that $f$ really is two-to-one), we assume that $s$ is _not_ the string of $n$ zeros.
+for some fixed $s\in\{0,1\}^n$, which we call the **period** of $f$.^[Asking for $f$ to be periodic is equivalent to asking that $f$ be **two-to-one**: for any $y\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ with $f(x)=y$, there exists *exactly one other* $x'\neq x$ such that $f(x')=y$ as well.]
+(We assume that $s$ is *not* the string of $n$ zeros, otherwise the problem becomes trivial.)
 
 Our task is to determine, using the fewest queries possible, the value of the $n$-bit string $s$.
 :::
 
 Classically, this problem is exponentially hard.
 We will not go through a detailed proof of this fact, but the intuition is reasonably simple: since there is no structure in the function $f$ that would help us find its period $s$, the best we can do is evaluate $f$ on random inputs and hope that we find some distinct $x$ and $x'$ such that $f(x)=f(x')$, and then we know that $s=x\oplus y$.
-After having made $m$ queries to the oracle, we have a list of $m$ values of the tuple $(x,f(x))$; there are $m(m-1)/2$ possible pairs which could match within this list, and the probability that a randomly chosen pair match is $1/2^{n-1}$.
+After having made $m$ queries to the oracle, we have a list of $m$-many tuples $(x,f(x))$; there are $m(m-1)/2$ possible pairs which could match within this list, and the probability that a randomly chosen pair match is $1/2^{n-1}$.
 This means that the probability of there being at least one matching pair within the list of $m$ tuples is less than $m^2/2^n$.
-Clearly, the chance of finding a matching pair is negligible if the oracle is queried on fewer than $\sqrt{2^n}$ inputs.
+This means that the chance of finding a matching pair is negligible if the oracle is queried on fewer than $m=\sqrt{2^n}$ inputs.
 
-The quantum case, on the other hand, gives a result with high probability within a _linear_ number of steps.
-The circuit that solves this problem, shown below, has a familiar Hadamard--function--Hadamard structure, but the second register has been expanded to $n$ qubits.
+The quantum case, on the other hand, gives a result (again, with "high" probability) within a *linear* number of steps.
+The circuit that solves this problem, shown below, has a familiar Hadamard--function--Hadamard structure, but the second register has now been expanded to $n$ qubits.
 
 :::: {.circuit latex=""}
-::: {.circuit_title}
+::: {.circuit-title}
 (Simon's problem).
 :::
-_First register: $n$ qubits. Second register: $n$ qubits._
+*First register: $n$ qubits. Second register: $n$ qubits.*
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex")}
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
 \begin{equation*}
     \begin{quantikz}
-      \lstick[wires=4]{$\ket{0^n}$}
+      \lstick[wires=4]{$\ket{0^{\otimes n}}$}
       & \gate{H}
       & \ctrl{4}
       & \gate{H}
@@ -696,7 +748,7 @@ _First register: $n$ qubits. Second register: $n$ qubits._
       & \gate{H}
       & \qw
     \\[2em]
-      \lstick[wires=4]{$\ket{0^n}$}
+      \lstick[wires=4]{$\ket{0^{\otimes n}}$}
       & \qw
       & \gate[wires=4,nwires={3}]{f}
       & \qw
@@ -717,14 +769,14 @@ _First register: $n$ qubits. Second register: $n$ qubits._
 ```
 ::::
 
-Let's follow the evolution of the two registers in this circuit.
-We start off by preparing the equally-weighted superposition of all $n$-bit strings, and then query the oracle:
+This time, let's follow the evolution of *both* registers throughout this circuit.
+We start off by preparing the equally-weighted superposition of all $n$-bit strings with the first Hadamard, and then query the oracle:
 $$
   \begin{aligned}
-    \ket{0^n}\ket{0^n}
-    &\longmapsto
-    \frac{1}{\sqrt{2^n}} \sum_x \ket{x}\ket{0^n}
-  \\&\longmapsto
+    \ket{0^{\otimes n}}\ket{0^{\otimes n}}
+    &\xmapsto{H^{\otimes n}\otimes\id}
+    \frac{1}{\sqrt{2^n}} \sum_x \ket{x}\ket{0^{\otimes n}}
+  \\&\xmapsto{U_f}
     \frac{1}{\sqrt{2^n}} \sum_x \ket{x}\ket{f(x)}.
   \end{aligned}
 $$
@@ -734,40 +786,39 @@ $$
 \tag{$\ddagger$}
 $$
 
-Now, if we measure the second register _before_ applying the second Hadamard transform to the first, we obtain one of the $2^{n-1}$ possible values of $f(x)$, each equally likely.^[As we shall see in a moment, the actual measurement on the second register is not actually necessary.]
+But if we measure^[As we shall see in a moment, the actual measurement on the second register is not actually necessary.] the second register *before* applying the second Hadamard transform to the first register, we obtain one of the $2^{n-1}$ possible values of $f(x)$, each equally likely.
+Let's study the implications of this.
 
-Suppose that the outcome of the measurement is $f(a)$.
+Suppose that the outcome of the measurement is $f(a)$ for some $a\in\{0,1\}^n$.
 Given that both $a$ and $a\oplus s$ are mapped to $f(a)$ by $f$, the first register then collapses to the state
 $$
   \frac{1}{\sqrt{2}}\big( \ket{a} + \ket{a\oplus s} \big).
 $$
-
 The subsequent Hadamard transform on the first register then gives us the final state^[We write $s^\perp$ to mean the set of all $y\in\{0,1\}^n$ such that $y\cdot s=0$.]
 $$
   \begin{aligned}
-    \frac{1}{\sqrt{2^{n+1}}} \sum_y \Big((-1)^{a\cdot y}+(-1)^{(a\oplus s)\cdot y}\Big) \ket{y}\ket{f(a)}
-    &=
-    \frac{1}{\sqrt{2^{n+1}}} \sum_y (-1)^{a\cdot y}
+    &\frac{1}{\sqrt{2^{n+1}}} \sum_y \Big((-1)^{a\cdot y}+(-1)^{(a\oplus s)\cdot y}\Big) \ket{y}\ket{f(a)}
+  \\= &\frac{1}{\sqrt{2^{n+1}}} \sum_y (-1)^{a\cdot y}
       \Big( 1 + (-1)^{s\cdot y} \Big) \ket{y}\ket{f(a)}
-  \\&=
-    \frac{1}{\sqrt{2^{n-1}}} \sum_{y\in s^\perp}
+  \\= &\frac{1}{\sqrt{2^{n-1}}} \sum_{y\in s^\perp}
       (-1)^{a\cdot y} \ket{y}\ket{f(a)}
   \end{aligned}
 $$
-where we have used the fact that $(a\oplus s)\cdot y = (a\cdot y)\oplus(s\cdot y)$, and that $1+(-1)^{s\cdot y}$ can have only two values: either $2$ (when $s\cdot y = 0$), or $0$ (when $s\cdot y = 1$).
-Now we measure the first register: the outcome is selected at random from all possible values of $y$ such that $a\cdot y = 0$, each occurring with probability $1/(2^{n-1})$.
+where we have used the fact that $(a\oplus s)\cdot y = (a\cdot y)\oplus(s\cdot y)$, and that $1+(-1)^{s\cdot y}$ can have only two values: either $2$ (when $s\cdot y = 0$) or $0$ (when $s\cdot y = 1$).
+Now we finally measure the first register: the outcome is selected at random from all possible values of $y$ such that $a\cdot y = 0$, each occurring with probability $1/(2^{n-1})$.
 
-In fact, we do not have to measure the second register at all: it was a mathematical shortcut, simply taken for pedagogical purposes.
-Instead of collapsing the state to just one term in a superposition, we can express Equation ($\ddagger$) as^[Recall that the image of $f$ is the set of all $z\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ satisfying $f(x)=z$.]
+In fact, we did not have to measure the second register at all: it was a mathematical shortcut, simply taken for pedagogical purposes.
+Instead of collapsing the state to just one term in a superposition, we can express Equation ($\ddagger$) as
 $$
-  \frac{1}{2^n} \sum_{y,f(a)}
+  \begin{aligned}
+    &\frac{1}{2^n} \sum_{y,f(a)}
     \Big( (-1)^{a\cdot y} + (-1)^{(a\oplus s)\cdot y} \Big) \ket{y}\ket{f(a)}
-  = \frac{1}{2^n} \sum_{y,f(a)} (-1)^{a\cdot y}
+  \\= &\frac{1}{2^n} \sum_{y,f(a)} (-1)^{a\cdot y}
     \Big( 1 + (-1)^{s\cdot y} \Big) \ket{y}\ket{f(a)}
+  \end{aligned}
 $$
-where the summation over $f(a)$ means summing over all binary strings in the image of $f$.
-
-The output of the algorithm is then
+where the summation over $f(a)$ means summing over all binary strings in the image of $f$, which is a convenient shorthand for the more complicated^[Another (complicated sounding) way of expressing this sum is by choice of a **section** of $f$, i.e. picking *one* element $a_z$ in *each* preimage $f^{-1}(z)$ is equivalent to defining a function $a\colon\{0,1\}^n\to\{0,1\}^n$ by $a\mapsto a_z$ which satisfies $(a\circ f)(z)=z$, or $a\circ f=\id$.] formal statement: for all $z\in\{0,1\}^n$, since our function $f$ is two-to-one, we know that the preimage $f^{-1}(z)$ has either *two* elements or *none*; if it's the latter, then we don't include $z$ in our sum; if it's the former, we *pick one* and call it $a$ (knowing that the other, by the setup, must be $a\oplus s$, which you can see appearing in the first equation above).
+With this, the final output of the algorithm is
 $$
   \frac{1}{2^{n-1}} \sum_{y\in s^\perp} \ket{y}
     \sum_{f(a)} (-1)^{a\cdot y} \ket{f(a)}
@@ -775,7 +826,7 @@ $$
 and, again, the measurement outcome is selected at random from all possible values of $y$ such that $s\cdot y=0$.
 
 We are not quite done yet: we cannot infer $s$ from a _single_ output $y$.
-However, once we have found $n-1$ linearly independent^[Here, **linearly independent** means that no string in the set $\{y_1,\ldots,y_n\}$ can be expressed as the bitwise sum of some other strings in this set.] strings $y_1,y_2,\ldots,y_{n-1}$, we can solve the $n-1$ equations
+However, once we have found $n-1$ linearly independent strings^[It is important to note that we are talking about the pure "abstract" *binary strings*, and not the corresponding states in the Hilbert space. Concretely, this means that **linearly independent** here means "no string in the set $\{y_1,\ldots,y_n\}$ can be expressed as the bitwise sum of some other strings in this set". That is, we are working with the $\mathbb{Z}/2\mathbb{Z}$-vector space of strings, not the $\mathbb{C}$-vector space of states!] $y_1,y_2,\ldots,y_{n-1}$, we can solve the $n-1$ equations
 $$
   \left\{
   \begin{aligned}
@@ -787,44 +838,10 @@ $$
   \right\}
 $$
 to determine a unique value of $s$.
-(Note that we only need $n-1$ values, and not $n$, because $s=0$ will always be a solution, but we have explicitly assumed that this is not the case, and so it suffices to narrow down the space of possible solutions to consist of _two_ elements, since then we know that we can just take the non-zero one.)
+(Note that we only need $n-1$ values, and not $n$, because $s=0$ will always be a solution, but we have explicitly assumed that this is not the case in our statement of the scenario, and so it suffices to narrow down the space of possible solutions to consist of *two* elements, since then we know that we can just take the non-zero one.)
 
 So we run this algorithm repeatedly, each time obtaining another value of $y$ that satisfies $s\cdot y = 0$.
 Every time we find some new value of $y$ that is linearly independent of all previous ones, we can discard half the potential candidates for $s$.
-The probability that $y_1,\ldots,y_{n-1}$ are linearly independent is
-$$
-  \left( 1 - \frac{1}{2^{n-1}} \right)
-  \left( 1 - \frac{1}{2^{n-2}} \right)
-  \ldots
-  \left( 1 - \frac{1}{2} \right).
-\tag{6.4.3.2}
-$$
-
-Indeed, suppose that we have $k$ linearly independent binary strings $y_1,\ldots,y_k$.
-Then these strings span a subspace of size $2^k$, consisting of all binary strings of the form $\bigoplus_{i=1}^k b_i y_i$, where $b_1,\ldots,b_k\in\{0,1\}$.
-Now suppose we obtain some $y_{k+1}$.
-It will be linearly independent from the $y_1,\ldots,y_k$ if and only if it lies _outside_ the subspace spanned by the $y_1,\ldots,y_k$, which occurs with probability $1-(2^k)/(2^n)$.
-We can bound Equation (6.4.3.2) from below:^[Use the inequality $$\begin{aligned}(1-x)(1-y)&= 1 - x - y - xy\\&\geq 1 - (x+y)\end{aligned}$$ which holds for any $0<x,y<1$.]
-the probability of obtaining a linearly independent set $\{y_1,\ldots,y_{n-1}\}$ by running the algorithm $n-1$ times (i.e. not having to discard any values and run again) is
-$$
-  \prod_{k=1}^{n-1}
-  \left(
-    1-\frac{1}{2^k}
-  \right)
-  \geq
-  \left[
-    1 -
-    \left(
-      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac14
-    \right)
-  \right]
-  \cdot \frac12
-  >
-  \frac14.
-$$
-
-We conclude that we can determine $s$ with some constant probability of error after repeating the algorithm $O(n)$ times.
-The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.
 
 (ref:simons-diagramatically-caption) Picture all possible binary strings as dots, but with the string $s$ denoted by a star. Every linearly independent $y_{k+1}$ lets us "zoom in" twice as close towards $s$.
 
@@ -860,6 +877,41 @@ The exponential separation that this algorithm demonstrates between quantum and 
   \end{scope}
 \end{tikzpicture}
 ```
+
+Now, the probability that $(n-1)$-many outputs $y_1,\ldots,y_{n-1}$ are linearly independent is
+$$
+  \left( 1-\frac{1}{2^{n-1}} \right)
+  \left( 1-\frac{1}{2^{n-2}} \right)
+  \ldots
+  \left( 1-\frac{1}{2} \right).
+\tag{$\circledast$}
+$$
+To see this, suppose that we have $k$ linearly independent binary strings $y_1,\ldots,y_k$.
+Then these strings span a subspace with $2^k$ elements, consisting of all binary strings of the form $\bigoplus_{i=1}^k b_i y_i$, where $b_1,\ldots,b_k\in\{0,1\}$.
+Now suppose we obtain some $y_{k+1}$.
+It will be linearly independent from the $y_1,\ldots,y_k$ if and only if it lies *outside* the subspace spanned by the $y_1,\ldots,y_k$, which occurs with probability $1-(2^k)/(2^n)$.
+
+We can bound Equation ($\circledast$) from below:^[Use the inequality $$\begin{aligned}(1-x)(1-y)&= 1 - x - y - xy\\&\geq 1 - (x+y)\end{aligned}$$ which holds for any $0<x,y<1$.]
+the probability of obtaining a linearly independent set $\{y_1,\ldots,y_{n-1}\}$ by running the algorithm $n-1$ times (i.e. not having to discard any values and run again) is
+$$
+  \prod_{k=1}^{n-1}
+  \left(
+    1-\frac{1}{2^k}
+  \right)
+  \geq
+  \left[
+    1 -
+    \left(
+      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac14
+    \right)
+  \right]
+  \cdot \frac{1}{2}
+  >
+  \frac14.
+$$
+
+We conclude that we can determine $s$ with some constant probability of error after repeating the algorithm $O(n)$ times.
+The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.
 
 
 

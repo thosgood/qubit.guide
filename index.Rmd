@@ -92,7 +92,7 @@ But this does not mean that our treatment is cursory!
 In fact, by the end of this book you will have learnt a fair bit more than what might usually be covered in a standard quantum information science course that you would find in a mathematics masters degree, for example.
 
 The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find certain chapters easy, while others find the same ones difficult --- so if things seem hard to you, then don't worry: the next chapter might feel much easier!
-The only real prerequisites are a working knowledge of complex numbers and vectors and matrices; some previous exposure to elementary probability theory and Dirac bra-ket notation (for example) would be helpful, but we provide crash-course introductions to some topics like these [at the end of this chapter](#preliminaries).
+The only real prerequisites are a working knowledge of complex numbers and vectors and matrices; some previous exposure to elementary probability theory and Dirac bra-ket notation (for example) would be helpful, but we provide crash-course introductions to some topics like these at the end of this chapter.
 A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory, algorithms) would be helpful, but is *not at all* essential.
 
 Of course, even if you aren't familiar with the formal mathematics, then that shouldn't stop you from reading this book if you want to.
@@ -122,54 +122,18 @@ Here we quickly recall most of the fundamental mathematical results that we will
 However, we will not introduce everything from the ground up.
 Most notably, we will assume that the reader understands what a **matrix** is, and how it represents a **linear transformation**.
 
-If an equation like $\tr\ket{a}\bra{b}=\braket{a}{b}$ makes sense to you, then you can safely skip over this section and get started directly with [Chapter 1](#quantum-interference).
+If an equation like $\tr\ket{a}\bra{b}=\braket{b}{a}$ makes sense to you, then you can safely skip over this section and get started directly with Chapter \@ref(quantum-interference).
 
 As a small note on notation, we generally write "$x\coloneqq y$" to mean "$x$ is defined to be (equal to) $y$", and "$x\equiv y$" to mean "$x$ is just another name for $y$", but sometimes we simply just write "$x=y$".
 
 
 ## Complex numbers
 
-It would be naive (and presumptuous) to argue that any one mathematical object is somehow "the most fundamental" or "the most useful" --- any two mathematicians will almost certainly have completely opposite views on any given candidate object^[These differing opinions are a good thing! Different researchers care about different things, and that's one reason why we get so much beautiful mathematics found in the intersections] --- but it would be hard to find an area of maths in which the complex numbers do not show up in some form or another.
-From algebraic geometry to fluid mechanics to number theory to statistics, complex numbers have many applications.
-Because of this, it seems only fair to introduce them first, since they also play a starring role in the story of quantum information science.
+::: {.todo}
+<!-- TO-DO: "we define complex numbers algebraically, but we care about their geometry (explain how addition is vector addition and multiplication by $re^i\theta$ is scaling by $r$ and rotation by $\theta$)" -->
+:::
 
-Although we will try to tell their story from the ground up, it would be unfair to expect a reader who has never come across them before to immediately understand and have a working knowledge of them, so we do recommend that you are at least reasonably comfortable with the main ideas of what a complex number actually is and how you can "do algebra" with them if you want to get the most out of reading this book.^[But do *not* consider this a concrete requirement for starting to work through this book --- reading stuff even if you think you might not understand it can be an exciting thing to do!]
-
-Starting with just $0$ and $1$, we can build a variety of interesting and useful mathematical structures.
-Firstly, asking to be able to *add* these two things together gives us an infinity of numbers to play around with, since we end up with $1$, $1+1$, $1+1+1$, ..., and so on.
-For convenience, it's good to come up with some neat notational shorthand, whence the introduction of arabic numerals: $1$, $2=1+1$, $3=1+1+1$, ..., and so on.
-We call the result --- these numbers $0,1,2,\ldots$ along with the ability to add them (with $0$ being an **additive identity**, i.e. adding it to any number does absolutely nothing) --- the **monoid** of **natural numbers**, and we denote it by $\mathbb{N}$.
-
-Next we could ask for the ability to "undo" addition, or, as we usually call it, *subtraction*.
-This means that we need to introduce negative versions of all of our natural numbers, and gives us the **abelian group** of **integers**, denoted^[The choice of the letter "Z" comes from the German word *Zahlen*, meaning "numbers".] $\mathbb{Z}$.
-
-One step up from addition on the arithmetic ladder is *multiplication*, but we can already multiply things in $\mathbb{Z}$ since the product of any two integers is always just another integer.
-Things get a bit more complicated when we ask for the inverse of this operation: *division*, which is to multiplication what subtraction is to addition (what mathematicians call an **inverse operation**).
-If we want to be able to divide any two integers then we need to throw in all possible fractions, giving us the **commutative ring** of **rational numbers**, denoted^[The choice of the letter "Q" comes from the word "quotient", which is (here) a synonym for "division".] $\mathbb{Q}$.
-
-For the next construction, we step out of the world of *algebra* and enter that of *analysis*: it turns out that there are lots of numbers which cannot be expressed as fractions, but instead lie in between the rational numbers.
-In fact, as a famous proof shows, there are so many such numbers that they outnumber the rational ones "infinity-to-one", in a sense which we could (but won't) make very precise.
-Some well-known examples of so-called **irrational numbers** include mathematical constants such as the ratio $\pi\approx3.14$ of the circumference of *any* circle to its diameter, and the number $e\approx2.718$ you get if you somehow calculate the infinite sum $1+\frac{1}{2!}+\frac{1}{3!}+\ldots$ (where $n!=n\times(n-1)\times(n-2)\times\ldots\times2\times1$).
-If we include all of these, filling in all the holes found inside $\mathbb{Q}$, then we end up with the **field** of **real numbers**, denoted by $\mathbb{R}$.
-
-So now we have a mathematical description of numbers which we can add, subtract, multiply, divide, and "take infinite sums of".
-What is there left to do?
-Well, if we think of multiplication as repeated addition ("$5\times3$ is just $5+5+5$"), then we can ask what repeated multiplication looks like, and the answer is *exponentiation*: "$5^3$ is just $5\times5\times5$".
-Of course, since real numbers are closed under multiplication^[We say that a collection of objects is **closed** under an operation to mean that, when you apply this operation, the result is also an element of the collection you started with. So, as we have already said, $\mathbb{Z}$ is closed under multiplication, but not under division.] we know that they will be closed under exponentiation too.
-But the pattern we've seen so far suggests that the problem might actually lie in the *inverse* of this operation: if we take some real number $y$ and some natural number $n$, does there exist a real number $x$ such that $x^a=y$?
-We don't have to go far to find out that the answer is *no*: if we take $y=-1$ and $a=2$, then we're simply asking if there exists a real square root of $-1$, and we can prove that such a thing cannot exist.^[Let $x$ be any real number. Then $x^2$ is never a negative number (consider a case-by-case analysis: when $x$ is positive, when $x$ is negative, and when $x$ is $0$), and so can never be equal to $-1$.]
-If we somehow fill in all the missing numbers (i.e. those of the form $\sqrt[n]{y}$ for any real number $y$ and any natural number $n$) then we end up with the **algebraically closed field** of **complex numbers**, denoted by $\mathbb{C}$.
-
-What is very surprising is that the story, in some sense, ends here: once you've thrown in all these $n$-th roots of real numbers, you don't need to add anything more when you consider things like [repeated exponentiation](https://en.wikipedia.org/wiki/Tetration), no matter how high up the ladder you go!
-In fact, the complex numbers are the subject of the loftily-titled **fundamental theorem of algebra**: if you pick any $(n+1)$-many complex numbers $z_0,z_1,\ldots,z_n$, then there exists at least one complex number $a$ such that $z_na^n+z_{n-1}a^{n-1}+\ldots+z_2a^2+z_1a+z_0$ is equal to $0$.
-It is hard to overstate the importance of this theorem.
-
-But what do complex numbers actually *look* like?
-Every step up until now has seemed pretty easy to visualise: we can imagine what an element of $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}$, or $\mathbb{R}$ looks like.^[Although it turns out that irrational numbers (i.e. numbers which are in $\mathbb{R}$ but not in $\mathbb{Q}$) are actually a lot less well-behaved than you might imagine, and tend to defy intuition in sneaky ways.]
-Two particularly useful ways of expressing complex numbers are as pairs of real numbers (writing a complex number $z$ as $x+iy$ for some real numbers $x,y$, where $i=\sqrt{-1}$, since $i$ is somehow enough to generate all the other non-real complex numbers) or in **polar form**, also known as **Euler form** (writing $z$ as $re^{i\varphi}$ for some real numbers $r,\varphi$, and where $e\approx2.718$ is the so-called [**Euler's number**](https://en.wikipedia.org/wiki/E_(mathematical_constant)) that we saw earlier).
-Both methods have their advantages, and it is helpful to be familiar with both, along with the story that translates from one to the other (namely, trigonometry!).
-
-You do not have to know much about this whole story of algebraic fields, but it helps to know the basics, so here are some exercises that should help you to become more familiar.^[Note that we have not really given you enough information in this section to be able to solve all these exercises, but that is intentional! Sometimes we like to ask questions and not answer them, with the hope that you will enjoy getting to do some research by yourself.]
+You do not have to know much about the whole story of algebraic fields, but it helps to know the basics, so here are some exercises that should help you to become more familiar.^[Note that we have not really given you enough information in this section to be able to solve all these exercises, but that is intentional! Sometimes we like to ask questions and not answer them, with the hope that you will enjoy getting to do some research by yourself.]
 
 a. The set $\mathbb{Q}$ of rational numbers and the set $\mathbb{R}$ of real numbers are both fields, but the set $\mathbb{Z}$ of integers is not. Why not?
 b. What does it mean to say that the field of complex numbers is **algebraically closed**?
@@ -257,11 +221,11 @@ This is sufficient for all our purposes and we will avoid many mathematical subt
 
 An **inner product** on a vector space $V$ (over the complex numbers) is a function that assigns to each pair of vectors $\ket{u},\ket{v}\in V$ a complex number $\braket{u}{v}$, and satisfies the following conditions:
 
-- $\braket{u}{v}=\braket{v}{u}^\star$;
-- $\braket{v}{v}\geq 0$ for all $\ket{v}$;
+- $\braket{u}{v}=\braket{v}{u}^\star$
+- $\braket{v}{v}\geq 0$ for all $\ket{v}$
 - $\braket{v}{v}= 0$ if and only if $\ket{v}=0$
 
-where $\star$ denotes complex conjugation (sometimes written as $z\mapsto\bar{z}$).
+where ${}^\star$ denotes complex conjugation (sometimes written as $z\mapsto\bar{z}$ instead).
 
 The inner product must also be _linear_ in the second argument but _antilinear_ in the first argument:
 $$
@@ -389,10 +353,10 @@ $$
     \ket{v}
     &= \sum_i \ket{i}\braket{i}{v}
   \\\bra{v}
-    &= \sum_j \braket{v}{i}\bra{i}.
+    &= \sum_j \braket{v}{i}\bra{i}
   \end{aligned}
 $$
-But *do not confuse $\ket{0}$ with the zero vector*!
+but *do not confuse $\ket{0}$ with the zero vector*!
 We *never* write the zero vector as $\ket{0}$, but only ever as $0$, without any bra or ket decorations (so e.g. $\ket{v}+0=\ket{v}$).
 
 Now that we have some notion of geometry, we can explain a bit more about this idea of associating a Hilbert space to a quantum system --- we will use some terminology that we have not yet introduced, but all will be explained in due time.
@@ -439,7 +403,7 @@ $$
 
 An operator $A$ is said to be
 
-- **normal** if $AA^\dagger = A^\dagger A$,
+- **normal** if $AA^\dagger = A^\dagger A$
 - **unitary** if $A^\dagger=A^{-1}$
 - **Hermitian** (or **self-adjoint**) if $A^\dagger = A$.
 
@@ -486,7 +450,7 @@ $$
     &= \id\ket{v}
   \\&= \sum_i \ket{e_i}\bra{e_i}\;\ket{v}
   \\&= \sum_i \ket{e_i}\;\braket{e_i}{v}
-  \\&= \sum_i v_i\ket{e_i},
+  \\&= \sum_i v_i\ket{e_i}
   \end{aligned}
 $$
 where $v_i=\braket{e_i}{v}$ are the components of $\ket{v}$.
