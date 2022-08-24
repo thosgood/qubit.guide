@@ -11,7 +11,7 @@ Build using the `./build_book` script.
 
 - **make github actions FAIL if PDF build(s) are unsuccessful**
 - **only one footnote per paragraph**
-- **search for TO-DO**
+- **search for `TO-DO` and `.todo`**
 
 ### Web
 
