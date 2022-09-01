@@ -185,7 +185,7 @@ Note then that we can simply write $1/z=z^\star/|z|^2$.
 Now things are looking somewhat nice, but the story isn't complete.
 We have a good geometric intuition for what a complex number is (a vector in $\mathbb{R}^2$) and how to add them (vector addition), as well as what the complex conjugate and the modulus mean (reflection in the $x$-axis, and the length of the vector, respectively); but what about multiplication and division?
 
-To understand these we need to switch from our **rectangular coordinates** $z=x+iy$ to **polar coordinates** --- instead of describing a point $z$ in $\mathbb{R}^2$ as "$x$ units left/right and $y$ units up/down", we describe it as "$r$ units from the origin, at an angle of $\theta$".
+To understand these we need to switch from our **rectangular coordinates** $z=x+iy$ to **polar coordinates** --- instead of describing a point $z$ in $\mathbb{R}^2$ as "$x$ units left/right and $y$ units up/down", we describe it as "$r$ units from the origin, at an angle of $\theta$ [**radians**](https://en.wikipedia.org/wiki/Radian)".
 We already know, given $(x,y)\in\mathbb{R}^2$, how to calculate its distance $r$ from the origin, since this is exactly the length of the vector: $r=|(x,y)|=\sqrt{x^2+y^2}$.
 But what about the angle?
 Some trigonometry tells us that $\theta=\tan(y/x)$, so we now know how to convert rectangular to polar coordinates:
@@ -206,15 +206,48 @@ Great!
 ... but what's the point of polar coordinates?
 Well, it turns out that they give us a geometric way of understanding multiplication: you can show^[**Exercise.** Prove this!] that $(r,\theta)$ multiplied by $(r',\theta')$ is exactly $(rr',\theta+\theta')$, which says that multiplication by a complex number $(r,\theta)$ is exactly a scaling by a factor of $r$ and a rotation by $\theta$.
 This means that we can also easily find the multiplicative inverse of $(r,\theta)$, since it's just $(1/r,-\theta)$.
+Finally, complex conjugation just means switching the sign of the angle: $(r,\theta)^\star=(r,-\theta)$.
 
-::: {.todo}
+There is one last ingredient that we should mention, which is the thing that really solidifies the relation between rectangular and polar coordinates.
+We know that rectangular coordinates $(x,y)$ can be written as $x+iy$, so is there some more algebraic way of writing polar coordinates $(r,\theta)$?
+Then we can avoid any ambiguity that might arise from using pairs of numbers --- if I tell you that I'm thinking of the complex number $z=(0.3,2)$, do I mean the point $0.3+2i$, or the point that is distance $r$ from the origin at an angle of $2$ radians?
+
+Given polar coordinates $(r,\theta)$, we know that this is equal to $(r\cos\theta,r\sin\theta)$ in rectangular coordinates.
+For simplicity, let's first consider the case where $r=1$.
+Then we can write $(1,\theta)$ as $\cos\theta+i\sin\theta$.
+Using the [**Taylor series**](https://en.wikipedia.org/wiki/Taylor_series)^[If you don't know about Taylor series, then feel free to just skim this part, but make sure to read the punchline!] of $\sin$ and $\cos$, we can rewrite this as
+$$
+  \begin{aligned}
+    \cos\theta+i\sin\theta
+    &= \left(
+      1-\frac{\theta^2}{2!}+\frac{\theta^4}{4!}-\ldots
+    \right) + i\left(
+      \theta-\frac{\theta^3}{3!}+\frac{\theta^5}{5!}-\ldots
+    \right)
+  \\&= 1+i\theta-\frac{\theta^2}{2!}-i\frac{\theta^3}{3!}+\frac{\theta^4}{4!}+i\frac{\theta^5}{5!}-\ldots
+  \\&= 1+i\theta+\frac{i^2\theta^2}{2!}+\frac{i^3\theta^3}{3!}+\frac{i^4\theta^4}{4!}+\frac{i^5\theta^5}{5!}+\ldots
+  \\&= \exp(i\theta)
+  \end{aligned}
+$$
+where at the very end we use the Taylor expansion of the [**exponential function**](https://en.wikipedia.org/wiki/Exponential_function) $\exp(x)=e^x$.
+
+We have just "proved"^[It is very important to point out that this "proof" is not rigorous or formal --- you need to be very *very* careful when rearranging infinite sums! However, this proof *can be made rigorous* by using some real analysis.] one of the most remarkable formulas in mathematics: **Euler's formula**
+$$
+  e^{i\theta} = \cos\theta+i\sin\theta
+$$
+(a special case of which gives the famous equation $e^{i\pi}+1=0$, uniting five fundamental constants: $0$, $1$, $i$, $e$, and $\pi$).
+In summary then, we have two beautiful ways of expressing a complex number $z\in\mathbb{C}$, in either its rectangular/planar form or its polar/Euler form:
+$$
+  z = x+iy = re^{i\theta}.
+$$
+
+::: {.idea latex=""}
+Addition and subtraction are most neatly expressed in the planar form $x+iy$, and multiplication and division are most neatly expressed in the polar form $re^{i\theta}$; complex conjugation looks nice and tidy in both.
 :::
-
-**TO-DO: basically planar for plus/minus and polar for times/divide**
 
 |                    | rectangular/planar                        | polar/Euler                                                   | geometric                               |
 |--------------------|-------------------------------------------|---------------------------------------------------------------|-----------------------------------------|
-| **addition**       | $(x,y)+(x',y')=(x+x',y+y')$               | ???                                                           | vector addition                         |
+| **addition**       | $(x,y)+(x',y')=(x+x',y+y')$               | **TO-DO**                                                           | vector addition                         |
 | **multiplication** | $(x,y)\cdot(x',y')=(xx'-yy',xy'+x'y)$     | $re^{i\theta}\cdot r'e^{i\theta'}=(rr')e^{i(\theta+\theta')}$ | scaling by $r$ and rotation by $\theta$ |
 | **inversion**      | $(x,y)\mapsto (x/(x^2+y^2),-y/(x^2+y^2))$ | $re^{i\theta}\mapsto (1/r)e^{-i\theta}$                       | conjugation and scaling by $1/r^2$      |
 | **conjugation**    | $(x,y)\mapsto (x,-y)$                     | $re^{i\theta}\mapsto re^{-i\theta}$                           | reflection in the real-axis             |
@@ -242,6 +275,12 @@ d. Here is a simple "proof" that $+1=-1$:
     1=\sqrt{1}=\sqrt{(-1)(-1)}=\sqrt{-1}\sqrt{-1}=i^2=-1.
   $$
   What is wrong with it?
+e. Prove that, for any two complex numbers $w,z\in\mathbb{C}$, we always have the inequality
+  $$
+    |z-w| \geq |z|-|w|.
+  $$
+  *Hint: use polar form, draw a diagram, and appeal to the [triangle inequality](https://en.wikipedia.org/wiki/Triangle_inequality)!*
+
 
 ## Euclidean vectors and vector spaces
 
