@@ -110,7 +110,7 @@
 
 \title{Introduction to Quantum Information Science}
 \author{\href{https://www.arturekert.org/}{Artur Ekert} and \href{https://thosgood.com}{Tim Hosgood}}
-\date{Last updated: 24 August 2022 \href{https://github.com/thosgood/qubit.guide/commits/main}{(see change history)}}
+\date{Last updated: 05 September 2022 \href{https://github.com/thosgood/qubit.guide/commits/main}{(see change history)}}
 
 
 \begin{document}
@@ -195,7 +195,7 @@ We also appreciate the work of Yihui Xie in developing the \href{https://bookdow
 
 Here we quickly recall most of the fundamental mathematical results that we will rely on in the rest of this book, most importantly \emph{linear algebra over the complex numbers}.
 However, we will not introduce everything from the ground up.
-Most notably, we will assume that the reader understands what a \textbf{matrix} is, and how it represents a \textbf{linear transformation}.
+Most notably, we will assume that the reader understands what a \textbf{matrix} is, and how it represents a \textbf{linear transformation}; some prior exposure to \textbf{complex numbers} would be helpful.
 
 If an equation like \(\operatorname{tr}|a\rangle\langle b|=\langle b|a\rangle\) makes sense to you, then you can safely skip over this section and get started directly with Chapter \ref{quantum-interference}.
 
@@ -204,7 +204,157 @@ As a small note on notation, we generally write ``\(x\coloneqq y\)'' to mean ``\
 \hypertarget{complex-numbers}{%
 \subsection{Complex numbers}\label{complex-numbers}}
 
-You do not have to know much about the whole story of algebraic fields, but it helps to know the basics, so here are some exercises that should help you to become more familiar.\footnote{Note that we have not really given you enough information in this section to be able to solve all these exercises, but that is intentional! Sometimes we like to ask questions and not answer them, with the hope that you will enjoy getting to do some research by yourself.}
+One of the fundamental ingredients of quantum information science (and, indeed, of quantum physics in general) is the notion of \textbf{complex numbers}.
+It would be disingenuous to expect that a few paragraphs would suffice to make the reader sufficiently familiar with subject, but we try our best here to give a speedy overview of the core principles, and end with some exercises that can be a helpful indicator as to what things you might want to read up on elsewhere.
+
+The ``classical'' way of arriving at complex numbers is as follows: start with the \textbf{natural numbers} \(\mathbb{N}=\{0,1,2,\ldots\}\), which we can add; if we want to be able to invert addition (i.e.~subtract), then we end up with the \textbf{integers} \(\mathbb{Z}=\{\ldots,-2,-1,0,1,2,\ldots\}\), which we can multiply; if we want to be able to invert multiplication (i.e.~divide), then we end up with the \textbf{rationals} \(\mathbb{Q}=\{\frac{p}{q}\mid p,q\in\mathbb{Z}\}\).
+In this process of ``closure under more and more binary operations'', we have passed from a \textbf{monoid}, to a \textbf{group}, to a \textbf{field}.
+Algebraically, then, we seem to be done: we can do all the addition and multiplication that we like, and we can invert it whenever it makes sense to do so (e.g.~we can divide, as long as it's not by \(0\)).
+
+But there are lots of numbers that turn up in geometry that are not rational, such as \(\sqrt{2}\approx1.414\), \(\pi\approx3.14\), and \(e\approx2.718\).
+To include all of these (and simultaneously make sense of things like infinite sums, and limits), we must do some \textbf{real analysis} --- something which we won't touch upon here --- to end up with the \textbf{real numbers} \(\mathbb{R}\).
+These form a field, just like the rationals, but now we don't have any ``gaps'' in our number line.
+So what's left to do?
+
+Well the reals have one big problem: they are not \textbf{algebraically closed}.
+That is, there exist polynomials with no roots, i.e.~equations of the form \(a_nx^n+a_{n-1}x^{n-1}+\ldots+a_1x+a_0=0\) (where the \(a_i\) are real numbers) that have no solutions.\footnote{To explain why we care so much about polynomials would be the subject of a whole nother book, but one important reason (of the \emph{many}!), for both analysts and geometers alike, is the \href{https://en.wikipedia.org/wiki/Stone\%E2\%80\%93Weierstrass_theorem}{\textbf{Weierstrass Approximation Theorem}}.}
+Somehow the most fundamental such example is the equation \(x^2+1=0\), which has no solutions, because the square of any real number must be non-negative, and so \(\sqrt{-1}\not\in\mathbb{R}\).
+
+It turns out that if we just throw in this one extra number \(i\coloneqq\sqrt{-1}\) to \(\mathbb{R}\) then we can solve \emph{any} polynomial --- a theorem so important that it's known as the \textbf{fundamental theorem of algebra}.
+We call the result of doing this the \textbf{complex numbers}, and denote them by \(\mathbb{C}\).
+
+This gives us an algebraic way of understanding what a complex number is: it is a real number \(x\) plus an \textbf{imaginary} number \(iy\) (where \(y\in\mathbb{R}\))
+That is, every complex number \(x+iy\) simply corresponds to a pair of real numbers \((x,y)\).
+So now we can think geometrically!
+We imagine the complex numbers \(\mathbb{C}\) as the 2-dimensional Euclidean space \(\mathbb{R}^2\), where the \(x\)-axis corresponds to the real part of a complex number, and the \(y\)-axis to the imaginary part.
+This really is a geometric way of thinking, since now addition (and subtraction) of complex numbers (which is defined by adding their real and imaginary parts separately) is given by vector addition, as shown in Figure \ref{fig:complex-addition}.
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{qubit_guide_files/figure-latex/complex-addition-1} 
+
+}
+
+\caption{Addition of two complex numbers \(z=x+iy\) and \(z'=x'+iy'\), where we write \(\Re\) (resp. \(\Im\)) for the real (resp. imaginary) part of a complex number: \(\Re(x+iy)=x\) and \(\Im(x+iy)=y\). Commutativity of addition corresponds to what is sometimes called the \textbf{parallelogram law} for addition of vectors.}\label{fig:complex-addition}
+\end{figure}
+
+But what about multiplication and division?
+Following the rules of the game, we can figure out what the product of two complex numbers is by treating the imaginary number \(i\) as a ``formal variable'', i.e.~pretending it's just a variable in some polynomial, and then remembering that \(i=\sqrt{-1}\) at the very end:
+\[
+  \begin{aligned}
+    (x+iy)(x'+iy')
+    &= xx'+ixy'+iyx'+i^2yy'
+  \\&= xx'+ixy'+iyx'-yy'
+  \\&= xx'-yy'+i(xy'+yx').
+  \end{aligned}
+\]
+
+Division works similarly --- the most simple example of inverting a complex number \(x+iy\) makes sense whenever \(x\) and \(y\) are both non-zero, since then we can use the trick of ``multiplying by \(1\)'':
+\[
+  \begin{aligned}
+    \frac{1}{x+iy}
+    &= \frac{1}{x+iy}\frac{x-iy}{x-iy}
+  \\&= \frac{x-iy}{x^2+y^2}
+  \\&= \frac{x}{x^2+y^2}-i\frac{y}{x+2+y^2}
+  \end{aligned}
+\]
+
+This other complex number \(x-iy\) that we used is somehow special because it is exactly the thing we needed to make the denominator real, so we give it a name: the \textbf{complex conjugate}\footnote{The more common notation in mathematics is \(\bar{z}\) instead of \(z^\star\), but physicists tend to like the latter.} of a complex number \(z=x+iy\) is the complex number \(z^\star\coloneqq x-iy\).
+Geometrically, this is just the reflection of the vector \((x,y)\in\mathbb{R}^2\) in the \(x\)-axis.
+The product \(zz^\star=x^2+y^2\) is also important: you might recognise (from Pythagoras' theorem) that \(\sqrt{x^2+y^2}\) is exactly the length of the vector \((x,y)\), and so we call the real number \(|z|\coloneqq\sqrt{zz^\star}\) the \textbf{modulus} (or magnitude, norm, or absolute value).
+Note then that we can simply write \(1/z=z^\star/|z|^2\).
+
+Now things are looking somewhat nice, but the story isn't complete.
+We have a good geometric intuition for what a complex number is (a vector in \(\mathbb{R}^2\)) and how to add them (vector addition), as well as what the complex conjugate and the modulus mean (reflection in the \(x\)-axis, and the length of the vector, respectively); but what about multiplication and division?
+
+To understand these we need to switch from our \textbf{rectangular coordinates} \(z=x+iy\) to \textbf{polar coordinates} --- instead of describing a point \(z\) in \(\mathbb{R}^2\) as ``\(x\) units left/right and \(y\) units up/down'', we describe it as ``\(r\) units from the origin, at an angle of \(\theta\) \href{https://en.wikipedia.org/wiki/Radian}{\textbf{radians}}''.
+We already know, given \((x,y)\in\mathbb{R}^2\), how to calculate its distance \(r\) from the origin, since this is exactly the length of the vector: \(r=|(x,y)|=\sqrt{x^2+y^2}\).
+But what about the angle?
+Some trigonometry tells us that \(\theta=\tan(y/x)\), so we now know how to convert rectangular to polar coordinates:
+\[
+  x+iy = (x,y)
+  \longmapsto (r,\theta) \coloneqq (\sqrt{x^2+y^2},\tan(y/x)).
+\]
+
+It would be nice to know how to go in the other direction though, but this can also be solved with some trigonometry:
+\[
+  (r,\theta)
+  \longmapsto (r\cos\theta,r\sin\theta).
+\]
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{qubit_guide_files/figure-latex/converting-planar-and-polar-1} 
+
+}
+
+\caption{Expressing a complex number \(z\) in both planar and polar forms.}\label{fig:converting-planar-and-polar}
+\end{figure}
+
+Great!
+\ldots{} but what's the point of polar coordinates?
+Well, it turns out that they give us a geometric way of understanding multiplication: you can show\footnote{\textbf{Exercise.} Prove this!} that \((r,\theta)\) multiplied by \((r',\theta')\) is exactly \((rr',\theta+\theta')\), which says that multiplication by a complex number \((r,\theta)\) is exactly a scaling by a factor of \(r\) and a rotation by \(\theta\).
+This means that we can also easily find the multiplicative inverse of \((r,\theta)\), since it's just \((1/r,-\theta)\).
+Finally, complex conjugation just means switching the sign of the angle: \((r,\theta)^\star=(r,-\theta)\).
+
+There is one last ingredient that we should mention, which is the thing that really solidifies the relation between rectangular and polar coordinates.
+We know that rectangular coordinates \((x,y)\) can be written as \(x+iy\), so is there some more algebraic way of writing polar coordinates \((r,\theta)\)?
+Then we can avoid any ambiguity that might arise from using pairs of numbers --- if I tell you that I'm thinking of the complex number \(z=(0.3,2)\), do I mean the point \(0.3+2i\), or the point that is distance \(r\) from the origin at an angle of \(2\) radians?
+
+Given polar coordinates \((r,\theta)\), we know that this is equal to \((r\cos\theta,r\sin\theta)\) in rectangular coordinates.
+For simplicity, let's first consider the case where \(r=1\).
+Then we can write \((1,\theta)\) as \(\cos\theta+i\sin\theta\).
+Using the \href{https://en.wikipedia.org/wiki/Taylor_series}{\textbf{Taylor series}}\footnote{If you don't know about Taylor series, then feel free to just skim this part, but make sure to read the punchline!} of \(\sin\) and \(\cos\), we can rewrite this as
+\[
+  \begin{aligned}
+    \cos\theta+i\sin\theta
+    &= \left(
+      1-\frac{\theta^2}{2!}+\frac{\theta^4}{4!}-\ldots
+    \right) + i\left(
+      \theta-\frac{\theta^3}{3!}+\frac{\theta^5}{5!}-\ldots
+    \right)
+  \\&= 1+i\theta-\frac{\theta^2}{2!}-i\frac{\theta^3}{3!}+\frac{\theta^4}{4!}+i\frac{\theta^5}{5!}-\ldots
+  \\&= 1+i\theta+\frac{i^2\theta^2}{2!}+\frac{i^3\theta^3}{3!}+\frac{i^4\theta^4}{4!}+\frac{i^5\theta^5}{5!}+\ldots
+  \\&= \exp(i\theta)
+  \end{aligned}
+\]
+where at the very end we use the Taylor expansion of the \href{https://en.wikipedia.org/wiki/Exponential_function}{\textbf{exponential function}} \(\exp(x)=e^x\).
+
+We have just ``proved''\footnote{It is very important to point out that this ``proof'' is not rigorous or formal --- you need to be very \emph{very} careful when rearranging infinite sums! However, this proof \emph{can be made rigorous} by using some real analysis.} one of the most remarkable formulas in mathematics: \textbf{Euler's formula}
+\[
+  e^{i\theta} = \cos\theta+i\sin\theta
+\]
+(a special case of which gives the famous equation \(e^{i\pi}+1=0\), uniting five fundamental constants: \(0\), \(1\), \(i\), \(e\), and \(\pi\)).
+In summary then, we have two beautiful ways of expressing a complex number \(z\in\mathbb{C}\), in either its rectangular/planar form or its polar/Euler form:
+\[
+  z = x+iy = re^{i\theta}.
+\]
+
+\begin{idea}
+Addition and subtraction are most neatly expressed in the planar form \(x+iy\), and multiplication and division are most neatly expressed in the polar form \(re^{i\theta}\); complex conjugation looks nice and tidy in both.
+
+\end{idea}
+
+\begin{technical}
+We know how to perform addition, multiplication, inversion (which is a special case of division), and complex conjugation on complex numbers in planar form, but we've only described how to do the last \emph{three} of these in polar form: we haven't said how to write \(re^{i\theta}+r'e^{i\theta'}\) as \(se^{i\varphi}\) for some \(s\) and \(\varphi\).
+This is because it is very messy looking:
+\[
+  \begin{aligned}
+    s
+    &= \sqrt{r^2+(r')^2+2rr'\cos(\theta'-\theta)}
+  \\\varphi
+    &= \theta+\operatorname{atan2}\big(r'\sin(\theta'-\theta),r+r'\cos(\theta'-\theta)\big)
+  \end{aligned}
+\]
+and where \(\operatorname{atan2}\) is the \href{https://en.wikipedia.org/wiki/Atan2}{2-argument arctangent function}.
+
+\end{technical}
+
+You do not need to know everything about this whole story of algebraically closed fields and so on, but it helps to know the basics, so here are some exercises that should help you to become more familiar.\footnote{Note that we have not really given you enough information in this section to be able to solve all these exercises, but that is intentional! Sometimes we like to ask questions and not answer them, with the hope that you will enjoy getting to do some research by yourself.}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
@@ -212,7 +362,7 @@ You do not have to know much about the whole story of algebraic fields, but it h
 \item
   The set \(\mathbb{Q}\) of rational numbers and the set \(\mathbb{R}\) of real numbers are both fields, but the set \(\mathbb{Z}\) of integers is not. Why not?
 \item
-  What does it mean to say that the field of complex numbers is \textbf{algebraically closed}?
+  Look up the formal statement of the fundamental theorem of algebra.
 \item
   Evaluate each of the following quantities:
   \[
@@ -229,7 +379,19 @@ You do not have to know much about the whole story of algebraic fields, but it h
    i^i.
     \]
 \item
-  Here is a simple proof that \(+1=-1\): \[1=\sqrt{1}=\sqrt{(-1)(-1)}=\sqrt{-1}\sqrt{-1}=i^2=-1.\] What is wrong with it?
+  Here is a simple ``proof'' that \(+1=-1\):
+  \[
+   1=\sqrt{1}=\sqrt{(-1)(-1)}=\sqrt{-1}\sqrt{-1}=i^2=-1.
+    \]
+  What is wrong with it?
+\item
+  Prove that, for any two complex numbers \(w,z\in\mathbb{C}\), we always have the inequality
+  \[
+   |z-w| \geqslant|z|-|w|.
+    \]
+  \emph{Hint: use polar form, draw a diagram, and appeal to the \href{https://en.wikipedia.org/wiki/Triangle_inequality}{\textbf{triangle inequality}}!}
+\item
+  Using the fact that \(e^{3i\theta}=(e^{i\theta})^3\), derive a formula for \(\cos3\theta\) in terms of \(\cos\theta\) and \(\sin\theta\).
 \end{enumerate}
 
 \hypertarget{euclidean-vectors-and-vector-spaces}{%
@@ -3807,7 +3969,7 @@ It is a very reasonable question to ask \emph{why} this formalism (Hilbert space
 One answer is that ``it just works'' --- the calculations that we do in this framework give us answers which are in agreement with the results of physical experiments --- but this can be rather unsatisfying as an answer.
 
 Quite beautifully, it turns out that if we start from just \emph{five} axioms, then we can prove that our choice of formalism is actually the only one that makes sense.
-This is the result of the paper ``Quantum Theory From Five Reasonable Axioms'', by L. Hardy \href{https://arxiv.org/abs/quant-ph/0101012}{arXiv:quant-ph/0101012}.
+This is the result of L. Hardy's ``Quantum Theory From Five Reasonable Axioms'', arXiv:\href{https://arxiv.org/abs/quant-ph/0101012}{quant-ph/0101012}.
 We start by saying that a quantum system should be characterised by two integers: the number of degrees of freedom \(K\), and the dimension \(N\).
 The former is (roughly) the minimum number of real numbers needed to specify any state; the latter is the maximum number of states that can be distinguished from one another in one single measurement.
 The five axioms are then as follows.
@@ -4163,6 +4325,9 @@ Going a bit deeper, we can define tensor products for \textbf{complexes} of modu
 
 Going even deeper still (and now far beyond the purview of this book), tensor products are generalised by the notion of \href{https://en.wikipedia.org/wiki/Monoidal_category}{\textbf{monoidal categories}}.
 
+As a final note, the universal property of the tensor product can be used to prove that we do not need to impose the postulate ``the Hilbert space of a composite system is the tensor product of the Hilbert spaces of its components'', but that this actually follows ``for free'' from the \textbf{state} and the \textbf{measurement postulates}.
+This is shown in Carcassi, Maccone, and Aidala's ``The four postulates of quantum mechanics are three'', arXiv:\href{https://arxiv.org/abs/2003.11007}{2003.11007}.
+
 \end{technical}
 
 \hypertarget{back-to-qubits}{%
@@ -4306,7 +4471,7 @@ The image of the Segre embedding is called the \textbf{Segre variety}, and you c
 
 Now here is the punchline to all this geometric meandering: \emph{a state \(|\phi\rangle\) of two qubits is separable if and only if its corresponding point in \(\mathbb{P}^3\) lies in the Segre variety \(\Sigma\)}.
 
-For more, see e.g.~Cirici, Salvadó, and Taron's ``Characterization of quantum entanglement via a hypercube of Segre embeddings'' (\href{https://arxiv.org/abs/2008.09583}{arXiv:2008.09583}).
+For more, see e.g.~Cirici, Salvadó, and Taron's ``Characterization of quantum entanglement via a hypercube of Segre embeddings'', arXiv:\href{https://arxiv.org/abs/2008.09583}{2008.09583}).
 
 \end{technical}
 
@@ -8469,8 +8634,8 @@ As we shall see in a moment, in some cases (such as in Grover's search algorithm
 
 Let us now follow a tour through the three early quantum algorithms, where each one offers a higher-order speed-up when compared to their classical analogues than the last: firstly linear, then quadratic, and finally exponential.
 
-\hypertarget{the-bernsteinvazirani-algorithm}{%
-\subsection{The Bernstein--Vazirani algorithm}\label{the-bernsteinvazirani-algorithm}}
+\hypertarget{the-bernstein-vazirani-algorithm}{%
+\subsection{The Bernstein--Vazirani algorithm}\label{the-bernstein-vazirani-algorithm}}
 
 \begin{scenario}
 We are presented with an oracle that computes some unknown function \(f\colon\{0,1\}^n\to\{0,1\}\), but we are promised that \(f\) is of the form
@@ -8698,8 +8863,8 @@ So the quantum algorithm searches an unsorted list of \(N\) items in roughly\foo
 For example, cracking some of the more popular modern ciphers, such as \href{https://en.wikipedia.org/wiki/Advanced_Encryption_Standard}{AES}, essentially requires a search among \emph{many} binary strings (called \textbf{keys}).
 If these can be checked at a rate of, say, one million keys per second, then a classical computer would need over a thousand years to find the correct key, while a quantum computer using Grover's algorithm would find it in less than four minutes.
 
-\hypertarget{simons-problem}{%
-\subsection{Simon's problem}\label{simons-problem}}
+\hypertarget{simons-algorithm}{%
+\subsection{Simon's algorithm}\label{simons-algorithm}}
 
 Here we will see the simplest quantum algorithm that offers an \emph{exponential} speed-up when compared to the best possible classical algorithm.
 
