@@ -2,6 +2,7 @@
 
 
 # 1. Check we're in the base directory
+
 if [[ `basename "$PWD"` != "qubit.guide" ]]; then
     echo "Script must be run from the main qubit.guide directory" >&2
     exit 1
@@ -10,7 +11,12 @@ else
 fi
 
 
-# 2. Build the various versions of the book
+# 2. Delete previous build
+
+R -e "bookdown::clean_book(TRUE)"
+
+
+# 3. Build the various versions of the book
 
 ## Web
 R -e "bookdown::render_book('index.Rmd','bookdown::gitbook',config_file='_bookdown.yml')"
@@ -22,7 +28,7 @@ R -e "bookdown::render_book('index.Rmd','bookdown::pdf_book',config_file='_bookd
 # to-do: rename resulting files
 
 
-# 3. Post-build changes (i.e. messy hacks)
+# 4. Post-build changes (i.e. messy hacks)
 
 # Replace some gitbook js files with our custom version
 cp web/plugin-bookdown.js book/libs/gitbook-2.6.7/js/plugin-bookdown.js
