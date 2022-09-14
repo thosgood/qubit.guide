@@ -12,14 +12,14 @@ But what is "close enough", and how do we quantify it?
 ## Metrics {#metrics}
 
 We will start with the second question: how do we quantify this notion of "close enough"?
-The central concept is one with which you are probably already somewhat familiar (we mentioned it in \@ref(bras-and-kets) and \@ref(geometry)), namely that of a **metric**, or **distance**.
+The central concept is one with which you are probably already somewhat familiar (we mentioned it in Sections \@ref(bras-and-kets) and \@ref(geometry)), namely that of a **metric**, or **distance**.
 
 ::: {.idea latex=""}
 Given a set $X$, a **metric** (or **distance**) on $X$ is a function $d\colon X\times X\to\mathbb{R}_{\geq0}$ such that
 
 - **Identity of indiscernibles:** $d(a,b)=0$ if and only if $a=b$
-- **Symmetry:** $d(a,b)=d(b,a)$ for any $a,b\in X$
-- **Triangle inequality:** $d(a,c)\leq d(a,b)+d(b,c)$.
+- **Symmetry:** $d(a,b)=d(b,a)$ for all $a,b\in X$
+- **Triangle inequality:** $d(a,c)\leq d(a,b)+d(b,c)$ for all $a,b,c\in X$.
 :::
 
 ::: {.technical title="Generalisations of metrics" latex=""}
@@ -29,13 +29,13 @@ Given a set $X$, a **metric** (or **distance**) on $X$ is a function $d\colon X\
 The most common norm is the **Euclidean distance**, that is, distance between two points in Euclidean space.
 Given points $A=(a_1,a_2,\ldots,a_n)$ and $B=(b_1,b_2,\ldots,b_n)$ in $\mathbb{R}^n$, their Euclidean distance is
 $$
- \sqrt{|b_1-a_1|^2 + |b_2-a_2|^2+\ldots +|b_n-a_n|^2}
+ \sqrt{|b_1-a_1|^2 + |b_2-a_2|^2+\ldots +|b_n-a_n|^2}.
 $$
 But we already know that Euclidean space $\mathbb{R}^n$ is more than just a set: it is a vector space.
 This means that we don't just have a metric space (i.e. a set with a metric), but instead a **normed vector space**, where the **norm** $\|\cdot\|$ of a vector is defined to be the distance of that vector from the origin: $\|a\|\coloneqq d(a,0)$.
 
 It turns out that this norm (and thus this metric) actually arises from a more fundamental structure, namely that of the **inner product**.
-Returning to the bra-ket notation, we recall that the norm of any vector $\ket{a}$ is exactly $\|a\|=\sqrt{\braket{a}{a}}$, and thus the distance between any two vectors $\ket{a},\ket{b}$ is exactly $d(\ket{a},\ket{b})=\|\ket{b}-\ket{a}\|$ (though for simplicity we sometimes write this as $\|b-a\|$ instead).
+Returning to the bra-ket notation, we recall that the norm of any vector $\ket{a}$ is exactly $\|a\|=\sqrt{\braket{a}{a}}$, and thus the distance between any two vectors $\ket{a},\ket{b}$ is exactly $d(\ket{a},\ket{b})=\|\ket{b}-\ket{a}\|$ (though for simplicity we sometimes write this as $\|b-a\|$ instead, or even $\|a-b\|$, since this is equal).
 This norm is also called the **$2$-norm**, or the **$\ell^2$-norm**, and is defined for any finite-dimensional Hilbert space $\mathbb{C}^n$ using the fact that $\mathbb{C}\cong\mathbb{R}^2$, so that $\|x+iy\|\coloneqq\|(x,y)\|=\sqrt{x^2+y^2}$.
 
 ::: {.technical title="p-norms" latex=""}
@@ -51,17 +51,82 @@ $$
 $$
 since these two strings differ in four bits:
 $$
-  \begin{aligned}
+  \begin{array}{cccccccccc}
     0&1&0&1&1&0&1&0&1&1
   \\1&1&0&1&1&1&0&1&1&1
   \\!&\checkmark&\checkmark&\checkmark&\checkmark&1&!&!&\checkmark&\checkmark
-  \end{aligned}
+  \end{array}
 $$
 
 More formally, if we define the **Hamming weight** of a binary string of length $n$ as the number of bits equal to $1$, then the Hamming distance between two strings is simply the Hamming weight of their difference (where subtraction is calculated in $\mathbb{Z}/2\mathbb{Z}$, i.e. $\mod2$).
-We leave the proof that this is indeed a metric as an exercise (\@ref(hamming-distance)).
+We leave the proof that this is indeed a metric as an exercise (Exercise \@ref(hamming-distance)).
 
 
+## How far apart are two quantum states?
+
+Given  two pure states, $\ket{u}$ and $\ket{v}$, we could try to measure the distance between them using the Euclidean distance $\|u-v\|$.
+This works for vectors, but has some drawbacks when it comes to quantum states.
+Recall that a quantum state is not represented by just a unit vector, but by a **ray**, i.e. a unit vector times an arbitrary phase factor.
+Multiplying a state vector by an overall phase factor has no physical effect: the two unit vectors $\ket{u}$ and $e^{i\phi}\ket{u}$ describe the same state.
+So, in particular, we want the distance between $\ket{u}$ and $-\ket{u}$ to be zero, since these describe the same quantum state.
+But if we were to use the Euclidean distance, then we would have that $\|u-(-u)\|=\|u+u\|=2$, which is actually as far apart as the two unit vectors can be!
+
+One solution to this problem is to define the distance between $\ket{u}$ and $\ket{v}$ as the *minimum* over all phase factors, i.e.
+$$
+  d(u,v)\coloneqq \min_{\phi\in[0,2\pi)}\Big\{\|u-e^{i\phi}v\|\Big\}.
+$$
+But with some algebraic manipulation we can actually figure out what this minimum is without calculating any of the other values.
+
+We first express the square of the distance between any two vectors in terms of their inner product:
+$$
+  \begin{aligned}
+    \|u-v\|^2
+    &= \braket{u-v}{u-v}
+  \\&= \braket{u}{u} - \braket{u}{v} - \braket{v}{u} + \braket{v}{v}
+  \\&= \|u\|^2 +\|v\|^2 - 2\Re\braket{u}{v}
+  \end{aligned}
+$$
+(where $\Re z$ is the real part of the complex number $z$).
+Then we can write the Euclidean distance between state vectors as
+$$
+  \|u-v\| = \sqrt{2(1-\Re\braket{u}{v})}.
+$$
+Now if we want to minimise this expression over all rotations^[Recall that multiplication by a complex number corresponds to rotation and scaling, and so multiplication by a phase factor (which is always of unit length) corresponds to just rotation.] of $v$, then we want $\braket{u}{v}$ to be real and as large as possible, i.e. for $\braket{u}{v}=|\braket{u}{v}|$.
+This gives the **state distance**
+$$
+  d(u,v) \coloneqq \sqrt{2(1-|\braket{u}{v}|)}.
+$$
+
+Note that we might write the state distance as $\|u-v\|$, and we might refer to it as "Euclidean distance", which is an abuse of notation: really we should be writing $\min\{\|\ket{u}-e^{i\varphi}\ket{v}\|\}$!
+But this sort of thing happens a lot in mathematics^[In computer science lingo, this is what you might call **operator overloading**.], and it's good to get used to it.
+The justification is that, as we have already said, the usual Euclidean distance doesn't really make great sense for state vectors (because of this vector vs. ray distinction), and so if we *know* that $\ket{u}$ and $\ket{v}$ are state vectors then writing $\|u-v\|$ (which is already shorthand for $\|\ket{u}-\ket{v}\|$) should suggest "oh, they mean the version of $\|\cdot\|$ that *makes sense for state vectors*, where we take a minimum".
+
+::: {.idea latex=""}
+For *small* values of $d(u,v)=\|u-v\|$, we can think of this distance as being the angle between the two unit vectors.
+Indeed, if we think of Euclidean (unit) vectors, then the difference $u-v$ is, for sufficiently small $\|u-v\|$, just the angle between the two unit vectors (expressed in radians), because a small segment of a circle "almost" looks like a triangle.
+
+```{r,engine='tikz',fig.width=3}
+\usetikzlibrary{arrows.meta}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+  \draw [thick,-Latex,primary] (0,0) to node[below right]{$\ket{u}$} (2,2);
+  \draw [thick,-Latex,rotate=25,secondary](0,0) to node[left]{$\ket{v}$} (2,2);
+  \draw [thick,-Latex] (2,2) to node[above right]{$\|u-v\|$} (.97,2.65);
+\end{tikzpicture}
+```
+
+Alternatively (and more formally), we can see this by writing $|\braket{u}{v}|=\cos\alpha\approx1-\alpha^2/2$, since then
+$$
+  \|u-v\|
+  = \sqrt{2(1-|\braket{u}{v}|)}
+  \approx \alpha.
+$$
+
+This can certainly help with intuition, but extra care must always be taken when dealing with complex vector spaces, since our geometric intuition breaks down rapidly in (complex) dimension higher than $1$.
+:::
+
+As **TO-DO: continue from here**
 
 
 
@@ -94,4 +159,4 @@ We leave the proof that this is indeed a metric as an exercise (\@ref(hamming-di
 
 ### Hamming distance {#hamming-distance}
 
-Show that the Hamming distance (defined in \@ref(metrics)) is indeed a metric.
+Show that the Hamming distance (defined in Section \@ref(metrics)) is indeed a metric.
