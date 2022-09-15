@@ -43,7 +43,7 @@ This norm is also called the **$2$-norm**, or the **$\ell^2$-norm**, and is defi
 :::
 
 Before moving on to talk about state vectors, let us first discuss one other metric space which shows up in information theory (both classical and quantum).
-The space^[You can think of this as simply a set, but we have already seen that this is actually a $\mathbb{Z}/2\mathbb{Z}$-vector space, where addition corresponds to $\texttt{XOR}$.] of binary strings of length $n$ admits a metric known as the **Hamming distance**.
+The space^[You can think of this as just a set, but we have already seen that this is actually a vector space over $\mathbb{Z}/2\mathbb{Z}$, where addition corresponds to $\texttt{XOR}$.] of binary strings (of some fixed length $n$) admits a metric known as the **Hamming distance**.
 This is defined quite simply as "the number of positions at which the corresponding bits are different".
 For example,
 $$
@@ -110,7 +110,7 @@ The justification is that, as we have already said, the usual Euclidean distance
 For *small* values of $d(u,v)=\|u-v\|$, we can think of this distance as being the angle between the two unit vectors.
 Indeed, if we think of Euclidean (unit) vectors, then the difference $v-u$ is, for sufficiently small $\|u-v\|$, just the angle between the two unit vectors (expressed in radians), because a small segment of a circle "almost" looks like a triangle.
 
-```{r,engine='tikz',fig.width=2}
+```{r,engine='tikz',fig.width=1.5}
 \usetikzlibrary{arrows.meta}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
@@ -132,7 +132,70 @@ $$
 This can certainly help with intuition, but extra care must always be taken when dealing with complex vector spaces, since our geometric intuition breaks down rapidly in (complex) dimension higher than $1$.
 :::
 
-As **TO-DO: continue from here**
+As you might hope, two state vectors which are close to one another give similar statistical predictions.
+In order to see this, pick a measurement (any measurement) and consider one partial outcome described by a projector $\proj{a}$.
+What can we say about the difference between the two probabilities
+$$
+  \begin{aligned}
+    p_u &= |\braket{a}{u}|^2
+  \\p_v &= |\braket{a}{v}|^2
+  \end{aligned}
+$$
+if we know that $\|u-v\|\leq\varepsilon$?
+
+Well, first of all, let us introduce two classic tricks that are almost always useful when dealing with inequalities --- the first holds in any normed vector space, and the latter in any inner product space.
+
+- the **reverse triangle inequality**:
+    $$
+      \Big|\|u\|-\|v\|\Big| \leq \|u-v\|
+    $$
+- the [**Cauchy--Schwartz inequality**](https://en.wikipedia.org/wiki/Cauchy%E2%80%93Schwarz_inequality):^[This is arguably *the most useful* mathematical inequality that we have!]
+    $$
+      \braket{u}{v}^2 \leq \braket{u}{u}\braket{v}{v}
+    $$
+    or, equivalently (by taking square roots),
+    $$
+      |\braket{u}{v}| \leq \|u\|\|v\|.
+    $$
+    Furthermore, the two sides of the inequality are equal *if and only if* $\ket{u}$ and $\ket{v}$ are linearly dependent.
+
+Using these, we see that
+$$
+  \begin{aligned}
+    |p_u-p_v|
+    &= \Big| |\braket{a}{u}|^2 - |\braket{a}{v}|^2 \Big|
+  \\&= \Big| \Big( |\braket{a}{u}| + |\braket{a}{v}| \Big) \Big( |\braket{a}{u}| - |\braket{a}{v}| \Big) \Big|
+  \\&\leq 2\Big| |\braket{a}{u}| - |\braket{a}{v}| \Big|
+  \\&\leq 2\Big| \braket{a}{u} - \braket{a}{v} \Big|
+  \\&\leq 2\|a\|\|u-v\|
+  \\&= 2\|u-v\|.
+  \end{aligned}
+$$
+So if $\|u-v\|\leq\varepsilon$, then $|p_u-p_v|\leq2\varepsilon$.
+
+Again, we can appeal to some geometric intuition if we pretend that $\ket{u}$ and $\ket{v}$ are Euclidean vectors instead of rays.
+Write
+$$
+  \begin{aligned}
+    |\braket{a}{u}| &= \cos(\alpha)
+  \\|\braket{a}{v}| &= \cos(\alpha+\varepsilon)
+  \end{aligned}
+$$
+where $\varepsilon$ is the (very small) angle between $\ket{u}$ and $\ket{v}$, whence $\|u-v\|=\varepsilon$.
+Then
+$$
+  \begin{aligned}
+    |\braket{a}{u}|^2 - |\braket{a}{v}|^2
+    &= \cos^2(\alpha) - \cos^2(\alpha+\varepsilon)
+  \\&\approx \varepsilon\sin(2\alpha)
+  \\&\leq \varepsilon.
+  \end{aligned}
+$$
+As an interesting exercise, you might try to explain why this approach gives a tighter bound ($\varepsilon$ instead of $2\varepsilon$).
+
+
+
+**TO-DO: continue from here**
 
 
 
