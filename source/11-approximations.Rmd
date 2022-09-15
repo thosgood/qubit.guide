@@ -11,6 +11,7 @@ But what is "close enough", and how do we quantify it?
 
 ## Metrics {#metrics}
 
+To begin with, let us work with pure states, and save the problem of dealing with mixed states for a later section.
 We will start with the second question: how do we quantify this notion of "close enough"?
 The central concept is one with which you are probably already somewhat familiar (we mentioned it in Sections \@ref(bras-and-kets) and \@ref(geometry)), namely that of a **metric**, or **distance**.
 
@@ -65,7 +66,7 @@ We leave the proof that this is indeed a metric as an exercise (Exercise \@ref(h
 
 ## How far apart are two quantum states?
 
-Given  two pure states, $\ket{u}$ and $\ket{v}$, we could try to measure the distance between them using the Euclidean distance $\|u-v\|$.
+Given two pure states, $\ket{u}$ and $\ket{v}$, we could try to measure the distance between them using the Euclidean distance $\|u-v\|$.
 This works for vectors, but has some drawbacks when it comes to quantum states.
 Recall that a quantum state is not represented by just a unit vector, but by a **ray**, i.e. a unit vector times an arbitrary phase factor.
 Multiplying a state vector by an overall phase factor has no physical effect: the two unit vectors $\ket{u}$ and $e^{i\phi}\ket{u}$ describe the same state.
@@ -93,7 +94,7 @@ $$
   \|u-v\| = \sqrt{2(1-\Re\braket{u}{v})}.
 $$
 Now if we want to minimise this expression over all rotations^[Recall that multiplication by a complex number corresponds to rotation and scaling, and so multiplication by a phase factor (which is always of unit length) corresponds to just rotation.] of $v$, then we want $\braket{u}{v}$ to be real and as large as possible, i.e. for $\braket{u}{v}=|\braket{u}{v}|$.
-This gives us our definition of distance.
+This gives us a definition of distance.
 
 ::: {.idea latex=""}
 The **state distance** between two state vectors $\ket{u}$ and $\ket{v}$ is
@@ -102,7 +103,7 @@ $$
 $$
 :::
 
-Note that we might write the state distance as $\|u-v\|$, and we might refer to it as "Euclidean distance", which is an abuse of notation: really we should be writing $\min\{\|\ket{u}-e^{i\varphi}\ket{v}\|\}$.
+Note that we sometimes write the state distance as $\|u-v\|$, and we might refer to it as "Euclidean distance", which is an abuse of notation: really we should be writing $\min\{\|\ket{u}-e^{i\varphi}\ket{v}\|\}$.
 But this sort of thing happens a lot in mathematics^[In computer science lingo, this is what you might call **operator overloading**.], and it's good to get used to it.
 The justification is that, as we have already said, the usual Euclidean distance doesn't really make great sense for state vectors (because of this vector vs. ray distinction), and so if we *know* that $\ket{u}$ and $\ket{v}$ are state vectors then writing $\|u-v\|$ (which is already shorthand for $\|\ket{u}-\ket{v}\|$) should suggest "oh, they mean the version of $\|\cdot\|$ that *makes sense for state vectors*, where we take a minimum".
 
@@ -194,10 +195,46 @@ $$
 As an interesting exercise, you might try to explain why this approach gives a tighter bound ($\varepsilon$ instead of $2\varepsilon$).
 
 
+## Fidelity
+
+Sometimes, when quantifying closeness of states, the *inner product* is a more convenient tool than the distance/norm.
+Analogous to how we define the distance between states $\ket{u}$ and $\ket{v}$ as $d(u,v)=\|u-v\|$, we define the **fidelity** between them as
+$$
+  F(u,v)\coloneqq |\braket{u}{v}|^2.
+$$
+This is *not* a metric, but it does have some similarly nice properties: for example, $F(u,v)=1$ when the two states are identical, and $F(u,v)=0$ when the two states are orthogonal (which means that they are "as different as possible").
+Intuitively, we can understand fidelity as the probability that the state $\ket{u}$ (resp. $\ket{v}$) would pass a test for being in state $\ket{v}$ (resp. $\ket{u}$).
+In other words, if we perform an orthogonal measurement on $\ket{u}$ that has two outcomes ($\texttt{true}$ if the state is $\ket{v}$; $\texttt{false}$ if the state is orthogonal to $\ket{v}$), then the fidelity $F(u,v)=|\braket{u}{v}|^2$ is exactly the probability that we measure the outcome $\texttt{true}$.
+
+Recall our definition of state distance:
+$$
+  d(u,v) = \sqrt{2(1-|\braket{u}{v}|)}
+$$
+This gives us a relation between distance and fidelity: once we know one, we can easily calculate the other.
+However, everything we have said so far applies only to *pure* states --- we will see how the mixed state case is slightly more complicated shortly.
+
+One final remark: as another example of the many inconsistencies in the literature, some authors define $F(u,v)$ to be $|\braket{u}{v}|$ instead of $|\braket{u}{v}|^2$.
+Whenever we say fidelity, we mean the latter: $|\braket{u}{v}|^2$.
+
+
+## Approximating unitaries
 
 **TO-DO: continue from here**
 
 
+
+
+
+
+
+
+
+
+
+## Distinguishing non-orthogonal states, again {#distinguishing-non-orthogonal-states-again}
+
+Let's briefly return to the problem considered in Section @\ref(distinguishing-non-orthogonal-states).
+**TO-DO: include end of §1 in the draft**
 
 
 
@@ -229,3 +266,31 @@ As an interesting exercise, you might try to explain why this approach gives a t
 ### Hamming distance {#hamming-distance}
 
 Show that the Hamming distance (defined in Section \@ref(metrics)) is indeed a metric.
+
+
+### Distinguishability and the trace distance
+
+**TO-DO: check that the notation here (e.g. for trace distance) is consistent**
+
+Say we have a physical system which is been prepared in one of two states (say, $\rho_1$ and $\rho_2$), each with equal probability.
+Then a *single* measurement can distinguish between the two preparations with probability *at most* $\frac{1}{2}[1+d_{\tr}(\rho_1,\rho_2)]$.
+
+1. Suppose that $\rho_1$ and $\rho_2$ commute.^[The commutativity assumption makes this problem essentially a special case of a purely classical one: distinguishing between two probability distributions.]
+    Using the spectral decompositions of $\rho_1$ and $\rho_2$ in their common eigenbasis, describe the optimal measurement that can distinguish between the two states. What is its probability of success?
+
+2. Suppose that you are given one randomly selected qubit from a pair in the state
+    $$
+      \ket{\psi} =
+      \frac{1}{\sqrt{2}}\left(
+        \ket{0}\otimes\left(
+          \sqrt{\frac23}\ket{0}
+          - \sqrt{\frac13}\ket{1}
+        \right)
+        + \ket{1}\otimes\left(
+          \sqrt{\frac23}\ket{0}
+          + \sqrt{\frac13}\ket{1}
+        \right)
+      \right)
+    $$
+    (which we have already seen in Exercise \@ref(some-density-operator-calculations)).
+    What is the maximal probability with which you can determine which qubit (either the first or the second) you were given?
