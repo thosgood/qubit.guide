@@ -219,6 +219,38 @@ Whenever we say fidelity, we mean the latter: $|\braket{u}{v}|^2$.
 
 ## Approximating unitaries
 
+So now we know a bit about how norms (or metrics, or inner products) can help us to understand distance between state vectors, can we say something similar about quantum evolutions?
+Say we have unitary operators $U$ and $V$ acting on the same Hilbert space, where $U$ is some "target" unitary that we *want* to implement in a real-life circuit, and $V$ is an "approximate" unitary that we *can actually* implement in practice.
+We say that **$V$ approximates $U$ with precision $\varepsilon$** if
+$$
+  \|U-V\| \leq \varepsilon
+$$
+where $\|\cdot\|$ is some norm on unitary matrices (of the same size), which we would want to satisfy the property that, if $\|U-V\|$ is "small", then $U$ should be hard to distinguish from $V$, no matter on which quantum state they act.
+One natural choice of norm which will be suitable for our purposes is the following.
+
+::: {.idea latex=""}
+The **operator norm** $\|A\|$ of an operator $A\in\mathcal{B}(\mathcal{H})$ is the maximum length of the vector $A\ket{v}$ over all possible normalised vectors $\ket{v}\in\mathcal{H}$, i.e.
+$$
+  \|A\| \coloneqq \max\Big\{|A\ket{v}| \text{ s.t. }|\ket{v}|=1\Big\}.
+$$
+One can show that $\|A\|$ is equal to the largest singular value^[We discussed singular values abstractly in Section \@ref(the-schmidt-decomposition), but we can be more explicit here: the **singular values** of an operator $A$ are the square roots of the (necessarily non-negative) eigenvalues of the Hermitian operator $A^\dagger A$.] of $A$.
+
+If $A$ is *normal*, then its singular values are exactly the absolute values of its eigenvalues, and so
+$$
+  A\text{ normal }\implies
+  \|A\| = \max\Big\{|\lambda| \text{ s.t. }\det(A-\lambda\id)=0\Big\}.
+$$
+:::
+
+The operator norm satisfies some very useful properties:^[Proving these properties, along with some others, is a good thing to practise --- see Exercise \@ref(operator-norm).]
+
+- If $A$ is normal, then $\|A^\dagger\|=\|A\|$
+- $\|A\otimes B\|=\|A\|\|B\|$
+- If $U$ is unitary, then $\|U\|=1$
+- If $P\neq0$ is an orthogonal projector, then $\|P\|=1$
+- **Sub-multiplicativity:** $\|AB\|\leq\|A\|\|B\|$.
+
+Now suppose that
 **TO-DO: continue from here**
 
 
@@ -266,6 +298,29 @@ Let's briefly return to the problem considered in Section @\ref(distinguishing-n
 ### Hamming distance {#hamming-distance}
 
 Show that the Hamming distance (defined in Section \@ref(metrics)) is indeed a metric.
+
+
+### Operator norm {#operator-norm}
+
+Prove the following properties of the operator norm:
+
+2. $\|A\otimes B\|=\|A\|\|B\|$ for any operators $A$ and $B$
+1. If $A$ is normal, then $\|A^\dagger\|=\|A\|$
+3. If $U$ is unitary, then $\|U\|=1$
+4. If $P\neq0$ is an orthogonal projector, then $\|P\|=1$.
+
+Using the singular value decomposition^[Recall Section \@ref(the-schmidt-decomposition)], or otherwise, prove that the operator norm has the following two properties for any operators $A$ and $B$:
+
+5. **Unitary invariance:** $\|UAV\|=\|A\|$ for any unitaries $U$ and $V$
+6. **Sub-multiplicativity:** $\|AB\|\leq\|A\|\|B\|$.
+
+Recall that we say that $V$ approximates $U$ with precision $\varepsilon$ if $\|U-V\|\leq\varepsilon$.
+
+7. Prove that, if $V$ approximates $U$ with precision $\varepsilon$, then $V^{-1}$ approximates $U^{-1}$ with the same precision $\varepsilon$.
+
+Using the Cauchy--Schwartz inequality, or otherwise, prove the following, for any vector $\ket{\psi}$ and any operators $A$ and $B$:
+
+8. $|\braket{\psi|A^\dagger B}{\psi}|\leq\|A\|\|B\|$.
 
 
 ### Distinguishability and the trace distance
