@@ -276,8 +276,50 @@ $$
 
 This tells us what $\varepsilon$-closeness means: suppose that $V$ and $U$ are $\varepsilon$-close; then if, instead of applying one, we apply the other, and subsequently measure the resulting physical system, we know that the probabilities of any particular outcome in any measurement will differ by *at most* $2\varepsilon$.
 
-What about working with sequences of unitaries, as we do in our quantum circuits?
-**TO-DO: continue from here**
+Now what about working with *sequences* of unitaries, as we do when we construct quantum circuits?
+It turns out that closeness is additive under multiplication of unitaries: if $\|U_1-V_1\|\leq\varepsilon_1$ and $\|U_2-V_2\|\leq\varepsilon_2$, then
+$$
+  \begin{aligned}
+    \|U_2U_1 - V_2V_1\|
+    &= \|U_2U_1 - V_2U_1 + V_2U_1 - V_2V_1\|
+  \\&= \|(U_2-V_2)U_1 + V_2(U_1-V_1)\|
+  \\&\leq \|U_2-V_2\|\|U_1\| + \|V_2\|\|U_1-V_1\|
+  \\&= \|U_2-V_2\| + \|U_1-V_1\|
+  \\&\leq \varepsilon_1+\varepsilon_2.
+  \end{aligned}
+$$
+We can then apply this argument inductively.
+
+::: {.idea latex=""}
+Errors in the approximation of one sequence of unitaries by another accumulate at most linearly in the number of unitary operations:
+$$
+  \|U_n\cdots U_1 - V_n\cdots V_1\| \leq \sum_{i=1}^n \varepsilon_n
+$$
+if $\|U_i-V_i\|\leq\varepsilon_i$ for all $i=1,\ldots,n$.
+:::
+
+This linear error accumulation relies heavily on the fact that the norm of a unitary operator is equal to $1$; for non-unitary operators, errors could accumulate exponentially, which would make efficient approximations of circuits practically impossible.
+Geometrically, this is because unitaries just *rotate* vectors, without scaling them.
+
+Again, we can appeal to some trigonometry.
+First note that
+$$
+  \|U-V\| = \|UV^\dagger-\id\|
+$$
+since the operator norm is unitarily invariant.^[See Exercise \@ref(operator-norm).]
+Since $UV^\dagger$ is also unitary, its eigenvalues are exactly phase factors $e^{i\varphi}$ for $\varphi\in\mathbb{R}$; the corresponding eigenvalue of $UV^\dagger-\id$ has modulus
+$$
+  |e^{i\varphi}-1| = \sqrt{2}\sqrt{1-\cos\varphi}.
+$$
+Putting this all together, we see that asking for $\|U-V\|\leq\varepsilon$ is exactly asking for each eigenvalue of $UV^\dagger-\id$ to satisfy $\sqrt{2}\sqrt{1-\cos\varphi}\leq\varepsilon$, which rearranges to
+$$
+  \cos\varphi \geq 1-\frac{\varepsilon^2}{2}
+$$
+which is simply $|\varphi|\leq\varepsilon$ for small enough $\varepsilon$.
+So $U$ rotates relative to $V$ by (at worst) an angle of order $\varepsilon$, and if we compose unitaries in a sequence then the accumulated rotation increases linearly with the number of unitaries.
+
+
+## Approximating generic unitaries is hard, but...
 
 
 
@@ -347,6 +389,18 @@ Recall that we say that $V$ approximates $U$ with precision $\varepsilon$ if $\|
 Using the Cauchy--Schwartz inequality, or otherwise, prove the following, for any vector $\ket{\psi}$ and any operators $A$ and $B$:
 
 8. $|\braket{\psi|A^\dagger B}{\psi}|\leq\|A\|\|B\|$.
+
+
+### Tolerance and precision
+
+Suppose we wish to implement a quantum circuit consisting of gates $U_1,\ldots,U_d$, but we only have available to us gates $V_1,\ldots,V_d$.
+Luckily, these gates are pretty good approximations to our desired gates, and the error is uniform: $\|U_i-V_i\|\leq\varepsilon$ for all $i=1,\ldots,d$ for some fixed $\varepsilon$.
+
+We want our approximate circuit to be within some **tolerance** $\delta$ of the desired circuit: the probabilities of different outcomes of $V=V_d\cdots V_1$ should be be within $\delta$ of the "correct" probabilities of the different outcomes of $U=U_d\cdots U_1$, i.e. $|p_U-p_V|\leq\delta$.
+
+How small must $\varepsilon$ be with respect to $\delta$ in order for us to achieve this?
+
+*Hint: recall that $|p_U-p_V|\leq2\|U-V\|$.*
 
 
 ### Distinguishability and the trace distance
