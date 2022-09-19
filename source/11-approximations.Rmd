@@ -391,7 +391,91 @@ For example, the set $\{H,T\}$ can be used to approximate arbitrary *single-qubi
 
 ## How far away are two probability distributions?
 
+
+Before we switch gears and discuss how to generalise state distance to density operators, let us first take a look at distances between probability distributions.
+What does it mean to say that two probability distributions (over the same index set) are similar to one another?
+
+::: {.idea latex=""}
+The **trace distance**^[Also known as the **variation** distance, $L_1$ distance, **statistical** distance, or **Kolmogorov** distance.] between probability distributions $p(k)$ and $q(k)$ is
+$$
+  d(p,q) \coloneqq \frac{1}{2}\sum_k |p(k)-q(k)|.
+$$
+:::
+
+This is indeed a distance: it satisfies all the necessary properties.^[**Exercise.** Show that this distance satisfies the triangle inequality.]
+It also has a rather simple interpretation, as we now explain.
+Let $p(k)$ be the *intended* probability distribution of an outcome produced by some ideal device $P$, but suppose that the actual physical device $Q$ is slightly faulty: with probability $1-\varepsilon$ it works exactly as $P$ does, but with probability $\varepsilon$ it goes completely wrong and generates an output according to some arbitrary probability distribution $e(k)$.
+What can we say about the probability distribution $q(k)$ of the outcome of such a device?
+Well, we can exactly say that
+$$
+  d(p,q) \leq \varepsilon
+$$
+by substituting $q(k)=(1-\varepsilon)p(k)+\varepsilon e(k)$.
+Conversely, if $d(p,q)=\varepsilon$ then we can represent one of them (say, $q(k)$) as the probability distribution resulting from a process that generates outcomes according to $p(k)$ followed by a process that alters outcome $k$ with total probability not greater than $\varepsilon$.
+
+Note that the normalisation property of probabilities implies that
+$$
+  \sum_k p(k)-q(k) = 0.
+$$
+We can split up this sum into two parts: the sum over $k$ for which $p(k)\geq q(k)$, and the sum over $k$ for which $p(k)<q(k)$.
+If we call the first part $S$, then the fact that $\sum_k p(k)-q(k)=0$ tells us that the second part must be equal to $-S$.
+Thus
+$$
+  \sum_k |p(k)-q(k)|
+  = S+|-S|
+  = 2S
+$$
+whence $S=d(p,q)$.
+
+(ref:probability-distribution-distance-caption) **TO-DO: write caption**
+
+```{r probability-distribution-distance,engine='tikz',fig.cap='(ref:probability-distribution-distance-caption)',fig.width=4}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+  \pgfmathdeclarefunction{gauss}{2}{%
+    \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
+  }
+  \begin{axis}[axis y line=none,
+    no markers,
+    domain=0:10,
+    samples=250,
+    axis lines*=left,
+    xlabel=$k$,
+    every axis x label/.style={at=(current axis.right of origin),anchor=west},
+    height=5cm,
+    width=12cm,
+    xtick=\empty,
+    xticklabels={$$},
+    enlargelimits=false,
+    clip=false,
+    axis on top,
+    grid = major
+    ]
+  \addplot [fill=gray, draw=none, domain=0:10] {min(gauss(4,1.1),gauss(6.5,0.9))} \closedcycle;
+  \addplot [very thick,primary] {gauss(4,1.1)};
+  \addplot [very thick,secondary] {gauss(6.5,0.9)};
+  \draw [yshift= 1.5cm,xshift=4cm] node {$S$};
+  \draw [yshift= 1.5cm,xshift=7cm] node {$S$};
+  \draw [yshift= 2.3cm,xshift=2.6cm] node {$p(k)$};
+  \draw [yshift= 2.3cm,xshift=8.4cm] node {$q(k)$};
+  \end{axis}
+\end{tikzpicture}
+```
+
 **TO-DO: continue from here**
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
