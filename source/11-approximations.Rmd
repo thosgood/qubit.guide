@@ -335,7 +335,7 @@ For example, each of the following sets of gates is universal:
 - $\{H,T,\texttt{c-NOT}\}$
 - $\{H,S,\texttt{Toff}\}$
 
-where $S$ and $T$ are the $\pi/4$- and $\pi/8$-phase gates (Section @\ref(phase-gates-galore)), $\texttt{c-}S$ is the *controlled* $S$-gate, and $\textt{Toff}$ is the Toffoli gate (Exercise \@ref(toffoli-gate)).
+where $S$ and $T$ are the $\pi/4$- and $\pi/8$-phase gates (Section \@ref(phase-gates-galore)), $\texttt{c-}S$ is the *controlled* $S$-gate, and $\texttt{Toff}$ is the Toffoli gate (Exercise \@ref(toffoli-gate)).
 
 But now we can be a bit more precise with the question that the notion of universality is trying to answer: given a universal set of gates, how hard is it to approximate any desired unitary transformation with accuracy $\varepsilon$?
 That is, *how many gates do we need*?
@@ -345,17 +345,55 @@ In fact, it is exponential in the number of qubits --- most unitary transformati
 We can show this by a counting argument (along with a healthy dose of geometric intuition).
 
 Consider a universal set of gates $G$ consisting of $g$ gates, where each gates acts on no more than $k$ qubits.
-How many circuits (acting on $n$-qubits) can we construct using $t$ gates form this set?
+How many circuits (acting on $n$-qubits) can we construct using $t$ gates from this set?
 We have $g\binom{n}{k}$ choices^[Counting arguments nearly always use [**binomial coefficient** notation](https://en.wikipedia.org/wiki/Binomial_coefficient): $\binom{a}{b}\coloneqq\frac{a!}{b!(b-a)!}$.] for the first gate, since there are $g$ gates, and $\binom{n}{k}$ ways to place it so that it acts on $k$ out of $n$ qubits.
 The same holds for all subsequent gates, and so we can build no more than
 $$
   \left( g\binom{n}{k} \right)^t
 $$
 circuits of size $t$ from $G$.
-What is important is that the $g\binom{n}{k}$ term is *polynomial* in $n$, and $g$ and $k$ are fixed constants, so we will write this upper bound as
+What is important is that $g\binom{n}{k}$ is *polynomial* in $n$, and $g$ and $k$ are fixed constants, so we will write this upper bound as
 $$
   (\mathrm{poly}(n))^t.
 $$
+In more geometric language, we have shown that, with $t$ gates, we can generate $(\mathrm{poly}(n))^t$ points in the space $U(N)$ of unitary transformations on $n$-qubits, where $N=2^n$.
+Now imagine drawing a ball of radius $\varepsilon$ (in the operator norm) centred at each of these points --- we want these balls to cover the entire unitary group $U(N)$, since this then says that any unitary is within distance $\varepsilon$ of a circuit built from $t$ gates in $G$.
+We will not get into the details of the geometry of $U(N)$, but simply use the fact that a ball of radius $\varepsilon$ in $U(N)$ has volume proportional to $\varepsilon^{N^2}$, whereas the volume of $UN)$ itself is proportional to $C^{N^2}$ for some fixed constant $C$.
+So we want
+$$
+  \varepsilon^{N^2}(\mathrm{poly}(n))^t \geq C^{N^2}
+$$
+which (after some algebraic manipulation) requires that
+$$
+  t \geq 2^{2n}\frac{\log(C/\varepsilon)}{\log(\mathrm{poly}(n))}.
+$$
+In words, *the scaling is exponential in $n$ but only logarithmic in $1/\varepsilon$*.
+
+::: {.idea latex=""}
+When we add qubits, the space of possible unitary operations grows very rapidly, and we have to work exponentially hard if we want to approximate the resulting unitaries with some prescribed precision.
+If, however, we fix the number of qubits and instead ask for better and better approximations, then things are much easier, since we only have to work logarithmically hard.
+:::
+
+The snag is that this counting argument does not give us any hints as to how we can actually build such approximations.
+A more constructive approach is to pick a set of universal gates and play with them, building more and more complex circuits.
+There is an important theorem in this direction that tells us that it does not matter much which particular universal set of gates we choose to start with.
+
+::: {.idea latex=""}
+**The [Solovay--Kitaev Theorem](https://en.wikipedia.org/wiki/Solovay%E2%80%93Kitaev_theorem).**
+Choose any two universal sets of gates that are closed under inverses.^[The notion of "being closed under inverses" is slightly weaker than you might first think: it means that the inverse of any gate in the set can be (exactly) constructed from a *finite* sequence of gates in the set; it does *not* mean that the inverses have to be elementary gates themselves.]
+Then any $t$-gate circuit built from one set of gates can be implemented to precision $\varepsilon$ using a $t\mathrm{poly}(\log(t/\varepsilon))$-gate circuit built from the other set.
+Furthermore, there is an efficient classical algorithm for finding this circuit.
+:::
+
+Since errors accumulate linearly, it suffices to approximate each gate from one set to accuracy $\varepsilon/t$, which can be achieved by using a $\mathrm{poly}(\log(t/\varepsilon))$-gate circuit built from the other set.
+So we can efficiently convert (constructively, via some efficient classical algorithm) between universal sets of gates with overhead $\mathrm{poly}(\log(1/\varepsilon)))$, i.e. $\log^c(1/\varepsilon)$ for some constant $c$.
+For all practical purposes, we want to minimise $c$, but the counting argument above shows that the best possible exponent is $1$, so the real question is *can we get close to this lower bound*?
+In general, we do not know.
+However, for some universal sets of gates we have *nearly* optimal constructions.
+For example, the set $\{H,T\}$ can be used to approximate arbitrary *single-qubit* unitaries to accuracy $\varepsilon$ using $\log(1/\varepsilon)$ many gates, instead of $\mathrm{poly}(\log(1/\varepsilon))$, and the circuits achieving this improved overhead cost can be efficiently constructed (for example, by the [Matsumoto--Amano construction](https://arxiv.org/abs/0806.3834).)
+
+
+## How far away are two probability distributions?
 
 **TO-DO: continue from here**
 
