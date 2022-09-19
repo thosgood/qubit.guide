@@ -321,7 +321,43 @@ So $U$ rotates relative to $V$ by (at worst) an angle of order $\varepsilon$, an
 
 ## Approximating generic unitaries is hard, but...
 
+Now that we understand approximations of unitary operators, we can revisit the question of universality that we touched upon in Sections \@ref(finite-set-of-universal-gates) and \@ref(universality-again).
+Recall that we call a finite set $G$ of gates **universal** if *any* $n$-qubit unitary operator can be approximated (up to an overall phase) to *arbitrary accuracy* by some unitary constructed using only gates from $G$ (and we then call the gates in $G$ **elementary**).
+In other words, $G$ is universal if, for any unitary $U$ acting on $n$-qubits and for any $\varepsilon>0$, there exist $U_1,\ldots,U_d\in G$ such that $\widetilde{U}\coloneqq U_d\cdots U_1$ satisfies
+$$
+  \|\widetilde{U}-e^{i\varphi}U\|\leq\varepsilon
+$$
+for some phase $\varphi$.
 
+For example, each of the following sets of gates is universal:
+
+- $\{H,\texttt{c-}S\}$
+- $\{H,T,\texttt{c-NOT}\}$
+- $\{H,S,\texttt{Toff}\}$
+
+where $S$ and $T$ are the $\pi/4$- and $\pi/8$-phase gates (Section @\ref(phase-gates-galore)), $\texttt{c-}S$ is the *controlled* $S$-gate, and $\textt{Toff}$ is the Toffoli gate (Exercise \@ref(toffoli-gate)).
+
+But now we can be a bit more precise with the question that the notion of universality is trying to answer: given a universal set of gates, how hard is it to approximate any desired unitary transformation with accuracy $\varepsilon$?
+That is, *how many gates do we need*?
+
+The answer is *a lot*.
+In fact, it is exponential in the number of qubits --- most unitary transformation require large quantum circuits of elementary gates.
+We can show this by a counting argument (along with a healthy dose of geometric intuition).
+
+Consider a universal set of gates $G$ consisting of $g$ gates, where each gates acts on no more than $k$ qubits.
+How many circuits (acting on $n$-qubits) can we construct using $t$ gates form this set?
+We have $g\binom{n}{k}$ choices^[Counting arguments nearly always use [**binomial coefficient** notation](https://en.wikipedia.org/wiki/Binomial_coefficient): $\binom{a}{b}\coloneqq\frac{a!}{b!(b-a)!}$.] for the first gate, since there are $g$ gates, and $\binom{n}{k}$ ways to place it so that it acts on $k$ out of $n$ qubits.
+The same holds for all subsequent gates, and so we can build no more than
+$$
+  \left( g\binom{n}{k} \right)^t
+$$
+circuits of size $t$ from $G$.
+What is important is that the $g\binom{n}{k}$ term is *polynomial* in $n$, and $g$ and $k$ are fixed constants, so we will write this upper bound as
+$$
+  (\mathrm{poly}(n))^t.
+$$
+
+**TO-DO: continue from here**
 
 
 
