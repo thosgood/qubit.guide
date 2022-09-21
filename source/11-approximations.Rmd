@@ -391,14 +391,16 @@ For example, the set $\{H,T\}$ can be used to approximate arbitrary *single-qubi
 
 ## How far away are two probability distributions?
 
-
 Before we switch gears and discuss how to generalise state distance to density operators, let us first take a look at distances between probability distributions.
 What does it mean to say that two probability distributions (over the same index set) are similar to one another?
 
+Recall that a **probability distribution**^[Things are simpler for us because we work with so-called **discrete** probability distributions, and so we can use *sums* instead of *integrals*. The general theory requires much more real analysis.] consists of two things --- a **sample space** $\Omega$, which is the set of all possible outcomes, and a **probability function** $p\colon\Omega\to[0,1]$ --- subject to the condition that $\sum_{k\in\Omega} p(k)=1$.
+Given any *subset* of outcomes $A\subseteq\Omega$, we define $p(A)=\sum\{k\in A\}p(k)$.
+
 ::: {.idea latex=""}
-The **trace distance**^[Also known as the **variation** distance, $L_1$ distance, **statistical** distance, or **Kolmogorov** distance.] between probability distributions $p(k)$ and $q(k)$ is
+The **trace distance**^[Also known as the **variation** distance, $L_1$ distance, **statistical** distance, or **Kolmogorov** distance.] between probability distributions $p$ and $q$ on the same sample space $\Omega$ is
 $$
-  d(p,q) \coloneqq \frac{1}{2}\sum_k |p(k)-q(k)|.
+  d(p,q) \coloneqq \frac{1}{2}\sum_{k\in\Omega} |p(k)-q(k)|.
 $$
 :::
 
@@ -427,7 +429,7 @@ $$
 $$
 whence $S=d(p,q)$.
 
-(ref:probability-distribution-distance-caption) **TO-DO: write caption**
+(ref:probability-distribution-distance-caption) **TO-DO: write caption (mention that this is continuous)**
 
 ```{r probability-distribution-distance,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6,fig.cap='(ref:probability-distribution-distance-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
@@ -463,26 +465,59 @@ whence $S=d(p,q)$.
 \end{tikzpicture}
 ```
 
-**TO-DO: continue from here**
+Just as a passing note, we will point out that
+$$
+  \begin{aligned}
+    \sum_k \max\{p(k),q(k)\}
+    &= 1 + S
+  \\&= 1 + d(p,q)
+  \end{aligned}
+$$
+and the shaded area in Figure \@ref(fig:probability-distribution-distance) is equal to^[Again, since we are working with finite probability distributions, we can use sums; in the continuous case shown in Figure \@ref(fig:probability-distribution-distance), we would really need to use *integrals* instead.]
+$$
+  \begin{aligned}
+    \sum_k \min\{p(k),q(k)\}
+    &= 1 - S
+  \\&= 1 - d(p,q).
+  \end{aligned}
+$$
+The latter lets us write the trace distance as
+$$
+  d(p,q) = 1 - \sum_k \min_k\{p(k),q(k)\}
+$$
+and the former will be useful very soon.
 
+As for intuition, the trace distance is a measure of how well we can distinguish a sample from distribution $p$ from a sample from distribution $q$: if the distance is $1$ then we can tell them apart perfectly; if the distance is $0$ then we can't distinguish them at all.
+Now suppose that $p$ and $q$ represent the probability distributions of two devices, $P$ and $Q$, respectively, and that one of these is chosen (with equal probability) to generate some outcome.
+If you are given the outcome $k$, and you know $p(k)$ and $q(k)$, then how can you best guess which device generated it?
+What is your best strategy, and with what probability does this let you guess correctly?
+It turns out that we can answer this using the trace distance.
 
+Arguably the most natural strategy is to look at $\max\{p(k),q(k)\}$: guess $P$ if $p(k)>q(k)$; guess $Q$ if $q(k)>p(k)$; guess uniformly at random if $p(k)=q(k)$.
+Following this strategy, the probability of guessing correctly (again, under the assumption that $P$ and $Q$ were chosen between with equal probability) is
+$$
+  p_{\mathrm{success}} = \frac{1}{2}\sum_k \max\{p(k),q(k)\}
+$$
+which we can rewrite as
+$$
+  p_{\mathrm{success}} = \frac{1}{2}(1+d(p,q)).
+$$
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+Here is another way of seeing the above.
+The probability that the devices $P$ and $Q$ will *not* behave in the same way is bounded by $d(p,q)$.
+This means that, with probability $1-d(p,q)$, the devices behave as if they were identical, in which case the best you can do is to guess uniformly at random, which will make you succeed with probability $\frac{1}{2}(1-d(p,q))$.
+With the remaining probability $d(p,q)$, the devices may behave as if they were completely different, and then you can tell which one is which perfectly, letting you succeed with probability exactly $1\cdot d(p,q)=d(p,q)$.
+So the total probability of success is equal to
+$$
+  \frac{1}{2}(1-d(p,q)) + d(p,q)
+  = \frac{1}{2}(1+d(p,q)).
+$$
 
 
 ## Dealing with density operators
+
+Now we return to quantum states, and generalise the notion of trace distance to density operators.
+**TO-DO: continue from here**
 
 **TO-DO**
 
@@ -572,6 +607,37 @@ We want our approximate circuit to be within some **tolerance** $\delta$ of the 
 How small must $\varepsilon$ be with respect to $\delta$ in order for us to achieve this?
 
 *Hint: recall that $|p_U-p_V|\leq2\|U-V\|$.*
+
+
+### Statistical distance and a special event
+
+1. Show that, if $p$ and $q$ are probability distributions on the same sample space $\Omega$, then
+  $$
+    d(p,q) = \max_{A\subseteq\Omega}\{|p(A)-q(A)|\}.
+  $$
+2. By definition, the above maximum is realised for some specific subset $A\subseteq\Omega$, i.e. there exists some event (described by the set of outcomes $A$) that is optimal in distinguishing $p$ from $q$.
+  What is this event?
+
+
+### Joint probability distributions
+
+**TO-DO: define some of the words here**
+
+Let $p(x,y)$ be a joint probability distribution with marginals $p(x)$ and $q(y)$.
+Show that
+$$
+  d(p,q) \leq \Pr(x\neq y)
+  \equiv \sum_{\{x,y\mid x\neq y\}} p(x,y).
+$$
+*Hint:*
+$$
+  \begin{aligned}
+    d(p,q)
+    &= 1 - \sum_x \min\{p(x),q(x)\}
+  \\&\leq 1 - \sum_x p(x,x)
+  \\&= \Pr(x\neq y).
+  \end{aligned}
+$$
 
 
 ### Distinguishability and the trace distance
