@@ -540,7 +540,7 @@ $$
 
 The induced **trace distance** between two density operators is
 $$
-  d(\rho,\sigma) \coloneqq \frac{1}{2}\|\rho-\sigma\|_{\tr}.
+  d_{\tr}(\rho,\sigma) \coloneqq \frac{1}{2}\|\rho-\sigma\|_{\tr}.
 $$
 :::
 
@@ -560,7 +560,7 @@ $$
 Then
 $$
   \begin{aligned}
-    d(p,q)
+    d_{\tr}(p,q)
     &\coloneqq \frac{1}{2}\sum_k|p(k)-q(k)|
   \\&= \frac{1}{2}\sum_k|\tr P_k(\rho-\sigma)|
   \\&= \frac{1}{2}\tr((\rho-\sigma)U)
@@ -579,13 +579,13 @@ $$
 we finally obtain that
 $$
   \begin{aligned}
-    d(p,q)
+    d_{\tr}(p,q)
     &\coloneqq \frac{1}{2}\sum_k|p(k)-q(k)|
   \\&= \leq \frac{1}{2}\|\rho-\sigma\|
-  \\&\eqqcolon d(\rho,\sigma)
+  \\&\eqqcolon d_{\tr}(\rho,\sigma)
   \end{aligned}
 $$
-which says that the trace distance $d(\rho,\sigma)$ gives an upper bound on distances between probability distributions obtained from $\rho$ and $\sigma$ by a measurement.
+which says that the trace distance $d_{\tr}(\rho,\sigma)$ gives an upper bound on distances between probability distributions obtained from $\rho$ and $\sigma$ by a measurement.
 The fact that this bound is tight (i.e. attainable) is witnessed by the measurement defined by the projectors onto the eigenspaces of $\rho-\sigma$.
 
 As an example, consider pure states $\ket{u}$ and $\ket{v}$.
@@ -631,38 +631,94 @@ So if two states $\ket{u}$ and $\ket{v}$ are $\varepsilon$-close in the trace di
 
 ## Distinguishing non-orthogonal states, again {#distinguishing-non-orthogonal-states-again}
 
-Let's briefly return to the problem considered in Section \@ref(distinguishing-non-orthogonal-states).
-**TO-DO: continue from here**
-**TO-DO: include end of §1 in the draft**
+Let's briefly return to the problem considered in Section \@ref(distinguishing-non-orthogonal-states), where we are given a system and told that it is in either state $\ket{\psi_1}$ or $\ket{\psi_2}$, with equal probability, but that these two vectors are *not* orthogonal.
+The goal is to find a measurement that maximises the probability of correctly identifying which state the system is in.
+Before solving this problem using the language of distances, let us repeat the geometric idea that we used previously.
+
+Draw two vectors, $\ket{\psi_1}$ and $\ket{\psi_2}$, separated by some angle $\varepsilon$.
+We want to find some orthonormal vectors $\ket{e_1}$ and $\ket{e_2}$ that specify the optimal projective measurement.
+First, note that any projections on the subspace *orthogonal* to the plane spanned by $\ket{\psi_1}$ and $\ket{\psi_2}$ will reveal no information about the identity of the state, so we know that we will want our orthonormal vectors to lie in the span of $\ket{\psi_1}$ and $\ket{\psi_2}$.
+Now, since $\ket{\psi_1}$ and $\ket{\psi_2}$ are both equally likely to occur, we want to place $\ket{e_1}$ and $\ket{e_2}$ *symmetrically* around them, as shown in Figure @\ref(fig:distinguishing-non-orthogonal-states-intuition)
+
+
+(ref:distinguishing-non-orthogonal-states-intuition-caption) Recall Section \@ref(distinguishing-non-orthogonal-states): the optimal measurement to distinguish between the two equally likely non-orthogonal signal states $\ket{\psi_1}$ and $\ket{\psi_2}$ is described by the two orthogonal vectors $\ket{e_1}$ and $\ket{e_2}$ placed symmetrically around them.
+
+```{r distinguishing-non-orthogonal-states-intuition,engine='tikz',fig.width=2,fig.cap='(ref:distinguishing-non-orthogonal-states-intuition-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[scale=2]
+  \node [primary] (s2) at (45:1) {$\ket{\psi_2}$};
+  \node [primary] (s1) at (15:1) {$\ket{\psi_1}$};
+  \node [secondary] (d2) at (75:1) {$\ket{e_2}$};
+  \node [secondary] (d1) at (-15:1) {$\ket{e_1}$};
+  \draw [->,primary] (0,0) to (s1);
+  \draw [->,primary] (0,0) to (s2);
+  \draw [->,secondary] (0,0) to (d1);
+  \draw [->,secondary] (0,0) to (d2);
+  \draw [dashed,secondary] (30:-0.35) to (30:0);
+  \draw [dashed,secondary] (30:0.5) to (30:1);
+  \draw [bend right,secondary] (15:0.45) to (45:0.45);
+  \node [secondary] at (30:0.35) {$\varepsilon$};
+\end{tikzpicture}
+```
+
+The probability of correctly distinguishing the two states is
+$$
+  p_{\mathrm{success}}
+  = \frac{1}{2}|\braket{e_1}{\psi_1}|^2 + \frac{1}{2}|\braket{e_2}{\psi_2}|^2
+$$
+which reduces, with our schema, to
+$$
+  \begin{aligned}
+    p_{\mathrm{success}}
+    &= \cos^2\left(\frac{\pi}{2}-\frac{\varepsilon}{2}\right)
+  \\&= \frac{1}{2}(1+\sin\varepsilon)
+  \\&\approx \frac{1}{2}(1+\varepsilon)
+  \\&\approx \frac{1}{2}(1+\|\psi_1-\psi_2\|).
+  \end{aligned}
+$$
+where the last equality holds whenever $\varepsilon$ is "small enough".
+But, happily, we can be much more precise than this!
+
+Let's start by rephrasing the problem in terms of density operators.
+We are sent one of two quantum states, either $\rho_0$ or $\rho_1$, with equal probability.
+You might notice that we're now labelling our states with $\{0,1\}$ instead of $\{1,2\}$.
+This is simply to help guide our intuition: we are being sent one bit of information, a $0$ or a $1$; the only complication is that this is happening in such a way that we cannot perfectly distinguish between them (since we are receiving *non-orthogonal* quantum states).
+We want to choose two orthogonal projectors $P_0$ and $P_1$, so outcome $P_0$ is interpreted as a $0$ and outcome $P_1$ as a $1$.
+The probability of correctly detecting which state was sent is, as always, the probability that $\rho_0$ was sent *and* outcome $P_0$ was observed, *plus* the probability that $\rho_1$ was sent *and* outcome $P_1$ was observed.
+In symbols,
+$$
+  \begin{aligned}
+    p_{\mathrm{success}}
+    &= \frac{1}{2}\tr(P_0\rho_0) + \frac{1}{2}\tr(P_1\rho_1)
+  \\&= \frac{1}{4}\tr[(P_0+P_1)(\rho_0+\rho_1)] + \frac{1}{4}\tr[(P_0-P_1)(\rho_0-\rho_1)]
+  \\&= \frac{1}{2} + \frac{1}{4}\tr[(P_0-P_1)(\rho_0-\rho_1)]
+  \end{aligned}
+$$
+where the last equality follows from the fact that $P_0+P_1=\id$.
+
+By applying Hölder's inequality^[See Section \@ref(more-operator-norms).], this tells us that
+$$
+  \begin{aligned}
+    p_{\mathrm{success}}
+    &\leq \frac{1}{2} + \frac{1}{4}\|(P_0-P_1)\|\|(\rho_0-\rho_1)\|_{\tr}
+  \\&\leq \frac{1}{2} + \frac{1}{4}\|\rho_0-\rho_1\|_{\tr}
+  \\&= \frac{1}{2}(1+d_{\tr}(\rho_0,\rho_1)).
+  \end{aligned}
+$$
+
+Again, this upper bound is attained by taking $P_0$ to be the projector onto the eigenspace of $\rho_0-\rho_1$ corresponding to the *positive* eigenvalues, and $P_1$ the projector corresponding to the *negative* eigenvalues --- this gives $\tr(P_0-P_1)(\rho_0-\rho_1)=\|\pho_0-\rho_1\|_{\tr}$.
+
+Of course, the whole story of quantum state distinguishability has much more to it than we have covered here.
+In Exercise \@ref(distinguishability-and-trace-distance-exercise) we ask about the case where the two states $\rho_0$ and $\rho_1$ are sent with *non-equal* probabilities $p_0$ and $p_1$, respectively.
+The more general scenario, where some quantum source emits states $\rho_0,\ldots,\rho_n$ with respective probabilities $p_0,\ldots,p_n$, turns out to be incredibly difficult --- we do not know an optimal discrimination strategy, except for in a few special cases.
 
 
 ## How accurate is accurate enough?
 
+**TO-DO: continue from here**
 **TO-DO**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ## *Remarks and exercises* {#remarks-and-exercises-11}
@@ -736,13 +792,13 @@ How small must $\varepsilon$ be with respect to $\delta$ in order for us to achi
 Let $p(x,y)$ be a joint probability distribution with marginals $p(x)$ and $q(y)$.
 Show that
 $$
-  d(p,q) \leq \Pr(x\neq y)
+  d_{\tr}(p,q) \leq \Pr(x\neq y)
   \equiv \sum_{\{x,y\mid x\neq y\}} p(x,y).
 $$
 *Hint:*
 $$
   \begin{aligned}
-    d(p,q)
+    d_{\tr}(p,q)
     &= 1 - \sum_x \min\{p(x),q(x)\}
   \\&\leq 1 - \sum_x p(x,x)
   \\&= \Pr(x\neq y).
@@ -750,17 +806,14 @@ $$
 $$
 
 
-### Distinguishability and the trace distance
+### Distinguishability and the trace distance {#distinguishability-and-trace-distance-exercise}
 
-**TO-DO: check that the notation here (e.g. for trace distance) is consistent**
+Say we have a physical system which is been prepared in one of two states (say, $\rho_0$ and $\rho_1$), each with equal probability.
+Then, as shown in Section @\ref(distinguishing-non-orthogonal-states-again), a *single* measurement can distinguish between the two preparations with probability *at most* $\frac{1}{2}[1+d_{\tr}(\rho_0,\rho_1)]$.
 
-Say we have a physical system which is been prepared in one of two states (say, $\rho_1$ and $\rho_2$), each with equal probability.
-Then a *single* measurement can distinguish between the two preparations with probability *at most* $\frac{1}{2}[1+d_{\tr}(\rho_1,\rho_2)]$.
+1. How does this probability change if the states $\rho_0$ and $\rho_1$ are *not* equally liked, but instead sent with some predetermined probabilities $p_0$ and $p_1$, respectively?
 
-1. Suppose that $\rho_1$ and $\rho_2$ commute.^[The commutativity assumption makes this problem essentially a special case of a purely classical one: distinguishing between two probability distributions.]
-    Using the spectral decompositions of $\rho_1$ and $\rho_2$ in their common eigenbasis, describe the optimal measurement that can distinguish between the two states. What is its probability of success?
-
-2. Suppose that you are given one randomly selected qubit from a pair in the state
+2. Suppose that you are given one randomly selected qubit from a pair in the state^[You have already seen this state in Exercise \@ref(some-density-operator-calculations).]
     $$
       \ket{\psi} =
       \frac{1}{\sqrt{2}}\left(
@@ -772,7 +825,6 @@ Then a *single* measurement can distinguish between the two preparations with pr
           \sqrt{\frac23}\ket{0}
           + \sqrt{\frac13}\ket{1}
         \right)
-      \right)
+      \right).
     $$
-    (which we have already seen in Exercise \@ref(some-density-operator-calculations)).
-    What is the maximal probability with which you can determine which qubit (either the first or the second) you were given?
+    What is the maximal probability with which we can determine which qubit (either the first or the second) we were given?
