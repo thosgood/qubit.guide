@@ -707,7 +707,7 @@ $$
   \end{aligned}
 $$
 
-Again, this upper bound is attained by taking $P_0$ to be the projector onto the eigenspace of $\rho_0-\rho_1$ corresponding to the *positive* eigenvalues, and $P_1$ the projector corresponding to the *negative* eigenvalues --- this gives $\tr(P_0-P_1)(\rho_0-\rho_1)=\|\rho_0-\rho_1\|_{\tr}$.
+Again, this upper bound is attained by taking $P_0$ to be the projector onto the eigenspace of $\rho_0-\rho_1$ corresponding to the *positive* eigenvalues, and $P_1$ the projector corresponding to the *negative* eigenvalues: this gives $\tr(P_0-P_1)(\rho_0-\rho_1)=\|\rho_0-\rho_1\|_{\tr}$.
 
 Of course, the whole story of quantum state distinguishability has much more to it than we have covered here.
 In Exercise \@ref(distinguishability-and-trace-distance-exercise) we ask about the case where the two states $\rho_0$ and $\rho_1$ are sent with *non-equal* probabilities $p_0$ and $p_1$, respectively.
@@ -724,23 +724,84 @@ Suppose we come up with a cool quantum algorithm, represented by a circuit compo
 The value of $\delta$ might be tiny, so not much can be inferred from a single run, but as long as we can repeat the computation $r$ times and take the majority answer as the "right" answer, the Chernoff bound^[Recall Exercise \@ref(imperfect-decision-maker).] tells us that the probability of error is bounded above by $e^{-2r\delta^2}$.
 We now want to physically implement this circuit using our preferred universal set of gates, say $\{H,T,\texttt{c-NOT}\}$.
 If we can implement each gate with accuracy $\varepsilon/t$, then we can approximate the circuit with accuracy $\varepsilon$, which means that the probability of success will be $\frac{1}{2}+\delta\pm\varepsilon$.
-So, at the very least, we want $\varepsilon<\frac{1}{2}\delta$!
+So, at the very least, we want $\varepsilon<\delta/2$.
 
 
 ## *Remarks and exercises* {#remarks-and-exercises-11}
 
 ### Operator decompositions {#operator-decompositions}
 
-**TO-DO: why do we care about decompositions**
+Analogously to how we can factor polynomials into linear parts, or factor numbers into prime divisors, we can "factor" matrices into smaller components.
+Doing so often helps us to better understand the geometry of the situation: we might be able to understand the transformation described by a single matrix as "some reflection, followed by some rotation, followed by some scaling".
+For us, one specific use of such a "factorisation" (known formally as an **operator decomposition**) is in better understanding various operator norms, as we explain in \@ref(more-operator-norms).
+
+Here are three operator decompositions that are particularly useful in quantum information theory.
 
 1. **Spectral decomposition.**
+  Recall Section \@ref(observables): the spectral theorem tells us that every *normal* operator $A\in\mathcal{B}(\mathcal{H})$ can be expressed as a linear combination of projections onto pairwise orthogonal subspaces.
+  We write the spectral decomposition of $A$ as
+  $$
+    A = \sum_k \lambda_k \proj{v_k}
+  $$
+  where $\lambda_k$ are the eigenvalues of $A$, with corresponding eigenvectors $\ket{v_k}$, which form an orthonormal basis in $\mathcal{H}$.
 
-2. **Singular value decomposition.**
-    **TO-DO: recall Section \@ref(the-schmidt-decomposition)**
+  In matrix notation, we can write this as
+  $$
+    A = UDU^\dagger
+  $$
+  where $D$ is the diagonal matrix whose diagonal entries are the eigenvalues $\lambda_k$, and where $U$ is the unitary matrix whose columns are the eigenvectors $\ket{v_k}$.
+
+2. **Singular value decomposition (SVD).**
+  We have already mentioned the SVD in \@ref(the-schmidt-decomposition) when discussing the Schmidt decomposition, but we recall the details here.
+  Consider *any* (non-zero) operator $A\in\mathcal{B}(\mathcal{H},\mathcal{H}')$.
+  From this, we can construct two positive semi-definite operators: $A^\dagger A\in\mathcal{B}(\mathcal{H})$ and $AA^\dagger\in\mathcal{B}(\mathcal{H}')$.
+  These are both normal, and so we can apply the spectral decomposition to both.
+  In particular, if we denote the eigenvalues of $A^\dagger A$ by $\lambda_k$, and the corresponding eigenvectors by $\ket{v_k}$, then we see that the vectors
+  $$
+    \ket{u_k} \coloneqq \frac{1}{\sqrt{\lambda_k}}A\ket{v_k}
+  $$
+  form an orthonormal system in $\mathcal{H}'$ (and are, in fact, eigenvectors of $AA^\dagger$), since
+  $$
+    \begin{aligned}
+      \braket{u_i}{u_j}
+      &= \frac{1}{\sqrt{\lambda_i}\sqrt{\lambda_j}} \braket{v_i|A^\dagger A}{v_j}
+    \\&= \frac{\lambda_j}{\sqrt{\lambda_i}\sqrt{\lambda_j}} \braket{v_i}{v_j}
+    \\&= \delta_{ij}.
+    \end{aligned}
+  $$
+  We define the **singular values** $s_k$ of $A$ to be the square roots of the eigenvalues of $A^\dagger A$, i.e. $s_k^2=\lambda_k$.
+  These singular values satisfy
+  $$
+    A\ket{v_k}=s_k\ket{u_k}
+  $$
+  by construction, and so we can write
+  $$
+    A = \sum_k s_k\ket{u_k}\bra{v_k}
+  $$
+  which we call the **singular value decomposition** (or **SVD**).
+  This decomposition holds for arbitrary (non-zero) operators as opposed to just normal ones, and also for operators between two different Hilbert spaces as opposed to just endomorphisms.
+  In words, this decomposition says that, given $A$, we can find orthonormal bases of $\mathcal{H}$ and $\mathcal{H}'$ such that $A$ maps the $k$-th basis vector of $\mathcal{H}$ to a non-negative multiple of the $k$-th basis vector of $\mathcal{H}'$ (and sends any left over basis vectors to $0$, if $\dim\mathcal{H}>\dim\mathcal{H}'$).
+
+  In matrix notation, we can write this as
+  $$
+    A = U\sqrt{D}V^\dagger
+  $$
+  where $D$ is the diagonal matrix of eigenvalues (and so $\sqrt{D}$ is the diagonal matrix of *singular* values), and both $U$ and $V$ are unitary.
+
+  Geometrically, we are decomposing any linear transformation into a composition of a rotation or reflection $V^\dagger$, followed by a scaling by the singular values $\sqrt{D}$, followed by another rotation or reflection $U$.
+  This maps the unit sphere in $\mathcal{H}$ onto an ellipsoid in $\mathcal{H}'$, and the singular values of $A$ are exactly the lengths of the semi-axes of this ellipsoid.
+
+  ```{r,engine='tikz',fig.width=3}
+  \begin{tikzpicture}[scale=0.7]
+    \draw (0,0) circle (1cm) (0,1) to (0,0) to (1,0) [xshift=5cm,rotate=30,yscale=0.8,xscale=1.5] (0,0) circle (1cm) (0,1) to (0,0) to (1,0);
+    \draw[->] (1.6,0) to (2.3,0) node[above=2pt] {$A$} to (3.1,0);
+    \draw (6,-0.1) node[above=2pt] {\scriptsize$s_1$};
+    \draw (4.55,-0.1) node[above=2pt] {\scriptsize$s_2$};
+  \end{tikzpicture}
+  ```
 
 3. **Polar decomposition.**
-
-**TO-DO**
+  **TO-DO**
 
 
 ### More operator norms {#more-operator-norms}
