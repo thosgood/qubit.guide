@@ -736,6 +736,7 @@ Doing so often helps us to better understand the geometry of the situation: we m
 For us, one specific use of such a "factorisation" (known formally as an **operator decomposition**) is in better understanding various operator norms, as we explain in \@ref(more-operator-norms).
 
 Here are three operator decompositions that are particularly useful in quantum information theory.
+The second is for arbitrary operators between Hilbert spaces, the first and third are for *normal endomorphisms* (i.e. normal operators from one Hilbert space to itself).
 
 1. **Spectral decomposition.**
     Recall Section \@ref(observables): the spectral theorem tells us that every *normal* operator $A\in\mathcal{B}(\mathcal{H})$ can be expressed as a linear combination of projections onto pairwise orthogonal subspaces.
@@ -801,7 +802,39 @@ Here are three operator decompositions that are particularly useful in quantum i
     ```
 
 3. **Polar decomposition.**
-  **TO-DO**
+  Let $A\in\mathcal{B}(\mathcal{H})$ be a normal arbitrary operator.
+  Since it is an endomorphism, it is represented by a square matrix.
+  Forgetting that $A$ is normal for a moment, we know that its SVD takes the form
+  $$
+    \begin{aligned}
+      A
+      &= U\sqrt{A^\dagger A}
+    \\&= \sqrt{AA^\dagger}U
+    \end{aligned}
+  $$
+  where the unitary matrix $U$ connects the two eigenbases: $U=\sum_k\ket{u_k}\bra{v_k}$.
+  We shall return to this unitary $U$ shortly.
+
+  Since $A$ is normal, $A^\dagger A=AA^\dagger$, so we can define its **modulus** as
+  $$
+    |A| \coloneqq \sqrt{A^\dagger A}
+  $$
+  which gives us the **polar decomposition**
+  $$
+    A = |A|U.
+  $$
+  This is the matrix analogue of the polar decomposition of a complex number: $z=re^{i\theta}$.
+
+  If we decompose the eigenvalues of $A$ as $\lambda_k=r_k e^{i\theta_k}$ (with corresponding eigenvectors $\ket{v_k}$) then the spectral decomposition of $A$ gives us
+  $$
+    \begin{aligned}
+      A
+      &= \sum_k \lambda_k\proj{v_k}
+    \\&= \sum_k r_ke^{i\theta_k}\proj{v_k}
+    \\&= \sum_k r_k\ket{u_k}\bra{v_k}
+    \end{aligned}
+  $$
+  where $\ket{u_k}=e^{i\theta_k}\ket{v_k}$, so we see that the unitary $U=\sum_k\ket{u_k}\bra{v_k}$ in the polar decomposition contains all the information of the phase factors.
 
 
 ### More operator norms {#more-operator-norms}
@@ -840,7 +873,7 @@ Using the Cauchy--Schwartz inequality, or otherwise, prove the following, for an
 ### Tolerance and precision
 
 Suppose we wish to implement a quantum circuit consisting of gates $U_1,\ldots,U_d$, but we only have available to us gates $V_1,\ldots,V_d$.
-Luckily, these gates are pretty good approximations to our desired gates, and the error is uniform: $\|U_i-V_i\|\leq\varepsilon$ for all $i=1,\ldots,d$ for some fixed $\varepsilon$.
+Luckily, these gates happen to be pretty good approximations to our desired gates, and the error is uniform: $\|U_i-V_i\|\leq\varepsilon$ for all $i=1,\ldots,d$ for some fixed $\varepsilon$.
 
 We want our approximate circuit to be within some **tolerance** $\delta$ of the desired circuit: the probabilities of different outcomes of $V=V_d\cdots V_1$ should be be within $\delta$ of the "correct" probabilities of the different outcomes of $U=U_d\cdots U_1$, i.e. $|p_U-p_V|\leq\delta$.
 
