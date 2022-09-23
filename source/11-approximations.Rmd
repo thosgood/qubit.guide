@@ -1,6 +1,7 @@
 # Approximation {#approximation}
 
-> About **TO-DO**
+> About quantifying precision in implementations of quantum circuits using the notion of **metrics** --- more specifically, the **trace distance**.
+> Also about the practical feasibility of universal sets of gates and correctly distinguishing non-orthogonal states described by density operators.
 
 We have talked a lot about preparing specific quantum states and constructing specific unitary operations, but the space of states of any quantum system is a continuous space, and the set of unitary transformations is also continuous.
 It is entirely unrealistic to imagine that in the actual world we will be able to prepare, for example, a qubit *precisely* in the state $\ket{0}$, or to perform a unitary transformation that is *exactly* equal to the controlled-not gate.
@@ -439,7 +440,7 @@ $$
 $$
 whence $S=d(p,q)$.
 
-(ref:probability-distribution-distance-caption) **TO-DO: write caption (mention that this is continuous)**
+(ref:probability-distribution-distance-caption) Visualising the distance between two (continuous) probability distributions.
 
 ```{r probability-distribution-distance,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6,fig.cap='(ref:probability-distribution-distance-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
@@ -839,7 +840,122 @@ The second is for arbitrary operators between Hilbert spaces, the first and thir
 
 ### More operator norms {#more-operator-norms}
 
-**TO-DO: recall Section \@ref(modifying-the-born-rule); talk about $\ell^p$ norms (skip 10.1 in draft); mention Hölder's inequality**
+We have already seen, all the way back in \@ref(modifying-the-born-rule)^[Think how far you've come since then!], how the Euclidean norm (from which we get the Euclidean distance) is the special case $p=2$ of $p$-norms (also known as $\ell^p$-norms), where
+$$
+  \|v\|_p \coloneqq \left( \sum_{i=1}^n |v_i|^p \right)^{\frac{1}{p}}
+$$
+for a vector $v=(v_1,\ldots,v_n)\in\mathbb{R}^n$, and for $p\in\mathbb{N}$.
+We can actually extend this definition to include the case $p=\infty$ by setting
+$$
+  \|v\|_\infty \coloneqq \max_{1\leq i\leq n}|v_i|.
+$$
+One particularly nice consequence of this definition is that
+$$
+  \|v\|_1 \geq \|v\|_2 \geq \ldots \geq \|v\|_\infty
+$$
+for any vector $v$.
+
+```{r p-norm-unit-spheres,engine='tikz',fig.width=4,fig.cap='(ref:p-norm-unit-spheres-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}[scale=2.5]
+  \draw [->](-1.3,0) to (1.3,0) node [above] {$v_1$};
+  \draw [->](0,-1.3) to (0,1.3) node [right] {$v_2$};
+  %
+  \draw (1,0) to (0,1) to (-1,0) to (0,-1) to cycle;
+  \node [label={[rotate=-45]below:${\tiny{p=1}}$}] at (0.52,0.52) {};
+  %
+  \draw (0,0) [primary] circle (1);
+  \node [label={[primary,rotate=-45]below:${\tiny p=2}$}] at (0.68,0.79) {};
+  %
+  \draw [domain=0:1,samples=40,secondary] plot ({\x}, {sqrt(1-\x^6)});
+  \draw [domain=0:1,samples=40,secondary] plot ({\x}, {-sqrt(1-\x^6)});
+  \draw [domain=0:1,samples=40,secondary] plot ({-\x}, {-sqrt(1-\x^6)});
+  \draw [domain=0:1,samples=40,secondary] plot ({-\x}, {sqrt(1-\x^6)});
+  \node [label={[secondary,rotate=-45]below: ${\tiny p=42}$}] at (0.79,0.94) {};
+  %
+  \draw (-1,-1) rectangle (1,1);
+  \node[] at (0.8,1.07) {$p=\infty$};
+\end{tikzpicture}
+```
+**TO-DO: mention Hölder's inequality**
+
+We will come back to the relevance of these $p$-norms shortly.
+For now, let us introduce three norms (two of which we have already seen, but recall here again to tell a more complete story) on the space of endomorphisms $\mathcal{B}(\mathcal{H})$ of a Hilbert space, each of which can be defined neatly in terms of singular values.
+Note that, if $A$ is normal, then we its singular values are exactly the absolute values of its eigenvalues, which usually lets us simplify the definition of the norm.
+
+Throughout, let $A\in\mathcal{B}(\mathcal{H})$, with singular values $s_k$.
+
+1. **Spectral norm.**
+    This one is so frequently used that it is often simply called the **operator** norm and denoted simply by $\|\cdot\|$.
+    It is the maximum length of the vector $A\ket{v}$ over all possible normalised vectors $\ket{v}\in\mathcal{H}$, i.e.
+    $$
+      \|A\| \coloneqq \max_{\ket{v}\in S_{\mathcal{H}}^1}\Big\{ |A\ket{v}| \Big\}
+    $$
+    (where $S_{\mathcal{H}}^1$ is the unit sphere in $\mathcal{H}$, i.e. the set of vectors of norm $1$).
+    One can show that $\|A\|$ is equal to the largest singular value of $A$.
+
+2. **Trace norm.**
+    This is given by the sum of the singular values of $A$, i.e.
+    $$
+      \|A\|_{\tr} \coloneqq \sum_k s_k
+    $$
+    but note that we can rewrite this using the polar decomposition (from Section @\ref(operator-decompositions)) as simply
+    $$
+      \|A\|_{\tr} = \tr|A|.
+    $$
+
+3. **Frobenius norm.**
+    We have mentioned a few times how inner products give rise to norms, and you might remember that we introduced an inner product on $\mathcal{B}(\mathcal{H})$ a while ago: the Hilbert--Schmidt norm^[Here we drop the factor of $\frac{1}{2}$ that we sometimes included for simplifying certain calculations.]
+    $$
+      \begin{aligned}
+        (A|B)
+        &\coloneqq \tr A^\dagger B
+      \\&= \sum_{i,j} A_{ij}^\star B_{ji}.
+      \end{aligned}
+    $$
+    The Frobenius norm is the norm induced by this inner product, i.e.
+    $$
+      \begin{aligned}
+        \|A\|_F
+        &\coloneqq \sqrt{(A|A)}
+      \\&= \sqrt{\tr(A^\dagger A)}
+      \\&= \sqrt{\sum_{i,j}|A_{ij}|^2}.
+      \end{aligned}
+    $$
+
+Let's study the relation between the operator norm and the trace norm first.
+By definition, we see that
+$$
+  \|A\|_{\tr} \geq \|A\|
+$$
+but there is another, more subtle, inequality that they satisfy, namely
+$$
+  |(A|B)| \leq \|A\|_{\tr}\|B\|
+$$
+which is like a more general version of the Cauchy--Schwartz inequality, and is sometimes referred to as **Hölder's inequality for matrices**.
+To derive this inequality, we can use the SVD of $A$, since then
+$$
+  \begin{aligned}
+    |(A|B)|
+    &\coloneqq |\tr A^\dagger B|
+  \\&= \left| \tr\left( \sum_k s_k\ket{v_k}\bra{u_k} B \right) \right|
+  \\&= \left| \sum s_k\braket{u_k|B}{v_k} \right|
+  \\&\leq \sum_k s_k|\braket{u_k|B}{v_k}|
+  \\&\leq \sum_k s_k\|B\|
+  \\&= \|A\|_{\tr}\|B\|.
+  \end{aligned}
+$$
+
+
+
+**TO-DO: first discuss norms 1 and 2 (p.16)**
+
+**TO-DO: now point out that they're all [**Schatten $p$-norms**](https://en.wikipedia.org/wiki/Schatten_norm)**
+
+**TO-DO: short explanation of what it means to have so many different norms! are they equivalent? etc.**
+
+**TO-DO: example on p.17**
 
 
 ### Hamming distance {#hamming-distance}
@@ -894,9 +1010,21 @@ How small must $\varepsilon$ be with respect to $\delta$ in order for us to achi
 
 ### Joint probability distributions
 
-**TO-DO: define some of the words here**
+If we simultaneously sample *two* random variables from the same probability space, then we obtain a **joint distribution**:
+$$
+  r(x,y) \coloneqq \Pr(x\text{ and }y).
+$$
+From this we can recover the **marginals**
+$$
+  \begin{aligned}
+    p(x)
+    &\coloneqq \sum_y r(x,y)
+  \\q(y)
+    &\coloneqq \sum_x r(x,y).
+  \end{aligned}
+$$
 
-Let $p(x,y)$ be a joint probability distribution with marginals $p(x)$ and $q(y)$.
+So let $r(x,y)$ be a joint probability distribution with marginals $p(x)$ and $q(y)$.
 Show that
 $$
   d_{\tr}(p,q) \leq \Pr(x\neq y)
