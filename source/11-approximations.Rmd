@@ -545,7 +545,7 @@ $$
 $$
 :::
 
-There are many questions raised by this definition, such as "how does this relate to the trace distance of probability distributions?" and "how does this trace norm relate to the operator norm from Section \@ref(approximating-unitaries)?" --- we will answer the first question now, but our answer to the second builds upon the notion of an **$\ell^p$-norm**, which is a discussion that we will postpone for Section \@ref(more-operator-norms).
+There are many questions raised by this definition, such as "how does this relate to the trace distance of probability distributions?" and "how does this trace norm relate to the operator norm from Section \@ref(approximating-unitaries)?" --- we will answer the first question now, but our answer to the second builds upon the notion of an $\ell^p$-norm, which is a discussion that we will postpone for Section \@ref(more-operator-norms).
 
 We can simply think of the trace distance for density operators as the natural analogue of the trace distance for probability distributions: it is a tight upper bound on the distances between the probability distributions obtained from $\rho$ and $\sigma$ by a measurement, as we now justify.
 
@@ -840,7 +840,7 @@ The second is for arbitrary operators between Hilbert spaces, the first and thir
 
 ### More operator norms {#more-operator-norms}
 
-We have already seen, all the way back in \@ref(modifying-the-born-rule)^[Think how far you've come since then!], how the Euclidean norm (from which we get the Euclidean distance) is the special case $p=2$ of $p$-norms (also known as $\ell^p$-norms), where
+We have already seen, all the way back in \@ref(modifying-the-born-rule)^[Think how far you've come since then!], how the Euclidean norm (from which we get the Euclidean distance) is the special case $p=2$ of $p$-norms (also known as [**$\ell^p$-norms**](https://en.wikipedia.org/wiki/Lp_space)), where
 $$
   \|v\|_p \coloneqq \left( \sum_{i=1}^n |v_i|^p \right)^{\frac{1}{p}}
 $$
@@ -878,7 +878,19 @@ for any vector $v$.
   \node[] at (0.8,1.07) {$p=\infty$};
 \end{tikzpicture}
 ```
-**TO-DO: mention Hölder's inequality**
+
+You might recall that we named the Cauchy--Schwartz inequality as arguably the most useful inequality in analysis.
+Well it turns out that it is actually the special case $p=2$ of an inequality concerning $p$-norms.
+
+::: {.idea latex=""}
+**Holder's inequality**.
+Let $p,q\in\mathbb{N}\cup\{\infty\}$ be such that $\frac{1}{p}+\frac{1}{q}=1$.
+Then
+$$
+  \|vw\|_1 \leq \|v\|_p\|w\|_q
+$$
+with equality if and only if $v$ and $w$ are "$(p,q)$-linearly dependent".^[The technical statement of Hölder's inequality is really for something known as a **measure space**, where $v$ and $w$ are *functions*, but the details aren't relevant for us here.]
+:::
 
 We will come back to the relevance of these $p$-norms shortly.
 For now, let us introduce three norms (two of which we have already seen, but recall here again to tell a more complete story) on the space of endomorphisms $\mathcal{B}(\mathcal{H})$ of a Hilbert space, each of which can be defined neatly in terms of singular values.
@@ -893,14 +905,17 @@ Throughout, let $A\in\mathcal{B}(\mathcal{H})$, with singular values $s_k$.
       \|A\| \coloneqq \max_{\ket{v}\in S_{\mathcal{H}}^1}\Big\{ |A\ket{v}| \Big\}
     $$
     (where $S_{\mathcal{H}}^1$ is the unit sphere in $\mathcal{H}$, i.e. the set of vectors of norm $1$).
-    One can show that $\|A\|$ is equal to the largest singular value of $A$.
+    From this definition, one can actually show that the norm is given by the largest singular value:
+    $$
+      \|A\| = \max_k s_k.
+    $$
 
 2. **Trace norm.**
     This is given by the sum of the singular values of $A$, i.e.
     $$
       \|A\|_{\tr} \coloneqq \sum_k s_k
     $$
-    but note that we can rewrite this using the polar decomposition (from Section @\ref(operator-decompositions)) as simply
+    but note that we can rewrite this using the polar decomposition (from Section \@ref(operator-decompositions)) as simply
     $$
       \|A\|_{\tr} = \tr|A|.
     $$
@@ -938,7 +953,7 @@ To derive this inequality, we can use the SVD of $A$, since then
 $$
   \begin{aligned}
     |(A|B)|
-    &\coloneqq |\tr A^\dagger B|
+    &= |\tr A^\dagger B|
   \\&= \left| \tr\left( \sum_k s_k\ket{v_k}\bra{u_k} B \right) \right|
   \\&= \left| \sum s_k\braket{u_k|B}{v_k} \right|
   \\&\leq \sum_k s_k|\braket{u_k|B}{v_k}|
@@ -947,15 +962,119 @@ $$
   \end{aligned}
 $$
 
+We can actually use this inequality to recover either the operator or the trace norm, by maximising: for any fixed $A$ (or any fixed $B$), we can obtain equality:
+$$
+  \begin{aligned}
+    \|A\|_{\tr}
+    &= \max_{\|B\|=1}\{(A|B)\}
+  \\\|B\|
+    &= \max_{\|A\|_{\tr}=1}\{(A|B)\}.
+  \end{aligned}
+$$
+To see this, in the first case we can use the polar decomposition $A=|A|U$ to see that equality is attained by $B=U$; in the second case we can use the polar decomposition $B=|B|V$ to see that equality is attained by $A=V\proj{v_1}$, where $\ket{v_1}$ is the eigenvector of $|B|$ with the largest eigenvalue (or, equivalently, singular value).
+In particular, this gives us a **variational** characterisation of the trace norm which is very useful at times:
+$$
+  \|A\|_{\tr} = \max_{U\text{ unitary}}|\tr AU|.
+$$
 
+One final special case to point out is what happens if $A$ is Hermitian.
+Then we can separate the spectral decomposition into positive and negative parts, and write $A$ as the difference of two positive operators:
+$$
+  A = A_+ - A_-.
+$$
+Then
+$$
+  \begin{aligned}
+    |A|
+    &= A_+ + A_-
+  \\\|A\|_{\tr}
+    &= \tr A_+ + \tr A_-.
+  \end{aligned}
+$$
 
-**TO-DO: first discuss norms 1 and 2 (p.16)**
+Now we finally return to the relevance of $p$-norms: it turns out that all these three operator norms above are actually special cases of [**Schatten $p$-norms**](https://en.wikipedia.org/wiki/Schatten_norm).
+For $p\in\mathbb{N}$ we define the Schatten $p$-norm in terms of singular values $s_k$ as
+$$
+  \|A\|_p \coloneqq \left( \sum_k |s_k|^p \right)^\frac{1}{p}
+$$
+and we define
+$$
+  \|A\|_\infty \coloneqq \max_k |s_k|
+$$
+analogously to how we did for $\ell^p$-norms.
+We then recover the trace norm, the Frobenius norm, and the spectral norm by taking $p=1,2,\infty$, respectively:
+$$
+  \begin{aligned}
+    \|A\|_1
+    &= \|A\|_{\tr}
+  \\\|A\|_2
+    &= \|A\|_F
+  \\\|A\|_\infty
+    &= \|A\|.
+  \end{aligned}
+$$
+All Schatten $p$-norms are sub-multiplicative ($\|AB\|_p\leq\|A\|_p\|B\|_p$) and unitarily invariant ($\|A\|=\|UAV\|$ for any unitaries $U$ and $V$).
 
-**TO-DO: now point out that they're all [**Schatten $p$-norms**](https://en.wikipedia.org/wiki/Schatten_norm)**
+We'll end this discussion with a worked example, deriving a useful inequality:
+$$
+  \tr(A-B)^2 \leq \|A^2-B^2\|_{\tr}.
+$$
+Let $\lambda_k$ be the eigenvalues of the operator $A-B$, with corresponding eigenvectors and $\ket{u_k}$.
+Then
+$$
+  \tr(A-B)^2 = \sum_k \lambda_k^2
+$$
+since the trace is exactly the sum of eigenvalues.
+Now, for any unitary $U$, we have that
+$$
+  \|A^2-B^2\|_{\tr} \geq |\tr(A^2-B^2)U|
+$$
+since $\|X\|_{\tr}=\max_{U\text{ unitary}} |\tr(XU)|$.
+If we take $U=\sum_i\pm\proj{u_k}$, where the signs are chosen so that each term $\braket{u_k|A^2-B^2}{u_k}$ is non-negative, then
+$$
+  \begin{aligned}
+    \|A^2-B^2\|_{\tr}
+    &\geq |\tr(A^2-B^2)U|
+  \\&= \sum_k |\braket{u_k|A^2-B^2|}{u_k}|.
+  \end{aligned}
+$$
 
-**TO-DO: short explanation of what it means to have so many different norms! are they equivalent? etc.**
+Writing $A^2-B^2$ as^[This is the non-commutative version of the identity $a^2-b^2=(a+b)(a-b)$.]
+$$
+  A^2-B^2 = \frac{1}{2}\Big[ (A+B)(A-B) + (A-B)(A+B) \Big]
+$$
+we see that
+$$
+  \begin{aligned}
+    \braket{u_k|A^2-B^2|}{u_k}
+    &= \frac{1}{2}\braket{u_k|(A+B)(A-B) + (A-B)(A+B)}{u_k}
+  \\&= \lambda_i\braket{u_k|A+B}{u_k}.
+  \end{aligned}
+$$
+Then, since $\lambda_i=\braket{u_k|A}{u_k}-\braket{u_k|B}{u_k}$ is the difference of two non-negative numbers, we have that
+$$
+  \braket{u_k|A+B}{u_k} \geq |\lambda_i|.
+$$
+Putting this all together, we obtain
+$$
+  \begin{aligned}
+    \|A^2-B^2\|_{\tr}
+    &\geq \sum_k |\braket{u_k|A^2-B^2|}{u_k}|
+  \\&\geq \sum_k \lambda_k^2
+  \\&= \tr(A-B)^2
+  \end{aligned}
+$$
+as desired.
 
-**TO-DO: example on p.17**
+One particularly nice application of this inequality arises when we take $A=\sqrt{\rho}$ and $B=\sqrt{\sigma}$, since then
+$$
+  \tr(\sqrt{\rho}-\sqrt{\sigma})^2 \leq \|\rho-\sigma\|_{\tr}
+$$
+or, after some rearrangement,
+$$
+  1-\tr(\sqrt{\rho}\sqrt{\sigma}) \leq \frac{1}{2}\|\rho-\sigma\|_{\tr}
+$$
+and we recognise $\tr(\sqrt{\rho}\sqrt{\sigma})$ as the fidelity.
 
 
 ### Hamming distance {#hamming-distance}
@@ -1044,7 +1163,7 @@ $$
 ### Distinguishability and the trace distance {#distinguishability-and-trace-distance-exercise}
 
 Say we have a physical system which is been prepared in one of two states (say, $\rho_0$ and $\rho_1$), each with equal probability.
-Then, as shown in Section @\ref(distinguishing-non-orthogonal-states-again), a *single* measurement can distinguish between the two preparations with probability *at most* $\frac{1}{2}[1+d_{\tr}(\rho_0,\rho_1)]$.
+Then, as shown in Section \@ref(distinguishing-non-orthogonal-states-again), a *single* measurement can distinguish between the two preparations with probability *at most* $\frac{1}{2}[1+d_{\tr}(\rho_0,\rho_1)]$.
 
 1. How does this probability change if the states $\rho_0$ and $\rho_1$ are *not* equally liked, but instead sent with some predetermined probabilities $p_0$ and $p_1$, respectively?
 
