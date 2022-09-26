@@ -1,0 +1,1198 @@
+# Approximation {#approximation}
+
+> About quantifying precision in implementations of quantum circuits using the notion of **metrics** --- more specifically, the **trace distance**.
+> Also about the practical feasibility of universal sets of gates and correctly distinguishing non-orthogonal states described by density operators.
+
+We have talked a lot about preparing specific quantum states and constructing specific unitary operations, but the space of states of any quantum system is a continuous space, and the set of unitary transformations is also continuous.
+It is entirely unrealistic to imagine that in the actual world we will be able to prepare, for example, a qubit *precisely* in the state $\ket{0}$, or to perform a unitary transformation that is *exactly* equal to the controlled-not gate.
+*We never have infinite precision in our manipulations of the physical world.*
+The good news is that, for all practical purposes, infinite precision is not actually necessary, and we can achieve most of our goals by preparing quantum states and performing quantum operations that are "close enough" to the desired ones.
+But what is "close enough", and how do we quantify it?
+
+
+## Metrics {#metrics}
+
+To begin with, let us work with pure states, and save the problem of dealing with mixed states for a later section.
+We will start with the second question: how do we quantify this notion of "close enough"?
+The central concept is one with which you are probably already somewhat familiar (we mentioned it in Sections \@ref(bras-and-kets) and \@ref(geometry)), namely that of a **metric**, or **distance**.
+
+::: {.idea latex=""}
+Given a set $X$, a **metric** (or **distance**) on $X$ is a function $d\colon X\times X\to\mathbb{R}_{\geq0}$ such that
+
+- **Identity of indiscernibles:** $d(a,b)=0$ if and only if $a=b$
+- **Symmetry:** $d(a,b)=d(b,a)$ for all $a,b\in X$
+- **Triangle inequality:** $d(a,c)\leq d(a,b)+d(b,c)$ for all $a,b,c\in X$.
+:::
+
+::: {.technical title="Generalisations of metrics" latex=""}
+There are four conditions governing metrics (identity of indiscernibles is an "if and only if" statement, so we can separate it into two "if" statements).
+As is usually the case in mathematics, it is interesting to ask what happens if we drop one or more of these.
+
+- If we drop $d(a,b)=0\implies a=b$ then we get [**pseudometrics**](https://en.wikipedia.org/wiki/Pseudometric_space).
+- If we drop $a=b\implies d(a,b)=0$ then we get **metametrics**, or **partial metrics**.
+- If we drop $d(a,b)=d(b,a)$ then we get **quasimetrics**. These arise "in real life", if you think about travelling around a city that has lots of one-way streets, or travelling up or down a big hill.
+- If we drop $d(a,c)\leq d(a,b)+d(b,c)$ then we get **semimetrics** (though be careful here: lots of authors use "semimetric" to mean almost any one of these generalisations, and the terminology is very non-consistent!).
+
+We can also consider the case of **extended metrics**, where the distance function is allowed to take the value $\infty$.
+For many category theorists, "the" notion of metric space is that of an *extended pseudoquasimetric*.
+:::
+
+The most common norm is the **Euclidean distance**, that is, distance between two points in Euclidean space.
+Given points $A=(a_1,a_2,\ldots,a_n)$ and $B=(b_1,b_2,\ldots,b_n)$ in $\mathbb{R}^n$, their Euclidean distance is
+$$
+ \sqrt{|b_1-a_1|^2 + |b_2-a_2|^2+\ldots +|b_n-a_n|^2}.
+$$
+But we already know that Euclidean space $\mathbb{R}^n$ is more than just a set: it is a vector space.
+This means that we don't just have a metric space (i.e. a set with a metric), but instead a **normed vector space**, where the **norm** $\|\cdot\|$ of a vector is defined to be the distance of that vector from the origin: $\|a\|\coloneqq d(a,0)$.
+
+It turns out that this norm (and thus this metric) actually arises from a more fundamental structure, namely that of the **inner product**.
+Returning to the bra-ket notation, we recall that the norm of any vector $\ket{a}$ is exactly $\|a\|=\sqrt{\braket{a}{a}}$, and thus the distance between any two vectors $\ket{a},\ket{b}$ is exactly $d(\ket{a},\ket{b})=\|\ket{b}-\ket{a}\|$ (though for simplicity we sometimes write this as $\|b-a\|$ instead, or even $\|a-b\|$, since this is equal).
+This norm is also called the **$2$-norm**, or the **$\ell^2$-norm** (for reasons that we will come back to in Section \@ref(more-operator-norms)), and is defined for any finite-dimensional Hilbert space $\mathbb{C}^n$ using the fact that $\mathbb{C}\cong\mathbb{R}^2$, so that $\|x+iy\|\coloneqq\|(x,y)\|=\sqrt{x^2+y^2}$.
+
+Before moving on to talk about state vectors, let us first discuss one other metric space which shows up in information theory (both classical and quantum).
+The space^[You can think of this as just a set, but we have already seen that this is actually a vector space over $\mathbb{Z}/2\mathbb{Z}$, where addition corresponds to $\texttt{XOR}$.] of binary strings (of some fixed length $n$) admits a metric known as the **Hamming distance**.
+This is defined quite simply as "the number of positions at which the corresponding bits are different".
+For example,
+$$
+  d(0101101011,1101110111) = 4
+$$
+since these two strings differ in four bits:
+$$
+  \begin{array}{cccccccccc}
+    0&1&0&1&1&0&1&0&1&1
+  \\1&1&0&1&1&1&0&1&1&1
+  \\\hline
+    !&\checkmark&\checkmark&\checkmark&\checkmark&!&!&!&\checkmark&\checkmark
+  \end{array}
+$$
+
+More formally, if we define the **Hamming weight** of a binary string of length $n$ as the number of bits equal to $1$, then the Hamming distance between two strings is simply the Hamming weight of their difference (where subtraction is calculated in $\mathbb{Z}/2\mathbb{Z}$, i.e. $\mod2$).
+We leave the proof that this is indeed a metric as an exercise (Exercise \@ref(hamming-distance)).
+
+
+## How far apart are two quantum states?
+
+Given two pure states, $\ket{u}$ and $\ket{v}$, we could try to measure the distance between them using the Euclidean distance $\|u-v\|$.
+This works for vectors, but has some drawbacks when it comes to quantum states.
+Recall that a quantum state is not represented by just a unit vector, but by a **ray**, i.e. a unit vector times an arbitrary phase factor.
+Multiplying a state vector by an overall phase factor has no physical effect: the two unit vectors $\ket{u}$ and $e^{i\phi}\ket{u}$ describe the same state.
+So, in particular, we want the distance between $\ket{u}$ and $-\ket{u}$ to be zero, since these describe the same quantum state.
+But if we were to use the Euclidean distance, then we would have that $\|u-(-u)\|=\|u+u\|=2$, which is actually as far apart as the two unit vectors can be!
+
+One solution to this problem is to define the distance between $\ket{u}$ and $\ket{v}$ as the *minimum* over all phase factors, i.e.
+$$
+  d(u,v)\coloneqq \min_{\phi\in[0,2\pi)}\Big\{\|u-e^{i\phi}v\|\Big\}.
+$$
+But with some algebraic manipulation we can actually figure out what this minimum is without calculating any of the other values.
+
+We first express the square of the distance between any two vectors in terms of their inner product:
+$$
+  \begin{aligned}
+    \|u-v\|^2
+    &= \braket{u-v}{u-v}
+  \\&= \braket{u}{u} - \braket{u}{v} - \braket{v}{u} + \braket{v}{v}
+  \\&= \|u\|^2 +\|v\|^2 - 2\Re\braket{u}{v}
+  \end{aligned}
+$$
+(where $\Re(z)$ is the real part of the complex number $z$).
+Then we can write the Euclidean distance between state vectors as
+$$
+  \|u-v\| = \sqrt{2(1-\Re\braket{u}{v})}.
+$$
+Now if we want to minimise this expression over all rotations^[Recall that multiplication by a complex number corresponds to rotation and scaling, and so multiplication by a phase factor (which is always of unit length) corresponds to just rotation.] of $v$, then we want $\braket{u}{v}$ to be real and as large as possible, i.e. for $\braket{u}{v}=|\braket{u}{v}|$.
+This gives us a definition of distance.
+
+::: {.idea latex=""}
+The **state distance** between two state vectors $\ket{u}$ and $\ket{v}$ is
+$$
+  d(u,v) \coloneqq \sqrt{2(1-|\braket{u}{v}|)}.
+$$
+:::
+
+Note that we sometimes write the state distance as $\|u-v\|$, and we might refer to it as "Euclidean distance", which is an abuse of notation: really we should be writing $\min\{\|\ket{u}-e^{i\varphi}\ket{v}\|\}$.
+But this sort of thing happens a lot in mathematics^[In computer science lingo, this is what you might call **operator overloading**.], and it's good to get used to it.
+The justification is that, as we have already said, the usual Euclidean distance doesn't really make great sense for state vectors (because of this vector vs. ray distinction), and so if we *know* that $\ket{u}$ and $\ket{v}$ are state vectors then writing $\|u-v\|$ (which is already shorthand for $\|\ket{u}-\ket{v}\|$) should suggest "oh, they mean the version of $\|\cdot\|$ that *makes sense for state vectors*, where we take a minimum".
+
+::: {.idea latex=""}
+For *small* values of $d(u,v)=\|u-v\|$, we can think of this distance as being the angle between the two unit vectors.
+Indeed, if we think of Euclidean (unit) vectors, then the difference $v-u$ is, for sufficiently small $\|u-v\|$, just the angle between the two unit vectors (expressed in radians), because a small segment of a circle "almost" looks like a triangle.
+
+```{r,engine='tikz',fig.width=1.5}
+\usetikzlibrary{arrows.meta}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \draw [thick,-Latex,primary] (0,0) to node[below right]{$u$} (2,2);
+  \draw [thick,-Latex,rotate=25,secondary](0,0) to node[left]{$v$} (2,2);
+  \draw [thick,-Latex] (2,2) to node[above right]{$v-u$} (.97,2.65);
+\end{tikzpicture}
+```
+
+Alternatively (and more formally), we can see this by writing $|\braket{u}{v}|=\cos\alpha\approx1-\alpha^2/2$, since then
+$$
+  \|u-v\|
+  = \sqrt{2(1-|\braket{u}{v}|)}
+  \approx \alpha.
+$$
+
+This can certainly help with intuition, but extra care must always be taken when dealing with complex vector spaces, since our geometric intuition breaks down rapidly in (complex) dimension higher than $1$.
+:::
+
+As you might hope, two state vectors which are close to one another give similar statistical predictions.
+In order to see this, pick a measurement (any measurement) and consider one partial outcome described by a projector $\proj{a}$.
+What can we say about the difference between the two probabilities
+$$
+  \begin{aligned}
+    p_u &= |\braket{a}{u}|^2
+  \\p_v &= |\braket{a}{v}|^2
+  \end{aligned}
+$$
+if we know that $\|u-v\|\leq\varepsilon$?
+
+Well, first of all, let us introduce two classic tricks that are almost always useful when dealing with inequalities --- the first holds in any normed vector space, and the latter in any inner product space.
+
+- the **reverse triangle inequality**:
+    $$
+      \Big|\|u\|-\|v\|\Big| \leq \|u-v\|
+    $$
+- the [**Cauchy--Schwartz inequality**](https://en.wikipedia.org/wiki/Cauchy%E2%80%93Schwarz_inequality):^[This is arguably *the most useful* mathematical inequality that we have!]
+    $$
+      \braket{u}{v}^2 \leq \braket{u}{u}\braket{v}{v}
+    $$
+    or, equivalently (by taking square roots),
+    $$
+      |\braket{u}{v}| \leq \|u\|\|v\|.
+    $$
+    Furthermore, the two sides of the inequality are equal *if and only if* $\ket{u}$ and $\ket{v}$ are linearly dependent.
+
+Using these, we see that
+$$
+  \begin{aligned}
+    |p_u-p_v|
+    &= \Big| |\braket{a}{u}|^2 - |\braket{a}{v}|^2 \Big|
+  \\&= \Big| \Big( |\braket{a}{u}| + |\braket{a}{v}| \Big) \Big( |\braket{a}{u}| - |\braket{a}{v}| \Big) \Big|
+  \\&\leq 2\Big| |\braket{a}{u}| - |\braket{a}{v}| \Big|
+  \\&\leq 2\Big| \braket{a}{u} - \braket{a}{v} \Big|
+  \\&\leq 2\|a\|\|u-v\|
+  \\&= 2\|u-v\|.
+  \end{aligned}
+$$
+So if $\|u-v\|\leq\varepsilon$, then $|p_u-p_v|\leq2\varepsilon$.
+
+Again, we can appeal to some geometric intuition if we pretend that $\ket{u}$ and $\ket{v}$ are Euclidean vectors instead of rays.
+Write
+$$
+  \begin{aligned}
+    |\braket{a}{u}| &= \cos(\alpha)
+  \\|\braket{a}{v}| &= \cos(\alpha+\varepsilon)
+  \end{aligned}
+$$
+where $\varepsilon$ is the (very small) angle between $\ket{u}$ and $\ket{v}$, whence $\|u-v\|=\varepsilon$.
+Then
+$$
+  \begin{aligned}
+    |\braket{a}{u}|^2 - |\braket{a}{v}|^2
+    &= \cos^2(\alpha) - \cos^2(\alpha+\varepsilon)
+  \\&\approx \varepsilon\sin(2\alpha)
+  \\&\leq \varepsilon.
+  \end{aligned}
+$$
+As an interesting exercise, you might try to explain why this approach gives a tighter bound ($\varepsilon$ instead of $2\varepsilon$).
+
+
+## Fidelity
+
+Sometimes, when quantifying closeness of states, the *inner product* is a more convenient tool than the distance/norm.
+Analogous to how we define the distance between states $\ket{u}$ and $\ket{v}$ as $d(u,v)=\|u-v\|$, we define the **fidelity** between them as
+$$
+  F(u,v)\coloneqq |\braket{u}{v}|^2.
+$$
+This is *not* a metric, but it does have some similarly nice properties: for example, $F(u,v)=1$ when the two states are identical, and $F(u,v)=0$ when the two states are orthogonal (which means that they are "as different as possible").
+Intuitively, we can understand fidelity as the probability that the state $\ket{u}$ (resp. $\ket{v}$) would pass a test for being in state $\ket{v}$ (resp. $\ket{u}$).
+In other words, if we perform an orthogonal measurement on $\ket{u}$ that has two outcomes ($\texttt{true}$ if the state is $\ket{v}$; $\texttt{false}$ if the state is orthogonal to $\ket{v}$), then the fidelity $F(u,v)=|\braket{u}{v}|^2$ is exactly the probability that we measure the outcome $\texttt{true}$.
+
+Recall our definition of state distance:
+$$
+  d(u,v) = \sqrt{2(1-|\braket{u}{v}|)}
+$$
+This gives us a relation between distance and fidelity: once we know one, we can easily calculate the other.
+However, everything we have said so far applies only to *pure* states --- we will see how the mixed state case is slightly more complicated shortly.
+
+One final remark: as another example of the many inconsistencies in the literature, some authors define $F(u,v)$ to be $|\braket{u}{v}|$ instead of $|\braket{u}{v}|^2$.
+Whenever we say fidelity, we mean the latter: $|\braket{u}{v}|^2$.
+
+
+## Approximating unitaries {#approximating-unitaries}
+
+So now we know a bit about how norms (or metrics, or inner products) can help us to understand distance between state vectors, can we say something similar about quantum evolutions?
+Say we have unitary operators $U$ and $V$ acting on the same Hilbert space, where $U$ is some "target" unitary that we *want* to implement in a real-life circuit, and $V$ is an "approximate" unitary that we *can actually* implement in practice.
+We say that **$V$ approximates $U$ with precision $\varepsilon$**, or that $U$ and $V$ are **$\varepsilon$-close**, if^[Note that $V$ approximates $U$ with precision $\varepsilon$ if and only if $U$ approximates $V$ with precision $\varepsilon$. Even though we might think of one as being our ideal unitary and the other as being the best feasible real-life implementation that we can achieve, this is only us giving names to things --- the definition does not care which way round we think of them.]
+$$
+  \|U-V\| \leq \varepsilon
+$$
+where $\|\cdot\|$ is some norm on unitary matrices (of the same size), which we would want to satisfy the following property: if $\|U-V\|$ is "small", then $U$ should be hard to distinguish from $V$ when acting on *any* quantum state.
+
+Before defining such a norm, however, we first recall some linear algebra which we briefly touched upon in Section \@ref(the-schmidt-decomposition).
+The **singular values** of an operator $A$ are the square roots of the (necessarily non-negative) eigenvalues of the Hermitian operator $A^\dagger A$.
+If $A$ is *normal* (e.g. a density operator), then its singular values are exactly the absolute values of its eigenvalues.
+We tend to denote singular values by $s_i(A)$ (or just $s_i$ if it is clear which operator we are talking about), and we write $\sigma(A)$ to mean the set of eigenvalues of $A$, i.e.
+$$
+  \sigma(A) \coloneqq \{\lambda\in\mathbb{C} \mid \det(A-\lambda\id)=0\}.
+$$
+This means that
+$$
+  \{s_i(A)\} = \{\sqrt{\lambda} \mid \lambda\in\sigma(A)\}.
+$$
+
+::: {.idea latex=""}
+The **operator norm** (or **spectral** norm) $\|A\|$ of an operator $A\in\mathcal{B}(\mathcal{H})$ is the maximum length of the vector $A\ket{v}$ over all possible normalised vectors $\ket{v}\in\mathcal{H}$, i.e.
+$$
+  \|A\| \coloneqq \max_{\ket{v}\in S_{\mathcal{H}}^1}\Big\{ |A\ket{v}| \Big\}
+$$
+(where $S_{\mathcal{H}}^1$ is the unit sphere in $\mathcal{H}$, i.e. the set of vectors of norm $1$).
+One can show that $\|A\|$ is equal to the largest singular value of $A$.
+
+If $A$ is *normal* (e.g. a density operator), then
+$$
+  \|A\| = \max_{\lambda\in\sigma(A)}\Big\{ |\lambda| \Big\}.
+$$
+:::
+
+The operator norm satisfies some very useful properties:^[Proving these properties, along with some others, is a good thing to practise --- see Exercise \@ref(operator-norm).]
+
+- If $A$ is normal, then $\|A^\dagger\|=\|A\|$
+- $\|A\otimes B\|=\|A\|\|B\|$
+- If $U$ is unitary, then $\|U\|=1$
+- If $P\neq0$ is an orthogonal projector, then $\|P\|=1$
+- **Sub-multiplicativity:** $\|AB\|\leq\|A\|\|B\|$.
+
+Now suppose that some quantum system, initially in state $\ket{\psi}$, evolves according to $U$ or $V$.
+Let $P$ be a projector associated with some specific outcome of some measurement that can be performed on the system after either evolution (such as $P=\proj{a}$, as in our earlier example).
+Let $p_U$ (resp. $p_V$) be the probability of obtaining the corresponding measurement outcome if the operation $U$ (resp. $V$) was performed.
+By definition, we see that
+$$
+  \begin{aligned}
+    |p_U-p_V|
+    &= \Big| \braket{\psi|U^\dagger PU}{\psi} - \braket{\psi|V^\dagger PV}{\psi} \Big|
+  \\&= \Big| \braket{\psi|U^\dagger P(U-V)}{\psi}+\braket{\psi|(U^\dagger-V^\dagger)PV}{\psi} \Big|
+  \\&\leq \Big| \braket{\psi|U^\dagger P(U-V)}{\psi} \Big| + \Big| \braket{\psi|(U^\dagger-V^\dagger)PV}{\psi} \Big|
+  \end{aligned}
+$$
+where the inequality is exactly the triangle inequality.
+
+By an application of the Cauchy--Schwartz inequality^[See Exercise \@ref(operator-norm).] followed by sub-multiplicativity, we then have
+$$
+  \begin{aligned}
+    |p_U-p_V|
+    &\leq \|U^\dagger P\|\|U-V\| + \|U^\dagger-V^\dagger\|\|VP\|
+  \\&\leq 2\|U-V\|.
+  \end{aligned}
+$$
+
+This tells us what $\varepsilon$-closeness means: suppose that $V$ and $U$ are $\varepsilon$-close; then if, instead of applying one, we apply the other, and subsequently measure the resulting physical system, we know that the probabilities of any particular outcome in any measurement will differ by *at most* $2\varepsilon$.
+
+Now what about working with *sequences* of unitaries, as we do when we construct quantum circuits?
+It turns out that closeness is additive under multiplication of unitaries: if $\|U_1-V_1\|\leq\varepsilon_1$ and $\|U_2-V_2\|\leq\varepsilon_2$, then
+$$
+  \begin{aligned}
+    \|U_2U_1 - V_2V_1\|
+    &= \|U_2U_1 - V_2U_1 + V_2U_1 - V_2V_1\|
+  \\&= \|(U_2-V_2)U_1 + V_2(U_1-V_1)\|
+  \\&\leq \|U_2-V_2\|\|U_1\| + \|V_2\|\|U_1-V_1\|
+  \\&= \|U_2-V_2\| + \|U_1-V_1\|
+  \\&\leq \varepsilon_1+\varepsilon_2.
+  \end{aligned}
+$$
+We can then apply this argument inductively.
+
+::: {.idea latex=""}
+Errors in the approximation of one sequence of unitaries by another accumulate at most linearly in the number of unitary operations:
+$$
+  \|U_n\cdots U_1 - V_n\cdots V_1\| \leq \sum_{i=1}^n \varepsilon_n
+$$
+if $\|U_i-V_i\|\leq\varepsilon_i$ for all $i=1,\ldots,n$.
+:::
+
+This linear error accumulation relies heavily on the fact that the norm of a unitary operator is equal to $1$; for non-unitary operators, errors could accumulate exponentially, which would make efficient approximations of circuits practically impossible.
+Geometrically, this is because unitaries just *rotate* vectors, without scaling them.
+
+Again, we can appeal to some trigonometry.
+First note that
+$$
+  \|U-V\| = \|UV^\dagger-\id\|
+$$
+since the operator norm is unitarily invariant.^[See Exercise \@ref(operator-norm).]
+Since $UV^\dagger$ is also unitary, its eigenvalues are exactly phase factors $e^{i\varphi}$ for $\varphi\in\mathbb{R}$; the corresponding eigenvalue of $UV^\dagger-\id$ has modulus
+$$
+  |e^{i\varphi}-1| = \sqrt{2}\sqrt{1-\cos\varphi}.
+$$
+Putting this all together, we see that asking for $\|U-V\|\leq\varepsilon$ is exactly asking for each eigenvalue of $UV^\dagger-\id$ to satisfy $\sqrt{2}\sqrt{1-\cos\varphi}\leq\varepsilon$, which rearranges to
+$$
+  \cos\varphi \geq 1-\frac{\varepsilon^2}{2}
+$$
+which is simply $|\varphi|\leq\varepsilon$ for small enough $\varepsilon$.
+So $U$ rotates relative to $V$ by (at worst) an angle of order $\varepsilon$, and if we compose unitaries in a sequence then the accumulated rotation increases linearly with the number of unitaries.
+
+
+## Approximating generic unitaries is hard, but...
+
+Now that we understand approximations of unitary operators, we can revisit the question of universality that we touched upon in Sections \@ref(finite-set-of-universal-gates) and \@ref(universality-again).
+Recall that we call a finite set $G$ of gates **universal** if *any* $n$-qubit unitary operator can be approximated (up to an overall phase) to *arbitrary accuracy* by some unitary constructed using only gates from $G$ (and we then call the gates in $G$ **elementary**).
+In other words, $G$ is universal if, for any unitary $U$ acting on $n$-qubits and for any $\varepsilon>0$, there exist $U_1,\ldots,U_d\in G$ such that $\widetilde{U}\coloneqq U_d\cdots U_1$ satisfies
+$$
+  \|\widetilde{U}-e^{i\varphi}U\|\leq\varepsilon
+$$
+for some phase $\varphi$.
+
+For example, each of the following sets of gates is universal:
+
+- $\{H,\texttt{c-}S\}$
+- $\{H,T,\texttt{c-NOT}\}$
+- $\{H,S,\texttt{Toff}\}$
+
+where $S$ and $T$ are the $\pi/4$- and $\pi/8$-phase gates (Section \@ref(phase-gates-galore)), $\texttt{c-}S$ is the *controlled* $S$-gate, and $\texttt{Toff}$ is the Toffoli gate (Exercise \@ref(toffoli-gate)).
+
+But now we can be a bit more precise with the question that the notion of universality is trying to answer: given a universal set of gates, how hard is it to approximate any desired unitary transformation with accuracy $\varepsilon$?
+That is, *how many gates do we need*?
+
+The answer is *a lot*.
+In fact, it is exponential in the number of qubits --- most unitary transformation require large quantum circuits of elementary gates.
+We can show this by a counting argument (along with a healthy dose of geometric intuition).
+
+Consider a universal set of gates $G$ consisting of $g$ gates, where each gates acts on no more than $k$ qubits.
+How many circuits (acting on $n$-qubits) can we construct using $t$ gates from this set?
+We have $g\binom{n}{k}$ choices^[Counting arguments nearly always use [**binomial coefficient** notation](https://en.wikipedia.org/wiki/Binomial_coefficient): $\binom{a}{b}\coloneqq\frac{a!}{b!(b-a)!}$.] for the first gate, since there are $g$ gates, and $\binom{n}{k}$ ways to place it so that it acts on $k$ out of $n$ qubits.
+The same holds for all subsequent gates, and so we can build no more than
+$$
+  \left( g\binom{n}{k} \right)^t
+$$
+circuits of size $t$ from $G$.
+What is important is that $g\binom{n}{k}$ is *polynomial* in $n$, and $g$ and $k$ are fixed constants, so we will write this upper bound as
+$$
+  (\mathrm{poly}(n))^t.
+$$
+In more geometric language, we have shown that, with $t$ gates, we can generate $(\mathrm{poly}(n))^t$ points in the space $U(N)$ of unitary transformations on $n$-qubits, where $N=2^n$.
+Now imagine drawing a ball of radius $\varepsilon$ (in the operator norm) centred at each of these points --- we want these balls to cover the entire unitary group $U(N)$, since this then says that any unitary is within distance $\varepsilon$ of a circuit built from $t$ gates in $G$.
+We will not get into the details of the geometry of $U(N)$, but simply use the fact that a ball of radius $\varepsilon$ in $U(N)$ has volume proportional to $\varepsilon^{N^2}$, whereas the volume of $UN)$ itself is proportional to $C^{N^2}$ for some fixed constant $C$.
+So we want
+$$
+  \varepsilon^{N^2}(\mathrm{poly}(n))^t \geq C^{N^2}
+$$
+which (after some algebraic manipulation) requires that
+$$
+  t \geq 2^{2n}\frac{\log(C/\varepsilon)}{\log(\mathrm{poly}(n))}.
+$$
+In words, *the scaling is exponential in $n$ but only logarithmic in $1/\varepsilon$*.
+
+::: {.idea latex=""}
+When we add qubits, the space of possible unitary operations grows very rapidly, and we have to work exponentially hard if we want to approximate the resulting unitaries with some prescribed precision.
+If, however, we fix the number of qubits and instead ask for better and better approximations, then things are much easier, since we only have to work logarithmically hard.
+:::
+
+The snag is that this counting argument does not give us any hints as to how we can actually build such approximations.
+A more constructive approach is to pick a set of universal gates and play with them, building more and more complex circuits.
+There is an important theorem in this direction that tells us that it does not matter much which particular universal set of gates we choose to start with.
+
+::: {.idea latex=""}
+**The [Solovay--Kitaev Theorem](https://en.wikipedia.org/wiki/Solovay%E2%80%93Kitaev_theorem).**
+Choose any two universal sets of gates that are closed under inverses.^[The notion of "being closed under inverses" is slightly weaker than you might first think: it means that the inverse of any gate in the set can be (exactly) constructed from a *finite* sequence of gates in the set; it does *not* mean that the inverses have to be elementary gates themselves.]
+Then any $t$-gate circuit built from one set of gates can be implemented to precision $\varepsilon$ using a $t\mathrm{poly}(\log(t/\varepsilon))$-gate circuit built from the other set.
+Furthermore, there is an efficient classical algorithm for finding this circuit.
+:::
+
+Since errors accumulate linearly, it suffices to approximate each gate from one set to accuracy $\varepsilon/t$, which can be achieved by using a $\mathrm{poly}(\log(t/\varepsilon))$-gate circuit built from the other set.
+So we can efficiently convert (constructively, via some efficient classical algorithm) between universal sets of gates with overhead $\mathrm{poly}(\log(1/\varepsilon)))$, i.e. $\log^c(1/\varepsilon)$ for some constant $c$.
+For all practical purposes, we want to minimise $c$, but the counting argument above shows that the best possible exponent is $1$, so the real question is *can we get close to this lower bound*?
+In general, we do not know.
+However, for some universal sets of gates we have *nearly* optimal constructions.
+For example, the set $\{H,T\}$ can be used to approximate arbitrary *single-qubit* unitaries to accuracy $\varepsilon$ using $\log(1/\varepsilon)$ many gates, instead of $\mathrm{poly}(\log(1/\varepsilon))$, and the circuits achieving this improved overhead cost can be efficiently constructed (for example, by the [Matsumoto--Amano construction](https://arxiv.org/abs/0806.3834).)
+
+
+## How far away are two probability distributions?
+
+Before we switch gears and discuss how to generalise state distance to density operators, let us first take a look at distances between probability distributions.
+What does it mean to say that two probability distributions (over the same index set) are similar to one another?
+
+Recall that a **probability distribution**^[Things are simpler for us because we work with so-called **discrete** probability distributions, and so we can use *sums* instead of *integrals*. The general theory requires much more real analysis.] consists of two things --- a **sample space** $\Omega$, which is the set of all possible outcomes, and a **probability function** $p\colon\Omega\to[0,1]$, which tells us the probability of any specific outcome --- subject to the condition that $\sum_{k\in\Omega} p(k)=1$.
+Given any *subset* of outcomes $A\subseteq\Omega$, we define $p(A)=\sum\{k\in A\}p(k)$.
+
+::: {.idea latex=""}
+The **trace distance**^[Also known as the **variation** distance, $L_1$ distance, **statistical** distance, or **Kolmogorov** distance.] between probability distributions $p$ and $q$ on the same sample space $\Omega$ is
+$$
+  d(p,q) \coloneqq \frac{1}{2}\sum_{k\in\Omega} |p(k)-q(k)|.
+$$
+:::
+
+This is indeed a distance: it satisfies all the necessary properties.^[**Exercise.** Show that this distance satisfies the triangle inequality.]
+It also has a rather simple interpretation, as we now explain.
+Let $p(k)$ be the *intended* probability distribution of an outcome produced by some ideal device $P$, but suppose that the actual physical device $Q$ is slightly faulty: with probability $1-\varepsilon$ it works exactly as $P$ does, but with probability $\varepsilon$ it goes completely wrong and generates an output according to some arbitrary probability distribution $e(k)$.
+What can we say about the probability distribution $q(k)$ of the outcome of such a device?
+Well, we can exactly say that
+$$
+  d(p,q) \leq \varepsilon
+$$
+by substituting $q(k)=(1-\varepsilon)p(k)+\varepsilon e(k)$.
+Conversely, if $d(p,q)=\varepsilon$ then we can represent one of them (say, $q(k)$) as the probability distribution resulting from a process that generates outcomes according to $p(k)$ followed by a process that alters outcome $k$ with total probability not greater than $\varepsilon$.
+
+Note that the normalisation property of probabilities implies that
+$$
+  \sum_k p(k)-q(k) = 0.
+$$
+We can split up this sum into two parts: the sum over $k$ for which $p(k)\geq q(k)$, and the sum over $k$ for which $p(k)<q(k)$.
+If we call the first part $S$, then the fact that $\sum_k p(k)-q(k)=0$ tells us that the second part must be equal to $-S$.
+Thus
+$$
+  \sum_k |p(k)-q(k)|
+  = S+|-S|
+  = 2S
+$$
+whence $S=d(p,q)$.
+
+(ref:probability-distribution-distance-caption) Visualising the distance between two (continuous) probability distributions.
+
+```{r probability-distribution-distance,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=6,fig.cap='(ref:probability-distribution-distance-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+  \pgfmathdeclarefunction{gauss}{2}{%
+    \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
+  }
+  \begin{axis}[axis y line=none,
+    no markers,
+    domain=0:10,
+    samples=250,
+    axis lines*=left,
+    xlabel=$k$,
+    every axis x label/.style={at=(current axis.right of origin),anchor=west},
+    height=5cm,
+    width=12cm,
+    xtick=\empty,
+    xticklabels={$$},
+    enlargelimits=false,
+    clip=false,
+    axis on top,
+    grid = major
+    ]
+  \addplot [fill=gray, draw=none, domain=0:10] {min(gauss(4,1.1),gauss(6.5,0.9))} \closedcycle;
+  \addplot [very thick,primary] {gauss(4,1.1)};
+  \addplot [very thick,secondary] {gauss(6.5,0.9)};
+  \draw [yshift= 1.5cm,xshift=4cm] node {$S$};
+  \draw [yshift= 1.5cm,xshift=7cm] node {$S$};
+  \draw [yshift= 2.3cm,xshift=2.6cm] node {$p(k)$};
+  \draw [yshift= 2.3cm,xshift=8.4cm] node {$q(k)$};
+  \end{axis}
+\end{tikzpicture}
+```
+
+Just as a passing note, we will point out that
+$$
+  \begin{aligned}
+    \sum_k \max\{p(k),q(k)\}
+    &= 1 + S
+  \\&= 1 + d(p,q)
+  \end{aligned}
+$$
+and the shaded area in Figure \@ref(fig:probability-distribution-distance) is equal to^[Again, since we are working with finite probability distributions, we can use sums; in the continuous case shown in Figure \@ref(fig:probability-distribution-distance), we would really need to use *integrals* instead.]
+$$
+  \begin{aligned}
+    \sum_k \min\{p(k),q(k)\}
+    &= 1 - S
+  \\&= 1 - d(p,q).
+  \end{aligned}
+$$
+The latter lets us write the trace distance as
+$$
+  d(p,q) = 1 - \sum_k \min_k\{p(k),q(k)\}
+$$
+and the former will be useful very soon.
+
+As for intuition, the trace distance is a measure of how well we can distinguish a sample from distribution $p$ from a sample from distribution $q$: if the distance is $1$ then we can tell them apart perfectly; if the distance is $0$ then we can't distinguish them at all.
+Now suppose that $p$ and $q$ represent the probability distributions of two devices, $P$ and $Q$, respectively, and that one of these is chosen (with equal probability) to generate some outcome.
+If you are given the outcome $k$, and you know $p(k)$ and $q(k)$, then how can you best guess which device generated it?
+What is your best strategy, and with what probability does this let you guess correctly?
+It turns out that we can answer this using the trace distance.
+
+Arguably the most natural strategy is to look at $\max\{p(k),q(k)\}$: guess $P$ if $p(k)>q(k)$; guess $Q$ if $q(k)>p(k)$; guess uniformly at random if $p(k)=q(k)$.
+Following this strategy, the probability of guessing correctly (again, under the assumption that $P$ and $Q$ were chosen between with equal probability) is
+$$
+  p_{\mathrm{success}} = \frac{1}{2}\sum_k \max\{p(k),q(k)\}
+$$
+which we can rewrite as
+$$
+  p_{\mathrm{success}} = \frac{1}{2}(1+d(p,q)).
+$$
+
+Here is another way of seeing the above.
+The probability that the devices $P$ and $Q$ will *not* behave in the same way is bounded by $d(p,q)$.
+This means that, with probability $1-d(p,q)$, the devices behave as if they were identical, in which case the best you can do is to guess uniformly at random, which will make you succeed with probability $\frac{1}{2}(1-d(p,q))$.
+With the remaining probability $d(p,q)$, the devices may behave as if they were completely different, and then you can tell which one is which perfectly, letting you succeed with probability exactly $1\cdot d(p,q)=d(p,q)$.
+So the total probability of success is equal to
+$$
+  \frac{1}{2}(1-d(p,q)) + d(p,q)
+  = \frac{1}{2}(1+d(p,q)).
+$$
+
+
+## Dealing with density operators
+
+Now we return to quantum states, and generalise the notion of trace distance to density operators.
+
+::: {.idea latex=""}
+The **trace norm** of an operator is the sum of its singular values:
+$$
+  \|A\|_{\tr} \coloneqq \sum_i s_i(A).
+$$
+If $A$ is *normal* (e.g. a density operator), then
+$$
+  \|A\|_{\tr} = \sum_{\lambda\in\sigma(A)} |\lambda|.
+$$
+
+The induced **trace distance** between two density operators is
+$$
+  d_{\tr}(\rho,\sigma) \coloneqq \frac{1}{2}\|\rho-\sigma\|_{\tr}.
+$$
+:::
+
+There are many questions raised by this definition, such as "how does this relate to the trace distance of probability distributions?" and "how does this trace norm relate to the operator norm from Section \@ref(approximating-unitaries)?" --- we will answer the first question now, but our answer to the second builds upon the notion of an $\ell^p$-norm, which is a discussion that we will postpone for Section \@ref(more-operator-norms).
+
+We can simply think of the trace distance for density operators as the natural analogue of the trace distance for probability distributions: it is a tight upper bound on the distances between the probability distributions obtained from $\rho$ and $\sigma$ by a measurement, as we now justify.
+
+Let $\{P_k\}$ be a complete set of orthogonal projectors, defining a projective measurement in some $\mathcal{H}$.
+This measurement gives outcome $k$ with some probability $p(k)$ if the quantum system is in state $\rho$, and the same outcome with some probability $q(k)$ if the system is in state $\sigma$.
+That is,
+$$
+  \begin{aligned}
+    p(k) &\coloneqq \tr P_k\rho
+  \\q(k) &\coloneqq \tr P_k\sigma.
+  \end{aligned}
+$$
+Then
+$$
+  \begin{aligned}
+    d_{\tr}(p,q)
+    &\coloneqq \frac{1}{2}\sum_k|p(k)-q(k)|
+  \\&= \frac{1}{2}\sum_k|\tr P_k(\rho-\sigma)|
+  \\&= \frac{1}{2}\tr((\rho-\sigma)U)
+  \end{aligned}
+$$
+where we define
+$$
+  U\coloneqq \sum_k\frac{\tr P_k(\rho-\sigma)}{|\tr P_k(\rho-\sigma)|}P_k
+$$
+or, in other words, $U$ is the sum of the $P_k$ but where the signs are determined by whether $|\tr P_k(\rho-\sigma)|$ is equal to $+\tr P_k(\rho-\sigma)$ or $-\tr P_k(\rho-\sigma)$.
+
+Since this $U$ is unitary, and since the trace norm can be written as^[See Section \@ref(more-operator-norms).]
+$$
+  \|A\|_{\tr} = \max_{U\text{ unitary}}|\tr AU|
+$$
+we finally obtain that
+$$
+  \begin{aligned}
+    d_{\tr}(p,q)
+    &\coloneqq \frac{1}{2}\sum_k|p(k)-q(k)|
+  \\&= \leq \frac{1}{2}\|\rho-\sigma\|
+  \\&\eqqcolon d_{\tr}(\rho,\sigma)
+  \end{aligned}
+$$
+which says that the trace distance $d_{\tr}(\rho,\sigma)$ gives an upper bound on distances between probability distributions obtained from $\rho$ and $\sigma$ by a measurement.
+The fact that this bound is tight (i.e. attainable) is witnessed by the measurement defined by the projectors onto the eigenspaces of $\rho-\sigma$.
+
+As an example, consider pure states $\ket{u}$ and $\ket{v}$.
+The trace distance between them is
+$$
+  \frac{1}{2}\|\proj{u}-\proj{v}\|_{\tr}.
+$$
+We can write $\ket{v}$ as
+$$
+  \ket{v} = \alpha\ket{u} + \beta\ket{\bar{u}}
+$$
+where $\ket{\bar{u}}$ is some unit vector orthogonal to $\ket{u}$, and where $\alpha=\braket{u}{v}$, with $\beta$ determined by $|\alpha|^2+|\beta|^2=1$.
+Then
+$$
+  \begin{aligned}
+    \proj{u} - \proj{v}
+    &= \begin{bmatrix}1&0\\0&0\end{bmatrix} - \begin{bmatrix}|\alpha|^2&\alpha\beta^\star\\\alpha^\star\beta&|\beta|^2\end{bmatrix}
+  \\&= \begin{bmatrix}|\beta|^2&-\alpha\beta^\star\\-\alpha^\star\beta&-|\beta|^2\end{bmatrix}
+  \end{aligned}
+$$
+(which has eigenvalues $\pm|\beta|$), and the trace distance is given by
+$$
+  \frac{1}{2}\|\proj{u}-\proj{v}\|_{\tr} = \sqrt{1-|\braket{u}{v}|^2}
+$$
+which is exactly $\sqrt{1-\text{fidelity}}$.
+
+As a consequence of this, we see that
+$$
+  \frac{1}{2}\|\proj{u}-\proj{v}\|_{\tr}
+  \leq \|u-v\|
+$$
+since
+$$
+  \begin{aligned}
+    1 - |\braket{u}{v}|^2
+    &= \Big( 1+|\braket{u}{v}| \Big) \Big( 1-|\braket{u}{v}| \Big)
+  \\&\leq 2\Big( 1-|\braket{u}{v}| \Big)
+  \\&= \|u-v\|^2.
+  \end{aligned}
+$$
+So if two states $\ket{u}$ and $\ket{v}$ are $\varepsilon$-close in the trace distance, then the probability distributions of outcomes of *any* measurement performed on a physical system in state $\ket{u}$ or $\ket{v}$ will also be $\varepsilon$-close in the trace distance.
+
+
+## Distinguishing non-orthogonal states, again {#distinguishing-non-orthogonal-states-again}
+
+Let's briefly return to the problem considered in Section \@ref(distinguishing-non-orthogonal-states), where we are given a system and told that it is in either state $\ket{\psi_1}$ or $\ket{\psi_2}$, with equal probability, but that these two vectors are *not* orthogonal.
+The goal is to find a measurement that maximises the probability of correctly identifying which state the system is in.
+Before solving this problem using the language of distances, let us repeat the geometric idea that we used previously.
+
+Draw two vectors, $\ket{\psi_1}$ and $\ket{\psi_2}$, separated by some angle $\varepsilon$.
+We want to find some orthonormal vectors $\ket{e_1}$ and $\ket{e_2}$ that specify the optimal projective measurement.
+First, note that any projections on the subspace *orthogonal* to the plane spanned by $\ket{\psi_1}$ and $\ket{\psi_2}$ will reveal no information about the identity of the state, so we know that we will want our orthonormal vectors to lie in the span of $\ket{\psi_1}$ and $\ket{\psi_2}$.
+Now, since $\ket{\psi_1}$ and $\ket{\psi_2}$ are both equally likely to occur, we want to place $\ket{e_1}$ and $\ket{e_2}$ *symmetrically* around them, as shown in Figure \@ref(fig:distinguishing-non-orthogonal-states-intuition)
+
+(ref:distinguishing-non-orthogonal-states-intuition-caption) Recall Section \@ref(distinguishing-non-orthogonal-states) --- the optimal measurement to distinguish between the two equally likely non-orthogonal signal states $\ket{\psi_1}$ and $\ket{\psi_2}$ is described by the two orthogonal vectors $\ket{e_1}$ and $\ket{e_2}$ placed symmetrically around them.
+
+```{r distinguishing-non-orthogonal-states-intuition,engine='tikz',fig.width=2,fig.cap='(ref:distinguishing-non-orthogonal-states-intuition-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[scale=2]
+  \node [primary] (s2) at (45:1) {$\ket{\psi_2}$};
+  \node [primary] (s1) at (15:1) {$\ket{\psi_1}$};
+  \node [secondary] (d2) at (75:1) {$\ket{e_2}$};
+  \node [secondary] (d1) at (-15:1) {$\ket{e_1}$};
+  \draw [->,thick,primary] (0,0) to (s1);
+  \draw [->,thick,primary] (0,0) to (s2);
+  \draw [->,thick,secondary] (0,0) to (d1);
+  \draw [->,thick,secondary] (0,0) to (d2);
+  \draw [dashed,thick,secondary] (30:-0.35) to (30:0);
+  \draw [dashed,thick,secondary] (30:0.5) to (30:1);
+  \draw [bend right,thick,secondary] (15:0.45) to (45:0.45);
+  \node [secondary] at (30:0.35) {$\varepsilon$};
+\end{tikzpicture}
+```
+
+The probability of correctly distinguishing the two states is
+$$
+  p_{\mathrm{success}}
+  = \frac{1}{2}|\braket{e_1}{\psi_1}|^2 + \frac{1}{2}|\braket{e_2}{\psi_2}|^2
+$$
+which reduces, with our schema, to
+$$
+  \begin{aligned}
+    p_{\mathrm{success}}
+    &= \cos^2\left(\frac{\pi}{2}-\frac{\varepsilon}{2}\right)
+  \\&= \frac{1}{2}(1+\sin\varepsilon)
+  \\&\approx \frac{1}{2}(1+\varepsilon)
+  \\&= \frac{1}{2}(1+\|\psi_1-\psi_2\|).
+  \end{aligned}
+$$
+where the last equality holds whenever $\varepsilon$ is "small enough".
+But, happily, we can be much more precise than this!
+
+Let's start by rephrasing the problem in terms of density operators.
+We are sent one of two quantum states, either $\rho_0$ or $\rho_1$, with equal probability.
+You might notice that we're now labelling our states with $\{0,1\}$ instead of $\{1,2\}$.
+This is simply to help guide our intuition: we are being sent one bit of information, a $0$ or a $1$; the only complication is that this is happening in such a way that we cannot perfectly distinguish between them (since we are receiving *non-orthogonal* quantum states).
+We want to choose two orthogonal projectors $P_0$ and $P_1$, so outcome $P_0$ is interpreted as a $0$ and outcome $P_1$ as a $1$.
+The probability of correctly detecting which state was sent is, as always, the probability that $\rho_0$ was sent *and* outcome $P_0$ was observed, *plus* the probability that $\rho_1$ was sent *and* outcome $P_1$ was observed.
+In symbols,
+$$
+  \begin{aligned}
+    p_{\mathrm{success}}
+    &= \frac{1}{2}\tr(P_0\rho_0) + \frac{1}{2}\tr(P_1\rho_1)
+  \\&= \frac{1}{4}\tr[(P_0+P_1)(\rho_0+\rho_1)] + \frac{1}{4}\tr[(P_0-P_1)(\rho_0-\rho_1)]
+  \\&= \frac{1}{2} + \frac{1}{4}\tr[(P_0-P_1)(\rho_0-\rho_1)]
+  \end{aligned}
+$$
+where the last equality follows from the fact that $P_0+P_1=\id$.
+
+By applying Hölder's inequality^[See Section \@ref(more-operator-norms).], this tells us that
+$$
+  \begin{aligned}
+    p_{\mathrm{success}}
+    &\leq \frac{1}{2} + \frac{1}{4}\|(P_0-P_1)\|\|(\rho_0-\rho_1)\|_{\tr}
+  \\&\leq \frac{1}{2} + \frac{1}{4}\|\rho_0-\rho_1\|_{\tr}
+  \\&= \frac{1}{2}(1+d_{\tr}(\rho_0,\rho_1)).
+  \end{aligned}
+$$
+
+Again, this upper bound is attained by taking $P_0$ to be the projector onto the eigenspace of $\rho_0-\rho_1$ corresponding to the *positive* eigenvalues, and $P_1$ the projector corresponding to the *negative* eigenvalues: this gives $\tr(P_0-P_1)(\rho_0-\rho_1)=\|\rho_0-\rho_1\|_{\tr}$.
+
+Of course, the whole story of quantum state distinguishability has much more to it than we have covered here.
+In Exercise \@ref(distinguishability-and-trace-distance-exercise) we ask about the case where the two states $\rho_0$ and $\rho_1$ are sent with *non-equal* probabilities $p_0$ and $p_1$, respectively.
+The more general scenario, where some quantum source emits states $\rho_0,\ldots,\rho_n$ with respective probabilities $p_0,\ldots,p_n$, turns out to be incredibly difficult --- we do not know an optimal discrimination strategy, except for in a few special cases.
+
+
+## How accurate is accurate enough?
+
+We have seen that finite sets of gates can be used to approximate any unitary operation with any prescribed accuracy.
+But how accurate is accurate enough?
+Of course, the answer depends on what we want to achieve.
+
+Suppose we come up with a cool quantum algorithm, represented by a circuit composed of $t$ gates, and it solves an interesting decision problem with probability $\frac{1}{2}+\delta$.
+The value of $\delta$ might be tiny, so not much can be inferred from a single run, but as long as we can repeat the computation $r$ times and take the majority answer as the "right" answer, the Chernoff bound^[Recall Exercise \@ref(imperfect-decision-maker).] tells us that the probability of error is bounded above by $e^{-2r\delta^2}$.
+We now want to physically implement this circuit using our preferred universal set of gates, say $\{H,T,\texttt{c-NOT}\}$.
+If we can implement each gate with accuracy $\varepsilon/t$, then we can approximate the circuit with accuracy $\varepsilon$, which means that the probability of success will be $\frac{1}{2}+\delta\pm\varepsilon$.
+So, at the very least, we want $\varepsilon<\delta/2$.
+
+
+## *Remarks and exercises* {#remarks-and-exercises-11}
+
+### Operator decompositions {#operator-decompositions}
+
+Analogously to how we can factor polynomials into linear parts, or factor numbers into prime divisors, we can "factor" matrices into smaller components.
+Doing so often helps us to better understand the geometry of the situation: we might be able to understand the transformation described by a single matrix as "some reflection, followed by some rotation, followed by some scaling".
+For us, one specific use of such a "factorisation" (known formally as an **operator decomposition**) is in better understanding various operator norms, as we explain in \@ref(more-operator-norms).
+
+Here are three operator decompositions that are particularly useful in quantum information theory.
+The second is for arbitrary operators between Hilbert spaces, the first and third are for *normal endomorphisms* (i.e. normal operators from one Hilbert space to itself).
+
+1. **Spectral decomposition.**
+    Recall Section \@ref(observables): the spectral theorem tells us that every *normal* operator $A\in\mathcal{B}(\mathcal{H})$ can be expressed as a linear combination of projections onto pairwise orthogonal subspaces.
+    We write the spectral decomposition of $A$ as
+    $$
+      A = \sum_k \lambda_k \proj{v_k}
+    $$
+    where $\lambda_k$ are the eigenvalues of $A$, with corresponding eigenvectors $\ket{v_k}$, which form an orthonormal basis in $\mathcal{H}$.
+
+    In matrix notation, we can write this as
+    $$
+      A = UDU^\dagger
+    $$
+    where $D$ is the diagonal matrix whose diagonal entries are the eigenvalues $\lambda_k$, and where $U$ is the unitary matrix whose columns are the eigenvectors $\ket{v_k}$.
+
+2. **Singular value decomposition (SVD).**
+    We have already mentioned the SVD in \@ref(the-schmidt-decomposition) when discussing the Schmidt decomposition, but we recall the details here.
+    Consider *any* (non-zero) operator $A\in\mathcal{B}(\mathcal{H},\mathcal{H}')$.
+    From this, we can construct two positive semi-definite operators: $A^\dagger A\in\mathcal{B}(\mathcal{H})$ and $AA^\dagger\in\mathcal{B}(\mathcal{H}')$.
+    These are both normal, and so we can apply the spectral decomposition to both.
+    In particular, if we denote the eigenvalues of $A^\dagger A$ by $\lambda_k$, and the corresponding eigenvectors by $\ket{v_k}$, then we see that the vectors
+    $$
+      \ket{u_k} \coloneqq \frac{1}{\sqrt{\lambda_k}}A\ket{v_k}
+    $$
+    form an orthonormal system in $\mathcal{H}'$ (and are, in fact, eigenvectors of $AA^\dagger$), since
+    $$
+      \begin{aligned}
+        \braket{u_i}{u_j}
+        &= \frac{1}{\sqrt{\lambda_i}\sqrt{\lambda_j}} \braket{v_i|A^\dagger A}{v_j}
+      \\&= \frac{\lambda_j}{\sqrt{\lambda_i}\sqrt{\lambda_j}} \braket{v_i}{v_j}
+      \\&= \delta_{ij}.
+      \end{aligned}
+    $$
+    We define the **singular values** $s_k$ of $A$ to be the square roots of the eigenvalues of $A^\dagger A$, i.e. $s_k^2=\lambda_k$.
+    These singular values satisfy
+    $$
+      A\ket{v_k}=s_k\ket{u_k}
+    $$
+    by construction, and so we can write
+    $$
+      A = \sum_k s_k\ket{u_k}\bra{v_k}
+    $$
+    which we call the **singular value decomposition** (or **SVD**).
+    This decomposition holds for arbitrary (non-zero) operators as opposed to just normal ones, and also for operators between two different Hilbert spaces as opposed to just endomorphisms.
+    In words, this decomposition says that, given $A$, we can find orthonormal bases of $\mathcal{H}$ and $\mathcal{H}'$ such that $A$ maps the $k$-th basis vector of $\mathcal{H}$ to a non-negative multiple of the $k$-th basis vector of $\mathcal{H}'$ (and sends any left over basis vectors to $0$, if $\dim\mathcal{H}>\dim\mathcal{H}'$).
+
+    In matrix notation, we can write this as
+    $$
+      A = U\sqrt{D}V^\dagger
+    $$
+    where $D$ is the diagonal matrix of eigenvalues (and so $\sqrt{D}$ is the diagonal matrix of *singular* values), and both $U$ and $V$ are unitary.
+
+    Geometrically, we are decomposing any linear transformation into a composition of a rotation or reflection $V^\dagger$, followed by a scaling by the singular values $\sqrt{D}$, followed by another rotation or reflection $U$.
+    This maps the unit sphere in $\mathcal{H}$ onto an ellipsoid in $\mathcal{H}'$, and the singular values of $A$ are exactly the lengths of the semi-axes of this ellipsoid.
+
+    ```{r,engine='tikz',fig.width=3}
+    \begin{tikzpicture}[scale=0.7]
+      \draw (0,0) circle (1cm) (0,1) to (0,0) to (1,0) [xshift=5cm,rotate=30,yscale=0.8,xscale=1.5] (0,0) circle (1cm) (0,1) to (0,0) to (1,0);
+      \draw[->] (1.6,0) to (2.3,0) node[above=2pt] {$A$} to (3.1,0);
+      \draw (6,-0.1) node[above=2pt] {\scriptsize$s_1$};
+      \draw (4.55,-0.1) node[above=2pt] {\scriptsize$s_2$};
+    \end{tikzpicture}
+    ```
+
+3. **Polar decomposition.**
+  Let $A\in\mathcal{B}(\mathcal{H})$ be a normal arbitrary operator.
+  Since it is an endomorphism, it is represented by a square matrix.
+  Forgetting that $A$ is normal for a moment, we know that its SVD takes the form
+  $$
+    \begin{aligned}
+      A
+      &= U\sqrt{A^\dagger A}
+    \\&= \sqrt{AA^\dagger}U
+    \end{aligned}
+  $$
+  where the unitary matrix $U$ connects the two eigenbases: $U=\sum_k\ket{u_k}\bra{v_k}$.
+  We shall return to this unitary $U$ shortly.
+
+  Since $A$ is normal, $A^\dagger A=AA^\dagger$, so we can define its **modulus** as
+  $$
+    |A| \coloneqq \sqrt{A^\dagger A}
+  $$
+  which gives us the **polar decomposition**
+  $$
+    A = |A|U.
+  $$
+  This is the matrix analogue of the polar decomposition of a complex number: $z=re^{i\theta}$.
+
+  If we decompose the eigenvalues of $A$ as $\lambda_k=r_k e^{i\theta_k}$ (with corresponding eigenvectors $\ket{v_k}$) then the spectral decomposition of $A$ gives us
+  $$
+    \begin{aligned}
+      A
+      &= \sum_k \lambda_k\proj{v_k}
+    \\&= \sum_k r_ke^{i\theta_k}\proj{v_k}
+    \\&= \sum_k r_k\ket{u_k}\bra{v_k}
+    \end{aligned}
+  $$
+  where $\ket{u_k}=e^{i\theta_k}\ket{v_k}$, so we see that the unitary $U=\sum_k\ket{u_k}\bra{v_k}$ in the polar decomposition contains all the information of the phase factors.
+
+
+### More operator norms {#more-operator-norms}
+
+We have already seen, all the way back in \@ref(modifying-the-born-rule)^[Think how far you've come since then!], how the Euclidean norm (from which we get the Euclidean distance) is the special case $p=2$ of $p$-norms (also known as [**$\ell^p$-norms**](https://en.wikipedia.org/wiki/Lp_space)), where
+$$
+  \|v\|_p \coloneqq \left( \sum_{i=1}^n |v_i|^p \right)^{\frac{1}{p}}
+$$
+for a vector $v=(v_1,\ldots,v_n)\in\mathbb{R}^n$, and for $p\in\mathbb{N}$.
+We can actually extend this definition to include the case $p=\infty$ by setting
+$$
+  \|v\|_\infty \coloneqq \max_{1\leq i\leq n}|v_i|.
+$$
+One particularly nice consequence of this definition is that
+$$
+  \|v\|_1 \geq \|v\|_2 \geq \ldots \geq \|v\|_\infty
+$$
+for any vector $v$.
+
+```{r,engine='tikz',fig.width=3.5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}[scale=2.5]
+  \draw [->](-1.3,0) to (1.3,0) node [above] {$v_1$};
+  \draw [->](0,-1.3) to (0,1.3) node [right] {$v_2$};
+  %
+  \draw (1,0) to (0,1) to (-1,0) to (0,-1) to cycle;
+  \node [label={[rotate=-45]below:${\tiny{p=1}}$}] at (0.52,0.52) {};
+  %
+  \draw (0,0) [primary] circle (1);
+  \node [label={[primary,rotate=-45]below:${\tiny p=2}$}] at (0.68,0.79) {};
+  %
+  \draw [domain=0:1,samples=40,secondary] plot ({\x}, {sqrt(1-\x^6)});
+  \draw [domain=0:1,samples=40,secondary] plot ({\x}, {-sqrt(1-\x^6)});
+  \draw [domain=0:1,samples=40,secondary] plot ({-\x}, {-sqrt(1-\x^6)});
+  \draw [domain=0:1,samples=40,secondary] plot ({-\x}, {sqrt(1-\x^6)});
+  \node [label={[secondary,rotate=-45]below: ${\tiny p=42}$}] at (0.79,0.94) {};
+  %
+  \draw (-1,-1) rectangle (1,1);
+  \node[] at (0.8,1.07) {$p=\infty$};
+\end{tikzpicture}
+```
+
+You might recall that we named the Cauchy--Schwartz inequality as arguably the most useful inequality in analysis.
+Well it turns out that it is actually the special case $p=2$ of an inequality concerning $p$-norms.
+
+::: {.idea latex=""}
+[**Hölder's inequality**](https://en.wikipedia.org/wiki/H%C3%B6lder's_inequality).
+Let $p,q\in\mathbb{N}\cup\{\infty\}$ be such that $\frac{1}{p}+\frac{1}{q}=1$.
+Then
+$$
+  \|vw\|_1 \leq \|v\|_p\|w\|_q
+$$
+with equality if and only if $v$ and $w$ are "$(p,q)$-linearly dependent".^[The technical statement of Hölder's inequality is really for something known as a **measure space**, where $v$ and $w$ are *functions*, but the details aren't relevant for us here.]
+:::
+
+We will come back to the relevance of these $p$-norms shortly.
+For now, let us introduce three norms (two of which we have already seen, but recall here again to tell a more complete story) on the space of endomorphisms $\mathcal{B}(\mathcal{H})$ of a Hilbert space, each of which can be defined neatly in terms of singular values.
+Note that, if $A$ is normal, then we its singular values are exactly the absolute values of its eigenvalues, which usually lets us simplify the definition of the norm.
+
+Throughout, let $A\in\mathcal{B}(\mathcal{H})$, with singular values $s_k$.
+
+1. **Spectral norm.**
+    This one is so frequently used that it is often simply called the **operator** norm and denoted simply by $\|\cdot\|$.
+    It is the maximum length of the vector $A\ket{v}$ over all possible normalised vectors $\ket{v}\in\mathcal{H}$, i.e.
+    $$
+      \|A\| \coloneqq \max_{\ket{v}\in S_{\mathcal{H}}^1}\Big\{ |A\ket{v}| \Big\}
+    $$
+    (where $S_{\mathcal{H}}^1$ is the unit sphere in $\mathcal{H}$, i.e. the set of vectors of norm $1$).
+    From this definition, one can actually show that the norm is given by the largest singular value:
+    $$
+      \|A\| = \max_k s_k.
+    $$
+
+2. **Trace norm.**
+    This is given by the sum of the singular values of $A$, i.e.
+    $$
+      \|A\|_{\tr} \coloneqq \sum_k s_k
+    $$
+    but note that we can rewrite this using the polar decomposition (from Section \@ref(operator-decompositions)) as simply
+    $$
+      \|A\|_{\tr} = \tr|A|.
+    $$
+
+3. **Frobenius norm.**
+    We have mentioned a few times how inner products give rise to norms, and you might remember that we introduced an inner product on $\mathcal{B}(\mathcal{H})$ a while ago: the Hilbert--Schmidt norm^[Here we drop the factor of $\frac{1}{2}$ that we sometimes included for simplifying certain calculations.]
+    $$
+      \begin{aligned}
+        (A|B)
+        &\coloneqq \tr A^\dagger B
+      \\&= \sum_{i,j} A_{ij}^\star B_{ji}.
+      \end{aligned}
+    $$
+    The Frobenius norm is the norm induced by this inner product, i.e.
+    $$
+      \begin{aligned}
+        \|A\|_F
+        &\coloneqq \sqrt{(A|A)}
+      \\&= \sqrt{\tr(A^\dagger A)}
+      \\&= \sqrt{\sum_{i,j}|A_{ij}|^2}.
+      \end{aligned}
+    $$
+
+Let's study the relation between the operator norm and the trace norm first.
+By definition, we see that
+$$
+  \|A\|_{\tr} \geq \|A\|
+$$
+but there is another, more subtle, inequality that they satisfy, namely
+$$
+  |(A|B)| \leq \|A\|_{\tr}\|B\|
+$$
+which is like a more general version of the Cauchy--Schwartz inequality, and is sometimes referred to as **Hölder's inequality for matrices**.
+To derive this inequality, we can use the SVD of $A$, since then
+$$
+  \begin{aligned}
+    |(A|B)|
+    &= |\tr A^\dagger B|
+  \\&= \left| \tr\left( \sum_k s_k\ket{v_k}\bra{u_k} B \right) \right|
+  \\&= \left| \sum s_k\braket{u_k|B}{v_k} \right|
+  \\&\leq \sum_k s_k|\braket{u_k|B}{v_k}|
+  \\&\leq \sum_k s_k\|B\|
+  \\&= \|A\|_{\tr}\|B\|.
+  \end{aligned}
+$$
+
+We can actually use this inequality to recover either the operator or the trace norm, by maximising: for any fixed $A$ (or any fixed $B$), we can obtain equality:
+$$
+  \begin{aligned}
+    \|A\|_{\tr}
+    &= \max_{\|B\|=1}\{(A|B)\}
+  \\\|B\|
+    &= \max_{\|A\|_{\tr}=1}\{(A|B)\}.
+  \end{aligned}
+$$
+To see this, in the first case we can use the polar decomposition $A=|A|U$ to see that equality is attained by $B=U$; in the second case we can use the polar decomposition $B=|B|V$ to see that equality is attained by $A=V\proj{v_1}$, where $\ket{v_1}$ is the eigenvector of $|B|$ with the largest eigenvalue (or, equivalently, singular value).
+In particular, this gives us a **variational** characterisation of the trace norm which is very useful at times:
+$$
+  \|A\|_{\tr} = \max_{U\text{ unitary}}|\tr AU|.
+$$
+
+One final special case to point out is what happens if $A$ is Hermitian.
+Then we can separate the spectral decomposition into positive and negative parts, and write $A$ as the difference of two positive operators:
+$$
+  A = A_+ - A_-.
+$$
+Then
+$$
+  \begin{aligned}
+    |A|
+    &= A_+ + A_-
+  \\\|A\|_{\tr}
+    &= \tr A_+ + \tr A_-.
+  \end{aligned}
+$$
+
+Now we finally return to the relevance of $p$-norms: it turns out that all these three operator norms above are actually special cases of [**Schatten $p$-norms**](https://en.wikipedia.org/wiki/Schatten_norm).
+For $p\in\mathbb{N}$ we define the Schatten $p$-norm in terms of singular values $s_k$ as
+$$
+  \|A\|_p \coloneqq \left( \sum_k |s_k|^p \right)^\frac{1}{p}
+$$
+and we define
+$$
+  \|A\|_\infty \coloneqq \max_k |s_k|
+$$
+analogously to how we did for $\ell^p$-norms.
+We then recover the trace norm, the Frobenius norm, and the spectral norm by taking $p=1,2,\infty$, respectively:
+$$
+  \begin{aligned}
+    \|A\|_1
+    &= \|A\|_{\tr}
+  \\\|A\|_2
+    &= \|A\|_F
+  \\\|A\|_\infty
+    &= \|A\|.
+  \end{aligned}
+$$
+All Schatten $p$-norms are sub-multiplicative ($\|AB\|_p\leq\|A\|_p\|B\|_p$) and unitarily invariant ($\|A\|=\|UAV\|$ for any unitaries $U$ and $V$).
+
+
+### Fidelity in a trace norm inequality
+
+There is a useful inequality involving the trace norm:
+$$
+  \tr(A-B)^2 \leq \|A^2-B^2\|_{\tr}.
+$$
+Let's prove it!
+
+Let $\lambda_k$ be the eigenvalues of the operator $A-B$, with corresponding eigenvectors and $\ket{u_k}$.
+Then
+$$
+  \tr(A-B)^2 = \sum_k \lambda_k^2
+$$
+since the trace is exactly the sum of eigenvalues.
+Now, for any unitary $U$, we have that
+$$
+  \|A^2-B^2\|_{\tr} \geq |\tr(A^2-B^2)U|
+$$
+since $\|X\|_{\tr}=\max_{U\text{ unitary}} |\tr(XU)|$.
+If we take $U=\sum_i\pm\proj{u_k}$, where the signs are chosen so that each term $\braket{u_k|A^2-B^2}{u_k}$ is non-negative, then
+$$
+  \begin{aligned}
+    \|A^2-B^2\|_{\tr}
+    &\geq |\tr(A^2-B^2)U|
+  \\&= \sum_k |\braket{u_k|A^2-B^2|}{u_k}|.
+  \end{aligned}
+$$
+
+Writing $A^2-B^2$ as^[This is the non-commutative version of the identity $a^2-b^2=(a+b)(a-b)$.]
+$$
+  A^2-B^2 = \frac{1}{2}\Big[ (A+B)(A-B) + (A-B)(A+B) \Big]
+$$
+we see that
+$$
+  \begin{aligned}
+    \braket{u_k|A^2-B^2|}{u_k}
+    &= \frac{1}{2}\braket{u_k|(A+B)(A-B) + (A-B)(A+B)}{u_k}
+  \\&= \lambda_i\braket{u_k|A+B}{u_k}.
+  \end{aligned}
+$$
+Then, since $\lambda_i=\braket{u_k|A}{u_k}-\braket{u_k|B}{u_k}$ is the difference of two non-negative numbers, we have that
+$$
+  \braket{u_k|A+B}{u_k} \geq |\lambda_i|.
+$$
+Putting this all together, we obtain
+$$
+  \begin{aligned}
+    \|A^2-B^2\|_{\tr}
+    &\geq \sum_k |\braket{u_k|A^2-B^2|}{u_k}|
+  \\&\geq \sum_k \lambda_k^2
+  \\&= \tr(A-B)^2
+  \end{aligned}
+$$
+as desired.
+
+One particularly nice application of this inequality arises when we take $A=\sqrt{\rho}$ and $B=\sqrt{\sigma}$, since then
+$$
+  \tr(\sqrt{\rho}-\sqrt{\sigma})^2 \leq \|\rho-\sigma\|_{\tr}
+$$
+or, after some rearrangement,
+$$
+  1-\tr(\sqrt{\rho}\sqrt{\sigma}) \leq \frac{1}{2}\|\rho-\sigma\|_{\tr}
+$$
+and we recognise $\tr(\sqrt{\rho}\sqrt{\sigma})$ as the fidelity.
+
+
+### Hamming distance {#hamming-distance}
+
+Show that the Hamming distance (defined in Section \@ref(metrics)) is indeed a metric.
+
+
+### Operator norm {#operator-norm}
+
+Prove the following properties of the operator norm:
+
+2. $\|A\otimes B\|=\|A\|\|B\|$ for any operators $A$ and $B$
+1. If $A$ is normal, then $\|A^\dagger\|=\|A\|$
+3. If $U$ is unitary, then $\|U\|=1$
+4. If $P\neq0$ is an orthogonal projector, then $\|P\|=1$.
+
+Using the singular value decomposition^[Recall Section \@ref(the-schmidt-decomposition)], or otherwise, prove that the operator norm has the following two properties for any operators $A$ and $B$:
+
+5. **Unitary invariance:** $\|UAV\|=\|A\|$ for any unitaries $U$ and $V$
+6. **Sub-multiplicativity:** $\|AB\|\leq\|A\|\|B\|$.
+
+Recall that we say that $V$ approximates $U$ with precision $\varepsilon$ if $\|U-V\|\leq\varepsilon$.
+
+7. Prove that, if $V$ approximates $U$ with precision $\varepsilon$, then $V^{-1}$ approximates $U^{-1}$ with the same precision $\varepsilon$.
+
+Using the Cauchy--Schwartz inequality, or otherwise, prove the following, for any vector $\ket{\psi}$ and any operators $A$ and $B$:
+
+8. $|\braket{\psi|A^\dagger B}{\psi}|\leq\|A\|\|B\|$.
+
+
+### Tolerance and precision
+
+Suppose we wish to implement a quantum circuit consisting of gates $U_1,\ldots,U_d$, but we only have available to us gates $V_1,\ldots,V_d$.
+Luckily, these gates happen to be pretty good approximations to our desired gates, and the error is uniform: $\|U_i-V_i\|\leq\varepsilon$ for all $i=1,\ldots,d$ for some fixed $\varepsilon$.
+
+We want our approximate circuit to be within some **tolerance** $\delta$ of the desired circuit: the probabilities of different outcomes of $V=V_d\cdots V_1$ should be be within $\delta$ of the "correct" probabilities of the different outcomes of $U=U_d\cdots U_1$, i.e. $|p_U-p_V|\leq\delta$.
+
+How small must $\varepsilon$ be with respect to $\delta$ in order for us to achieve this?
+
+*Hint: recall that $|p_U-p_V|\leq2\|U-V\|$.*
+
+
+### Statistical distance and a special event
+
+1. Show that, if $p$ and $q$ are probability distributions on the same sample space $\Omega$, then
+  $$
+    d(p,q) = \max_{A\subseteq\Omega}\{|p(A)-q(A)|\}.
+  $$
+2. By definition, the above maximum is realised for some specific subset $A\subseteq\Omega$, i.e. there exists some event (described by the set of outcomes $A$) that is optimal in distinguishing $p$ from $q$.
+  What is this event?
+
+
+### Joint probability distributions
+
+If we simultaneously sample *two* random variables from the same probability space, then we obtain a **joint distribution**:
+$$
+  r(x,y) \coloneqq \Pr(x\text{ and }y).
+$$
+From this we can recover the **marginals**
+$$
+  \begin{aligned}
+    p(x)
+    &\coloneqq \sum_y r(x,y)
+  \\q(y)
+    &\coloneqq \sum_x r(x,y).
+  \end{aligned}
+$$
+
+So let $r(x,y)$ be a joint probability distribution with marginals $p(x)$ and $q(y)$.
+Show that
+$$
+  d_{\tr}(p,q) \leq \Pr(x\neq y)
+  \equiv \sum_{\{x,y\mid x\neq y\}} p(x,y).
+$$
+*Hint:*
+$$
+  \begin{aligned}
+    d_{\tr}(p,q)
+    &= 1 - \sum_x \min\{p(x),q(x)\}
+  \\&\leq 1 - \sum_x p(x,x)
+  \\&= \Pr(x\neq y).
+  \end{aligned}
+$$
+
+
+### Distinguishability and the trace distance {#distinguishability-and-trace-distance-exercise}
+
+Say we have a physical system which is been prepared in one of two states (say, $\rho_0$ and $\rho_1$), each with equal probability.
+Then, as shown in Section \@ref(distinguishing-non-orthogonal-states-again), a *single* measurement can distinguish between the two preparations with probability *at most* $\frac{1}{2}[1+d_{\tr}(\rho_0,\rho_1)]$.
+
+1. How does this probability change if the states $\rho_0$ and $\rho_1$ are *not* equally liked, but instead sent with some predetermined probabilities $p_0$ and $p_1$, respectively?
+
+2. Suppose that you are given one randomly selected qubit from a pair in the state^[You have already seen this state in Exercise \@ref(some-density-operator-calculations).]
+    $$
+      \ket{\psi} =
+      \frac{1}{\sqrt{2}}\left(
+        \ket{0}\otimes\left(
+          \sqrt{\frac23}\ket{0}
+          - \sqrt{\frac13}\ket{1}
+        \right)
+        + \ket{1}\otimes\left(
+          \sqrt{\frac23}\ket{0}
+          + \sqrt{\frac13}\ket{1}
+        \right)
+      \right).
+    $$
+    What is the maximal probability with which we can determine which qubit (either the first or the second) we were given?

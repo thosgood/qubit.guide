@@ -298,10 +298,10 @@ We have already seen the following types of operators:
 | :- | :- |
 | **normal** | $AA^\dagger = A^\dagger A$ |
 | **unitary** | $A^\dagger = A^{-1}$ |
-| **Hermitian**, or **self-adjoint** | $A^\dagger = A$ |
+| **Hermitian** (or **self-adjoint**) | $A^\dagger = A$ |
 | **positive semi-definite** | $\braket{v}{A|v}\geq0$ for all $\ket{v}$ |
 
-The [**spectral theorem**](https://en.wikipedia.org/wiki/Spectral_theorem) says that an operator $A$ is normal if and only if it is **unitarily diagonalisable**: there exists some *unitary* $Q$ and some *diagonal* $D$ such that $A=Q^\dagger DQ$.
+The [**spectral theorem**](https://en.wikipedia.org/wiki/Spectral_theorem) says that an operator $A$ is normal if and only if it is **unitarily diagonalisable**: there exists some *unitary* $U$ and some *diagonal* $D$ such that $A=U^\dagger DU$.
 
 Note that unitary, Hermitian, and positive semi-definite operators are all, in particular, normal.
 :::
@@ -562,7 +562,7 @@ With this setup^[There is something called **superdense coding**, where one qubi
 
 
 
-## Distinguishability of non-orthogonal states {#distinguishability-of-non-orthogonal-states}
+## Distinguishing non-orthogonal states {#distinguishing-non-orthogonal-states}
 
 We have already mentioned (Section \@ref(projection-rule-and-incomplete-measurements)) that non-orthogonal states cannot be reliably distinguished, and now we can make this statement more precise.
 Suppose Alice sends Bob a message by choosing one of the two *non-orthogonal* states $\ket{s_1}$ and $\ket{s_2}$, where both are equally likely to be chosen.
@@ -579,11 +579,11 @@ What is the probability that Bob will decode the message correctly, and what is 
   \node [primary] (s1) at (15:1) {$\ket{s_1}$};
   \node [secondary] (d2) at (75:1) {$\ket{d_2}$};
   \node [secondary] (d1) at (-15:1) {$\ket{d_1}$};
-  \draw [->,primary] (0,0) to (s1);
-  \draw [->,primary] (0,0) to (s2);
-  \draw [->,secondary] (0,0) to (d1);
-  \draw [->,secondary] (0,0) to (d2);
-  \draw [dashed,secondary] (0,0) to (30:0.8);
+  \draw [->,thick,primary] (0,0) to (s1);
+  \draw [->,thick,primary] (0,0) to (s2);
+  \draw [->,thick,secondary] (0,0) to (d1);
+  \draw [->,thick,secondary] (0,0) to (d2);
+  \draw [dashed,thick,secondary] (0,0) to (30:0.8);
 \end{tikzpicture}
 ```
 
@@ -648,16 +648,16 @@ $$
 
 We can parametrise $|\braket{s_1}{s_2}| = \cos\alpha$, where $\alpha$ is then the angle between $\ket{s_1}$ and $\ket{s_2}$.
 
-```{r,engine='tikz',fig.width=2}
+```{r,engine='tikz',fig.width=1.5}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \newcommand{\ket}[1]{|#1\rangle}
 \begin{tikzpicture}[scale=2]
   \node [primary] (s2) at (45:1) {$\ket{s_2}$};
   \node [primary] (s1) at (15:1) {$\ket{s_1}$};
-  \draw [->,primary] (0,0) to (s1);
-  \draw [->,primary] (0,0) to (s2);
-  \draw [bend right,secondary] (15:0.45) to (45:0.45);
+  \draw [->,thick,primary] (0,0) to (s1);
+  \draw [->,thick,primary] (0,0) to (s2);
+  \draw [bend right,thick,secondary] (15:0.45) to (45:0.45);
   \node [secondary] at (30:0.35) {$\alpha$};
 \end{tikzpicture}
 ```
@@ -674,6 +674,8 @@ If we try just guessing the state, without any measurement, then we expect $\Pr 
 This is our lower bound, and in any attempt to distinguish the two states we should do better than that.
 If the two signal states are very close to each other, then $\sin\alpha$ is small and we are slightly better off than guessing.
 As we increase $\alpha$, the two states become more distinguishable, and, as we can see from the formula, when the two states become orthogonal they also become completely distinguishable.
+
+We will return to this same problem later on, in Section \@ref(distinguishing-non-orthogonal-states-again), where we will use a different, less ad-hoc, approach, working in the more general setting of so-called **density operators**.
 
 
 
@@ -721,7 +723,7 @@ The five axioms are then as follows.
 2. *Simplicity.* The integer $K$ is a function of $N$, and takes the minimum possible value consistent with these axioms for each $N$.
 3. *Subspaces.* If a system is such that its states all lie within an $M$-dimensional subspace (for some $M<N$), then it behaves exactly like a system of dimension $M$.
 4. *Composite systems.* Composite systems behave multiplicatively, i.e. if a system is a composite of two subsystems $A$ and $B$, then $N=N_AN_B$ and $K=K_AK_B$.
-5. *Continuity.* Given any two pure states of a system, there exists a continuous reversible transformation of the system that sends one to the other.
+5. *Continuity.* Given any two pure^[All of the states that we have been discussing so far are **pure states**, but we define what this means in Section \@ref(definitions).] states of a system, there exists a continuous reversible transformation of the system that sends one to the other.
 
 What is particularly nice, as a bonus result, is that if we make one tiny change to these axioms --- just dropping the word "continuous" from the fifth axiom --- then the result is exactly *classical* probability theory.
 :::
@@ -885,7 +887,7 @@ This is because any measurement can be reduced to the standard measurement by pe
 
 ### Optimal measurement
 
-The optimal measurement to distinguish between the two equally likely non-orthogonal signal states, $\ket{s_1}$ and $\ket{s_2}$, is described by the two orthogonal vectors $\ket{d_1}$ and $\ket{d_2}$, placed symmetrically around the signal states, as we saw in Section \@ref(distinguishability-of-non-orthogonal-states).
+The optimal measurement to distinguish between the two equally likely non-orthogonal signal states, $\ket{s_1}$ and $\ket{s_2}$, is described by the two orthogonal vectors $\ket{d_1}$ and $\ket{d_2}$, placed symmetrically around the signal states, as we saw in Section \@ref(distinguishing-non-orthogonal-states).
 But suppose the states are *not* equally likely: say $\ket{s_1}$ is chosen with probability $p_1$ and $\ket{s_2}$ with probability $p_2$.
 How would you modify the measurement to maximise the probability of success in this case?
 
