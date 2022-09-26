@@ -110,7 +110,7 @@
 
 \title{Introduction to Quantum Information Science}
 \author{\href{https://www.arturekert.org/}{Artur Ekert} and \href{https://thosgood.com}{Tim Hosgood}}
-\date{Last updated: 05 September 2022 \href{https://github.com/thosgood/qubit.guide/commits/main}{(see change history)}}
+\date{Last updated: 26 September 2022 \href{https://github.com/thosgood/qubit.guide/commits/main}{(see change history)}}
 
 
 \begin{document}
@@ -143,6 +143,7 @@ The version that you will find on this website was originally edited by \href{ht
 
 \begin{quote}
 \emph{Although almost complete, this book is still a work-in-progress --- a few sections are missing, but we are constantly updating and filling in the gaps!}
+\emph{Note that, because of this, external links to specific chapters or sections might break as things move around.}
 \end{quote}
 
 \hypertarget{plan-and-intended-audience}{%
@@ -172,7 +173,7 @@ But this does not mean that our treatment is cursory!
 In fact, by the end of this book you will have learnt a fair bit more than what might usually be covered in a standard quantum information science course that you would find in a mathematics masters degree, for example.
 
 The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find certain chapters easy, while others find the same ones difficult --- so if things seem hard to you, then don't worry: the next chapter might feel much easier!
-The only real prerequisites are a working knowledge of complex numbers and vectors and matrices; some previous exposure to elementary probability theory and Dirac bra-ket notation (for example) would be helpful, but we provide crash-course introductions to some topics like these at the end of this chapter.
+The only real prerequisites are a working knowledge of complex numbers and vectors and matrices, such as ``what is an eigenvector''; some previous exposure to elementary probability theory and Dirac bra-ket notation (for example) would be helpful, but we provide crash-course introductions to some topics like these at the end of this chapter.
 A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g.~state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory, algorithms) would be helpful, but is \emph{not at all} essential.
 
 Of course, even if you aren't familiar with the formal mathematics, then that shouldn't stop you from reading this book if you want to.
@@ -404,7 +405,7 @@ Mathematicians have simply taken these properties and defined vectors as \emph{a
 This is basically what an Italian mathematician Giuseppe Peano (1858--1932) did in a chapter of his 1888 book with an impressive title: \emph{Calcolo geometrico secondo l'Ausdehnungslehre di H. Grassmann preceduto dalle operazioni della logica deduttiva}.
 Following Peano, we define a \textbf{vector space} as a mathematical structure in which the notion of linear combination ``makes sense''.
 
-More formally, a \textbf{complex vector space} is a set \(V\) such that, given any two \textbf{vectors} \(a\) and \(b\) (that is, any two elements of \(V\)) and any two complex numbers \(\alpha\) and \(\beta\), we can form the linear combination \(\alpha a+\beta b\), which is also a vector in \(V\).
+More formally, a \textbf{complex vector space} is a set \(V\) such that, given any two \textbf{vectors} \(a\) and \(b\) (that is, any two elements of \(V\)) and any two \emph{complex} numbers \(\alpha\) and \(\beta\), we can form the linear combination \(\alpha a+\beta b\), which is also a vector in \(V\).
 There are certain ``nice properties'' that vector spaces things must satisfy. Addition of vectors must be commutative and associative, with an identity (the zero vector, which is often written as \(\mathbf{0}\)) and an inverse for each \(v\) (written as \(-v\)). Multiplication by complex numbers must obey the two distributive laws: \((\alpha+\beta)v = \alpha v+\beta v\) and \(\alpha (v+w) = \alpha v+\alpha w\).
 
 \begin{technical}
@@ -458,6 +459,8 @@ or, in column vectors,
 
 Throughout the course we will deal only with vector spaces of \emph{finite} dimensions.
 This is sufficient for all our purposes and we will avoid many mathematical subtleties associated with infinite dimensional spaces, for which we would need the tools of \textbf{functional analysis}.
+
+Formally, whenever we say \textbf{\(n\)-dimensional Euclidean space}, we mean the \emph{real} vector space \(\mathbb{R}^n\).
 
 \hypertarget{bras-and-kets}{%
 \subsection{Bras and kets}\label{bras-and-kets}}
@@ -752,7 +755,7 @@ To recover the first definition from the second, we argue as follows:
     \operatorname{tr}|b\rangle\langle a|
     &= \sum_k \langle e_k|b\rangle\langle a|e_k\rangle
   \\&= \sum_k \langle a|e_k\rangle\langle e_k|b\rangle
-  \\&= \langle a|\mathbf{1}\rangle|b\rangle
+  \\&= \langle a|\mathbf{1}|b\rangle
   \\&= \langle a|b\rangle.
   \end{aligned}
 \]
@@ -1370,15 +1373,15 @@ In the original paper\footnote{Max Born, ``Zur Quantenmechanik der Stoßvorgäng
 \subsubsection{Modifying the Born rule}\label{modifying-the-born-rule}}
 
 Suppose that we modified the Born rule, so that probabilities were given by the absolute values of amplitudes \emph{raised to the power \(p\)} (for some \(p>0\) not necessarily equal to \(2\)).
-Then physically admissible evolutions would still have to preserve the normalisation of probability: mathematically speaking, they would have to be isometries of \(p\)-norms.
+Then physically admissible evolutions would still have to preserve the normalisation of probability: mathematically speaking, they would have to be \emph{isometries of \(p\)-norms}.
 
-Recall that the \(p\)-norm of vector \(v\), with components \(v_1, v_2,\ldots, v_n\), is defined as\footnote{In the case \(p=2\), we recover the usual Pythagorean/Euclidean equation that we all know and love: the distance of the point \((v_1,v_2,\ldots,v_n)\) from the origin is \(\sqrt{v_1^2+v_2^2+\ldots+v_n^2}\); if we take \(n=2\) as well then we recover the Pythagoras theorem.}
+The \(**p\)-norm** of a vector \(v=(v_1, v_2,\ldots, v_n)\), for \(p\in\mathbb{N}\), is defined as\footnote{In the case \(p=2\), we recover the usual Pythagorean/Euclidean equation that we all know and love: the distance of the point \((v_1,v_2,\ldots,v_n)\) from the origin is \(\sqrt{v_1^2+v_2^2+\ldots+v_n^2}\); if we take \(n=2\) as well then we recover the Pythagoras theorem.}
 \[
   \sqrt[{}^p]{|v_1|^p + |v_2|^p + \ldots + |v_n|^p}.
 \]
 It is clear that any permutation of vector components and multiplication by phase factors (i.e.~unit complex numbers, of the form \(e^{i\varphi}\) for some \(\varphi\)) will leave any \(p\)-norm unchanged.
 It turns out that these complex permutations are the \emph{only} isometries, except for \emph{one} special case: \(p=2\).
-For \(p=2\), the isometries are unitary operations, which form a continuous group; in all other cases we are restricted to discrete permutations.
+For \(p=2\), the isometries are exactly unitaries, which form a \emph{continuous} group; in all other cases we are restricted to discrete permutations.
 We do not have to go into details of the proof since we can \emph{see} this result.
 
 
@@ -1389,7 +1392,7 @@ We do not have to go into details of the proof since we can \emph{see} this resu
 
 }
 
-\caption{The unit spheres in the \(p\)-norm for \(p=1,2,42,\infty\).}\label{fig:p-norm-unit-spheres}
+\caption{The unit spheres in the \(p\)-norm for \(p=1,2,42,\infty\) (where the definition of the \(\infty\)-norm is slightly different; we will come back to this in Section \ref{more-operator-norms}).}\label{fig:p-norm-unit-spheres}
 \end{figure}
 
 The image of the unit sphere must be preserved under probability preserving operations.
@@ -1513,7 +1516,7 @@ The moral of the story: if whatever you do requires an exponential use of resour
 \subsubsection{Imperfect prime tester}\label{imperfect-prime-tester}}
 
 There exists a randomised algorithm which tests whether a given number \(N\) is prime.\footnote{Primality used to be given as the classic example of a problem in \(\texttt{BPP}\) but not \(\texttt{P}\). However, in 2002 a deterministic polynomial time test for primality was proposed by Manindra Agrawal, Neeraj Kayal, and Nitin Saxena in the wonderfully titled paper ``PRIMES is in \(\texttt{P}\)''. Thus, since 2002, primality has been in \(\texttt{P}\).}
-The algorithm always returns \(\texttt{yes}\) when \(N\) is prime, and the probability it returns \(\texttt{yes}\) when \(N\) is not prime is \(\epsilon\), where \(\epsilon\) is never greater than a half (independently, each time you run the algorithm).
+The algorithm always returns \(\texttt{yes}\) when \(N\) is prime, and the probability it returns \(\texttt{yes}\) when \(N\) is not prime is \(\varepsilon\), where \(\varepsilon\) is never greater than a half (independently, each time you run the algorithm).
 You run this algorithm \(r\) times (for the same value of \(N\)), and each time the algorithm returns \(\texttt{yes}\).
 What is the probability that \(N\) is \emph{not} prime?
 
@@ -1522,7 +1525,7 @@ What is the probability that \(N\) is \emph{not} prime?
 
 Suppose a randomised algorithm solves a decision problem, returning \(\texttt{yes}\) or \(\texttt{no}\) answers.
 It gets the answer wrong with a probability not greater than \(\frac{1}{2}-\delta\), where \(\delta>0\) is a constant.\footnote{This result is known as the \textbf{Chernoff bound}.}
-If we are willing to accept a probability of error no larger than \(\epsilon\), then it suffices to run the computation \(r\) times, where \(r=O(\log 1/\epsilon)\).
+If we are willing to accept a probability of error no larger than \(\varepsilon\), then it suffices to run the computation \(r\) times, where \(r=O(\log 1/\varepsilon)\).
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-11-1} \end{center}
 
@@ -1674,7 +1677,7 @@ In practice, a qubit is typically a microscopic system, such as an atom, a nucle
 
 \end{idea}
 
-As we have already mentioned, any\footnote{ Here we are talking about \emph{isolated} systems. As you will soon learn, a larger class of physically admissible operations is described by completely positive maps. It may sound awfully complicated but, as you will soon see, it is actually very simple.} computational step, that is, any physically admissible operation \(U\) on a qubit, is described by a \((2\times 2)\) unitary matrix \(U\).
+As we have already mentioned, any\footnote{Here we are talking about \emph{isolated} systems. As you will soon learn, a larger class of physically admissible operations is described by completely positive maps. It may sound awfully complicated but, as you will soon see, it is actually very simple.} computational step, that is, any physically admissible operation \(U\) on a qubit, is described by a \((2\times 2)\) unitary matrix \(U\).
 It modifies the state of the qubit as
 \[
   |\psi\rangle
@@ -1751,16 +1754,26 @@ where the definitions of the Hadamard and phase-shift gates are as in \ref{qubit
 
 \begin{idea}
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}@{}}
+\begin{longtable}[]{@{}lll@{}}
 \toprule
 \endhead
-\textbf{Hadamard} & \(H = \frac{1}{\sqrt{2}}\begin{bmatrix}1&1\\1&-1\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&\frac{1}{\sqrt{2}}(|0\rangle+|1\rangle)\\|1\rangle&\longmapsto&\frac{1}{\sqrt{2}}(|0\rangle-|1\rangle)\end{array}\) \\
-\textbf{Phase-shift} & \(P_\varphi = \begin{bmatrix}1&0\\0&e^{i\varphi}\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&e^{i\varphi}|1\rangle\end{array}\) \\
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{Hadamard}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(H = \frac{1}{\sqrt{2}}\begin{bmatrix}1&1\\1&-1\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&\frac{1}{\sqrt{2}}(|0\rangle+|1\rangle)\\|1\rangle&\longmapsto&\frac{1}{\sqrt{2}}(|0\rangle-|1\rangle)\end{array}\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{Phase-shift}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(P_\varphi = \begin{bmatrix}1&0\\0&e^{i\varphi}\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&e^{i\varphi}|1\rangle\end{array}\)\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
 
 \end{idea}
 
@@ -1935,17 +1948,33 @@ but there are three specific examples of \(P_\varphi\) that are important enough
 
 \begin{idea}
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}@{}}
+\begin{longtable}[]{@{}lll@{}}
 \toprule
 \endhead
-\textbf{Phase-flip} & \(Z = \begin{bmatrix}1&0\\0&-1\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&-|1\rangle\end{array}\) \\
-\textbf{\(\frac{\pi}{4}\)-phase} & \(S = \begin{bmatrix}1&0\\0&i\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&i|1\rangle\end{array}\) \\
-\textbf{\(\frac{\pi}{8}\)-phase} & \(T = \begin{bmatrix}1&0\\0&e^{i\frac{\pi}{4}}\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&e^{i\frac{\pi}{4}}|1\rangle\end{array}\) \\
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{Phase-flip}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(Z = \begin{bmatrix}1&0\\0&-1\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&-|1\rangle\end{array}\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{\(\frac{\pi}{4}\)-phase}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(S = \begin{bmatrix}1&0\\0&i\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&i|1\rangle\end{array}\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{\(\frac{\pi}{8}\)-phase}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(T = \begin{bmatrix}1&0\\0&e^{i\frac{\pi}{4}}\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&e^{i\frac{\pi}{4}}|1\rangle\end{array}\)\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
 
 \end{idea}
 
@@ -1999,18 +2028,40 @@ These three operators, combined with the identity, satisfy a lot of nice formal 
 
 \begin{idea}
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}@{}}
+\begin{longtable}[]{@{}lll@{}}
 \toprule
 \endhead
-\textbf{Identity} & \(\mathbf{1}= \begin{bmatrix}1&0\\0&1\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&|1\rangle\end{array}\) \\
-\textbf{Bit-flip} & \(X = \begin{bmatrix}0&1\\1&0\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&|1\rangle\\|1\rangle&\longmapsto&|0\rangle\end{array}\) \\
-\textbf{Bit-phase-flip} & \(Y = \begin{bmatrix}0&-i\\i&0\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&i|1\rangle\\|1\rangle&\longmapsto&-i|0\rangle\end{array}\) \\
-\textbf{Phase-flip} & \(Z = \begin{bmatrix}1&0\\0&-1\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&-|1\rangle\end{array}\) \\
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{Identity}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\mathbf{1}= \begin{bmatrix}1&0\\0&1\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&|1\rangle\end{array}\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{Bit-flip}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(X = \begin{bmatrix}0&1\\1&0\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&|1\rangle\\|1\rangle&\longmapsto&|0\rangle\end{array}\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{Bit-phase-flip}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(Y = \begin{bmatrix}0&-i\\i&0\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&i|1\rangle\\|1\rangle&\longmapsto&-i|0\rangle\end{array}\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{Phase-flip}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(Z = \begin{bmatrix}1&0\\0&-1\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&-|1\rangle\end{array}\)\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
 
 \end{idea}
 
@@ -2228,16 +2279,16 @@ The circuit does exactly this:
 The first phase gate effects rotation by \(\alpha\) about the \(z\)-axis, the second phase gate is sandwiched between the two Hadamard gates, and these three gates together effect rotation by \(\varphi\) about the \(x\)-axis, and, finally, the third phase gates effects rotation by \(\beta\) about the \(z\)-axis.
 So we can implement any unitary \(U\) by choosing the three phase shifts, \(\alpha\), \(\varphi\), and \(\beta\), which are known as the three \href{https://en.wikipedia.org/wiki/Euler_angles}{\textbf{Euler angles}}.
 
-\hypertarget{a-finite-set-of-universal-gates}{%
-\subsection{A finite set of universal gates}\label{a-finite-set-of-universal-gates}}
+\hypertarget{finite-set-of-universal-gates}{%
+\subsection{A finite set of universal gates}\label{finite-set-of-universal-gates}}
 
 The Hadamard gate and the phase gates, with adjustable phases, allow us to implement an arbitrary single-qubit unitary \emph{exactly}.
 The tacit assumption here is that we have here \emph{infinitely many} phase gates: one gate for each phase.
 In fact, we can pick just one phase gate, namely any phase gate \(P_\alpha\) with the phase \(\alpha\) that is incommensurate\footnote{That is, there do \emph{not} exist any \(m,n\in\mathbb{Z}\) such that \(m\alpha=n\pi\). For example, it suffices to take \(\alpha\) to be rational, since \(\pi\) is irrational.} with \(\pi\).
 It is clear that repeated iteration of \(P_\alpha\) can be used to approximate any other phase gate to arbitrary accuracy: indeed, rotate the Bloch sphere by \(\alpha\) about the \(z\)-axis sufficiently many times and you end up as close as you please to any other rotation about the \(z\)-axis.
 
-If you want to be \(\epsilon\)-close to the desired angle of rotation, then you may need to repeat the rotation by \(\alpha\) roughly \(1/\epsilon\) times.
-Indeed, within \(n\) applications (for\footnote{The notation \(x\gg y\) is rather imprecise, but it basically means ``\(x\) is much much larger than \(y\), and, in particular, large enough for whatever we are claiming to be true''.} \(n\alpha\gg 2\pi\)) of \(P_\alpha\), we expect the accessible angles to be approximately evenly distributed within the range \([0,2\pi]\), i.e.~any angle of rotation can be achieved to an accuracy of \(\epsilon=2\pi/n\) by using up to \(n\approx 1/\epsilon\) applications of \(P_\alpha\).
+If you want to be \(\varepsilon\)-close to the desired angle of rotation, then you may need to repeat the rotation by \(\alpha\) roughly \(1/\varepsilon\) times.
+Indeed, within \(n\) applications (for\footnote{The notation \(x\gg y\) is rather imprecise, but it basically means ``\(x\) is much much larger than \(y\), and, in particular, large enough for whatever we are claiming to be true''.} \(n\alpha\gg 2\pi\)) of \(P_\alpha\), we expect the accessible angles to be approximately evenly distributed within the range \([0,2\pi]\), i.e.~any angle of rotation can be achieved to an accuracy of \(\varepsilon=2\pi/n\) by using up to \(n\approx 1/\varepsilon\) applications of \(P_\alpha\).
 So we can use \emph{just one} phase gate to \emph{approximate} the \emph{three} phase gates in the circuit in Figure \ref{fig:universal-circuit-for-2-by-2}.
 
 There are other ways of implementing irrational rotations of the Bloch sphere.
@@ -2353,7 +2404,7 @@ Let us introduce a second beam-splitter and place two normal mirrors so that bot
 
 }
 
-\caption{Two beam-splitters with mirrors, arranged so that the photon travels through both, along with two detectors. We label the detectors in such a way that, if a photon enters input \(|i\rangle\) and is \emph{transmitted} (not reflected) through both beam-splitters, then it is detected by detector \(i\).}\label{fig:two-beam-splitters}
+\caption{Two beam-splitters with mirrors, arranged so that the photon travels through both, along with two detectors. We label the detectors in such a way that, if a photon enters input \(|j\rangle\) and is \emph{transmitted} (not reflected) through both beam-splitters, then it is detected by detector \(j\).}\label{fig:two-beam-splitters}
 \end{figure}
 
 Recall the Kolmogorov additivity axiom in classical probability theory: whenever something can happen in several alternative ways, we add probabilities for each way considered separately.
@@ -2441,16 +2492,26 @@ where
 
 \begin{idea}
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}@{}}
+\begin{longtable}[]{@{}lll@{}}
 \toprule
 \endhead
-\textbf{bit-flip} & \(\texttt{NOT}\equiv X\) & \(\begin{bmatrix}0&1\\1&0\end{bmatrix}\) \\
-\textbf{beam-splitter} & \(\sqrt{\texttt{NOT}}\equiv B\) & \(\frac{1}{\sqrt{2}}\begin{bmatrix}1&i\\i&1\end{bmatrix}\) \\
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{bit-flip}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\texttt{NOT}\equiv X\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{bmatrix}0&1\\1&0\end{bmatrix}\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{beam-splitter}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\sqrt{\texttt{NOT}}\equiv B\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\frac{1}{\sqrt{2}}\begin{bmatrix}1&i\\i&1\end{bmatrix}\)\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
 
 \end{idea}
 
@@ -2573,18 +2634,40 @@ We have already defined the Pauli operators (Section \ref{pauli-operators}), but
 
 \begin{idea}
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.33}}@{}}
+\begin{longtable}[]{@{}lll@{}}
 \toprule
 \endhead
-\textbf{Identity} & \(\mathbf{1}= \begin{bmatrix}1&0\\0&1\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&|1\rangle\end{array}\) \\
-\textbf{Bit-flip} & \(X = \begin{bmatrix}0&1\\1&0\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&|1\rangle\\|1\rangle&\longmapsto&|0\rangle\end{array}\) \\
-\textbf{Bit-phase-flip} & \(Y = \begin{bmatrix}0&-i\\i&0\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&i|1\rangle\\|1\rangle&\longmapsto&-i|0\rangle\end{array}\) \\
-\textbf{Phase-flip} & \(Z = \begin{bmatrix}1&0\\0&-1\end{bmatrix}\) & \(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&-|1\rangle\end{array}\) \\
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{Identity}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\mathbf{1}= \begin{bmatrix}1&0\\0&1\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&|1\rangle\end{array}\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{Bit-flip}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(X = \begin{bmatrix}0&1\\1&0\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&|1\rangle\\|1\rangle&\longmapsto&|0\rangle\end{array}\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{Bit-phase-flip}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(Y = \begin{bmatrix}0&-i\\i&0\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&i|1\rangle\\|1\rangle&\longmapsto&-i|0\rangle\end{array}\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.30\columnwidth}\raggedright
+\textbf{Phase-flip}\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(Z = \begin{bmatrix}1&0\\0&-1\end{bmatrix}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\raggedright
+\(\begin{array}{lcr}|0\rangle&\longmapsto&|0\rangle\\|1\rangle&\longmapsto&-|1\rangle\end{array}\)\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
 
 \end{idea}
 
@@ -2631,7 +2714,7 @@ Note, however, that this does \emph{not} imply that e.g.~\(\operatorname{tr}(ABC
 We can also define an \textbf{inner product} on the vector space of matrices:\footnote{The \(\frac{1}{2}\) coefficient here is simply the normalisation factor, which changes if we consider \emph{multi-qubit} Pauli operators.}
 
 \begin{idea}
-The \textbf{Hilbert--Schmidt product} of \(A\) and \(B\) is given by
+The \textbf{Hilbert--Schmidt product} of \(A\) and \(B\) is given by\footnote{The factor of \(\frac{1}{2}\) isn't necessary, but simplifies some calculations.}
 \[
   (A|B) = \frac{1}{2} \operatorname{tr}A^\dagger B.
 \]
@@ -3135,7 +3218,7 @@ You would like to know whether a particular room has a bomb in it with as much c
   Would the new setup improve the overall success rate of the detection of a bomb without blowing it up?
 \item
   There exists a scheme, involving many beam-splitters and something called the \textbf{quantum Zeno effect}, such that the success rate for detecting a bomb without blowing it up approaches 100\%.
-  Try to work it out, or find a solution on the internet.
+  Try to work it out, or find a solution on the internet.\footnote{You can play around with this setup on the \href{https://lab.quantumflytrap.com/lab/elitzur-vaidman-bomb?mode=laser}{Quantum Flytrap Virtual Lab}.}
 \end{enumerate}
 
 \hypertarget{orthonormal-pauli-basis}{%
@@ -3450,6 +3533,7 @@ There are a \emph{lot} of other sources where you can read about such things ---
   F. Giacosa, ``On unitary evolution and collapse in Quantum Mechanics''. Quanta \textbf{3} (2014), pp.~156--170. arXiv:\href{https://arxiv.org/abs/1406.2344}{1406.2344}.
 \end{itemize}
 
+
 \end{technical}
 
 A measurement is a physical process and can be explained without any ``collapse'', but it is usually a complicated process in which one complex system (a measuring apparatus or an observer) interacts and gets correlated with a physical system being measured.
@@ -3478,6 +3562,7 @@ An orthonormal basis satisfies two conditions:
 \item
   \textbf{Completeness}: \(\sum_k|e_k\rangle\langle e_k| = \mathbf{1}\)
 \end{itemize}
+
 
 \end{idea}
 
@@ -3524,6 +3609,7 @@ Conditions on \emph{projectors}:
 \item
   \textbf{Completeness}: \(\sum_k P_k = \mathbf{1}\)
 \end{itemize}
+
 
 \end{idea}
 
@@ -3588,14 +3674,14 @@ We have already seen the following types of operators:
 \begin{longtable}[]{@{}ll@{}}
 \toprule
 \endhead
-\textbf{normal} & \(AA^\dagger = A^\dagger A\) \\
-\textbf{unitary} & \(A^\dagger = A^{-1}\) \\
-\textbf{Hermitian}, or \textbf{self-adjoint} & \(A^\dagger = A\) \\
-\textbf{positive semi-definite} & \(\langle v|A|v\rangle\geqslant 0\) for all \(|v\rangle\) \\
+\textbf{normal} & \(AA^\dagger = A^\dagger A\)\tabularnewline
+\textbf{unitary} & \(A^\dagger = A^{-1}\)\tabularnewline
+\textbf{Hermitian} (or \textbf{self-adjoint}) & \(A^\dagger = A\)\tabularnewline
+\textbf{positive semi-definite} & \(\langle v|A|v\rangle\geqslant 0\) for all \(|v\rangle\)\tabularnewline
 \bottomrule
 \end{longtable}
 
-The \href{https://en.wikipedia.org/wiki/Spectral_theorem}{\textbf{spectral theorem}} says that an operator \(A\) is normal if and only if it is \textbf{unitarily diagonalisable}: there exists some \emph{unitary} \(Q\) and some \emph{diagonal} \(D\) such that \(A=Q^\dagger DQ\).
+The \href{https://en.wikipedia.org/wiki/Spectral_theorem}{\textbf{spectral theorem}} says that an operator \(A\) is normal if and only if it is \textbf{unitarily diagonalisable}: there exists some \emph{unitary} \(U\) and some \emph{diagonal} \(D\) such that \(A=U^\dagger DU\).
 
 Note that unitary, Hermitian, and positive semi-definite operators are all, in particular, normal.
 
@@ -3850,8 +3936,8 @@ With this setup\footnote{There is something called \textbf{superdense coding}, w
 
 \end{idea}
 
-\hypertarget{distinguishability-of-non-orthogonal-states}{%
-\subsection{Distinguishability of non-orthogonal states}\label{distinguishability-of-non-orthogonal-states}}
+\hypertarget{distinguishing-non-orthogonal-states}{%
+\subsection{Distinguishing non-orthogonal states}\label{distinguishing-non-orthogonal-states}}
 
 We have already mentioned (Section \ref{projection-rule-and-incomplete-measurements}) that non-orthogonal states cannot be reliably distinguished, and now we can make this statement more precise.
 Suppose Alice sends Bob a message by choosing one of the two \emph{non-orthogonal} states \(|s_1\rangle\) and \(|s_2\rangle\), where both are equally likely to be chosen.
@@ -3944,6 +4030,8 @@ This is our lower bound, and in any attempt to distinguish the two states we sho
 If the two signal states are very close to each other, then \(\sin\alpha\) is small and we are slightly better off than guessing.
 As we increase \(\alpha\), the two states become more distinguishable, and, as we can see from the formula, when the two states become orthogonal they also become completely distinguishable.
 
+We will return to this same problem later on, in Section \ref{distinguishing-non-orthogonal-states-again}, where we will use a different, less ad-hoc, approach, working in the more general setting of so-called \textbf{density operators}.
+
 \hypertarget{wiesners-quantum-money}{%
 \subsection{Wiesner's quantum money}\label{wiesners-quantum-money}}
 
@@ -3986,7 +4074,7 @@ The five axioms are then as follows.
 \item
   \emph{Composite systems.} Composite systems behave multiplicatively, i.e.~if a system is a composite of two subsystems \(A\) and \(B\), then \(N=N_AN_B\) and \(K=K_AK_B\).
 \item
-  \emph{Continuity.} Given any two pure states of a system, there exists a continuous reversible transformation of the system that sends one to the other.
+  \emph{Continuity.} Given any two pure\footnote{All of the states that we have been discussing so far are \textbf{pure states}, but we define what this means in Section \ref{definitions}.} states of a system, there exists a continuous reversible transformation of the system that sends one to the other.
 \end{enumerate}
 
 What is particularly nice, as a bonus result, is that if we make one tiny change to these axioms --- just dropping the word ``continuous'' from the fifth axiom --- then the result is exactly \emph{classical} probability theory.
@@ -4135,7 +4223,7 @@ This is because any measurement can be reduced to the standard measurement by pe
 \hypertarget{optimal-measurement}{%
 \subsubsection{Optimal measurement}\label{optimal-measurement}}
 
-The optimal measurement to distinguish between the two equally likely non-orthogonal signal states, \(|s_1\rangle\) and \(|s_2\rangle\), is described by the two orthogonal vectors \(|d_1\rangle\) and \(|d_2\rangle\), placed symmetrically around the signal states, as we saw in Section \ref{distinguishability-of-non-orthogonal-states}.
+The optimal measurement to distinguish between the two equally likely non-orthogonal signal states, \(|s_1\rangle\) and \(|s_2\rangle\), is described by the two orthogonal vectors \(|d_1\rangle\) and \(|d_2\rangle\), placed symmetrically around the signal states, as we saw in Section \ref{distinguishing-non-orthogonal-states}.
 But suppose the states are \emph{not} equally likely: say \(|s_1\rangle\) is chosen with probability \(p_1\) and \(|s_2\rangle\) with probability \(p_2\).
 How would you modify the measurement to maximise the probability of success in this case?
 
@@ -4497,17 +4585,19 @@ In the standard basis \(\{|00\rangle,|01\rangle,|10\rangle,|11\rangle\}\), it is
 
 \begin{idea}
 
-\begin{longtable}[]{@{}
-  >{\centering\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.00}}@{}}
+\begin{longtable}[]{@{}c@{}}
 \toprule
-\begin{minipage}[b]{\linewidth}\centering
-controlled-\(\texttt{NOT}\)
-\end{minipage} \\
+\begin{minipage}[b]{0.97\columnwidth}\centering
+controlled-\(\texttt{NOT}\)\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
-\(\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&\begin{matrix}0&1\\1&0\end{matrix}\end{array}\right]\) \\
+\begin{minipage}[t]{0.97\columnwidth}\centering
+\(\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&\begin{matrix}0&1\\1&0\end{matrix}\end{array}\right]\)\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
 
 \end{idea}
 
@@ -4545,6 +4635,7 @@ Here is a simple circuit that demonstrates the entangling power of \(\texttt{c-N
 (Generating entanglement).
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-38-1} \end{center}
+
 
 \end{circuit}
 
@@ -4608,6 +4699,7 @@ Consider the following circuit, which is built from a Bell state generator follo
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-39-1} \end{center}
 
+
 \end{circuit}
 
 The first input qubit (counting from the top) is in some arbitrary state.
@@ -4648,7 +4740,7 @@ Upon performing the standard measurement and learning the values of \(x\) and \(
 (e.g.~if \(x=0\) and \(y=1\), then we choose \(X\)).
 We then apply this transformation to the third qubit, which restores the original state of the first qubit.
 
-If you understand how this circuit works then you are ready for quantum teleportation.
+If you understand how this circuit works\footnote{You can play around with this on the \href{https://lab.quantumflytrap.com/lab/quantum-teleportation?mode=laser}{Quantum Flytrap Virtual Lab}.}, then you are ready for quantum teleportation.
 Here is a dramatic version.
 
 \begin{quote}
@@ -4749,17 +4841,19 @@ Another common two-qubit gate is the \textbf{controlled-phase} gate, denoted \(\
 
 \begin{idea}
 
-\begin{longtable}[]{@{}
-  >{\centering\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.00}}@{}}
+\begin{longtable}[]{@{}c@{}}
 \toprule
-\begin{minipage}[b]{\linewidth}\centering
-controlled-phase
-\end{minipage} \\
+\begin{minipage}[b]{0.97\columnwidth}\centering
+controlled-phase\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
-\(\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&\begin{matrix}1&0\\0&e^{i\varphi}\end{matrix}\end{array}\right]\) \\
+\begin{minipage}[t]{0.97\columnwidth}\centering
+\(\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&\begin{matrix}1&0\\0&e^{i\varphi}\end{matrix}\end{array}\right]\)\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
 
 \end{idea}
 
@@ -4788,6 +4882,7 @@ In order to see the entangling power of the controlled-phase shift gate, conside
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-41-1} \end{center}
 
+
 \end{circuit}
 
 In this circuit, first the two Hadamard gates prepare the equally-weighted superposition of all states from the computational basis
@@ -4812,17 +4907,19 @@ where \(U\) is an arbitrary single-qubit unitary transformation \(U\).
 
 \begin{idea}
 
-\begin{longtable}[]{@{}
-  >{\centering\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.00}}@{}}
+\begin{longtable}[]{@{}c@{}}
 \toprule
-\begin{minipage}[b]{\linewidth}\centering
-controlled-\(U\)
-\end{minipage} \\
+\begin{minipage}[b]{0.97\columnwidth}\centering
+controlled-\(U\)\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
-\(\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&U\end{array}\right]\) \\
+\begin{minipage}[t]{0.97\columnwidth}\centering
+\(\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&U\end{array}\right]\)\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
+
 
 \end{idea}
 
@@ -4861,6 +4958,7 @@ Consider the following circuit.
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-44-1} \end{center}
 
 where \(|u\rangle\) is an \emph{eigenstate} of \(U\), so that \(U|u\rangle = e^{i\varphi}|u\rangle\) for some \(\varphi\).
+
 
 \end{circuit}
 
@@ -4962,15 +5060,30 @@ The existence of entangled states leads to an obvious question: if we cannot att
 In the next few chapters we will see that, when we limit our attentions to a part of a larger system, states are not represented by vectors, measurements are not described by orthogonal projections, and evolution is not unitary.
 As a spoiler, here is a dictionary of some of the new concepts that will soon be introduced:
 
-\begin{longtable}[]{@{}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.29}}
-  >{\centering\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.43}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.29}}@{}}
+\begin{longtable}[]{@{}rcl@{}}
 \toprule
 \endhead
-state vectors & \(\rightsquigarrow\) & density operators \\
-orthogonal projectors & \(\rightsquigarrow\) & positive operator-valued measures \\
-unitary evolutions & \(\rightsquigarrow\) & completely-positive trace-preserving maps \\
+\begin{minipage}[t]{0.26\columnwidth}\raggedleft
+state vectors\strut
+\end{minipage} & \begin{minipage}[t]{0.39\columnwidth}\centering
+\(\rightsquigarrow\)\strut
+\end{minipage} & \begin{minipage}[t]{0.26\columnwidth}\raggedright
+density operators\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.26\columnwidth}\raggedleft
+orthogonal projectors\strut
+\end{minipage} & \begin{minipage}[t]{0.39\columnwidth}\centering
+\(\rightsquigarrow\)\strut
+\end{minipage} & \begin{minipage}[t]{0.26\columnwidth}\raggedright
+positive operator-valued measures\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.26\columnwidth}\raggedleft
+unitary evolutions\strut
+\end{minipage} & \begin{minipage}[t]{0.39\columnwidth}\centering
+\(\rightsquigarrow\)\strut
+\end{minipage} & \begin{minipage}[t]{0.26\columnwidth}\raggedright
+completely-positive trace-preserving maps\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -5065,6 +5178,7 @@ Show that, for any states \(|\psi_1\rangle\) and \(|\psi_2\rangle\) of two qubit
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-45-1} \end{center}
 
+
 \end{circuit}
 
 \hypertarget{controlled-not-circuit}{%
@@ -5077,6 +5191,7 @@ Show that the circuit below gives another implementation of the controlled-\(\te
 (Controlled-\(\texttt{NOT}\), again).
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-46-1} \end{center}
+
 
 \end{circuit}
 
@@ -5093,6 +5208,7 @@ Take a look at the circuit below, where \(M\) stands for measurement in the stan
 (?).
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-47-1} \end{center}
+
 
 \end{circuit}
 
@@ -5187,6 +5303,7 @@ The swap gate \(S\) on two qubits is defined first on product vectors by \(S\col
 (Symmetric and antisymmetric projection).
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-49-1} \end{center}
+
 
 \end{circuit}
 
@@ -5443,8 +5560,9 @@ The Schmidt decomposition follows from the \href{https://en.wikipedia.org/wiki/S
 \[
   C = UDV
 \]
-where \(U\) and \(V\) are (respectively) \((n\times n)\) and \((m\times m)\) unitary matrices, and \(D\) is an \((n\times m)\) diagonal matrix with real, non-negative elements in descending order \(d_1\geqslant d_2\geqslant\ldots\geqslant d_{\min{(n,m)}}\) (and with the rest of the matrix is filled with zeros).
+where \(U\) and \(V\) are (respectively) \((n\times n)\) and \((m\times m)\) unitary matrices, and \(D\) is an \((n\times m)\) diagonal matrix with real, non-negative elements in descending order \(d_1\geqslant d_2\geqslant\ldots\geqslant d_{\min\{n,m\}}\) (and with the rest of the matrix is filled with zeros).
 The elements \(d_k\) are called the \textbf{singular values} of \(C\).
+We will return to the SVD in more detail later on, in Section \ref{operator-decompositions}.
 
 You can visualize the SVD by thinking of \(C\) as representing a linear
 transformation from \(m\)-dimensional to \(n\)-dimensional Euclidean space: it maps the unit ball in the \(m\)-dimensional space to an ellipsoid in
@@ -5452,7 +5570,7 @@ the \(n\)-dimensional space; the singular values are the lengths of
 the semi-axes of that ellipsoid; the matrices \(U\) and \(V\) carry
 information about the locations of those axes and the vectors in
 the first space which map into them.
-Thus SVD tells us that the transformation \(C\) consists of rotating the unit ball (transformation \(V\)), stretching the \(k\)-th axis by a factor of \(d_k\), and then rotating the resulting ellipsoid (transformation \(U\)).
+Thus SVD tells us that the transformation \(C\) consists of rotating the unit ball (the transformation \(V\)), stretching the \(k\)-th axis by a factor of \(d_k\) (the transformation \(D\)), and then rotating the resulting ellipsoid (the transformation \(U\)).
 
 Using the index notation \(C_{ij} = \sum_k U_{ik}d_k V_{kj}\), we can thus apply SVD to \(c_{ij}\):
 \[
@@ -5511,12 +5629,13 @@ A \textbf{density operator} \(\rho\) on a Hilbert space \(\mathcal{H}\) is a non
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Hermitian.} \(\rho^\dagger=\rho\)
+  \textbf{Hermitian:} \(\rho^\dagger=\rho\)
 \item
-  \textbf{Non-negative.} \(\langle v|\rho|v\rangle\geqslant 0\) for all \(|v\rangle\)
+  \textbf{Non-negative:} \(\langle v|\rho|v\rangle\geqslant 0\) for all \(|v\rangle\)
 \item
-  \textbf{Trace one.} \(\operatorname{tr}\rho=1\).
+  \textbf{Trace one:} \(\operatorname{tr}\rho=1\).
 \end{itemize}
+
 
 \end{idea}
 
@@ -5707,8 +5826,8 @@ The process in which off-diagonal entries go to zero is called \textbf{decoheren
   \end{bmatrix}
   \longmapsto
   \begin{bmatrix}
-    |\alpha|^2 & \epsilon
-  \\\epsilon^\star & |\beta|^2
+    |\alpha|^2 & \varepsilon
+  \\\varepsilon^\star & |\beta|^2
   \end{bmatrix}
   \longmapsto
   \begin{bmatrix}
@@ -5716,7 +5835,7 @@ The process in which off-diagonal entries go to zero is called \textbf{decoheren
   \\0 & |\beta|^2
   \end{bmatrix}
 \]
-For \(\epsilon = \alpha\beta^\star\) we have a pure quantum state (``full interference capability'') and for \(\epsilon=0\) we have a classical probability distribution over the standard basis (``no interference capability'').
+For \(\varepsilon = \alpha\beta^\star\) we have a pure quantum state (``full interference capability'') and for \(\varepsilon=0\) we have a classical probability distribution over the standard basis (``no interference capability'').
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -6179,70 +6298,6 @@ What is the partial trace of \(\rho\) over each qubit?
 \subsubsection{Maximally Bell}\label{maximally-bell}}
 
 What is the density matrix corresponding to two qubits prepared in the mixture of the Bell state \(\Phi^+=\frac{1}{\sqrt{2}}(|00\rangle+|11\rangle)\) and the maximally mixed state\footnote{The maximally mixed state of two qubits is described by a \((4\times 4)\) matrix in \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\).}, both with equal probability \(\frac{1}{2}\)?
-
-\hypertarget{trace-norm}{%
-\subsubsection{Trace norm}\label{trace-norm}}
-
-The \textbf{trace norm} \(\|A\|_{\operatorname{tr}}\) of a matrix \(A\) is defined by
-\[
-  \|A\|_{\operatorname{tr}} = \operatorname{tr}\left(\sqrt{A^\dagger A}\right).
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  Show that, if \(A\) is Hermitian, then its trace norm is equal to the sum of the absolute values of its eigenvalues.
-\item
-  What is the trace norm of an arbitrary density matrix?
-\end{enumerate}
-
-The distance induced by the trace norm is called the \textbf{trace distance}, defined as
-\[
-  d_{\operatorname{tr}}(\rho_1,\rho_2) = \frac{1}{2}\|\rho_2-\rho_1\|_{\operatorname{tr}}.
-\]
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  What is the trace distance between two arbitrary pure states?
-\end{enumerate}
-
-\begin{technical}
-Since we only work with finite-dimensional Hilbert spaces, all norms are equivalent, and there are \href{https://en.wikipedia.org/wiki/Matrix_norm}{quite a few} other interesting norms on matrices.
-
-\end{technical}
-
-\hypertarget{distinguishability-and-the-trace-distance}{%
-\subsubsection{Distinguishability and the trace distance}\label{distinguishability-and-the-trace-distance}}
-
-Say we have a physical system which is been prepared in one of two states (say, \(\rho_1\) and \(\rho_2\)), each with equal probability.
-Then a \emph{single} measurement can distinguish between the two preparations with probability \emph{at most} \(\frac{1}{2}[1+d_{\operatorname{tr}}(\rho_1,\rho_2)]\).
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  Suppose that \(\rho_1\) and \(\rho_2\) commute.\footnote{The commutativity assumption makes this problem essentially a special case of a purely classical one: distinguishing between two probability distributions.}
-  Using the spectral decompositions of \(\rho_1\) and \(\rho_2\) in their common eigenbasis, describe the optimal measurement that can distinguish between the two states. What is its probability of success?
-\item
-  Suppose that you are given one randomly selected qubit from a pair in the state
-  \[
-     |\psi\rangle =
-     \frac{1}{\sqrt{2}}\left(
-       |0\rangle\otimes\left(
-         \sqrt{\frac23}|0\rangle
-         - \sqrt{\frac13}|1\rangle
-       \right)
-       + |1\rangle\otimes\left(
-         \sqrt{\frac23}|0\rangle
-         + \sqrt{\frac13}|1\rangle
-       \right)
-     \right)
-   \]
-  (which we have already seen in Exercise \ref{some-density-operator-calculations}).
-  What is the maximal probability with which you can determine which qubit (either the first or the second) you were given?
-\end{enumerate}
 
 \hypertarget{spectral-decompositions-and-common-eigenbases}{%
 \subsubsection{Spectral decompositions and common eigenbases}\label{spectral-decompositions-and-common-eigenbases}}
@@ -6768,6 +6823,7 @@ This expression shows two different ways of looking at quantum evolutions, and b
   Note that this operator--sum decomposition is \emph{not} unique, since the Kraus operators \(E_i\) depend on the choice of basis in the ancilla.
 \end{itemize}
 
+
 \end{idea}
 
 These two representations are equivalent, and we can easily switch between them:
@@ -7234,6 +7290,7 @@ Pictorially, we might represent this by something like
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-59-1} \end{center}
 
+
 \end{idea}
 
 In this form, the Choi--Jamiołkowski isomorphism gives us a simple necessary and sufficient condition for a linear map to be a quantum channel:
@@ -7286,7 +7343,7 @@ This establishes the desired isomorphism between \emph{states} and \emph{channel
 The equations
 \[
   \mathcal{E}(\rho)
-  = d(\operatorname{tr}\otimes\mathbf{1})\left[(\rho^T\otimes\mathbf{1})\widetilde{\cal{E}}\right].
+  = d(\operatorname{tr}\otimes\mathbf{1})\left[(\rho^T\otimes\mathbf{1})\widetilde{\mathcal{E}}\right].
 \]
 and
 \[
@@ -7417,7 +7474,7 @@ Using the aforementioned fact that any vector \(|\psi\rangle\) in \(\mathcal{H}\
 
 So how many Kraus operators do we really need?
 Channel-state duality tells us that the \emph{minimal} number of Kraus operators needed to express \(\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')\) in the operator-sum form is given by the rank of its Choi matrix \(\widetilde{\mathcal{E}}\), i.e.~we need \emph{no more than} \(dd'\) such operators (where \(d=\dim\mathcal{H}\) and \(d'=\dim\mathcal{H}'\)).
-In fact, this minimal set of Kraus operators corresponds to the \emph{spectral decomposition} of \(\widetilde{\mathcal{E}}\).
+In fact, this minimal set of Kraus operators corresponds to the \emph{spectral decomposition}\footnote{We talk about spectral decomposition in more detail in Section \ref{operator-decompositions}.} of \(\widetilde{\mathcal{E}}\).
 
 Indeed, if \(\widetilde{\mathcal{E}}=\sum_k|\widetilde{v}_k\rangle\langle\widetilde{v}_k|\) and \(|\widetilde{v}_k\rangle=(\mathbf{1}\otimes E_k)|\Omega\rangle\), then the orthogonality of \(|\widetilde{v}_k\rangle\) and \(|\widetilde{v}_l\rangle\) implies the orthogonality (in the Hilbert--Schmidt sense\footnote{Recall that the Hilbert--Schmidt product \((A|B)\) of two operators \(A\) and \(B\) is defined by \((A|B)=\frac{1}{2}\operatorname{tr}A^\dagger B\).}) of the corresponding Kraus operators \(E_k\) and \(E_l\).
 In order to see this, we write \(\langle\widetilde{v}_k|\widetilde{v}_l\rangle\) as
@@ -7457,6 +7514,7 @@ If this is the case, then this decomposition has the following properties:
 \item
   Two sets of Kraus operators \(\{E_k\}\) and \(\{F_l\}\) represent the same map \(\mathcal{E}\) if and only if there exists a unitary \(R\) such that \(E_k =\sum_l R_{kl}F_l\) (where the smaller set of the Kraus operators is padded with zeros, if necessary).
 \end{itemize}
+
 
 \end{idea}
 
@@ -7582,6 +7640,7 @@ Then the following statements are equivalent:
       \]
   for every state \(\rho\).
 \end{enumerate}
+
 
 \end{idea}
 
@@ -8104,7 +8163,7 @@ One such example is in the polarisation of light, where we stumble across an int
 
 The (much-simplified) one sentence introduction to light polarisation is this: light is made of \href{https://en.wikipedia.org/wiki/Transverse_wave}{\textbf{transverse}} waves, and transverse waves have a ``direction'', which we call \textbf{polarisation}; a \textbf{polarising filter} only allows waves of a certain polarisation to pass through.
 If we take two polarising filters, and place them on top of each other with their polarisations oriented at \(90^\circ\) to one another, then basically no light will pass through, since the only light that can pass through the first filter is orthogonally polarised with respect to the second filter, and is thus blocked from passing through.
-But then, if we take a third filter, and place it in between the other two, at an angle in the middle of both (i.e.~at \(45^\circ\)), then somehow \emph{more} light is let through than if the middle filter weren't there at all.\footnote{For the more visually inclined, there is a \href{https://www.youtube.com/watch?v=zcqZHYo7ONs}{video on YouTube by minutephysics} about this experiment, or you can play with a virtual version at \href{https://lab.quantumflytrap.com/lab/bell-inequality?mode=detections}{Virtual Lab by Quantum Flytrap}.}
+But then, if we take a third filter, and place it in between the other two, at an angle in the middle of both (i.e.~at \(45^\circ\)), then somehow \emph{more} light is let through than if the middle filter weren't there at all.\footnote{For the more visually inclined, there is a \href{https://www.youtube.com/watch?v=zcqZHYo7ONs}{video on YouTube by minutephysics} about this experiment, or you can play with a virtual version on the \href{https://lab.quantumflytrap.com/lab/bell-inequality?mode=laser}{Quantum Flytrap Virtual Lab}.}
 
 This is intrinsically linked to \textbf{Bell's theorem}, which proves the technical sounding statement that ``any local real hidden variable theory must satisfy certain statistical properties'', which is \emph{not} satisfied in reality, as many quantum mechanical experiments (such as the above) show!
 
@@ -8567,13 +8626,13 @@ Note that there are only four possibilities for what \(f\) can be: it could be o
 
 \begin{longtable}[]{@{}rcc@{}}
 \toprule
-& \(f(0)\) & \(f(1)\) \\
+& \(f(0)\) & \(f(1)\)\tabularnewline
 \midrule
 \endhead
-constant & \(0\) & \(0\) \\
-constant & \(1\) & \(1\) \\
-balanced & \(0\) & \(1\) \\
-balanced & \(1\) & \(0\) \\
+constant & \(0\) & \(0\)\tabularnewline
+constant & \(1\) & \(1\)\tabularnewline
+balanced & \(0\) & \(1\)\tabularnewline
+balanced & \(1\) & \(0\)\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -8583,7 +8642,7 @@ Our task is to determine, using the fewest queries possible, whether the functio
 
 Note that we are \emph{not} asked for the particular values \(f(0)\) and \(f(1)\), but \emph{only whether the two values are the same or different}.
 Classical intuition tells us that we have to evaluate both \(f(0)\) and \(f(1)\) and compare them, which involves evaluating \(f\) \emph{twice}.
-But, in the quantum setting, we can solve this problem with a \emph{single} function evaluation, using the following circuit.\footnote{The original Deutsch algorithm provides the correct answer with probability 50\%. Here we present a modified/improved version.}
+But, in the quantum setting, we can solve this problem with a \emph{single} function evaluation, using the following circuit.\footnote{The original Deutsch algorithm provides the correct answer with probability 50\%. Here we present a modified/improved version. The more general problem, which deals with unknown functions \(f\colon\{0,1\}^n\to\{0,1\}\) for \(n\geqslant 1\), is known as the \href{https://en.wikipedia.org/wiki/Deutsch\%E2\%80\%93Jozsa_algorithm}{Deutsch--Jozsa problem}.}
 
 \begin{circuit}
 
@@ -8592,6 +8651,7 @@ But, in the quantum setting, we can solve this problem with a \emph{single} func
 \emph{First register: \(1\) qubit. Second register: \(1\) qubit.}
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-66-1} \end{center}
+
 
 \end{circuit}
 
@@ -8615,7 +8675,7 @@ The evolution of the first qubit is thus identical to that described by the circ
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-67-1} \end{center}
 
 where the relative phase is \(\varphi = (-1)^{f(0)\oplus f(1)}\).
-The first qubit ends in state \(|0\rangle\) if the function \(f\) is constant, and in state \(|1\rangle\) if the function is balanced, and the standard measurement distinguishes these two cases with certainty.
+The first qubit ends in state \(|0\rangle\) if the function \(f\) is constant, and in state \(|1\rangle\) if the function is balanced, and the standard measurement distinguishes these two cases with certainty.\footnote{This is also implemented in the \href{https://lab.quantumflytrap.com/lab/deutsch-jozsa?mode=laser}{Quantum Flytrap Virtual Lab}.}
 
 Deutsch's result laid the foundation for the new field of quantum computation, and was followed by several other quantum algorithms for various problems.
 They all seem to rest on the same generic sequence:
@@ -8661,6 +8721,7 @@ In contrast, by running the circuit below, it is possible to determine the value
 \emph{First register: \(n\) qubits. Second register: \(1\) qubit.}
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-68-1} \end{center}
+
 
 \end{circuit}
 
@@ -8764,6 +8825,7 @@ where \(f_0\) tags the binary string consisting of \(n\) zeros:
   \\0 &\text{otherwise.}
   \end{cases}
 \]
+
 
 \end{circuit}
 
@@ -8896,6 +8958,7 @@ The circuit that solves this problem, shown below, has a familiar Hadamard--func
 \emph{First register: \(n\) qubits. Second register: \(n\) qubits.}
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-72-1} \end{center}
+
 
 \end{circuit}
 
@@ -9035,7 +9098,1226 @@ The exponential separation that this algorithm demonstrates between quantum and 
 \subsubsection{Implementing reflections}\label{implementing-reflections}}
 
 \hypertarget{grovers-optimality}{%
-\subsubsection{\{Grover's optimality\}}\label{grovers-optimality}}
+\subsubsection{Grover's optimality}\label{grovers-optimality}}
+
+\hypertarget{approximation}{%
+\section{Approximation}\label{approximation}}
+
+\begin{quote}
+About quantifying precision in implementations of quantum circuits using the notion of \textbf{metrics} --- more specifically, the \textbf{trace distance}.
+Also about the practical feasibility of universal sets of gates and correctly distinguishing non-orthogonal states described by density operators.
+\end{quote}
+
+We have talked a lot about preparing specific quantum states and constructing specific unitary operations, but the space of states of any quantum system is a continuous space, and the set of unitary transformations is also continuous.
+It is entirely unrealistic to imagine that in the actual world we will be able to prepare, for example, a qubit \emph{precisely} in the state \(|0\rangle\), or to perform a unitary transformation that is \emph{exactly} equal to the controlled-not gate.
+\emph{We never have infinite precision in our manipulations of the physical world.}
+The good news is that, for all practical purposes, infinite precision is not actually necessary, and we can achieve most of our goals by preparing quantum states and performing quantum operations that are ``close enough'' to the desired ones.
+But what is ``close enough'', and how do we quantify it?
+
+\hypertarget{metrics}{%
+\subsection{Metrics}\label{metrics}}
+
+To begin with, let us work with pure states, and save the problem of dealing with mixed states for a later section.
+We will start with the second question: how do we quantify this notion of ``close enough''?
+The central concept is one with which you are probably already somewhat familiar (we mentioned it in Sections \ref{bras-and-kets} and \ref{geometry}), namely that of a \textbf{metric}, or \textbf{distance}.
+
+\begin{idea}
+
+Given a set \(X\), a \textbf{metric} (or \textbf{distance}) on \(X\) is a function \(d\colon X\times X\to\mathbb{R}_{\geqslant 0}\) such that
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Identity of indiscernibles:} \(d(a,b)=0\) if and only if \(a=b\)
+\item
+  \textbf{Symmetry:} \(d(a,b)=d(b,a)\) for all \(a,b\in X\)
+\item
+  \textbf{Triangle inequality:} \(d(a,c)\leqslant d(a,b)+d(b,c)\) for all \(a,b,c\in X\).
+\end{itemize}
+
+
+\end{idea}
+
+\begin{technical}
+There are four conditions governing metrics (identity of indiscernibles is an ``if and only if'' statement, so we can separate it into two ``if'' statements).
+As is usually the case in mathematics, it is interesting to ask what happens if we drop one or more of these.
+
+\begin{itemize}
+\tightlist
+\item
+  If we drop \(d(a,b)=0\implies a=b\) then we get \href{https://en.wikipedia.org/wiki/Pseudometric_space}{\textbf{pseudometrics}}.
+\item
+  If we drop \(a=b\implies d(a,b)=0\) then we get \textbf{metametrics}, or \textbf{partial metrics}.
+\item
+  If we drop \(d(a,b)=d(b,a)\) then we get \textbf{quasimetrics}. These arise ``in real life'', if you think about travelling around a city that has lots of one-way streets, or travelling up or down a big hill.
+\item
+  If we drop \(d(a,c)\leqslant d(a,b)+d(b,c)\) then we get \textbf{semimetrics} (though be careful here: lots of authors use ``semimetric'' to mean almost any one of these generalisations, and the terminology is very non-consistent!).
+\end{itemize}
+
+We can also consider the case of \textbf{extended metrics}, where the distance function is allowed to take the value \(\infty\).
+For many category theorists, ``the'' notion of metric space is that of an \emph{extended pseudoquasimetric}.
+
+\end{technical}
+
+The most common norm is the \textbf{Euclidean distance}, that is, distance between two points in Euclidean space.
+Given points \(A=(a_1,a_2,\ldots,a_n)\) and \(B=(b_1,b_2,\ldots,b_n)\) in \(\mathbb{R}^n\), their Euclidean distance is
+\[
+ \sqrt{|b_1-a_1|^2 + |b_2-a_2|^2+\ldots +|b_n-a_n|^2}.
+\]
+But we already know that Euclidean space \(\mathbb{R}^n\) is more than just a set: it is a vector space.
+This means that we don't just have a metric space (i.e.~a set with a metric), but instead a \textbf{normed vector space}, where the \textbf{norm} \(\|\cdot\|\) of a vector is defined to be the distance of that vector from the origin: \(\|a\|\coloneqq d(a,0)\).
+
+It turns out that this norm (and thus this metric) actually arises from a more fundamental structure, namely that of the \textbf{inner product}.
+Returning to the bra-ket notation, we recall that the norm of any vector \(|a\rangle\) is exactly \(\|a\|=\sqrt{\langle a|a\rangle}\), and thus the distance between any two vectors \(|a\rangle,|b\rangle\) is exactly \(d(|a\rangle,|b\rangle)=\||b\rangle-|a\rangle\|\) (though for simplicity we sometimes write this as \(\|b-a\|\) instead, or even \(\|a-b\|\), since this is equal).
+This norm is also called the \textbf{\(2\)-norm}, or the \textbf{\(\ell^2\)-norm} (for reasons that we will come back to in Section \ref{more-operator-norms}), and is defined for any finite-dimensional Hilbert space \(\mathbb{C}^n\) using the fact that \(\mathbb{C}\cong\mathbb{R}^2\), so that \(\|x+iy\|\coloneqq\|(x,y)\|=\sqrt{x^2+y^2}\).
+
+Before moving on to talk about state vectors, let us first discuss one other metric space which shows up in information theory (both classical and quantum).
+The space\footnote{You can think of this as just a set, but we have already seen that this is actually a vector space over \(\mathbb{Z}/2\mathbb{Z}\), where addition corresponds to \(\texttt{XOR}\).} of binary strings (of some fixed length \(n\)) admits a metric known as the \textbf{Hamming distance}.
+This is defined quite simply as ``the number of positions at which the corresponding bits are different''.
+For example,
+\[
+  d(0101101011,1101110111) = 4
+\]
+since these two strings differ in four bits:
+\[
+  \begin{array}{cccccccccc}
+    0&1&0&1&1&0&1&0&1&1
+  \\1&1&0&1&1&1&0&1&1&1
+  \\\hline
+    !&\checkmark&\checkmark&\checkmark&\checkmark&!&!&!&\checkmark&\checkmark
+  \end{array}
+\]
+
+More formally, if we define the \textbf{Hamming weight} of a binary string of length \(n\) as the number of bits equal to \(1\), then the Hamming distance between two strings is simply the Hamming weight of their difference (where subtraction is calculated in \(\mathbb{Z}/2\mathbb{Z}\), i.e.~\(\mod2\)).
+We leave the proof that this is indeed a metric as an exercise (Exercise \ref{hamming-distance}).
+
+\hypertarget{how-far-apart-are-two-quantum-states}{%
+\subsection{How far apart are two quantum states?}\label{how-far-apart-are-two-quantum-states}}
+
+Given two pure states, \(|u\rangle\) and \(|v\rangle\), we could try to measure the distance between them using the Euclidean distance \(\|u-v\|\).
+This works for vectors, but has some drawbacks when it comes to quantum states.
+Recall that a quantum state is not represented by just a unit vector, but by a \textbf{ray}, i.e.~a unit vector times an arbitrary phase factor.
+Multiplying a state vector by an overall phase factor has no physical effect: the two unit vectors \(|u\rangle\) and \(e^{i\phi}|u\rangle\) describe the same state.
+So, in particular, we want the distance between \(|u\rangle\) and \(-|u\rangle\) to be zero, since these describe the same quantum state.
+But if we were to use the Euclidean distance, then we would have that \(\|u-(-u)\|=\|u+u\|=2\), which is actually as far apart as the two unit vectors can be!
+
+One solution to this problem is to define the distance between \(|u\rangle\) and \(|v\rangle\) as the \emph{minimum} over all phase factors, i.e.
+\[
+  d(u,v)\coloneqq \min_{\phi\in[0,2\pi)}\Big\{\|u-e^{i\phi}v\|\Big\}.
+\]
+But with some algebraic manipulation we can actually figure out what this minimum is without calculating any of the other values.
+
+We first express the square of the distance between any two vectors in terms of their inner product:
+\[
+  \begin{aligned}
+    \|u-v\|^2
+    &= \langle u-v|u-v\rangle
+  \\&= \langle u|u\rangle - \langle u|v\rangle - \langle v|u\rangle + \langle v|v\rangle
+  \\&= \|u\|^2 +\|v\|^2 - 2\Re\langle u|v\rangle
+  \end{aligned}
+\]
+(where \(\Re(z)\) is the real part of the complex number \(z\)).
+Then we can write the Euclidean distance between state vectors as
+\[
+  \|u-v\| = \sqrt{2(1-\Re\langle u|v\rangle)}.
+\]
+Now if we want to minimise this expression over all rotations\footnote{Recall that multiplication by a complex number corresponds to rotation and scaling, and so multiplication by a phase factor (which is always of unit length) corresponds to just rotation.} of \(v\), then we want \(\langle u|v\rangle\) to be real and as large as possible, i.e.~for \(\langle u|v\rangle=|\langle u|v\rangle|\).
+This gives us a definition of distance.
+
+\begin{idea}
+The \textbf{state distance} between two state vectors \(|u\rangle\) and \(|v\rangle\) is
+\[
+  d(u,v) \coloneqq \sqrt{2(1-|\langle u|v\rangle|)}.
+\]
+
+\end{idea}
+
+Note that we sometimes write the state distance as \(\|u-v\|\), and we might refer to it as ``Euclidean distance'', which is an abuse of notation: really we should be writing \(\min\{\||u\rangle-e^{i\varphi}|v\rangle\|\}\).
+But this sort of thing happens a lot in mathematics\footnote{In computer science lingo, this is what you might call \textbf{operator overloading}.}, and it's good to get used to it.
+The justification is that, as we have already said, the usual Euclidean distance doesn't really make great sense for state vectors (because of this vector vs.~ray distinction), and so if we \emph{know} that \(|u\rangle\) and \(|v\rangle\) are state vectors then writing \(\|u-v\|\) (which is already shorthand for \(\||u\rangle-|v\rangle\|\)) should suggest ``oh, they mean the version of \(\|\cdot\|\) that \emph{makes sense for state vectors}, where we take a minimum''.
+
+\begin{idea}
+For \emph{small} values of \(d(u,v)=\|u-v\|\), we can think of this distance as being the angle between the two unit vectors.
+Indeed, if we think of Euclidean (unit) vectors, then the difference \(v-u\) is, for sufficiently small \(\|u-v\|\), just the angle between the two unit vectors (expressed in radians), because a small segment of a circle ``almost'' looks like a triangle.
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-73-1} \end{center}
+
+Alternatively (and more formally), we can see this by writing \(|\langle u|v\rangle|=\cos\alpha\approx1-\alpha^2/2\), since then
+\[
+  \|u-v\|
+  = \sqrt{2(1-|\langle u|v\rangle|)}
+  \approx \alpha.
+\]
+
+This can certainly help with intuition, but extra care must always be taken when dealing with complex vector spaces, since our geometric intuition breaks down rapidly in (complex) dimension higher than \(1\).
+
+\end{idea}
+
+As you might hope, two state vectors which are close to one another give similar statistical predictions.
+In order to see this, pick a measurement (any measurement) and consider one partial outcome described by a projector \(|a\rangle\langle a|\).
+What can we say about the difference between the two probabilities
+\[
+  \begin{aligned}
+    p_u &= |\langle a|u\rangle|^2
+  \\p_v &= |\langle a|v\rangle|^2
+  \end{aligned}
+\]
+if we know that \(\|u-v\|\leqslant\varepsilon\)?
+
+Well, first of all, let us introduce two classic tricks that are almost always useful when dealing with inequalities --- the first holds in any normed vector space, and the latter in any inner product space.
+
+\begin{itemize}
+\tightlist
+\item
+  the \textbf{reverse triangle inequality}:
+  \[
+      \Big|\|u\|-\|v\|\Big| \leqslant\|u-v\|
+    \]
+\item
+  the \href{https://en.wikipedia.org/wiki/Cauchy\%E2\%80\%93Schwarz_inequality}{\textbf{Cauchy--Schwartz inequality}}:\footnote{This is arguably \emph{the most useful} mathematical inequality that we have!}
+  \[
+      \langle u|v\rangle^2 \leqslant\langle u|u\rangle\langle v|v\rangle
+    \]
+  or, equivalently (by taking square roots),
+  \[
+      |\langle u|v\rangle| \leqslant\|u\|\|v\|.
+    \]
+  Furthermore, the two sides of the inequality are equal \emph{if and only if} \(|u\rangle\) and \(|v\rangle\) are linearly dependent.
+\end{itemize}
+
+Using these, we see that
+\[
+  \begin{aligned}
+    |p_u-p_v|
+    &= \Big| |\langle a|u\rangle|^2 - |\langle a|v\rangle|^2 \Big|
+  \\&= \Big| \Big( |\langle a|u\rangle| + |\langle a|v\rangle| \Big) \Big( |\langle a|u\rangle| - |\langle a|v\rangle| \Big) \Big|
+  \\&\leqslant 2\Big| |\langle a|u\rangle| - |\langle a|v\rangle| \Big|
+  \\&\leqslant 2\Big| \langle a|u\rangle - \langle a|v\rangle \Big|
+  \\&\leqslant 2\|a\|\|u-v\|
+  \\&= 2\|u-v\|.
+  \end{aligned}
+\]
+So if \(\|u-v\|\leqslant\varepsilon\), then \(|p_u-p_v|\leqslant 2\varepsilon\).
+
+Again, we can appeal to some geometric intuition if we pretend that \(|u\rangle\) and \(|v\rangle\) are Euclidean vectors instead of rays.
+Write
+\[
+  \begin{aligned}
+    |\langle a|u\rangle| &= \cos(\alpha)
+  \\|\langle a|v\rangle| &= \cos(\alpha+\varepsilon)
+  \end{aligned}
+\]
+where \(\varepsilon\) is the (very small) angle between \(|u\rangle\) and \(|v\rangle\), whence \(\|u-v\|=\varepsilon\).
+Then
+\[
+  \begin{aligned}
+    |\langle a|u\rangle|^2 - |\langle a|v\rangle|^2
+    &= \cos^2(\alpha) - \cos^2(\alpha+\varepsilon)
+  \\&\approx \varepsilon\sin(2\alpha)
+  \\&\leqslant\varepsilon.
+  \end{aligned}
+\]
+As an interesting exercise, you might try to explain why this approach gives a tighter bound (\(\varepsilon\) instead of \(2\varepsilon\)).
+
+\hypertarget{fidelity}{%
+\subsection{Fidelity}\label{fidelity}}
+
+Sometimes, when quantifying closeness of states, the \emph{inner product} is a more convenient tool than the distance/norm.
+Analogous to how we define the distance between states \(|u\rangle\) and \(|v\rangle\) as \(d(u,v)=\|u-v\|\), we define the \textbf{fidelity} between them as
+\[
+  F(u,v)\coloneqq |\langle u|v\rangle|^2.
+\]
+This is \emph{not} a metric, but it does have some similarly nice properties: for example, \(F(u,v)=1\) when the two states are identical, and \(F(u,v)=0\) when the two states are orthogonal (which means that they are ``as different as possible'').
+Intuitively, we can understand fidelity as the probability that the state \(|u\rangle\) (resp. \(|v\rangle\)) would pass a test for being in state \(|v\rangle\) (resp. \(|u\rangle\)).
+In other words, if we perform an orthogonal measurement on \(|u\rangle\) that has two outcomes (\(\texttt{true}\) if the state is \(|v\rangle\); \(\texttt{false}\) if the state is orthogonal to \(|v\rangle\)), then the fidelity \(F(u,v)=|\langle u|v\rangle|^2\) is exactly the probability that we measure the outcome \(\texttt{true}\).
+
+Recall our definition of state distance:
+\[
+  d(u,v) = \sqrt{2(1-|\langle u|v\rangle|)}
+\]
+This gives us a relation between distance and fidelity: once we know one, we can easily calculate the other.
+However, everything we have said so far applies only to \emph{pure} states --- we will see how the mixed state case is slightly more complicated shortly.
+
+One final remark: as another example of the many inconsistencies in the literature, some authors define \(F(u,v)\) to be \(|\langle u|v\rangle|\) instead of \(|\langle u|v\rangle|^2\).
+Whenever we say fidelity, we mean the latter: \(|\langle u|v\rangle|^2\).
+
+\hypertarget{approximating-unitaries}{%
+\subsection{Approximating unitaries}\label{approximating-unitaries}}
+
+So now we know a bit about how norms (or metrics, or inner products) can help us to understand distance between state vectors, can we say something similar about quantum evolutions?
+Say we have unitary operators \(U\) and \(V\) acting on the same Hilbert space, where \(U\) is some ``target'' unitary that we \emph{want} to implement in a real-life circuit, and \(V\) is an ``approximate'' unitary that we \emph{can actually} implement in practice.
+We say that \textbf{\(V\) approximates \(U\) with precision \(\varepsilon\)}, or that \(U\) and \(V\) are \textbf{\(\varepsilon\)-close}, if\footnote{Note that \(V\) approximates \(U\) with precision \(\varepsilon\) if and only if \(U\) approximates \(V\) with precision \(\varepsilon\). Even though we might think of one as being our ideal unitary and the other as being the best feasible real-life implementation that we can achieve, this is only us giving names to things --- the definition does not care which way round we think of them.}
+\[
+  \|U-V\| \leqslant\varepsilon
+\]
+where \(\|\cdot\|\) is some norm on unitary matrices (of the same size), which we would want to satisfy the following property: if \(\|U-V\|\) is ``small'', then \(U\) should be hard to distinguish from \(V\) when acting on \emph{any} quantum state.
+
+Before defining such a norm, however, we first recall some linear algebra which we briefly touched upon in Section \ref{the-schmidt-decomposition}.
+The \textbf{singular values} of an operator \(A\) are the square roots of the (necessarily non-negative) eigenvalues of the Hermitian operator \(A^\dagger A\).
+If \(A\) is \emph{normal} (e.g.~a density operator), then its singular values are exactly the absolute values of its eigenvalues.
+We tend to denote singular values by \(s_i(A)\) (or just \(s_i\) if it is clear which operator we are talking about), and we write \(\sigma(A)\) to mean the set of eigenvalues of \(A\), i.e.
+\[
+  \sigma(A) \coloneqq \{\lambda\in\mathbb{C} \mid \det(A-\lambda\mathbf{1})=0\}.
+\]
+This means that
+\[
+  \{s_i(A)\} = \{\sqrt{\lambda} \mid \lambda\in\sigma(A)\}.
+\]
+
+\begin{idea}
+The \textbf{operator norm} (or \textbf{spectral} norm) \(\|A\|\) of an operator \(A\in\mathcal{B}(\mathcal{H})\) is the maximum length of the vector \(A|v\rangle\) over all possible normalised vectors \(|v\rangle\in\mathcal{H}\), i.e.
+\[
+  \|A\| \coloneqq \max_{|v\rangle\in S_{\mathcal{H}}^1}\Big\{ |A|v\rangle| \Big\}
+\]
+(where \(S_{\mathcal{H}}^1\) is the unit sphere in \(\mathcal{H}\), i.e.~the set of vectors of norm \(1\)).
+One can show that \(\|A\|\) is equal to the largest singular value of \(A\).
+
+If \(A\) is \emph{normal} (e.g.~a density operator), then
+\[
+  \|A\| = \max_{\lambda\in\sigma(A)}\Big\{ |\lambda| \Big\}.
+\]
+
+\end{idea}
+
+The operator norm satisfies some very useful properties:\footnote{Proving these properties, along with some others, is a good thing to practise --- see Exercise \ref{operator-norm}.}
+
+\begin{itemize}
+\tightlist
+\item
+  If \(A\) is normal, then \(\|A^\dagger\|=\|A\|\)
+\item
+  \(\|A\otimes B\|=\|A\|\|B\|\)
+\item
+  If \(U\) is unitary, then \(\|U\|=1\)
+\item
+  If \(P\neq0\) is an orthogonal projector, then \(\|P\|=1\)
+\item
+  \textbf{Sub-multiplicativity:} \(\|AB\|\leqslant\|A\|\|B\|\).
+\end{itemize}
+
+Now suppose that some quantum system, initially in state \(|\psi\rangle\), evolves according to \(U\) or \(V\).
+Let \(P\) be a projector associated with some specific outcome of some measurement that can be performed on the system after either evolution (such as \(P=|a\rangle\langle a|\), as in our earlier example).
+Let \(p_U\) (resp. \(p_V\)) be the probability of obtaining the corresponding measurement outcome if the operation \(U\) (resp. \(V\)) was performed.
+By definition, we see that
+\[
+  \begin{aligned}
+    |p_U-p_V|
+    &= \Big| \langle\psi|U^\dagger PU|\psi\rangle - \langle\psi|V^\dagger PV|\psi\rangle \Big|
+  \\&= \Big| \langle\psi|U^\dagger P(U-V)|\psi\rangle+\langle\psi|(U^\dagger-V^\dagger)PV|\psi\rangle \Big|
+  \\&\leqslant\Big| \langle\psi|U^\dagger P(U-V)|\psi\rangle \Big| + \Big| \langle\psi|(U^\dagger-V^\dagger)PV|\psi\rangle \Big|
+  \end{aligned}
+\]
+where the inequality is exactly the triangle inequality.
+
+By an application of the Cauchy--Schwartz inequality\footnote{See Exercise \ref{operator-norm}.} followed by sub-multiplicativity, we then have
+\[
+  \begin{aligned}
+    |p_U-p_V|
+    &\leqslant\|U^\dagger P\|\|U-V\| + \|U^\dagger-V^\dagger\|\|VP\|
+  \\&\leqslant 2\|U-V\|.
+  \end{aligned}
+\]
+
+This tells us what \(\varepsilon\)-closeness means: suppose that \(V\) and \(U\) are \(\varepsilon\)-close; then if, instead of applying one, we apply the other, and subsequently measure the resulting physical system, we know that the probabilities of any particular outcome in any measurement will differ by \emph{at most} \(2\varepsilon\).
+
+Now what about working with \emph{sequences} of unitaries, as we do when we construct quantum circuits?
+It turns out that closeness is additive under multiplication of unitaries: if \(\|U_1-V_1\|\leqslant\varepsilon_1\) and \(\|U_2-V_2\|\leqslant\varepsilon_2\), then
+\[
+  \begin{aligned}
+    \|U_2U_1 - V_2V_1\|
+    &= \|U_2U_1 - V_2U_1 + V_2U_1 - V_2V_1\|
+  \\&= \|(U_2-V_2)U_1 + V_2(U_1-V_1)\|
+  \\&\leqslant\|U_2-V_2\|\|U_1\| + \|V_2\|\|U_1-V_1\|
+  \\&= \|U_2-V_2\| + \|U_1-V_1\|
+  \\&\leqslant\varepsilon_1+\varepsilon_2.
+  \end{aligned}
+\]
+We can then apply this argument inductively.
+
+\begin{idea}
+Errors in the approximation of one sequence of unitaries by another accumulate at most linearly in the number of unitary operations:
+\[
+  \|U_n\cdots U_1 - V_n\cdots V_1\| \leqslant\sum_{i=1}^n \varepsilon_n
+\]
+if \(\|U_i-V_i\|\leqslant\varepsilon_i\) for all \(i=1,\ldots,n\).
+
+\end{idea}
+
+This linear error accumulation relies heavily on the fact that the norm of a unitary operator is equal to \(1\); for non-unitary operators, errors could accumulate exponentially, which would make efficient approximations of circuits practically impossible.
+Geometrically, this is because unitaries just \emph{rotate} vectors, without scaling them.
+
+Again, we can appeal to some trigonometry.
+First note that
+\[
+  \|U-V\| = \|UV^\dagger-\mathbf{1}\|
+\]
+since the operator norm is unitarily invariant.\footnote{See Exercise \ref{operator-norm}.}
+Since \(UV^\dagger\) is also unitary, its eigenvalues are exactly phase factors \(e^{i\varphi}\) for \(\varphi\in\mathbb{R}\); the corresponding eigenvalue of \(UV^\dagger-\mathbf{1}\) has modulus
+\[
+  |e^{i\varphi}-1| = \sqrt{2}\sqrt{1-\cos\varphi}.
+\]
+Putting this all together, we see that asking for \(\|U-V\|\leqslant\varepsilon\) is exactly asking for each eigenvalue of \(UV^\dagger-\mathbf{1}\) to satisfy \(\sqrt{2}\sqrt{1-\cos\varphi}\leqslant\varepsilon\), which rearranges to
+\[
+  \cos\varphi \geqslant 1-\frac{\varepsilon^2}{2}
+\]
+which is simply \(|\varphi|\leqslant\varepsilon\) for small enough \(\varepsilon\).
+So \(U\) rotates relative to \(V\) by (at worst) an angle of order \(\varepsilon\), and if we compose unitaries in a sequence then the accumulated rotation increases linearly with the number of unitaries.
+
+\hypertarget{approximating-generic-unitaries-is-hard-but}{%
+\subsection{Approximating generic unitaries is hard, but\ldots{}}\label{approximating-generic-unitaries-is-hard-but}}
+
+Now that we understand approximations of unitary operators, we can revisit the question of universality that we touched upon in Sections \ref{finite-set-of-universal-gates} and \ref{universality-again}.
+Recall that we call a finite set \(G\) of gates \textbf{universal} if \emph{any} \(n\)-qubit unitary operator can be approximated (up to an overall phase) to \emph{arbitrary accuracy} by some unitary constructed using only gates from \(G\) (and we then call the gates in \(G\) \textbf{elementary}).
+In other words, \(G\) is universal if, for any unitary \(U\) acting on \(n\)-qubits and for any \(\varepsilon>0\), there exist \(U_1,\ldots,U_d\in G\) such that \(\widetilde{U}\coloneqq U_d\cdots U_1\) satisfies
+\[
+  \|\widetilde{U}-e^{i\varphi}U\|\leqslant\varepsilon
+\]
+for some phase \(\varphi\).
+
+For example, each of the following sets of gates is universal:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\{H,\texttt{c-}S\}\)
+\item
+  \(\{H,T,\texttt{c-NOT}\}\)
+\item
+  \(\{H,S,\texttt{Toff}\}\)
+\end{itemize}
+
+where \(S\) and \(T\) are the \(\pi/4\)- and \(\pi/8\)-phase gates (Section \ref{phase-gates-galore}), \(\texttt{c-}S\) is the \emph{controlled} \(S\)-gate, and \(\texttt{Toff}\) is the Toffoli gate (Exercise \ref{toffoli-gate}).
+
+But now we can be a bit more precise with the question that the notion of universality is trying to answer: given a universal set of gates, how hard is it to approximate any desired unitary transformation with accuracy \(\varepsilon\)?
+That is, \emph{how many gates do we need}?
+
+The answer is \emph{a lot}.
+In fact, it is exponential in the number of qubits --- most unitary transformation require large quantum circuits of elementary gates.
+We can show this by a counting argument (along with a healthy dose of geometric intuition).
+
+Consider a universal set of gates \(G\) consisting of \(g\) gates, where each gates acts on no more than \(k\) qubits.
+How many circuits (acting on \(n\)-qubits) can we construct using \(t\) gates from this set?
+We have \(g\binom{n}{k}\) choices\footnote{Counting arguments nearly always use \href{https://en.wikipedia.org/wiki/Binomial_coefficient}{\textbf{binomial coefficient} notation}: \(\binom{a}{b}\coloneqq\frac{a!}{b!(b-a)!}\).} for the first gate, since there are \(g\) gates, and \(\binom{n}{k}\) ways to place it so that it acts on \(k\) out of \(n\) qubits.
+The same holds for all subsequent gates, and so we can build no more than
+\[
+  \left( g\binom{n}{k} \right)^t
+\]
+circuits of size \(t\) from \(G\).
+What is important is that \(g\binom{n}{k}\) is \emph{polynomial} in \(n\), and \(g\) and \(k\) are fixed constants, so we will write this upper bound as
+\[
+  (\mathrm{poly}(n))^t.
+\]
+In more geometric language, we have shown that, with \(t\) gates, we can generate \((\mathrm{poly}(n))^t\) points in the space \(U(N)\) of unitary transformations on \(n\)-qubits, where \(N=2^n\).
+Now imagine drawing a ball of radius \(\varepsilon\) (in the operator norm) centred at each of these points --- we want these balls to cover the entire unitary group \(U(N)\), since this then says that any unitary is within distance \(\varepsilon\) of a circuit built from \(t\) gates in \(G\).
+We will not get into the details of the geometry of \(U(N)\), but simply use the fact that a ball of radius \(\varepsilon\) in \(U(N)\) has volume proportional to \(\varepsilon^{N^2}\), whereas the volume of \(UN)\) itself is proportional to \(C^{N^2}\) for some fixed constant \(C\).
+So we want
+\[
+  \varepsilon^{N^2}(\mathrm{poly}(n))^t \geqslant C^{N^2}
+\]
+which (after some algebraic manipulation) requires that
+\[
+  t \geqslant 2^{2n}\frac{\log(C/\varepsilon)}{\log(\mathrm{poly}(n))}.
+\]
+In words, \emph{the scaling is exponential in \(n\) but only logarithmic in \(1/\varepsilon\)}.
+
+\begin{idea}
+When we add qubits, the space of possible unitary operations grows very rapidly, and we have to work exponentially hard if we want to approximate the resulting unitaries with some prescribed precision.
+If, however, we fix the number of qubits and instead ask for better and better approximations, then things are much easier, since we only have to work logarithmically hard.
+
+\end{idea}
+
+The snag is that this counting argument does not give us any hints as to how we can actually build such approximations.
+A more constructive approach is to pick a set of universal gates and play with them, building more and more complex circuits.
+There is an important theorem in this direction that tells us that it does not matter much which particular universal set of gates we choose to start with.
+
+\begin{idea}
+\textbf{The \href{https://en.wikipedia.org/wiki/Solovay\%E2\%80\%93Kitaev_theorem}{Solovay--Kitaev Theorem}.}
+Choose any two universal sets of gates that are closed under inverses.\footnote{The notion of ``being closed under inverses'' is slightly weaker than you might first think: it means that the inverse of any gate in the set can be (exactly) constructed from a \emph{finite} sequence of gates in the set; it does \emph{not} mean that the inverses have to be elementary gates themselves.}
+Then any \(t\)-gate circuit built from one set of gates can be implemented to precision \(\varepsilon\) using a \(t\mathrm{poly}(\log(t/\varepsilon))\)-gate circuit built from the other set.
+Furthermore, there is an efficient classical algorithm for finding this circuit.
+
+\end{idea}
+
+Since errors accumulate linearly, it suffices to approximate each gate from one set to accuracy \(\varepsilon/t\), which can be achieved by using a \(\mathrm{poly}(\log(t/\varepsilon))\)-gate circuit built from the other set.
+So we can efficiently convert (constructively, via some efficient classical algorithm) between universal sets of gates with overhead \(\mathrm{poly}(\log(1/\varepsilon)))\), i.e.~\(\log^c(1/\varepsilon)\) for some constant \(c\).
+For all practical purposes, we want to minimise \(c\), but the counting argument above shows that the best possible exponent is \(1\), so the real question is \emph{can we get close to this lower bound}?
+In general, we do not know.
+However, for some universal sets of gates we have \emph{nearly} optimal constructions.
+For example, the set \(\{H,T\}\) can be used to approximate arbitrary \emph{single-qubit} unitaries to accuracy \(\varepsilon\) using \(\log(1/\varepsilon)\) many gates, instead of \(\mathrm{poly}(\log(1/\varepsilon))\), and the circuits achieving this improved overhead cost can be efficiently constructed (for example, by the \href{https://arxiv.org/abs/0806.3834}{Matsumoto--Amano construction}.)
+
+\hypertarget{how-far-away-are-two-probability-distributions}{%
+\subsection{How far away are two probability distributions?}\label{how-far-away-are-two-probability-distributions}}
+
+Before we switch gears and discuss how to generalise state distance to density operators, let us first take a look at distances between probability distributions.
+What does it mean to say that two probability distributions (over the same index set) are similar to one another?
+
+Recall that a \textbf{probability distribution}\footnote{Things are simpler for us because we work with so-called \textbf{discrete} probability distributions, and so we can use \emph{sums} instead of \emph{integrals}. The general theory requires much more real analysis.} consists of two things --- a \textbf{sample space} \(\Omega\), which is the set of all possible outcomes, and a \textbf{probability function} \(p\colon\Omega\to[0,1]\), which tells us the probability of any specific outcome --- subject to the condition that \(\sum_{k\in\Omega} p(k)=1\).
+Given any \emph{subset} of outcomes \(A\subseteq\Omega\), we define \(p(A)=\sum\{k\in A\}p(k)\).
+
+\begin{idea}
+The \textbf{trace distance}\footnote{Also known as the \textbf{variation} distance, \(L_1\) distance, \textbf{statistical} distance, or \textbf{Kolmogorov} distance.} between probability distributions \(p\) and \(q\) on the same sample space \(\Omega\) is
+\[
+  d(p,q) \coloneqq \frac{1}{2}\sum_{k\in\Omega} |p(k)-q(k)|.
+\]
+
+\end{idea}
+
+This is indeed a distance: it satisfies all the necessary properties.\footnote{\textbf{Exercise.} Show that this distance satisfies the triangle inequality.}
+It also has a rather simple interpretation, as we now explain.
+Let \(p(k)\) be the \emph{intended} probability distribution of an outcome produced by some ideal device \(P\), but suppose that the actual physical device \(Q\) is slightly faulty: with probability \(1-\varepsilon\) it works exactly as \(P\) does, but with probability \(\varepsilon\) it goes completely wrong and generates an output according to some arbitrary probability distribution \(e(k)\).
+What can we say about the probability distribution \(q(k)\) of the outcome of such a device?
+Well, we can exactly say that
+\[
+  d(p,q) \leqslant\varepsilon
+\]
+by substituting \(q(k)=(1-\varepsilon)p(k)+\varepsilon e(k)\).
+Conversely, if \(d(p,q)=\varepsilon\) then we can represent one of them (say, \(q(k)\)) as the probability distribution resulting from a process that generates outcomes according to \(p(k)\) followed by a process that alters outcome \(k\) with total probability not greater than \(\varepsilon\).
+
+Note that the normalisation property of probabilities implies that
+\[
+  \sum_k p(k)-q(k) = 0.
+\]
+We can split up this sum into two parts: the sum over \(k\) for which \(p(k)\geqslant q(k)\), and the sum over \(k\) for which \(p(k)<q(k)\).
+If we call the first part \(S\), then the fact that \(\sum_k p(k)-q(k)=0\) tells us that the second part must be equal to \(-S\).
+Thus
+\[
+  \sum_k |p(k)-q(k)|
+  = S+|-S|
+  = 2S
+\]
+whence \(S=d(p,q)\).
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{qubit_guide_files/figure-latex/probability-distribution-distance-1} 
+
+}
+
+\caption{Visualising the distance between two (continuous) probability distributions.}\label{fig:probability-distribution-distance}
+\end{figure}
+
+Just as a passing note, we will point out that
+\[
+  \begin{aligned}
+    \sum_k \max\{p(k),q(k)\}
+    &= 1 + S
+  \\&= 1 + d(p,q)
+  \end{aligned}
+\]
+and the shaded area in Figure \ref{fig:probability-distribution-distance} is equal to\footnote{Again, since we are working with finite probability distributions, we can use sums; in the continuous case shown in Figure \ref{fig:probability-distribution-distance}, we would really need to use \emph{integrals} instead.}
+\[
+  \begin{aligned}
+    \sum_k \min\{p(k),q(k)\}
+    &= 1 - S
+  \\&= 1 - d(p,q).
+  \end{aligned}
+\]
+The latter lets us write the trace distance as
+\[
+  d(p,q) = 1 - \sum_k \min_k\{p(k),q(k)\}
+\]
+and the former will be useful very soon.
+
+As for intuition, the trace distance is a measure of how well we can distinguish a sample from distribution \(p\) from a sample from distribution \(q\): if the distance is \(1\) then we can tell them apart perfectly; if the distance is \(0\) then we can't distinguish them at all.
+Now suppose that \(p\) and \(q\) represent the probability distributions of two devices, \(P\) and \(Q\), respectively, and that one of these is chosen (with equal probability) to generate some outcome.
+If you are given the outcome \(k\), and you know \(p(k)\) and \(q(k)\), then how can you best guess which device generated it?
+What is your best strategy, and with what probability does this let you guess correctly?
+It turns out that we can answer this using the trace distance.
+
+Arguably the most natural strategy is to look at \(\max\{p(k),q(k)\}\): guess \(P\) if \(p(k)>q(k)\); guess \(Q\) if \(q(k)>p(k)\); guess uniformly at random if \(p(k)=q(k)\).
+Following this strategy, the probability of guessing correctly (again, under the assumption that \(P\) and \(Q\) were chosen between with equal probability) is
+\[
+  p_{\mathrm{success}} = \frac{1}{2}\sum_k \max\{p(k),q(k)\}
+\]
+which we can rewrite as
+\[
+  p_{\mathrm{success}} = \frac{1}{2}(1+d(p,q)).
+\]
+
+Here is another way of seeing the above.
+The probability that the devices \(P\) and \(Q\) will \emph{not} behave in the same way is bounded by \(d(p,q)\).
+This means that, with probability \(1-d(p,q)\), the devices behave as if they were identical, in which case the best you can do is to guess uniformly at random, which will make you succeed with probability \(\frac{1}{2}(1-d(p,q))\).
+With the remaining probability \(d(p,q)\), the devices may behave as if they were completely different, and then you can tell which one is which perfectly, letting you succeed with probability exactly \(1\cdot d(p,q)=d(p,q)\).
+So the total probability of success is equal to
+\[
+  \frac{1}{2}(1-d(p,q)) + d(p,q)
+  = \frac{1}{2}(1+d(p,q)).
+\]
+
+\hypertarget{dealing-with-density-operators}{%
+\subsection{Dealing with density operators}\label{dealing-with-density-operators}}
+
+Now we return to quantum states, and generalise the notion of trace distance to density operators.
+
+\begin{idea}
+The \textbf{trace norm} of an operator is the sum of its singular values:
+\[
+  \|A\|_{\operatorname{tr}} \coloneqq \sum_i s_i(A).
+\]
+If \(A\) is \emph{normal} (e.g.~a density operator), then
+\[
+  \|A\|_{\operatorname{tr}} = \sum_{\lambda\in\sigma(A)} |\lambda|.
+\]
+
+The induced \textbf{trace distance} between two density operators is
+\[
+  d_{\operatorname{tr}}(\rho,\sigma) \coloneqq \frac{1}{2}\|\rho-\sigma\|_{\operatorname{tr}}.
+\]
+
+\end{idea}
+
+There are many questions raised by this definition, such as ``how does this relate to the trace distance of probability distributions?'' and ``how does this trace norm relate to the operator norm from Section \ref{approximating-unitaries}?'' --- we will answer the first question now, but our answer to the second builds upon the notion of an \(\ell^p\)-norm, which is a discussion that we will postpone for Section \ref{more-operator-norms}.
+
+We can simply think of the trace distance for density operators as the natural analogue of the trace distance for probability distributions: it is a tight upper bound on the distances between the probability distributions obtained from \(\rho\) and \(\sigma\) by a measurement, as we now justify.
+
+Let \(\{P_k\}\) be a complete set of orthogonal projectors, defining a projective measurement in some \(\mathcal{H}\).
+This measurement gives outcome \(k\) with some probability \(p(k)\) if the quantum system is in state \(\rho\), and the same outcome with some probability \(q(k)\) if the system is in state \(\sigma\).
+That is,
+\[
+  \begin{aligned}
+    p(k) &\coloneqq \operatorname{tr}P_k\rho
+  \\q(k) &\coloneqq \operatorname{tr}P_k\sigma.
+  \end{aligned}
+\]
+Then
+\[
+  \begin{aligned}
+    d_{\operatorname{tr}}(p,q)
+    &\coloneqq \frac{1}{2}\sum_k|p(k)-q(k)|
+  \\&= \frac{1}{2}\sum_k|\operatorname{tr}P_k(\rho-\sigma)|
+  \\&= \frac{1}{2}\operatorname{tr}((\rho-\sigma)U)
+  \end{aligned}
+\]
+where we define
+\[
+  U\coloneqq \sum_k\frac{\operatorname{tr}P_k(\rho-\sigma)}{|\operatorname{tr}P_k(\rho-\sigma)|}P_k
+\]
+or, in other words, \(U\) is the sum of the \(P_k\) but where the signs are determined by whether \(|\operatorname{tr}P_k(\rho-\sigma)|\) is equal to \(+\operatorname{tr}P_k(\rho-\sigma)\) or \(-\operatorname{tr}P_k(\rho-\sigma)\).
+
+Since this \(U\) is unitary, and since the trace norm can be written as\footnote{See Section \ref{more-operator-norms}.}
+\[
+  \|A\|_{\operatorname{tr}} = \max_{U\text{ unitary}}|\operatorname{tr}AU|
+\]
+we finally obtain that
+\[
+  \begin{aligned}
+    d_{\operatorname{tr}}(p,q)
+    &\coloneqq \frac{1}{2}\sum_k|p(k)-q(k)|
+  \\&= \leqslant\frac{1}{2}\|\rho-\sigma\|
+  \\&\eqqcolon d_{\operatorname{tr}}(\rho,\sigma)
+  \end{aligned}
+\]
+which says that the trace distance \(d_{\operatorname{tr}}(\rho,\sigma)\) gives an upper bound on distances between probability distributions obtained from \(\rho\) and \(\sigma\) by a measurement.
+The fact that this bound is tight (i.e.~attainable) is witnessed by the measurement defined by the projectors onto the eigenspaces of \(\rho-\sigma\).
+
+As an example, consider pure states \(|u\rangle\) and \(|v\rangle\).
+The trace distance between them is
+\[
+  \frac{1}{2}\||u\rangle\langle u|-|v\rangle\langle v|\|_{\operatorname{tr}}.
+\]
+We can write \(|v\rangle\) as
+\[
+  |v\rangle = \alpha|u\rangle + \beta|\bar{u}\rangle
+\]
+where \(|\bar{u}\rangle\) is some unit vector orthogonal to \(|u\rangle\), and where \(\alpha=\langle u|v\rangle\), with \(\beta\) determined by \(|\alpha|^2+|\beta|^2=1\).
+Then
+\[
+  \begin{aligned}
+    |u\rangle\langle u| - |v\rangle\langle v|
+    &= \begin{bmatrix}1&0\\0&0\end{bmatrix} - \begin{bmatrix}|\alpha|^2&\alpha\beta^\star\\\alpha^\star\beta&|\beta|^2\end{bmatrix}
+  \\&= \begin{bmatrix}|\beta|^2&-\alpha\beta^\star\\-\alpha^\star\beta&-|\beta|^2\end{bmatrix}
+  \end{aligned}
+\]
+(which has eigenvalues \(\pm|\beta|\)), and the trace distance is given by
+\[
+  \frac{1}{2}\||u\rangle\langle u|-|v\rangle\langle v|\|_{\operatorname{tr}} = \sqrt{1-|\langle u|v\rangle|^2}
+\]
+which is exactly \(\sqrt{1-\text{fidelity}}\).
+
+As a consequence of this, we see that
+\[
+  \frac{1}{2}\||u\rangle\langle u|-|v\rangle\langle v|\|_{\operatorname{tr}}
+  \leqslant\|u-v\|
+\]
+since
+\[
+  \begin{aligned}
+    1 - |\langle u|v\rangle|^2
+    &= \Big( 1+|\langle u|v\rangle| \Big) \Big( 1-|\langle u|v\rangle| \Big)
+  \\&\leqslant 2\Big( 1-|\langle u|v\rangle| \Big)
+  \\&= \|u-v\|^2.
+  \end{aligned}
+\]
+So if two states \(|u\rangle\) and \(|v\rangle\) are \(\varepsilon\)-close in the trace distance, then the probability distributions of outcomes of \emph{any} measurement performed on a physical system in state \(|u\rangle\) or \(|v\rangle\) will also be \(\varepsilon\)-close in the trace distance.
+
+\hypertarget{distinguishing-non-orthogonal-states-again}{%
+\subsection{Distinguishing non-orthogonal states, again}\label{distinguishing-non-orthogonal-states-again}}
+
+Let's briefly return to the problem considered in Section \ref{distinguishing-non-orthogonal-states}, where we are given a system and told that it is in either state \(|\psi_1\rangle\) or \(|\psi_2\rangle\), with equal probability, but that these two vectors are \emph{not} orthogonal.
+The goal is to find a measurement that maximises the probability of correctly identifying which state the system is in.
+Before solving this problem using the language of distances, let us repeat the geometric idea that we used previously.
+
+Draw two vectors, \(|\psi_1\rangle\) and \(|\psi_2\rangle\), separated by some angle \(\varepsilon\).
+We want to find some orthonormal vectors \(|e_1\rangle\) and \(|e_2\rangle\) that specify the optimal projective measurement.
+First, note that any projections on the subspace \emph{orthogonal} to the plane spanned by \(|\psi_1\rangle\) and \(|\psi_2\rangle\) will reveal no information about the identity of the state, so we know that we will want our orthonormal vectors to lie in the span of \(|\psi_1\rangle\) and \(|\psi_2\rangle\).
+Now, since \(|\psi_1\rangle\) and \(|\psi_2\rangle\) are both equally likely to occur, we want to place \(|e_1\rangle\) and \(|e_2\rangle\) \emph{symmetrically} around them, as shown in Figure \ref{fig:distinguishing-non-orthogonal-states-intuition}
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{qubit_guide_files/figure-latex/distinguishing-non-orthogonal-states-intuition-1} 
+
+}
+
+\caption{Recall Section \ref{distinguishing-non-orthogonal-states} --- the optimal measurement to distinguish between the two equally likely non-orthogonal signal states \(|\psi_1\rangle\) and \(|\psi_2\rangle\) is described by the two orthogonal vectors \(|e_1\rangle\) and \(|e_2\rangle\) placed symmetrically around them.}\label{fig:distinguishing-non-orthogonal-states-intuition}
+\end{figure}
+
+The probability of correctly distinguishing the two states is
+\[
+  p_{\mathrm{success}}
+  = \frac{1}{2}|\langle e_1|\psi_1\rangle|^2 + \frac{1}{2}|\langle e_2|\psi_2\rangle|^2
+\]
+which reduces, with our schema, to
+\[
+  \begin{aligned}
+    p_{\mathrm{success}}
+    &= \cos^2\left(\frac{\pi}{2}-\frac{\varepsilon}{2}\right)
+  \\&= \frac{1}{2}(1+\sin\varepsilon)
+  \\&\approx \frac{1}{2}(1+\varepsilon)
+  \\&= \frac{1}{2}(1+\|\psi_1-\psi_2\|).
+  \end{aligned}
+\]
+where the last equality holds whenever \(\varepsilon\) is ``small enough''.
+But, happily, we can be much more precise than this!
+
+Let's start by rephrasing the problem in terms of density operators.
+We are sent one of two quantum states, either \(\rho_0\) or \(\rho_1\), with equal probability.
+You might notice that we're now labelling our states with \(\{0,1\}\) instead of \(\{1,2\}\).
+This is simply to help guide our intuition: we are being sent one bit of information, a \(0\) or a \(1\); the only complication is that this is happening in such a way that we cannot perfectly distinguish between them (since we are receiving \emph{non-orthogonal} quantum states).
+We want to choose two orthogonal projectors \(P_0\) and \(P_1\), so outcome \(P_0\) is interpreted as a \(0\) and outcome \(P_1\) as a \(1\).
+The probability of correctly detecting which state was sent is, as always, the probability that \(\rho_0\) was sent \emph{and} outcome \(P_0\) was observed, \emph{plus} the probability that \(\rho_1\) was sent \emph{and} outcome \(P_1\) was observed.
+In symbols,
+\[
+  \begin{aligned}
+    p_{\mathrm{success}}
+    &= \frac{1}{2}\operatorname{tr}(P_0\rho_0) + \frac{1}{2}\operatorname{tr}(P_1\rho_1)
+  \\&= \frac{1}{4}\operatorname{tr}[(P_0+P_1)(\rho_0+\rho_1)] + \frac{1}{4}\operatorname{tr}[(P_0-P_1)(\rho_0-\rho_1)]
+  \\&= \frac{1}{2} + \frac{1}{4}\operatorname{tr}[(P_0-P_1)(\rho_0-\rho_1)]
+  \end{aligned}
+\]
+where the last equality follows from the fact that \(P_0+P_1=\mathbf{1}\).
+
+By applying Hölder's inequality\footnote{See Section \ref{more-operator-norms}.}, this tells us that
+\[
+  \begin{aligned}
+    p_{\mathrm{success}}
+    &\leqslant\frac{1}{2} + \frac{1}{4}\|(P_0-P_1)\|\|(\rho_0-\rho_1)\|_{\operatorname{tr}}
+  \\&\leqslant\frac{1}{2} + \frac{1}{4}\|\rho_0-\rho_1\|_{\operatorname{tr}}
+  \\&= \frac{1}{2}(1+d_{\operatorname{tr}}(\rho_0,\rho_1)).
+  \end{aligned}
+\]
+
+Again, this upper bound is attained by taking \(P_0\) to be the projector onto the eigenspace of \(\rho_0-\rho_1\) corresponding to the \emph{positive} eigenvalues, and \(P_1\) the projector corresponding to the \emph{negative} eigenvalues: this gives \(\operatorname{tr}(P_0-P_1)(\rho_0-\rho_1)=\|\rho_0-\rho_1\|_{\operatorname{tr}}\).
+
+Of course, the whole story of quantum state distinguishability has much more to it than we have covered here.
+In Exercise \ref{distinguishability-and-trace-distance-exercise} we ask about the case where the two states \(\rho_0\) and \(\rho_1\) are sent with \emph{non-equal} probabilities \(p_0\) and \(p_1\), respectively.
+The more general scenario, where some quantum source emits states \(\rho_0,\ldots,\rho_n\) with respective probabilities \(p_0,\ldots,p_n\), turns out to be incredibly difficult --- we do not know an optimal discrimination strategy, except for in a few special cases.
+
+\hypertarget{how-accurate-is-accurate-enough}{%
+\subsection{How accurate is accurate enough?}\label{how-accurate-is-accurate-enough}}
+
+We have seen that finite sets of gates can be used to approximate any unitary operation with any prescribed accuracy.
+But how accurate is accurate enough?
+Of course, the answer depends on what we want to achieve.
+
+Suppose we come up with a cool quantum algorithm, represented by a circuit composed of \(t\) gates, and it solves an interesting decision problem with probability \(\frac{1}{2}+\delta\).
+The value of \(\delta\) might be tiny, so not much can be inferred from a single run, but as long as we can repeat the computation \(r\) times and take the majority answer as the ``right'' answer, the Chernoff bound\footnote{Recall Exercise \ref{imperfect-decision-maker}.} tells us that the probability of error is bounded above by \(e^{-2r\delta^2}\).
+We now want to physically implement this circuit using our preferred universal set of gates, say \(\{H,T,\texttt{c-NOT}\}\).
+If we can implement each gate with accuracy \(\varepsilon/t\), then we can approximate the circuit with accuracy \(\varepsilon\), which means that the probability of success will be \(\frac{1}{2}+\delta\pm\varepsilon\).
+So, at the very least, we want \(\varepsilon<\delta/2\).
+
+\hypertarget{remarks-and-exercises-11}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-11}}
+
+\hypertarget{operator-decompositions}{%
+\subsubsection{Operator decompositions}\label{operator-decompositions}}
+
+Analogously to how we can factor polynomials into linear parts, or factor numbers into prime divisors, we can ``factor'' matrices into smaller components.
+Doing so often helps us to better understand the geometry of the situation: we might be able to understand the transformation described by a single matrix as ``some reflection, followed by some rotation, followed by some scaling''.
+For us, one specific use of such a ``factorisation'' (known formally as an \textbf{operator decomposition}) is in better understanding various operator norms, as we explain in \ref{more-operator-norms}.
+
+Here are three operator decompositions that are particularly useful in quantum information theory.
+The second is for arbitrary operators between Hilbert spaces, the first and third are for \emph{normal endomorphisms} (i.e.~normal operators from one Hilbert space to itself).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Spectral decomposition.}
+  Recall Section \ref{observables}: the spectral theorem tells us that every \emph{normal} operator \(A\in\mathcal{B}(\mathcal{H})\) can be expressed as a linear combination of projections onto pairwise orthogonal subspaces.
+  We write the spectral decomposition of \(A\) as
+  \[
+     A = \sum_k \lambda_k |v_k\rangle\langle v_k|
+   \]
+  where \(\lambda_k\) are the eigenvalues of \(A\), with corresponding eigenvectors \(|v_k\rangle\), which form an orthonormal basis in \(\mathcal{H}\).
+
+  In matrix notation, we can write this as
+  \[
+     A = UDU^\dagger
+   \]
+  where \(D\) is the diagonal matrix whose diagonal entries are the eigenvalues \(\lambda_k\), and where \(U\) is the unitary matrix whose columns are the eigenvectors \(|v_k\rangle\).
+\item
+  \textbf{Singular value decomposition (SVD).}
+  We have already mentioned the SVD in \ref{the-schmidt-decomposition} when discussing the Schmidt decomposition, but we recall the details here.
+  Consider \emph{any} (non-zero) operator \(A\in\mathcal{B}(\mathcal{H},\mathcal{H}')\).
+  From this, we can construct two positive semi-definite operators: \(A^\dagger A\in\mathcal{B}(\mathcal{H})\) and \(AA^\dagger\in\mathcal{B}(\mathcal{H}')\).
+  These are both normal, and so we can apply the spectral decomposition to both.
+  In particular, if we denote the eigenvalues of \(A^\dagger A\) by \(\lambda_k\), and the corresponding eigenvectors by \(|v_k\rangle\), then we see that the vectors
+  \[
+     |u_k\rangle \coloneqq \frac{1}{\sqrt{\lambda_k}}A|v_k\rangle
+   \]
+  form an orthonormal system in \(\mathcal{H}'\) (and are, in fact, eigenvectors of \(AA^\dagger\)), since
+  \[
+     \begin{aligned}
+       \langle u_i|u_j\rangle
+       &= \frac{1}{\sqrt{\lambda_i}\sqrt{\lambda_j}} \langle v_i|A^\dagger A|v_j\rangle
+     \\&= \frac{\lambda_j}{\sqrt{\lambda_i}\sqrt{\lambda_j}} \langle v_i|v_j\rangle
+     \\&= \delta_{ij}.
+     \end{aligned}
+   \]
+  We define the \textbf{singular values} \(s_k\) of \(A\) to be the square roots of the eigenvalues of \(A^\dagger A\), i.e.~\(s_k^2=\lambda_k\).
+  These singular values satisfy
+  \[
+     A|v_k\rangle=s_k|u_k\rangle
+   \]
+  by construction, and so we can write
+  \[
+     A = \sum_k s_k|u_k\rangle\langle v_k|
+   \]
+  which we call the \textbf{singular value decomposition} (or \textbf{SVD}).
+  This decomposition holds for arbitrary (non-zero) operators as opposed to just normal ones, and also for operators between two different Hilbert spaces as opposed to just endomorphisms.
+  In words, this decomposition says that, given \(A\), we can find orthonormal bases of \(\mathcal{H}\) and \(\mathcal{H}'\) such that \(A\) maps the \(k\)-th basis vector of \(\mathcal{H}\) to a non-negative multiple of the \(k\)-th basis vector of \(\mathcal{H}'\) (and sends any left over basis vectors to \(0\), if \(\dim\mathcal{H}>\dim\mathcal{H}'\)).
+
+  In matrix notation, we can write this as
+  \[
+     A = U\sqrt{D}V^\dagger
+   \]
+  where \(D\) is the diagonal matrix of eigenvalues (and so \(\sqrt{D}\) is the diagonal matrix of \emph{singular} values), and both \(U\) and \(V\) are unitary.
+
+  Geometrically, we are decomposing any linear transformation into a composition of a rotation or reflection \(V^\dagger\), followed by a scaling by the singular values \(\sqrt{D}\), followed by another rotation or reflection \(U\).
+  This maps the unit sphere in \(\mathcal{H}\) onto an ellipsoid in \(\mathcal{H}'\), and the singular values of \(A\) are exactly the lengths of the semi-axes of this ellipsoid.
+
+  \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-74-1} \end{center}
+\item
+  \textbf{Polar decomposition.}
+  Let \(A\in\mathcal{B}(\mathcal{H})\) be a normal arbitrary operator.
+  Since it is an endomorphism, it is represented by a square matrix.
+  Forgetting that \(A\) is normal for a moment, we know that its SVD takes the form
+  \[
+   \begin{aligned}
+     A
+     &= U\sqrt{A^\dagger A}
+   \\&= \sqrt{AA^\dagger}U
+   \end{aligned}
+    \]
+  where the unitary matrix \(U\) connects the two eigenbases: \(U=\sum_k|u_k\rangle\langle v_k|\).
+  We shall return to this unitary \(U\) shortly.
+\end{enumerate}
+
+Since \(A\) is normal, \(A^\dagger A=AA^\dagger\), so we can define its \textbf{modulus} as
+\[
+    |A| \coloneqq \sqrt{A^\dagger A}
+  \]
+which gives us the \textbf{polar decomposition}
+\[
+    A = |A|U.
+  \]
+This is the matrix analogue of the polar decomposition of a complex number: \(z=re^{i\theta}\).
+
+If we decompose the eigenvalues of \(A\) as \(\lambda_k=r_k e^{i\theta_k}\) (with corresponding eigenvectors \(|v_k\rangle\)) then the spectral decomposition of \(A\) gives us
+\[
+    \begin{aligned}
+      A
+      &= \sum_k \lambda_k|v_k\rangle\langle v_k|
+    \\&= \sum_k r_ke^{i\theta_k}|v_k\rangle\langle v_k|
+    \\&= \sum_k r_k|u_k\rangle\langle v_k|
+    \end{aligned}
+  \]
+where \(|u_k\rangle=e^{i\theta_k}|v_k\rangle\), so we see that the unitary \(U=\sum_k|u_k\rangle\langle v_k|\) in the polar decomposition contains all the information of the phase factors.
+
+\hypertarget{more-operator-norms}{%
+\subsubsection{More operator norms}\label{more-operator-norms}}
+
+We have already seen, all the way back in \ref{modifying-the-born-rule}\footnote{Think how far you've come since then!}, how the Euclidean norm (from which we get the Euclidean distance) is the special case \(p=2\) of \(p\)-norms (also known as \href{https://en.wikipedia.org/wiki/Lp_space}{\textbf{\(\ell^p\)-norms}}), where
+\[
+  \|v\|_p \coloneqq \left( \sum_{i=1}^n |v_i|^p \right)^{\frac{1}{p}}
+\]
+for a vector \(v=(v_1,\ldots,v_n)\in\mathbb{R}^n\), and for \(p\in\mathbb{N}\).
+We can actually extend this definition to include the case \(p=\infty\) by setting
+\[
+  \|v\|_\infty \coloneqq \max_{1\leqslant i\leqslant n}|v_i|.
+\]
+One particularly nice consequence of this definition is that
+\[
+  \|v\|_1 \geqslant\|v\|_2 \geqslant\ldots \geqslant\|v\|_\infty
+\]
+for any vector \(v\).
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-75-1} \end{center}
+
+You might recall that we named the Cauchy--Schwartz inequality as arguably the most useful inequality in analysis.
+Well it turns out that it is actually the special case \(p=2\) of an inequality concerning \(p\)-norms.
+
+\begin{idea}
+\href{https://en.wikipedia.org/wiki/H\%C3\%B6lder's_inequality}{\textbf{Hölder's inequality}}.
+Let \(p,q\in\mathbb{N}\cup\{\infty\}\) be such that \(\frac{1}{p}+\frac{1}{q}=1\).
+Then
+\[
+  \|vw\|_1 \leqslant\|v\|_p\|w\|_q
+\]
+with equality if and only if \(v\) and \(w\) are ``\((p,q)\)-linearly dependent''.\footnote{The technical statement of Hölder's inequality is really for something known as a \textbf{measure space}, where \(v\) and \(w\) are \emph{functions}, but the details aren't relevant for us here.}
+
+\end{idea}
+
+We will come back to the relevance of these \(p\)-norms shortly.
+For now, let us introduce three norms (two of which we have already seen, but recall here again to tell a more complete story) on the space of endomorphisms \(\mathcal{B}(\mathcal{H})\) of a Hilbert space, each of which can be defined neatly in terms of singular values.
+Note that, if \(A\) is normal, then we its singular values are exactly the absolute values of its eigenvalues, which usually lets us simplify the definition of the norm.
+
+Throughout, let \(A\in\mathcal{B}(\mathcal{H})\), with singular values \(s_k\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Spectral norm.}
+  This one is so frequently used that it is often simply called the \textbf{operator} norm and denoted simply by \(\|\cdot\|\).
+  It is the maximum length of the vector \(A|v\rangle\) over all possible normalised vectors \(|v\rangle\in\mathcal{H}\), i.e.
+  \[
+     \|A\| \coloneqq \max_{|v\rangle\in S_{\mathcal{H}}^1}\Big\{ |A|v\rangle| \Big\}
+   \]
+  (where \(S_{\mathcal{H}}^1\) is the unit sphere in \(\mathcal{H}\), i.e.~the set of vectors of norm \(1\)).
+  From this definition, one can actually show that the norm is given by the largest singular value:
+  \[
+     \|A\| = \max_k s_k.
+   \]
+\item
+  \textbf{Trace norm.}
+  This is given by the sum of the singular values of \(A\), i.e.
+  \[
+     \|A\|_{\operatorname{tr}} \coloneqq \sum_k s_k
+   \]
+  but note that we can rewrite this using the polar decomposition (from Section \ref{operator-decompositions}) as simply
+  \[
+     \|A\|_{\operatorname{tr}} = \operatorname{tr}|A|.
+   \]
+\item
+  \textbf{Frobenius norm.}
+  We have mentioned a few times how inner products give rise to norms, and you might remember that we introduced an inner product on \(\mathcal{B}(\mathcal{H})\) a while ago: the Hilbert--Schmidt norm\footnote{Here we drop the factor of \(\frac{1}{2}\) that we sometimes included for simplifying certain calculations.}
+  \[
+     \begin{aligned}
+       (A|B)
+       &\coloneqq \operatorname{tr}A^\dagger B
+     \\&= \sum_{i,j} A_{ij}^\star B_{ji}.
+     \end{aligned}
+   \]
+  The Frobenius norm is the norm induced by this inner product, i.e.
+  \[
+     \begin{aligned}
+       \|A\|_F
+       &\coloneqq \sqrt{(A|A)}
+     \\&= \sqrt{\operatorname{tr}(A^\dagger A)}
+     \\&= \sqrt{\sum_{i,j}|A_{ij}|^2}.
+     \end{aligned}
+   \]
+\end{enumerate}
+
+Let's study the relation between the operator norm and the trace norm first.
+By definition, we see that
+\[
+  \|A\|_{\operatorname{tr}} \geqslant\|A\|
+\]
+but there is another, more subtle, inequality that they satisfy, namely
+\[
+  |(A|B)| \leqslant\|A\|_{\operatorname{tr}}\|B\|
+\]
+which is like a more general version of the Cauchy--Schwartz inequality, and is sometimes referred to as \textbf{Hölder's inequality for matrices}.
+To derive this inequality, we can use the SVD of \(A\), since then
+\[
+  \begin{aligned}
+    |(A|B)|
+    &= |\operatorname{tr}A^\dagger B|
+  \\&= \left| \operatorname{tr}\left( \sum_k s_k|v_k\rangle\langle u_k| B \right) \right|
+  \\&= \left| \sum s_k\langle u_k|B|v_k\rangle \right|
+  \\&\leqslant\sum_k s_k|\langle u_k|B|v_k\rangle|
+  \\&\leqslant\sum_k s_k\|B\|
+  \\&= \|A\|_{\operatorname{tr}}\|B\|.
+  \end{aligned}
+\]
+
+We can actually use this inequality to recover either the operator or the trace norm, by maximising: for any fixed \(A\) (or any fixed \(B\)), we can obtain equality:
+\[
+  \begin{aligned}
+    \|A\|_{\operatorname{tr}}
+    &= \max_{\|B\|=1}\{(A|B)\}
+  \\\|B\|
+    &= \max_{\|A\|_{\operatorname{tr}}=1}\{(A|B)\}.
+  \end{aligned}
+\]
+To see this, in the first case we can use the polar decomposition \(A=|A|U\) to see that equality is attained by \(B=U\); in the second case we can use the polar decomposition \(B=|B|V\) to see that equality is attained by \(A=V|v_1\rangle\langle v_1|\), where \(|v_1\rangle\) is the eigenvector of \(|B|\) with the largest eigenvalue (or, equivalently, singular value).
+In particular, this gives us a \textbf{variational} characterisation of the trace norm which is very useful at times:
+\[
+  \|A\|_{\operatorname{tr}} = \max_{U\text{ unitary}}|\operatorname{tr}AU|.
+\]
+
+One final special case to point out is what happens if \(A\) is Hermitian.
+Then we can separate the spectral decomposition into positive and negative parts, and write \(A\) as the difference of two positive operators:
+\[
+  A = A_+ - A_-.
+\]
+Then
+\[
+  \begin{aligned}
+    |A|
+    &= A_+ + A_-
+  \\\|A\|_{\operatorname{tr}}
+    &= \operatorname{tr}A_+ + \operatorname{tr}A_-.
+  \end{aligned}
+\]
+
+Now we finally return to the relevance of \(p\)-norms: it turns out that all these three operator norms above are actually special cases of \href{https://en.wikipedia.org/wiki/Schatten_norm}{\textbf{Schatten \(p\)-norms}}.
+For \(p\in\mathbb{N}\) we define the Schatten \(p\)-norm in terms of singular values \(s_k\) as
+\[
+  \|A\|_p \coloneqq \left( \sum_k |s_k|^p \right)^\frac{1}{p}
+\]
+and we define
+\[
+  \|A\|_\infty \coloneqq \max_k |s_k|
+\]
+analogously to how we did for \(\ell^p\)-norms.
+We then recover the trace norm, the Frobenius norm, and the spectral norm by taking \(p=1,2,\infty\), respectively:
+\[
+  \begin{aligned}
+    \|A\|_1
+    &= \|A\|_{\operatorname{tr}}
+  \\\|A\|_2
+    &= \|A\|_F
+  \\\|A\|_\infty
+    &= \|A\|.
+  \end{aligned}
+\]
+All Schatten \(p\)-norms are sub-multiplicative (\(\|AB\|_p\leqslant\|A\|_p\|B\|_p\)) and unitarily invariant (\(\|A\|=\|UAV\|\) for any unitaries \(U\) and \(V\)).
+
+\hypertarget{fidelity-in-a-trace-norm-inequality}{%
+\subsubsection{Fidelity in a trace norm inequality}\label{fidelity-in-a-trace-norm-inequality}}
+
+There is a useful inequality involving the trace norm:
+\[
+  \operatorname{tr}(A-B)^2 \leqslant\|A^2-B^2\|_{\operatorname{tr}}.
+\]
+Let's prove it!
+
+Let \(\lambda_k\) be the eigenvalues of the operator \(A-B\), with corresponding eigenvectors and \(|u_k\rangle\).
+Then
+\[
+  \operatorname{tr}(A-B)^2 = \sum_k \lambda_k^2
+\]
+since the trace is exactly the sum of eigenvalues.
+Now, for any unitary \(U\), we have that
+\[
+  \|A^2-B^2\|_{\operatorname{tr}} \geqslant|\operatorname{tr}(A^2-B^2)U|
+\]
+since \(\|X\|_{\operatorname{tr}}=\max_{U\text{ unitary}} |\operatorname{tr}(XU)|\).
+If we take \(U=\sum_i\pm|u_k\rangle\langle u_k|\), where the signs are chosen so that each term \(\langle u_k|A^2-B^2|u_k\rangle\) is non-negative, then
+\[
+  \begin{aligned}
+    \|A^2-B^2\|_{\operatorname{tr}}
+    &\geqslant|\operatorname{tr}(A^2-B^2)U|
+  \\&= \sum_k |\langle u_k|A^2-B^2||u_k\rangle|.
+  \end{aligned}
+\]
+
+Writing \(A^2-B^2\) as\footnote{This is the non-commutative version of the identity \(a^2-b^2=(a+b)(a-b)\).}
+\[
+  A^2-B^2 = \frac{1}{2}\Big[ (A+B)(A-B) + (A-B)(A+B) \Big]
+\]
+we see that
+\[
+  \begin{aligned}
+    \langle u_k|A^2-B^2||u_k\rangle
+    &= \frac{1}{2}\langle u_k|(A+B)(A-B) + (A-B)(A+B)|u_k\rangle
+  \\&= \lambda_i\langle u_k|A+B|u_k\rangle.
+  \end{aligned}
+\]
+Then, since \(\lambda_i=\langle u_k|A|u_k\rangle-\langle u_k|B|u_k\rangle\) is the difference of two non-negative numbers, we have that
+\[
+  \langle u_k|A+B|u_k\rangle \geqslant|\lambda_i|.
+\]
+Putting this all together, we obtain
+\[
+  \begin{aligned}
+    \|A^2-B^2\|_{\operatorname{tr}}
+    &\geqslant\sum_k |\langle u_k|A^2-B^2||u_k\rangle|
+  \\&\geqslant\sum_k \lambda_k^2
+  \\&= \operatorname{tr}(A-B)^2
+  \end{aligned}
+\]
+as desired.
+
+One particularly nice application of this inequality arises when we take \(A=\sqrt{\rho}\) and \(B=\sqrt{\sigma}\), since then
+\[
+  \operatorname{tr}(\sqrt{\rho}-\sqrt{\sigma})^2 \leqslant\|\rho-\sigma\|_{\operatorname{tr}}
+\]
+or, after some rearrangement,
+\[
+  1-\operatorname{tr}(\sqrt{\rho}\sqrt{\sigma}) \leqslant\frac{1}{2}\|\rho-\sigma\|_{\operatorname{tr}}
+\]
+and we recognise \(\operatorname{tr}(\sqrt{\rho}\sqrt{\sigma})\) as the fidelity.
+
+\hypertarget{hamming-distance}{%
+\subsubsection{Hamming distance}\label{hamming-distance}}
+
+Show that the Hamming distance (defined in Section \ref{metrics}) is indeed a metric.
+
+\hypertarget{operator-norm}{%
+\subsubsection{Operator norm}\label{operator-norm}}
+
+Prove the following properties of the operator norm:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  \(\|A\otimes B\|=\|A\|\|B\|\) for any operators \(A\) and \(B\)
+\item
+  If \(A\) is normal, then \(\|A^\dagger\|=\|A\|\)
+\item
+  If \(U\) is unitary, then \(\|U\|=1\)
+\item
+  If \(P\neq0\) is an orthogonal projector, then \(\|P\|=1\).
+\end{enumerate}
+
+Using the singular value decomposition\footnote{Recall Section \ref{the-schmidt-decomposition}}, or otherwise, prove that the operator norm has the following two properties for any operators \(A\) and \(B\):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  \textbf{Unitary invariance:} \(\|UAV\|=\|A\|\) for any unitaries \(U\) and \(V\)
+\item
+  \textbf{Sub-multiplicativity:} \(\|AB\|\leqslant\|A\|\|B\|\).
+\end{enumerate}
+
+Recall that we say that \(V\) approximates \(U\) with precision \(\varepsilon\) if \(\|U-V\|\leqslant\varepsilon\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  Prove that, if \(V\) approximates \(U\) with precision \(\varepsilon\), then \(V^{-1}\) approximates \(U^{-1}\) with the same precision \(\varepsilon\).
+\end{enumerate}
+
+Using the Cauchy--Schwartz inequality, or otherwise, prove the following, for any vector \(|\psi\rangle\) and any operators \(A\) and \(B\):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{7}
+\tightlist
+\item
+  \(|\langle\psi|A^\dagger B|\psi\rangle|\leqslant\|A\|\|B\|\).
+\end{enumerate}
+
+\hypertarget{tolerance-and-precision}{%
+\subsubsection{Tolerance and precision}\label{tolerance-and-precision}}
+
+Suppose we wish to implement a quantum circuit consisting of gates \(U_1,\ldots,U_d\), but we only have available to us gates \(V_1,\ldots,V_d\).
+Luckily, these gates happen to be pretty good approximations to our desired gates, and the error is uniform: \(\|U_i-V_i\|\leqslant\varepsilon\) for all \(i=1,\ldots,d\) for some fixed \(\varepsilon\).
+
+We want our approximate circuit to be within some \textbf{tolerance} \(\delta\) of the desired circuit: the probabilities of different outcomes of \(V=V_d\cdots V_1\) should be be within \(\delta\) of the ``correct'' probabilities of the different outcomes of \(U=U_d\cdots U_1\), i.e.~\(|p_U-p_V|\leqslant\delta\).
+
+How small must \(\varepsilon\) be with respect to \(\delta\) in order for us to achieve this?
+
+\emph{Hint: recall that \(|p_U-p_V|\leqslant 2\|U-V\|\).}
+
+\hypertarget{statistical-distance-and-a-special-event}{%
+\subsubsection{Statistical distance and a special event}\label{statistical-distance-and-a-special-event}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Show that, if \(p\) and \(q\) are probability distributions on the same sample space \(\Omega\), then
+  \[
+   d(p,q) = \max_{A\subseteq\Omega}\{|p(A)-q(A)|\}.
+    \]
+\item
+  By definition, the above maximum is realised for some specific subset \(A\subseteq\Omega\), i.e.~there exists some event (described by the set of outcomes \(A\)) that is optimal in distinguishing \(p\) from \(q\).
+  What is this event?
+\end{enumerate}
+
+\hypertarget{joint-probability-distributions}{%
+\subsubsection{Joint probability distributions}\label{joint-probability-distributions}}
+
+If we simultaneously sample \emph{two} random variables from the same probability space, then we obtain a \textbf{joint distribution}:
+\[
+  r(x,y) \coloneqq \Pr(x\text{ and }y).
+\]
+From this we can recover the \textbf{marginals}
+\[
+  \begin{aligned}
+    p(x)
+    &\coloneqq \sum_y r(x,y)
+  \\q(y)
+    &\coloneqq \sum_x r(x,y).
+  \end{aligned}
+\]
+
+So let \(r(x,y)\) be a joint probability distribution with marginals \(p(x)\) and \(q(y)\).
+Show that
+\[
+  d_{\operatorname{tr}}(p,q) \leqslant\Pr(x\neq y)
+  \equiv \sum_{\{x,y\mid x\neq y\}} p(x,y).
+\]
+\emph{Hint:}
+\[
+  \begin{aligned}
+    d_{\operatorname{tr}}(p,q)
+    &= 1 - \sum_x \min\{p(x),q(x)\}
+  \\&\leqslant 1 - \sum_x p(x,x)
+  \\&= \Pr(x\neq y).
+  \end{aligned}
+\]
+
+\hypertarget{distinguishability-and-trace-distance-exercise}{%
+\subsubsection{Distinguishability and the trace distance}\label{distinguishability-and-trace-distance-exercise}}
+
+Say we have a physical system which is been prepared in one of two states (say, \(\rho_0\) and \(\rho_1\)), each with equal probability.
+Then, as shown in Section \ref{distinguishing-non-orthogonal-states-again}, a \emph{single} measurement can distinguish between the two preparations with probability \emph{at most} \(\frac{1}{2}[1+d_{\operatorname{tr}}(\rho_0,\rho_1)]\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  How does this probability change if the states \(\rho_0\) and \(\rho_1\) are \emph{not} equally liked, but instead sent with some predetermined probabilities \(p_0\) and \(p_1\), respectively?
+\item
+  Suppose that you are given one randomly selected qubit from a pair in the state\footnote{You have already seen this state in Exercise \ref{some-density-operator-calculations}.}
+  \[
+     |\psi\rangle =
+     \frac{1}{\sqrt{2}}\left(
+       |0\rangle\otimes\left(
+         \sqrt{\frac23}|0\rangle
+         - \sqrt{\frac13}|1\rangle
+       \right)
+       + |1\rangle\otimes\left(
+         \sqrt{\frac23}|0\rangle
+         + \sqrt{\frac13}|1\rangle
+       \right)
+     \right).
+   \]
+  What is the maximal probability with which we can determine which qubit (either the first or the second) we were given?
+\end{enumerate}
 
 \hypertarget{decoherence-and-basic-quantum-error-correction}{%
 \section{Decoherence and basic quantum error correction}\label{decoherence-and-basic-quantum-error-correction}}
@@ -9081,6 +10363,7 @@ Now we can also write this evolution as
 \]
 where \(|e_{\mathbf{1}}\rangle = \frac{1}{2}(|e_{00}\rangle + |e_{11}\rangle)\) and \(|e_Z\rangle = \frac{1}{2}(|e_{00}\rangle - |e_{11}\rangle)\).
 We can roughly interpret this expression as saying that two things can happen to the qubit: \emph{nothing} \(\mathbf{1}\) (first term), or \emph{phase-flip} \(Z\) (second term).
+
 This, however, \emph{should not be taken literally} unless the states of the environment, \(|e_{\mathbf{1}}\rangle\) and \(|e_Z\rangle\), are orthogonal.\footnote{Why not?}
 
 This process is what we refer to as \textbf{decoherence}.
@@ -9369,7 +10652,7 @@ That is, each time Alice wants to send a single logical \(0\), she instead sends
 Bob decodes the bit value by a ``majority vote'' of the three bits.
 If only one error occurs in a given ``block'' of three bits, then this error correction procedure is foolproof.
 In general, the net probability of error in a received block is just the likelihood that either two or three errors occur, which is \(3p^2(1-p) + p^3\).
-If \(p<\frac12\), then this probability is indeed less than \(p\), and so the three-bit code improves the reliability of the information transfer.
+If \(p<\frac{1}{2}\), then this probability is indeed less than \(p\), and so the three-bit code improves the reliability of the information transfer.
 
 The \emph{quantum} case, however, is more complicated, because we have to worry about both bit-flip \emph{and} phase-flip errors.
 
@@ -9378,13 +10661,13 @@ It turns out that we can actually rely on the same triple-repetition code, but w
 
 Given some qubit in an unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), we encode it into three qubits by using \(\texttt{c-NOT}\) gates:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-73-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-76-1} \end{center}
 
 Suppose that the \emph{second} qubit is flipped by our noisy channel, so that the encoded state becomes \(\alpha|010\rangle + \beta|101\rangle\).
 Decoding this requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 So instead we introduce another \emph{two additional} qubits, which we refer to as \textbf{ancilla bits}, both in state \(|0\rangle\), and apply the following \textbf{encoding network}:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-74-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-77-1} \end{center}
 
 We measure the two ancilla bits (in the standard basis), and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code, as follows.
 
@@ -9405,10 +10688,10 @@ First we encode the qubit using the phase-flip code, and then we encode each of 
 This gives an error correction scheme that allows us to protect against both types of error by encoding a single logical qubit across \emph{nine} physical qubits, protecting against a \emph{single} quantum error on any of the nine qubits.
 
 If we want to preserve a quantum state for a long time without doing any computations, or if we want to send it through a noisy communications channel, we can just encode the state using a quantum code and decode it when we are done.
-Computation on encoded states using noisy gates requires few more tricks.
+Computation on encoded states using noisy \emph{gates}, however, requires a few more tricks\ldots{}
 
-\hypertarget{remarks-and-exercises-11}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-11}}
+\hypertarget{remarks-and-exercises-12}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-12}}
 
 \hypertarget{quantum-error-correction-and-fault-tolerance}{%
 \section{Quantum error correction and fault tolerance}\label{quantum-error-correction-and-fault-tolerance}}
