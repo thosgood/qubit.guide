@@ -110,7 +110,7 @@
 
 \title{Introduction to Quantum Information Science}
 \author{\href{https://www.arturekert.org/}{Artur Ekert} and \href{https://thosgood.com}{Tim Hosgood}}
-\date{Last updated: 26 September 2022 \href{https://github.com/thosgood/qubit.guide/commits/main}{(see change history)}}
+\date{Last updated: 27 September 2022 \href{https://github.com/thosgood/qubit.guide/commits/main}{(see change history)}}
 
 
 \begin{document}
@@ -173,7 +173,7 @@ But this does not mean that our treatment is cursory!
 In fact, by the end of this book you will have learnt a fair bit more than what might usually be covered in a standard quantum information science course that you would find in a mathematics masters degree, for example.
 
 The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find certain chapters easy, while others find the same ones difficult --- so if things seem hard to you, then don't worry: the next chapter might feel much easier!
-The only real prerequisites are a working knowledge of complex numbers and vectors and matrices, such as ``what is an eigenvector''; some previous exposure to elementary probability theory and Dirac bra-ket notation (for example) would be helpful, but we provide crash-course introductions to some topics like these at the end of this chapter.
+The only real prerequisites are a working knowledge of complex numbers and vectors and matrices; some previous exposure to elementary probability theory and Dirac bra-ket notation (for example) would be helpful, but we provide crash-course introductions to some topics like these at the end of this chapter.
 A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g.~state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory, algorithms) would be helpful, but is \emph{not at all} essential.
 
 Of course, even if you aren't familiar with the formal mathematics, then that shouldn't stop you from reading this book if you want to.
@@ -646,15 +646,17 @@ The order \emph{does} matter: in general, \(BA\neq AB\).
 In the exceptional case in which \(AB=BA\), one says that these two operators \textbf{commute}.
 The inverse of \(A\), written as \(A^{-1}\), is the operator that satisfies \(AA^{-1}=\mathbf{1}=A^{-1}A\).
 For finite-dimensional spaces, one only needs to check \emph{one} of these two conditions, since any one of the two implies the other, whereas, on an infinite-dimensional space, \emph{both} must be checked.
-Finally, given a particular basis, an operator \(A\) is uniquely determined by the entries of its matrix, defined by \(A_{ij}=\langle i|A|j\rangle\).
-The \textbf{adjoint}, or \textbf{Hermitian conjugate}, of \(A\), denoted by \(A^\dagger\), is defined by the relation
+Finally, given a particular basis, an operator \(A\) is uniquely determined by the entries of its matrix: \(A_{ij}=\langle i|A|j\rangle\).
+
+The \textbf{adjoint}, or \textbf{Hermitian conjugate}, of an linear map \(A\), denoted by \(A^\dagger\), is defined by the relation
 \[
   \begin{gathered}
     \langle i|A^\dagger|j\rangle
     = \langle j|A|i\rangle^\star
-  \\\text{for all $|i\rangle,|j\rangle\in\mathcal{H}$}.
+  \\\text{for all $|i\rangle,|j\rangle\in\mathcal{H}$}
   \end{gathered}
 \]
+and \(\dagger\) turns \((n\times m)\) matrices into \((m\times n)\) matrices.
 
 An operator \(A\) is said to be
 
@@ -669,6 +671,7 @@ An operator \(A\) is said to be
 \end{itemize}
 
 In particular then, being unitary implies being normal, since if \(A^\dagger=A^{-1}\) then \(AA^\dagger=A^\dagger A\), since both of these are equal to \(\mathbf{1}\).
+Note also that unitary and Hermitian operators must be operators, i.e.~they are represented by an \((n\times n)\) matrix.
 
 Any \emph{physically admissible} evolution of an isolated quantum system is represented by a unitary operator.\footnote{This is an \emph{axiom}, justified by experimental evidence, and also by some sort of mathematical intuition. So, in this book, we take this as a \emph{fact} that we do not question. It is, however, very interesting to question it: \emph{why should we assume this to be true?}}
 Note that unitary operators preserve the inner product: given a unitary operator \(U\) and two kets \(|a\rangle\) and \(|b\rangle\), and defining \(|a'\rangle=U|a\rangle\) and \(|b'\rangle=U|b\rangle\), we have that
@@ -680,6 +683,28 @@ Note that unitary operators preserve the inner product: given a unitary operator
   \end{gathered}
 \]
 Preserving the inner product implies preserving the norm induced by this product, i.e.~unit state vectors are mapped to unit state vectors, i.e.~\emph{unitary operations are the isometries of the Euclidean norm}.
+
+\hypertarget{eigenvalues-and-eigenvectors}{%
+\subsection{Eigenvalues and eigenvectors}\label{eigenvalues-and-eigenvectors}}
+
+Given an operator \(A\), an \textbf{eigenvector} is a non-zero vector \(|v\rangle\) such that
+\[
+  A|v\rangle = \lambda|v\rangle
+\]
+for some \(\lambda\in\mathbb{C}\) (which is called the corresponding \textbf{eigenvalue}).
+We call the pair \((\lambda,|v\rangle)\) an \textbf{eigenpair}, and we call the set of eigenvalues the \textbf{spectrum} of \(A\), denoted by \(\sigma(A)\).
+It is a surprising (but incredibly useful) fact that every operator has at least one eigenpair.\footnote{You can prove this for an \((n\times n)\) matrix \(A\) by considering the set \(\{|v\rangle,A|v\rangle,A^2|v\rangle,\ldots,A^n|v\rangle\}\) of vectors in \(\mathbb{C}^n\). Since this has \(n+1\) elements, it must be linearly \emph{dependent}, and so (after some lengthy algebra) we can construct an eigenpair.}
+Geometrically, an eigenvector of an operator \(A\) is a vector upon which \(A\) simply acts by ``stretching''.
+
+Rewriting the defining property of an eigenpair \((\lambda,|v\rangle)\), we see that
+\[
+  (A-\lambda\mathbf{1})|v\rangle = 0
+\]
+which tells us that the operator \(A-\lambda\mathbf{1}\) has a non-zero kernel, and is thus non-invertible.
+This gives a useful characterisation of the spectrum in terms of a determinant:
+\[
+  \sigma(A) = \{\lambda\in\mathbb{C} \mid \det(A-\lambda\mathbf{1})=0\}.
+\]
 
 \hypertarget{outer-products}{%
 \subsection{Outer products}\label{outer-products}}
@@ -2001,7 +2026,7 @@ We will occasionally switch to the \(\mathrm{SU}(2)\) version of a phase gates, 
 We will soon explain what this group \(\mathrm{SU}(2)\) is and how it relates to another important group called \(\mathrm{SO}(3)\), but it turns up in many places throughout quantum physics, as well as mathematics in general.
 Other places you might see \(\mathrm{SU}(2)\) appear are when talking about \href{https://en.wikipedia.org/wiki/Quaternion}{\textbf{quaternions}} (which are somehow the next thing in the sequence \(\mathbb{R}\hookrightarrow\mathbb{C}\hookrightarrow?\)) and two of the four ``fundamental interactions'', namely electromagnetism and the weak nuclear force, which get bundled together into something known as \href{https://en.wikipedia.org/wiki/Electroweak_interaction}{\textbf{electroweak interaction}}.
 
-We will eventually talk about how this aforementioned relationship between \(\mathrm{SU}(2)\) and \(\mathrm{SO}(3)\) lets us describe \emph{rotations} of things in three-dimensional space.
+We will also eventually talk about how this aforementioned relationship between \(\mathrm{SU}(2)\) and \(\mathrm{SO}(3)\) lets us describe \emph{rotations} of things in three-dimensional space.
 The abstract mathematical concept lying behind this is one with a very lofty-sounding title indeed: \textbf{representation theory of Lie algebras}.
 This lets us formally talk about things like (non-relativistic) \href{https://en.wikipedia.org/wiki/Spin_(physics)}{spin}.
 As for this application of \(\mathrm{SU}(2)\) in studying the electroweak interaction, this is an example of something known as \href{https://en.wikipedia.org/wiki/Gauge_theory}{\textbf{gauge theory}}.
@@ -2015,7 +2040,7 @@ In general, states differing only by a global phase are physically indistinguish
 
 \begin{technical}
 If you are more mathematically minded, then we can justify ignoring the global phase in a few other ways.
-Taking the axiomatic approach where values of physical observables correspond to eigenvalues of operators, think about the eigenvalues of a matrix \(A\) and of the matrix \(\mu A\), where \(\mu\) is a complex number with \(|\mu|=1\).
+Taking the axiomatic approach, where values of physical observables correspond to eigenvalues of operators, think about how the eigenvalues of a matrix \(A\) relate to those of the matrix \(\mu A\), where \(\mu\) is a complex number with \(|\mu|=1\).
 One ``high-level'' way of dealing with this, in the language of gauge theory, is to talk of \textbf{invariance under gauge symmetry} (here, in particular, we're talking about \href{https://en.wikipedia.org/wiki/Circle_group}{\(U(1)\)} symmetries).
 
 \end{technical}
@@ -4401,7 +4426,15 @@ and with its action on all other vectors determined by linearity:
 We have described the tensor product in terms of how it acts on bases, and then extended everything by linearity, distributivity, and associativity.
 But there are other, more abstract approaches to defining the tensor product.
 
-For example, given two vector spaces \(V\) and \(W\), we can construct their tensor product \(V\otimes W\) as a \emph{quotient} of the cartesian product \(V\times W\) (whose elements are simply pairs \((v,w)\) of vectors in \(V\) and vectors in \(W\)) by the subspace spanned by the relations that we want the tensor product to satisfy: \((v_1+v_2,w)-(v_1,w)-(v_2,w)\), \((v,w_1+w_2)-(v,w_1)-(v,w_2)\), \((\lambda v,w)-\lambda(v,w)\), and \((v,\lambda w)-\lambda(v,w)\).
+For example, given two vector spaces \(V\) and \(W\), we can construct their tensor product \(V\otimes W\) as a \emph{quotient} of the cartesian product \(V\times W\) (whose elements are simply pairs \((v,w)\) of vectors in \(V\) and vectors in \(W\)) by the subspace spanned by the relations that we want the tensor product to satisfy:
+\[
+  \begin{gathered}
+    (v_1+v_2,w)-(v_1,w)-(v_2,w),
+  \\(v,w_1+w_2)-(v,w_1)-(v,w_2),
+  \\(\lambda v,w)-\lambda(v,w),
+  \\(v,\lambda w)-\lambda(v,w).
+  \end{gathered}
+\]
 
 But really this is hinting at the so-called \href{https://en.wikipedia.org/wiki/Universal_property}{\textbf{universal property}} that defines the tensor product without giving a choice of explicit construction: the tensor product of \(V\) and \(W\) is defined to be any vector space \(A\) along with a bilinear map \(\otimes\colon V\times W\to A\) such that, for any \emph{other} vector space \(Z\) along with a bilinear map \(f\colon V\times W\to Z\), there exists a \emph{unique} linear map \(\tilde{f}\colon A\to Z\) such that \(f=\tilde{f}\circ\otimes\).
 In the language of category theory, the tensor product is the \textbf{initial object} amongst vector spaces endowed with a bilinear map from \(V\times W\); any other vector space \(Z\) with a bilinear map \(V\times W\to Z\) \emph{factors through} the tensor product.

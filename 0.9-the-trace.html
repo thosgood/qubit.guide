@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>0.7 Outer products | Introduction to Quantum Information Science</title>
+  <title>0.9 The trace | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="0.7 Outer products | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="0.9 The trace | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="An introductory series of lectures on quantum computing." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="0.7 Outer products | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="0.9 The trace | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="0.6-operators.html"/>
-<link rel="next" href="0.8-the-trace.html"/>
+<link rel="prev" href="0.8-outer-products.html"/>
+<link rel="next" href="0.10-some-useful-identities.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -86,9 +86,10 @@
 <li class="chapter" data-level="0.4" data-path="0.4-daggers.html"><a href="0.4-daggers.html"><i class="fa fa-check"></i><b>0.4</b> Daggers</a></li>
 <li class="chapter" data-level="0.5" data-path="0.5-geometry.html"><a href="0.5-geometry.html"><i class="fa fa-check"></i><b>0.5</b> Geometry</a></li>
 <li class="chapter" data-level="0.6" data-path="0.6-operators.html"><a href="0.6-operators.html"><i class="fa fa-check"></i><b>0.6</b> Operators</a></li>
-<li class="chapter" data-level="0.7" data-path="0.7-outer-products.html"><a href="0.7-outer-products.html"><i class="fa fa-check"></i><b>0.7</b> Outer products</a></li>
-<li class="chapter" data-level="0.8" data-path="0.8-the-trace.html"><a href="0.8-the-trace.html"><i class="fa fa-check"></i><b>0.8</b> The trace</a></li>
-<li class="chapter" data-level="0.9" data-path="0.9-some-useful-identities.html"><a href="0.9-some-useful-identities.html"><i class="fa fa-check"></i><b>0.9</b> Some useful identities</a></li>
+<li class="chapter" data-level="0.7" data-path="0.7-eigenvalues-and-eigenvectors.html"><a href="0.7-eigenvalues-and-eigenvectors.html"><i class="fa fa-check"></i><b>0.7</b> Eigenvalues and eigenvectors</a></li>
+<li class="chapter" data-level="0.8" data-path="0.8-outer-products.html"><a href="0.8-outer-products.html"><i class="fa fa-check"></i><b>0.8</b> Outer products</a></li>
+<li class="chapter" data-level="0.9" data-path="0.9-the-trace.html"><a href="0.9-the-trace.html"><i class="fa fa-check"></i><b>0.9</b> The trace</a></li>
+<li class="chapter" data-level="0.10" data-path="0.10-some-useful-identities.html"><a href="0.10-some-useful-identities.html"><i class="fa fa-check"></i><b>0.10</b> Some useful identities</a></li>
 </ul></li>
 <li class="part"><span><b>I Foundations</b></span></li>
 <li class="chapter" data-level="1" data-path="1-quantum-interference.html"><a href="1-quantum-interference.html"><i class="fa fa-check"></i><b>1</b> Quantum interference</a><ul>
@@ -351,52 +352,37 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="outer-products" class="section level2 hasAnchor">
-<h2><span class="header-section-number">0.7</span> Outer products<a href="0.7-outer-products.html#outer-products" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Apart from the inner product <eq env="math">\langle u|v\rangle</eq>, which is a complex number, we can also form the <strong>outer product</strong> <eq env="math">|u\rangle\langle v|</eq>, which is a linear map (operator) on <eq env="math">\mathcal{H}</eq> (or on <eq env="math">\mathcal{H}^\star</eq>, depending how you look at it).
-This is what physicists like (and what mathematicians dislike!) about Dirac notation: a certain degree of healthy ambiguity.</p>
-<ul>
-<li>The result of <eq env="math">|u\rangle\langle v|</eq> acting on a ket <eq env="math">|x\rangle</eq> is <eq env="math">|u\rangle\langle v|x\rangle</eq>, i.e. the vector <eq env="math">|u\rangle</eq> multiplied by the complex number <eq env="math">\langle v|x\rangle</eq>.</li>
-<li>Similarly, the result of <eq env="math">|u\rangle\langle v|</eq> acting on a bra <eq env="math">\langle y|</eq> is <eq env="math">\langle y|u\rangle\langle v|</eq>, i.e. the linear functional <eq env="math">\langle v|</eq> multiplied by the complex number <eq env="math">\langle y|u\rangle</eq>.</li>
-</ul>
-<p>The product of two maps, <eq env="math">A=|a\rangle\langle b|</eq> followed by <eq env="math">B=|c\rangle\langle d|</eq>, is a linear map <eq env="math">BA</eq>, which can be written in Dirac notation as
+<div id="the-trace" class="section level2 hasAnchor">
+<h2><span class="header-section-number">0.9</span> The trace<a href="0.9-the-trace.html#the-trace" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <strong>trace</strong> is an operation which turns outer products into inner products,
 <eq env="displaymath">
-  BA = |c\rangle\langle d|a\rangle\langle b| = \langle d|a\rangle|c\rangle\langle b|
+  \operatorname{tr}\colon |b\rangle\langle a| \longmapsto \langle a|b\rangle.
 </eq>
-i.e. the inner product (complex number) <eq env="math">\langle d|a\rangle</eq> times the outer product (linear map) <eq env="math">|c\rangle\langle b|</eq>.</p>
-<p>Any operator on <eq env="math">\mathcal{H}</eq> can be expressed as a sum of outer products. Given an orthonormal basis <eq env="math">\{|e_i\rangle\}_{i=1,\ldots,n}</eq>, any operator which maps the basis vectors <eq env="math">|e_i\rangle</eq> to vectors <eq env="math">|f_i\rangle</eq> can be written as <eq env="math">\sum_{i=1}^n|f_i\rangle\langle e_i|</eq>.
-If the vectors <eq env="math">\{|f_i\rangle\}</eq> <em>also</em> form an orthonormal basis then the operator simply “rotates” one orthonormal basis into another.
-These are unitary operators which preserve the inner product.
-In particular, if each <eq env="math">|e_i\rangle</eq> is mapped to <eq env="math">|e_i\rangle</eq>, then we obtain the identity operator:
+We have just seen that any linear operator can be written as a sum of outer products, and so we can extend the definition of trace (by linearity) to any operator.
+Equivalently, for any square matrix <eq env="math">A</eq>, the trace of <eq env="math">A</eq> can be defined to be the sum of its diagonal elements:
 <eq env="displaymath">
-  \sum_i|e_i\rangle\langle e_i|=\mathbf{1}.
+  \operatorname{tr}A = \sum_k \langle e_k|A|e_k\rangle = \sum_k A_{kk}.
 </eq>
-This relation holds for <em>any</em> orthonormal basis, and it is one of the most ubiquitous and useful formulas in quantum theory, known as <strong>completeness</strong>.<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a>
-For example, for any vector <eq env="math">|v\rangle</eq> and for any orthonormal basis <eq env="math">\{|e_i\rangle\}</eq>, we have
+In fact, the trace of <eq env="math">A</eq> is equal to the sum of the eigenvalues of <eq env="math">A</eq>, even in the case where <eq env="math">A</eq> is not diagonalisable.</p>
+<p>You can show, using this definition or otherwise, that the trace is cyclic<a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a> (<eq env="math">\operatorname{tr}(AB) = \operatorname{tr}(BA)</eq>) and linear (<eq env="math">\operatorname{tr}(\alpha A+\beta B) = \alpha\operatorname{tr}(A)+\beta\operatorname{tr}(B)</eq>, where <eq env="math">A</eq> and <eq env="math">B</eq> are square matrices and <eq env="math">\alpha</eq> and <eq env="math">\beta</eq> complex numbers).</p>
+<p>To recover the first definition from the second, we argue as follows:
 <eq env="displaymath">
   \begin{aligned}
-    |v\rangle
-    &amp;= \mathbf{1}|v\rangle
-  \\&amp;= \sum_i |e_i\rangle\langle e_i|\;|v\rangle
-  \\&amp;= \sum_i |e_i\rangle\;\langle e_i|v\rangle
-  \\&amp;= \sum_i v_i|e_i\rangle
+    \operatorname{tr}|b\rangle\langle a|
+    &amp;= \sum_k \langle e_k|b\rangle\langle a|e_k\rangle
+  \\&amp;= \sum_k \langle a|e_k\rangle\langle e_k|b\rangle
+  \\&amp;= \langle a|\mathbf{1}|b\rangle
+  \\&amp;= \langle a|b\rangle.
   \end{aligned}
 </eq>
-where <eq env="math">v_i=\langle e_i|v\rangle</eq> are the components of <eq env="math">|v\rangle</eq>.</p>
-<p>Finally, note that calculating the adjoint of an outer product boils down to just swapping the order:
-<eq env="displaymath">
-  (|a\rangle\langle b|)^\dagger = |b\rangle\langle a|.
-</eq></p>
-<div class="technical" title="Dagger compact categories">
-<p>This whole package of stuff and properties and structure (i.e. finite dimensional Hilbert spaces with linear maps and the dagger) bundles up into an abstract framework called a <a href="https://en.wikipedia.org/wiki/Dagger_compact_category"><strong>dagger compact category</strong></a>.
-We will not delve into the vast world of category theory in this book, and to reach an understanding of all the ingredients that go into the one single definition of dagger compact categories would take more than a single chapter.
-But it’s a good idea to be aware that there are researchers in quantum information science who work <em>entirely</em> from this approach, known as <a href="https://en.wikipedia.org/wiki/Categorical_quantum_mechanics"><strong>categorical quantum mechanics</strong></a>.</p>
-</div>
+Here, the second term can be viewed both as the sum of the diagonal elements of <eq env="math">|b\rangle\langle a|</eq> in the <eq env="math">|e_k\rangle</eq> basis, and as the sum of the products of two complex numbers <eq env="math">\langle e_k|b\rangle</eq> and <eq env="math">\langle a|e_k\rangle</eq>.
+We have used the decomposition of the identity, <eq env="math">\sum_k|e_k\rangle\langle e_k|=\mathbf{1}</eq>.
+Given that we can decompose the identity by choosing any orthonormal basis, it is clear that the trace does <em>not</em> depend on the choice of the basis.</p>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="15">
-<li id="fn15"><p>Not to be confused with “completeness” in the sense of Hilbert spaces.<a href="0.7-outer-products.html#fnref15" class="footnote-back">↩︎</a></p></li>
+<ol start="17">
+<li id="fn17"><p>Note that “cyclic” does not mean the same thing as “permutation invariant”! It is <em>not</em> true in general that <eq env="math">\operatorname{tr}(ABC)=\operatorname{tr}(CBA)</eq>, but only that <eq env="math">\operatorname{tr}(ABC)=\operatorname{tr}(BCA)=\operatorname{tr}(CAB)</eq>, i.e. we can only <em>cyclically</em> permute the operators.<a href="0.9-the-trace.html#fnref17" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <!-- KaTeX for maths rendering -->
@@ -527,8 +513,8 @@ But it’s a good idea to be aware that there are researchers in quantum informa
           </div>
         </div>
       </div>
-<a href="0.6-operators.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="0.8-the-trace.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="0.8-outer-products.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="0.10-some-useful-identities.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

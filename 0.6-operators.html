@@ -30,7 +30,7 @@
   
   
 <link rel="prev" href="0.5-geometry.html"/>
-<link rel="next" href="0.7-outer-products.html"/>
+<link rel="next" href="0.7-eigenvalues-and-eigenvectors.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -86,9 +86,10 @@
 <li class="chapter" data-level="0.4" data-path="0.4-daggers.html"><a href="0.4-daggers.html"><i class="fa fa-check"></i><b>0.4</b> Daggers</a></li>
 <li class="chapter" data-level="0.5" data-path="0.5-geometry.html"><a href="0.5-geometry.html"><i class="fa fa-check"></i><b>0.5</b> Geometry</a></li>
 <li class="chapter" data-level="0.6" data-path="0.6-operators.html"><a href="0.6-operators.html"><i class="fa fa-check"></i><b>0.6</b> Operators</a></li>
-<li class="chapter" data-level="0.7" data-path="0.7-outer-products.html"><a href="0.7-outer-products.html"><i class="fa fa-check"></i><b>0.7</b> Outer products</a></li>
-<li class="chapter" data-level="0.8" data-path="0.8-the-trace.html"><a href="0.8-the-trace.html"><i class="fa fa-check"></i><b>0.8</b> The trace</a></li>
-<li class="chapter" data-level="0.9" data-path="0.9-some-useful-identities.html"><a href="0.9-some-useful-identities.html"><i class="fa fa-check"></i><b>0.9</b> Some useful identities</a></li>
+<li class="chapter" data-level="0.7" data-path="0.7-eigenvalues-and-eigenvectors.html"><a href="0.7-eigenvalues-and-eigenvectors.html"><i class="fa fa-check"></i><b>0.7</b> Eigenvalues and eigenvectors</a></li>
+<li class="chapter" data-level="0.8" data-path="0.8-outer-products.html"><a href="0.8-outer-products.html"><i class="fa fa-check"></i><b>0.8</b> Outer products</a></li>
+<li class="chapter" data-level="0.9" data-path="0.9-the-trace.html"><a href="0.9-the-trace.html"><i class="fa fa-check"></i><b>0.9</b> The trace</a></li>
+<li class="chapter" data-level="0.10" data-path="0.10-some-useful-identities.html"><a href="0.10-some-useful-identities.html"><i class="fa fa-check"></i><b>0.10</b> Some useful identities</a></li>
 </ul></li>
 <li class="part"><span><b>I Foundations</b></span></li>
 <li class="chapter" data-level="1" data-path="1-quantum-interference.html"><a href="1-quantum-interference.html"><i class="fa fa-check"></i><b>1</b> Quantum interference</a><ul>
@@ -368,22 +369,24 @@ The order <em>does</em> matter: in general, <eq env="math">BA\neq AB</eq>.
 In the exceptional case in which <eq env="math">AB=BA</eq>, one says that these two operators <strong>commute</strong>.
 The inverse of <eq env="math">A</eq>, written as <eq env="math">A^{-1}</eq>, is the operator that satisfies <eq env="math">AA^{-1}=\mathbf{1}=A^{-1}A</eq>.
 For finite-dimensional spaces, one only needs to check <em>one</em> of these two conditions, since any one of the two implies the other, whereas, on an infinite-dimensional space, <em>both</em> must be checked.
-Finally, given a particular basis, an operator <eq env="math">A</eq> is uniquely determined by the entries of its matrix, defined by <eq env="math">A_{ij}=\langle i|A|j\rangle</eq>.
-The <strong>adjoint</strong>, or <strong>Hermitian conjugate</strong>, of <eq env="math">A</eq>, denoted by <eq env="math">A^\dagger</eq>, is defined by the relation
+Finally, given a particular basis, an operator <eq env="math">A</eq> is uniquely determined by the entries of its matrix: <eq env="math">A_{ij}=\langle i|A|j\rangle</eq>.</p>
+<p>The <strong>adjoint</strong>, or <strong>Hermitian conjugate</strong>, of an linear map <eq env="math">A</eq>, denoted by <eq env="math">A^\dagger</eq>, is defined by the relation
 <eq env="displaymath">
   \begin{gathered}
     \langle i|A^\dagger|j\rangle
     = \langle j|A|i\rangle^\star
-  \\\text{for all $|i\rangle,|j\rangle\in\mathcal{H}$}.
+  \\\text{for all $|i\rangle,|j\rangle\in\mathcal{H}$}
   \end{gathered}
-</eq></p>
+</eq>
+and <eq env="math">\dagger</eq> turns <eq env="math">(n\times m)</eq> matrices into <eq env="math">(m\times n)</eq> matrices.</p>
 <p>An operator <eq env="math">A</eq> is said to be</p>
 <ul>
 <li><strong>normal</strong> if <eq env="math">AA^\dagger = A^\dagger A</eq></li>
 <li><strong>unitary</strong> if <eq env="math">A^\dagger=A^{-1}</eq></li>
 <li><strong>Hermitian</strong> (or <strong>self-adjoint</strong>) if <eq env="math">A^\dagger = A</eq>.</li>
 </ul>
-<p>In particular then, being unitary implies being normal, since if <eq env="math">A^\dagger=A^{-1}</eq> then <eq env="math">AA^\dagger=A^\dagger A</eq>, since both of these are equal to <eq env="math">\mathbf{1}</eq>.</p>
+<p>In particular then, being unitary implies being normal, since if <eq env="math">A^\dagger=A^{-1}</eq> then <eq env="math">AA^\dagger=A^\dagger A</eq>, since both of these are equal to <eq env="math">\mathbf{1}</eq>.
+Note also that unitary and Hermitian operators must be operators, i.e. they are represented by an <eq env="math">(n\times n)</eq> matrix.</p>
 <p>Any <em>physically admissible</em> evolution of an isolated quantum system is represented by a unitary operator.<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a>
 Note that unitary operators preserve the inner product: given a unitary operator <eq env="math">U</eq> and two kets <eq env="math">|a\rangle</eq> and <eq env="math">|b\rangle</eq>, and defining <eq env="math">|a'\rangle=U|a\rangle</eq> and <eq env="math">|b'\rangle=U|b\rangle</eq>, we have that
 <eq env="displaymath">
@@ -530,7 +533,7 @@ Preserving the inner product implies preserving the norm induced by this product
         </div>
       </div>
 <a href="0.5-geometry.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="0.7-outer-products.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="0.7-eigenvalues-and-eigenvectors.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

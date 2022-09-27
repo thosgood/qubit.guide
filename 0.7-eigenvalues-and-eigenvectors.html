@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>0.8 The trace | Introduction to Quantum Information Science</title>
+  <title>0.7 Eigenvalues and eigenvectors | Introduction to Quantum Information Science</title>
   <meta name="description" content="An introductory series of lectures on quantum computing." />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="0.8 The trace | Introduction to Quantum Information Science" />
+  <meta property="og:title" content="0.7 Eigenvalues and eigenvectors | Introduction to Quantum Information Science" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="An introductory series of lectures on quantum computing." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="0.8 The trace | Introduction to Quantum Information Science" />
+  <meta name="twitter:title" content="0.7 Eigenvalues and eigenvectors | Introduction to Quantum Information Science" />
   
   <meta name="twitter:description" content="An introductory series of lectures on quantum computing." />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="0.7-outer-products.html"/>
-<link rel="next" href="0.9-some-useful-identities.html"/>
+<link rel="prev" href="0.6-operators.html"/>
+<link rel="next" href="0.8-outer-products.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -86,9 +86,10 @@
 <li class="chapter" data-level="0.4" data-path="0.4-daggers.html"><a href="0.4-daggers.html"><i class="fa fa-check"></i><b>0.4</b> Daggers</a></li>
 <li class="chapter" data-level="0.5" data-path="0.5-geometry.html"><a href="0.5-geometry.html"><i class="fa fa-check"></i><b>0.5</b> Geometry</a></li>
 <li class="chapter" data-level="0.6" data-path="0.6-operators.html"><a href="0.6-operators.html"><i class="fa fa-check"></i><b>0.6</b> Operators</a></li>
-<li class="chapter" data-level="0.7" data-path="0.7-outer-products.html"><a href="0.7-outer-products.html"><i class="fa fa-check"></i><b>0.7</b> Outer products</a></li>
-<li class="chapter" data-level="0.8" data-path="0.8-the-trace.html"><a href="0.8-the-trace.html"><i class="fa fa-check"></i><b>0.8</b> The trace</a></li>
-<li class="chapter" data-level="0.9" data-path="0.9-some-useful-identities.html"><a href="0.9-some-useful-identities.html"><i class="fa fa-check"></i><b>0.9</b> Some useful identities</a></li>
+<li class="chapter" data-level="0.7" data-path="0.7-eigenvalues-and-eigenvectors.html"><a href="0.7-eigenvalues-and-eigenvectors.html"><i class="fa fa-check"></i><b>0.7</b> Eigenvalues and eigenvectors</a></li>
+<li class="chapter" data-level="0.8" data-path="0.8-outer-products.html"><a href="0.8-outer-products.html"><i class="fa fa-check"></i><b>0.8</b> Outer products</a></li>
+<li class="chapter" data-level="0.9" data-path="0.9-the-trace.html"><a href="0.9-the-trace.html"><i class="fa fa-check"></i><b>0.9</b> The trace</a></li>
+<li class="chapter" data-level="0.10" data-path="0.10-some-useful-identities.html"><a href="0.10-some-useful-identities.html"><i class="fa fa-check"></i><b>0.10</b> Some useful identities</a></li>
 </ul></li>
 <li class="part"><span><b>I Foundations</b></span></li>
 <li class="chapter" data-level="1" data-path="1-quantum-interference.html"><a href="1-quantum-interference.html"><i class="fa fa-check"></i><b>1</b> Quantum interference</a><ul>
@@ -351,37 +352,30 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="the-trace" class="section level2 hasAnchor">
-<h2><span class="header-section-number">0.8</span> The trace<a href="0.8-the-trace.html#the-trace" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The <strong>trace</strong> is an operation which turns outer products into inner products,
+<div id="eigenvalues-and-eigenvectors" class="section level2 hasAnchor">
+<h2><span class="header-section-number">0.7</span> Eigenvalues and eigenvectors<a href="0.7-eigenvalues-and-eigenvectors.html#eigenvalues-and-eigenvectors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Given an operator <eq env="math">A</eq>, an <strong>eigenvector</strong> is a non-zero vector <eq env="math">|v\rangle</eq> such that
 <eq env="displaymath">
-  \operatorname{tr}\colon |b\rangle\langle a| \longmapsto \langle a|b\rangle.
+  A|v\rangle = \lambda|v\rangle
 </eq>
-We have just seen that any linear operator can be written as a sum of outer products, and so we can extend the definition of trace (by linearity) to any operator.
-Equivalently, for any square matrix <eq env="math">A</eq>, the trace of <eq env="math">A</eq> can be defined to be the sum of its diagonal elements:
+for some <eq env="math">\lambda\in\mathbb{C}</eq> (which is called the corresponding <strong>eigenvalue</strong>).
+We call the pair <eq env="math">(\lambda,|v\rangle)</eq> an <strong>eigenpair</strong>, and we call the set of eigenvalues the <strong>spectrum</strong> of <eq env="math">A</eq>, denoted by <eq env="math">\sigma(A)</eq>.
+It is a surprising (but incredibly useful) fact that every operator has at least one eigenpair.<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a>
+Geometrically, an eigenvector of an operator <eq env="math">A</eq> is a vector upon which <eq env="math">A</eq> simply acts by “stretching”.</p>
+<p>Rewriting the defining property of an eigenpair <eq env="math">(\lambda,|v\rangle)</eq>, we see that
 <eq env="displaymath">
-  \operatorname{tr}A = \sum_k \langle e_k|A|e_k\rangle = \sum_k A_{kk}.
+  (A-\lambda\mathbf{1})|v\rangle = 0
 </eq>
-In fact, the trace of <eq env="math">A</eq> is equal to the sum of the eigenvalues of <eq env="math">A</eq>, even in the case where <eq env="math">A</eq> is not diagonalisable.</p>
-<p>You can show, using this definition or otherwise, that the trace is cyclic<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a> (<eq env="math">\operatorname{tr}(AB) = \operatorname{tr}(BA)</eq>) and linear (<eq env="math">\operatorname{tr}(\alpha A+\beta B) = \alpha\operatorname{tr}(A)+\beta\operatorname{tr}(B)</eq>, where <eq env="math">A</eq> and <eq env="math">B</eq> are square matrices and <eq env="math">\alpha</eq> and <eq env="math">\beta</eq> complex numbers).</p>
-<p>To recover the first definition from the second, we argue as follows:
+which tells us that the operator <eq env="math">A-\lambda\mathbf{1}</eq> has a non-zero kernel, and is thus non-invertible.
+This gives a useful characterisation of the spectrum in terms of a determinant:
 <eq env="displaymath">
-  \begin{aligned}
-    \operatorname{tr}|b\rangle\langle a|
-    &amp;= \sum_k \langle e_k|b\rangle\langle a|e_k\rangle
-  \\&amp;= \sum_k \langle a|e_k\rangle\langle e_k|b\rangle
-  \\&amp;= \langle a|\mathbf{1}|b\rangle
-  \\&amp;= \langle a|b\rangle.
-  \end{aligned}
-</eq>
-Here, the second term can be viewed both as the sum of the diagonal elements of <eq env="math">|b\rangle\langle a|</eq> in the <eq env="math">|e_k\rangle</eq> basis, and as the sum of the products of two complex numbers <eq env="math">\langle e_k|b\rangle</eq> and <eq env="math">\langle a|e_k\rangle</eq>.
-We have used the decomposition of the identity, <eq env="math">\sum_k|e_k\rangle\langle e_k|=\mathbf{1}</eq>.
-Given that we can decompose the identity by choosing any orthonormal basis, it is clear that the trace does <em>not</em> depend on the choice of the basis.</p>
+  \sigma(A) = \{\lambda\in\mathbb{C} \mid \det(A-\lambda\mathbf{1})=0\}.
+</eq></p>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="16">
-<li id="fn16"><p>Note that “cyclic” does not mean the same thing as “permutation invariant”! It is <em>not</em> true in general that <eq env="math">\operatorname{tr}(ABC)=\operatorname{tr}(CBA)</eq>, but only that <eq env="math">\operatorname{tr}(ABC)=\operatorname{tr}(BCA)=\operatorname{tr}(CAB)</eq>, i.e. we can only <em>cyclically</em> permute the operators.<a href="0.8-the-trace.html#fnref16" class="footnote-back">↩︎</a></p></li>
+<ol start="15">
+<li id="fn15"><p>You can prove this for an <eq env="math">(n\times n)</eq> matrix <eq env="math">A</eq> by considering the set <eq env="math">\{|v\rangle,A|v\rangle,A^2|v\rangle,\ldots,A^n|v\rangle\}</eq> of vectors in <eq env="math">\mathbb{C}^n</eq>. Since this has <eq env="math">n+1</eq> elements, it must be linearly <em>dependent</em>, and so (after some lengthy algebra) we can construct an eigenpair.<a href="0.7-eigenvalues-and-eigenvectors.html#fnref15" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <!-- KaTeX for maths rendering -->
@@ -512,8 +506,8 @@ Given that we can decompose the identity by choosing any orthonormal basis, it i
           </div>
         </div>
       </div>
-<a href="0.7-outer-products.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="0.9-some-useful-identities.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="0.6-operators.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="0.8-outer-products.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
