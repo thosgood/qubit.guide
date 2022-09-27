@@ -93,7 +93,7 @@ But this does not mean that our treatment is cursory!
 In fact, by the end of this book you will have learnt a fair bit more than what might usually be covered in a standard quantum information science course that you would find in a mathematics masters degree, for example.
 
 The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find certain chapters easy, while others find the same ones difficult --- so if things seem hard to you, then don't worry: the next chapter might feel much easier!
-The only real prerequisites are a working knowledge of complex numbers and vectors and matrices, such as "what is an eigenvector"; some previous exposure to elementary probability theory and Dirac bra-ket notation (for example) would be helpful, but we provide crash-course introductions to some topics like these at the end of this chapter.
+The only real prerequisites are a working knowledge of complex numbers and vectors and matrices; some previous exposure to elementary probability theory and Dirac bra-ket notation (for example) would be helpful, but we provide crash-course introductions to some topics like these at the end of this chapter.
 A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory, algorithms) would be helpful, but is *not at all* essential.
 
 Of course, even if you aren't familiar with the formal mathematics, then that shouldn't stop you from reading this book if you want to.
@@ -570,15 +570,17 @@ The order _does_ matter: in general, $BA\neq AB$.
 In the exceptional case in which $AB=BA$, one says that these two operators **commute**.
 The inverse of $A$, written as $A^{-1}$, is the operator that satisfies $AA^{-1}=\id=A^{-1}A$.
 For finite-dimensional spaces, one only needs to check _one_ of these two conditions, since any one of the two implies the other, whereas, on an infinite-dimensional space, _both_ must be checked.
-Finally, given a particular basis, an operator $A$ is uniquely determined by the entries of its matrix, defined by $A_{ij}=\bra{i}A\ket{j}$.
-The **adjoint**, or **Hermitian conjugate**, of $A$, denoted by $A^\dagger$, is defined by the relation
+Finally, given a particular basis, an operator $A$ is uniquely determined by the entries of its matrix: $A_{ij}=\bra{i}A\ket{j}$.
+
+The **adjoint**, or **Hermitian conjugate**, of an linear map $A$, denoted by $A^\dagger$, is defined by the relation
 $$
   \begin{gathered}
     \bra{i}A^\dagger\ket{j}
     = \bra{j}A\ket{i}^\star
-  \\\text{for all $\ket{i},\ket{j}\in\mathcal{H}$}.
+  \\\text{for all $\ket{i},\ket{j}\in\mathcal{H}$}
   \end{gathered}
 $$
+and $\dagger$ turns $(n\times m)$ matrices into $(m\times n)$ matrices.
 
 An operator $A$ is said to be
 
@@ -587,6 +589,7 @@ An operator $A$ is said to be
 - **Hermitian** (or **self-adjoint**) if $A^\dagger = A$.
 
 In particular then, being unitary implies being normal, since if $A^\dagger=A^{-1}$ then $AA^\dagger=A^\dagger A$, since both of these are equal to $\id$.
+Note also that unitary and Hermitian operators must be operators, i.e. they are represented by an $(n\times n)$ matrix.
 
 Any *physically admissible* evolution of an isolated quantum system is represented by a unitary operator.^[This is an *axiom*, justified by experimental evidence, and also by some sort of mathematical intuition. So, in this book, we take this as a *fact* that we do not question. It is, however, very interesting to question it: *why should we assume this to be true?*]
 Note that unitary operators preserve the inner product: given a unitary operator $U$ and two kets $\ket{a}$ and $\ket{b}$, and defining $\ket{a'}=U\ket{a}$ and $\ket{b'}=U\ket{b}$, we have that
@@ -598,6 +601,28 @@ $$
   \end{gathered}
 $$
 Preserving the inner product implies preserving the norm induced by this product, i.e. unit state vectors are mapped to unit state vectors, i.e. _unitary operations are the isometries of the Euclidean norm_.
+
+
+## Eigenvalues and eigenvectors
+
+Given an operator $A$, an **eigenvector** is a non-zero vector $\ket{v}$ such that
+$$
+  A\ket{v} = \lambda\ket{v}
+$$
+for some $\lambda\in\mathbb{C}$ (which is called the corresponding **eigenvalue**).
+We call the pair $(\lambda,\ket{v})$ an **eigenpair**, and we call the set of eigenvalues the **spectrum** of $A$, denoted by $\sigma(A)$.
+It is a surprising (but incredibly useful) fact that every operator has at least one eigenpair.^[You can prove this for an $(n\times n)$ matrix $A$ by considering the set $\{\ket{v},A\ket{v},A^2\ket{v},\ldots,A^n\ket{v}\}$ of vectors in $\mathbb{C}^n$. Since this has $n+1$ elements, it must be linearly *dependent*, and so (after some lengthy algebra) we can construct an eigenpair.]
+Geometrically, an eigenvector of an operator $A$ is a vector upon which $A$ simply acts by "stretching".
+
+Rewriting the defining property of an eigenpair $(\lambda,\ket{v})$, we see that
+$$
+  (A-\lambda\id)\ket{v} = 0
+$$
+which tells us that the operator $A-\lambda\id$ has a non-zero kernel, and is thus non-invertible.
+This gives a useful characterisation of the spectrum in terms of a determinant:
+$$
+  \sigma(A) = \{\lambda\in\mathbb{C} \mid \det(A-\lambda\id)=0\}.
+$$
 
 
 ## Outer products {#outer-products}
