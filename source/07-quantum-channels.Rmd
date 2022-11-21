@@ -45,7 +45,7 @@ Importantly, we assume that we have "added in" a large enough auxiliary system t
 
 Finally, after all the (unitary) interactions have taken place, we **trace out** the auxiliary system, turning the joint state $U(\proj{a}\otimes\rho)U^\dagger$ of the dilated system into the final state of our system of interest: the output state $\rho'$.
 
-We shall later show that the net effect of these three operations (adding, unitary evolution, and tracing out) can be written, as long as the initial state $\ket{a}$ of the auxiliary system in *not* correlated with the input state $\rho$, in a nice compact way:
+We shall later show that the net effect of these three operations (adding, unitary evolution, and tracing out) can be written, as long as the initial state $\ket{a}$ of the auxiliary system is *not* correlated with the input state $\rho$, in a nice compact way:
 $$
   \rho\longmapsto\rho' = \sum_i E_i\rho E_i^\dagger
 $$
@@ -407,8 +407,6 @@ How would you reverse these operations?
 
 ## Evolution of open systems {#evolution-of-open-systems}
 
-<div class="video" title="Expand, Evolve, Reduce" data-videoid="bVSJj6bP6fs"></div>
-
 Needless to say, there is more to evolutions of open systems than mere random isometries, and what follows is the most general scenario that we will come across in our study of quantum information.
 
 Consider two interacting systems, $\mathcal{A}$ and $\mathcal{B}$, but this time do *not* assume that their interacting dynamics admits a control-target interpretation.
@@ -526,8 +524,6 @@ These notions (weak and orthogonal factorisation systems) are absolutely fundame
 ## Stinespring's dilation and Kraus's ambiguity
 
 <div class="video" title="Kraus representations" data-videoid="3Tzd8QzNvl4"></div>
-
-<div class="video" title="Summary: Stinespring and Kraus representations" data-videoid="Cogi6t3YVXM"></div>
 
 Once we start playing with adding physical systems and increasing the dimension of the underlying Hilbert space, it is convenient to switch from unitaries to isometries.^[Recall that a map $V$ is an isometry if $V^\dagger V=\id$. For example, adding a system in state $\ket{k}$ gives an isometry $V\colon\ket{\psi}\mapsto\ket{k}\otimes\ket{\psi}$, and the combination of adding a system in a fixed state followed by a unitary evolution of the combined system is also an isometry.]
 This is more for mathematical simplicity than physical insight, but it is always good to declutter our equations a bit if we can.
@@ -765,6 +761,8 @@ This is due to *complete* positivity (instead of mere positivity) of quantum cha
 
 
 ## Composition of quantum channels
+
+<div class="video" title="Expand, Evolve, Reduce" data-videoid="bVSJj6bP6fs"></div>
 
 <div class="video" title="Concatenation of physically-admissible operations" data-videoid="5ZRuvrblQII"></div>
 
@@ -1005,16 +1003,18 @@ In order to prove this, we will now introduce a very convenient tool called the 
 
 <div class="video" title="Choi matrix" data-videoid="vO34FIq1NBg"></div>
 
+<div class="video" title="Summary: Stinespring and Kraus representations" data-videoid="Cogi6t3YVXM"></div>
+
 
 Suppose that $\dim\mathcal{H}=d$ and $\dim\mathcal{H}'=d'$, and pick a basis for each space.
 Now any linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$ can be completely characterised by its action on the $d^2$-many basis matrices $\ket{i}\bra{j}$ of $\mathcal{B}(\mathcal{H})$ (where $i,j\in\{1,2\ldots,d\}$), i.e. for any density operator $\rho$ on $\mathcal{H}$ we have
 $$
   \mathcal{E}(\rho)
-  = \mathcal{E}\left(\sum_{ij}\rho_{ij} \ket{i}\bra{j}\right)
-  = \sum_i\rho_{ij}\mathcal{E}(\ket{i}\bra{j}).
+  = \mathcal{E}\left(\sum_{i,j=1}^d\rho_{ij} \ket{i}\bra{j}\right)
+  = \sum_{i,j=1}^d\rho_{ij}\mathcal{E}(\ket{i}\bra{j}).
 \tag{$\natural$}
 $$
-We can now tabulate all the $(d'\times d')$ matrices $\mathcal{E}(\ket{i}\bra{j})$ in $\mathcal{H}'$ by forming a bigger $(dd'\times dd')$ block matrix in $\mathcal{H}\otimes\mathcal{H}'$:
+We can now tabulate the $(d\times d)$-many $(d'\times d')$ matrices $\mathcal{E}(\ket{i}\bra{j})$ in $\mathcal{H}'$ by forming a bigger $(dd'\times dd')$ block matrix in $\mathcal{H}\otimes\mathcal{H}'$:
 
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
 \definecolor{primary}{RGB}{177,98,78}
@@ -1046,7 +1046,7 @@ We can now tabulate all the $(d'\times d')$ matrices $\mathcal{E}(\ket{i}\bra{j}
 \end{equation*}
 ```
 
-We call this block matrix $\widetilde{\mathcal{E}}\in\mathcal{B}(\mathcal{H}\otimes\mathcal{H}')$ the **Choi matrix**^[Man-Duen Choi was brought up in Hong Kong. He received his Ph.D. degree under the guidance of Chandler Davis at Toronto. He taught at the University of California, Berkeley, from 1973 to 1976, and has worked since then at the University of Toronto. His research has been mainly in operator algebras, operator theory, and polynomial rings. He is particularly interested in examples/counterexamples and $2\times2$ matrix manipulations.] of $\mathcal{E}$.
+We call this block matrix $\widetilde{\mathcal{E}}\in\mathcal{B}(\mathcal{H}\otimes\mathcal{H}')$, when scaled by a factor of $\frac{1}{d}$, the **Choi matrix**^[Man-Duen Choi was brought up in Hong Kong. He received his Ph.D. degree under the guidance of Chandler Davis at Toronto. He taught at the University of California, Berkeley, from 1973 to 1976, and has worked since then at the University of Toronto. His research has been mainly in operator algebras, operator theory, and polynomial rings. He is particularly interested in examples/counterexamples and $2\times2$ matrix manipulations.] of $\mathcal{E}$.
 
 The Choi matrix is essentially another way of representing a linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$, since if you are given the Choi matrix $\widetilde{\mathcal{E}}$ of $\mathcal{E}$ and you want to evaluate $\mathcal{E}(\rho)$, then you simply follow Equation ($\natural$), taking the values of $\mathcal{E}(\ket{i}\bra{j})$ from the Choi matrix.
 We can write this more formally as follows.
@@ -1054,13 +1054,13 @@ We can write this more formally as follows.
 ::: {.idea latex=""}
 The Choi matrix $\widetilde{\mathcal{E}}$ of a linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$ satisfies
 $$
-  \mathcal{E}(\rho)
-  = d(\tr\otimes\id)\left[(\rho^T\otimes\id)\widetilde{\mathcal{E}}\right]
+  \frac{1}{d}\mathcal{E}(\rho)
+  = (\tr\otimes\id)\left[(\rho^T\otimes\id_{d'\times d'})\widetilde{\mathcal{E}}\right]
 $$
-for all density matrices $\rho$, where $d=\dim\mathcal{H}$.
+for all density matrices $\rho$ in $\mathcal{B}(\mathcal{H})$, where $d=\dim\mathcal{H}$.
 :::
 
-The expression above may look baffling to an untrained eye, but this is often the case when we turn something conceptually obvious into a precise and compact mathematical notation.
+The expression above may look baffling at first glance, but this is often the case when we turn something conceptually obvious into more compact mathematical notation.
 In order to gain some intuition here, recall that, for matrices $A$ and $B$,
 $$
   \tr A^T B = \sum_{ij} A_{ij}B_{ij}.
@@ -1068,7 +1068,7 @@ $$
 If we take $A$ and $B$ to be the block matrices $\rho\otimes\id$ and $\widetilde{\mathcal{E}}$, respectively, then we can use this to show that
 $$
   (\tr\otimes\id)\left[(\rho^T\otimes\id)\widetilde{\mathcal{E}}\right]
-  = \frac{1}{d}\sum_i\rho_{ij}\mathcal{E}(\ket{i}\bra{j}).
+  = \frac{1}{d}\sum_{ij}\rho_{ij}\mathcal{E}(\ket{i}\bra{j}).
 $$
 
 This gives us a one-to-one correspondence between linear maps $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ and matrices $\widetilde{\mathcal{E}}$ acting on the tensor product $\mathcal{H}\otimes\mathcal{H}'$, known as the **Choi--Jamiołkowski isomorphism** $\mathcal{E}\mapsto\widetilde{\mathcal{E}}$.
@@ -1117,7 +1117,7 @@ That is, this one-to-one correspondence between linear maps $\mathcal{E}\colon\m
 In other words, we can classify quantum channels as being exactly those linear maps that have a certain image under the Choi--Jamiołkowski isomorphism!
 In order to see this, let us express the Choi matrix as the result of $\id\otimes\mathcal{E}$ acting on the maximally mixed state
 $$
-  \ket{\Omega}\coloneqq\frac{1}{d}\sum_i\ket{i}\ket{i}
+  \ket{\Omega}\coloneqq\frac{1}{d}\sum_{i=1}^d\ket{i}\ket{i}
 $$
 in $\mathcal{H}\otimes\mathcal{H}$.
 
@@ -1125,7 +1125,7 @@ in $\mathcal{H}\otimes\mathcal{H}$.
 The Choi matrix $\widetilde{\mathcal{E}}$ of a linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$ is given by
 $$
   \widetilde{\mathcal{E}}
-  = (\id\otimes\mathcal{E})\proj{\Omega}
+  = (\id_{d\times d}\otimes\mathcal{E})\proj{\Omega}
   = \frac{1}{d} \sum_{ij} \ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})
 $$
 where $d=\dim\mathcal{H}$.
@@ -1175,7 +1175,7 @@ $$
     \widetilde{\mathcal{E}}
     &= \sum_k\proj{\widetilde{\psi}_k}
   \\&= \sum_k  (\id\otimes E_k)\proj{\Omega} (\id\otimes E^\dagger_k)
-  \\&= \frac{1}{d} \sum_{ij} \ket{i}\bra{j}\otimes\underbrace{\sum_k E_k(\ket{i}\bra{j}) E^\dagger_k}_{\mathcal{E}(\ket{i}\bra{j})}.
+  \\&= \frac{1}{d} \sum_{ij} \left(\ket{i}\bra{j}\otimes\underbrace{\sum_k E_k(\ket{i}\bra{j}) E^\dagger_k}_{\mathcal{E}(\ket{i}\bra{j})}\right).
   \end{aligned}
 $$
 Comparing the last expression on the right-hand size with the definition of $\widetilde{\mathcal{E}}$, or using the Choi--Jamiołkowski isomorphism, we conclude that $\mathcal{E}$ is of the form
