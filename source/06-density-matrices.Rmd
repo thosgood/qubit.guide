@@ -394,7 +394,7 @@ The corresponding density operator of the composite system is the projector $\rh
 $$
   \rho_{\mathcal{AB}}
   = \proj{\psi_{\mathcal{AB}}}
-  = \sum_{ij} c_i c^\star_j \ket{a_i}\bra{a_j} \otimes \ket{b_i}\bra{b_j}
+  = \sum_{i,j} c_i c^\star_j \ket{a_i}\bra{a_j} \otimes \ket{b_i}\bra{b_j}
 $$
 
 Let us compute the reduced density operator $\rho_{\mathcal{A}}$ by taking the partial trace over $\mathcal{B}$:
@@ -403,9 +403,9 @@ $$
     \rho_{\mathcal{A}}
     &= \tr_{\mathcal{B}}\rho_{\mathcal{AB}}
   \\&= \tr_{\mathcal{B}} \proj{\psi_{\mathcal{AB}}}
-  \\&= \tr_{\mathcal{B}} \sum_{ij} c_i c^\star_j \ket{a_i}\bra{a_j} \otimes \ket{b_i}\bra{b_j}
-  \\&= \sum_{ij} c_i c^\star_j \ket{a_i}\bra{a_j}(\tr\ket{b_i}\bra{b_j})
-  \\&= \sum_{ij} c_i c^\star_j \ket{a_i}\bra{a_j} \underbrace{\braket{b_i}{b_j}}_{\delta_{ij}}
+  \\&= \tr_{\mathcal{B}} \sum_{i,j} c_i c^\star_j \ket{a_i}\bra{a_j} \otimes \ket{b_i}\bra{b_j}
+  \\&= \sum_{i,j} c_i c^\star_j \ket{a_i}\bra{a_j}(\tr\ket{b_i}\bra{b_j})
+  \\&= \sum_{i,j} c_i c^\star_j \ket{a_i}\bra{a_j} \underbrace{\braket{b_i}{b_j}}_{\delta_{ij}}
   \\& = \sum_{i} |c_i|^2 \proj{a_i}.
   \end{aligned}
 $$
@@ -441,7 +441,7 @@ In order to see the relationship between the two, consider a joint state of a bi
 $$
   \begin{aligned}
     \ket{\psi_{\mathcal{AB}}}
-    &= \sum_{ij} c_{ij}\ket{a_i}\otimes\ket{b_j}
+    &= \sum_{i,j} c_{ij}\ket{a_i}\otimes\ket{b_j}
   \\&= \sum_{j} \ket{\widetilde\psi_j}\ket{b_j}
     = \sum_{j} \sqrt{p_j}\ket{\psi_j}\ket{b_j}
   \end{aligned}
@@ -452,9 +452,9 @@ Then the partial trace over $\mathcal{B}$ gives the reduced density operator of 
 $$
   \begin{aligned}
     \rho_{\mathcal{A}}
-    &=\tr_{\mathcal{B}} \left( \sum_{ij} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} \otimes \ket{b_i}\bra{b_j} \right)
-  \\&= \sum_{ij} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} (\tr\ket{b_i}\bra{b_j})
-  \\&= \sum_{ij} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} \braket{b_j}{b_i}
+    &=\tr_{\mathcal{B}} \left( \sum_{i,j} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} \otimes \ket{b_i}\bra{b_j} \right)
+  \\&= \sum_{i,j} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} (\tr\ket{b_i}\bra{b_j})
+  \\&= \sum_{i,j} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} \braket{b_j}{b_i}
   \\&= \sum_{i} \ket{\widetilde\psi_i}\bra{\widetilde\psi_i}
     = \sum_{i} p_i \proj{\psi_i}.
   \end{aligned}
@@ -495,8 +495,8 @@ But this new mixture has exactly the same density operator as the previous one:
 $$
   \begin{aligned}
     \sum_j\proj{\widetilde\phi_j}
-    &= \sum_{ijl} U_{ij}\ket{\widetilde\psi_i}\bra{\widetilde\psi_l}U^\star_{lj}
-  \\&= \sum_{il} \underbrace{\left(\sum_j U_{ij}U^\star_{lj}\right)}_{\delta_{il}}\ket{\widetilde\psi_i}\bra{\widetilde\psi_l}
+    &= \sum_{i,j,l} U_{ij}\ket{\widetilde\psi_i}\bra{\widetilde\psi_l}U^\star_{lj}
+  \\&= \sum_{i,l} \underbrace{\left(\sum_j U_{ij}U^\star_{lj}\right)}_{\delta_{il}}\ket{\widetilde\psi_i}\bra{\widetilde\psi_l}
   \\&= \sum_i\proj{\widetilde\psi_j}
   \end{aligned}
 $$
@@ -626,7 +626,7 @@ To show that our more ad-hoc definition of the partial trace agrees with this sl
 $$
   \begin{aligned}
     \ket{\psi_{\mathcal{AB}}}
-    &= \sum_{ij} c_{ij}\ket{a_i}\otimes\ket{b_j}
+    &= \sum_{i,j} c_{ij}\ket{a_i}\otimes\ket{b_j}
   \\&= \sum_{j} \ket{\widetilde\psi_j}\ket{b_j}
     = \sum_{j} \sqrt{p_j}\ket{\psi_j}\ket{b_j}.
   \end{aligned}
@@ -639,10 +639,10 @@ $$
     \tr [(X\otimes \id) \rho_{\mathcal{AB}}]
     &= \tr \left[
         (X\otimes\id) \left(
-          \sum_{ij} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} \otimes \ket{b_i}\bra{b_j}
+          \sum_{i,j} \ket{\widetilde\psi_i}\bra{\widetilde\psi_j} \otimes \ket{b_i}\bra{b_j}
         \right)
       \right]
-  \\&= \sum_{ij} \left[
+  \\&= \sum_{i,j} \left[
         \tr\left(X \ket{\widetilde\psi_i}\bra{\widetilde\psi_j}\right)
       \right]
       \underbrace{\left[\tr\left(\ket{b_i}\bra{b_j}\right)\right]}_{\delta_{ij}}

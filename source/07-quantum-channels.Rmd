@@ -416,7 +416,7 @@ Let us pick an orthonormal basis $\ket{i}$ of the Hilbert space $\mathcal{H}_\ma
 Any unitary transformation of the combined system $\mathcal{AB}$ can then be written as
 $$
   U
-  = \sum_{ij}\ket{i}\bra{j}\otimes B_{ij}
+  = \sum_{i,j}\ket{i}\bra{j}\otimes B_{ij}
   = \begin{bmatrix}
     B_{11} & B_{12} & B_{13} & \ldots
   \\B_{21} & B_{22} & B_{23} & \ldots
@@ -450,15 +450,15 @@ for an arbitrary state $\ket{\psi}$ of $\mathcal{B}$.
 
 The resulting density operator for $\mathcal{B}$ is found by taking the density operator of the output state of $\mathcal{AB}$, which is
 $$
-  \sum_{ij} \ket{i}\bra{j}\otimes B_{ik}\proj{\psi}B_{jk}^\dagger
+  \sum_{i,j} \ket{i}\bra{j}\otimes B_{ik}\proj{\psi}B_{jk}^\dagger
 $$
 and then tracing out $\mathcal{A}$, obtaining^[Recall that $\braket{i}{j}=\delta_{ij}$.]
 $$
   \begin{aligned}
     \tr_\mathcal{A} \left(
-      \sum_{ij} \ket{i}\bra{j}\otimes B_{ik}\proj{\psi}B_{jk}^\dagger
+      \sum_{i,j} \ket{i}\bra{j}\otimes B_{ik}\proj{\psi}B_{jk}^\dagger
     \right)
-    &= \sum_{ij} \braket{i}{j}\cdot B_{ik}\proj{\psi}B_{jk}^\dagger
+    &= \sum_{i,j} \braket{i}{j}\cdot B_{ik}\proj{\psi}B_{jk}^\dagger
   \\&= \sum_i B_{ik}\proj{\psi}B_{ik}^\dagger.
   \end{aligned}
 $$
@@ -531,7 +531,7 @@ This is more for mathematical simplicity than physical insight, but it is always
 Recall that any unitary transformation of the combined system $\mathcal{AB}$ can be written as
 $$
   U
-  = \sum_{ij}\ket{i}\bra{j}\otimes B_{ij}
+  = \sum_{i,j}\ket{i}\bra{j}\otimes B_{ij}
   = \begin{bmatrix}
     B_{11} & B_{12} & B_{13} & \ldots
   \\B_{21} & B_{22} & B_{23} & \ldots
@@ -603,7 +603,7 @@ $$
   \proj{\psi}
   \longmapsto
   V\proj{\psi}V^\dagger
-  = \sum_{ij} \ket{i}\bra{j} \otimes E_i\proj{\psi} E_j^\dagger.
+  = \sum_{i,j} \ket{i}\bra{j} \otimes E_i\proj{\psi} E_j^\dagger.
 $$
 We trace out $\mathcal{A}$ (recalling that $\tr\ket{i}\bra{j} = \braket{i}{j}=\delta_{ij}$) and express the evolution of system $\mathcal{B}$ (which is allowed to have a mixed input state $\rho$, since these can always be expressed as statistical mixtures of pure states $\ket{\psi}$) as
 $$
@@ -654,7 +654,7 @@ $$
   \begin{aligned}
     V
     &= \sum_i\ket{e_i}\otimes E_i
-  \\&= \sum _{ij} \ket{f_j}\braket{f_j}{e_i}\otimes E_i
+  \\&= \sum_{i,j} \ket{f_j}\braket{f_j}{e_i}\otimes E_i
   \\&= \sum_{j} \ket{f_j} \otimes \sum_i \underbrace{\braket{f_j}{e_i}}_{R_{ji}} E_i
   \\&= \sum_{j} \ket{f_j} \otimes F_j
   \end{aligned}
@@ -666,8 +666,8 @@ $$
   \begin{aligned}
     \mathcal{F}(\rho)
     &= \sum_j F_j\rho F^\dagger_j
-  \\&= \sum_{ijk} R_{ji}E_i \rho E^\dagger_k R^\star_{jk}
-  \\&=\sum_{ik} \underbrace{\left(\sum_j R_{jk}^\star R_{ji}\right)}_{\delta_{ki}} E_i\rho E^\dagger_k
+  \\&= \sum_{i,j,k} R_{ji}E_i \rho E^\dagger_k R^\star_{jk}
+  \\&=\sum_{i,k} \underbrace{\left(\sum_j R_{jk}^\star R_{ji}\right)}_{\delta_{ki}} E_i\rho E^\dagger_k
   \\&= \sum_i E_i\rho E^\dagger_i
   \\&= \mathcal{E}(\rho).
   \end{aligned}
@@ -826,12 +826,12 @@ where $\sum_i A^\dagger_i A_i=\sum_j B^\dagger_j B_j=\id$;
 then the sequential composition of $\mathcal{E}$ followed by $\mathcal{F}$ can be written as
 $$
   \mathcal{F} \circ\mathcal{E}
-  = \sum_{ij} (B_jA_i) \cdot (B_jA_i)^\dagger
+  = \sum_{i,j} (B_jA_i) \cdot (B_jA_i)^\dagger
 $$
 so that the $B_jA_i$ are the Kraus operators associated with the new channel $\mathcal{F}\circ\mathcal{E}$, where the normalisation condition (or completeness relation) follows from
 $$
   \begin{aligned}
-    \sum_{ij} (B_jA_i)^\dagger (B_jA_i)
+    \sum_{i,j} (B_jA_i)^\dagger (B_jA_i)
     &= \sum_i A_i^\dagger\left(\sum_j B_j^\dagger B_j\right)A_i
   \\&= \sum_i A_i^\dagger A_i
   \\&= \id.
@@ -843,8 +843,8 @@ In actual fact, since we have access to tensor products, there is another sort o
 The normalisation condition again follows from a simple calculation:
 $$
   \begin{aligned}
-    \sum_{ij} (A_i\otimes B_j)^\dagger (A_i\otimes B_j)
-    &= \sum_{ij} A_i^\dagger A_i \otimes B_j^\dagger B_j
+    \sum_{i,j} (A_i\otimes B_j)^\dagger (A_i\otimes B_j)
+    &= \sum_{i,j} A_i^\dagger A_i \otimes B_j^\dagger B_j
   \\&= \id_A\otimes\id_B.
   \end{aligned}
 $$
@@ -949,10 +949,10 @@ However, if the input qubit is part of a two qubit system, initially in the enta
 $$
   \begin{aligned}
     \proj{\Omega}
-    = \frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes \ket{i}\bra{j}
+    = \frac{1}{2}\sum_{i,j} \ket{i}\bra{j} \otimes \ket{i}\bra{j}
     \xmapsto{\id\otimes T}
-    &\frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes T( \ket{i}\bra{j})
-  \\= &\frac{1}{2}\sum_{ij} \ket{i}\bra{j} \otimes \ket{j}\bra{i}.
+    &\frac{1}{2}\sum_{i,j} \ket{i}\bra{j} \otimes T( \ket{i}\bra{j})
+  \\= &\frac{1}{2}\sum_{i,j} \ket{i}\bra{j} \otimes \ket{j}\bra{i}.
   \end{aligned}
 $$
 The output is known as the $\texttt{SWAP}$ matrix, since it describes the $\texttt{SWAP}$ operation: $\ket{j}\ket{i}\mapsto\ket{i}\ket{j}$.
@@ -1063,12 +1063,12 @@ for all density matrices $\rho$ in $\mathcal{B}(\mathcal{H})$, where $d=\dim\mat
 The expression above may look baffling at first glance, but this is often the case when we turn something conceptually obvious into more compact mathematical notation.
 In order to gain some intuition here, recall that, for matrices $A$ and $B$,
 $$
-  \tr A^T B = \sum_{ij} A_{ij}B_{ij}.
+  \tr A^T B = \sum_{i,j} A_{ij}B_{ij}.
 $$
 If we take $A$ and $B$ to be the block matrices $\rho\otimes\id$ and $\widetilde{\mathcal{E}}$, respectively, then we can use this to show that
 $$
   (\tr\otimes\id)\left[(\rho^T\otimes\id)\widetilde{\mathcal{E}}\right]
-  = \frac{1}{d}\sum_{ij}\rho_{ij}\mathcal{E}(\ket{i}\bra{j}).
+  = \frac{1}{d}\sum_{i,j}\rho_{ij}\mathcal{E}(\ket{i}\bra{j}).
 $$
 
 This gives us a one-to-one correspondence between linear maps $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ and matrices $\widetilde{\mathcal{E}}$ acting on the tensor product $\mathcal{H}\otimes\mathcal{H}'$, known as the **Choi--Jamiołkowski isomorphism** $\mathcal{E}\mapsto\widetilde{\mathcal{E}}$.
@@ -1126,7 +1126,7 @@ The Choi matrix $\widetilde{\mathcal{E}}$ of a linear map $\mathcal{E}\colon\mat
 $$
   \widetilde{\mathcal{E}}
   = (\id_{d\times d}\otimes\mathcal{E})\proj{\Omega}
-  = \frac{1}{d} \sum_{ij} \ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})
+  = \frac{1}{d} \sum_{i,j} \ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})
 $$
 where $d=\dim\mathcal{H}$.
 
@@ -1166,7 +1166,7 @@ Now, any vector $\ket{\psi}$ in $\mathcal{H}\otimes\mathcal{H}'$ can be written 
 $$
   \ket{\psi}=\id\otimes V\ket{\Omega}
 $$
-where $V=\sum_{ij}V_{ij}\ket{j}\bra{i}$ is an operator from $\mathcal{H}$ to $\mathcal{H}'$.
+where $V=\sum_{i,j}V_{ij}\ket{j}\bra{i}$ is an operator from $\mathcal{H}$ to $\mathcal{H}'$.
 (Here, the vectors $\ket{i}$ and $\ket{j}$ form orthonormal bases in $\mathcal{H}$ and $\mathcal{H}'$, respectively).
 
 Using this, we see that
@@ -1175,7 +1175,7 @@ $$
     \widetilde{\mathcal{E}}
     &= \sum_k\proj{\widetilde{\psi}_k}
   \\&= \sum_k  (\id\otimes E_k)\proj{\Omega} (\id\otimes E^\dagger_k)
-  \\&= \frac{1}{d} \sum_{ij} \left(\ket{i}\bra{j}\otimes\underbrace{\sum_k E_k(\ket{i}\bra{j}) E^\dagger_k}_{\mathcal{E}(\ket{i}\bra{j})}\right).
+  \\&= \frac{1}{d} \sum_{i,j} \left(\ket{i}\bra{j}\otimes\underbrace{\sum_k E_k(\ket{i}\bra{j}) E^\dagger_k}_{\mathcal{E}(\ket{i}\bra{j})}\right).
   \end{aligned}
 $$
 Comparing the last expression on the right-hand size with the definition of $\widetilde{\mathcal{E}}$, or using the Choi--Jamiołkowski isomorphism, we conclude that $\mathcal{E}$ is of the form
@@ -1198,7 +1198,7 @@ and
 $$
   \widetilde{\mathcal{E}}
   = (\id\otimes\mathcal{E})\proj{\Omega}
-  = \frac{1}{d} \sum_{ij} \ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})
+  = \frac{1}{d} \sum_{i,j} \ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})
 $$
 tell us how to obtain the state $\widetilde{\mathcal{E}}$ from the channel $\mathcal{E}$, and vice versa.
 We have also shown that quantum channels are exactly the completely positive trace-preserving maps.
@@ -1338,15 +1338,15 @@ $$
     \braket{\widetilde{v}_k |\widetilde{v}_l}
     &= \bra{\Omega}(\id\otimes E_k^\dagger)(\id\otimes E_l)\ket{\Omega}
   \\&= \tr(\id\otimes E_k^\dagger E_l)\proj{\Omega}
-  \\&= \frac{1}{d}\tr\sum_{ij}\ket{i}\bra{j}\otimes E_k^\dagger E_l \ket{i}\bra{j}
+  \\&= \frac{1}{d}\tr\sum_{i,j}\ket{i}\bra{j}\otimes E_k^\dagger E_l \ket{i}\bra{j}
   \end{aligned}
 $$
-(using the fact that we can substitute $\frac{1}{d}\sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{j}$ for $\proj{\Omega}$).
+(using the fact that we can substitute $\frac{1}{d}\sum_{i,j}\ket{i}\bra{j}\otimes\ket{i}\bra{j}$ for $\proj{\Omega}$).
 Now, the trace of the tensor product of two matrices is the product of their traces, hence
 $$
   \begin{aligned}
     \braket{\widetilde{v}_k}{\widetilde{v}_l}
-    &= \frac{1}{d}\sum_{ij} \braket{i}{j}\tr E_k^\dagger E_l \ket{i}\bra{j}
+    &= \frac{1}{d}\sum_{i,j} \braket{i}{j}\tr E_k^\dagger E_l \ket{i}\bra{j}
   \\&= \frac{1}{d} \tr E_k^\dagger E_l
   \end{aligned}
 $$
@@ -1375,8 +1375,8 @@ $$
   \begin{aligned}
     \rho
     \longmapsto
-    & \sum_{ij} B_i\rho B^\dagger_j \left(\sum _k c_{ki}c^\star_{kj}\right)
-  \\=& \sum_{ij} B_i\rho B^\dagger_j  C_{ij}
+    & \sum_{i,j} B_i\rho B^\dagger_j \left(\sum _k c_{ki}c^\star_{kj}\right)
+  \\=& \sum_{i,j} B_i\rho B^\dagger_j  C_{ij}
   \end{aligned}
 $$
 The matrix $C_{ij}$ is positive semidefinite, and hence unitarily diagonalisable: $C_{ij}=\sum_k U_{ik} d_k U^\dagger_{kj}$ for some unitary $U$ and some $d_k\geq0$.
@@ -1433,8 +1433,8 @@ These other operators satisfy
 $$
   \begin{aligned}
     K_i^\dagger K_j
-    &= \sum_{kl} U^\star_{ik} E^\dagger_k E_l U_{jl}
-  \\&= \sum_{kl} U^\star_{ik} (\sqrt{p_k p_l}\delta_{kl}\id) U_{jl}
+    &= \sum_{k,l} U^\star_{ik} E^\dagger_k E_l U_{jl}
+  \\&= \sum_{k,l} U^\star_{ik} (\sqrt{p_k p_l}\delta_{kl}\id) U_{jl}
   \\&= \sum_{k} U^\star_{ik} p_k U_{jk}\id
   \\&= \sigma_{ij}\id
   \end{aligned}
@@ -1447,14 +1447,14 @@ Indeed, in terms of Kraus representations for $\mathcal{E}$ and $\mathcal{R}$, w
 $$
   \rho
   = (\mathcal{R}\circ\mathcal{E})(\rho)
-  \equiv \sum_{lj} R_l E_j \rho R^\dagger_l E^\dagger_j
+  \equiv \sum_{l,j} R_l E_j \rho R^\dagger_l E^\dagger_j
 $$
 for any state $\rho$.
 This means that identity channel $\mathcal{R}\circ\mathcal{E}=\id$ must have all the Kraus operators proportional to the identity:
 $$
   R_lE_j=\lambda_{lj}\id
 $$
-for some complex numbers $\lambda_{lj}$ such that^[This is the normalisation condition for the Kraus operators $R_lE_j$] $\sum_{lj} |\lambda_{lj}|^2=1$.
+for some complex numbers $\lambda_{lj}$ such that^[This is the normalisation condition for the Kraus operators $R_lE_j$] $\sum_{l,j} |\lambda_{lj}|^2=1$.
 Then we can write
 $$
   \begin{aligned}
@@ -1465,7 +1465,7 @@ $$
   \end{aligned}
 $$
 where $\sigma_{ij} = \sum_l \lambda^*_{il}\lambda_{jl}$.
-Clearly, $\sigma_{ij}$ is a positive matrix such that $\tr(\sigma_{ij})=1$ and $\sum_i\sigma_{ii}=\sum_{il}|\lambda_{il}|^2=1$.
+Clearly, $\sigma_{ij}$ is a positive matrix such that $\tr(\sigma_{ij})=1$ and $\sum_i\sigma_{ii}=\sum_{i,l}|\lambda_{il}|^2=1$.
 
 So the condition $E_i^\dagger E_j = \sigma_{ij}\id$ is both necessary *and* sufficient in order for the channel $\mathcal{E}$ to be correctable.
 
@@ -1855,13 +1855,13 @@ Indeed, the unitary evolution $(\id\otimes R) U$ gives
 $$
   \rho\otimes\proj{e}
   \longmapsto
-  \sum_{kl} E_k \rho E_l^\dagger \otimes R\ket{e_k}\bra{e_l} R^\dagger
+  \sum_{k,l} E_k \rho E_l^\dagger \otimes R\ket{e_k}\bra{e_l} R^\dagger
 $$
 and the subsequent trace over the environment gives
 $$
   \begin{aligned}
-    \tr_E \sum_{kl} E_k \rho E_l^\dagger \otimes R\ket{e_k}\bra{e_l} R^\dagger
-    &= \sum_{kl} E_k \rho E_l^\dagger \bra{e_l} R^\dagger R\ket{e_k}
+    \tr_E \sum_{k,l} E_k \rho E_l^\dagger \otimes R\ket{e_k}\bra{e_l} R^\dagger
+    &= \sum_{k,l} E_k \rho E_l^\dagger \bra{e_l} R^\dagger R\ket{e_k}
   \\&= \sum_{k} E_k \rho E_k^\dagger.
   \end{aligned}
 $$
@@ -2030,7 +2030,7 @@ $$
 whence
 $$
   \proj{\Omega}
-  = \frac{1}{d} \sum_{ij}\ket{i}\bra{j}\otimes\ket{i}\bra{j}
+  = \frac{1}{d} \sum_{i,j}\ket{i}\bra{j}\otimes\ket{i}\bra{j}
 $$
 Each subsystem is of dimension $d$, and all the Schmidt coefficients are equal.
 Here are few useful tricks involving a maximally mixed state.
@@ -2040,7 +2040,7 @@ Here are few useful tricks involving a maximally mixed state.
       \bra{\Omega}A\otimes B\ket{\Omega} = \frac{1}{d}\tr(A^T B).
     $$
 
-- Any pure state $\ket{\psi}=\sum_{ij} c_{ij}\ket{i}\ket{j}$ of the bipartite system can be written as
+- Any pure state $\ket{\psi}=\sum_{i,j} c_{ij}\ket{i}\ket{j}$ of the bipartite system can be written as
     $$
       (C\otimes\id)\ket{\Omega} = (\id\otimes C^T)\ket{\Omega}.
     $$
@@ -2055,8 +2055,8 @@ Here are few useful tricks involving a maximally mixed state.
       \begin{aligned}
         S
         &= d \proj{\Omega}^{T_{\mathcal{A}}}
-      \\&= d \sum_{ij} \big(\ket{i}\bra{j}\big)^T\otimes\ket{i}\bra{j}
-      \\&= d \sum_{ij} \ket{j}\bra{i}\otimes\ket{i}\bra{j}
+      \\&= d \sum_{i,j} \big(\ket{i}\bra{j}\big)^T\otimes\ket{i}\bra{j}
+      \\&= d \sum_{i,j} \ket{j}\bra{i}\otimes\ket{i}\bra{j}
       \end{aligned}
     $$
     where we write $X^{T_{\mathcal{A}}}$ to mean the partial transpose over $\mathcal{A}$, i.e. $T\otimes\id$.
