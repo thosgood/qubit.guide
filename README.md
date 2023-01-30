@@ -11,6 +11,7 @@ Build using the `./build_book` script.
 
 - **make github actions FAIL if PDF build(s) are unsuccessful**
 - **only one footnote per paragraph**
+- check that you use Chapter vs. Section consistently in any `\@ref`
 - **search for `TO-DO` and `.todo`**
 
 ### Web
@@ -29,6 +30,7 @@ Build using the `./build_book` script.
 - improve sidenote y-positioning using jquery
     + find the previous `.footnote-ref` in the DOM and align with that
 - extra output (added to downloads) that uses the single page html bookdown format **with mathjax**
+    + (I can't remember why I specifically wanted mathjax...)
 
 ### PDF
 
