@@ -38,7 +38,7 @@ Build using the `./build_book` script.
 - *general PDF styling*
     + ***FONT*** (in headings)
     + "Part X" pages --- less empty space (maybe centred text?)
-    + make the tables (e.g. in "phase gates galore") in the pdf version look good
+    + make the tables (e.g. in "phase gates galore" and "Pauli matrices, algebraically") in the pdf version look good
     + make title page nice
     + remove the dashes from page numbers
     + TOC spacing (e.g. the §11.10 number overlaps with the subsection title)
