@@ -124,7 +124,50 @@ Last but not least, the $n$-qubit Pauli group spans the space of $(2^n\times 2^n
 
 ## Pauli and his stabilisers
 
-The
+The stabiliser (or stabilizer, if you like) formalism is an elegant technique that is often used to describe vectors and subspaces.
+Suppose you want to specify a particular vector in a Hilbert space.
+The most conventional way to do this would be to pick a basis and then list the coordinate components of the vector.
+But we could instead list a set of operators that leave this vector invariant.
+More generally, we can define a vector subspace (rather than just a single vector, which corresponds to a 1-dimensional subspace: its span) by giving a list of operators that fix this subspace.
+Such operators are called **stabilisers**.
+
+::: {.idea latex=""}
+We say that an operator $S$ **stabilises** a state $\ket{\psi}$ if $S\ket{\psi}=\ket{\psi}$.
+We say that $S$ stabilises a subspace $V$ if $S$ stabilises every state in $V$.
+:::
+
+In other words, an operator $S$ stabilises a state $\ket{\psi}$ (or the state is fixed by the operator) if $\ket{\psi}$ is an eigenstate of $S$ with eigenvalue $1$.
+It is very important to note that here we *have* to pay attention to the global phase factor: if $S\ket{\psi}=-\ket{\psi}$ then we do *not* say that $S$ stabilises $\ket{\psi}$, even though $\ket{\psi}$ and $-\ket{\psi}$ describe the same quantum state.
+
+For example, we can look at states stabilised by the Pauli operators with factors $\pm1$:
+$$
+  \begin{aligned}
+    Z\text{ stabilises }\ket{0}
+    &\qquad-Z\text{ stabilises }\ket{1}
+  \\Y\text{ stabilises }\ket{i}
+    &\qquad-Y\text{ stabilises }\ket{-i}
+  \\X\text{ stabilises }\ket{+}
+    &\qquad-X\text{ stabilises }\ket{-}
+  \end{aligned}
+$$
+where $\ket{\pm i}=\frac{1}{\sqrt{2}}(\ket{0}+i\ket{1})$ and $\ket{\pm}=\frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})$.
+On the Bloch sphere, the single-qubit stabiliser states lie at the intersection of the three axes with the surface of the sphere.
+
+```{r,engine='tikz',fig.width=3}
+\begin{tikzpicture} [scale=1.7]
+\draw (0,0) circle(1);
+\draw plot[domain=pi:2*pi] ({cos(\x r)},{.3*sin(\x r)});
+\draw[dashed] plot[domain=0:pi] ({cos(\x r)},{.3*sin(\x r)});
+%Stabiliser states
+\draw[-latex] (0,0)--(0,1)node[above] {$\ket{0}$};
+\draw[->] (0,0)--(0,-1) node[below] {$\ket{1}$};
+\draw[->] (0,0)--(1,0) node[right] {$\ket{+i}$};
+\draw[->] (0,0)--(-1,0)  node[left] {$\ket{-i}$};
+\draw[->] (0,0)--({cos(45 r)},{0.3*sin(45 r)})  node[above] {$\ket{-}$};
+\draw[->] (0,0)--({-cos(45 r)},{-0.3*sin(45 r)}) node[below] {$\ket{+}$};
+\end{tikzpicture}
+```
+
 
 
 
@@ -163,5 +206,6 @@ The
 
 Any Pauli matrix that is not the identity commutes with exactly half of all the Pauli matrices: namely, with the identity and with itself.
 For example, $X$ commutes with $\id$ and $X$, and anticommutes with $Y$ and $Z$.
+
 Extend this observation to any non-identity element in $\mathcal{P}_n$.
 In other words, show that, for any $P\in\mathcal{P}_n\setminus\{\id^{\otimes n}\}$, exactly half of the elements in $\mathcal{P}_n$ commute with $P$.
