@@ -176,7 +176,7 @@ The set of all stabilisers of a given state or given subspace form a group: if $
 This group is called the **stabiliser group** of the given state or subspace.
 
 Using this language, we can rephrase the previous example by saying that the stabiliser group of the state $\ket{1}$ is $\{\id,Z\}=\langle Z\rangle$, the stabiliser group of the state $\ket{0}$ is $\{\id,-Z\}=\langle -Z\rangle$, the stabiliser group of the state $\ket{+}$ is $\{\id,X\}=\langle X\rangle$, and so on.
-If we take the tensor product of a two states, with stabiliser groups $A$ and $B$ (respectively), then the resulting tensor product state has stabiliser group given by the cartesian product $A\times B$.
+If we take the tensor product of a two states, with stabiliser groups $\mathcal{A}$ and $\mathcal{B}$ (respectively), then the resulting tensor product state has stabiliser group given by the cartesian product $\mathcal{A}\times\mathcal{B}$.
 For example, the state $\ket{1}\ket{+}$ is stabilised by the group
 $$
   \begin{aligned}
@@ -189,7 +189,7 @@ As for the state $\ket{0}^{\otimes n}$, this is stabilised by the group generate
 $$
   \ket{0000}
   \longleftrightarrow
-  \begin{array}{c|cccc}
+  \begin{array}{c|cccc|}
     +&Z&\id&\id&\id
   \\+&\id&Z&\id&\id
   \\+&\id&\id&Z&\id
@@ -200,7 +200,7 @@ and we can see that the signs determine the bit value in the computational basis
 $$
   \ket{0001}
   \longleftrightarrow
-  \begin{array}{c|cccc}
+  \begin{array}{c|cccc|}
     +&Z&\id&\id&\id
   \\+&\id&Z&\id&\id
   \\+&\id&\id&Z&\id
@@ -209,7 +209,7 @@ $$
   \qquad
   \ket{0101}
   \longleftrightarrow
-  \begin{array}{c|cccc}
+  \begin{array}{c|cccc|}
     +&Z&\id&\id&\id
   \\-&\id&Z&\id&\id
   \\+&\id&\id&Z&\id
@@ -221,14 +221,14 @@ For our purposes, we are only really interested in stabilisers that are also ele
 It turns out that such stabilisers can describe highly entangled states.
 In particular, the four Bell states (which we first talked about in Section \@ref(bell-states)) can be defined rather succinctly by their stabiliser groups:
 
-| State | Stabiliser group |
-| :---- | :--------------- |
+| Bell state | Stabiliser group |
+| :--------- | :--------------- |
 | $\Phi^+=\ket{00}+\ket{11}$ | $\langle XX,ZZ\rangle$ |
 | $\Psi^+=\ket{01}+\ket{10}$ | $\langle XX,-ZZ\rangle$ |
 | $\Phi^-=\ket{00}-\ket{11}$ | $\langle -XX,ZZ\rangle$ |
 | $\Psi^-=\ket{01}-\ket{10}$ | $\langle -XX,-ZZ\rangle$ |
 
-Not only this, but vector spaces are also rather easily defined: the subspace of the three-qubit state space spanned by $\ket{000}$ and $\ket{111}$ is stabilised by
+Not only this, but some vector spaces are also rather easily defined: the subspace of the three-qubit state space spanned by $\ket{000}$ and $\ket{111}$ is stabilised by
 $$
   \{\id\id\id,ZZ\id,Z\id Z,\id ZZ\} = \langle ZZ\id,\id ZZ\rangle.
 $$
@@ -236,9 +236,53 @@ $$
 Right now, it might seem more complicated to use stabilisers to define vectors or subspaces, but when we start looking at states with a larger and larger number of components we will see how this approach ends up being very tidy indeed!
 It is not be true that the stabiliser description of states and subspaces will *always* be the most concise, but it is true in a lot of cases that are of interest to us.
 
+Returning to our claim that stabiliser groups that are subgroups of $\mathcal{P}_n$ are abelian, let us start with a definition, and then justify it afterwards.
 
+::: {.idea latex=""}
+An **$n$-qubit Pauli stabiliser group** is any subgroup of $\mathcal{P}_n$ that is abelian and does not contain $-\id$.
+Its elements are called **Pauli stabilisers**.
+:::
 
+Recall that, in order for the subspace $V_S$ stabilised by some group $S$ to be non-trivial, we need $-\id\not\in S$.
+Given that all Pauli operators square to the identity, and all pairs of Pauli operators either commute or anticommute, this implies that if we want some Pauli operators to stabilise anything then they must *commute*.
+Indeed, if $S_1$ and $S_2$ are two Pauli operators that anticommute, and $\ket{\psi}$ is any vector stabilised by both of them, then
+$$
+  \begin{aligned}
+    \ket{\psi}
+    &= S_1S_2\ket{\psi}
+  \\&= -S_2S_1\ket{\psi}
+  \\&= -\ket{\psi}
+  \end{aligned}
+$$
+which means that $\ket{\psi}=0$.
+But saying that we are looking at a stabiliser group consisting of Pauli stabilisers that all commute with one another (as opposed to anticommuting) is exactly saying that we have an abelian subgroup of $\mathcal{P}_n$; if we want it to be non-trivial, then we need it to not contain $-\id$.
+Conversely, if we pick any abelian subgroup of $\mathcal{P}_n$ that does not contain $-\id$, this stabilises *some* subspace $V_S$.
 
+The size of any Pauli stabiliser $\mathcal{S}$ is $|\mathcal{S}|=2^r$, where $r$ is some positive integer, since we can always find some choice of generators $G_1,\ldots,G_r$, and then any operator $S\in\mathcal{S}$ can be written as^[An interesting small exercise here is to explain why the product of any *independent* Pauli stabilisers cannot be equal to the identity.]
+$$
+  S = G_1^{\epsilon_1}G_2^{\epsilon_2}\ldots G_r^{\epsilon_r}
+$$
+where $r_i\in\{0,1\}$.
+But given any stabiliser group, we can always express its elements using many different sets of generators; a specific choice of $r$ independent generators of a Pauli stabiliser $\mathcal{S}$ of size $2^r$ is called a **presentation**.
+In order to choose a presentation from the set of elements of $\mathcal{S}$, we have to start by picking any non-identity element, of which there are $2^r-1$.
+Inductively then, we pick the next generator by picking any element which is not in the subgroup generated by the previously selected generators, which means that there are
+$$
+  (2^r-1)(2^r-2)(2^r-2^2)\ldots(2^r-2^{r-1})
+$$
+possible generating sets of $\mathcal{S}$.
+But these are *ordered* sets (i.e. we are keeping track of the order in which we pick the elements, so $G_1,G_2,\ldots$ is a "different" choice than $G_2,G_1,\ldots$), so if we want to know the number of presentations then we can simply divide the expression above by $r^!$.
+
+For example, the Bell state $\Phi^+=\ket{00}+\ket{11}$ is stabilised by the group $\{\id\id,XX,-YY,ZZ\}$.
+This stabiliser group has $(2^2-1)(2^2-2)/2!=3$ presentations, namely
+$$
+  \langle XX,ZZ\rangle
+  \qquad
+  \langle -YY,XX\rangle
+  \qquad
+  \langle ZZ,-YY\rangle.
+$$
+
+So now we know the size of a Pauli stabiliser, but what can we say about the dimension of the subspace that it stabilises?
 
 
 
@@ -273,3 +317,24 @@ For example, $X$ commutes with $\id$ and $X$, and anticommutes with $Y$ and $Z$.
 
 Extend this observation to any non-identity element in $\mathcal{P}_n$.
 In other words, show that, for any $P\in\mathcal{P}_n\setminus\{\id^{\otimes n}\}$, exactly half of the elements in $\mathcal{P}_n$ commute with $P$.
+
+
+### Only one out of four stabilisers
+
+Explain why, if $S$ is an element of some stabiliser group, then none of $-S$, $iS$, or $-S$ are in the same stabiliser group.
+
+
+### Stabilisers and projectors
+
+Let $\mathcal{S}$ be a Pauli stabiliser group, with generators $G_1,\ldots,G_r$.
+
+1. Show that $\frac{1}{2}(\id\pm G_j)$ is the projector onto the $\pm1$ eigenspace of $G_j$ for any $j=1,\ldots,r$.
+2. Show that the projector
+    $$
+      P = \frac{1}{2}(\id+G_1)\frac{1}{2}(\id+G_2)\ldots\frac{1}{2}(\id+G_r)
+    $$
+    onto the simultaneous $+1$ eigenspace of the generators $G_1,\ldots,G_r$ can be written as
+    $$
+      P = \frac{1}{2^r}(S_1+S_2+\ldots+S_{2^r})
+    $$
+    where the sum contains all elements $S_i$ of $\mathcal{S}$.
