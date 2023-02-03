@@ -37,6 +37,7 @@ Build using the `./build_book` script.
 - **`_pdf-instructions.Rmd` to mirror `_web-instructions.Rmd`**
     + talk about technical divs
     + explain that web version exists
+- figure numbering should (ideally) agree with the web version
 - *general PDF styling*
     + ***FONT*** (in headings)
     + "Part X" pages --- less empty space (maybe centred text?)
