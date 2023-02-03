@@ -273,20 +273,30 @@ possible generating sets of $\mathcal{S}$.
 But these are *ordered* sets (i.e. we are keeping track of the order in which we pick the elements, so $G_1,G_2,\ldots$ is a "different" choice than $G_2,G_1,\ldots$), so if we want to know the number of presentations then we can simply divide the expression above by $r^!$.
 
 For example, the Bell state $\Phi^+=\ket{00}+\ket{11}$ is stabilised by the group $\{\id\id,XX,-YY,ZZ\}$.
-This stabiliser group has $(2^2-1)(2^2-2)/2!=3$ presentations, namely
-$$
-  \langle XX,ZZ\rangle
-  \qquad
-  \langle -YY,XX\rangle
-  \qquad
-  \langle ZZ,-YY\rangle.
-$$
+This stabiliser group has $(2^2-1)(2^2-2)/2!=3$ presentations, namely $\langle XX,ZZ\rangle$, $\langle -YY,XX\rangle$, and $\langle ZZ,-YY\rangle$.
 
 So now we know the size of a Pauli stabiliser, but what can we say about the dimension of the subspace that it stabilises?
+If $|\mathcal{S}|=2^r$ then the corresponding stabiliser subspace $V_S$ has dimension $2^{n-r}$ (where $n$ is the number of qubits, i.e. such that $\mathcal{S}\subseteq\mathcal{P}_n$).
+To see this, we can look at the projector $P_S$ onto $V_S$, since once we have a projector onto any subspace we know that the dimension of that subspace is exactly the trace of the projector (we can prove this by thinking about the matrix of the projector in the diagonal form).
+In our case (using the result of Exercise \@ref(stabilisers-and-projectors)) we calculate that
+$$
+  \begin{aligned}
+    \tr P_S
+    &= \tr\frac{1}{2^r}(S_1+S_2+\ldots+S_{2^r})
+  \\&= \frac{1}{2^r}(\tr\id)
+  \\&= 2^{n-r}
+  \end{aligned}
+$$
+since any non-identity element of the stabiliser group has trace equal to zero, and $\tr\id^{\otimes n}=2^n$, whence $\dim V_s=2^{n-r}$.
+If $r=n$ then the stabilised subspace is $1$-dimensional, and so we have stabiliser states.
 
-
-
-
+There is a more geometric way of understanding why powers of 2 keep on turning up in these calculations.
+Given independent Pauli generators, it is convenient to think about the state or subspace that they stabilise as being the result of repeatedly bisecting the Hilbert space.
+Let $G_1,\ldots,G_r$ be a presentation of a Pauli stabiliser $\mathcal{S}$.
+For each operator $G_i$, half its eigenvalues are $+1$ and another half are $-1$, so each $G_i$ bisects the $2^n$-dimensional Hilbert space of $n$ qubits into two eigenspaces of equal size.
+So $G_1$ gives two $2^{n-1}$-dimensional subspaces: one for the $+1$ eigenvalue and one for the $-1$ eigenvalue.
+Forgetting about the $-1$ part and just focusing on the $+1$ part, $G_2$ then splits this $2^{n-1}$-dimensional subspace into two $2^{n-2}$-dimensional subspaces, since it is independent from $G_1$ (as we justify in Exercise \@ref(stabilisers-and-projectors)).
+Repeating this procedure, forgetting about the $-1$ subspace each time, leads us to consider the simultaneous $+1$ eigenspace of $G_1,\ldots,G_r$, where each time we pass from $\{G_1,G_2,\ldots,G_i\}$ to $\{G_1,G_2,\ldots,G_i,G_{i+1}\}$ we bisect the subspace into two equal parts once more, eventually ending with the $2^{n-2}$-dimensional subspace $V_S$, as above.
 
 
 
@@ -324,7 +334,7 @@ In other words, show that, for any $P\in\mathcal{P}_n\setminus\{\id^{\otimes n}\
 Explain why, if $S$ is an element of some stabiliser group, then none of $-S$, $iS$, or $-S$ are in the same stabiliser group.
 
 
-### Stabilisers and projectors
+### Stabilisers and projectors {#stabilisers-and-projectors}
 
 Let $\mathcal{S}$ be a Pauli stabiliser group, with generators $G_1,\ldots,G_r$.
 
@@ -338,3 +348,12 @@ Let $\mathcal{S}$ be a Pauli stabiliser group, with generators $G_1,\ldots,G_r$.
       P = \frac{1}{2^r}(S_1+S_2+\ldots+S_{2^r})
     $$
     where the sum contains all elements $S_i$ of $\mathcal{S}$.
+3. The fact that independent generators consecutively bisect the total Hilbert space relies on the fact that, if $G_1$ and $G_2$ are independent generators, then $G_2$ restricted to the $+1$ eigenspace of $G_1$ bisects it into two subspaces of equal dimension.
+    Explain how this fact follows from
+    $$
+      \tr\left[
+        \frac{1}{2}(\id+G_1)G_2\frac{1}{2}(\id+G_1)
+      \right] = 0
+    $$
+    and prove that this trace is indeed zero.
+    Why do the two generators $G_1$ and $G_2$ have to be independent?
