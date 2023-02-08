@@ -403,7 +403,167 @@ They play a crucial role in areas such as quantum error correction, measurement-
 
 ## Measuring Pauli stabilisers
 
-How
+How do we bisect Hilbert spaces in practice?
+By measuring stabilisers.
+
+Let's start by measuring any single-qubit observable that squares to the identity.
+The corresponding operator $P$ with eigenvalues $\pm1$ is both Hermitian and unitary, and can thus represent both an observable and a quantum gate.
+If we prepare a qubit in some state $\ket{\psi}$ and then wish to perform a measurement that will give us a result of $\pm1$ and leave the qubit in a post-measurement state, namely the corresponding eigenvector, then we can use the following circuit (where $\propto$ denotes that two states are multiples of one another).
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick{$\ket{0}$}
+  &\gate{H}
+  &\ctrl{1}
+  &\gate{H}
+  &\meterD{}
+\\\lstick{$\ket{\psi}$}
+  &\qw
+  &\gate{P}
+  &\qw
+  &\qw\rstick{$\propto\id\pm P\ket{\psi}$}
+\end{quantikz}
+```
+
+This construction requires an auxiliary qubit (in the top register), two Hadamard gates, and the tacit assumption that we can construct a controlled-$P$ operator.
+Stepping through the execution of this circuit, we get
+$$
+  \begin{aligned}
+    \ket{0}\ket{\psi}
+    &\xmapsto{H\otimes\id}
+      \frac{1}{\sqrt{2}}(\ket{0}+\ket{1})\ket{\psi}
+  \\&\xmapsto{\texttt{c-}P}
+      \frac{1}{\sqrt{2}}\ket{0}\ket{\psi} + \frac{1}{\sqrt{2}}\ket{1}P\ket{\psi}
+  \\&\xmapsto{H\otimes\id}
+      \ket{0}\frac{1}{2}(\id+P)\ket{\psi} + \ket{1}\frac{1}{2}(\id-P)\ket{\psi}.
+  \end{aligned}
+$$
+The final state of the two qubits indicates that, when the auxiliary (top) qubit is found in state $\ket{0}$ then we projected the state $\ket{\psi}$ onto the $+1$ eigenspace of $P$ (via the projector $\frac{1}{2}(\id+P)$), and when it is found in state $\ket{1}$ then we projected $\ket{\psi}$ onto the $-1$ eigenspace (via the projector $\frac{1}{2}(\id-P)$).
+In particular, the $X$, $Y$, and $Z$ observables can be measured using controlled-$X$, controlled-$Y$, and controlled-$Z$ gates (respectively).
+This pattern can easily be extended to an $n$-qubit Pauli operator.
+For example, for $n=3$, a generic circuit that implements a projective measurement onto the $\pm1$ eigenspaces of $S=P_1\otimes P_2\otimes P_3$ has the form
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick{$\ket{0}$}
+  &\gate{H}
+  &\ctrl{1}
+  &\ctrl{2}
+  &\ctrl{3}
+  &\gate{H}
+  &\meterD{}
+\\\lstick[wires=3]{$\ket{\psi}$}
+  &\qw
+  &\gate{P_1}
+  &\qw
+  &\qw
+  &\qw
+  &\qw
+\\[-1.5 em] \qw
+  &\qw
+  &\qw
+  &\gate{P_2}
+  &\qw
+  &\qw
+  &\qw
+\\[-1.5 em] \qw
+  &\qw
+  &\qw
+  &\qw
+  &\gate{P_3}
+  &\qw
+  &\qw
+\end{quantikz}
+```
+
+and is usually drawn more compactly as
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick{$\ket{0}$}
+  &\gate{H}
+  &\ctrl{3}
+  &\gate{H}
+  &\meterD{}
+\\\lstick[wires=3]{$\ket{\psi}$}
+  &\qw
+  &\gate{P_{1}}
+  &\qw
+  &\qw
+\\[-.8 em] \qw
+  &\qw
+  &\gate{P_{2}}
+  &\qw
+  &\qw
+\\[-.8 em] \qw
+  &\qw
+  &\gate{P_{3}}
+  &\qw
+  &\qw
+\end{quantikz}
+```
+
+In this way, we can measure stabilisers and project onto the subspaces that they stabilise.
+For example, take the stabiliser group $\mathcal{S}=\langle XX,ZZ\rangle$, and consider the circuit below:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick{$\ket{0}$}
+  &\gate{H}
+  &\ctrl{3}
+  &\qw
+  &\gate{H}
+  &\meterD{}
+\\\lstick{$\ket{0}$}
+  &\gate{H}
+  &\qw
+  &\ctrl{2}
+  &\gate{H}
+  &\meterD{}
+\\\lstick[wires=2]{$\ket{\psi}$}
+  &\qw
+  &\gate{X}
+  &\gate{Z}
+  &\qw
+  &\qw
+\\[-.8 em] \qw
+  &\qw
+  &\gate{X}
+  &\gate{Z}
+  &\qw
+  &\qw
+\end{quantikz}
+```
+
+The
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
