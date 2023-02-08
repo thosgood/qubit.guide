@@ -401,7 +401,7 @@ As we will see, stabiliser states are ubiquitous in quantum information theory d
 They play a crucial role in areas such as quantum error correction, measurement-based quantum computation, and entanglement classification.
 
 
-## Measuring Pauli stabilisers
+## Measuring Pauli stabilisers {#measuring-pauli-stabilisers}
 
 How do we bisect Hilbert spaces in practice?
 By measuring stabilisers.
@@ -536,7 +536,16 @@ For example, take the stabiliser group $\mathcal{S}=\langle XX,ZZ\rangle$, and c
 \end{quantikz}
 ```
 
-The
+The registered bit values from the first and second (counting from the top) auxiliary qubits tell us how we bisect the Hilbert space with $XX$ and $ZZ$ (respectively), recalling that a bit value of $0$ corresponds to the $+1$ Pauli eigenvalue, and a bit value of $1$ to the $-1$ eigenvalue.
+The first measurement can project $\ket{\psi}$ either onto $\frac{1}{2}(\id+XX)$ (in which case the first auxiliary qubit will show $0$, corresponding to the eigenvalue $+1$, and the subspace spanned by $\ket{00}+\ket{11}$ and $\ket{01}+\ket{10}$) or onto $\frac{1}{2}(\id-XX)$ (in which case the first auxiliary qubit will show $1$, corresponding to the eigenvalue $-1$, and the subspace spanned by $\ket{00}-\ket{11}$ and $\ket{01}-\ket{10}$).
+The second measurement can further project the resulting post-measurement state of the two qubits either onto $\frac{1}{2}(\id+ZZ)$ (in which case the second auxiliary qubit will show $0$, corresponding to the eigenvalue $+1$, and the subspace spanned by $\ket{00}+\ket{11}$ and $\ket{00}-\ket{11}$) or onto $\frac{1}{2}(\id-ZZ)$ (in which case the second auxiliary qubit will show $1$, corresponding to the eigenvalue $-1$, and the subspace spanned by $\ket{01}+\ket{10}$ and $\ket{01}-\ket{10}$).
+So if both auxiliary qubits show bit value outcome $0$ (corresponding to the "Pauli" outcome $(+1,+1)$, describing the eigenvalues), then we have successfully projected onto the state stabilised by $XX$ and $ZZ$, which is exactly $\ket{00}+\ket{11}$.
+More generally, in "Pauli notation", the outcome $(\pm1,\pm1)$ corresponds to the projection onto the stabiliser state stabilised by $\langle\pm XX,\pm ZZ\rangle$.
+
+Needless to say, we do not have any control over the actual outcomes of the measurement, but we do now know *which* post-measurement state we have generated.
+This means that we can use the circuit to prepare a desired state by applying an appropriate unitary operation to the final state.
+For example, if we want to generate the state $\ket{00}+\ket{11}$ but actually end up with the state $\ket{00}-\ket{11}$, then we can simply apply the $Z$ operation to any of the two qubits to get the desired result.
+This generic method is now the only way of constructing projective measurements of Pauli observables, however --- see Exercise @\ref(equivalent-projective-pauli-measurements)
 
 
 
@@ -623,3 +632,70 @@ Let $\mathcal{S}$ be a Pauli stabiliser group, with generators $G_1,\ldots,G_r$.
     $$
     and prove that this trace is indeed zero.
     Why do the two generators $G_1$ and $G_2$ have to be independent?
+
+
+### Equivalent projective measurements {#equivalent-projective-pauli-measurements}
+
+In Section \@ref(measuring-pauli-stabilisers) we described a generic method for constructing projective measurements of Pauli observables.
+However, sometimes it may be easier to use equivalent, simpler constructions.
+For example, the following two circuit identities are often used:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick{$\ket{0}$}
+  &\gate{H}
+  &\ctrl{1}
+  &\gate{H}
+  &\meterD{}
+\\\lstick{$\ket{\psi}$}
+  &\qw
+  &\gate{X}
+  &\qw
+  &\qw
+  \end{quantikz}
+  =
+  \begin{quantikz}
+  \lstick{$\ket{0}$}
+  &\qw
+  &\targ
+  &\qw
+  &\qw
+  &\meterD{}
+\\\lstick{$\ket{\psi}$}
+  &\gate{H}
+  &\ctrl{-1}
+  &\gate{H}
+  &\qw
+\end{quantikz}
+```
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick{$\ket{0}$}
+  &\gate{H}
+  &\ctrl{1}
+  &\gate{H}
+  &\meterD{}
+\\\lstick{$\ket{\psi}$}
+  &\qw
+  &\gate{Z}
+  &\qw
+  &\qw
+  \end{quantikz}
+  =
+  \begin{quantikz}
+  \lstick{$\ket{0}$}
+  &\qw
+  &\targ
+  &\qw
+  &\qw
+  &\meterD{}
+\\\lstick{$\ket{\psi}$}
+  &\qw
+  &\ctrl{-1}
+  &\qw
+  &\qw
+\end{quantikz}
+```
+
+These both follows from the fact that $HZH=X$, and that the control and the target of a controlled-$Z$ gate can be chosen arbitrarily, since the gate itself is symmetric with respect to this choice (the phase flip only happens when both qubits are in state $\ket{1}$).
