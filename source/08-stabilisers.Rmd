@@ -300,7 +300,6 @@ Forgetting about the $-1$ part and just focusing on the $+1$ part, $G_2$ then sp
 Repeating this procedure, forgetting about the $-1$ subspace each time, leads us to consider the simultaneous $+1$ eigenspace of $G_1,\ldots,G_r$, where each time we pass from $\{G_1,G_2,\ldots,G_i\}$ to $\{G_1,G_2,\ldots,G_i,G_{i+1}\}$ we bisect the subspace into two equal parts once more, eventually ending with the $2^{n-2}$-dimensional subspace $V_S$, as above.
 We can show this pictorially, as in Figure \@ref(fig:stabiliser-bisection).
 
-
 (ref:stabiliser-bisection-caption) The stabiliser group $\{ZZ\id,\id ZZ\}$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_S$ which is spanned by $\ket{000}$ and $\ket{111}$. Think of the labels $ZZ\id$ and $\id ZZ$ as the $x$- and $y$-axes, and the sign labels on each square as $(x,y)$-coordinates. So the two squares on the left together make the $+1$ eigenspace of $\id ZZ$, and the two squares on the top make the $+1$ eigenspace of $ZZ\id$.
 
 ```{r stabiliser-bisection,engine='tikz',fig.cap='(ref:stabiliser-bisection-caption)',fig.width=3}
@@ -575,8 +574,8 @@ Here is one way to visualise a partition into cosets:
 \newcommand{\id}{\mathbf{1}}
 \begin{equation*}
   \setlength\arraycolsep{0.4em}
-  \begin{array}{c|c|c|c|c|}
-    c_nH
+  \begin{array}{r|c|c|c|c|}
+    c_nH=
     &\cellcolor{secondary!20}c_n
     &\cellcolor{secondary!20}c_nh_1
     &\cellcolor{secondary!20}\ldots
@@ -586,17 +585,17 @@ Here is one way to visualise a partition into cosets:
     &\cellcolor{secondary!20}\vdots
     &\cellcolor{secondary!20}\ddots
     &\cellcolor{secondary!20}\vdots
-  \\c_2H
+  \\c_2H=
     &\cellcolor{secondary!20}c_2
     &\cellcolor{secondary!20}c_2h_1
     &\cellcolor{secondary!20}\ldots
     &\cellcolor{secondary!20}c_2h_k
-  \\c_1H
+  \\c_1H=
     &\cellcolor{secondary!20}c_1
     &\cellcolor{secondary!20}c_1h_1
     &\cellcolor{secondary!20}\ldots
     &\cellcolor{secondary!20}c_1h_k
-  \\H
+  \\H=
     &\cellcolor{primary!20}\id
     & \cellcolor{primary!20}h_1
     & \cellcolor{primary!20}\ldots
@@ -645,10 +644,126 @@ By the definition of the normaliser, $\mathcal{S}$ is normal in $N(\mathcal{S})$
 What is less obvious is that $N(S)$ itself is normal in $\mathcal{P}_n$.
 To prove this, let $g\in\mathcal{P}_n$ and consider $n^{-1}gn$, for some $n\in N(\mathcal{S})$.
 We need to show that $g^{-1}ng\in N(S)$.
+For any $s\in\mathcal{S}$,
+$$
+  (g^{-1}ng)s = s(g^{-1}ng)
+$$
+because either $s$ commutes with both $g$ and $g^{-1}$, or it anticommutes with both $g$ and $g^{-1}$, in which case the two minus signs cancel out.
+Either way, $s$ commutes with $g^{-1}ng$, and so, by definition, $g^{-1}ng\in N(\mathcal{S})$.
+So $\mathcal{S}$ in normal in $N(\mathcal{S})$ by definition, and $N(\mathcal{S})$ is normal in $\mathcal{P}_n$ by the above; but recall that this does *not* imply that $\mathcal{S}$ is normal in $\mathcal{P}_n$.
+Indeed, pick any element $g\in\mathcal{P}_n$ that anticommutes with some $s\in\mathcal{S}$, so that $g^{-1}sg=-s$; but we already know that if $s\in\mathcal{S}$ then $-s\not\in\mathcal{S}$.
 
+With these normal subgroups $\mathcal{S}\triangleleft N(\mathcal{S})\triangleleft\mathcal{P}_n$ we can form two quotient groups, arranging things into cosets: $N(\mathcal{S})/\mathcal{S}$ and $\mathcal{P}_n/N(\mathcal{S})$.
+This is visualised in Figure @\ref(fig:slicing-pn-into-cosets)
+Note that we can also form cosets of $\mathcal{S}$ in $\mathcal{P}_n$, but since this is not a normal subgroup the left cosets will be different from the right cosets, and we cannot construct a quotient group $\mathcal{P}_n/\mathcal{S}$.
 
+(ref:slicing-pn-into-cosets-caption) The stabiliser group $\{ZZ\id,\id ZZ\}$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_S$ which is spanned by $\ket{000}$ and $\ket{111}$. Think of the labels $ZZ\id$ and $\id ZZ$ as the $x$- and $y$-axes, and the sign labels on each square as $(x,y)$-coordinates. So the two squares on the left together make the $+1$ eigenspace of $\id ZZ$, and the two squares on the top make the $+1$ eigenspace of $ZZ\id$.
 
-
+```{r slicing-pn-into-cosets,engine='tikz',fig.cap='(ref:slicing-pn-into-cosets-caption)',fig.width=7}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}[scale=0.4]
+  \begin{scope}[shift={(45:6)}]
+  %------------------
+  \draw [fill=secondary!25,thick] (0,0) rectangle (10,4);
+  \draw [fill=gray!25] (0,4) rectangle (10,16);
+  \draw [fill=gray] (0,8) rectangle (10,12);
+  \draw [dotted] (0,1) -- (10,1);
+  \draw [dotted] (0,2) -- (10,2);
+  \draw [dotted] (0,3) -- (10,3);
+  \draw [dotted] (0,5) -- (10,5);
+  \draw [dotted] (0,6) -- (10,6);
+  \draw [dotted] (0,7) -- (10,7);
+  \draw [thick] (0,8) -- (10,8);
+  \draw [dotted] (0,9) -- (10,9);
+  \draw [dotted] (0,10) -- (10,10);
+  \draw [dotted] (0,11) -- (10,11);
+  \draw [thick] (0,12) -- (10,12);
+  \draw [dotted] (0,13) -- (10,13);
+  \draw [dotted] (0,14) -- (10,14);
+  \draw [dotted] (0,15) -- (10,15);
+  %----------------
+  \end{scope}
+  \begin{scope}[shift={(45:4)}]
+  %------------------
+  \draw [fill=secondary!25,thick] (0,0) rectangle (10,4);
+  \draw [fill=gray!25] (0,4) rectangle (10,16);
+  \draw [fill=gray] (0,8) rectangle (10,12);
+  \draw [dotted] (0,1) -- (10,1);
+  \draw [dotted] (0,2) -- (10,2);
+  \draw [dotted] (0,3) -- (10,3);
+  \draw [dotted] (0,5) -- (10,5);
+  \draw [dotted] (0,6) -- (10,6);
+  \draw [dotted] (0,7) -- (10,7);
+  \draw [thick] (0,8) -- (10,8);
+  \draw [dotted] (0,9) -- (10,9);
+  \draw [dotted] (0,10) -- (10,10);
+  \draw [dotted] (0,11) -- (10,11);
+  \draw [thick] (0,12) -- (10,12);
+  \draw [dotted] (0,13) -- (10,13);
+  \draw [dotted] (0,14) -- (10,14);
+  \draw [dotted] (0,15) -- (10,15);
+  %----------------
+  \end{scope}
+  \begin{scope}[shift={(45:2)}]
+  %------------------
+  \draw [fill=secondary!25,thick] (0,0) rectangle (10,4);
+  \draw [fill=gray!25] (0,4) rectangle (10,16);
+  \draw [fill=gray] (0,8) rectangle (10,12);
+  \draw [dotted] (0,1) -- (10,1);
+  \draw [dotted] (0,2) -- (10,2);
+  \draw [dotted] (0,3) -- (10,3);
+  \draw [dotted] (0,5) -- (10,5);
+  \draw [dotted] (0,6) -- (10,6);
+  \draw [dotted] (0,7) -- (10,7);
+  \draw [thick] (0,8) -- (10,8);
+  \draw [dotted] (0,9) -- (10,9);
+  \draw [dotted] (0,10) -- (10,10);
+  \draw [dotted] (0,11) -- (10,11);
+  \draw [thick] (0,12) -- (10,12);
+  \draw [dotted] (0,13) -- (10,13);
+  \draw [dotted] (0,14) -- (10,14);
+  \draw [dotted] (0,15) -- (10,15);
+  %----------------
+  \end{scope}
+  %------------------
+  \draw [fill=primary!25,thick] (0,0) rectangle (10,1);
+  \draw [fill=secondary!25,thick] (0,1) rectangle (10,4);
+  \draw [fill=gray!25] (0,4) rectangle (10,16);
+  \draw [fill=gray] (0,8) rectangle (10,12);
+  \draw [dotted] (0,2) -- (10,2);
+  \draw [dotted] (0,3) -- (10,3);
+  \draw [dotted] (0,5) -- (10,5);
+  \draw [dotted] (0,6) -- (10,6);
+  \draw [dotted] (0,7) -- (10,7);
+  \draw [thick] (0,8) -- (10,8);
+  \draw [dotted] (0,9) -- (10,9);
+  \draw [dotted] (0,10) -- (10,10);
+  \draw [dotted] (0,11) -- (10,11);
+  \draw [thick] (0,12) -- (10,12);
+  \draw [dotted] (0,13) -- (10,13);
+  \draw [dotted] (0,14) -- (10,14);
+  \draw [dotted] (0,15) -- (10,15);
+  %----------------
+  \draw[<-] (9.2,0.5) -- (12,0.5) node[right]{stabiliser $\mathcal{S}$};
+  \node[right] at (12,2.2) {cosets of $\mathcal{S}$ in $N(\mathcal{S})$};
+  \draw[<-] (9.2,1.5) -- (12,2.2);
+  \draw[<-] (9.2,2.5) -- (12,2.2);
+  \draw[<-] (9.2,3.5) -- (12,2.2);
+  \draw[decoration={brace,raise=5pt},decorate]
+    (0,0.2) -- node[left=6pt] {normaliser $N(\mathcal{S})$} (0,3.8);
+  \draw[->] (-1.8,10) -- (-1,6);
+  \draw[->] (-1.8,10) -- (-1,10);
+  \draw[->] (-1.8,10) -- (-1,14);
+  \node[left=18pt] at (0,10) {cosets of $N(\mathcal{S})$ in $\mathcal{P}_{n}$};
+  \draw[decoration={brace,raise=5pt},decorate]
+    (0,4.2) -- node[left=6pt] {} (0,7.8);
+   \draw[decoration={brace,raise=5pt},decorate]
+    (0,8.2) -- node[left=6pt] {} (0,11.8);
+   \draw[decoration={brace,raise=5pt},decorate]
+    (0,12.2) -- node[left=6pt] {} (0,15.8);
+\end{tikzpicture}
+```
 
 
 
