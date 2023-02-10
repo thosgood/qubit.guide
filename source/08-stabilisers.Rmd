@@ -569,30 +569,35 @@ Any two cosets (i.e. any two choices of $g\in G$) are either entirely equal or c
 The relevance of normality here is that if $H$ is normal, then there is no need to distinguish between left ($gH$) and right ($Hg$) cosets, and in this case we can construct the **quotient group** $G/H$ consisting of cosets with the operation defined by $gH\cdot g'H=(gg')H$.
 Here is one way to visualise a partition into cosets:
 
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=7}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=8}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \newcommand{\id}{\mathbf{1}}
 \begin{equation*}
   \setlength\arraycolsep{0.4em}
-  \begin{array}{|c|c|c|c|}
-    \cellcolor{secondary!20}c_n
+  \begin{array}{c|c|c|c|c|}
+    c_nH
+    &\cellcolor{secondary!20}c_n
     &\cellcolor{secondary!20}c_nh_1
     &\cellcolor{secondary!20}\ldots
     &\cellcolor{secondary!20}c_nh_k
   \\\vdots
     &\cellcolor{secondary!20}\vdots
+    &\cellcolor{secondary!20}\vdots
     &\cellcolor{secondary!20}\ddots
     &\cellcolor{secondary!20}\vdots
-  \\c_2
+  \\c_2H
+    &\cellcolor{secondary!20}c_2
     &\cellcolor{secondary!20}c_2h_1
     &\cellcolor{secondary!20}\ldots
     &\cellcolor{secondary!20}c_2h_k
-  \\c_1
+  \\c_1H
+    &\cellcolor{secondary!20}c_1
     &\cellcolor{secondary!20}c_1h_1
     &\cellcolor{secondary!20}\ldots
     &\cellcolor{secondary!20}c_1h_k
-  \\\cellcolor{primary!20}\id
+  \\H
+    &\cellcolor{primary!20}\id
     & \cellcolor{primary!20}h_1
     & \cellcolor{primary!20}\ldots
     & \cellcolor{primary!20}h_k
@@ -618,12 +623,28 @@ In words, the normaliser consists of the set of elements of $G$ that conjugate a
 This suggests a very subtle question: is every subgroup of a normal subgroup normal?
 The answer is most definitely *no*: if $H\triangleleft K$ and $K\triangleleft G$ then it is *not* necessarily the case that $H\triangleleft G$, merely that $H<G$.
 
-As we shall soon see, stabilisers are not normal subgroups of $\mathcal{P}_n$, so we have to instead look at their normalisers.
+As we shall soon see, Pauli stabilisers are not normal subgroups of $\mathcal{P}_n$, and we will instead want to study their normalisers.
 
 
 ## Pauli normalisers
 
-There are
+There are two subgroups that pop up once we choose a stabiliser $\mathcal{S}$.
+The subgroup of $\mathcal{P}_n$ consisting of all elements that commute which every element of $\mathcal{S}$ is called the **centraliser of $\mathcal{S}$**, denoted by
+$$
+  C(\mathcal{S}) = \{g\in\mathcal{P}_n \mid g^{-1}sg=s\text{ for all }s\in\mathcal{S}\}
+$$
+and the other is the one that we have already seen: the normaliser
+$$
+  N(\mathcal{S}) = \{g\in\mathcal{P}_n \mid g^{-1}sg\in\mathcal{S}\text{ for all }s\in\mathcal{S}\}.
+$$
+These two are, in general, distinct but related: for the normaliser we ask that $g^{-1}sg=s'$ for some arbitrary $s'\in\mathcal{S}$; for the centraliser we additionally ask that $s'=s$.
+However, in the case of Pauli groups, these two subgroups coincide, because $g^{-1}sg=s'$ if and only if $sg=gs'$, but since any two elements of the Pauli group either commute or anticommute, this implies that $s'=s$ or $s'=-s$; but we have already seen (and proven, in Exercise \@ref(one-out-of-four-stabilisers)) that if $s$ is in a stabiliser then $-s$ cannot be, and so it must be the case that $s'=s$.
+
+In summary, given a stabiliser, we get a corresponding normaliser, and given the normaliser (which, in our case, is the same thing as the centraliser), we get two interesting quotient groups to study.
+By the definition of the normaliser, $\mathcal{S}$ is normal in $N(\mathcal{S})$.
+What is less obvious is that $N(S)$ itself is normal in $\mathcal{P}_n$.
+To prove this, let $g\in\mathcal{P}_n$ and consider $n^{-1}gn$, for some $n\in N(\mathcal{S})$.
+We need to show that $g^{-1}ng\in N(S)$.
 
 
 
@@ -678,7 +699,7 @@ Extend this observation to any non-identity element in $\mathcal{P}_n$.
 In other words, show that, for any $P\in\mathcal{P}_n\setminus\{\id^{\otimes n}\}$, exactly half of the elements in $\mathcal{P}_n$ commute with $P$.
 
 
-### Only one out of four stabilisers
+### One out of four stabilisers {#one-out-of-four-stabilisers}
 
 Explain why, if $S$ is an element of some stabiliser group, then none of $-S$, $iS$, or $-S$ are in the same stabiliser group.
 
