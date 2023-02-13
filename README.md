@@ -12,6 +12,7 @@ Build using the `./build_book` script.
 - **make github actions FAIL if PDF build(s) are unsuccessful**
 - **only one footnote per paragraph**
 - check that you use Chapter vs. Section consistently in any `\@ref`
+- consistent use of `\longrightarrow` vs `\to` in display maths
 - **search for `TO-DO` and `.todo`**
 
 ### Web
