@@ -657,7 +657,7 @@ With these normal subgroups $\mathcal{S}\triangleleft N(\mathcal{S})\trianglelef
 This is visualised in Figure @\ref(fig:slicing-pn-into-cosets)
 Note that we can also form cosets of $\mathcal{S}$ in $\mathcal{P}_n$, but since this is not a normal subgroup the left cosets will be different from the right cosets, and we cannot construct a quotient group $\mathcal{P}_n/\mathcal{S}$.
 
-(ref:slicing-pn-into-cosets-caption) Any Pauli stabiliser $\mathcal{S}\leq\mathcal{P}_n$ (shown in red) slices its normaliser $N(\mathcal{S})$ (shown in blue) into cosets, and the normaliser in turn slices $\mathcal{P}_n$ into cosets. There are four "sheets" in the diagram to remind us that there are four possible global phases, so we obtain the three sheets behind the first one by multiplying by $-1$, $i$, and $-i$.
+(ref:slicing-pn-into-cosets-caption) Any Pauli stabiliser $\mathcal{S}\leq\mathcal{P}_n$ (shown in red) slices its normaliser $N(\mathcal{S})$ (shown in blue) into cosets, and the normaliser in turn slices $\mathcal{P}_n$ into cosets. There are four "sheets" in the diagram to remind us that there are four possible global phases, so we obtain the three sheets behind the first one by multiplying by $-1$, $i$, and $-i$. We give a more concrete worked example in Exercise \@ref(pauli-group-three-qubits-worked-example).
 
 ```{r slicing-pn-into-cosets,engine='tikz',fig.cap='(ref:slicing-pn-into-cosets-caption)',fig.width=7}
 \definecolor{primary}{RGB}{177,98,78}
@@ -841,9 +841,9 @@ All the basic rules for updating stabilisers with Clifford gates can be convenie
 
 | Gate | Input | Output |
 | :--: | :---: | :----: |
-| $H$ | $\begin{mqty}X\\Y\\Z\end{mqty}$ | $\begin{mqty}Z\\-Y\\X\end{mqty}$ |
-| $S$ | $\begin{mqty}X\\Y\\Z\end{mqty}$ | $\begin{mqty}Y\\-X\\Z\end{mqty}$ |
-| $\texttt{c-NOT}$ | $\begin{mqty}\id X\\X\id\\\id Y\\Y\id\\\id Z\\Z\id\end{mqty}$ | $\begin{mqty}\id X\\XX\\ZY\\YX\\ZZ\\Z\id\end{mqty}$ |
+| $H$ | $\mqty{X\\Y\\Z}$ | $\mqty{Z\\-Y\\X}$ |
+| $S$ | $\mqty{X\\Y\\Z}$ | $\mqty{Y\\-X\\Z}$ |
+| $\texttt{c-NOT}$ | $\mqty{\id X\\X\id\\\id Y\\Y\id\\\id Z\\Z\id}$ | $\mqty{\id X\\XX\\ZY\\YX\\ZZ\\Z\id}$ |
 
 and these rules can be expressed as circuit identities, such as
 
@@ -869,7 +869,9 @@ and these rules can be expressed as circuit identities, such as
   & \qw
   & \qw
 \end{quantikz}
-\qquad
+```
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5.5}
 \begin{quantikz}
   & \ctrl{1}
   & \qw
@@ -893,6 +895,8 @@ and these rules can be expressed as circuit identities, such as
 \end{quantikz}
 ```
 
+and
+
 ```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5.5}
 \begin{quantikz}
   & \ctrl{1}
@@ -915,7 +919,9 @@ and these rules can be expressed as circuit identities, such as
   & \qw
   & \qw
 \end{quantikz}
-\qquad
+```
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5.5}
 \begin{quantikz}
   & \ctrl{1}
   & \qw
@@ -942,7 +948,7 @@ and these rules can be expressed as circuit identities, such as
 Let's work through an example to see how these rules work in practice.
 Here's a simple stabiliser circuit:
 
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5.5}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=3}
 \begin{quantikz}
   \lstick{$\ket{0}$}
   & \gate{H}
@@ -996,8 +1002,6 @@ $$
 <!-- TO-DO: explain this calculation -->
 :::
 
-!!!!!!!!!!!!!!!!! TO-DO !!!!!!!!!!!!!!!!!
-
 Despite the fact that the Clifford circuits can generate huge entangled $n$-qubit superpositions starting from the single state $\ket{0}^{\otimes n}$, such circuits are easy to simulate classically because we can efficiently update the list of stabilisers following the simple rules.
 Daniel Gottesman and Emanuel Knill showed that^[This is now known as the [
 **Gottesman–Knill theorem**](https://en.wikipedia.org/wiki/Gottesman%E2%80%93Knill_theorem).] there is a polynomial-time classical algorithm to simulate any stabiliser circuit that acts on a stabiliser state.
@@ -1020,7 +1024,7 @@ Almost all of the quantum error correcting codes are stabiliser codes, and are p
 :::
 
 
-### The Pauli group of three qubits
+### The Pauli group of three qubits {#pauli-group-three-qubits-worked-example}
 
 ::: {.todo}
 <!-- TO-DO -->
