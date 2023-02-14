@@ -795,6 +795,8 @@ $$
 $$
 :::
 
+It's a confusing (but immutable) matter of terminology that **Clifford gates** (i.e. gates made from only unitaries in the Clifford group) are sometimes called **stabiliser gates**, and **Clifford circuits** (i.e. circuits made from only Clifford gates) are sometimes called **stabiliser circuits**, but stabiliser states are *never* called "Clifford states".
+
 So if we have an $n$-qubit stabiliser state, described by $n$ Pauli generators, then any unitary in the Clifford group $\mathcal{C}_n$ will map each of the $n$ Pauli generators to another Pauli generator, and the set of these $n$ new generators will define a new stabiliser state.
 Indeed, suppose we have some vector space $V$ stabilised by the group $\mathcal{S}$, and we apply some unitary operation $U$.
 If $\ket{\psi}$ is an arbitrary element of $V$, then, for any element $S$ of $\mathcal{S}$,
@@ -938,47 +940,92 @@ and these rules can be expressed as circuit identities, such as
 ```
 
 Let's work through an example to see how these rules work in practice.
+Here's a simple stabiliser circuit:
 
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5.5}
+\begin{quantikz}
+  \lstick{$\ket{0}$}
+  & \gate{H}
+  & \ctrl{1}
+  & \qw
+  & \qw
+\\\lstick{$\ket{0}$}
+  & \qw
+  & \targ\qw
+  & \gate{S}
+  & \qw
+\end{quantikz}
+```
 
+As we step through this circuit we embark on our **Clifford walk** between two-qubit stabiliser states:
+$$
+  \begin{aligned}
+    \ket{00}
+    \xmapsto{H\otimes\id}
+    &\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})\ket{0}
+  \\\xmapsto{\texttt{c-NOT}}
+    &\frac{1}{\sqrt{2}}(\ket{00}+\ket{11})
+  \\\xmapsto{\id\otimes S}
+    &\frac{1}{\sqrt{2}}(\ket{00}+i\ket{11}).
+  \end{aligned}
+$$
+This walk could also be described in terms of stabiliser generators:
+$$
+  \begin{vmatrix}
+    Z&\id
+  \\\id&Z
+  \end{vmatrix}
+  \xmapsto{H\otimes\id}
+  \begin{vmatrix}
+    X&\id
+  \\\id&Z
+  \end{vmatrix}
+  \xmapsto{\texttt{c-NOT}}
+  \begin{vmatrix}
+    X&X
+  \\Z&Z
+  \end{vmatrix}
+  \xmapsto{\id\otimes S}
+  \begin{vmatrix}
+    X&Y
+  \\Z&Z
+  \end{vmatrix}.
+$$
 
+::: {.todo}
+<!-- TO-DO: explain this calculation -->
+:::
 
+!!!!!!!!!!!!!!!!! TO-DO !!!!!!!!!!!!!!!!!
 
+Despite the fact that the Clifford circuits can generate huge entangled $n$-qubit superpositions starting from the single state $\ket{0}^{\otimes n}$, such circuits are easy to simulate classically because we can efficiently update the list of stabilisers following the simple rules.
+Daniel Gottesman and Emanuel Knill showed that^[This is now known as the [
+**Gottesman–Knill theorem**](https://en.wikipedia.org/wiki/Gottesman%E2%80%93Knill_theorem).] there is a polynomial-time classical algorithm to simulate any stabiliser circuit that acts on a stabiliser state.
+We can also efficiently compute the expectation values of any physical observables by examining the updated list of stabilisers.
+Note that computing a list of amplitudes would not be efficient, since there are exponentially many of them.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Because they can be efficiently classically simulated, stabiliser circuits necessarily do *not* capture the full power of quantum computation.
+The full universality requires as least one non-Clifford gate, such as the $T=\smalldiag{1}{e^{-i\pi/4}}$ gate.
+Once we include this gate, we can create circuits that will take us from any initial state, such as $\ket{0}^{\otimes n}$, to arbitrarily close to any other state in the $n$-qubit Hilbert space.
+Despite this limitation of stabiliser computation, however, it has become a central part of quantum computing, mostly because of its role in quantum error correction and fault tolerant computation.
+Almost all of the quantum error correcting codes are stabiliser codes, and are presented using the stabiliser formalism.
 
 
 ## *Remarks and exercises* {#remarks-and-exercises-stabilisers}
+
+### Measuring parity
+
+::: {.todo}
+<!-- TO-DO -->
+:::
+
+
+### The Pauli group of three qubits
+
+::: {.todo}
+<!-- TO-DO -->
+:::
+
 
 ### Half commuting {#half-commuting}
 
