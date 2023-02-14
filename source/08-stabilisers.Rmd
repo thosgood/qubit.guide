@@ -553,10 +553,10 @@ Before continuing our exploration of Pauli stabilisers, we need a bit of pure ma
 
 ::: {.idea}
 Let $H$ be a subgroup of $G$, written $H\leq G$.
-We say that $H$ is a **normal** subgroup of $G$, and write $H\triangleleft G$, if $H$ is invariant under conjugation by all elements of $G$, i.e. $g^{-1}hg\in H$ for all $g\in G$ and all $h\in H$.
+We say that $H$ is a **normal** subgroup of $G$, and write $H\triangleleft G$, if $H$ is invariant under conjugation by all elements of $G$, i.e. $ghg^{-1}\in H$ for all $g\in G$ and all $h\in H$.
 :::
 
-Note that we only require that $g^{-1}hg$ be some arbitrary element in $H$, not that $g^{-1}hg=h$.
+Note that we only require that $ghg^{-1}$ be some arbitrary element in $H$, not that $ghg^{-1}=h$.
 
 If $H\leq G$ is an arbitrary (not necessarily normal) subgroup, then we can use it to "slice up" $G$ into subsets of equal size called **cosets**, one of which is $H$ itself.
 We define a (left) coset to be a set of the form
@@ -616,7 +616,7 @@ It seems like it was [Évariste Galois](https://en.wikipedia.org/wiki/Évariste_
 Given an arbitrary subgroup $H\leq G$, we can construct a larger subgroup $K\leq G$ in which $H$ is normal, i.e. such that $H\triangleleft K\leq G$.
 The largest such subgroup $K$ is called the **normaliser of $H$ in $G$**, denoted by $N_G(H)$, and we can construct it explicitly:
 $$
-  N_G(H) = \{g\in G \mid g^{-1}hg\in H\text{ for all }h\in H\}.
+  N_G(H) = \{g\in G \mid ghg^{-1}\in H\text{ for all }h\in H\}.
 $$
 In words, the normaliser consists of the set of elements of $G$ that conjugate all elements of $H$ to elements of $H$.
 This suggests a very subtle question: is every subgroup of a normal subgroup normal?
@@ -630,28 +630,28 @@ As we shall soon see, Pauli stabilisers are not normal subgroups of $\mathcal{P}
 There are two subgroups that pop up once we choose a stabiliser $\mathcal{S}$.
 The subgroup of $\mathcal{P}_n$ consisting of all elements that commute which every element of $\mathcal{S}$ is called the **centraliser of $\mathcal{S}$**, denoted by
 $$
-  C(\mathcal{S}) = \{g\in\mathcal{P}_n \mid g^{-1}sg=s\text{ for all }s\in\mathcal{S}\}
+  C(\mathcal{S}) = \{g\in\mathcal{P}_n \mid gsg^{-1}=s\text{ for all }s\in\mathcal{S}\}
 $$
 and the other is the one that we have already seen: the normaliser
 $$
-  N(\mathcal{S}) = \{g\in\mathcal{P}_n \mid g^{-1}sg\in\mathcal{S}\text{ for all }s\in\mathcal{S}\}.
+  N(\mathcal{S}) = \{g\in\mathcal{P}_n \mid gsg^{-1}\in\mathcal{S}\text{ for all }s\in\mathcal{S}\}.
 $$
-These two are, in general, distinct but related: for the normaliser we ask that $g^{-1}sg=s'$ for some arbitrary $s'\in\mathcal{S}$; for the centraliser we additionally ask that $s'=s$.
-However, in the case of Pauli groups, these two subgroups coincide, because $g^{-1}sg=s'$ if and only if $sg=gs'$, but since any two elements of the Pauli group either commute or anticommute, this implies that $s'=s$ or $s'=-s$; but we have already seen (and proven, in Exercise \@ref(one-out-of-four-stabilisers)) that if $s$ is in a stabiliser then $-s$ cannot be, and so it must be the case that $s'=s$.
+These two are, in general, distinct but related: for the normaliser we ask that $gsg^{-1}=s'$ for some arbitrary $s'\in\mathcal{S}$; for the centraliser we additionally ask that $s'=s$.
+However, in the case of Pauli groups, these two subgroups coincide, because $gsg^{-1}=s'$ if and only if $sg=gs'$, but since any two elements of the Pauli group either commute or anticommute, this implies that $s'=s$ or $s'=-s$; but we have already seen (and proven, in Exercise \@ref(one-out-of-four-stabilisers)) that if $s$ is in a stabiliser then $-s$ cannot be, and so it must be the case that $s'=s$.
 
 In summary, given a stabiliser, we get a corresponding normaliser, and given the normaliser (which, in our case, is the same thing as the centraliser), we get two interesting quotient groups to study.
 By the definition of the normaliser, $\mathcal{S}$ is normal in $N(\mathcal{S})$.
 What is less obvious is that $N(S)$ itself is normal in $\mathcal{P}_n$.
-To prove this, let $g\in\mathcal{P}_n$ and consider $n^{-1}gn$, for some $n\in N(\mathcal{S})$.
-We need to show that $g^{-1}ng\in N(S)$.
+To prove this, let $g\in\mathcal{P}_n$ and consider $gng^{-1}$, for some $n\in N(\mathcal{S})$.
+We need to show that $gng^{-1}\in N(S)$.
 For any $s\in\mathcal{S}$,
 $$
-  (g^{-1}ng)s = s(g^{-1}ng)
+  (gng^{-1})s = s(gng^{-1})
 $$
 because either $s$ commutes with both $g$ and $g^{-1}$, or it anticommutes with both $g$ and $g^{-1}$, in which case the two minus signs cancel out.
-Either way, $s$ commutes with $g^{-1}ng$, and so, by definition, $g^{-1}ng\in N(\mathcal{S})$.
+Either way, $s$ commutes with $gng^{-1}$, and so, by definition, $gng^{-1}\in N(\mathcal{S})$.
 So $\mathcal{S}$ in normal in $N(\mathcal{S})$ by definition, and $N(\mathcal{S})$ is normal in $\mathcal{P}_n$ by the above; but recall that this does *not* imply that $\mathcal{S}$ is normal in $\mathcal{P}_n$.
-Indeed, pick any element $g\in\mathcal{P}_n$ that anticommutes with some $s\in\mathcal{S}$, so that $g^{-1}sg=-s$; but we already know that if $s\in\mathcal{S}$ then $-s\not\in\mathcal{S}$.
+Indeed, pick any element $g\in\mathcal{P}_n$ that anticommutes with some $s\in\mathcal{S}$, so that $gsg^{-1}=-s$; but we already know that if $s\in\mathcal{S}$ then $-s\not\in\mathcal{S}$.
 
 With these normal subgroups $\mathcal{S}\triangleleft N(\mathcal{S})\triangleleft\mathcal{P}_n$ we can form two quotient groups, arranging things into cosets: $N(\mathcal{S})/\mathcal{S}$ and $\mathcal{P}_n/N(\mathcal{S})$.
 This is visualised in Figure @\ref(fig:slicing-pn-into-cosets)
@@ -779,7 +779,25 @@ Finally we have the two quotient groups: $N(\mathcal{S})/\mathcal{S}$ has $4\cdo
 
 ## Clifford walks on stabiliser states
 
-There
+There are essentially two ways to define stabiliser states of $n$ qubits.
+We have already seen how we can describe them as simultaneous $+1$ eigenstates of $n$ generators of some stabiliser group $\mathcal{S}\leq\mathcal{P}_n$, but it turns out that we could also define them as the states that are reachable from the $\ket{0}^{\otimes n}$ state using only the $\texttt{c-NOT}$ gate, the Hadamard $H$, and the phase gate $S=\smalldiag{1}{i}$.
+If you start playing around with these three gates, you'll soon notice that you tend to reach certain discrete states, and never anything in between them.
+For example, in the single qubit case (so with just the $H$ and $S$ gates), you'll be able to go between $\ket{0}$, $\ket{1}$, $\ket{\pm}$, and $\ket{\pm i}$, but never anything like, say, $\sqrt{\frac{1}{3}}\ket{0}+\sqrt{\frac{2}{3}}\ket{1}$.
+When you have two or more qubits, you might also notice that whenever you create an $n$-qubit superposition that assigns non-zero amplitudes to strings in some set $A\subset\{0,1\}^n$, it's always an equal superposition over $A$ (though possibly with $\pm1$ or $\pm i$ phases), and $|A|$ is always some power of $2$.
+For example, you can generate states such as $\frac{1}{\sqrt{2}}(\ket{000}+\ket{111})\ket{010}$ or $\frac{1}{2}(\ket{000}+i\ket{100}+\ket{011}-i\ket{111})\ket{010}$, but never states such as $\frac{1}{\sqrt{3}}(\ket{001}+\ket{010}+\ket{100})\ket{010}$.
+
+::: {.idea latex=""}
+Circuits composed of only $\texttt{c-NOT}$, $H$, and $S$ are special: they effect unitaries that map stabiliser states to stabiliser states.
+The group generated by these three unitaries is called the $n$-qubit **Clifford group** $\mathcal{C}_n$, which happens to be exactly the normaliser of $\mathcal{P}_n$, i.e.
+$$
+  \mathcal{C}_n$ = \{U\in \mathrm{U}(2^n) \mid UPU^\dagger\in\mathcal{P}_n\text{ for all }P\in\mathcal{P}_n\}.
+$$
+:::
+
+
+
+
+
 
 
 
