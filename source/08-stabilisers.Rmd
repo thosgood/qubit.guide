@@ -832,22 +832,25 @@ Given that $Y=iXZ$, there is no need to specify the action of $H$ on $Y$, since 
 $$
   \begin{aligned}
     Y\longmapsto
-    &i(HXH)(HZH)
-  \\=&iZX
-  \\=&-Y.
+    &\,\,i(HXH)(HZH)
+  \\=&\,\,iZX
+  \\=&\,\,-Y.
   \end{aligned}
 $$
 All the basic rules for updating stabilisers with Clifford gates can be conveniently tabulated:
 
-| Gate | Input | Output |
-| :--: | :---: | :----: |
-| $H$ | $\mqty{X\\Y\\Z}$ | $\mqty{Z\\-Y\\X}$ |
-| $S$ | $\mqty{X\\Y\\Z}$ | $\mqty{Y\\-X\\Z}$ |
-| $\texttt{c-NOT}$ | $\mqty{\id X\\X\id\\\id Y\\Y\id\\\id Z\\Z\id}$ | $\mqty{\id X\\XX\\ZY\\YX\\ZZ\\Z\id}$ |
+$$
+$$
+
+| Gate | Input/Output |
+| :--: | :----------: |
+| $H$ | $\mqty{X\longmapsto Z\\Y\longmapsto-Y\\Z\longmapsto X}$ |
+| $S$ | $\mqty{X\longmapsto Y\\Y\longmapsto -X\\Z\longmapsto Z}$ |
+| $\texttt{c-NOT}$ | $\mqty{\id X\longmapsto\id X\\X\id\longmapsto XX\\\id Y\longmapsto ZY\\Y\id\longmapsto YX\\\id Z\longmapsto ZZ\\Z\id\longmapsto Z\id}$ |
 
 and these rules can be expressed as circuit identities, such as
 
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5.5}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
 \begin{quantikz}
   & \ctrl{1}
   & \gate{X} \qw
@@ -871,7 +874,7 @@ and these rules can be expressed as circuit identities, such as
 \end{quantikz}
 ```
 
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5.5}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
 \begin{quantikz}
   & \ctrl{1}
   & \qw
@@ -897,7 +900,7 @@ and these rules can be expressed as circuit identities, such as
 
 and
 
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5.5}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
 \begin{quantikz}
   & \ctrl{1}
   & \gate{Z} \qw
@@ -921,7 +924,7 @@ and
 \end{quantikz}
 ```
 
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=5.5}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
 \begin{quantikz}
   & \ctrl{1}
   & \qw
@@ -948,7 +951,7 @@ and
 Let's work through an example to see how these rules work in practice.
 Here's a simple stabiliser circuit:
 
-```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=3}
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=2.5}
 \begin{quantikz}
   \lstick{$\ket{0}$}
   & \gate{H}
@@ -1018,6 +1021,147 @@ Almost all of the quantum error correcting codes are stabiliser codes, and are p
 ## *Remarks and exercises* {#remarks-and-exercises-stabilisers}
 
 ### Measuring parity
+
+Suppose you have a two-qubit stabiliser $ZZ$.
+This is an observable that has two eigenvalues and two corresponding eigenspaces, namely the $+1$ eigenspace spanned by $\{\ket{00},\ket{11}\}$ and the $-1$ eigenspace spanned by $\{\ket{01},\ket{10}\}$.
+This tells us something about the parity of the two qubits: the $+1$ outcome means that the bit values are the same, and the $-1$ outcome means that they are different.
+However, it is critical that we do *not* measure the bit values $Z\id$ and $\id Z$ separately and then multiply the results, since this could cause the state to "collapse" to one of the basis states in revealing the exact bit values.
+We don't want this!
+We simply want to know the mutual parity of the bit values, not what values they actually are.
+
+Mathematically speaking, the parity measurement $ZZ$ involves two orthogonal projectors
+$$
+  \begin{aligned}
+    \frac{1}{2}(\id\id+ZZ)
+    &= \proj{00}+\proj{11}
+  \\\frac{1}{2}(\id\id-ZZ)
+    &= \proj{01}+\proj{10}
+  \end{aligned}
+$$
+whereas the bit-value measurements $Z\id$ and $\id Z$ are characterised by the four projectors
+$$
+  \begin{aligned}
+    \frac{1}{2}(\id\id+Z\id)
+    &= \proj{0}\otimes\id
+  \\\frac{1}{2}(\id\id+\id Z)
+    &= \id\otimes\proj{0}
+  \\\frac{1}{2}(\id\id-Z\id)
+    &= \proj{1}\otimes\id
+  \\\frac{1}{2}(\id\id-\id Z)
+    &= \id\otimes\proj{1}.
+  \end{aligned}
+$$
+
+In terms of circuits, if we want to measure the parity of two qubits prepared in some state $\ket{\psi}$, then we can use the circuit
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick[wires=2]{$\ket{\psi}$}
+  & \qw
+  & \ctrl{2}
+  & \qw
+  & \qw
+\\\qw
+  & \qw
+  & \qw
+  & \ctrl{1}
+  & \qw
+\\\lstick{$\ket{0}$}
+  & \qw
+  & \targ
+  & \qw
+  & \targ \qw
+  & \qw
+  & \meterD{}
+\end{quantikz}
+```
+
+which is different from the circuit which effects the measurement of the individual bit values of the two qubits, namely
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick[wires=2]{$\ket{\psi}$}
+  & \qw
+  & \ctrl{2}
+  & \qw
+  & \qw
+\\\qw
+  & \qw
+  & \qw
+  & \ctrl{2}
+  & \qw
+\\\lstick{$\ket{0}$}
+  & \qw
+  & \targ
+  & \qw
+  & \qw
+  & \qw
+  & \meterD{}
+\\[-1em]
+  \lstick{$\ket{0}$}
+  & \qw
+  & \qw
+  & \targ
+  & \qw
+  & \qw
+  & \meterD{}
+\end{quantikz}
+```
+
+When dealing with stabilisers, we prefer to think about the controlled-$\texttt{NOT}$ gate as a controlled-$X$ instead.
+We then draw the parity-measurement circuit as
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick[wires=2]{$\ket{\psi}$}
+  & \qw
+  & \ctrl{2}
+  & \qw
+  & \qw
+\\\qw
+  & \qw
+  & \qw
+  & \ctrl{1}
+  & \qw
+\\\lstick{$\ket{0}$}
+  & \qw
+  & \gate{X}
+  & \qw
+  & \gate{X} \qw
+  & \qw
+  & \meterD{}
+\end{quantikz}
+```
+
+But this is a bit confusing, since we are measuring the $Z$ observable using controlled-$X$ gates.
+Thankfully, we can use some circuit/Pauli identities to rephrase things in terms of controlled-$Z$ gates instead:
+
+```{r,engine='tikz',engine.opts=list(template="tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick{$\ket{0}$}
+  & \gate{H}
+  & \ctrl{1}
+  &\ctrl{2}
+  & \gate{H}
+  & \meterD{}
+\\\lstick[wires=2]{$\ket{\psi}$} \qw
+  & \qw
+  & \gate{Z}
+  & \qw
+  & \qw
+  & \qw
+\\[-1.5em]
+  \qw
+  & \qw
+  & \qw
+  & \gate{Z}
+  & \qw
+  & \qw
+\end{quantikz}
+```
+
+This is a quantum version of the two-bit parity measurement.
+When the auxiliary qubit (now in the top register) is found in state $\ket{0}$ then we projected
 
 ::: {.todo}
 <!-- TO-DO -->
