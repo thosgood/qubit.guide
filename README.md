@@ -11,6 +11,8 @@ Build using the `./build_book` script.
 
 - **make github actions FAIL if PDF build(s) are unsuccessful**
 - **only one footnote per paragraph**
+- check that you use Chapter vs. Section consistently in any `\@ref`
+- consistent use of `\longrightarrow` vs `\to` in display maths
 - **search for `TO-DO` and `.todo`**
 
 ### Web
@@ -29,16 +31,18 @@ Build using the `./build_book` script.
 - improve sidenote y-positioning using jquery
     + find the previous `.footnote-ref` in the DOM and align with that
 - extra output (added to downloads) that uses the single page html bookdown format **with mathjax**
+    + (I can't remember why I specifically wanted mathjax...)
 
 ### PDF
 
 - **`_pdf-instructions.Rmd` to mirror `_web-instructions.Rmd`**
     + talk about technical divs
     + explain that web version exists
+- figure numbering should (ideally) agree with the web version
 - *general PDF styling*
     + ***FONT*** (in headings)
     + "Part X" pages --- less empty space (maybe centred text?)
-    + make the tables (e.g. in "phase gates galore") in the pdf version look good
+    + make the tables (e.g. in "phase gates galore" and "Pauli matrices, algebraically") in the pdf version look good
     + make title page nice
     + remove the dashes from page numbers
     + TOC spacing (e.g. the §11.10 number overlaps with the subsection title)
