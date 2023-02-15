@@ -110,7 +110,7 @@
 
 \title{Introduction to Quantum Information Science}
 \author{\href{https://www.arturekert.org/}{Artur Ekert} and \href{https://thosgood.com}{Tim Hosgood}}
-\date{Last updated: 03 February 2023 \href{https://github.com/thosgood/qubit.guide/commits/main}{(see change history)}}
+\date{Last updated: 15 February 2023 \href{https://github.com/thosgood/qubit.guide/commits/main}{(see change history)}}
 
 
 \begin{document}
@@ -132,6 +132,7 @@
 \providecommand{\tr}{\operatorname{tr}}
 \providecommand{\id}{\mathbf{1}}
 \providecommand{\diag}[2]{\begin{bmatrix}#1&0\\0&#2\end{bmatrix}}
+\providecommand{\smalldiag}[2]{\left(\begin{smallmatrix}#1&0\\0&#2\end{smallmatrix}\right)}
 \providecommand{\mqty}[1]{\begin{matrix}#1\end{matrix}}
 \providecommand{\bmqty}[1]{\begin{bmatrix}#1\end{bmatrix}}
 \renewcommand{\leq}{\leqslant}
@@ -1379,8 +1380,8 @@ However, it should be mentioned that quantum computing is a serious possibility 
 At present it is not clear how and when fully-fledged quantum computers will eventually be built, but this notwithstanding, the quantum theory of computation already plays a much more fundamental role in the scheme of things than its classical predecessor did.
 It is reasonable to argue that anyone who seeks a fundamental understanding of either physics, computation, or logic must incorporate into their world view the new insights brought by quantum theory.
 
-\hypertarget{remarks-and-exercises-1}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-1}}
+\hypertarget{remarks-and-exercises-interference}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-interference}}
 
 \hypertarget{a-historical-remark}{%
 \subsubsection{A historical remark}\label{a-historical-remark}}
@@ -2076,7 +2077,7 @@ So the Hadamard gate turns phase-flips into bit-flips, but it also turns bit-fli
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-21-1} \end{center}
 
 Let us also add, for completeness, that \(HYH=-Y\).
-You will see these identities again and again, especially when we discuss quantum error corrections.\footnote{Unitaries, such as \(H\), that take the three Pauli operators to the Pauli operators via conjugation form the so-called \textbf{Clifford group}, which we will meet later on. Which phase gate is in the Clifford group of a single qubit?}
+You will see these identities again and again, especially when we discuss quantum error corrections.\footnote{Unitaries, such as \(H\), that take the three Pauli operators to the Pauli operators via conjugation form the so-called \textbf{Clifford group}, which we will meet later on, in Chapter \ref{stabilisers}. Which phase gate is in the Clifford group of a single qubit?}
 \[
   \begin{aligned}
     HXH &= Z
@@ -2276,8 +2277,8 @@ We can then compose a sequence of these two rotations to approximate any other r
 This may look very nice in theory, but there are issues with the actual physical implementation of this approach: in reality, all the gates in the circuit will operate with only \emph{finite} precision, and the phase gates will deviate from implementing the required \emph{irrational} rotations.
 It turns out, however, that we can tolerate minor imperfections; the final result will not be that far off.
 
-\hypertarget{remarks-and-exercises-2}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-2}}
+\hypertarget{remarks-and-exercises-qubits}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-qubits}}
 
 \hypertarget{unknown-phase}{%
 \subsubsection{Unknown phase}\label{unknown-phase}}
@@ -2666,6 +2667,8 @@ The \textbf{Hilbert--Schmidt product} of \(A\) and \(B\) is given by\footnote{Th
 \]
 
 \end{idea}
+
+We will return to the algebraic structure of these Pauli matrices in Chapter \ref{stabilisers}, before explaining how they turn out to be useful for things such as quantum error correction.
 
 \hypertarget{unitaries-as-rotations}{%
 \subsection{Unitaries as rotations}\label{unitaries-as-rotations}}
@@ -3097,8 +3100,8 @@ Now, to relate this to the earlier parts of this chapter, we note that the Hamil
 \]
 which is a rotation with angular frequency \(\omega\) about the axis defined by the unit vector \(\vec n\).
 
-\hypertarget{remarks-and-exercises-3}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-3}}
+\hypertarget{remarks-and-exercises-pauli-bloch}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-pauli-bloch}}
 
 \hypertarget{quantum-bomb-tester}{%
 \subsubsection{Quantum bomb tester}\label{quantum-bomb-tester}}
@@ -4102,8 +4105,8 @@ In general, for any decomposition of the identity \(\sum_k P_k=\mathbf{1}\) into
 The projector formalism covers both complete and incomplete measurements.
 The complete measurements are exactly those defined by rank-one projectors \(P_k=|e_k\rangle\langle e_k|\), projecting on vectors from some orthonormal basis \(\{|e_k\rangle\}\).
 
-\hypertarget{remarks-and-exercises-4}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-4}}
+\hypertarget{remarks-and-exercises-measurement}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-measurement}}
 
 \hypertarget{projector}{%
 \subsubsection{Projector?}\label{projector}}
@@ -4575,8 +4578,8 @@ Note that this gate does not admit any tensor product decomposition, but can be 
 The \(\texttt{c-NOT}\) gate lets us do many interesting things, and can act in a rather deceptive way.
 Let us now study some of these things.
 
-\hypertarget{the-bell-states-and-the-bell-measurement}{%
-\subsubsection{The Bell states, and the Bell measurement}\label{the-bell-states-and-the-bell-measurement}}
+\hypertarget{bell-states}{%
+\subsubsection{The Bell states, and the Bell measurement}\label{bell-states}}
 
 We start with the generation of entanglement.
 Here is a simple circuit that demonstrates the entangling power of \(\texttt{c-NOT}\):\footnote{John Stewart Bell (1928--1990) was a Northern Irish physicist.}
@@ -5053,8 +5056,8 @@ That is, we spend \emph{less energy}, but the trade off is that we have to spend
 It turns out that whichever way we try to represent the number \(N\) in the unary encoding (i.e.~using \(N\) different states of a single chunk of matter), we end up depleting our physical resources (such as energy or time, or even space) at a much greater rate than in the case when we use subsystems.
 This plausibility argument indicates that, for efficient processing of information, the system must be divided into subsystems --- for example, into physical bits.
 
-\hypertarget{remarks-and-exercises-5}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-5}}
+\hypertarget{remarks-and-exercises-entanglement}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-entanglement}}
 
 \hypertarget{entangled-or-not}{%
 \subsubsection{Entangled or not?}\label{entangled-or-not}}
@@ -6161,8 +6164,8 @@ But now we can substitute in the condition that \(T\) satisfies, giving
 And we're done!
 Indeed, if we had started with some other such map \(T'\) then we would have arrived at the same expression, which is independent of our choice of \(T\) or \(T'\), whence \(T=T'\).
 
-\hypertarget{remarks-and-exercises-6}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-6}}
+\hypertarget{remarks-and-exercises-density-matrices}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-density-matrices}}
 
 \hypertarget{some-density-operator-calculations}{%
 \subsubsection{Some density operator calculations}\label{some-density-operator-calculations}}
@@ -7562,8 +7565,8 @@ Then the following statements are equivalent:
 
 \end{idea}
 
-\hypertarget{remarks-and-exercises-7}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-7}}
+\hypertarget{remarks-and-exercises-quantum-channels}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-quantum-channels}}
 
 \hypertarget{purifications-and-isometries}{%
 \subsubsection{Purifications and isometries}\label{purifications-and-isometries}}
@@ -8058,6 +8061,889 @@ Here are few useful tricks involving a maximally mixed state.
     \]
 \end{itemize}
 
+\hypertarget{stabilisers}{%
+\section{Stabilisers}\label{stabilisers}}
+
+\begin{quote}
+About the structure of the \textbf{Pauli group}, which is the group generated by tensor products of the Pauli matrices, including the identity.
+It has nice algebraic properties which are useful in many areas of quantum information science, in particular quantum error correction and classical simulations of some types of quantum computation.
+We will discuss how certain subgroups of the Pauli group, and in particular stabilisers and normalisers of these subgroups, slice the Pauli group into interesting cosets that have a group structure of their own.
+We will also look at the \textbf{Clifford group}, which is a set of unitary operators that preserve the Pauli group under conjugation and describes the easy part of quantum computation.
+\end{quote}
+
+We have already seen the (single-qubit) Pauli matrices, along with a brief look into their algebraic structure, in Section \ref{pauli-matrices-algebraically}.
+
+\[
+  \mathbf{1}= \begin{bmatrix}1&0\\0&1\end{bmatrix}
+  \qquad
+  X = \begin{bmatrix}0&1\\1&0\end{bmatrix}
+  \qquad
+  Y = \begin{bmatrix}0&-i\\i&0\end{bmatrix}
+  \qquad
+  Z = \begin{bmatrix}1&0\\0&-1\end{bmatrix}
+\]
+
+Recall that these matrices span the entire space of \((2\times2)\) complex matrices, square to the identity (and thus can only have eigenvalues in the set \(\{+1,-1\}\)), and are both Hermitian and unitary.
+As such, they can represent both observables \emph{and} unitary evolutions.
+Any two given Pauli matrices either commute or anticommute.
+
+As one final reminder, we often refer to the Pauli matrices as ``matrices'', but they are defined as operators by the commutations relations, without reference to any particular basis.
+That is, the Pauli operators \(X\), \(Y\), and \(Z\) are defined exactly by the relations
+\[
+  \begin{gathered}
+    X^2 = Y^2 = Z^2 = \mathbf{1}
+  \\XY=iZ \qquad YZ=iX \qquad ZX=iY
+  \\YX=-iZ \qquad ZY=-iX \qquad XZ=-iY.
+  \end{gathered}
+\]
+
+\hypertarget{pauli-groups}{%
+\subsection{Pauli groups}\label{pauli-groups}}
+
+When we multiply the four Pauli matrices with one another we get Pauli matrices in return, but with possible phase factors \(\pm1\) and \(\pm i\) (e.g.~\(XY=iZ\)).
+Once we include these phase factors, ensuring that we have a set that is closed under matrix multiplication, we obtain the \textbf{single qubit Pauli group}, which we denote by \(\mathcal{P}_1\).
+
+In order to characterise a group, we can simply list all its elements and define the group operation on each possible pair, but it is usually more efficient to use the notion of \textbf{group generators}.\footnote{Note how similar this is to the definition of a basis for a vector space.}
+Given a group \(G\), these are elements \(g_1,\ldots,g_n\) of the group that are \textbf{independent} (we cannot write any one of them as a product of some of the others) and such that every element of \(G\) can be written as a product of (possibly repeated) elements of \(\{g_1,\ldots,g_n\}\).
+If \(G\) is generated by \(g_1,\ldots,g_n\), then we write \(G=\langle g_1,\ldots,g_n\rangle\).
+
+\begin{idea}
+The \textbf{single-qubit Pauli group} \(\mathcal{P}_1\) is defined by
+\[
+  \begin{aligned}
+    \mathcal{P}_1
+    &\coloneqq \langle X,Y,Z\rangle
+  \\&= \{\pm\mathbf{1}, \pm i\mathbf{1}, \pm X, \pm iX, \pm Y, \pm iY, \pm Z, \pm iZ\}.
+  \end{aligned}
+\]
+
+The \textbf{\(n\)-qubit Pauli group} \(\mathcal{P}_n\) is defined to consist of all \(n\)-fold tensor products of Pauli matrices, with possible global phase factors \(\pm1\) and \(\pm i\), i.e.
+\[
+  \mathcal{P}_n
+  \coloneqq \{P_1\otimes\ldots\otimes P_n \mid P_1,\ldots,P_n\in\mathcal{P}_1\}.
+\]
+This group has \(4^{n+1}\) elements: \(4\times4^n\), since we have to account for the possible global phase factors (which usually aren't very important for practical applications, but are necessary in order to have a well defined group).\footnote{As a small mathematical aside, we could use some group theory here: \(\mathcal{P}_n\) has two trivial (multiplicative) subgroups, namely \(Z_2=\{\pm1\}\) and \(Z_4=\{\pm1,\pm i\}\); the quotient group \(\mathcal{P}_n/Z_4\) is exactly the \(n\)-qubit Pauli group but with the phases ignored.}
+
+\end{idea}
+
+Some researchers prefer to think of the (single-qubit) Pauli group as the group generated only by \(X\) and \(Z\) (leaving out \(Y\)), which then only has 8 elements: \(\pm1\), \(\pm X\), \(\pm Z\), and \(\pm iY\).
+We do \textbf{not} follow this convention.
+
+\begin{technical}
+One abstract way of defining the Pauli group, without having to make any reference to matrices (and thus to bases), or even to operators, is using the notion of a \href{https://en.wikipedia.org/wiki/Central_product}{\textbf{central product}}.
+This is a way of combining two smaller group into one large group, but ``respecting'' the commutative parts of each, which means that it arises as a quotient of the \href{https://en.wikipedia.org/wiki/Direct_product_of_groups}{\textbf{direct product}} (which is somehow the most blunt way of combining together two groups).
+
+The \textbf{cyclic group of order 4} is the abstract manifestation of something maybe more familiar: the additive group of integers modulo 4.
+That is, the numbers \(0\), \(1\), \(2\), and \(3\) form a group under addition, but where we take the addition to be ``remainder 4'', so that e.g.~\(3+2=1\).
+In abstract algebra, this group is denoted by \(C_4\).
+
+The \textbf{dihedral group of order 8} (sometimes, very confusingly, also referred to as being of order \emph{4}) arises as the symmetry group of a square: we can rotate a square by \(90^\circ\), or reflect it along either of the axis joining any two diagonally opposite corners, or reflect it along either of the axis joining the midpoints of any two opposite sides --- doing any of these actions leaves the square looking exactly how it started.
+But some of these actions describe the same thing!
+For example, reflecting through the vertical axis and then the horizontal axis is the same as rotating by \(180^\circ\) (try visualising this by flipping and rotating your hand!), which is a specific example of the more general fact (which we briefly touched upon in Section \ref{composition-of-rotations}) that the composition of two reflections is the same as a rotation through twice the angle between the two axes.
+In abstract algebra, this group is denoted by \(D_8\) (though in geometry it is often written as \(D_4\) instead).
+
+The relevance to the Pauli group is this: the central product of \(C_4\) and \(D_8\) is exactly \(\mathcal{P}_1\).
+
+\end{technical}
+
+If it is clear that we are working with \emph{tensor products} of Pauli matrices, then we often (as per usual) omit the tensor product symbol, writing e.g.~\(XY\mathbf{1}Z\) instead of \(X\otimes Y\otimes\mathbf{1}\otimes Z\) when talking about \(\mathcal{P}_4\).
+Note however that we only do this when it is obvious what we mean: this is very different from the product \(XY\mathbf{1}Z=i\mathbf{1}\) inside \(\mathcal{P}_1\)!
+
+Let's now talk a little bit about the algebraic structure of \(\mathcal{P}_n\).
+Multiplying together elements is fairly simple: since they are tensor products, we multiply them component-wise, but just remembering to pay attention to the global phase.
+For example, we can multiply \(ZXX\mathbf{1}\) and \(XXYY\) in \(\mathcal{P}_4\) as follows:
+\[
+  \begin{aligned}
+    (ZXX\mathbf{1})\cdot(XXYY)
+    &= (ZX)(XX)(XY)(\mathbf{1}Y)
+  \\&= (iY)(\mathbf{1})(iZ)(Y)
+  \\&= -Y\mathbf{1}ZY.
+  \end{aligned}
+\]
+Next, any pair of elements in \(\mathcal{P}_n\) either commute or anticommute: given \(P=P_1\ldots P_n\) and \(Q=Q_1\ldots Q_n\), we notice that they commute exactly whenever the number of \emph{anticommuting} components (indices \(j\) such that \(P_jQ_j=-Q_jP_j\)) is even, since then the minus signs cancel out.
+In other words, \(PQ=(-1)^J QP\), where \(J=|\{j\text{ such that }P_jQ_j=-Q_jP_j\}|\).
+For example, if we consider two elements of \(\mathcal{P}_9\) and write \(\checkmark\) to mean that two components commute, and \(!\) to mean that they don't, we can then just count to see if there are an odd or even number of \(!\) overall, like so:
+\[
+  \begin{array}{ccccccccc}
+    Z&X&Y&X&Y&Z&X&X&Y
+  \\Z&X&\mathbf{1}&Z&Z&X&\mathbf{1}&Y&Z
+  \\\hline
+    \checkmark&\checkmark&\checkmark&!&!&!&\checkmark&!&!
+  \end{array}
+\]
+and since there are 5 anticommuting components, we see that \(ZXYXYZXXY\) and \(ZX\mathbf{1}ZZX\mathbf{1}YZ\) anticommute.
+
+Finally, the square of any element in \(\mathcal{P}_n\) is \(\pm\mathbf{1}\).
+Indeed, all the elements in the Pauli group are unitary, and each one is either Hermitian (overall phase \(\pm1\) and squares to \(\mathbf{1}\)) or anti-Hermitian (overall phase \(\pm i\) and squares to \(-\mathbf{1}\)).
+As per usual, we are only really interested in working with the Hermitian elements, and we refer to \emph{these} as the Pauli operators.
+
+\begin{idea}
+An \textbf{\(n\)-qubit Pauli operator} is a Hermitian element of the \(n\)-qubit Pauli group \(\mathcal{P}_n\).
+
+\end{idea}
+
+Since the Pauli operators are self-inverse (they square to the identity), their eigenvalues can only be \(\pm1\).
+Furthermore, these eigenvalues must be of the same degeneracy, and the eigenspaces corresponding to each eigenvalue are of the same dimension, as we can see by taking the trace of a Pauli operator:
+\[
+  \operatorname{tr}(P_1\otimes P_2\otimes\ldots\otimes P_n) = (\operatorname{tr}P_1)(\operatorname{tr}P_2)\ldots(\operatorname{tr}P_n)
+\]
+which is zero, except in the trivial case where \(P_1=P_2=\ldots=P_n=\mathbf{1}\).
+Last but not least, the \(n\)-qubit Pauli group spans the space of \((2^n\times 2^n)\) complex matrices.
+
+\hypertarget{pauli-stabilisers}{%
+\subsection{Pauli stabilisers}\label{pauli-stabilisers}}
+
+The stabiliser (or stabilizer, if you like) formalism is an elegant technique that is often used to describe vectors and subspaces.
+Suppose you want to specify a particular vector in a Hilbert space.
+The most conventional way to do this would be to pick a basis and then list the coordinate components of the vector.
+But we could instead list a set of operators that leave this vector invariant.
+More generally, we can define a vector subspace (rather than just a single vector, which corresponds to a 1-dimensional subspace: its span) by giving a list of operators that fix this subspace.
+Such operators are called \textbf{stabilisers}.
+
+\begin{idea}
+We say that an operator \(S\) \textbf{stabilises} a (non-zero) state \(|\psi\rangle\) if \(S|\psi\rangle=|\psi\rangle\).
+We say that \(S\) stabilises a subspace \(V\) if \(S\) stabilises every state in \(V\).
+Then we call \(|\psi\rangle\) (or \(V\)) the \textbf{stabiliser state} (or \textbf{stabiliser subspace}).
+
+\end{idea}
+
+In other words, an operator \(S\) stabilises a state \(|\psi\rangle\) (or the state is fixed by the operator) if \(|\psi\rangle\) is an eigenstate of \(S\) with eigenvalue \(1\).
+It is very important to note that here we \emph{have} to pay attention to the global phase factor: if \(S|\psi\rangle=-|\psi\rangle\) then we do \emph{not} say that \(S\) stabilises \(|\psi\rangle\), even though \(|\psi\rangle\) and \(-|\psi\rangle\) describe the same quantum state.
+
+For example, we can look at states stabilised by the Pauli operators with factors \(\pm1\):
+\[
+  \begin{aligned}
+    Z\text{ stabilises }|0\rangle
+    &\qquad-Z\text{ stabilises }|1\rangle
+  \\Y\text{ stabilises }|i\rangle
+    &\qquad-Y\text{ stabilises }|-i\rangle
+  \\X\text{ stabilises }|+\rangle
+    &\qquad-X\text{ stabilises }|-\rangle
+  \end{aligned}
+\]
+where \(|\pm i\rangle=\frac{1}{\sqrt{2}}(|0\rangle+i|1\rangle)\) and \(|\pm\rangle=\frac{1}{\sqrt{2}}(|0\rangle\pm|1\rangle)\).
+
+On the Bloch sphere, these single-qubit stabiliser states lie at the intersection of the three axes with the surface of the sphere.
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-65-1} \end{center}
+
+We can also say something about the remaining two elements of the single-qubit Pauli group: \(\mathbf{1}\) stabilises everything, and \(-\mathbf{1}\) stabilises nothing (except for the zero state, which we explicitly ignore).
+More generally, if \(S\) stabilises something then \(-S\) cannot stabilise the same thing.
+
+The set of all stabilisers of a given state or given subspace form a group: if \(S|\psi\rangle=|\psi\rangle\), then multiplying both sides by \(S^{-1}\) shows that the inverse of a stabiliser is again a stabiliser; the composition of two stabilisers is again a stabiliser, since \((ST)|\psi\rangle=S(T|\psi\rangle)=S|\psi\rangle=|\psi\rangle\); and as we have just said, the identity is always a stabiliser.
+This group is called the \textbf{stabiliser group} of the given state or subspace.
+
+Using this language, we can rephrase the previous example by saying that the stabiliser group of the state \(|1\rangle\) is \(\{\mathbf{1},Z\}=\langle Z\rangle\), the stabiliser group of the state \(|0\rangle\) is \(\{\mathbf{1},-Z\}=\langle -Z\rangle\), the stabiliser group of the state \(|+\rangle\) is \(\{\mathbf{1},X\}=\langle X\rangle\), and so on.
+If we take the tensor product of a two states, with stabiliser groups \(\mathcal{A}\) and \(\mathcal{B}\) (respectively), then the resulting tensor product state has stabiliser group given by the cartesian product \(\mathcal{A}\times\mathcal{B}\).
+For example, the state \(|1\rangle|+\rangle\) is stabilised by the group
+\[
+  \begin{aligned}
+    \{\mathbf{1},Z\}\times\{\mathbf{1},X\}
+    &= \{\mathbf{1}\mathbf{1},\mathbf{1}X,Z\mathbf{1},ZX\}
+  \\&= \langle Z\mathbf{1},\mathbf{1}X\rangle.
+  \end{aligned}
+\]
+As for the state \(|0\rangle^{\otimes n}\), this is stabilised by the group generated by the \(n\) elements \(Z\mathbf{1}\mathbf{1}\ldots\mathbf{1}\), \(\mathbf{1}Z\mathbf{1}\ldots\mathbf{1}\), \ldots, \(\mathbf{1}\mathbf{1}\ldots,Z\), so we often simply stack the generators and write such generating sets as \((n\times n)\) matrices, labelling the left-hand side with the relevant signs:
+\[
+  |0000\rangle
+  \longleftrightarrow
+  \begin{array}{c|cccc|}
+    +&Z&\mathbf{1}&\mathbf{1}&\mathbf{1}
+  \\+&\mathbf{1}&Z&\mathbf{1}&\mathbf{1}
+  \\+&\mathbf{1}&\mathbf{1}&Z&\mathbf{1}
+  \\+&\mathbf{1}&\mathbf{1}&\mathbf{1}&Z
+  \end{array}
+\]
+and we can see that the signs determine the bit value in the computational basis state, if we look at the generators of the stabiliser groups for some other states:
+\[
+  |0001\rangle
+  \longleftrightarrow
+  \begin{array}{c|cccc|}
+    +&Z&\mathbf{1}&\mathbf{1}&\mathbf{1}
+  \\+&\mathbf{1}&Z&\mathbf{1}&\mathbf{1}
+  \\+&\mathbf{1}&\mathbf{1}&Z&\mathbf{1}
+  \\-&\mathbf{1}&\mathbf{1}&\mathbf{1}&Z
+  \end{array}
+  \qquad
+  |0101\rangle
+  \longleftrightarrow
+  \begin{array}{c|cccc|}
+    +&Z&\mathbf{1}&\mathbf{1}&\mathbf{1}
+  \\-&\mathbf{1}&Z&\mathbf{1}&\mathbf{1}
+  \\+&\mathbf{1}&\mathbf{1}&Z&\mathbf{1}
+  \\-&\mathbf{1}&\mathbf{1}&\mathbf{1}&Z
+  \end{array}
+\]
+
+For our purposes, we are only really interested in stabilisers that are also elements of the \(n\)-qubit Pauli group \(\mathcal{P}_n\), and we shall soon see that these form an \emph{abelian} group.
+It turns out that such stabilisers can describe highly entangled states.
+In particular, the four Bell states (which we first talked about in Section \ref{bell-states}) can be defined rather succinctly by their stabiliser groups:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule()
+Bell state & Stabiliser group \\
+\midrule()
+\endhead
+\(\Phi^+=|00\rangle+|11\rangle\) & \(\langle XX,ZZ\rangle\) \\
+\(\Psi^+=|01\rangle+|10\rangle\) & \(\langle XX,-ZZ\rangle\) \\
+\(\Phi^-=|00\rangle-|11\rangle\) & \(\langle -XX,ZZ\rangle\) \\
+\(\Psi^-=|01\rangle-|10\rangle\) & \(\langle -XX,-ZZ\rangle\) \\
+\bottomrule()
+\end{longtable}
+
+Not only this, but some vector spaces are also rather easily defined: the subspace of the three-qubit state space spanned by \(|000\rangle\) and \(|111\rangle\) is stabilised by
+\[
+  \{\mathbf{1}\mathbf{1}\mathbf{1},ZZ\mathbf{1},Z\mathbf{1}Z,\mathbf{1}ZZ\} = \langle ZZ\mathbf{1},\mathbf{1}ZZ\rangle.
+\]
+
+Right now, it might seem more complicated to use stabilisers to define vectors or subspaces, but when we start looking at states with a larger and larger number of components we will see how this approach ends up being very tidy indeed!
+It is not be true that the stabiliser description of states and subspaces will \emph{always} be the most concise, but it is true in a lot of cases that are of interest to us.
+
+Returning to our claim that stabiliser groups that are subgroups of \(\mathcal{P}_n\) are abelian, let us start with a definition, and then justify it afterwards.
+
+\begin{idea}
+An \textbf{\(n\)-qubit Pauli stabiliser group} is any subgroup of \(\mathcal{P}_n\) that is abelian and does not contain \(-\mathbf{1}\).
+Its elements are called \textbf{Pauli stabilisers}.
+
+\end{idea}
+
+Recall that, in order for the subspace \(V_S\) stabilised by some group \(S\) to be non-trivial, we need \(-\mathbf{1}\not\in S\).
+Given that all Pauli operators square to the identity, and all pairs of Pauli operators either commute or anticommute, this implies that if we want some Pauli operators to stabilise anything then they must \emph{commute}.
+Indeed, if \(S_1\) and \(S_2\) are two Pauli operators that anticommute, and \(|\psi\rangle\) is any vector stabilised by both of them, then
+\[
+  \begin{aligned}
+    |\psi\rangle
+    &= S_1S_2|\psi\rangle
+  \\&= -S_2S_1|\psi\rangle
+  \\&= -|\psi\rangle
+  \end{aligned}
+\]
+which means that \(|\psi\rangle=0\).
+But saying that we are looking at a stabiliser group consisting of Pauli stabilisers that all commute with one another (as opposed to anticommuting) is exactly saying that we have an abelian subgroup of \(\mathcal{P}_n\); if we want it to be non-trivial, then we need it to not contain \(-\mathbf{1}\).
+Conversely, if we pick any abelian subgroup of \(\mathcal{P}_n\) that does not contain \(-\mathbf{1}\), this stabilises \emph{some} subspace \(V_S\).
+
+The size of any Pauli stabiliser \(\mathcal{S}\) is \(|\mathcal{S}|=2^r\), where \(r\) is some positive integer, since we can always find some choice of generators \(G_1,\ldots,G_r\), and then any operator \(S\in\mathcal{S}\) can be written as\footnote{An interesting small exercise here is to explain why the product of any \emph{independent} Pauli stabilisers cannot be equal to the identity.}
+\[
+  S = G_1^{\epsilon_1}G_2^{\epsilon_2}\ldots G_r^{\epsilon_r}
+\]
+where \(r_i\in\{0,1\}\).
+But given any stabiliser group, we can always express its elements using many different sets of generators; a specific choice of \(r\) independent generators of a Pauli stabiliser \(\mathcal{S}\) of size \(2^r\) is called a \textbf{presentation}.
+In order to choose a presentation from the set of elements of \(\mathcal{S}\), we have to start by picking any non-identity element, of which there are \(2^r-1\).
+Inductively then, we pick the next generator by picking any element which is not in the subgroup generated by the previously selected generators, which means that there are
+\[
+  (2^r-1)(2^r-2)(2^r-2^2)\ldots(2^r-2^{r-1})
+\]
+possible generating sets of \(\mathcal{S}\).
+But these are \emph{ordered} sets (i.e.~we are keeping track of the order in which we pick the elements, so \(G_1,G_2,\ldots\) is a ``different'' choice than \(G_2,G_1,\ldots\)), so if we want to know the number of presentations then we can simply divide the expression above by \(r^!\).
+
+For example, the Bell state \(\Phi^+=|00\rangle+|11\rangle\) is stabilised by the group \(\{\mathbf{1}\mathbf{1},XX,-YY,ZZ\}\).
+This stabiliser group has \((2^2-1)(2^2-2)/2!=3\) presentations, namely \(\langle XX,ZZ\rangle\), \(\langle -YY,XX\rangle\), and \(\langle ZZ,-YY\rangle\).
+
+So now we know the size of a Pauli stabiliser, but what can we say about the dimension of the subspace that it stabilises?
+If \(|\mathcal{S}|=2^r\) then the corresponding stabiliser subspace \(V_S\) has dimension \(2^{n-r}\) (where \(n\) is the number of qubits, i.e.~such that \(\mathcal{S}\subseteq\mathcal{P}_n\)).
+To see this, we can look at the projector \(P_S\) onto \(V_S\), since once we have a projector onto any subspace we know that the dimension of that subspace is exactly the trace of the projector (we can prove this by thinking about the matrix of the projector in the diagonal form).
+In our case (using the result of Exercise \ref{stabilisers-and-projectors}) we calculate that
+\[
+  \begin{aligned}
+    \operatorname{tr}P_S
+    &= \operatorname{tr}\frac{1}{2^r}(S_1+S_2+\ldots+S_{2^r})
+  \\&= \frac{1}{2^r}(\operatorname{tr}\mathbf{1})
+  \\&= 2^{n-r}
+  \end{aligned}
+\]
+since any non-identity element of the stabiliser group has trace equal to zero, and \(\operatorname{tr}\mathbf{1}^{\otimes n}=2^n\), whence \(\dim V_s=2^{n-r}\).
+If \(r=n\) then the stabilised subspace is \(1\)-dimensional, and so we have stabiliser states.
+
+There is a more geometric way of understanding why powers of 2 keep on turning up in these calculations.
+Given independent Pauli generators, it is convenient to think about the state or subspace that they stabilise as being the result of repeatedly bisecting the Hilbert space.
+Let \(G_1,\ldots,G_r\) be a presentation of a Pauli stabiliser \(\mathcal{S}\).
+For each operator \(G_i\), half its eigenvalues are \(+1\) and another half are \(-1\), so each \(G_i\) bisects the \(2^n\)-dimensional Hilbert space of \(n\) qubits into two eigenspaces of equal size.
+So \(G_1\) gives two \(2^{n-1}\)-dimensional subspaces: one for the \(+1\) eigenvalue and one for the \(-1\) eigenvalue.
+Forgetting about the \(-1\) part and just focusing on the \(+1\) part, \(G_2\) then splits this \(2^{n-1}\)-dimensional subspace into two \(2^{n-2}\)-dimensional subspaces, since it is independent from \(G_1\) (as we justify in Exercise \ref{stabilisers-and-projectors}).
+Repeating this procedure, forgetting about the \(-1\) subspace each time, leads us to consider the simultaneous \(+1\) eigenspace of \(G_1,\ldots,G_r\), where each time we pass from \(\{G_1,G_2,\ldots,G_i\}\) to \(\{G_1,G_2,\ldots,G_i,G_{i+1}\}\) we bisect the subspace into two equal parts once more, eventually ending with the \(2^{n-2}\)-dimensional subspace \(V_S\), as above.
+We can show this pictorially, as in Figure \ref{fig:stabiliser-bisection}.
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{qubit_guide_files/figure-latex/stabiliser-bisection-1} 
+
+}
+
+\caption{The stabiliser group \(\{ZZ\mathbf{1},\mathbf{1}ZZ\}\) bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace \(V_S\) which is spanned by \(|000\rangle\) and \(|111\rangle\). Think of the labels \(ZZ\mathbf{1}\) and \(\mathbf{1}ZZ\) as the \(x\)- and \(y\)-axes, and the sign labels on each square as \((x,y)\)-coordinates. So the two squares on the left together make the \(+1\) eigenspace of \(\mathbf{1}ZZ\), and the two squares on the top make the \(+1\) eigenspace of \(ZZ\mathbf{1}\).}\label{fig:stabiliser-bisection}
+\end{figure}
+
+\hypertarget{single-stabiliser-states}{%
+\subsection{Single stabiliser states}\label{single-stabiliser-states}}
+
+Given \(n\) independent generators of a stabiliser group \(\mathcal{S}\) on a Hilbert space of \(n\)-qubits, we end up specifying a \(1\)-dimensional subspace, meaning it is spanned by a single basis vector, namely the stabiliser state.
+We have already talked about the single-qubit stabiliser states determined by all possible stabilisers in \(\mathcal{P}_1\), namely \(|0\rangle\) and \(|1\rangle\) for \(\langle \pm Z\rangle\), \(|\pm\rangle\) for \(\langle \pm X\rangle\), and \(|\pm i\rangle\) for \(\langle \pm Y\rangle\).
+We have also mentioned some of the two-qubit stabilisers states, some of which are highly entangled, such as the Bell states, and some of which are separable, such as the computational basis states (whose stabilisers groups we described by block matrices with \(Z\) on the diagonal, \(\mathbf{1}\) everywhere else, and signs labelling each row depending on the binary description of the state).
+
+Here's another two-qubit example: that of the maximally entangled state \(|00\rangle+|11\rangle\).
+This is stabilised by \(\langle XX,ZZ\rangle\), but let's explain how we can see this.
+If we look first at the operator \(XX\), we see that it splits the \(4\)-dimensional Hilbert space into two \(2\)-dimensional subspaces, corresponding to eigenvalues \(\pm1\); by definition, it stabilises the one corresponding to eigenvalue \(+1\), which is spanned by \(|00\rangle+|11\rangle\) and \(|01\rangle+|10\rangle\).
+Now the operator \(ZZ\) also splits the \(4\)-dimensional Hilbert space into two \(2\)-dimensional subspaces, again corresponding to eigenvalues \(\pm1\); it stabilises the one corresponding to eigenvalue \(+1\), which is spanned by \(|00\rangle+|11\rangle\) and \(|00\rangle-|11\rangle\).
+Note that \(|01\rangle+|10\rangle\) is in the \(-1\) eigenspace of \(ZZ\), even though it is in the \(+1\) eigenspace of \(XX\) (and vice versa for \(|00\rangle-|11\rangle\)).
+So the simultaneous \(+1\) eigenspace of \(XX\) and \(ZZ\) is exactly the state \(|00\rangle+|11\rangle\).
+\[
+  \begin{aligned}
+    |00\rangle+|11\rangle
+    \longleftrightarrow
+    \begin{array}{c|cc|}
+      +&X&X
+    \\+&Z&Z
+    \end{array}
+    \quad&\quad
+    |00\rangle-|11\rangle
+    \longleftrightarrow
+    \begin{array}{c|cc|}
+      -&X&X
+    \\+&Z&Z
+    \end{array}
+  \\|01\rangle+|10\rangle
+    \longleftrightarrow
+    \begin{array}{c|cc|}
+      +&X&X
+    \\-&Z&Z
+    \end{array}
+    \quad&\quad
+    |01\rangle-|10\rangle
+    \longleftrightarrow
+    \begin{array}{c|cc|}
+      -&X&X
+    \\-&Z&Z
+    \end{array}
+  \end{aligned}
+\]
+
+As we have already mentioned when discussing presentations of a stabiliser group, there can be multiple different generating sets, which corresponds to the fact that there are multiple different ways of bisecting the Hilbert space.
+For example, the stabiliser state \(|00\rangle+|11\rangle\) is completely specified by \(\langle XX,ZZ\rangle\), as shown above, but also by \(\langle XX,-YY\rangle\) or \(\langle -YY,ZZ\rangle\).
+But, as we should expect, these three generating sets all generate the same group, namely \(\mathcal{S}=\{\mathbf{1}\mathbf{1},XX,-YY,ZZ\}\).
+
+How many \(n\)-qubit stabiliser states do we have?
+The answer is
+\[
+  2^n\prod_{k=0}^{n-1}(2^{n-k}+1)
+\]
+as we can show with a counting argument: we will count the number of generating sets with \(n\) generators (since this is exactly the right number of generators to specify a \(1\)-dimensional stabiliser subspace) and then divide by the number of presentations for any given stabiliser.\footnote{This is a common technique in combinatorial arguments: first \emph{over}count, and then fix your answer by accounting for this.}
+There are \(4^{n-1}\) choices for the first generator \(G_1\) (ignoring overall sign), since it can be any \(n\)-fold tensor product of the four Pauli matrices, excluding the identity \(\mathbf{1}\mathbf{1}\mathbf{1}\mathbf{1}\).
+For the second generator \(G_2\), we have \((4^n/2)-2\) possibilities, since it must commute with the first generator (and we know that exactly half of the operators commute with any given operator, as shown in Exercise \ref{half-commuting}, whence \(4^n/2\)) and it cannot be \(\mathbf{1}\mathbf{1}\mathbf{1}\mathbf{1}\) or \(G_1\) (whence \(-2\)).
+Similarly, \(G_3\) must commute with both \(G_1\) and \(G_2\), but it cannot be in the group generated by them, so there are \((4^n/4)-4\) possible choices, and so on.
+This means that we have
+\[
+  2^n(4^n-1)\left(\frac{4^n}{2}-2\right)\left(\frac{4^n}{4}-4\right)\ldots\left(\frac{4^n}{2^{n-1}}-2^{n-1}\right)
+\]
+possible generating sets in total.
+Now we need to divide by the number of presentations, but we have already calculated this in Section \ref{pauli-stabilisers}: it's exactly
+\[
+  (2^n-1)(2^n-2)(2^n-2^2)\ldots(2^n-2^{n-1}).
+\]
+It is a fun algebra exercise to show that this division indeed gives the number we claimed.
+
+As we will see, stabiliser states are ubiquitous in quantum information theory due to their versatility and relative simplicity.
+They play a crucial role in areas such as quantum error correction, measurement-based quantum computation, and entanglement classification.
+
+\hypertarget{measuring-pauli-stabilisers}{%
+\subsection{Measuring Pauli stabilisers}\label{measuring-pauli-stabilisers}}
+
+How do we bisect Hilbert spaces in practice?
+By measuring stabilisers.
+
+Let's start by measuring any single-qubit observable that squares to the identity.
+The corresponding operator \(P\) with eigenvalues \(\pm1\) is both Hermitian and unitary, and can thus represent both an observable and a quantum gate.
+If we prepare a qubit in some state \(|\psi\rangle\) and then wish to perform a measurement that will give us a result of \(\pm1\) and leave the qubit in a post-measurement state, namely the corresponding eigenvector, then we can use the following circuit (where \(\propto\) denotes that two states are multiples of one another).
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-66-1} \end{center}
+
+This construction requires an auxiliary qubit (in the top register), two Hadamard gates, and the tacit assumption that we can construct a controlled-\(P\) operator.
+Stepping through the execution of this circuit, we get
+\[
+  \begin{aligned}
+    |0\rangle|\psi\rangle
+    &\overset{H\otimes\mathbf{1}}{\longmapsto}
+      \frac{1}{\sqrt{2}}(|0\rangle+|1\rangle)|\psi\rangle
+  \\&\overset{\texttt{c-}P}{\longmapsto}
+      \frac{1}{\sqrt{2}}|0\rangle|\psi\rangle + \frac{1}{\sqrt{2}}|1\rangle P|\psi\rangle
+  \\&\overset{H\otimes\mathbf{1}}{\longmapsto}
+      |0\rangle\frac{1}{2}(\mathbf{1}+P)|\psi\rangle + |1\rangle\frac{1}{2}(\mathbf{1}-P)|\psi\rangle.
+  \end{aligned}
+\]
+The final state of the two qubits indicates that, when the auxiliary (top) qubit is found in state \(|0\rangle\) then we projected the state \(|\psi\rangle\) onto the \(+1\) eigenspace of \(P\) (via the projector \(\frac{1}{2}(\mathbf{1}+P)\)), and when it is found in state \(|1\rangle\) then we projected \(|\psi\rangle\) onto the \(-1\) eigenspace (via the projector \(\frac{1}{2}(\mathbf{1}-P)\)).
+In particular, the \(X\), \(Y\), and \(Z\) observables can be measured using controlled-\(X\), controlled-\(Y\), and controlled-\(Z\) gates (respectively).
+This pattern can easily be extended to an \(n\)-qubit Pauli operator.
+For example, for \(n=3\), a generic circuit that implements a projective measurement onto the \(\pm1\) eigenspaces of \(S=P_1\otimes P_2\otimes P_3\) has the form
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-67-1} \end{center}
+
+and is usually drawn more compactly as
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-68-1} \end{center}
+
+In this way, we can measure stabilisers and project onto the subspaces that they stabilise.
+For example, take the stabiliser group \(\mathcal{S}=\langle XX,ZZ\rangle\), and consider the circuit below:
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-69-1} \end{center}
+
+The registered bit values from the first and second (counting from the top) auxiliary qubits tell us how we bisect the Hilbert space with \(XX\) and \(ZZ\) (respectively), recalling that a bit value of \(0\) corresponds to the \(+1\) Pauli eigenvalue, and a bit value of \(1\) to the \(-1\) eigenvalue.
+The first measurement can project \(|\psi\rangle\) either onto \(\frac{1}{2}(\mathbf{1}+XX)\) (in which case the first auxiliary qubit will show \(0\), corresponding to the eigenvalue \(+1\), and the subspace spanned by \(|00\rangle+|11\rangle\) and \(|01\rangle+|10\rangle\)) or onto \(\frac{1}{2}(\mathbf{1}-XX)\) (in which case the first auxiliary qubit will show \(1\), corresponding to the eigenvalue \(-1\), and the subspace spanned by \(|00\rangle-|11\rangle\) and \(|01\rangle-|10\rangle\)).
+The second measurement can further project the resulting post-measurement state of the two qubits either onto \(\frac{1}{2}(\mathbf{1}+ZZ)\) (in which case the second auxiliary qubit will show \(0\), corresponding to the eigenvalue \(+1\), and the subspace spanned by \(|00\rangle+|11\rangle\) and \(|00\rangle-|11\rangle\)) or onto \(\frac{1}{2}(\mathbf{1}-ZZ)\) (in which case the second auxiliary qubit will show \(1\), corresponding to the eigenvalue \(-1\), and the subspace spanned by \(|01\rangle+|10\rangle\) and \(|01\rangle-|10\rangle\)).
+So if both auxiliary qubits show bit value outcome \(0\) (corresponding to the ``Pauli'' outcome \((+1,+1)\), describing the eigenvalues), then we have successfully projected onto the state stabilised by \(XX\) and \(ZZ\), which is exactly \(|00\rangle+|11\rangle\).
+More generally, in ``Pauli notation'', the outcome \((\pm1,\pm1)\) corresponds to the projection onto the stabiliser state stabilised by \(\langle\pm XX,\pm ZZ\rangle\).
+
+Needless to say, we do not have any control over the actual outcomes of the measurement, but we do now know \emph{which} post-measurement state we have generated.
+This means that we can use the circuit to prepare a desired state by applying an appropriate unitary operation to the final state.
+For example, if we want to generate the state \(|00\rangle+|11\rangle\) but actually end up with the state \(|00\rangle-|11\rangle\), then we can simply apply the \(Z\) operation to any of the two qubits to get the desired result.
+This generic method is now the only way of constructing projective measurements of Pauli observables, however --- see Exercise \ref{equivalent-projective-pauli-measurements}
+
+\hypertarget{mathematical-detour-normal-subgroups}{%
+\subsection{Mathematical detour: normal subgroups}\label{mathematical-detour-normal-subgroups}}
+
+Before continuing our exploration of Pauli stabilisers, we need a bit of pure mathematics.
+
+Let \(H\) be a subgroup of \(G\), written \(H\leqslant G\).
+We say that \(H\) is a \textbf{normal} subgroup of \(G\), and write \(H\triangleleft G\), if \(H\) is invariant under conjugation by all elements of \(G\), i.e.~\(ghg^{-1}\in H\) for all \(g\in G\) and all \(h\in H\).
+
+Note that we only require that \(ghg^{-1}\) be some arbitrary element in \(H\), not that \(ghg^{-1}=h\).
+
+If \(H\leqslant G\) is an arbitrary (not necessarily normal) subgroup, then we can use it to ``slice up'' \(G\) into subsets of equal size called \textbf{cosets}, one of which is \(H\) itself.
+We define a (left) coset to be a set of the form
+\[
+  gH = \{gh \mid h\in H\}
+\]
+for any fixed \(g\in G\).
+Any two cosets (i.e.~any two choices of \(g\in G\)) are either entirely equal or completely disjoint.
+The relevance of normality here is that if \(H\) is normal, then there is no need to distinguish between left (\(gH\)) and right (\(Hg\)) cosets, and in this case we can construct the \textbf{quotient group} \(G/H\) consisting of cosets with the operation defined by \(gH\cdot g'H=(gg')H\).
+Here is one way to visualise a partition into cosets:
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-70-1} \end{center}
+
+The bottom row represents the subgroup \(H\), and each row above represents a coset, i.e.~a set of elements generated by picking an element \(c_k\) of \(G\) that does not belong to \(H\) nor to any of the previously generated cosets, and then multiplying this element by all elements in \(H\), one at a time.
+This picture above shows that, for any finite group \(G\) and any subgroup \(H\leqslant G\),
+\[
+  |G| = |G:H|\cdot|H|
+\]
+where \(|G:H|\) is the number of cosets of \(G\) given by \(H\).
+This fact is known as \textbf{Lagrange's theorem} (although \href{https://en.wikipedia.org/wiki/Joseph-Louis_Lagrange}{Joseph-Louis Lagrange} was a rather prolific mathematician, working in many areas, so this is only one of the theorems to bear his name).
+
+It seems like it was \href{https://en.wikipedia.org/wiki/Évariste_Galois}{Évariste Galois} who recognised that \emph{normal} subgroups were worthy of special attention.
+Given an arbitrary subgroup \(H\leqslant G\), we can construct a larger subgroup \(K\leqslant G\) in which \(H\) is normal, i.e.~such that \(H\triangleleft K\leqslant G\).
+The largest such subgroup \(K\) is called the \textbf{normaliser of \(H\) in \(G\)}, denoted by \(N_G(H)\), and we can construct it explicitly:
+\[
+  N_G(H) = \{g\in G \mid ghg^{-1}\in H\text{ for all }h\in H\}.
+\]
+In words, the normaliser consists of the set of elements of \(G\) that conjugate all elements of \(H\) to elements of \(H\).
+This suggests a very subtle question: is every subgroup of a normal subgroup normal?
+The answer is most definitely \emph{no}: if \(H\triangleleft K\) and \(K\triangleleft G\) then it is \emph{not} necessarily the case that \(H\triangleleft G\), merely that \(H\leqslant G\).
+
+As we shall soon see, Pauli stabilisers are not normal subgroups of \(\mathcal{P}_n\), and we will instead want to study their normalisers.
+
+\hypertarget{pauli-normalisers}{%
+\subsection{Pauli normalisers}\label{pauli-normalisers}}
+
+There are two subgroups that pop up once we choose a stabiliser \(\mathcal{S}\).
+The subgroup of \(\mathcal{P}_n\) consisting of all elements that commute which every element of \(\mathcal{S}\) is called the \textbf{centraliser of \(\mathcal{S}\)}, denoted by
+\[
+  C(\mathcal{S}) = \{g\in\mathcal{P}_n \mid gsg^{-1}=s\text{ for all }s\in\mathcal{S}\}
+\]
+and the other is the one that we have already seen: the normaliser
+\[
+  N(\mathcal{S}) = \{g\in\mathcal{P}_n \mid gsg^{-1}\in\mathcal{S}\text{ for all }s\in\mathcal{S}\}.
+\]
+These two are, in general, distinct but related: for the normaliser we ask that \(gsg^{-1}=s'\) for some arbitrary \(s'\in\mathcal{S}\), and for the centraliser we \emph{additionally} ask that \(s'=s\).
+However, in the case of Pauli groups, these two subgroups coincide, because \(gsg^{-1}=s'\) if and only if \(sg=gs'\), but since any two elements of the Pauli group either commute or anticommute, this implies that \(s'=s\) or \(s'=-s\); but we have already seen (and proven, in Exercise \ref{one-out-of-four-stabilisers}) that if \(s\) is in a stabiliser then \(-s\) cannot be, and so it must be the case that \(s'=s\).
+
+In summary, given a stabiliser, we get a corresponding normaliser, and given the normaliser (which, in our case, is the same thing as the centraliser), we get two interesting quotient groups to study.
+By the definition of the normaliser, \(\mathcal{S}\) is normal in \(N(\mathcal{S})\).
+What is less obvious is that \(N(S)\) itself is normal in \(\mathcal{P}_n\).
+To prove this, let \(g\in\mathcal{P}_n\) and consider \(gng^{-1}\), for some \(n\in N(\mathcal{S})\).
+We need to show that \(gng^{-1}\in N(S)\).
+For any \(s\in\mathcal{S}\),
+\[
+  (gng^{-1})s = s(gng^{-1})
+\]
+because either \(s\) commutes with both \(g\) and \(g^{-1}\), or it anticommutes with both \(g\) and \(g^{-1}\), in which case the two minus signs cancel out.
+Either way, \(s\) commutes with \(gng^{-1}\), and so, by definition, \(gng^{-1}\in N(\mathcal{S})\).
+So \(\mathcal{S}\) in normal in \(N(\mathcal{S})\) by definition, and \(N(\mathcal{S})\) is normal in \(\mathcal{P}_n\) by the above; but recall that this does \emph{not} imply that \(\mathcal{S}\) is normal in \(\mathcal{P}_n\).
+Indeed, pick any element \(g\in\mathcal{P}_n\) that anticommutes with some \(s\in\mathcal{S}\), so that \(gsg^{-1}=-s\); but we already know that if \(s\in\mathcal{S}\) then \(-s\not\in\mathcal{S}\).
+
+With these normal subgroups \(\mathcal{S}\triangleleft N(\mathcal{S})\triangleleft\mathcal{P}_n\) we can form two quotient groups, arranging things into cosets: \(N(\mathcal{S})/\mathcal{S}\) and \(\mathcal{P}_n/N(\mathcal{S})\).
+This is visualised in Figure \ref{fig:slicing-pn-into-cosets}.
+Note that we can also form cosets of \(\mathcal{S}\) in \(\mathcal{P}_n\), but since this is not a normal subgroup the left cosets will be different from the right cosets, and we cannot construct a quotient group \(\mathcal{P}_n/\mathcal{S}\).
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{qubit_guide_files/figure-latex/slicing-pn-into-cosets-1} 
+
+}
+
+\caption{Any Pauli stabiliser \(\mathcal{S}\leqslant\mathcal{P}_n\) (shown in red) slices its normaliser \(N(\mathcal{S})\) (shown in blue) into cosets, and the normaliser in turn slices \(\mathcal{P}_n\) into cosets. There are four ``sheets'' in the diagram to remind us that there are four possible global phases, so we obtain the three sheets behind the first one by multiplying by \(-1\), \(i\), and \(-i\). We give a more concrete worked example in Exercise \ref{pauli-group-three-qubits-worked-example}.}\label{fig:slicing-pn-into-cosets}
+\end{figure}
+
+This resulting structure --- any Pauli stabiliser slicing its normaliser into cosets, and this normaliser in turn slicing the Pauli group into cosets --- will be very useful when we discuss quantum error correction, and we can explain a bit how this will work now.
+The stabiliser will partition the Hilbert space of \(n\) qubits into subspaces, and the one that is fixed by the stabiliser will be chosen as a \textbf{code space}.
+All operators in the normaliser will then become logical operations on the code space, and the cosets of the normaliser in \(\mathcal{P}_n\) will group together operators that describe errors of a similar type (those with the same \textbf{error syndrome}).
+It will be a useful fact to know that \(\mathcal{P}_n/N(\mathcal{S})\) is abelian --- we show this in Exercise \ref{pauli-mod-normaliser-is-abelian}.
+
+Finally, let's count some elements.
+We have already seen that \(|\mathcal{P}_n|=4\cdot 4^n=4^{n+1}\), and that if \(\mathcal{S}\) has \(r\) generators then \(|\mathcal{S}|=2^r\).
+But what about \(N(\mathcal{S})\)?
+By definition, the normaliser consists of all the operators that commute with all the generators of the stabiliser.
+There are \(4\cdot(4^n/2)\) that commute with the first generator, half of which also commute with the second generator, a further half of which also commute with the third generator, and so on.
+So we have that \(|N(\mathcal{S})|=4\cdot(4^n/2^r)\).
+Finally we have the two quotient groups: \(N(\mathcal{S})/\mathcal{S}\) has \(4\cdot(4^n/4^r)=4^{n-r+1}\) elements and is isomorphic to \(\mathcal{P}_{n-r}\); and \(\mathcal{P}_n/N(\mathcal{S})\) has \((4\cdot4^n)/(4\cdot(4^n/2^r))=2^r\) elements.
+
+\hypertarget{clifford-walks-on-stabiliser-states}{%
+\subsection{Clifford walks on stabiliser states}\label{clifford-walks-on-stabiliser-states}}
+
+There are essentially two ways to define stabiliser states of \(n\) qubits.
+We have already seen how we can describe them as simultaneous \(+1\) eigenstates of \(n\) generators of some stabiliser group \(\mathcal{S}\leqslant\mathcal{P}_n\), but it turns out that we could also define them as the states that are reachable from the \(|0\rangle^{\otimes n}\) state using only the \(\texttt{c-NOT}\) gate, the Hadamard \(H\), and the phase gate \(S=\left(\begin{smallmatrix}1&0\\0&i\end{smallmatrix}\right)\).
+If you start playing around with these three gates, you'll soon notice that you tend to reach certain discrete states, and never anything in between them.
+For example, in the single qubit case (so with just the \(H\) and \(S\) gates), you'll be able to go between \(|0\rangle\), \(|1\rangle\), \(|\pm\rangle\), and \(|\pm i\rangle\), but never anything like, say, \(\sqrt{\frac{1}{3}}|0\rangle+\sqrt{\frac{2}{3}}|1\rangle\).
+When you have two or more qubits, you might also notice that whenever you create an \(n\)-qubit superposition that assigns non-zero amplitudes to strings in some set \(A\subset\{0,1\}^n\), it's always an equal superposition over \(A\) (though possibly with \(\pm1\) or \(\pm i\) phases), and \(|A|\) is always some power of \(2\).
+For example, you can generate states such as \(\frac{1}{\sqrt{2}}(|000\rangle+|111\rangle)|010\rangle\) or \(\frac{1}{2}(|000\rangle+i|100\rangle+|011\rangle-i|111\rangle)|010\rangle\), but never states such as \(\frac{1}{\sqrt{3}}(|001\rangle+|010\rangle+|100\rangle)|010\rangle\).
+
+\begin{idea}
+Circuits composed of only \(\texttt{c-NOT}\), \(H\), and \(S\) are special: they effect unitaries that map stabiliser states to stabiliser states.
+
+The \(n\)-qubit \textbf{Clifford group} \(\mathcal{C}_n\) is the group generated by these three unitaries, and it happens to be exactly the normaliser of of the \(n\)-qubit Pauli group:
+\[
+  \mathcal{C}_n = \{U\in\mathrm{U}(2^n) \mid UPU^\dagger\in\mathcal{P}_n\text{ for all }P\in\mathcal{P}_n\} \eqqcolon N_{\mathrm{U}(2^n)}(\mathcal{P}_n).
+\]
+
+\end{idea}
+
+It's a confusing (but immutable) matter of terminology that \textbf{Clifford gates} (i.e.~gates made from only unitaries in the Clifford group) are sometimes called \textbf{stabiliser gates}, and \textbf{Clifford circuits} (i.e.~circuits made from only Clifford gates) are sometimes called \textbf{stabiliser circuits}, but stabiliser states are \emph{never} called ``Clifford states''.
+
+So if we have an \(n\)-qubit stabiliser state, described by \(n\) Pauli generators, then any unitary in the Clifford group \(\mathcal{C}_n\) will map each of the \(n\) Pauli generators to another Pauli generator, and the set of these \(n\) new generators will define a new stabiliser state.
+Indeed, suppose we have some vector space \(V\) stabilised by the group \(\mathcal{S}\), and we apply some unitary operation \(U\).
+If \(|\psi\rangle\) is an arbitrary element of \(V\), then, for any element \(S\) of \(\mathcal{S}\),
+\[
+  \begin{aligned}
+    U|\psi\rangle
+    &= US|\psi\rangle
+    \\&= US(U^\dagger U)|\psi\rangle
+    \\&= (USU^\dagger)U|\psi\rangle
+  \end{aligned}
+\]
+and so the state \(U|\psi\rangle\) is stabilised by \(USU^\dagger\), from which we deduce that the vector space
+\[
+  UV \coloneqq \{U|\psi\rangle \mid |\psi\rangle\in V\}
+\]
+is stabilised by the group
+\[
+  U\mathcal{S}U^\dagger \coloneqq \{USU^\dagger \mid S\in\mathcal{S}\}.
+\]
+Furthermore, if \(G_1,\ldots,G_r\) generate \(\mathcal{S}\), then \(UG_1U^\dagger,\ldots,UG_rU^\dagger\) generate \(U\mathcal{S}U^\dagger\), so to compute the change in the stabiliser we need only compute how it affects the generators of the stabiliser.
+
+Since the Clifford group is generated by only three elements, we can easily work out how each of these gates acts by conjugation on the Pauli group.
+For instance, we have previously seen that the Hadamard gate performs the following transformation:
+\[
+  \begin{aligned}
+    X
+    &\longmapsto HXH = Z
+  \\Z
+    &\longmapsto HZH = X.
+  \end{aligned}
+\]
+Given that \(Y=iXZ\), there is no need to specify the action of \(H\) on \(Y\), since we can calculate that
+\[
+  \begin{aligned}
+    Y\longmapsto
+    &\,\,i(HXH)(HZH)
+  \\=&\,\,iZX
+  \\=&\,\,-Y.
+  \end{aligned}
+\]
+All the basic rules for updating stabilisers with Clifford gates can be conveniently tabulated:
+
+\[
+\]
+
+\begin{longtable}[]{@{}
+  >{\centering\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.2500}}
+  >{\centering\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.7500}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\centering
+Gate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Input/Output
+\end{minipage} \\
+\midrule()
+\endhead
+\(H\) & \(\left\{\begin{matrix}X\longmapsto Z\\Y\longmapsto-Y\\Z\longmapsto X\end{matrix}\right\}\) \\
+\(S\) & \(\left\{\begin{matrix}X\longmapsto Y\\Y\longmapsto -X\\Z\longmapsto Z\end{matrix}\right\}\) \\
+\(\texttt{c-NOT}\) & \(\left\{\begin{matrix}\mathbf{1}X\longmapsto\mathbf{1}X\\X\mathbf{1}\longmapsto XX\\\mathbf{1}Y\longmapsto ZY\\Y\mathbf{1}\longmapsto YX\\\mathbf{1}Z\longmapsto ZZ\\Z\mathbf{1}\longmapsto Z\mathbf{1}\end{matrix}\right\}\) \\
+\bottomrule()
+\end{longtable}
+
+and these rules can be expressed as circuit identities, such as
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-71-1} \end{center}
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-72-1} \end{center}
+
+and
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-73-1} \end{center}
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-74-1} \end{center}
+
+Let's work through an example to see how these rules work in practice.
+Here's a simple stabiliser circuit:
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-75-1} \end{center}
+
+As we step through this circuit we embark on our \textbf{Clifford walk} between two-qubit stabiliser states:
+\[
+  \begin{aligned}
+    |00\rangle
+    \overset{H\otimes\mathbf{1}}{\longmapsto}
+    &\frac{1}{\sqrt{2}}(|0\rangle+|1\rangle)|0\rangle
+  \\\overset{\texttt{c-NOT}}{\longmapsto}
+    &\frac{1}{\sqrt{2}}(|00\rangle+|11\rangle)
+  \\\overset{\mathbf{1}\otimes S}{\longmapsto}
+    &\frac{1}{\sqrt{2}}(|00\rangle+i|11\rangle).
+  \end{aligned}
+\]
+This walk could also be described in terms of stabiliser generators:
+\[
+  \begin{vmatrix}
+    Z&\mathbf{1}
+  \\\mathbf{1}&Z
+  \end{vmatrix}
+  \overset{H\otimes\mathbf{1}}{\longmapsto}
+  \begin{vmatrix}
+    X&\mathbf{1}
+  \\\mathbf{1}&Z
+  \end{vmatrix}
+  \overset{\texttt{c-NOT}}{\longmapsto}
+  \begin{vmatrix}
+    X&X
+  \\Z&Z
+  \end{vmatrix}
+  \overset{\mathbf{1}\otimes S}{\longmapsto}
+  \begin{vmatrix}
+    X&Y
+  \\Z&Z
+  \end{vmatrix}.
+\]
+Here the first column corresponds to the first qubit, and the second column to the second qubit.
+So the first Hadamard gate flips \(Z\mathbf{1}\) to \(X\mathbf{1}\), then the \(\texttt{c-NOT}\) (which acts on both qubits together, and so acts on entire rows) turns \(X\mathbf{1}\) into \(XX\) and \(\mathbf{1}Z\) into \(ZZ\), then finally the \(S\) gate on the second qubit (thus the second column) turns \(XZ\) into \(YZ\).
+
+Despite the fact that the Clifford circuits can generate huge entangled \(n\)-qubit superpositions starting from the single state \(|0\rangle^{\otimes n}\), such circuits are easy to simulate classically because we can efficiently update the list of stabilisers following the simple rules.
+Daniel Gottesman and Emanuel Knill showed that\footnote{This is now known as the \href{https://en.wikipedia.org/wiki/Gottesman\%E2\%80\%93Knill_theorem}{\textbf{Gottesman--Knill theorem}}.} there is a polynomial-time classical algorithm to simulate any stabiliser circuit that acts on a stabiliser state.
+We can also efficiently compute the expectation values of any physical observables by examining the updated list of stabilisers.
+Note that computing a list of amplitudes would not be efficient, since there are exponentially many of them.
+
+Because they can be efficiently classically simulated, stabiliser circuits necessarily do \emph{not} capture the full power of quantum computation.
+The full universality requires as least one non-Clifford gate, such as the \(T=\left(\begin{smallmatrix}1&0\\0&e^{-i\pi/4}\end{smallmatrix}\right)\) gate.
+Once we include this gate, we can create circuits that will take us from any initial state, such as \(|0\rangle^{\otimes n}\), to arbitrarily close to any other state in the \(n\)-qubit Hilbert space.
+Despite this limitation of stabiliser computation, however, it has become a central part of quantum computing, mostly because of its role in quantum error correction and fault tolerant computation.
+Almost all of the quantum error correcting codes are stabiliser codes, and are presented using the stabiliser formalism.
+
+\hypertarget{remarks-and-exercises-stabilisers}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-stabilisers}}
+
+\hypertarget{measuring-parity}{%
+\subsubsection{Measuring parity}\label{measuring-parity}}
+
+Suppose you have a two-qubit stabiliser \(ZZ\).
+This is an observable that has two eigenvalues and two corresponding eigenspaces, namely the \(+1\) eigenspace spanned by \(\{|00\rangle,|11\rangle\}\) and the \(-1\) eigenspace spanned by \(\{|01\rangle,|10\rangle\}\).
+This tells us something about the parity of the two qubits: the \(+1\) outcome means that the bit values are the same, and the \(-1\) outcome means that they are different.
+However, it is critical that we do \emph{not} measure the bit values \(Z\mathbf{1}\) and \(\mathbf{1}Z\) separately and then multiply the results, since this could cause the state to ``collapse'' to one of the basis states in revealing the exact bit values.
+We don't want this!
+We simply want to know the mutual parity of the bit values, not what values they actually are.
+
+Mathematically speaking, the parity measurement \(ZZ\) involves two orthogonal projectors
+\[
+  \begin{aligned}
+    \frac{1}{2}(\mathbf{1}\mathbf{1}+ZZ)
+    &= |00\rangle\langle 00|+|11\rangle\langle 11|
+  \\\frac{1}{2}(\mathbf{1}\mathbf{1}-ZZ)
+    &= |01\rangle\langle 01|+|10\rangle\langle 10|
+  \end{aligned}
+\]
+whereas the bit-value measurements \(Z\mathbf{1}\) and \(\mathbf{1}Z\) are characterised by the four projectors
+\[
+  \begin{aligned}
+    \frac{1}{2}(\mathbf{1}\mathbf{1}+Z\mathbf{1})
+    &= |0\rangle\langle 0|\otimes\mathbf{1}
+  \\\frac{1}{2}(\mathbf{1}\mathbf{1}+\mathbf{1}Z)
+    &= \mathbf{1}\otimes|0\rangle\langle 0|
+  \\\frac{1}{2}(\mathbf{1}\mathbf{1}-Z\mathbf{1})
+    &= |1\rangle\langle 1|\otimes\mathbf{1}
+  \\\frac{1}{2}(\mathbf{1}\mathbf{1}-\mathbf{1}Z)
+    &= \mathbf{1}\otimes|1\rangle\langle 1|.
+  \end{aligned}
+\]
+
+In terms of circuits, if we want to measure the parity of two qubits prepared in some state \(|\psi\rangle\), then we can use the circuit
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-76-1} \end{center}
+
+which is different from the circuit which effects the measurement of the individual bit values of the two qubits, namely
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-77-1} \end{center}
+
+When dealing with stabilisers, we prefer to think about the controlled-\(\texttt{NOT}\) gate as a controlled-\(X\) instead.
+We then draw the parity-measurement circuit as
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-78-1} \end{center}
+
+But this is a bit confusing, since we are measuring the \(Z\) observable using controlled-\(X\) gates.
+Thankfully, we can use some circuit/Pauli identities to rephrase things in terms of controlled-\(Z\) gates instead:
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-79-1} \end{center}
+
+This is a quantum version of the two-bit parity measurement.
+When the auxiliary qubit (now in the top register) is found in state \(|0\rangle\) then we projected onto the \(+1\) eigenspace of \(ZZ\), which is spanned by the vectors \(|00\rangle\) and \(|11\rangle\); otherwise, we projected onto the \(-1\) eigenspace of \(ZZ\), which is spanned by the vectors \(|01\rangle\) and \(|10\rangle\).
+The circuit above is more commonly drawn simply as
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-80-1} \end{center}
+
+This scheme can be generalised and used to implement any sequence of Pauli measurements.
+For example, the circuit below shows to consecutive measurements: \(X\mathbf{1}Z\) followed by \(\mathbf{1}YZ\).
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-81-1} \end{center}
+
+\hypertarget{pauli-group-three-qubits-worked-example}{%
+\subsubsection{The Pauli group of three qubits}\label{pauli-group-three-qubits-worked-example}}
+
+Consider the three-qubit Pauli group \(\mathcal{P}_3\), which has \(4\cdot 4^3=256\) elements.
+One example of a stabiliser group is
+\[
+  \begin{aligned}
+    \mathcal{S}
+    &= \{\mathbf{1}\mathbf{1}\mathbf{1},ZZ\mathbf{1},\mathbf{1}ZZ, Z\mathbf{1}Z\}
+  \\&= \langle ZZ\mathbf{1},\mathbf{1}ZZ\rangle.
+  \end{aligned}
+\]
+since it is an abelian subgroup of \(\mathcal{P}_3\) that does not contain \(-\mathbf{1}\mathbf{1}\mathbf{1}\).
+You can check that it fixes the subspace spanned by \(|000\rangle\) and \(|111\rangle\) (and note that you only need to check this on the generators of \(\mathcal{S}\), not for all elements of \(\mathcal{S}\)).
+We have already seen in Figure \ref{fig:stabiliser-bisection} how these two generators bisect the Hilbert space of three qubits, so now let's try to understand Figure \ref{fig:slicing-pn-into-cosets} for this specific example.
+
+The elements of \(\mathcal{P}_3\) that commute with the stabiliser \(\mathcal{S}\) form the normaliser \(N(\mathcal{S})\).
+Since the stabiliser is abelian, it itself is contained inside the normaliser, but there are also elements in the normalised that are \emph{not} in the stabiliser.
+All together, there are \(4\cdot16=64\) elements in the normaliser, and they can be neatly sliced into cosets of \(\mathcal{S}\) in \(N(\mathcal{S})\), as shown in Figure \ref{fig:slicing-ns-into-cosets}.
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{qubit_guide_files/figure-latex/slicing-ns-into-cosets-1} 
+
+}
+
+\caption{Here we have arranged the elements of the normaliser of \(\mathcal{S}\) so that each row represents a coset of \(\mathcal{S}\) in \(N(\mathcal{S})\). The quotient group \(N(\mathcal{S})/\mathcal{S}\) is isomorphic to the Pauli group \(\mathcal{P}_1\), and you can see this by considering the first column (which is the \textbf{representative} for that row/coset) of the frontmost page: the four operators \(\mathbf{1}\mathbf{1}\mathbf{1}\), \(XXX\), \(-YYY\), and \(ZZZ\) behave, algebraically, exactly the same as \(\mathbf{1}\), \(X\), \(Y\), and \(Z\) (in that they satisfy the same commutation relations). Note that it is indeed \(-YYY\) that behaves like \(Y\), not \(+YYY\).}\label{fig:slicing-ns-into-cosets}
+\end{figure}
+
+Having pictured the cosets of \(\mathcal{S}\) inside \(N(\mathcal{S})\), we can now look at the cosets of \(N(\mathcal{S})\) inside \(\mathcal{P}_3\).
+
+
+
+\begin{figure}[H]
+
+{\centering \includegraphics{qubit_guide_files/figure-latex/slicing-p3-into-cosets-1} 
+
+}
+
+\caption{Here the cosets of the normaliser \(N(\mathcal{S})\) inside \(\mathcal{P}_3\) are given by the representatives \(\mathbf{1}\mathbf{1}\mathbf{1}\), \(X\mathbf{1}\mathbf{1}\), \(\mathbf{1}X\mathbf{1}\), and \(\mathbf{1}\mathbf{1}X\). Each of the four cosets representing an element of \(\mathcal{P}_3/N(\mathcal{S})\) is composed of 16 rows (four in each sheet). These rows represent cosets of \(\mathcal{S}\) in \(\mathcal{P}_3\) but we have to be careful: within the normaliser \(N(\mathcal{S})\), these are well defined, but outside of the normaliser there is a difference between left and right cosets, since \(\mathcal{S}\) is not normal in \(\mathcal{P}_3\). The blue and red rows are exactly a copy of those from Figure \ref{fig:slicing-ns-into-cosets}.}\label{fig:slicing-p3-into-cosets}
+\end{figure}
+
+\hypertarget{half-commuting}{%
+\subsubsection{Half commuting}\label{half-commuting}}
+
+Any Pauli matrix that is not the identity commutes with exactly half of all the Pauli matrices: namely, with the identity and with itself.
+For example, \(X\) commutes with \(\mathbf{1}\) and \(X\), and anticommutes with \(Y\) and \(Z\).
+
+Extend this observation to any non-identity element in \(\mathcal{P}_n\).
+In other words, show that, for any \(P\in\mathcal{P}_n\setminus\{\mathbf{1}^{\otimes n}\}\), exactly half of the elements in \(\mathcal{P}_n\) commute with \(P\).
+
+\hypertarget{one-out-of-four-stabilisers}{%
+\subsubsection{One out of four stabilisers}\label{one-out-of-four-stabilisers}}
+
+Explain why, if \(S\) is an element of some stabiliser group, then none of \(-S\), \(iS\), or \(-S\) are in the same stabiliser group.
+
+\hypertarget{stabilisers-and-projectors}{%
+\subsubsection{Stabilisers and projectors}\label{stabilisers-and-projectors}}
+
+Let \(\mathcal{S}\) be a Pauli stabiliser group, with generators \(G_1,\ldots,G_r\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Show that \(\frac{1}{2}(\mathbf{1}\pm G_j)\) is the projector onto the \(\pm1\) eigenspace of \(G_j\) for any \(j=1,\ldots,r\).
+\item
+  Show that the projector
+  \[
+     P = \frac{1}{2}(\mathbf{1}+G_1)\frac{1}{2}(\mathbf{1}+G_2)\ldots\frac{1}{2}(\mathbf{1}+G_r)
+   \]
+  onto the simultaneous \(+1\) eigenspace of the generators \(G_1,\ldots,G_r\) can be written as
+  \[
+     P = \frac{1}{2^r}(S_1+S_2+\ldots+S_{2^r})
+   \]
+  where the sum contains all elements \(S_i\) of \(\mathcal{S}\).
+\item
+  The fact that independent generators consecutively bisect the total Hilbert space relies on the fact that, if \(G_1\) and \(G_2\) are independent generators, then \(G_2\) restricted to the \(+1\) eigenspace of \(G_1\) bisects it into two subspaces of equal dimension.
+  Explain how this fact follows from
+  \[
+     \operatorname{tr}\left[
+       \frac{1}{2}(\mathbf{1}+G_1)G_2\frac{1}{2}(\mathbf{1}+G_1)
+     \right] = 0
+   \]
+  and prove that this trace is indeed zero.
+  Why do the two generators \(G_1\) and \(G_2\) have to be independent?
+\end{enumerate}
+
+\hypertarget{pauli-mod-normaliser-is-abelian}{%
+\subsubsection{Abelian Pauli quotients}\label{pauli-mod-normaliser-is-abelian}}
+
+Given any group \(G\), we define the \textbf{commutator} \([-,-]\) by
+\[
+  \begin{aligned}
+    [-,-]\colon G\times G
+    &\longrightarrow G
+  \\(g_1,g_2)
+    &\longmapsto g_1^{-1}g_2^{-1}g_1g_2
+  \end{aligned}
+\]
+
+Now let \(H\triangleleft G\) be a normal subgroup, and consider the following theorem.
+
+\begin{idea}
+\textbf{Theorem.} The quotient group \(G/H\) is abelian if and only if \([g_1,g_2]\in H\) for all \(g_1,g_2\in G\).
+
+\end{idea}
+
+Using this theorem (or otherwise),
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Prove that \(\mathcal{P}_n/N(\mathcal{S})\) is abelian for any Pauli stabiliser \(\mathcal{S}\leqslant\mathcal{P}_n\).
+\item
+  Prove that \(\mathcal{P}_n/C_4\) is abelian, where \(C_4\cong\mathbb{Z}/4\mathbb{Z}\) is given by the global phase.
+\end{enumerate}
+
+\hypertarget{equivalent-projective-pauli-measurements}{%
+\subsubsection{Equivalent projective measurements}\label{equivalent-projective-pauli-measurements}}
+
+In Section \ref{measuring-pauli-stabilisers} we described a generic method for constructing projective measurements of Pauli observables.
+However, sometimes it may be easier to use equivalent, simpler constructions.
+For example, the following two circuit identities are often used:
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-82-1} \end{center}
+
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-83-1} \end{center}
+
+These both follows from the fact that \(HZH=X\), and that the control and the target of a controlled-\(Z\) gate can be chosen arbitrarily, since the gate itself is symmetric with respect to this choice (the phase flip only happens when both qubits are in state \(|1\rangle\)).
+
 \hypertarget{part-applications}{%
 \part{Applications}\label{part-applications}}
 
@@ -8329,8 +9215,8 @@ In classical probability theory, the (absolute value of the) average value of th
 \]
 is bounded by \(2\) (and this bound can be attained); in quantum theory, it is bounded by \(2\sqrt{2}\) (and this bound can also be attained).
 
-\hypertarget{remarks-and-exercises-9}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-9}}
+\hypertarget{remarks-and-exercises-EPR-bell}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-EPR-bell}}
 
 \hypertarget{quantum-algorithms}{%
 \section{Quantum algorithms}\label{quantum-algorithms}}
@@ -8515,7 +9401,7 @@ For this purpose, we ignore everything that happens inside the black box: in our
 
 We start, once more, with the simplest quantum interference circuit
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-65-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-84-1} \end{center}
 
 but let's turn this into a black-box scenario, as described above:
 
@@ -8568,7 +9454,7 @@ But, in the quantum setting, we can solve this problem with a \emph{single} func
 
 \emph{First register: \(1\) qubit. Second register: \(1\) qubit.}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-66-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-85-1} \end{center}
 
 \end{circuit}
 
@@ -8589,7 +9475,7 @@ During the function evaluation, the second register ``kicks back'' the phase fac
 
 The evolution of the first qubit is thus identical to that described by the circuit diagram
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-67-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-86-1} \end{center}
 
 where the relative phase is \(\varphi = (-1)^{f(0)\oplus f(1)}\).
 The first qubit ends in state \(|0\rangle\) if the function \(f\) is constant, and in state \(|1\rangle\) if the function is balanced, and the standard measurement distinguishes these two cases with certainty.\footnote{This is also implemented in the \href{https://lab.quantumflytrap.com/lab/deutsch-jozsa?mode=laser}{Quantum Flytrap Virtual Lab}.}
@@ -8637,18 +9523,18 @@ In contrast, by running the circuit below, it is possible to determine the value
 
 \emph{First register: \(n\) qubits. Second register: \(1\) qubit.}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-68-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-87-1} \end{center}
 
 \end{circuit}
 
 A quick note on notation: the ``\(\ldots\)'' in the circuit means ``there are more wires here but they are identical (apart from the numbering) to the ones above''.
 You might also see other notation to denote this, such as
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-69-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-88-1} \end{center}
 
 or even simply
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-70-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-89-1} \end{center}
 
 Now, stepping through the execution of the circuit (and ignoring the second register, which, as per usual, remains in the state \(|-\rangle\) throughout), we obtain
 \[
@@ -8731,7 +9617,7 @@ In contrast, there is a quantum search algorithm, implemented by the circuit bel
 
 \emph{First register: \(n\) qubits. Second register: \(1\) qubit.}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-71-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-90-1} \end{center}
 
 where \(f_0\) tags the binary string consisting of \(n\) zeros:
 \[
@@ -8872,7 +9758,7 @@ The circuit that solves this problem, shown below, has a familiar Hadamard--func
 
 \emph{First register: \(n\) qubits. Second register: \(n\) qubits.}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-72-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-91-1} \end{center}
 
 \end{circuit}
 
@@ -8996,8 +9882,8 @@ the probability of obtaining a linearly independent set \(\{y_1,\ldots,y_{n-1}\}
 We conclude that we can determine \(s\) with some constant probability of error after repeating the algorithm \(O(n)\) times.
 The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.
 
-\hypertarget{remarks-and-exercises-10}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-10}}
+\hypertarget{remarks-and-exercises-algorithms}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-algorithms}}
 
 \hypertarget{shors-algorithm}{%
 \subsubsection{Shor's algorithm}\label{shors-algorithm}}
@@ -9153,7 +10039,7 @@ The justification is that, as we have already said, the usual Euclidean distance
 For \emph{small} values of \(d(u,v)=\|u-v\|\), we can think of this distance as being the angle between the two unit vectors.
 Indeed, if we think of Euclidean (unit) vectors, then the difference \(v-u\) is, for sufficiently small \(\|u-v\|\), just the angle between the two unit vectors (expressed in radians), because a small segment of a circle ``almost'' looks like a triangle.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-73-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-92-1} \end{center}
 
 Alternatively (and more formally), we can see this by writing \(|\langle u|v\rangle|=\cos\alpha\approx1-\alpha^2/2\), since then
 \[
@@ -9752,8 +10638,8 @@ We now want to physically implement this circuit using our preferred universal s
 If we can implement each gate with accuracy \(\varepsilon/t\), then we can approximate the circuit with accuracy \(\varepsilon\), which means that the probability of success will be \(\frac{1}{2}+\delta\pm\varepsilon\).
 So, at the very least, we want \(\varepsilon<\delta/2\).
 
-\hypertarget{remarks-and-exercises-11}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-11}}
+\hypertarget{remarks-and-exercises-approximations}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-approximations}}
 
 \hypertarget{operator-decompositions}{%
 \subsubsection{Operator decompositions}\label{operator-decompositions}}
@@ -9822,7 +10708,7 @@ The second is for arbitrary operators between Hilbert spaces, the first and thir
   Geometrically, we are decomposing any linear transformation into a composition of a rotation or reflection \(V^\dagger\), followed by a scaling by the singular values \(\sqrt{D}\), followed by another rotation or reflection \(U\).
   This maps the unit sphere in \(\mathcal{H}\) onto an ellipsoid in \(\mathcal{H}'\), and the singular values of \(A\) are exactly the lengths of the semi-axes of this ellipsoid.
 
-  \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-74-1} \end{center}
+  \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-93-1} \end{center}
 \item
   \textbf{Polar decomposition.}
   Let \(A\in\mathcal{B}(\mathcal{H})\) be a normal arbitrary operator.
@@ -9878,7 +10764,7 @@ One particularly nice consequence of this definition is that
 \]
 for any vector \(v\).
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-75-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-94-1} \end{center}
 
 You might recall that we named the Cauchy--Schwartz inequality as arguably the most useful inequality in analysis.
 Well it turns out that it is actually the special case \(p=2\) of an inequality concerning \(p\)-norms.
@@ -10574,13 +11460,13 @@ It turns out that we can actually rely on the same triple-repetition code, but w
 
 Given some qubit in an unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), we encode it into three qubits by using \(\texttt{c-NOT}\) gates:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-76-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-95-1} \end{center}
 
 Suppose that the \emph{second} qubit is flipped by our noisy channel, so that the encoded state becomes \(\alpha|010\rangle + \beta|101\rangle\).
 Decoding this requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 So instead we introduce another \emph{two additional} qubits, which we refer to as \textbf{ancilla bits}, both in state \(|0\rangle\), and apply the following \textbf{encoding network}:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-77-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-96-1} \end{center}
 
 We measure the two ancilla bits (in the standard basis), and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code, as follows.
 
@@ -10603,8 +11489,8 @@ This gives an error correction scheme that allows us to protect against both typ
 If we want to preserve a quantum state for a long time without doing any computations, or if we want to send it through a noisy communications channel, we can just encode the state using a quantum code and decode it when we are done.
 Computation on encoded states using noisy \emph{gates}, however, requires a few more tricks\ldots{}
 
-\hypertarget{remarks-and-exercises-12}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-12}}
+\hypertarget{remarks-and-exercises-decoherence}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-decoherence}}
 
 \hypertarget{quantum-error-correction-and-fault-tolerance}{%
 \section{Quantum error correction and fault tolerance}\label{quantum-error-correction-and-fault-tolerance}}
@@ -10614,38 +11500,10 @@ About \textbf{!!!TO-DO!!!}.
 \end{quote}
 
 \hypertarget{further-reading}{%
-\section{Further reading}\label{further-reading}}
+\section{Further topics and selected reading}\label{further-reading}}
 
 \begin{quote}
 About \ldots{} \textbf{!!!TO-DO!!!}
 \end{quote}
-
-\begin{itemize}
-\tightlist
-\item
-  reading list, organised by topic
-\item
-  small introductions to the following:
-
-  \begin{itemize}
-  \tightlist
-  \item
-    graphical calculus (graphical linear algebra, then ZX-calculus)
-  \item
-    philosophical ``problem'' of measurement
-  \item
-    various QM interpretations
-  \item
-    history of experimental results and actual implementations
-  \item
-    current uses of quantum information theory
-  \item
-    non-locality and non-contextuality, and other no-go theorems
-  \item
-    open problems (\url{https://arxiv.org/abs/2002.03233})
-  \item
-    retrodictive quantum computing
-  \end{itemize}
-\end{itemize}
 
 \end{document}
