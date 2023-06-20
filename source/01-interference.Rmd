@@ -684,13 +684,36 @@ The probability amplitude of a particular final state being reached is equal to 
 $$
   z = \sum_{\mathrm{all\,paths}\,k} z_k.
 $$
+
 The resulting probability, as we have just seen, is the sum of the probabilities pertaining to each computational path $p_k$ modified by the interference terms:
 $$
   \begin{aligned}
     p
-    &= |z|^2
-  \\&= \sum_{k,j} z_j^\star z_k
-  \\&= \sum_k p_k + \sum_{k\ne j} \sqrt{p_k p_j}\cos(\varphi_k-\varphi_j).
+    &= |z|^2 = z^\star z
+  \\&= \left(  \sum_{j=1}^N z_j \right)^\star
+       \left(  \sum_{k=1}^N z_k \right)
+  \\&= \left( z_1 + z_2 + \dots + z_N \right)^\star
+       \left( z_1 + z_2 + \dots + z_N \right)
+  \\&= \left( z_1^\star + z_2^\star + \dots + z_N^\star \right)
+       \left( z_1 + z_2 + \dots + z_N \right)
+  \\&=    \left( z_1^\star z_1 + z_1^\star z_2 + \dots + z_1^\star z_N \right)
+  \\&     +\left( z_2^\star z_1 +z_2^\star z_2 + \dots + z_2^\star z_N \right)
+  \\&     + \dots
+  \\&     +\left( z_N^\star z_1 + z_N^\star z_2 + \dots + z_N^\star z_N \right)
+  \\&= \underbrace{\sum_k |z_k|^2}_{\substack{\text{diagonal}\\ \text{elements}}}
+  + \underbrace{\sum_{\substack{ k > j}} \left( z_k^\star z_j + z_j^\star z_k\right)}_{\substack{\text{non-diagonal}\\ \text{elements}}}
+  \\&= \sum_k |z_k|^2 + \sum_{\substack{ k > j}} \left( |z_k||z_j|
+          e^{i(\varphi_j-\varphi_k)}
+          + |z_j||z_k|
+          e^{i(\varphi_k-\varphi_j)}
+        \right)
+  \\&= \sum_k |z_k|^2 + \sum_{\substack{ k > j}} \left( |z_k||z_j|
+        e^{-i(\varphi_k-\varphi_j)}
+        + |z_j||z_k|
+        e^{i(\varphi_k-\varphi_j)}
+      \right)
+  \\&= \sum_k p_k + \sum_{k > j} 2 |z_k||z_j|\cos(\varphi_k-\varphi_j)
+  \\&= \sum_k p_k + \sum_{k > j} 2 \sqrt{p_k p_j}\cos(\varphi_k-\varphi_j).
   \end{aligned}
 $$
 
