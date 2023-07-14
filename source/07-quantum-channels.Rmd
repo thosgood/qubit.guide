@@ -1142,7 +1142,55 @@ Pictorially, we might represent this by something like
 ```
 :::
 
+In this form, we can see right away that, if $\mathcal{E}$ is a quantum channel, then $\widetilde{\mathcal{E}}$ is a density matrix.
+In fact, not just any density matrix: the first subsystem of the maximally entangled state $\ket{\Omega}$ remains maximally mixed, since we apply the identity operator, and so $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$.
+The converse is also true: any density matrix $\widetilde{\mathcal{E}}$ such that $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$ defines a quantum channel, i.e. a completely positive trace-preserving map.
+This is just one example of how, in general, the Choi--Jamiołkowski isomorphism provides a simple way of studying linear maps on operators by means of inspecting their Choi matrices.
 
+::: {.idea latex=""}
+Let $\widetilde{\mathcal{E}}$ be the Choi matrix of a linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$.
+Then
+
+1. $\mathcal{E}$ is completely positive if and only if $\widetilde{\mathcal{E}}$ is positive semi-definite.
+2. $\mathcal{E}$ is trace preserving if and only if $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$.
+3. $\mathcal{E}$ sends the identity operator to the identity operator if and only if $(\tr\otimes\id)\widetilde{\mathcal{E}}=\frac{1}{d}\id$.
+4. $\mathcal{E}$ sends Hermitian operators to Hermitian operators and only if $\widetilde{\mathcal{E}}$ is Hermitian.
+:::
+
+We shall prove the first two of these correspondences here, and leave the last two as an exercise.
+
+Let's start with complete positivity, since one direction is much easier: if $\mathcal{E}$ is a completely positive map, then its extension $\id\otimes\mathcal{E}$ maps $\proj{\Omega}$ to a positive semi-definite matrix, and so $\widetilde{\mathcal{E}}$ is positive semi-definite.
+The converse is less immediate.
+If $\widetilde{\mathcal{E}}$ is positive semi-definite, then its eigenvalues $p_k$ are non-negative, and we can write its spectral decomposition as
+$$
+  \widetilde{\mathcal{E}}
+  = \sum_k p_k\proj{\psi_k}
+  = \sum_k \proj{\widetilde{\psi}_k}
+$$
+where the vectors $\ket{\widetilde{\psi}_k}=\sqrt{p_k}\ket{\psi_k}$ are pairwise orthogonal but not normalised.
+Each of the vectors $\ket{\widetilde{\psi}_k}$ can be written as
+$$
+  \ket{\widetilde{\psi}_k}
+  = (\id\otimes E_k)\ket{\Omega}
+$$
+for some operator $E_k$ (Exercise \@ref(vector-expression-omega)).
+This means that
+$$
+  \begin{aligned}
+    \widetilde{\mathcal{E}}
+    &= \sum_k \proj{\widetilde{\psi}_k}
+  \\&= \sum_k (\id\otimes E_k)\proj{\Omega}(\id\otimes E_k^\dagger)
+  \\&= \frac{1}{d}\sum_{i,j} \left(\ket{i}\bra{j}\otimes\underbrace{\sum_k E_k\bra{i}\ket{j}E_k^\dagger}_{\mathcal{E}(\ket{i}\bra{j})}\right).
+  \end{aligned}
+$$
+Comparing this last expression with the definition of $\widetilde{\mathcal{E}}$, we conclude that $\mathcal{E}$ is of the form
+$$
+  \mathcal{E}(\rho)
+  = \sum_k E_k\rho E_k^\dagger
+$$
+which is a completely positive map in Kraus form (though not necessarily trace preserving, since we do not require that $\sum_k E_k E_k^\dagger=\id$).
+
+For the trace-preserving correspondence, note that
 
 
 
@@ -1303,7 +1351,7 @@ $$
   \\=& \sum_{i,j} B_i\rho B^\dagger_j  C_{ij}
   \end{aligned}
 $$
-The matrix $C_{ij}$ is positive semidefinite, and hence unitarily diagonalisable: $C_{ij}=\sum_k U_{ik} d_k U^\dagger_{kj}$ for some unitary $U$ and some $d_k\geq0$.
+The matrix $C_{ij}$ is positive semi-definite, and hence unitarily diagonalisable: $C_{ij}=\sum_k U_{ik} d_k U^\dagger_{kj}$ for some unitary $U$ and some $d_k\geq0$.
 We can then unitarily "rotate" our operator basis and use the $C_k=\sum_j U_{jk}B_j \sqrt{d_k}$ as our new Kraus operators.
 
 
@@ -1893,12 +1941,15 @@ Consider the [**Toffoli gate**](https://en.wikipedia.org/wiki/Toffoli_gate)
 Express $\rho'$ as a function of $\rho$ in the Kraus representation.
 
 
-### Trace preserving and partial trace
+### Expressing vectors using the maximally mixed state {#vector-expression-omega}
 
-Show that $\mathcal{E}$ is trace preserving if and only if $\tr_\mathcal{B}\widetilde{\mathcal{E}} = d\id$.
-(Here the partial trace is over the second system in our definition $\widetilde{\mathcal{E}}=\id\otimes\mathcal{E}\proj{\Omega}$).
-
-*Hint: show that $\tr\mathcal{E}(\ket{i}\bra{j})=\delta_{ij}$.*
+Show that any vector $\ket{\psi}$ in $\mathcal{H}\otimes\mathcal{H}'$ can be written as
+$$
+  \ket{\psi}
+  = \id\otimes V\ket{\Omega}
+$$
+where $V=\sum_{i,j}V_{ij}\ket{j}\bra{i}$ is an operator from $\mathcal{H}$ to $\mathcal{H}'$, and $\ket{\Omega}=\frac{1}{d}\sum_i\ket{i}\ket{i}$ is a maximally entangled state in $\mathcal{H}\otimes\mathcal{H}$.
+(Here the vectors $\ket{i}$ and $\ket{j}$ form orthonormal bases in $\mathcal{H}$ and $\mathcal{H}'$, respectively.)
 
 
 ### Complete positivity of a certain map
