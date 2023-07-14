@@ -1143,7 +1143,7 @@ Pictorially, we might represent this by something like
 :::
 
 In this form, we can see right away that, if $\mathcal{E}$ is a quantum channel, then $\widetilde{\mathcal{E}}$ is a density matrix.
-In fact, not just any density matrix: the first subsystem of the maximally entangled state $\ket{\Omega}$ remains maximally mixed, since we apply the identity operator, and so $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$.
+In fact, not just any density matrix: the first subsystem of the maximally entangled state $\ket{\Omega}$ is initially maximally, and remains maximally mixed, since we apply the identity operator, and so $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$.
 The converse is also true: any density matrix $\widetilde{\mathcal{E}}$ such that $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$ defines a quantum channel, i.e. a completely positive trace-preserving map.
 This is just one example of how, in general, the Choi--Jamiołkowski isomorphism provides a simple way of studying linear maps on operators by means of inspecting their Choi matrices.
 
@@ -1190,8 +1190,51 @@ $$
 $$
 which is a completely positive map in Kraus form (though not necessarily trace preserving, since we do not require that $\sum_k E_k E_k^\dagger=\id$).
 
-For the trace-preserving correspondence, note that
+For the trace-preserving correspondence, note first of all that, if $\mathcal{E}$ is trace preserving, then
+$$
+  \begin{aligned}
+    (\id\otimes\tr)\widetilde{\mathcal{E}}
+    &= \frac{1}{d}\sum_{i,j} \ket{i}\bra{j} \underbrace{\tr\mathcal{E}(\ket{i}\bra{j})}_{\delta_{ij}}
+  \\&= \frac{1}{d}\sum_i\proj{i}
+  \\&= \frac{1}{d}\id.
+  \end{aligned}
+$$
+Conversely, for any operator $\rho$ in $\mathcal{B}(\mathcal{H})$, we have already seen that
+$$
+  \frac{1}{d}\tr\mathcal{E}(\rho)
+  = (\tr\otimes1)\left[(\rho^T\otimes\id)\widetilde{\mathcal{E}}\right]
+$$
+and so, tracing over $\mathcal{H}'$ by applying $\id\otimes\tr$, we see that
+$$
+  \tr\mathcal{E}(\rho)
+  = (\id\otimes\tr)\left[d(\tr\otimes1)\left[(\rho^T\otimes\id)\widetilde{\mathcal{E}}\right]\right]
+$$
+which rearranges to give
+$$
+  \begin{aligned}
+    \tr\mathcal{E}(\rho)
+    &= d(\tr\otimes\tr)\left[(\rho^T\otimes\id)\widetilde{\mathcal{E}\right]
+  \\&= d(\tr\otimes\id)\left[\rho^T(\id\otimes\tr)\widetilde{\mathcal{E}}\right]
+  \end{aligned}
+$$
+by using the fact^[We have already used this property when calculating the expectation value of an observable $A$ that pertains only to a subsystem $\mathcal{A}$ of a bipartite system $\mathcal{AB}$ described by some density operator $\rho_{\mathcal{AB}}$, noting that $\tr[(A\otimes\id)\rho_{\mathcal{AB}}]=\tr[A\rho_{\mathcal{A}}]$, where $\rho_{\mathcal{A}}=\tr_\mathcal{B}\rho_{\mathcal{AB}}$.] that $(\tr\otimes\tr)[(A\otimes\id)C]=(\tr\otimes\id)[A(\id\otimes\tr)C]$, which is just another way of writing the defining property of the partial trace: $\tr_{\mathcal{AB}}(A\otimes\id)C=\tr_{\mathcal{A}}(A\tr_{\mathcal{B}}C)$.
+So if $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$, then
+$$
+  \tr\mathcal{E}(\rho)
+  = \tr\rho^T
+  = \tr\rho
+$$
+and so $\mathcal{E}$ is trace preserving.
 
+In particular then, completely positive trace-preserving maps (quantum channels) have Choi matrices that are positive semi-definite and such that their partial trace gives the maximally mixed state $\frac{1}{d}\id$, and we have just shown that the converse is true.
+
+::: {.idea latex=""}
+**Channel--state duality.**
+Quantum channels are exactly the completely positive trace-preserving (CPTP) maps, and these are exactly the linear maps $\mathcal{E}$ whose Choi matrix $\widetilde{\mathcal{E}}$ is positive semi-definite and such that $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$.
+:::
+
+Furthermore, all completely positive maps admit a Kraus decomposition $\rho\mapsto\sum_k E_k\rho E_k^\dagger$, and these Kraus operators can be obtained from the spectral decomposition of the corresponding Choi matrix.
+Given the Kraus decomposition, if we *also* want the map to be trace preserving, then we must additional require that the Kraus operators satisfy $\sum_k E_k^\dagger E_k=\id$.
 
 
 ## The mathematics of "can" and "cannot"
@@ -1280,7 +1323,7 @@ which lets us apply channel-state duality: *$\mathcal{E}$ is completely positive
 
 <div class="video" title="Properties of Kraus representations" data-videoid="YxnTjuRwvdg"></div>
 
-::: {.idea}
+::: {.idea latex=""}
 Channel-state duality gives us more than just a one-to-one correspondence between states $\widetilde{\mathcal{E}}$ and channels $\mathcal{E}$ --- it *also* gives a one-to-one correspondence between vectors in the statistical ensemble $\widetilde{\mathcal{E}}$ and the Kraus operators in the decomposition of $\mathcal{E}$.
 :::
 
@@ -1993,6 +2036,19 @@ $$
 $$
 
 (For example, if we are interested in the component $\mathcal{E}(X)_{ij}=\bra{i}\mathcal{E}(X)\ket{j}$, then we can take $Y=\ket{j}\bra{i}$.)
+
+
+### Entanglement witness
+
+Show that, if $\mathcal{E}$ is a positive semi-definite map that is not necessarily completely positive, then its Choi matrix $\widetilde{\mathcal{E}}$ is still positive semi-definite on *separable* states.
+
+
+### Almost Kraus decomposition
+
+Show that any linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ can be written as $\rho\mapsto\sum_k E_k\rho F_k^\dagger$.
+This is very reminiscent of the Kraus decomposition, except that here $E_k$ and $F_k$ are not, in general, the same operator.
+
+*Hint: use the singular-value decomposition of the Choi matrix.*
 
 
 ### Tricks with a maximally mixed state
