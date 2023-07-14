@@ -324,12 +324,14 @@ $$
 $$
 Then, using the trick of writing $x=\frac{x+y}{2}+\frac{x-y}{2}$ and $y=\frac{x+y}{2}-\frac{x-y}{2}$, followed by Euler's formula ($e^{i\alpha}=\cos\alpha+i\sin\alpha$), we see that
 $$
-  \begin{aligned}
-    U_{10}
-  \\&= \frac{1}{2} \left(e^{i\varphi_0}-e^{i\varphi_1}\right)
-  \\&= \frac{1}{2}\left(e^{i\frac{\varphi_0+\varphi_1}{2}}e^{i\frac{\varphi_0-\varphi_1}{2}}\right)
-  \\&= -ie^{i\frac{\varphi_0+\varphi_1}{2}}\sin\frac{\varphi_1-\varphi_0}{2}
-  \end{aligned}
+\begin{aligned}
+U_{10}
+&= \frac{1}{2} \left(e^{i\varphi_0}-e^{i\varphi_1}\right)
+\\&= \frac{1}{2}\left( e^{i\frac{\varphi_0+\varphi_1}{2}}e^{i\frac{\varphi_0-\varphi_1}{2}} - e^{i\frac{\varphi_0+\varphi_1}{2}}e^{-i\frac{\varphi_0-\varphi_1}{2}}\right)
+\\&= \frac{1}{2} e^{i\frac{\varphi_0+\varphi_1}{2}} \left( e^{i\frac{\varphi_0-\varphi_1}{2}} - e^{-i\frac{\varphi_0-\varphi_1}{2}}\right)
+\\&= \frac{1}{2} e^{i\frac{\varphi_0+\varphi_1}{2}} \left( 2i \sin\left(\frac{\varphi_0 - \varphi_1}{2}\right) \right)
+\\&= -ie^{i\frac{\varphi_0+\varphi_1}{2}}\sin\frac{\varphi_1-\varphi_0}{2}
+\end{aligned}
 $$
 where the relative phase $\varphi=\varphi_1-\varphi_0$ shows up yet again.
 
@@ -682,13 +684,37 @@ The probability amplitude of a particular final state being reached is equal to 
 $$
   z = \sum_{\mathrm{all\,paths}\,k} z_k.
 $$
-The resulting probability, as we have just seen, is the sum of the probabilities pertaining to each computational path $p_k$ modified by the interference terms:
+
+The resulting probability, as we have just seen, is the sum of the probabilities $p_k$ pertaining to each computational path modified by the interference terms.
+To show this, note first that
 $$
   \begin{aligned}
     p
-    &= |z|^2
-  \\&= \sum_{k,j} z_j^\star z_k
-  \\&= \sum_k p_k + \sum_{k\ne j} \sqrt{p_k p_j}\cos(\varphi_k-\varphi_j).
+    &= |z|^2 = z^\star z
+  \\&= \left(  \sum_{j=1}^N z_j \right)^\star
+       \left(  \sum_{k=1}^N z_k \right)
+  \\&= \left( z_1^\star + z_2^\star + \dots + z_N^\star \right)
+       \left( z_1 + z_2 + \dots + z_N \right)
+  \end{aligned}
+$$
+Multiplying out these two sums gives us terms of the form $z_i^\star z_j$ for $1\leq i,j\leq N$, so we can think of these as forming a square matrix and then split the sum into the "diagonal" terms and the "off-diagonal" terms:
+$$
+  \begin{aligned}
+    p
+    &= \underbrace{\sum_k |z_k|^2}_{\substack{\text{diagonal}\\ \text{elements}}}
+  + \underbrace{\sum_{\substack{ k > j}} \left( z_k^\star z_j + z_j^\star z_k\right)}_{\substack{\text{off-diagonal}\\ \text{elements}}}
+  \\&= \sum_k |z_k|^2 + \sum_{\substack{ k > j}} \left( |z_k||z_j|
+          e^{i(\varphi_j-\varphi_k)}
+          + |z_j||z_k|
+          e^{i(\varphi_k-\varphi_j)}
+        \right)
+  \\&= \sum_k |z_k|^2 + \sum_{\substack{ k > j}} \left( |z_k||z_j|
+        e^{-i(\varphi_k-\varphi_j)}
+        + |z_j||z_k|
+        e^{i(\varphi_k-\varphi_j)}
+      \right)
+  \\&= \sum_k p_k + \sum_{k > j} 2 |z_k||z_j|\cos(\varphi_k-\varphi_j)
+  \\&= \sum_k p_k + \sum_{k > j} \underbrace{2 \sqrt{p_k p_j}\cos(\varphi_k-\varphi_j)}_{\text{interference terms}}.
   \end{aligned}
 $$
 
@@ -854,14 +880,14 @@ If the admissible physical evolutions were restricted to discrete symmetries, e.
 ### Many computational paths
 
 A quantum computer starts calculations in some initial state, then follows $n$ different computational paths which lead to the final output.
-The computational paths are followed with probability amplitudes $\frac{1}{\sqrt n}e^{i k \varphi}$, where $\varphi$ is a fixed angle $0< \varphi <2\pi$ and $k=0,1,...n-1$.
+The computational paths are followed with probability amplitudes $\frac{1}{n}e^{i k \varphi}$, where $\varphi$ is a fixed angle $0< \varphi <2\pi$ and $k=0,1,...n-1$.
 Using the fact that $1+z+z^2+\ldots + z^n= \frac{1-z^{n+1}}{1-z}$, show that the probability $P$ of generating the output is given by
 $$
   P
-  = \frac{1}{n}\left\vert
+  = \frac{1}{n^2}\left\vert
     \frac{1-e^{i n\varphi}}{1-e^{i\varphi}}
   \right\vert^2
-  = \frac{1}{n} \frac{\sin^2 (n\frac{\varphi}{2})}{\sin^2 (\frac{\varphi}{2})}.
+  = \frac{1}{n^2} \frac{\sin^2 (n\frac{\varphi}{2})}{\sin^2 (\frac{\varphi}{2})}.
 $$
 for $0<\varphi<2\pi$, and that $P=1$ when $\varphi=0$.
 Plot the probability as a function of $\varphi$.
