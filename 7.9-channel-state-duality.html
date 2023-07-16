@@ -293,11 +293,13 @@
 <li class="chapter" data-level="7.13.12" data-path="7.13-remarks-and-exercises-quantum-channels.html"><a href="7.13-remarks-and-exercises-quantum-channels.html#pauli-twirl"><i class="fa fa-check"></i><b>7.13.12</b> Pauli twirl</a></li>
 <li class="chapter" data-level="7.13.13" data-path="7.13-remarks-and-exercises-quantum-channels.html"><a href="7.13-remarks-and-exercises-quantum-channels.html#depolarising-channel"><i class="fa fa-check"></i><b>7.13.13</b> Depolarising channel</a></li>
 <li class="chapter" data-level="7.13.14" data-path="7.13-remarks-and-exercises-quantum-channels.html"><a href="7.13-remarks-and-exercises-quantum-channels.html#toffoli-gate"><i class="fa fa-check"></i><b>7.13.14</b> Toffoli gate</a></li>
-<li class="chapter" data-level="7.13.15" data-path="7.13-remarks-and-exercises-quantum-channels.html"><a href="7.13-remarks-and-exercises-quantum-channels.html#trace-preserving-and-partial-trace"><i class="fa fa-check"></i><b>7.13.15</b> Trace preserving and partial trace</a></li>
+<li class="chapter" data-level="7.13.15" data-path="7.13-remarks-and-exercises-quantum-channels.html"><a href="7.13-remarks-and-exercises-quantum-channels.html#vector-expression-omega"><i class="fa fa-check"></i><b>7.13.15</b> Expressing vectors using the maximally mixed state</a></li>
 <li class="chapter" data-level="7.13.16" data-path="7.13-remarks-and-exercises-quantum-channels.html"><a href="7.13-remarks-and-exercises-quantum-channels.html#complete-positivity-of-a-certain-map"><i class="fa fa-check"></i><b>7.13.16</b> Complete positivity of a certain map</a></li>
 <li class="chapter" data-level="7.13.17" data-path="7.13-remarks-and-exercises-quantum-channels.html"><a href="7.13-remarks-and-exercises-quantum-channels.html#duals"><i class="fa fa-check"></i><b>7.13.17</b> Duals</a></li>
 <li class="chapter" data-level="7.13.18" data-path="7.13-remarks-and-exercises-quantum-channels.html"><a href="7.13-remarks-and-exercises-quantum-channels.html#trace-transpose-choi"><i class="fa fa-check"></i><b>7.13.18</b> Trace, transpose, Choi</a></li>
-<li class="chapter" data-level="7.13.19" data-path="7.13-remarks-and-exercises-quantum-channels.html"><a href="7.13-remarks-and-exercises-quantum-channels.html#tricks-with-a-maximally-mixed-state"><i class="fa fa-check"></i><b>7.13.19</b> Tricks with a maximally mixed state</a></li>
+<li class="chapter" data-level="7.13.19" data-path="7.13-remarks-and-exercises-quantum-channels.html"><a href="7.13-remarks-and-exercises-quantum-channels.html#entanglement-witness"><i class="fa fa-check"></i><b>7.13.19</b> Entanglement witness</a></li>
+<li class="chapter" data-level="7.13.20" data-path="7.13-remarks-and-exercises-quantum-channels.html"><a href="7.13-remarks-and-exercises-quantum-channels.html#almost-kraus-decomposition"><i class="fa fa-check"></i><b>7.13.20</b> Almost Kraus decomposition</a></li>
+<li class="chapter" data-level="7.13.21" data-path="7.13-remarks-and-exercises-quantum-channels.html"><a href="7.13-remarks-and-exercises-quantum-channels.html#tricks-with-a-maximally-mixed-state"><i class="fa fa-check"></i><b>7.13.21</b> Tricks with a maximally mixed state</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="8-stabilisers.html"><a href="8-stabilisers.html"><i class="fa fa-check"></i><b>8</b> Stabilisers</a>
@@ -502,82 +504,104 @@ where <eq env="math">d=\dim\mathcal{H}</eq>.</p>
 <p>Pictorially, we might represent this by something like</p>
 <p><img src="qubit_guide_files/figure-html/unnamed-chunk-59-1.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
-<p>In this form, the Choi–Jamiołkowski isomorphism gives us a simple necessary and sufficient condition for a linear map to be a quantum channel:</p>
+<p>In this form, we can see right away that, if <eq env="math">\mathcal{E}</eq> is a quantum channel, then <eq env="math">\widetilde{\mathcal{E}}</eq> is a density matrix.
+In fact, not just any density matrix: the first subsystem of the maximally entangled state <eq env="math">|\Omega\rangle</eq> is initially maximally, and remains maximally mixed, since we apply the identity operator, and so <eq env="math">(\mathbf{1}\otimes\operatorname{tr})\widetilde{\mathcal{E}}=\frac{1}{d}\mathbf{1}</eq>.
+The converse is also true: any density matrix <eq env="math">\widetilde{\mathcal{E}}</eq> such that <eq env="math">(\mathbf{1}\otimes\operatorname{tr})\widetilde{\mathcal{E}}=\frac{1}{d}\mathbf{1}</eq> defines a quantum channel, i.e. a completely positive trace-preserving map.
+This is just one example of how, in general, the Choi–Jamiołkowski isomorphism provides a simple way of studying linear maps on operators by means of inspecting their Choi matrices.</p>
 <div class="idea">
-<p><strong>Channel-state duality.</strong> <eq env="math">\mathcal{E}</eq> is a quantum channel <em>if and only if</em> <eq env="math">\widetilde{\mathcal{E}}</eq> is a density matrix.</p>
+<p>Let <eq env="math">\widetilde{\mathcal{E}}</eq> be the Choi matrix of a linear map <eq env="math">\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})</eq>.
+Then</p>
+<ol style="list-style-type: decimal">
+<li><eq env="math">\mathcal{E}</eq> is completely positive if and only if <eq env="math">\widetilde{\mathcal{E}}</eq> is positive semi-definite.</li>
+<li><eq env="math">\mathcal{E}</eq> is trace preserving if and only if <eq env="math">(\mathbf{1}\otimes\operatorname{tr})\widetilde{\mathcal{E}}=\frac{1}{d}\mathbf{1}</eq>.</li>
+<li><eq env="math">\mathcal{E}</eq> sends the identity operator to the identity operator if and only if <eq env="math">(\operatorname{tr}\otimes\mathbf{1})\widetilde{\mathcal{E}}=\frac{1}{d}\mathbf{1}</eq>.</li>
+<li><eq env="math">\mathcal{E}</eq> sends Hermitian operators to Hermitian operators and only if <eq env="math">\widetilde{\mathcal{E}}</eq> is Hermitian.</li>
+</ol>
 </div>
-<p>One direction of this claim is immediate: we already know that any quantum channel <eq env="math">\mathcal{E}</eq> is, in particular, a completely positive map, and so <eq env="math">\mathbf{1}\otimes\mathcal{E}</eq> maps density matrices to density matrices, whence <eq env="math">\widetilde{\mathcal{E}}=(\mathbf{1}\otimes\mathcal{E})|\Omega\rangle\langle\Omega|</eq> is a density matrix, since <eq env="math">|\Omega\rangle\langle\Omega|</eq> is a density matrix.
-The other direction is less obvious.
-If <eq env="math">\widetilde{\mathcal{E}}</eq> is a density matrix, then it can be written as a mixture of pure states <eq env="math">|\psi_k\rangle\langle\psi_k|</eq> with probabilities <eq env="math">p_k</eq>, or directly as
+<p>We shall prove the first two of these correspondences here, and leave the last two as an exercise.</p>
+<p>Let’s start with complete positivity, since one direction is much easier: if <eq env="math">\mathcal{E}</eq> is a completely positive map, then its extension <eq env="math">\mathbf{1}\otimes\mathcal{E}</eq> maps <eq env="math">|\Omega\rangle\langle\Omega|</eq> to a positive semi-definite matrix, and so <eq env="math">\widetilde{\mathcal{E}}</eq> is positive semi-definite.
+The converse is less immediate.
+If <eq env="math">\widetilde{\mathcal{E}}</eq> is positive semi-definite, then its eigenvalues <eq env="math">p_k</eq> are non-negative, and we can write its spectral decomposition as
 <eq env="displaymath">
   \widetilde{\mathcal{E}}
-  = \sum_k|\widetilde{\psi}_k\rangle\langle\widetilde{\psi}_k|,
+  = \sum_k p_k|\psi_k\rangle\langle\psi_k|
+  = \sum_k |\widetilde{\psi}_k\rangle\langle\widetilde{\psi}_k|
 </eq>
-where <eq env="math">|\widetilde{ \psi}_k\rangle=\sqrt{p_k}|\psi_k\rangle</eq> are (non-normalised) vectors, which can all be written as
+where the vectors <eq env="math">|\widetilde{\psi}_k\rangle=\sqrt{p_k}|\psi_k\rangle</eq> are pairwise orthogonal but not normalised.
+Each of the vectors <eq env="math">|\widetilde{\psi}_k\rangle</eq> can be written as
 <eq env="displaymath">
-  |\widetilde{ \psi}_k\rangle = (\mathbf{1}\otimes E_k)|\Omega\rangle
+  |\widetilde{\psi}_k\rangle
+  = (\mathbf{1}\otimes E_k)|\Omega\rangle
 </eq>
-for some operator <eq env="math">E_k</eq>.</p>
-<p>Now, any vector <eq env="math">|\psi\rangle</eq> in <eq env="math">\mathcal{H}\otimes\mathcal{H}'</eq> can be written as<a href="#fn140" class="footnote-ref" id="fnref140"><sup>140</sup></a>
-<eq env="displaymath">
-  |\psi\rangle=\mathbf{1}\otimes V|\Omega\rangle
-</eq>
-where <eq env="math">V=\sum_{i,j}V_{ij}|j\rangle\langle i|</eq> is an operator from <eq env="math">\mathcal{H}</eq> to <eq env="math">\mathcal{H}'</eq>.
-(Here, the vectors <eq env="math">|i\rangle</eq> and <eq env="math">|j\rangle</eq> form orthonormal bases in <eq env="math">\mathcal{H}</eq> and <eq env="math">\mathcal{H}'</eq>, respectively).</p>
-<p>Using this, we see that
+for some operator <eq env="math">E_k</eq> (Exercise <a href="7.13-remarks-and-exercises-quantum-channels.html#vector-expression-omega">7.13.15</a>).
+This means that
 <eq env="displaymath">
   \begin{aligned}
     \widetilde{\mathcal{E}}
-    &amp;= \sum_k|\widetilde{\psi}_k\rangle\langle\widetilde{\psi}_k|
-  \\&amp;= \sum_k  (\mathbf{1}\otimes E_k)|\Omega\rangle\langle\Omega| (\mathbf{1}\otimes E^\dagger_k)
-  \\&amp;= \frac{1}{d} \sum_{i,j} \left(|i\rangle\langle j|\otimes\underbrace{\sum_k E_k(|i\rangle\langle j|) E^\dagger_k}_{\mathcal{E}(|i\rangle\langle j|)}\right).
+    &amp;= \sum_k |\widetilde{\psi}_k\rangle\langle\widetilde{\psi}_k|
+  \\&amp;= \sum_k (\mathbf{1}\otimes E_k)|\Omega\rangle\langle\Omega|(\mathbf{1}\otimes E_k^\dagger)
+  \\&amp;= \frac{1}{d}\sum_{i,j} \left(|i\rangle\langle j|\otimes\underbrace{\sum_k E_k\langle i||j\rangle E_k^\dagger}_{\mathcal{E}(|i\rangle\langle j|)}\right).
   \end{aligned}
 </eq>
-Comparing the last expression on the right-hand size with the definition of <eq env="math">\widetilde{\mathcal{E}}</eq>, or using the Choi–Jamiołkowski isomorphism, we conclude that <eq env="math">\mathcal{E}</eq> is of the form
+Comparing this last expression with the definition of <eq env="math">\widetilde{\mathcal{E}}</eq>, we conclude that <eq env="math">\mathcal{E}</eq> is of the form
 <eq env="displaymath">
   \mathcal{E}(\rho)
-  = \sum_k E_k \rho E^\dagger_k.
-</eq></p>
-<p>Finally, <eq env="math">\operatorname{tr}\widetilde{\mathcal{E}}=1</eq> implies that<a href="#fn141" class="footnote-ref" id="fnref141"><sup>141</sup></a> <eq env="math">\sum_k E^\dagger_kE_k=\mathbf{1}</eq>.
-So if <eq env="math">\widetilde{\mathcal{E}}</eq> is a density operator, then the map <eq env="math">\mathcal{E}</eq> can be expressed in the Kraus form.
-Thus <eq env="math">\mathcal{E}</eq> is a quantum channel, and, therefore, also a CPTP map.</p>
-<p>This establishes the desired isomorphism between <em>states</em> and <em>channels</em>.
-The equations
-<eq env="displaymath">
-  \mathcal{E}(\rho)
-  = d(\operatorname{tr}\otimes\mathbf{1})\left[(\rho^T\otimes\mathbf{1})\widetilde{\mathcal{E}}\right].
+  = \sum_k E_k\rho E_k^\dagger
 </eq>
-and
+which is a completely positive map in Kraus form (though not necessarily trace preserving, since we do not require that <eq env="math">\sum_k E_k E_k^\dagger=\mathbf{1}</eq>).</p>
+<p>For the trace-preserving correspondence, note first of all that, if <eq env="math">\mathcal{E}</eq> is trace preserving, then
 <eq env="displaymath">
-  \widetilde{\mathcal{E}}
-  = (\mathbf{1}\otimes\mathcal{E})|\Omega\rangle\langle\Omega|
-  = \frac{1}{d} \sum_{i,j} |i\rangle\langle j|\otimes\mathcal{E}(|i\rangle\langle j|)
+  \begin{aligned}
+    (\mathbf{1}\otimes\operatorname{tr})\widetilde{\mathcal{E}}
+    &amp;= \frac{1}{d}\sum_{i,j} |i\rangle\langle j| \underbrace{\operatorname{tr}\mathcal{E}(|i\rangle\langle j|)}_{\delta_{ij}}
+  \\&amp;= \frac{1}{d}\sum_i|i\rangle\langle i|
+  \\&amp;= \frac{1}{d}\mathbf{1}.
+  \end{aligned}
 </eq>
-tell us how to obtain the state <eq env="math">\widetilde{\mathcal{E}}</eq> from the channel <eq env="math">\mathcal{E}</eq>, and vice versa.
-We have also shown that quantum channels are exactly the completely positive trace-preserving maps.</p>
-<p>We can summarise the flow of implications in a diagram:
+Conversely, for any operator <eq env="math">\rho</eq> in <eq env="math">\mathcal{B}(\mathcal{H})</eq>, we have already seen that
 <eq env="displaymath">
-\begin{CD}
-  \mathcal{E} @&gt;{\widetilde{\mathcal{E}}=(\mathbf{1}\otimes\mathcal{E})|\Omega\rangle\langle\Omega|}&gt;&gt; \widetilde{\mathcal{E}}
-\\@VVV @VVV
-\\E_k E_k^\dagger @&lt;&lt;{|\widetilde{\psi}_k\rangle=(\mathbf{1}\otimes E_k)|\Omega\rangle}&lt; |\widetilde{\psi}_k\rangle\langle\widetilde{\psi}_k|
-\end{CD}
+  \frac{1}{d}\operatorname{tr}\mathcal{E}(\rho)
+  = (\operatorname{tr}\otimes1)\left[(\rho^T\otimes\mathbf{1})\widetilde{\mathcal{E}}\right]
 </eq>
-We start in the top-left corner with a quantum channel <eq env="math">\mathcal{E}</eq>.
-This channel is a CPTP map, which means (in particular) that <eq env="math">\mathbf{1}\otimes\mathcal{E}</eq> takes a maximally mixed state <eq env="math">|\Omega\rangle</eq> to a density matrix <eq env="math">\widetilde{\mathcal{E}}</eq>.
-This is our first implication: <em>if <eq env="math">\mathcal{E}</eq> is a quantum channel, then its Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq> is a density matrix</em>.
-The reverse implication goes as follows.
-The density matrix <eq env="math">\widetilde{\mathcal{E}}</eq> can be expressed as a mixture of pure states <eq env="math">|\widetilde\psi_k\rangle\langle\widetilde\psi_k|</eq> (taking us to the bottom-right corner in the diagram).
-We use this mixture decomposition when we construct map the <eq env="math">\mathcal{E}</eq> from the Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq>, via the Choi-Jamiolkowski isomorphism.
-We notice that <eq env="math">\mathcal{E}</eq> admits the operator-sum representation, and that each of the pure states in the mixture is associated with a Kraus operator, with <eq env="math">|\widetilde{\psi}_k\rangle = (\mathbf{1}\otimes E_k)|\Omega\rangle</eq>.
-All together this gives us the reverse implication: <em>if the Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq> is a density matrix, then <eq env="math">\mathcal{E}</eq> is a quantum channel.</em></p>
+and so, tracing over <eq env="math">\mathcal{H}'</eq> by applying <eq env="math">\mathbf{1}\otimes\operatorname{tr}</eq>, we see that
+<eq env="displaymath">
+  \operatorname{tr}\mathcal{E}(\rho)
+  = (\mathbf{1}\otimes\operatorname{tr})\left[d(\operatorname{tr}\otimes1)\left[(\rho^T\otimes\mathbf{1})\widetilde{\mathcal{E}}\right]\right]
+</eq>
+which rearranges to give
+<eq env="displaymath">
+  \begin{aligned}
+    \operatorname{tr}\mathcal{E}(\rho)
+    &amp;= d(\operatorname{tr}\otimes\operatorname{tr})\left[(\rho^T\otimes\mathbf{1})\widetilde{\mathcal{E}}\right]
+  \\&amp;= d(\operatorname{tr}\otimes\mathbf{1})\left[\rho^T(\mathbf{1}\otimes\operatorname{tr})\widetilde{\mathcal{E}}\right]
+  \end{aligned}
+</eq>
+by using the fact that <eq env="math">(\operatorname{tr}\otimes\operatorname{tr})[(A\otimes\mathbf{1})C]=(\operatorname{tr}\otimes\mathbf{1})[A(\mathbf{1}\otimes\operatorname{tr})C]</eq>, which is just another way of writing the defining property of the partial trace: <eq env="math">\operatorname{tr}_{\mathcal{AB}}(A\otimes\mathbf{1})C=\operatorname{tr}_{\mathcal{A}}(A\operatorname{tr}_{\mathcal{B}}C)</eq>.
+So if <eq env="math">(\mathbf{1}\otimes\operatorname{tr})\widetilde{\mathcal{E}}=\frac{1}{d}\mathbf{1}</eq>, then
+<eq env="displaymath">
+  \operatorname{tr}\mathcal{E}(\rho)
+  = \operatorname{tr}\rho^T
+  = \operatorname{tr}\rho
+</eq>
+and so <eq env="math">\mathcal{E}</eq> is trace preserving.
+Note that we have already used this defining property of the partial trace when calculating the expectation value of an observable <eq env="math">A</eq> that pertains only to a subsystem <eq env="math">\mathcal{A}</eq> of a bipartite system <eq env="math">\mathcal{AB}</eq> described by some density operator <eq env="math">\rho_{\mathcal{AB}}</eq>, noting that <eq env="math">\operatorname{tr}[(A\otimes\mathbf{1})\rho_{\mathcal{AB}}]=\operatorname{tr}[A\rho_{\mathcal{A}}]</eq>, where <eq env="math">\rho_{\mathcal{A}}=\operatorname{tr}_\mathcal{B}\rho_{\mathcal{AB}}</eq>.</p>
+<p>In particular then, completely positive trace-preserving maps (quantum channels) have Choi matrices that are positive semi-definite and such that their partial trace gives the maximally mixed state <eq env="math">\frac{1}{d}\mathbf{1}</eq>, and we have just shown that the converse is true.</p>
+<div class="idea">
+<p><strong>Channel–state duality.</strong>
+The following three things are all equivalent to one another:</p>
+<ul>
+<li>quantum channels (i.e. linear maps that can be written in Stinespring or Kraus form)</li>
+<li>completely positive trace-preserving (CPTP) maps</li>
+<li>linear maps <eq env="math">\mathcal{E}</eq> whose Choi matrix <eq env="math">\widetilde{\mathcal{E}}</eq> is positive semi-definite and such that <eq env="math">(\mathbf{1}\otimes\operatorname{tr})\widetilde{\mathcal{E}}=\frac{1}{d}\mathbf{1}</eq>.</li>
+</ul>
+</div>
+<p>Furthermore, all completely positive maps admit a Kraus decomposition <eq env="math">\rho\mapsto\sum_k E_k\rho E_k^\dagger</eq>, and these Kraus operators can be obtained from the spectral decomposition of the corresponding Choi matrix.
+Given the Kraus decomposition, if we <em>also</em> want the map to be trace preserving, then we must additional require that the Kraus operators satisfy <eq env="math">\sum_k E_k^\dagger E_k=\mathbf{1}</eq>.</p>
 </div>
 <div class="footnotes">
 <hr />
 <ol start="139">
 <li id="fn139"><p>Man-Duen Choi was brought up in Hong Kong. He received his Ph.D. degree under the guidance of Chandler Davis at Toronto. He taught at the University of California, Berkeley, from 1973 to 1976, and has worked since then at the University of Toronto. His research has been mainly in operator algebras, operator theory, and polynomial rings. He is particularly interested in examples/counterexamples and <eq env="math">2\times2</eq> matrix manipulations.<a href="7.9-channel-state-duality.html#fnref139" class="footnote-back">↩︎</a></p></li>
-<li id="fn140"><p><strong>Exercise.</strong> Prove this!<a href="7.9-channel-state-duality.html#fnref140" class="footnote-back">↩︎</a></p></li>
-<li id="fn141"><p><strong>Exercise.</strong> Prove this! <em>Hint: you can decompose the trace into a partial trace followed by a trace, and it’s helpful to do so here — <eq env="math">\operatorname{tr}\widetilde{\mathcal{E}}=\operatorname{tr}[(\operatorname{tr}\otimes\mathbf{1})\widetilde{\mathcal{E}}]</eq>.</em><a href="7.9-channel-state-duality.html#fnref141" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 <!-- KaTeX for maths rendering -->
