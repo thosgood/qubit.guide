@@ -644,7 +644,7 @@ These two representations are equivalent, and we can easily switch between them:
     If we want to go further, from an isometry $V$ to a unitary $U$, then the next step is somewhat arbitrary: we can choose all the remaining block columns of $U$ however we please, *as long as* we end up with a unitary matrix $U$.
 
 ::: {.idea latex=""}
-All linear transformations of density operators that can be written in the Stinespring (or, equivalently, Kraus) form represent *physically realisable operations* --- we call them **quantum channels**, or **superoperators**.^[Physicists like the terminology "superoperators", since it makes it clear that these transformations send operators to operators.]
+All linear transformations of density operators that can be written in Stinespring (or, equivalently, Kraus) form represent *physically realisable operations* --- we call them **quantum channels**, or **superoperators**.^[Physicists like the terminology "superoperators", since it makes it clear that these transformations send operators to operators.]
 :::
 
 We note again that the Kraus decomposition is *not unique*: the operators $E_i$ depend on the choice of the ancilla basis.
@@ -1142,83 +1142,104 @@ Pictorially, we might represent this by something like
 ```
 :::
 
-In this form, the Choi--Jamiołkowski isomorphism gives us a simple necessary and sufficient condition for a linear map to be a quantum channel:
+In this form, we can see right away that, if $\mathcal{E}$ is a quantum channel, then $\widetilde{\mathcal{E}}$ is a density matrix.
+In fact, not just any density matrix: the first subsystem of the maximally entangled state $\ket{\Omega}$ is initially maximally, and remains maximally mixed, since we apply the identity operator, and so $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$.
+The converse is also true: any density matrix $\widetilde{\mathcal{E}}$ such that $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$ defines a quantum channel, i.e. a completely positive trace-preserving map.
+This is just one example of how, in general, the Choi--Jamiołkowski isomorphism provides a simple way of studying linear maps on operators by means of inspecting their Choi matrices.
 
 ::: {.idea latex=""}
-**Channel-state duality.** $\mathcal{E}$ is a quantum channel *if and only if* $\widetilde{\mathcal{E}}$ is a density matrix.
+Let $\widetilde{\mathcal{E}}$ be the Choi matrix of a linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H'})$.
+Then
+
+1. $\mathcal{E}$ is completely positive if and only if $\widetilde{\mathcal{E}}$ is positive semi-definite.
+2. $\mathcal{E}$ is trace preserving if and only if $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$.
+3. $\mathcal{E}$ sends the identity operator to the identity operator if and only if $(\tr\otimes\id)\widetilde{\mathcal{E}}=\frac{1}{d}\id$.
+4. $\mathcal{E}$ sends Hermitian operators to Hermitian operators and only if $\widetilde{\mathcal{E}}$ is Hermitian.
 :::
 
-One direction of this claim is immediate: we already know that any quantum channel $\mathcal{E}$ is, in particular, a completely positive map, and so $\id\otimes\mathcal{E}$ maps density matrices to density matrices, whence $\widetilde{\mathcal{E}}=(\id\otimes\mathcal{E})\ket{\Omega}\bra{\Omega}$ is a density matrix, since $\ket{\Omega}\bra{\Omega}$ is a density matrix.
-The other direction is less obvious.
-If $\widetilde{\mathcal{E}}$ is a density matrix, then it can be written as a mixture of pure states $\proj{\psi_k}$ with probabilities $p_k$, or directly as
+We shall prove the first two of these correspondences here, and leave the last two as an exercise.
+
+Let's start with complete positivity, since one direction is much easier: if $\mathcal{E}$ is a completely positive map, then its extension $\id\otimes\mathcal{E}$ maps $\proj{\Omega}$ to a positive semi-definite matrix, and so $\widetilde{\mathcal{E}}$ is positive semi-definite.
+The converse is less immediate.
+If $\widetilde{\mathcal{E}}$ is positive semi-definite, then its eigenvalues $p_k$ are non-negative, and we can write its spectral decomposition as
 $$
   \widetilde{\mathcal{E}}
-  = \sum_k\proj{\widetilde{\psi}_k},
+  = \sum_k p_k\proj{\psi_k}
+  = \sum_k \proj{\widetilde{\psi}_k}
 $$
-where $\ket{\widetilde{ \psi}_k}=\sqrt{p_k}\ket{\psi_k}$ are (non-normalised) vectors, which can all be written as
+where the vectors $\ket{\widetilde{\psi}_k}=\sqrt{p_k}\ket{\psi_k}$ are pairwise orthogonal but not normalised.
+Each of the vectors $\ket{\widetilde{\psi}_k}$ can be written as
 $$
-  \ket{\widetilde{ \psi}_k} = (\id\otimes E_k)\ket{\Omega}
+  \ket{\widetilde{\psi}_k}
+  = (\id\otimes E_k)\ket{\Omega}
 $$
-for some operator $E_k$.
-
-Now, any vector $\ket{\psi}$ in $\mathcal{H}\otimes\mathcal{H}'$ can be written as^[**Exercise.** Prove this!]
-$$
-  \ket{\psi}=\id\otimes V\ket{\Omega}
-$$
-where $V=\sum_{i,j}V_{ij}\ket{j}\bra{i}$ is an operator from $\mathcal{H}$ to $\mathcal{H}'$.
-(Here, the vectors $\ket{i}$ and $\ket{j}$ form orthonormal bases in $\mathcal{H}$ and $\mathcal{H}'$, respectively).
-
-Using this, we see that
+for some operator $E_k$ (Exercise \@ref(vector-expression-omega)).
+This means that
 $$
   \begin{aligned}
     \widetilde{\mathcal{E}}
-    &= \sum_k\proj{\widetilde{\psi}_k}
-  \\&= \sum_k  (\id\otimes E_k)\proj{\Omega} (\id\otimes E^\dagger_k)
-  \\&= \frac{1}{d} \sum_{i,j} \left(\ket{i}\bra{j}\otimes\underbrace{\sum_k E_k(\ket{i}\bra{j}) E^\dagger_k}_{\mathcal{E}(\ket{i}\bra{j})}\right).
+    &= \sum_k \proj{\widetilde{\psi}_k}
+  \\&= \sum_k (\id\otimes E_k)\proj{\Omega}(\id\otimes E_k^\dagger)
+  \\&= \frac{1}{d}\sum_{i,j} \left(\ket{i}\bra{j}\otimes\underbrace{\sum_k E_k\bra{i}\ket{j}E_k^\dagger}_{\mathcal{E}(\ket{i}\bra{j})}\right).
   \end{aligned}
 $$
-Comparing the last expression on the right-hand size with the definition of $\widetilde{\mathcal{E}}$, or using the Choi--Jamiołkowski isomorphism, we conclude that $\mathcal{E}$ is of the form
+Comparing this last expression with the definition of $\widetilde{\mathcal{E}}$, we conclude that $\mathcal{E}$ is of the form
 $$
   \mathcal{E}(\rho)
-  = \sum_k E_k \rho E^\dagger_k.
+  = \sum_k E_k\rho E_k^\dagger
 $$
+which is a completely positive map in Kraus form (though not necessarily trace preserving, since we do not require that $\sum_k E_k E_k^\dagger=\id$).
 
-Finally, $\tr\widetilde{\mathcal{E}}=1$ implies that^[**Exercise.** Prove this! *Hint: you can decompose the trace into a partial trace followed by a trace, and it's helpful to do so here --- $\tr\widetilde{\mathcal{E}}=\tr[(\tr\otimes\id)\widetilde{\mathcal{E}}]$.*] $\sum_k E^\dagger_kE_k=\id$.
-So if $\widetilde{\mathcal{E}}$ is a density operator, then the map $\mathcal{E}$ can be expressed in the Kraus form.
-Thus $\mathcal{E}$ is a quantum channel, and, therefore, also a CPTP map.
+For the trace-preserving correspondence, note first of all that, if $\mathcal{E}$ is trace preserving, then
+$$
+  \begin{aligned}
+    (\id\otimes\tr)\widetilde{\mathcal{E}}
+    &= \frac{1}{d}\sum_{i,j} \ket{i}\bra{j} \underbrace{\tr\mathcal{E}(\ket{i}\bra{j})}_{\delta_{ij}}
+  \\&= \frac{1}{d}\sum_i\proj{i}
+  \\&= \frac{1}{d}\id.
+  \end{aligned}
+$$
+Conversely, for any operator $\rho$ in $\mathcal{B}(\mathcal{H})$, we have already seen that
+$$
+  \frac{1}{d}\tr\mathcal{E}(\rho)
+  = (\tr\otimes1)\left[(\rho^T\otimes\id)\widetilde{\mathcal{E}}\right]
+$$
+and so, tracing over $\mathcal{H}'$ by applying $\id\otimes\tr$, we see that
+$$
+  \tr\mathcal{E}(\rho)
+  = (\id\otimes\tr)\left[d(\tr\otimes1)\left[(\rho^T\otimes\id)\widetilde{\mathcal{E}}\right]\right]
+$$
+which rearranges to give
+$$
+  \begin{aligned}
+    \tr\mathcal{E}(\rho)
+    &= d(\tr\otimes\tr)\left[(\rho^T\otimes\id)\widetilde{\mathcal{E}}\right]
+  \\&= d(\tr\otimes\id)\left[\rho^T(\id\otimes\tr)\widetilde{\mathcal{E}}\right]
+  \end{aligned}
+$$
+by using the fact that $(\tr\otimes\tr)[(A\otimes\id)C]=(\tr\otimes\id)[A(\id\otimes\tr)C]$, which is just another way of writing the defining property of the partial trace: $\tr_{\mathcal{AB}}(A\otimes\id)C=\tr_{\mathcal{A}}(A\tr_{\mathcal{B}}C)$.
+So if $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$, then
+$$
+  \tr\mathcal{E}(\rho)
+  = \tr\rho^T
+  = \tr\rho
+$$
+and so $\mathcal{E}$ is trace preserving.
+Note that we have already used this defining property of the partial trace when calculating the expectation value of an observable $A$ that pertains only to a subsystem $\mathcal{A}$ of a bipartite system $\mathcal{AB}$ described by some density operator $\rho_{\mathcal{AB}}$, noting that $\tr[(A\otimes\id)\rho_{\mathcal{AB}}]=\tr[A\rho_{\mathcal{A}}]$, where $\rho_{\mathcal{A}}=\tr_\mathcal{B}\rho_{\mathcal{AB}}$.
 
-This establishes the desired isomorphism between *states* and *channels*.
-The equations
-$$
-  \mathcal{E}(\rho)
-  = d(\tr\otimes\id)\left[(\rho^T\otimes\id)\widetilde{\mathcal{E}}\right].
-$$
-and
-$$
-  \widetilde{\mathcal{E}}
-  = (\id\otimes\mathcal{E})\proj{\Omega}
-  = \frac{1}{d} \sum_{i,j} \ket{i}\bra{j}\otimes\mathcal{E}(\ket{i}\bra{j})
-$$
-tell us how to obtain the state $\widetilde{\mathcal{E}}$ from the channel $\mathcal{E}$, and vice versa.
-We have also shown that quantum channels are exactly the completely positive trace-preserving maps.
+In particular then, completely positive trace-preserving maps (quantum channels) have Choi matrices that are positive semi-definite and such that their partial trace gives the maximally mixed state $\frac{1}{d}\id$, and we have just shown that the converse is true.
 
-We can summarise the flow of implications in a diagram:
-$$
-\begin{CD}
-  \mathcal{E} @>{\widetilde{\mathcal{E}}=(\id\otimes\mathcal{E})\ket{\Omega}\bra{\Omega}}>> \widetilde{\mathcal{E}}
-\\@VVV @VVV
-\\E_k E_k^\dagger @<<{\ket{\widetilde{\psi}_k}=(\id\otimes E_k)\ket{\Omega}}< \ket{\widetilde{\psi}_k}\bra{\widetilde{\psi}_k}
-\end{CD}
-$$
-We start in the top-left corner with a quantum channel $\mathcal{E}$.
-This channel is a CPTP map, which means (in particular) that $\id\otimes\mathcal{E}$ takes a maximally mixed state $\ket{\Omega}$ to a density matrix $\widetilde{\mathcal{E}}$.
-This is our first implication: *if $\mathcal{E}$ is a quantum channel, then its Choi matrix $\widetilde{\mathcal{E}}$ is a density matrix*.
-The reverse implication goes as follows.
-The density matrix $\widetilde{\mathcal{E}}$ can be expressed as a mixture of pure states $\proj{\widetilde\psi_k}$ (taking us to the bottom-right corner in the diagram).
-We use this mixture decomposition when we construct map the $\mathcal{E}$ from the Choi matrix $\widetilde{\mathcal{E}}$, via the Choi-Jamiolkowski isomorphism.
-We notice that $\mathcal{E}$ admits the operator-sum representation, and that each of the pure states in the mixture is associated with a Kraus operator, with $\ket{\widetilde{\psi}_k} = (\id\otimes E_k)\ket{\Omega}$.
-All together this gives us the reverse implication: *if the Choi matrix $\widetilde{\mathcal{E}}$ is a density matrix, then $\mathcal{E}$ is a quantum channel.*
+::: {.idea latex=""}
+**Channel--state duality.**
+The following three things are all equivalent to one another:
 
+- quantum channels (i.e. linear maps that can be written in Stinespring or Kraus form)
+- completely positive trace-preserving (CPTP) maps
+- linear maps $\mathcal{E}$ whose Choi matrix $\widetilde{\mathcal{E}}$ is positive semi-definite and such that $(\id\otimes\tr)\widetilde{\mathcal{E}}=\frac{1}{d}\id$.
+:::
+
+Furthermore, all completely positive maps admit a Kraus decomposition $\rho\mapsto\sum_k E_k\rho E_k^\dagger$, and these Kraus operators can be obtained from the spectral decomposition of the corresponding Choi matrix.
+Given the Kraus decomposition, if we *also* want the map to be trace preserving, then we must additional require that the Kraus operators satisfy $\sum_k E_k^\dagger E_k=\id$.
 
 
 ## The mathematics of "can" and "cannot"
@@ -1307,7 +1328,7 @@ which lets us apply channel-state duality: *$\mathcal{E}$ is completely positive
 
 <div class="video" title="Properties of Kraus representations" data-videoid="YxnTjuRwvdg"></div>
 
-::: {.idea}
+::: {.idea latex=""}
 Channel-state duality gives us more than just a one-to-one correspondence between states $\widetilde{\mathcal{E}}$ and channels $\mathcal{E}$ --- it *also* gives a one-to-one correspondence between vectors in the statistical ensemble $\widetilde{\mathcal{E}}$ and the Kraus operators in the decomposition of $\mathcal{E}$.
 :::
 
@@ -1378,7 +1399,7 @@ $$
   \\=& \sum_{i,j} B_i\rho B^\dagger_j  C_{ij}
   \end{aligned}
 $$
-The matrix $C_{ij}$ is positive semidefinite, and hence unitarily diagonalisable: $C_{ij}=\sum_k U_{ik} d_k U^\dagger_{kj}$ for some unitary $U$ and some $d_k\geq0$.
+The matrix $C_{ij}$ is positive semi-definite, and hence unitarily diagonalisable: $C_{ij}=\sum_k U_{ik} d_k U^\dagger_{kj}$ for some unitary $U$ and some $d_k\geq0$.
 We can then unitarily "rotate" our operator basis and use the $C_k=\sum_j U_{jk}B_j \sqrt{d_k}$ as our new Kraus operators.
 
 
@@ -1968,12 +1989,15 @@ Consider the [**Toffoli gate**](https://en.wikipedia.org/wiki/Toffoli_gate)
 Express $\rho'$ as a function of $\rho$ in the Kraus representation.
 
 
-### Trace preserving and partial trace
+### Expressing vectors using the maximally mixed state {#vector-expression-omega}
 
-Show that $\mathcal{E}$ is trace preserving if and only if $\tr_\mathcal{B}\widetilde{\mathcal{E}} = d\id$.
-(Here the partial trace is over the second system in our definition $\widetilde{\mathcal{E}}=\id\otimes\mathcal{E}\proj{\Omega}$).
-
-*Hint: show that $\tr\mathcal{E}(\ket{i}\bra{j})=\delta_{ij}$.*
+Show that any vector $\ket{\psi}$ in $\mathcal{H}\otimes\mathcal{H}'$ can be written as
+$$
+  \ket{\psi}
+  = \id\otimes V\ket{\Omega}
+$$
+where $V=\sum_{i,j}V_{ij}\ket{j}\bra{i}$ is an operator from $\mathcal{H}$ to $\mathcal{H}'$, and $\ket{\Omega}=\frac{1}{d}\sum_i\ket{i}\ket{i}$ is a maximally entangled state in $\mathcal{H}\otimes\mathcal{H}$.
+(Here the vectors $\ket{i}$ and $\ket{j}$ form orthonormal bases in $\mathcal{H}$ and $\mathcal{H}'$, respectively.)
 
 
 ### Complete positivity of a certain map
@@ -2017,6 +2041,19 @@ $$
 $$
 
 (For example, if we are interested in the component $\mathcal{E}(X)_{ij}=\bra{i}\mathcal{E}(X)\ket{j}$, then we can take $Y=\ket{j}\bra{i}$.)
+
+
+### Entanglement witness
+
+Show that, if $\mathcal{E}$ is a positive semi-definite map that is not necessarily completely positive, then its Choi matrix $\widetilde{\mathcal{E}}$ is still positive semi-definite on *separable* states.
+
+
+### Almost Kraus decomposition
+
+Show that any linear map $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ can be written as $\rho\mapsto\sum_k E_k\rho F_k^\dagger$.
+This is very reminiscent of the Kraus decomposition, except that here $E_k$ and $F_k$ are not, in general, the same operator.
+
+*Hint: use the singular-value decomposition of the Choi matrix.*
 
 
 ### Tricks with a maximally mixed state
