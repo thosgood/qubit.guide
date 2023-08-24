@@ -434,11 +434,11 @@ If <eq env="math">p&lt;\frac{1}{2}</eq>, then this probability is indeed less th
 <p>But let’s start simply: how can we protect a qubit against a <em>single bit-flip error</em> <eq env="math">X</eq>?
 It turns out that we can actually rely on the same triple-repetition code, but we just need to use the language of quantum operations.</p>
 <p>Given some qubit in an unknown pure state <eq env="math">\alpha|0\rangle + \beta|1\rangle</eq>, we encode it into three qubits by using <eq env="math">\texttt{c-NOT}</eq> gates:</p>
-<p><img src="qubit_guide_files/figure-html/unnamed-chunk-95-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="qubit_guide_files/figure-html/unnamed-chunk-96-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Suppose that the <em>second</em> qubit is flipped by our noisy channel, so that the encoded state becomes <eq env="math">\alpha|010\rangle + \beta|101\rangle</eq>.
 Decoding this requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 So instead we introduce another <em>two additional</em> qubits, which we refer to as <strong>ancilla bits</strong>, both in state <eq env="math">|0\rangle</eq>, and apply the following <strong>encoding network</strong>:</p>
-<p><img src="qubit_guide_files/figure-html/unnamed-chunk-96-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="qubit_guide_files/figure-html/unnamed-chunk-97-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>We measure the two ancilla bits (in the standard basis), and the result of the measurement, known as the <strong>error syndrome</strong>, tells us how to reset the three qubits of the code, as follows.</p>
 <p>The first ancilla compares qubits one and two (counting from the top), and the second ancilla compares qubits two and three: if the ancilla is measured and found to be the <eq env="math">|0\rangle</eq> state, then it means that the corresponding qubits were in the <em>same</em> state; if it is found in the <eq env="math">|1\rangle</eq> state, then the corresponding qubits were in <em>different</em> states.
 Hence, the four possible error syndromes — <eq env="math">|00\rangle</eq>, <eq env="math">|01\rangle</eq>, <eq env="math">|10\rangle</eq>, and <eq env="math">|11\rangle</eq> — each indicate a different possibility: no errors, or an error in the third, first, or second qubits, respectively.
