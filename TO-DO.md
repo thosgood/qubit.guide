@@ -7,6 +7,7 @@
 - check that you use Chapter vs. Section consistently in any `\@ref`
 - consistent use of `\longrightarrow` vs `\to` in display maths
 - **search for `TO-DO` and `.todo`**
+- update to quantikz2
 
 ### Web
 
