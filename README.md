@@ -1,6 +1,6 @@
 # qubit.guide
 
-The online version of Introduction to Quantum Information Science by [Artur Ekert](), [Tim Hosgood](), [Alastair Kay](), and [Chiara Macchiavello]().
+The online version of Introduction to Quantum Information Science by [Artur Ekert](https://www.arturekert.org/), [Tim Hosgood](https://thosgood.com/), [Alastair Kay](http://www.ma.rhul.ac.uk/akay/), and [Chiara Macchiavello](https://fisica.unipv.it/personale/Persona.php?ID=55).
 
 This work is licensed under [CC BY-NC-ND 4.0](cc-by-nc-nd).
 
