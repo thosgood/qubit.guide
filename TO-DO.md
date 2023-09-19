@@ -35,10 +35,10 @@
 - figure numbering should (ideally) agree with the web version
 - *general PDF styling*
     + ***FONT*** (in headings)
+    + footnotes as sidenotes
     + "Part X" pages --- less empty space (maybe centred text?)
     + make the tables (e.g. in "phase gates galore" and "Pauli matrices, algebraically") in the pdf version look good
     + make title page nice
-    + remove the dashes from page numbers
     + TOC spacing (e.g. the §11.10 number overlaps with the subsection title)
         * also just make it smaller overall width?
     + make physical page numbers agree with printed page numbers
