@@ -31,7 +31,7 @@
 
 - **`_pdf-instructions.Rmd` to mirror `_web-instructions.Rmd`**
     + talk about technical divs
-    + explain that web version exists
+    + explain that the web version exists
 - figure numbering should (ideally) agree with the web version
 - *general PDF styling*
     + ***FONT*** (in headings)
@@ -51,7 +51,6 @@
     + they start with a single space
     + they don't have paragraph line breaks
     + they sometimes have more space at the bottom than at the top?
-    + **they can't break midway (e.g. Segre embedding)**
 - check footnotes don't spill over into subsequent pages
 - make a smaller format pdf version ("book-sized", with footnotes at the bottom)
     + also a large print pdf version
