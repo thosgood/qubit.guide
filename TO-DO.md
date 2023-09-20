@@ -3,11 +3,15 @@
 ### General
 
 - **make github actions FAIL if PDF build(s) are unsuccessful**
+- update to quantikz2
+
+
+### Reminders
+
 - **only one footnote per paragraph**
 - check that you use Chapter vs. Section consistently in any `\@ref`
 - consistent use of `\longrightarrow` vs `\to` in display maths
 - **search for `TO-DO` and `.todo`**
-- update to quantikz2
 
 ### Web
 
@@ -36,6 +40,7 @@
 - *general PDF styling*
     + ***FONT*** (in headings)
     + footnotes as sidenotes
+        * also left-aligned body
     + "Part X" pages --- less empty space (maybe centred text?)
     + make the tables (e.g. in "phase gates galore" and "Pauli matrices, algebraically") in the pdf version look good
     + make title page nice
@@ -45,6 +50,7 @@
     + icon for `.technical` divs?
         * use the title of the div too
     + some figures are just TOO BIG (e.g. that relative phase/probability graph for decoherence)
+        * note also that e.g. Deterministic/Probabilistic/Quantum computation are too wide --- need some sort of fullwidthimage environment
     + external link icon?
 - **"last updated" date on title page**
 - `.idea` and `.technical` envs have problems:
