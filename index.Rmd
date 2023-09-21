@@ -824,10 +824,10 @@ Trace:
 ## Probabilities
 
 In a sense, the basics of quantum theory boil down to the combination of two bits of mathematics: linear algebra over the complex numbers, and probability theory.
-We have just gone over all the linear algebra that we will need, so now let's tackle the other topic.
+We have just gone over all the linear algebra that we will need, so now let's tackle the other topic (though we will immediately revisit it in Chapter \@ref(quantum-interference)).
 
 Probability theory is a vast and beautiful subject which has undergone many transformations over the centuries.
-What started as something understood in terms of gambling odds later evolved into the theory of measure spaces, and is now able to be expressed in terms of diagrammatic category theory.
+What started as something understood in terms of gambling odds later evolved into the theory of measure spaces, and is now even able to be expressed in terms of diagrammatic category theory.
 But for our purposes, we only need the very elementary parts of the subject, so we will stick with the first interpretation: probability tells us the odds of something happening.^[What we actually mean by "the odds of something happening" and how we should really interpret probabilities "in the real world" is a profound philosophical problem that we shall completely pass over.]
 
 The setup is always the same: we have some process (rolling some dice, flipping a coin, drawing a card, etc.) that has some possible **outcomes** (getting a 5, heads, or an ace of hearts, etc.) but is realised in some way which means that we cannot be certain which outcome we will see whenever we run the process (or "perform the experiment").
@@ -868,19 +868,23 @@ In the table above we can see that, for example, if we rolled a 1 on a six-sided
 Something else that arises in these examples the notion of **distinguishable outcomes**, when we look at how the sample space of flipping two coins depends on whether or not they are identical.
 That is, if we have a gold coin and a silver coin then it makes sense to say that $HT$ is different from $TH$, because the first means that the gold coin was the one that landed on heads, and the second means that it was instead the silver coin.
 But if we have two identical coins, then how can we distinguish between $HT$ and $TH$?
-We would have to be able to point to one of them, say, the one on the left, and say "that's the coin that's on the left", but if we can do this then by definition we can distinguish between them!^[Another possibility would be to distinguish the coins *in time* instead of space, i.e. to flip one coin first and then the other afterwards. In other words, from the eyes of probability theory, flipping one coin twice is the same as flipping two coins once in this sense.]
+We would have to be able to point to one of them, say, the one on the left, and say "that's the coin that's on the left", but if we can do this then by definition we can distinguish between them!^[Another possibility would be to distinguish the coins *in time* instead of space, i.e. to flip one coin first and then the other afterwards. A coin cannot remember what happened the last time it was flipped, so is there really a difference between flipping a single coin twice or two coins once? In the eyes of probability theory: no.]
 In general, the sample space consists only of distinguishable outcomes, but what counts as distinguishable really depends on the specifics of the experiment that we have set up.
+
+::: {.todo}
+<!-- TO-DO: .technical about measure spaces -->
+:::
 
 Now we can define probability rather succinctly.
 
 ::: {.idea latex=""}
-The **probability** $P(A)$ of an event $A$ is the number of desired outcomes divided by the number of total outcomes, i.e.
+In a **fair process**, where all outcomes are equally likely, the **probability** $P(A)$ of an event $A$ is the number of desired outcomes divided by the number of total outcomes, i.e.
 $$
   P(A)
   = \frac{\text{\# of elements of }A}{\text{\# of elements of }\Omega}.
 $$
 
-In particular, the probability will thus always be a number between $0$ and $1$.
+In particular, the probability will always be a number between $0$ and $1$.
 :::
 
 Running through some of the above examples of events, we see that this definition of probability agrees with what we might already expect.
@@ -891,6 +895,10 @@ Running through some of the above examples of events, we see that this definitio
 | Rolling a 6 with a single die | $1/6$ |
 | Rolling an odd number with a single die | $3/6=1/2$ |
 
+::: {.todo}
+<!-- TO-DO: .technical about Pascal's triangle -->
+:::
+
 Now let's look at what happens when we're interested in more than one event occurring.
 We might study the possibility of *either* event $A$ *or* event $B$ happening, where the "or" here can be **exclusive** (we want exactly one of them to happen, but *not* both) or **inclusive** (we want *at least* one of them to happen), or we could study the possibility of *both* event $A$ *and* event $B$ happening.
 It turns out that these two notions, which seem somehow opposite, are delicately related.
@@ -898,20 +906,53 @@ It turns out that these two notions, which seem somehow opposite, are delicately
 First of all, let's consider *both* events $A$ and $B$ occurring.
 What does this mean?
 Well, by our definition of "occurring", it means that the outcome of the process is an element of $A$ and also of $B$, which is equivalent to saying that it is an element of their intersection $A\cap B$.
+In other words,
+$$
+  P(A\text{ and }B)
+  = P(A\cap B).
+$$
+This lets us define two very important terms.
+
+::: {.idea latex=""}
+We say that $A$ and $B$ are **mutually exclusive** if $P(A\cap B)=0$, and **independent** if $P(A\cap B)=P(A)P(B)$.
+
+In words, $A$ and $B$ are mutually exclusive if one of them occurring precludes the other from occurring, i.e. if *at most* one of them can occur, and they are independent if one of them occurring has no effect on the other occurring.
+:::
+
+Usually, when we talk of mutually exclusive events we are referring to a single run of an experiment, and for independent events we are referring to multiple runs.
+For example, "rolling an even number" and "rolling an odd number" are mutually exclusive events when rolling a single die once, but independent events when rolling a single die twice.^[**Exercise.** Are the events "rolling an even number" and "rolling an odd number" still independent when we think of rolling two die simultaneously?]
+Basically, we should be careful when talking about events and make sure to be precise as to what our sample space is, and how the event is actually realised as a subset of this.
+
+We can think of mutually exclusive and independent as extreme ends of a scale: on one side we have events that affect each other so strongly that if one occurs then we know with absolute certainty that the other one did not; on the other we have events that have absolutely no effect on each other whatsoever.
+One might wonder about what the opposite of mutually exclusive might be, and there are two ideas that seem like they might be interesting: events $A$ and $B$ such that $P(A\cap B)=1$, and events $A$ and $B$ such that, if one occurs, then the other also always occurs.
+The first of these two putative definitions is not so interesting, because if $P(A\cap B)=1$ then both $A$ and $B$ always occur, and so, by the definition of $P(A)=P(B)=1$, this means that $A=B=\Omega$ is just the event that "anything happens".
+The second is a bit less trivial, but also not so deep: saying that $A$ occurs if and only if $B$ occurs is equivalent to saying that $A=B$ as events.
+
+Now let's think about *either* event $A$ or event $B$ occurring, in the inclusive-or sense of the word (we will return to the exclusive one afterwards).
+This is equivalent to the event given by the union $A\cup B$ occurring.
+In other words,
+$$
+  P(A\text{ or }B)
+  = P(A\cup B).
+$$
+
+The relationship between $P(A\cup B)$ and $P(A\cap B)$ is given by the following principle.
+
+::: {.idea latex=""}
+**Inclusion--exclusion principle.** $P(A\cup B)=P(A)+P(B)-P(A\cap B)$.
+:::
+
+We will not prove this, but it's a fun exercise to think about why this must be true.^[Drawing a Venn diagram might help.]
+In fact, the [general inclusion--exclusion principle](https://en.wikipedia.org/wiki/Inclusion–exclusion_principle) describes what happens for an arbitrary finite number of events.
+Using this, we can see why mutually independent events are particularly nice: if $A$ and $B$ are mutually exclusive, then $P(A\cup B)=P(A)+P(B)$, i.e. the probability of $(A\text{ or }B)$ is the sum of the probability of $A$ and the probability of $B$.
+
+In the same way that mutually exclusive events are special in the eyes of the inclusion--exclusion principle, independent events are special in the eyes of Bayes' theorem, but to talk about this we first need to explain conditional probability.
 
 **TO-DO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
 
-- coins can't remember how many times they've been flipped!
-- fair = all outcomes equally likely
-- mutually exclusive
-- mutually exclusive events add (coins)
-- consecutive independent(?) events multiply (coins)
 - conditional probabilities by hand (coins)
-- independent events
+- conditional probabilities: coins can't remember how many times they've been flipped!
 - Bayes' rule
-- .technical: pascal's triangle
-- .technical: measure theory
-- .technical: diagrammatic probability theory
 
 **TO-DO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
 
@@ -929,3 +970,7 @@ Now imagine that you have two six-sided dice.
 Finally, we give our two six-sided dice to a friend for them to roll in secret.
 
 6. If they tell us that they rolled two numbers that added up to 6, what is the probability that they rolled a 1?
+
+::: {.todo}
+<!-- TO-DO: .technical about diagrammatic probability theory -->
+:::
