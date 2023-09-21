@@ -823,6 +823,96 @@ Trace:
 
 ## Probabilities
 
+In a sense, the basics of quantum theory boil down to the combination of two bits of mathematics: linear algebra over the complex numbers, and probability theory.
+We have just gone over all the linear algebra that we will need, so now let's tackle the other topic.
+
+Probability theory is a vast and beautiful subject which has undergone many transformations over the centuries.
+What started as something understood in terms of gambling odds later evolved into the theory of measure spaces, and is now able to be expressed in terms of diagrammatic category theory.
+But for our purposes, we only need the very elementary parts of the subject, so we will stick with the first interpretation: probability tells us the odds of something happening.^[What we actually mean by "the odds of something happening" and how we should really interpret probabilities "in the real world" is a profound philosophical problem that we shall completely pass over.]
+
+The setup is always the same: we have some process (rolling some dice, flipping a coin, drawing a card, etc.) that has some possible **outcomes** (getting a 5, heads, or an ace of hearts, etc.) but is realised in some way which means that we cannot be certain which outcome we will see whenever we run the process (or "perform the experiment").
+
+The first thing to define in any such scenario is the **sample space**, usually denoted by $\Omega$, which is the set of all possible outcomes.
+Next we have the **event space** $\mathcal{F}$, which is the set of all **events**, where an event is a set of outcomes (this might sound confusing at first, but we'll give some examples shortly).
+Whenever we run the process, we will get some outcome, and we say that any event that contains that outcome **occurred**.
+Finally, we will have a **probability function**, which assigns to any event a **probability**, which is a number between $0$ and $1$.
+This probability function has to satisfy some axioms, but we'll come to these later; for now, let us give some examples.
+Here is a table of the sample spaces for some processes.
+
+| **Process** | **Sample space $\Omega$** |
+| :- | :- |
+| Rolling a six-sided die | $\{1,2,3,4,5,6\}$ |
+| Flipping a coin | $\{H,T\}$ |
+| Flipping two *distinct* coins | $\{HH,TH,HT,TT\}$ |
+| Flipping two *identical* coins | $\{HH,TH,TT\}$ |
+
+And here's a table of some (but not all, except for in the case of flipping a single coin) of the events corresponding to these sample spaces.
+
+| **Process** | **Example events $A\in\mathcal{F}$** | **Interpretation** |
+| :- | :- | :- |
+| Rolling a six-sided die | $\{1\}$ | rolling a 1 |
+| | $\{1,3,5\}$ | rolling an odd number |
+| | $\{1,2,3\}$ | rolling a number less than 3 |
+| | $\{2,3\}$ | rolling a prime number less than 4 |
+| Flipping a coin | $\{H\}$ | getting heads |
+| | $\{T\}$ | getting tails |
+| | $\{H,T\}$ | any outcome at all |
+| Flipping two *distinct* coins | $\{HH\}$ | getting two heads |
+| | $\{HH,TH,HT\}$ | getting at least one heads |
+| | $\{HH,TT\}$ | getting two the same |
+| Flipping two *identical* coins | $\{HH\}$ | getting two heads |
+| | $\{HH,TH\}$ | getting at least one heads |
+
+In the table above we can see that, for example, if we rolled a 1 on a six-sided die then many events occurred: we rolled a 1, but we also rolled an odd number, and a number less than 3; but we did not roll a prime number.
+
+Something else that arises in these examples the notion of **distinguishable outcomes**, when we look at how the sample space of flipping two coins depends on whether or not they are identical.
+That is, if we have a gold coin and a silver coin then it makes sense to say that $HT$ is different from $TH$, because the first means that the gold coin was the one that landed on heads, and the second means that it was instead the silver coin.
+But if we have two identical coins, then how can we distinguish between $HT$ and $TH$?
+We would have to be able to point to one of them, say, the one on the left, and say "that's the coin that's on the left", but if we can do this then by definition we can distinguish between them!^[Another possibility would be to distinguish the coins *in time* instead of space, i.e. to flip one coin first and then the other afterwards. In other words, from the eyes of probability theory, flipping one coin twice is the same as flipping two coins once in this sense.]
+In general, the sample space consists only of distinguishable outcomes, but what counts as distinguishable really depends on the specifics of the experiment that we have set up.
+
+Now we can define probability rather succinctly.
+
+::: {.idea latex=""}
+The **probability** $P(A)$ of an event $A$ is the number of desired outcomes divided by the number of total outcomes, i.e.
+$$
+  P(A)
+  = \frac{\text{\# of elements of }A}{\text{\# of elements of }\Omega}.
+$$
+
+In particular, the probability will thus always be a number between $0$ and $1$.
+:::
+
+Running through some of the above examples of events, we see that this definition of probability agrees with what we might already expect.
+
+| **Event** | **Probability** |
+| :- | :- |
+| Getting heads on a single coin flip | $1/2$ |
+| Rolling a 6 with a single die | $1/6$ |
+| Rolling an odd number with a single die | $3/6=1/2$ |
+
+Now let's look at what happens when we're interested in more than one event occurring.
+We might study the possibility of *either* event $A$ *or* event $B$ happening, where the "or" here can be **exclusive** (we want exactly one of them to happen, but *not* both) or **inclusive** (we want *at least* one of them to happen), or we could study the possibility of *both* event $A$ *and* event $B$ happening.
+It turns out that these two notions, which seem somehow opposite, are delicately related.
+
+First of all, let's consider *both* events $A$ and $B$ occurring.
+What does this mean?
+Well, by our definition of "occurring", it means that the outcome of the process is an element of $A$ and also of $B$, which is equivalent to saying that it is an element of their intersection $A\cap B$.
+
+**TO-DO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+
+- coins can't remember how many times they've been flipped!
+- fair = all outcomes equally likely
+- mutually exclusive
+- mutually exclusive events add (coins)
+- consecutive independent(?) events multiply (coins)
+- conditional probabilities by hand (coins)
+- independent events
+- Bayes' rule
+- .technical: pascal's triangle
+- .technical: measure theory
+- .technical: diagrammatic probability theory
+
 **TO-DO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
 
 You should now be able to answer the following questions:
