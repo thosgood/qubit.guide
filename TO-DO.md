@@ -3,11 +3,15 @@
 ### General
 
 - **make github actions FAIL if PDF build(s) are unsuccessful**
+- update to quantikz2
+
+
+### Reminders
+
 - **only one footnote per paragraph**
 - check that you use Chapter vs. Section consistently in any `\@ref`
 - consistent use of `\longrightarrow` vs `\to` in display maths
 - **search for `TO-DO` and `.todo`**
-- update to quantikz2
 
 ### Web
 
@@ -26,32 +30,3 @@
     + find the previous `.footnote-ref` in the DOM and align with that
 - extra output (added to downloads) that uses the single page html bookdown format **with mathjax**
     + (I can't remember why I specifically wanted mathjax...)
-
-### PDF
-
-- **`_pdf-instructions.Rmd` to mirror `_web-instructions.Rmd`**
-    + talk about technical divs
-    + explain that web version exists
-- figure numbering should (ideally) agree with the web version
-- *general PDF styling*
-    + ***FONT*** (in headings)
-    + "Part X" pages --- less empty space (maybe centred text?)
-    + make the tables (e.g. in "phase gates galore" and "Pauli matrices, algebraically") in the pdf version look good
-    + make title page nice
-    + remove the dashes from page numbers
-    + TOC spacing (e.g. the §11.10 number overlaps with the subsection title)
-        * also just make it smaller overall width?
-    + make physical page numbers agree with printed page numbers
-    + icon for `.technical` divs?
-        * use the title of the div too
-    + some figures are just TOO BIG (e.g. that relative phase/probability graph for decoherence)
-    + external link icon?
-- **"last updated" date on title page**
-- `.idea` and `.technical` envs have problems:
-    + they start with a single space
-    + they don't have paragraph line breaks
-    + they sometimes have more space at the bottom than at the top?
-    + **they can't break midway (e.g. Segre embedding)**
-- check footnotes don't spill over into subsequent pages
-- make a smaller format pdf version ("book-sized", with footnotes at the bottom)
-    + also a large print pdf version

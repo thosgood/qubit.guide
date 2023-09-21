@@ -4,38 +4,6 @@ title: "Introduction to Quantum Information Science"
 author: "[Artur Ekert](https://www.arturekert.org/), [Tim Hosgood](https://thosgood.com), [Alastair Kay](http://www.ma.rhul.ac.uk/akay/), [Chiara Macchiavello](https://fisica.unipv.it/personale/Persona.php?ID=55)"
 date: "Last updated: `r format(Sys.Date(), format='%d %B %Y')` [(see change history)](https://github.com/thosgood/qubit.guide/commits/main)"
 description: "An introductory series of lectures on quantum computing."
-output:
-  bookdown::gitbook:
-    mathjax: null
-    pandoc_args: ["--gladtex"]
-    css: ["web/gitbook-custom.css", "https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css", "web/lite-yt-embed.css"]
-    includes:
-      after_body: ["web/scripts.html"]
-    split_by: section+number
-    config:
-      toc:
-        before: |
-          <li><h4>Table of contents</h4></li>
-        collapse: section
-      download: ["pdf"]
-      fontsettings:
-        theme: white
-        family: sans
-        size: 1
-      sharing:
-        facebook: no
-        github: no
-        twitter: no
-        linkedin: no
-        weibo: no
-        instapaper: no
-        vk: no
-        all: []
-      info: no
-  bookdown::pdf_book:
-    template: "latex/latex-template-a4.tex"
-    latex_engine: xelatex
-    keep_tex: yes
 ---
 
 # Introduction {-}
@@ -69,8 +37,8 @@ output:
 <!-- TO-DO: write introduction -->
 :::
 
-> *Although almost complete, this book is still a work-in-progress --- a few sections are missing, but we are constantly updating and filling in the gaps!*
-> *Note that, because of this, external links to specific chapters or sections might break as things move around.*
+> Although almost complete, this book is still a work-in-progress --- a few sections are missing, but we are constantly updating and filling in the gaps!
+> Note that, because of this, external links to specific chapters or sections might break as things move around.
 
 
 ## Plan and intended audience {-}
@@ -78,34 +46,41 @@ output:
 In this series of lectures you will learn how inherently quantum phenomena, such as quantum interference and quantum entanglement, can make information processing more efficient and more secure, even in the presence of noise.
 
 There are many introductions to quantum information science, so it seems like a good idea to start with an explanation of why this particular one exists.
-When learning such a subject, located somewhere in between mathematics, physics, and computer science, there are many possible approaches, with one main factor being "how far along the informal--formal scale do I want to be?".
+When learning such a subject, located somewhere in between mathematics, physics, and computer science, there are many possible approaches, with one main factor being "how far along the scale of informal to formal do I want to be?".
 In these notes we take the following philosophy: it can be both interesting and fun to cover lots of ground quickly and see as much as possible on a surface level, but it's also good to know that there is a lot of important stuff that you'll miss by doing this.
 In practice, this means that we don't worry to much about high-level mathematics.
-That is not to say that we do not use mathematics "properly" --- you'll find a perfectly formal treatment of e.g. quantum channels via completely positive trace-preserving maps in the language of linear algebra --- but rather than putting too many footnotes with technical caveats and explanations throughout the main text, we opt to collect them all together into one big "warning" here:
+That is not to say that we do not use mathematics "properly" --- in these notes you'll find a perfectly formal treatment of e.g. quantum channels via completely positive trace-preserving maps in the language of linear algebra --- but rather than putting too many footnotes with technical caveats and explanations throughout the main text, we opt to collect them all together into one big "warning" here:
 
-> *The mathematics underlying quantum theory is a vast and in-depth subject, most of which we will never touch upon, some of which we will only allude to, and the rest of which we will cover only in the level of detail necessary to our overarching goal*.^[However, since mathematicians were involved in the writing of this book, we have not been able to resist *some* digressions here and there.]
+::: {.idea latex=""}
+The mathematics underlying quantum theory is a vast and in-depth subject, most of which we will never touch upon, some of which we will only allude to, and the rest of which we will cover only in the level of detail necessary to our overarching goal (give or take some interesting mathematical detours).
+:::
 
-"What", then, "is the overarching goal?" one might ask.
+But this then poses the question of what the overarching goal of this book actually is.
 Our answer is this:
 
-> *To help an eager reader understand what quantum information science is all about, and for them to realise which facets of it they would like to study in more detail*.
+::: {.idea latex=""}
+To help an eager reader understand what quantum information science is all about, and for them to realise which facets of it they would like to study in more detail.
+:::
 
 But this does not mean that our treatment is cursory!
 In fact, by the end of this book you will have learnt a fair bit more than what might usually be covered in a standard quantum information science course that you would find in a mathematics masters degree, for example.
 
-The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find certain chapters easy, while others find the same ones difficult --- so if things seem hard to you, then don't worry: the next chapter might feel much easier!
+The interdisciplinary nature of this topic, combined with the diverse backgrounds that different readers have, means that some may find certain chapters easy, while others find the same ones difficult --- so if things seem hard to you then don't worry, because the next chapter might feel much easier!
 The only real prerequisites are a working knowledge of complex numbers and vectors and matrices; some previous exposure to elementary probability theory and Dirac bra-ket notation (for example) would be helpful, but we provide crash-course introductions to some topics like these at the end of this chapter.
-A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory, algorithms) would be helpful, but is *not at all* essential.
+A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory, algorithms) would be helpful, but is *not at all* necessary.
 
-Of course, even if you aren't familiar with the formal mathematics, then that shouldn't stop you from reading this book if you want to.
+Of course, even if you aren't familiar with the formal mathematics of complex numbers and linear algebra, then that shouldn't stop you from reading this book if you want to.
 You might be surprised at how much you can [black box](https://en.wikipedia.org/wiki/Black_box) the bits that you don't understand!
-The caveat stands, however, that, to *really* get to grips with this subject, at least some knowledge of maths is necessary --- but this is not a bad thing!
+The caveat stands, however, that, to *really* get to grips with this subject, at least some knowledge of maths is necessary --- and this is not a bad thing!
 
-Finally, throughout this text you will find some technical asides (marked with the <i class="fa fa-search-plus"></i> icon).
+Finally, throughout this text you will find some technical asides.
 These are *not at all* necessary reading, but are just there to provide the exceptionally eager reader (or perhaps those with a more formal mathematical background) with some extra context, as well as some pointers towards further reading.
 
 
 ```{r, child = if (knitr::is_html_output()) 'source/_web-instructions.Rmd'}
+```
+
+```{r, child = if (knitr::is_latex_output()) 'source/_pdf-instructions.Rmd'}
 ```
 
 
@@ -115,15 +90,16 @@ These are *not at all* necessary reading, but are just there to provide the exce
 We thank the following for their helpful comments and corrections, as well as for catching typos: Zhenyu Cai, Jedrzej Burkat, Maryam Khaqan, Rolando Reiner, Jan Baltussen, Linus Kelsey, Edgardo Deza, Elizabeth Ealing, L.L. Salcedo, Giuseppe Bisicchia.
 We also appreciate the work of Yihui Xie in developing the [Bookdown package](https://bookdown.org/yihui/bookdown/) with which this e-book was built.
 
-Hosting of this online book was made possible by the [Centre for Quantum Technologies](https://cqt.quantumlah.org/), the [University of Oxford Mathematical Institute](https://www.maths.ox.ac.uk/), and the [Okinawa Institute of Science and Technology](https://www.oist.jp/).
+The creation and hosting of the online book was made possible by the [Centre for Quantum Technologies](https://cqt.quantumlah.org/), the [University of Oxford Mathematical Institute](https://www.maths.ox.ac.uk/), and the [Okinawa Institute of Science and Technology](https://www.oist.jp/).
 
-```{r, out.width='28%', fig.show='hold'}
-knitr::include_graphics('images/cqt.png')
-knitr::include_graphics('images/oxford-maths.png')
-knitr::include_graphics('images/oist.png')
+```{r, out.width='90%'}
+knitr::include_graphics('images/sponsors.png')
 ```
 
 
+
+\loadgeometry{tufteish}
+\pagestyle{fancy}
 
 # Some mathematical preliminaries {-}
 
@@ -139,7 +115,7 @@ As a small note on notation, we generally write "$x\coloneqq y$" to mean "$x$ is
 ## Complex numbers
 
 One of the fundamental ingredients of quantum information science (and, indeed, of quantum physics in general) is the notion of **complex numbers**.
-It would be disingenuous to expect that a few paragraphs would suffice to make the reader sufficiently familiar with subject, but we try our best here to give a speedy overview of the core principles, and end with some exercises that can be a helpful indicator as to what things you might want to read up on elsewhere.
+It would be disingenuous to expect that a few paragraphs would suffice to make the reader sufficiently familiar with subject, but we try our best here to give a speedy overview of the core principles, and end with some exercises that can be a helpful indicator of which things you might want to read up on elsewhere.
 
 The "classical" way of arriving at complex numbers is as follows: start with the **natural numbers** $\mathbb{N}=\{0,1,2,\ldots\}$, which we can add; if we want to be able to invert addition (i.e. subtract), then we end up with the **integers** $\mathbb{Z}=\{\ldots,-2,-1,0,1,2,\ldots\}$, which we can multiply; if we want to be able to invert multiplication (i.e. divide), then we end up with the **rationals** $\mathbb{Q}=\{\frac{p}{q}\mid p,q\in\mathbb{Z}\}$.
 In this process of "closure under more and more binary operations", we have passed from a **monoid**, to a **group**, to a **field**.
@@ -293,7 +269,7 @@ $$
 Addition and subtraction are most neatly expressed in the planar form $x+iy$, and multiplication and division are most neatly expressed in the polar form $re^{i\theta}$; complex conjugation looks nice and tidy in both.
 :::
 
-::: {.technical title="Addition of polar vectors" latex=""}
+::: {.technical title="Addition of polar vectors" latex="{Addition of polar vectors}"}
 We know how to perform addition, multiplication, inversion (which is a special case of division), and complex conjugation on complex numbers in planar form, but we've only described how to do the last *three* of these in polar form: we haven't said how to write $re^{i\theta}+r'e^{i\theta'}$ as $se^{i\varphi}$ for some $s$ and $\varphi$.
 This is because it is very messy looking:
 $$
@@ -330,11 +306,10 @@ d. Here is a simple "proof" that $+1=-1$:
     1=\sqrt{1}=\sqrt{(-1)(-1)}=\sqrt{-1}\sqrt{-1}=i^2=-1.
   $$
   What is wrong with it?
-e. Prove that, for any two complex numbers $w,z\in\mathbb{C}$, we always have the inequality
+e. Prove that, for any two complex numbers $w,z\in\mathbb{C}$, we always have the inequality^[*Hint: use polar form, draw a diagram, and appeal to the [**triangle inequality**](https://en.wikipedia.org/wiki/Triangle_inequality).*]
   $$
     |z-w| \geq |z|-|w|.
   $$
-  *Hint: use polar form, draw a diagram, and appeal to the [**triangle inequality**](https://en.wikipedia.org/wiki/Triangle_inequality)!*
 f. Using the fact that $e^{3i\theta}=(e^{i\theta})^3$, derive a formula for $\cos3\theta$ in terms of $\cos\theta$ and $\sin\theta$.
 
 
@@ -350,7 +325,7 @@ Following Peano, we define a **vector space** as a mathematical structure in whi
 More formally, a **complex vector space** is a set $V$ such that, given any two **vectors** $a$ and $b$ (that is, any two elements of $V$) and any two *complex* numbers $\alpha$ and $\beta$, we can form the linear combination $\alpha a+\beta b$, which is also a vector in $V$.
 There are certain "nice properties" that vector spaces things must satisfy. Addition of vectors must be commutative and associative, with an identity (the zero vector, which is often written as $\mathbf{0}$) and an inverse for each $v$ (written as $-v$). Multiplication by complex numbers must obey the two distributive laws: $(\alpha+\beta)v = \alpha v+\beta v$ and $\alpha (v+w) = \alpha v+\alpha w$.
 
-::: {.technical title="Modules over a ring" latex=""}
+::: {.technical title="Modules over a ring" latex="{Modules over a ring}"}
 A more succinct way of defining a vector space is as an abelian group endowed with a scalar action of a field.
 This showcases vector spaces as a particularly well behaved example of a more general object: **modules over a ring**.
 :::
@@ -423,7 +398,7 @@ for any complex constants $c_1$ and $c_2$.
 To any physical system we associate^[The question of *how* exactly we construct this associated space is a subtle one in the case of arbitrary physical systems, but we shall see that this is relatively straightforward when working with the types of systems that we consider in this book.] a complex vector space with an inner product, known as a **Hilbert space** $\mathcal{H}$.
 The inner product between vectors $\ket{u}$ and $\ket{v}$ in ${\mathcal{H}}$ is written as $\braket{u}{v}$.
 
-::: {.technical title="Finite-dimensional functional analysis" latex=""}
+::: {.technical title="Finite-dimensional functional analysis" latex="{Finite-dimensional functional analysis}"}
 If $V$ is a vector space with an inner product $\langle-,-\rangle$, then this gives us a **norm** on $V$ by defining $\|x\|=\sqrt{\langle x,x\rangle}$ and thus a **metric** by defining $d(x,y)=\|y-x\|$.
 We say that a sequence $(x_n)$ in $V$ is **Cauchy** if its elements "eventually always get closer", i.e. if for all $\varepsilon>0$ there exists some $N\in\mathbb{N}$ such that for all $m,n>N$ we have $\|x_n-x_m\|<\varepsilon$.
 We say that a normed space is **complete** if *every Cauchy sequence converges in that space*, i.e. if the limits of sequences that *should* exist actually *do* exist.
@@ -611,7 +586,7 @@ $$
 $$
 Preserving the inner product implies preserving the norm induced by this product, i.e. unit state vectors are mapped to unit state vectors, i.e. _unitary operations are the isometries of the Euclidean norm_.
 
-::: {.technical title="Dagger compact categories" latex=""}
+::: {.technical title="Dagger compact categories" latex="{Dagger compact categories}"}
 This whole package of stuff and properties and structure (i.e. finite dimensional Hilbert spaces with linear maps and the dagger) bundles up into an abstract framework called a [**dagger compact category**](https://en.wikipedia.org/wiki/Dagger_compact_category).
 We will not delve into the vast world of category theory in this book, and to reach an understanding of all the ingredients that go into the one single definition of dagger compact categories would take more than a single chapter.
 But it's a good idea to be aware that there are researchers in quantum information science who work *entirely* from this approach, known as [**categorical quantum mechanics**](https://en.wikipedia.org/wiki/Categorical_quantum_mechanics).
