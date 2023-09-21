@@ -946,15 +946,45 @@ We will not prove this, but it's a fun exercise to think about why this must be 
 In fact, the [general inclusion--exclusion principle](https://en.wikipedia.org/wiki/Inclusion–exclusion_principle) describes what happens for an arbitrary finite number of events.
 Using this, we can see why mutually independent events are particularly nice: if $A$ and $B$ are mutually exclusive, then $P(A\cup B)=P(A)+P(B)$, i.e. the probability of $(A\text{ or }B)$ is the sum of the probability of $A$ and the probability of $B$.
 
-In the same way that mutually exclusive events are special in the eyes of the inclusion--exclusion principle, independent events are special in the eyes of Bayes' theorem, but to talk about this we first need to explain conditional probability.
+In the same way that mutually exclusive events are special in the eyes of the inclusion--exclusion principle, independent events are special in the eyes of conditional probability.
+Oftentimes we consider events that are not independent, such as drawing cards from a deck without replacing them afterwards: if I take the ace of hearts, then the probability of me drawing a heart the next time has gone down from $13/52$ to $12/51$, since there is now one fewer heart in the deck.
+Even worse, the probability of me drawing the ace of hearts again is now $0$.
+Given two events $A$ and $B$, we define the **conditional probability $P(B|A)$**, of **$B$ given $A$**, to be the probability that $A$ occurs *assuming that $B$ has just previously occurred*.
+Thinking back to the definition of probability, we can calculate this by taking the number of outcomes in $A\cap B$ (our desired outcomes, the outcomes in $B$ that also are outcomes in $A$) and dividing it by the number of outcomes in $A$ (all possible outcomes, since we are assuming that $A$ has happened), so that
+$$
+  P(B|A)
+  = \frac{P(A\cap B)}{P(A)}.
+$$
 
-**TO-DO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+Conditional probabilities are the source of many misunderstandings.
+For example, it's intuitively obvious that the probability of flipping a coin 100 times and getting heads every single time is very small.
+So say we've flipped a coin 99 times and managed to get a heads every single time, are we now more likely to flip a tail, because the chance of getting 100 heads in a row must be small?
+Well we don't even need mathematics to answer this: the coin has no way of remembering what has happened on the previous flips!
+In other words, also the probability $P(H^{100})=P(H^{99}\text{ and }H)$ is very small, the (conditional) probability $P(H|H^{99})$ is still exactly $1/2$.
+Looking at the definition of conditional probability, this makes sense: $P(H^{99})$ is itself very small, almost as small as $P(H^{100})$, so it's not surprising that when we divide one by the other we get a number that's not so far away from $1$.
 
-- conditional probabilities by hand (coins)
-- conditional probabilities: coins can't remember how many times they've been flipped!
-- Bayes' rule
+Now we can see how independent events are special: if $P(A\cap B)=P(A)P(B)$ then
+$$
+  \begin{aligned}
+    P(B|A)
+    &= \frac{P(A\cap B)}{P(A)}
+  \\&= \frac{P(A)P(B)}{P(A)}
+  \\&= P(B)
+  \end{aligned}
+$$
+and so the probability of $B$ given $A$ is exactly the same as the probability of $B$ without knowing anything about the outcome of $A$ (and similarly for $P(A|B)=P(A)$).
 
-**TO-DO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+Finally, we mention what might be called the fundamental theorem of conditional probability.
+
+::: {.idea latex=""}
+**Bayes' theorem.**
+Let $A$ and $B$ be events with $P(B)\neq0$.
+Then
+$$
+  P(A|B)
+  = \frac{P(B|A)P(A)}{P(B)}.
+$$
+:::
 
 You should now be able to answer the following questions:
 
