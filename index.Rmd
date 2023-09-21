@@ -107,7 +107,14 @@ Here we quickly recall most of the fundamental mathematical results that we will
 However, we will not introduce everything from the ground up.
 Most notably, we will assume that the reader understands what a **matrix** is, and how it represents a **linear transformation**; some prior exposure to **complex numbers** would be helpful.
 
-If an equation like $\tr\ket{a}\bra{b}=\braket{b}{a}$ makes sense to you, then you can safely skip over this section and get started directly with Chapter \@ref(quantum-interference).
+If an equation like $\tr\ket{a}\bra{b}=\braket{b}{a}$ makes sense to you, and you can find the eigenvalues and eigenvectors of a matrix like
+$$
+  \begin{pmatrix}
+    0 & 1+i
+  \\\sqrt{2}e^{-i\pi/4} & 0
+  \end{pmatrix}
+$$
+then you can safely skip over this section and get started directly with Chapter \@ref(quantum-interference).
 
 As a small note on notation, we generally write "$x\coloneqq y$" to mean "$x$ is defined to be (equal to) $y$", and "$x\equiv y$" to mean "$x$ is just another name for $y$", but sometimes we simply just write "$x=y$".
 
@@ -493,14 +500,12 @@ We will come back to this $\dagger$ operation on matrices in Section \@ref(opera
 ## Geometry {#geometry}
 
 The inner product brings geometry: the **length**, or **norm**, of $\ket{v}$ is given by $\|v\|=\sqrt{\braket{v}{v}}$, and we say that $\ket{u}$ and $\ket{v}$ are **orthogonal** if $\braket{u}{v}=0$.
-Any maximal set of pairwise orthogonal vectors of unit length^[That is, consider sets of vectors $\ket{e_i}$ such that $\braket{e_i}{e_j}=\delta_{ij}$ (where the **Kronecker delta** $\delta_{ij}$ is $0$ if $i\neq j$, and $1$ if $i=j$.), and then pick any of the largest such sets (which must exist, since we assume our vector spaces to be finite dimensional).] forms an orthonormal basis, and so any vector can be expressed as a linear combination of the basis vectors:
+Any maximal set of pairwise orthogonal vectors of unit length^[That is, consider sets of vectors $\ket{e_i}$ such that $\braket{e_i}{e_j}=\delta_{ij}$ (where the **Kronecker delta** $\delta_{ij}$ is $0$ if $i\neq j$, and $1$ if $i=j$.), and then pick any of the largest such sets (which must exist, since we assume our vector spaces to be finite dimensional).] forms an orthonormal basis $\{\ket{e_1},\ldots,\ket{e_n}\}$, and so any vector can be expressed as a linear combination of the basis vectors:
 $$
-  \begin{gathered}
-    \ket{v}
-    =\sum_i v_i\ket{e_i}
-  \\\text{where $v_i=\braket{e_i}{v}$}.
-  \end{gathered}
+  \ket{v}
+  = \sum_i v_i\ket{e_i}
 $$
+where $v_i=\braket{e_i}{v}$.
 Then the bras $\bra{e_i}$ form the **dual basis**
 $$
   \begin{gathered}
@@ -603,6 +608,17 @@ for some $\lambda\in\mathbb{C}$ (which is called the corresponding **eigenvalue*
 We call the pair $(\lambda,\ket{v})$ an **eigenpair**, and we call the set of eigenvalues the **spectrum** of $A$, denoted by $\sigma(A)$.
 It is a surprising (but incredibly useful) fact that every operator has at least one eigenpair.^[You can prove this for an $(n\times n)$ matrix $A$ by considering the set $\{\ket{v},A\ket{v},A^2\ket{v},\ldots,A^n\ket{v}\}$ of vectors in $\mathbb{C}^n$. Since this has $n+1$ elements, it must be linearly *dependent*, and so (after some lengthy algebra) we can construct an eigenpair.]
 Geometrically, an eigenvector of an operator $A$ is a vector upon which $A$ simply acts by "stretching".
+Note that eigenvectors can be scaled by an arbitrary non-zero length: if $A\ket{v}=\lambda\ket{v}$ then
+$$
+  \begin{aligned}
+    A(\mu\ket{v})
+    &= \mu(A\ket{v})
+  \\&= \mu\lambda\ket{v}
+  \\&= \lambda(\mu\ket{v})
+  \end{aligned}
+$$
+for any $\mu\neq0$.
+Because of this, *we usually assume all eigenvectors to be of length $1$*.
 
 Rewriting the defining property of an eigenpair $(\lambda,\ket{v})$, we see that
 $$
@@ -613,6 +629,95 @@ This gives a useful characterisation of the spectrum in terms of a determinant:
 $$
   \sigma(A) = \{\lambda\in\mathbb{C} \mid \det(A-\lambda\id)=0\}.
 $$
+
+The spectrum $\sigma(A)$ allows us to recover information about the operator $A$.
+For example, the trace of $A$ is equal to the sum of all its eigenvalues, and the determinant of $A$ is equal to the product of all its eigenvalues.
+We can show this easily for normal operators using the fact^[**Exercise.** Prove this! *Hint: start by showing that, if $(\lambda,\ket{v})$ is an eigenpair of $A$, then $(\lambda^\star,\ket{v})$ is an eigenpair of $A^\dagger$.*] that their eigenvectors are orthogonal: they satisfy $\braket{v}{w}=0$ for $v\neq w$.
+Because eigenvectors can always be scaled, this means that we can assume the eigenvectors of a normal operator to be *orthonormal*.
+If we write the eigenpairs as $(\lambda_i,\ket{v_i})$, we can define
+$$
+  U
+  = \sum_i \ket{i}\bra{v_i}
+$$
+for an orthonormal basis $\{\ket{1},\ldots,\ket{n}\}$, which is an orthogonal matrix (since the eigenvectors are also assumed to be orthonormal).
+Then we see that
+$$
+  \begin{aligned}
+    UAU^\dagger
+    &= \sum_{i,j} \ket{i}\bra{v_i} A \ket{v_j}\bra{j}
+  \\&= \sum_{i,j} \ket{i}\bra{v_i} \lambda_j\ket{v_j}\bra{j}
+  \\&= \sum_{i,j} \lambda_j\ket{i}(\braket{v_i}{v_j})\bra{j}
+  \\&= \sum_i \lambda_i \ket{i}\bra{i}
+  \end{aligned}
+$$
+(where we again use this hypothesis that the eigenvectors of $A$ are all orthonormal) which is the diagonal matrix $D$ consisting of the eigenvalues $\lambda_i$ of $A$ along its diagonal.
+Then, since $UAU^\dagger=D$, we can equally write $A=U^\dagger DU$, which gives us
+$$
+  A
+  = \sum_i \lambda_i \proj{v_i}.
+$$
+We call each $\lambda_i\proj{v_i}$ the **eigenspace projector**, since a **projector** is defined to be any operator $P$ that satisfies $P=P^\dagger$ and $P^2=P$.
+Note that projectors can only have eigenvalues equal to $0$ or $1$, since if $\ket{v}$ is an eigenvector of $P$ then, using the fact that $P^2=P$,
+$$
+  \begin{aligned}
+    0
+    &= (P^2-P)\ket{v}
+  \\&= (\lambda^2-\lambda)\ket{v}
+  \\\implies \lambda(\lambda-1)=0
+  \end{aligned}
+$$
+and so $\lambda$ must be equal to either $0$ or $1$.
+
+Finally we can now return to the relationship between eigenvalues and the trace and determinant, using this fact that any normal operator $A$ gives a unitary operator $U$ such that $A=U^\dagger DU$ for the diagonal matrix $D$ of eigenvalues of $A$.
+Indeed,
+$$
+  \begin{aligned}
+    \tr(A)
+    &= \tr(U^\dagger DU)
+  \\&= \tr(DUU^\dagger)
+  \\&= \tr(D)
+  \\&= \sum_i \lambda_i
+  \end{aligned}
+$$
+which proves that the trace is equal to the sum of the eigenvalues, and
+$$
+  \begin{aligned}
+    \det(A)
+    &= \det(U^\dagger DU)
+  \\&= \det(U^\dagger)\det(D)\det(U)
+  \\&= \det(D)\det(U^\dagger)\det(U)
+  \\&= \det(D)\det(U^\dagger U)
+  \\&= \det(D)
+  \\&= \prod_i \lambda_i
+  \end{aligned}
+$$
+which proves that the determinant is equal to the product of the eigenvalues.
+
+The eigenspace projectors give us the **spectral decomposition** of $A$, which is where we write
+$$
+  A
+  = \sum_i \lambda_i\proj{v_i}.
+$$
+
+::: {.technical title="Extending functions to matrices" latex="{Extending functions to matrices}"}
+The spectral decomposition of a normal operator gives an effective way of calculating the action of a function on a matrix.
+If $f\colon\mathbb{C}\to\mathbb{C}$ is a function, then we can define
+$$
+  f(A)
+  = \sum_i f(\lambda_i)\proj{v_i}.
+$$
+For example, if $f(x)=x^2$, then, by this definition, $f(A)=\sum_i \lambda_i^2\proj{v_i}$.
+But this is consistent with the definition of $A^2$ that you expect:
+$$
+  \begin{aligned}
+    A^2
+    &= \left(\sum_i \lambda_i\proj{v_i}\right)\left(\sum_i \lambda_i\proj{v_i}\right)
+  \\&= \sum_{i,j} \lambda_i\lambda_j \proj{v_i}\proj{v_j}
+  \\&= \sum_i \lambda_i^2 \proj{v_i}
+  \end{aligned}
+$$
+using the fact that the eigenvectors $\ket{v_i}$ are orthonormal and that projectors $P=\proj{v_i}$ satisfy $P^2=P$.
+:::
 
 
 ## Outer products {#outer-products}
@@ -708,3 +813,8 @@ Trace:
 - $\tr(ABC) = \tr(CAB) = \tr(BCA)$
 - $\tr\ket{a}\bra{b} = \braket{b}{a}$
 - $\tr (A\ket{a}\bra{b}) = \braket{b}{A|a} = \tr(\ket{a}\bra{b}A)$
+
+
+# Probabilities
+
+
