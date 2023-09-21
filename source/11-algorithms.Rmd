@@ -323,7 +323,7 @@ They all seem to rest on the same generic sequence:
 
 - a Hadamard transform;
 - function evaluation;
-- another Hadamard (or Fourier) transform.^[As explained in Section \@ref(hadamard-and-quantum-fourier-transforms), the Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$.]
+- another Hadamard (or Fourier) transform.^[As explained in Section \@ref(phase-estimation-and-quantum-fourier-transforms), the Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$.]
 
 As we shall see in a moment, in some cases (such as in Grover's search algorithm) this sequence is repeated several times.
 
@@ -890,12 +890,12 @@ $$
   \left[
     1 -
     \left(
-      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac14
+      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac{1}{4}
     \right)
   \right]
   \cdot \frac{1}{2}
   >
-  \frac14.
+  \frac{1}{4}.
 $$
 
 We conclude that we can determine $s$ with some constant probability of error after repeating the algorithm $O(n)$ times.
@@ -908,6 +908,46 @@ The exponential separation that this algorithm demonstrates between quantum and 
 ## Phase estimation and quantum Fourier transforms {#phase-estimation-and-quantum-fourier-transforms}
 
 <div class="video" title="Hadamard and quantum Fourier transforms" data-videoid="qF9Wpgaqqww"></div>
+
+Recall Exercise \@ref(unknown-phase), where we were given the usual quantum interference circuit
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+\begin{quantikz}
+  \lstick{$\ket{0}$} \qw
+  & \gate{H}
+  & \phase{\varphi}
+  & \gate{H}
+  & \qw \rstick{$\ket{1}$}
+\end{quantikz}
+```
+
+and promised that $\varphi$ was either $0$ or $\pi$, but were only allowed one run of the circuit to determine which one it was.
+This is actually a specific example of a more general problem, namely **eigenvalue estimation**.
+To understand this, let's first give a solution to the above exercise.
+
+Let $U$ be a unitary and $\ket{u}$ an eigenvector.
+If we know that the corresponding eigenvalue is $\pm1$ (i.e. $e^{i\varphi}$ for $\varphi\in\{0,\pi\}$) then we can simply run the phase kick-back circuit from Section \@ref(phase-kick-back) (since the first register is exactly the usual quantum interference circuit we are interested in)
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \gate{H}
+    & \qw \rstick{$\cos\frac{\varphi}{2}\ket{0} - i\sin\frac{\varphi}{2}\ket{1}$}
+  \\\lstick{$\ket{u}$}
+    & \qw
+    & \gate{U}
+    & \qw
+    & \qw \rstick{$\ket{u}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+To see that this solves our problem, we can just use the one fact that we have yet to use, namely that $\varphi\in\{0,\pi\}$, because $(\cos0,\sin0)=(1,0)$ and $(\cos\pi/2,\sin\pi/2)=(0,1)$, so if we measure $\ket{0}$ the we know that $\varphi$ must have been $0$, and similarly for $\ket{1}$ and $\varphi=\pi$.
+
+Starting 
 
 ::: {.todo}
 <!-- TO-DO -->
