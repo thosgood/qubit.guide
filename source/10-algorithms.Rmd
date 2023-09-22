@@ -232,7 +232,7 @@ We start, once more, with the simplest quantum interference circuit
 \end{equation*}
 ```
 
-but let's turn this into a black-box scenario, often known as the **binary observable measurement** problem:^[You might recognise this as Exercise \@ref(unknown-phase).]
+but let's turn this into a black-box scenario, often known as the **binary observable measurement** problem:^[You might recognise this as Exercise \@ref(unknown-phase), and we will return to this problem again in Section \@ref(phase-estimation-and-quantum-fourier-transforms).]
 
 - we are allowed to prepare the input in any state that we like;
 - we are allowed to read the output;
@@ -247,7 +247,10 @@ In other words, a *single run* of the interference experiment is sufficient to d
 
 The very first quantum algorithm, proposed by [David Deutsch](https://en.wikipedia.org/wiki/David_Deutsch) in 1985, is very much related to this effect, but where the phase setting is determined by the Boolean function evaluation via the phase kick-back.
 
-::: {.scenario latex=""}
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Global properties of a one-bit function).*
+:::
 We are presented with an oracle that computes some unknown function $f\colon\{0,1\}\to\{0,1\}$.
 Note that there are only four possibilities for what $f$ can be: it could be one of two **constant** functions (i.e. those where $f(0)=f(1)$), or one of two **balanced** functions (i.e. those where $f(0)\neq f(1)$).
 
@@ -259,7 +262,7 @@ Note that there are only four possibilities for what $f$ can be: it could be one
 | balanced | $1$ | $0$ |
 
 Our task is to determine, using the fewest queries possible, whether the function computed by the oracle is constant or balanced.
-:::
+::::
 
 Note that we are *not* asked for the particular values $f(0)$ and $f(1)$, but *only whether the two values are the same or different*.
 Classical intuition tells us that we have to evaluate both $f(0)$ and $f(1)$ and compare them, which involves evaluating $f$ *twice*.
@@ -267,9 +270,9 @@ But, in the quantum setting, we can solve this problem with a *single* function 
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-(Deutsch's).
+*(Deutsch's algorithm).*
 :::
-*First register: $1$ qubit. Second register: $1$ qubit.*
+First register: $1$ qubit. Second register: $1$ qubit.
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
 \begin{equation*}
@@ -321,6 +324,23 @@ The evolution of the first qubit is thus identical to that described by the circ
 where the relative phase is $\varphi = (-1)^{f(0)\oplus f(1)}$.
 The first qubit ends in state $\ket{0}$ if the function $f$ is constant, and in state $\ket{1}$ if the function is balanced, and the standard measurement distinguishes these two cases with certainty.^[This is also implemented in the [Quantum Flytrap Virtual Lab](https://lab.quantumflytrap.com/lab/deutsch-jozsa?mode=laser).]
 
+But really this is just the binary observable measurement problem in disguise!
+Indeed, the fact that quantum Boolean function evaluation of a function $f$ is given by
+$$
+  \ket{x}\ket{y} \longmapsto \ket{x}\ket{y\oplus f(x)}
+$$
+means that the unitary $U_f$ has eigenvalues $\pm1$ because it satisfies $U_f^2=\id$, since two consecutive evaluations gives
+$$
+  \begin{aligned}
+  \ket{x}\ket{y}
+  \longmapsto& \ket{x}\ket{y\oplus f(x)}
+\\\longmapsto& \ket{x}\ket{y\oplus f(x)\oplus f(x)}
+\\=& \ket{x}\ket{y}.
+  \end{aligned}
+$$
+So the fact that $1=e^{0}$ and $-1=e^{i\pi}$ means that $U_f$ acts as a phase gate with phase either $0$ or $\pi$.
+We will come back to this link between Deutsch's algorithm and binary observable measurement in Section \@ref(phase-estimation-and-quantum-fourier-transforms).
+
 Deutsch's result laid the foundation for the new field of quantum computation, and was followed by several other quantum algorithms for various problems.
 They all seem to rest on the same generic sequence:
 
@@ -342,7 +362,10 @@ After this, we will look at generalising binary observable measurement, the corr
 
 <div class="video" title="The Bernstein–Vazirani algorithm" data-videoid="60OHCftlqbA"></div>
 
-::: {.scenario latex=""}
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Hidden inner-product determination).*
+:::
 We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}$, but we are promised that $f$ is of the form
 $$
   f(x) = a\cdot x
@@ -351,7 +374,7 @@ $$
 for some fixed binary string $a=a_1a_2\ldots a_n\in\{0,1\}^n$.
 
 Our task is to determine, using the fewest queries possible, the value of the $n$-bit string $a$.
-:::
+::::
 
 It's quite easy to see how to do this classically: if we input the value $x=00\ldots010\ldots0$, where the $m$-th bit is a $1$ and all other bits are $0$, then $f(x)$ is simply the $m$-th bit of $a$; after $n$ such calls, we will know every bit value, and thus know $a$.
 It is also clear that there *cannot* exist a better classical algorithm: each call to the oracle teaches us exactly one bit of information, and since we must learn $n$ bits, we must query it $n$ times.
@@ -360,9 +383,9 @@ In contrast, by running the circuit below, it is possible to determine the value
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-(Bernstein-Vazirani).
+*(The Bernstein-Vazirani algorithm).*
 :::
-*First register: $n$ qubits. Second register: $1$ qubit.*
+First register: $n$ qubits. Second register: $1$ qubit.
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
@@ -486,11 +509,14 @@ Needless to say, in a large phone book this would take a long time.
 
 While this might seem like a rather contrived problem (a computer database *should* always maintain an index on any searchable field), many problems in computer science can be cast in this form, i.e. that of an **unstructured search**.
 
-::: {.scenario latex=""}
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Unstructured search).*
+:::
 We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}$.
 
 Our task is to find, using the fewest queries possible, an input $x\in\{0,1\}^n$ such that $f(x)=1$.
-:::
+::::
 
 Suppose that we know that, amongst the $N=2^n$ binary strings, there are $M\ll N$ which are **tagged**, i.e. strings on which $f$ evaluates to $1$.
 Since there is no structure in the database, any classical search requires around $N/M$ steps, i.e. the function $f$ must be evaluated roughly $N/M$ times.
@@ -499,9 +525,9 @@ In contrast, there is a quantum search algorithm, implemented by the circuit bel
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-(Grover's search).
+*(Grover's search).*
 :::
-*First register: $n$ qubits. Second register: $1$ qubit.*
+First register: $n$ qubits. Second register: $1$ qubit.
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
@@ -690,7 +716,10 @@ If these can be checked at a rate of, say, one million keys per second, then a c
 
 Here we will see the simplest quantum algorithm that offers an *exponential* speed-up when compared to the best possible classical algorithm.
 
-::: {.scenario latex=""}
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Hidden binary-addition determination).*
+:::
 We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}^n$, but we are promised that $f$ satisfies, for all $x\in\{0,1\}^n$,
 $$
   f(x) = f(x\oplus s)
@@ -699,7 +728,7 @@ for some fixed $s\in\{0,1\}^n$, which we call the **period** of $f$.
 (We assume that $s$ is *not* the string of $n$ zeros, otherwise the problem becomes trivial.)
 
 Our task is to determine, using the fewest queries possible, the value of the $n$-bit string $s$.
-:::
+::::
 
 Note that asking for $f$ to be periodic is equivalent to asking that $f$ be **two-to-one**: for any $y\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ with $f(x)=y$, there exists *exactly one other* $x'\neq x$ such that $f(x')=y$ as well.
 
@@ -714,9 +743,9 @@ The circuit that solves this problem, shown below, has a familiar Hadamard--func
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-(Simon's problem).
+*(Simon's problem).*
 :::
-*First register: $n$ qubits. Second register: $n$ qubits.*
+First register: $n$ qubits. Second register: $n$ qubits.
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
@@ -916,24 +945,27 @@ The exponential separation that this algorithm demonstrates between quantum and 
 In Section \@ref(deutschs-algorithm), we took the problem of binary observable measurement and at Deutsch's algorithm, which uses quantum Boolean function evaluation as the controlled-$U$ gate.
 Now we're going to generalise the binary observable measurement problem to other controlled-$U$ gates, and in the next section we will see what sort of quantum algorithm this leads us to develop; afterwards, we'll explain how this is the first step towards Shor's algorithm for prime factorisation.
 
-Let's start by rephrasing binary observable measurement in terms of **eigenvalue estimation**.
+Let's start by rephrasing the binary observable measurement problem in terms of **phase estimation** (or **eigenvalue estimation**).
+Recall the problem: we are handed some phase gate of unknown phase $\varphi$, but we are promised that $\varphi$ is either $0$ or $\pi$; we want to figure out which one it is by running a simple circuit one time.
+But this is entirely equivalent to having access to an oracle that computes a controlled-$U$ gate, along with having an eigenstate $\ket{u}$ with eigenvalue $\pm1$ (i.e. $e^{i\varphi}$ for $\varphi\in\{0,\pi\}$), since this acts as a phase gate of phase $0$ or $\pi$ (depending on whether the eigenvalue is $+1$ or $-1$) on the first register when we plug in $\ket{u}$ to the second register.
+This is just phase kick-back again!
+So let's state the problem this way, and use the solution that we have already described in Section \@ref(deutschs-algorithm) (which is really the circuit that we saw all the way back in Section \@ref(phase-kick-back)).
 
-Recall the problem: we are given the usual quantum interference circuit
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Binary phase estimation).*
+:::
+We are presented with an oracle that computes a controlled-$U$ gate, along with an eigenstate $\ket{u}$ of $U$ with eigenvalue $e^{i\varphi}$
+We are promised that $\varphi$ is either $0$ or $\pi$.
 
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
-\begin{quantikz}
-  \lstick{$\ket{0}$} \qw
-  & \gate{H}
-  & \phase{\varphi}
-  & \gate{H}
-  & \qw \rstick{$\ket{1}$}
-\end{quantikz}
-```
+Our task is to determine, using the fewest queries possible, the value of $\varphi$.
+::::
 
-and promised that $\varphi$ is either $0$ or $\pi$, but we are only allowed one run of the circuit to determine which one it was.
-
-So let $U$ be a unitary and $\ket{u}$ an eigenvector.
-If we know that the corresponding eigenvalue is $\pm1$ (i.e. $e^{i\varphi}$ for $\varphi\in\{0,\pi\}$) then we can simply run the phase kick-back circuit from Section \@ref(phase-kick-back) (since the first register is exactly the usual quantum interference circuit we are interested in)
+:::: {.circuit latex=""}
+::: {.circuit-title}
+*(Controlled-$U$ interference).*
+:::
+First register: $1$ qubit. Second register: $1$ qubit.
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
 \begin{equation*}
@@ -942,7 +974,7 @@ If we know that the corresponding eigenvalue is $\pm1$ (i.e. $e^{i\varphi}$ for 
     & \gate{H}
     & \ctrl{1}
     & \gate{H}
-    & \qw \rstick{$\cos\frac{\varphi}{2}\ket{0} - i\sin\frac{\varphi}{2}\ket{1}$}
+    & \qw \rstick{$\begin{cases}0&\mbox{if }\varphi=0\\1&\mbox{if }\varphi=\pi\end{cases}$}
   \\\lstick{$\ket{u}$}
     & \qw
     & \gate{U}
@@ -951,25 +983,14 @@ If we know that the corresponding eigenvalue is $\pm1$ (i.e. $e^{i\varphi}$ for 
   \end{quantikz}
 \end{equation*}
 ```
+::::
 
-To see that this solves our problem, we can just use the one fact that we have yet to use, namely that $\varphi\in\{0,\pi\}$, because $(\cos0,\sin0)=(1,0)$ and $(\cos\pi/2,\sin\pi/2)=(0,1)$, so if we measure $\ket{0}$ the we know that $\varphi$ must have been $0$, and similarly for $\ket{1}$ and $\varphi=\pi$.
+So we see that the eigenvalues being $\pm1$, or, equivalently, $\varphi$ being $0$ or $\pi$, is fundamental to this story --- this is what we want to generalise, so that we can deal with more values^[We won't be able to find the value of completely arbitrary phases, but only those of a certain rational form. Still, this is a big improvement!] of $\varphi$.
 
-Indeed, the fact that quantum Boolean function evaluation is given by
-$$
-  \ket{x}\ket{y} \longmapsto \ket{x}\ket{y\oplus f(x)}
-$$
-means that the unitary $U$ that it implements satisfies $U^1=\id$, since two consecutive evaluations gives
-$$
-  \begin{aligned}
-  \ket{x}\ket{y}
-  \longmapsto& \ket{x}\ket{y\oplus f(x)}
-\\\longmapsto& \ket{x}\ket{y\oplus f(x)\oplus f(x)}
-\\=& \ket{x}\ket{y}.
-  \end{aligned}
-$$
-So we see that the eigenvalues being $\pm1$, or, equivalently, $\varphi$ being $0$ or $\pi$, is fundamental to this story --- this is what we want to generalise, to be able to deal with more values of $\varphi$.
-
-::: {.scenario latex=""}
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Phase estimation).*
+:::
 We are presented with an oracle that computes a controlled-$U$ gate, along with an eigenstate $\ket{u}$ of $U$ with eigenvalue $e^{i\varphi}$.
 We are promised that $\varphi$ is of the form
 $$
@@ -978,16 +999,53 @@ $$
 $$
 for some integers $m$ and $n$.
 
-Our task is to find the best $t$-bit approximation to $m/2^n=\varphi/2\pi$.
-:::
+Our goal is to find the best $t$-bit approximation to ${\varphi}/{2\pi}={m}/{2^n}$ for some fixed $t\in\mathbb{N}$.
+::::
 
-Rather than giving the algorithm that solves this problem immediately, let's work our way up to it, starting with some simple mathematical observations.
+Let's work our way up to finding a circuit to solve this problem, starting with the following simple mathematical observation.
 Since $e^{i\varphi}=e^{i(\varphi+2\pi)}$, we can assume $m$ to be an integer between $0$ and $2^n-1$, which means that it has a binary representation of the form
 $$
   m
   = \sum_{i=1}^n m_i 2^{n-i}
 $$
-for $m_i\in\{0,1\}$.
+for $m_i\in\{0,1\}$, and so
+$$
+  \varphi
+  = 2\pi\sum_{i=1}^n m_i 2^{-i}
+$$
+
+This helps us rephrase the problem as "find the values of the $m_i$ for $i=1,\ldots,t$".
+
+Now, rather than tackling the full problem, let's try a much smaller modification of the original binary observable measurement problem: we have the same setup --- a phase gate of unknown phase $\varphi$ --- but this time we are promised that $\varphi$ is either $0$ or $\pi/2$ (instead of $0$ or $\pi$).
+How can we adapt our original solution to find the phase value?
+
+After some thought, you might see the trick: if we can apply the phase gate *twice in a row*, then we reduce the problem to the one we have already solved.
+Indeed, if $\varphi=0$ then repeating it twice is the same as simply applying it once; if $\varphi=\pi/2$ then repeating it twice is the same as simply applying a phase gate of phase $\pi$.
+
+Iterating this idea leads us to the first step of solving the general phase estimation problem, since if $U\ket{u}=e^{i\varphi}\ket{u}$ then $U^{2^{n-1}}\ket{u}=e^{2^{n-1}i\varphi}\ket{u}$.
+But
+$$
+  \begin{aligned}
+    2^{n-1}\varphi
+    &= 2^n\pi\frac{m}{2^n}
+  \\&= \pi m
+  \\&= \pi\sum_{i=1}^n m_i 2^{n-i}
+  \\&= \pi m_n + \pi\underbrace{\sum_{i=1}^{n-1}m_i2^{n-i}}_{\text{all divisible by }2}
+  \end{aligned}
+$$
+and so, by the $2\pi$-periodicity of $e^{ix}$, we see that
+$$
+  U^{2^{n-1}}\ket{u}
+  = e^{m_n\pi i}\ket{u}
+$$
+and now we're happy: $m_n\in\{0,1\}$, so this is an eigenvalue of $U^{2^{n-1}}$ with phase $0$ or $\pi$, reducing us to the original binary observable measurement problem that we have already solved by replacing $U$ with $U^{2^{n-1}}$.
+
+We've dealt with "shrinking" the distance between the two possible phases (if we have $0$ and $\pi/k$ for some $k\in\mathbb{N}$ then we simply replace $U$ by $U^k$), so now let's look at the other way^[Any interval $[a,b]$ in $\mathbb{R}$ can be turned into any other interval $[c,d]$ by a single shrink (or scale) and a single shift: multiply $a$ and $b$ by $(d-c)/(b-a)$ to get $a'$ and $b'$, and then add $c-a'$ to both $a'$ and $b'$. Make $[a,b]$ the right length, and then just put it in the right place!] of modifying a pair of phases: shifting.
+We have the same setup --- a phase gate of unknown phase $\varphi$ --- but this time we are promised that $\varphi$ is either $-\pi/2$ or $\pi/2$ (instead of $0$ or $\pi$).
+How can we adapt our original solution to find the phase value?
+
+This one is a bit harder.
+It's clear that "all we need to do" is add $\pi/2$ to each of the phases, since then we'd end up back at $0$ and $\pi$, but how can we actually do this?
 
 ::: {.todo}
 <!-- TO-DO -->
@@ -1012,7 +1070,7 @@ TO-DO: note that this is useful for Shor's
 
 
 
-## Shor's algorithm
+## Shor's algorithm {#shors-algorithm}
 
 <div class="video" title="Shor's algorithm" data-videoid="TioipZX7d5U"></div>
 
