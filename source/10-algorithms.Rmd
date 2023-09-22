@@ -281,7 +281,7 @@ First register: $1$ qubit. Second register: $1$ qubit.
     & \gate{H}
     & \ctrl{1}
     & \gate{H}
-    & \qw \rstick{$\begin{cases}0&\mbox{if constant}\\1&\mbox{if balanced}\end{cases}$}
+    & \qw \rstick{$\begin{cases}\ket{0}&\mbox{if constant}\\\ket{1}&\mbox{if balanced}\end{cases}$}
   \\\lstick{$\ket{-}$}
     & \qw
     & \gate{f}
@@ -391,13 +391,12 @@ First register: $n$ qubits. Second register: $1$ qubit.
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
 \begin{equation*}
   \begin{quantikz}
-    \lstick{$\ket{0}$}
+    \lstick[wires=4]{$\ket{0}^{\otimes n}$}
     & \gate{H}
     & \ctrl{4}
     & \gate{H}
     & \qw \rstick{$\ket{a_1}$}
   \\[-1em]
-    \lstick{$\ket{0}$}
     & \gate{H}
     & \ctrl{3}
     & \gate{H}
@@ -405,7 +404,6 @@ First register: $n$ qubits. Second register: $1$ qubit.
   \\[-1em]
     &&\vdotsgate
   \\[-1em]
-    \lstick{$\ket{0}$}
     & \gate{H}
     & \ctrl{1}
     & \gate{H}
@@ -427,7 +425,7 @@ You might also see other notation to denote this, such as
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
 \begin{equation*}
   \begin{quantikz}
-    \lstick{$\ket{0^{\otimes n}}$}
+    \lstick{$\ket{0}^{\otimes n}$}
     &[2mm] \gate{H}\qwbundle{n}
     & \qw
   \end{quantikz}
@@ -439,7 +437,7 @@ or even simply
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
 \begin{equation*}
   \begin{quantikz}
-    \lstick{$\ket{0^{\otimes n}}$}
+    \lstick{$\ket{0}^{\otimes n}$}
     & \gate{H}\qwbundle[alternate]{}
     & \qwbundle[alternate]{}
   \end{quantikz}
@@ -533,7 +531,7 @@ First register: $n$ qubits. Second register: $1$ qubit.
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
 \begin{equation*}
   \begin{quantikz}
-    \lstick[wires=4]{$\ket{0^{\otimes n}}$}
+    \lstick[wires=4]{$\ket{0}^{\otimes n}$}
     & \gate{H}
     & \qw
     & \ctrl{4}
@@ -751,7 +749,7 @@ First register: $n$ qubits. Second register: $n$ qubits.
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
 \begin{equation*}
     \begin{quantikz}
-      \lstick[wires=4]{$\ket{0^{\otimes n}}$}
+      \lstick[wires=4]{$\ket{0}^{\otimes n}$}
       & \gate{H}
       & \ctrl{4}
       & \gate{H}
@@ -769,7 +767,7 @@ First register: $n$ qubits. Second register: $n$ qubits.
       & \gate{H}
       & \qw
     \\[2em]
-      \lstick[wires=4]{$\ket{0^{\otimes n}}$}
+      \lstick[wires=4]{$\ket{0}^{\otimes n}$}
       & \qw
       & \gate[wires=4,nwires={3}]{f}
       & \qw
@@ -972,7 +970,7 @@ First register: $1$ qubit. Second register: $1$ qubit.
     & \gate{H}
     & \ctrl{1}
     & \gate{H}
-    & \qw \rstick{$\begin{cases}0&\mbox{if }\varphi=0\\1&\mbox{if }\varphi=\pi\end{cases}$}
+    & \qw \rstick{$\begin{cases}\ket{0}&\mbox{if }\varphi=0\\\ket{1}&\mbox{if }\varphi=\pi\end{cases}$}
   \\\lstick{$\ket{u}$}
     & \qw
     & \gate{U}
@@ -1039,12 +1037,29 @@ $$
 and now we're happy: $m_n\in\{0,1\}$, so this is an eigenvalue of $U^{2^{n-1}}$ with phase $0$ or $\pi$, reducing us to the original binary observable measurement problem that we have already solved by replacing $U$ with $U^{2^{n-1}}$.
 We have found the $n$-th bit $m_n$!
 
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \gate{H}
+    & \qw \rstick{$\ket{m_n}$}
+  \\\lstick{$\ket{u}$}
+    & \qw
+    & \gate{U^{2^{n-1}}}
+    & \qw
+    & \qw \rstick{$\ket{u}$}
+  \end{quantikz}
+\end{equation*}
+```
+
 We've dealt with shrinking^[Any interval $[a,b]$ in $\mathbb{R}$ can be turned into any other interval $[c,d]$ by a single shrink (or scale) and a single shift: multiply $a$ and $b$ by $(d-c)/(b-a)$ to get $a'$ and $b'$, and then add $c-a'$ to both $a'$ and $b'$.] the distance between the two possible phases (if we have $0$ and $\pi/k$ for some $k\in\mathbb{N}$ then we simply replace $U$ by $U^k$), so now let's look at the other way of modifying a pair of phases: shifting.
 We have the same setup --- a phase gate of unknown phase $\varphi$ --- but this time we are promised that $\varphi$ is either $-\pi/2$ or $\pi/2$ (instead of $0$ or $\pi$).
 How can we adapt our original solution to find the phase value?
 
 This time we just need to add $\pi/2$ to each of the phases, since then we'd end up back at $0$ and $\pi$.
-This means that we simply need to precede the phase gate by the $\pi/4$-phase gate^[Refer to Section \@ref(phase-gates-galore) for an explanation of this confusing terminology.] $S=\left[\begin{smallmatrix}1&0\\0&i\end{smallmatrix}\right]$.
+This means that we simply need to precede (or follow) the phase gate by the $\pi/4$-phase gate^[Refer to Section \@ref(phase-gates-galore) for an explanation of this confusing terminology.] $S=\left[\begin{smallmatrix}1&0\\0&i\end{smallmatrix}\right]$.
 
 We already know how to find the value of $m_n$, so let's use this to now find the value of $m_{n-1}$.
 If we just try the same trick as before then we run into problems: it's true that $U^{2^{n-2}}\ket{u}=e^{2^{n-2}\varphi}\ket{u}$, but
@@ -1053,25 +1068,116 @@ $$
   \equiv \pi m_{n-1}+\pi m_n/2 \mod2\pi
 $$
 so we have an annoying phase of $\pi m_n/2$ in the way.
+However, we know that all we have to do now is to compensate for this by adding another phase gate:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \phase{{-\pi m_n}/{2}}
+    & \gate{H}
+    & \qw \rstick{$\ket{m_{n-1}}$}
+  \\\lstick{$\ket{u}$}
+    & \qw
+    & \gate{U^{2^{n-2}}}
+    & \qw
+    & \qw
+    & \qw \rstick{$\ket{u}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+Once we've got the value of $m_{n-1}$ from this circuit, then we can simply apply the same idea to find $m_{n-2}$, $m_{n-3}$, and so on, until we have all the $m_i$ for $i=1,\ldots,n$.
+For example, the circuit to determine $m_{n-3}$ (given than we already know $m_n$, $m_{n-1}$, and $m_{n-2}$) is
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \phase{{-\pi m_n}/{8}}
+    & \phase{{-\pi m_{n-1}}/{4}}
+    & \phase{{-\pi m_{n-2}}/{2}}
+    & \gate{H}
+    & \qw \rstick{$\ket{m_{n-3}}$}
+  \\\lstick{$\ket{u}$}
+    & \qw
+    & \gate{U^{2^{n-3}}}
+    & \qw
+    & \qw
+    & \qw
+    & \qw \rstick{$\ket{u}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+The entire process for determining the whole string $m_1\ldots m_n$, solving the scenario, can be written in a form that looks exactly how we expect: Hadamard--phase--Hadamard, modulo some subtle changes, which we will explain.
+
+:::: {.circuit latex=""}
+::: {.circuit-title}
+*(Controlled-$U$ interference).*
+:::
+First register: $n$ qubits. Second register: $1$ qubit.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=4]{$\ket{0}^{\otimes n}$}
+    & \gate{H}
+    & \ctrl{4}
+    & \gate[wires=4,nwires={3}]{FT^\dagger}
+    & \qw \rstick{$\ket{m_1}$}
+  \\[-1em]
+    & \gate{H}
+    & \ctrl{3}
+    & \qw
+    & \qw \rstick{$\ket{m_2}$}
+  \\[-1em]
+    &&\vdotsgate
+  \\[-1em]
+    & \gate{H}
+    & \ctrl{1}
+    & \qw
+    & \qw \rstick{$\ket{m_n}$}
+  \\[2em]
+    \lstick{$\ket{u}$}
+    & \qw
+    & \gate{U^\triangle}
+    & \qw
+    & \qw \rstick{$\ket{u}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+where $U^\triangle$ is defined below, and $FT^\dagger$ is defined in \@ref(quantum-fourier-transform).
+::::
 
 ::: {.todo}
-<!-- TO-DO -->
+<!-- TO-DO: define U^\triangle -->
 :::
 
 ::: {.todo}
-<!-- .technical make sure to mention that the Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$ -->
+<!-- TO-DO: note that you can't efficiently implement U^\triangle if all you have is U ! -->
 :::
 
 
 
 
 
-## Quantum Fourier transforms {#quantum-fourier-transforms}
+## Quantum Fourier transform {#quantum-fourier-transform}
 
 <div class="video" title="Hadamard and quantum Fourier transforms" data-videoid="qF9Wpgaqqww"></div>
 
+TO-DO: just a small little detour back into more foundational/less applied stuff
+
+TO-DO: BUT we're going to focus on the "circuit story" instead of the mathematical one (i.e. no mention of actual Fourier theory!)
+
 ::: {.todo}
-<!-- TO-DO -->
+<!-- TO-DO: finish -->
 :::
 
 ::: {.todo}
@@ -1089,7 +1195,7 @@ TO-DO: see 7.5 in v5
 TO-DO: note that this is useful for Shor's
 
 ::: {.todo}
-<!-- TO-DO -->
+<!-- TO-DO: finish -->
 :::
 
 
