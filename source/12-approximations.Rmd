@@ -12,6 +12,9 @@ The good news is that, for all practical purposes, infinite precision is not act
 But what is "close enough", and how do we quantify it?
 
 
+
+
+
 ## Metrics {#metrics}
 
 To begin with, let us work with pure states, and save the problem of dealing with mixed states for a later section.
@@ -70,6 +73,9 @@ $$
 
 More formally, if we define the **Hamming weight** of a binary string of length $n$ as the number of bits equal to $1$, then the Hamming distance between two strings is simply the Hamming weight of their difference (where subtraction is calculated in $\mathbb{Z}/2\mathbb{Z}$, i.e. $\mod2$).
 We leave the proof that this is indeed a metric as an exercise (Exercise \@ref(hamming-distance)).
+
+
+
 
 
 ## How far apart are two quantum states?
@@ -203,6 +209,9 @@ $$
 As an interesting exercise, you might try to explain why this approach gives a tighter bound ($\varepsilon$ instead of $2\varepsilon$).
 
 
+
+
+
 ## Fidelity
 
 Sometimes, when quantifying closeness of states, the *inner product* is a more convenient tool than the distance/norm.
@@ -225,6 +234,9 @@ One final remark: as another example of the many inconsistencies in the literatu
 Whenever we say fidelity, we mean the latter: $|\braket{u}{v}|^2$.
 
 
+
+
+
 ## Approximating unitaries {#approximating-unitaries}
 
 So now we know a bit about how norms (or metrics, or inner products) can help us to understand distance between state vectors, can we say something similar about quantum evolutions?
@@ -235,7 +247,7 @@ $$
 $$
 where $\|\cdot\|$ is some norm on unitary matrices (of the same size), which we would want to satisfy the following property: if $\|U-V\|$ is "small", then $U$ should be hard to distinguish from $V$ when acting on *any* quantum state.
 
-Before defining such a norm, however, we first recall some linear algebra which we briefly touched upon in Section \@ref(the-schmidt-decomposition).
+Before defining such a norm, however, we first recall some linear algebra which we briefly touched upon in Exercise \@ref(the-schmidt-decomposition).
 The **singular values** of an operator $A$ are the square roots of the (necessarily non-negative) eigenvalues of the Hermitian operator $A^\dagger A$.
 If $A$ is *normal* (e.g. a density operator), then its singular values are exactly the absolute values of its eigenvalues.
 We tend to denote singular values by $s_i(A)$ (or just $s_i$ if it is clear which operator we are talking about), and we write $\sigma(A)$ to mean the set of eigenvalues of $A$, i.e.
@@ -337,6 +349,9 @@ which is simply $|\varphi|\leq\varepsilon$ for small enough $\varepsilon$.
 So $U$ rotates relative to $V$ by (at worst) an angle of order $\varepsilon$, and if we compose unitaries in a sequence then the accumulated rotation increases linearly with the number of unitaries.
 
 
+
+
+
 ## Approximating generic unitaries is hard, but...
 
 Now that we understand approximations of unitary operators, we can revisit the question of universality that we touched upon in Sections \@ref(finite-set-of-universal-gates) and \@ref(universality-again).
@@ -408,7 +423,10 @@ So we can efficiently convert (constructively, via some efficient classical algo
 For all practical purposes, we want to minimise $c$, but the counting argument above shows that the best possible exponent is $1$, so the real question is *can we get close to this lower bound*?
 In general, we do not know.
 However, for some universal sets of gates we have *nearly* optimal constructions.
-For example, the set $\{H,T\}$ can be used to approximate arbitrary *single-qubit* unitaries to accuracy $\varepsilon$ using $\log(1/\varepsilon)$ many gates, instead of $\mathrm{poly}(\log(1/\varepsilon))$, and the circuits achieving this improved overhead cost can be efficiently constructed (for example, by the [Matsumoto--Amano construction](https://arxiv.org/abs/0806.3834).)
+For example, the set $\{H,T\}$ can be used to approximate arbitrary *single-qubit* unitaries to accuracy $\varepsilon$ using $\log(1/\varepsilon)$ many gates, instead of $\mathrm{poly}(\log(1/\varepsilon))$, and the circuits achieving this improved overhead cost can be efficiently constructed (for example, by the [Matsumoto--Amano construction](https://arxiv.org/abs/0806.3834)).
+
+
+
 
 
 ## How far apart are two probability distributions?
@@ -536,6 +554,9 @@ $$
 $$
 
 
+
+
+
 ## Dealing with density operators
 
 Now we return to quantum states, and generalise the notion of trace distance to density operators.
@@ -641,6 +662,9 @@ $$
 So if two states $\ket{u}$ and $\ket{v}$ are $\varepsilon$-close in the trace distance, then the probability distributions of outcomes of *any* measurement performed on a physical system in state $\ket{u}$ or $\ket{v}$ will also be $\varepsilon$-close in the trace distance.
 
 
+
+
+
 ## Distinguishing non-orthogonal states, again {#distinguishing-non-orthogonal-states-again}
 
 Let's briefly return to the problem considered in Section \@ref(distinguishing-non-orthogonal-states), where we are given a system and told that it is in either state $\ket{\psi_1}$ or $\ket{\psi_2}$, with equal probability, but that these two vectors are *not* orthogonal.
@@ -726,6 +750,19 @@ In Exercise \@ref(distinguishability-and-trace-distance-exercise) we ask about t
 The more general scenario, where some quantum source emits states $\rho_0,\ldots,\rho_n$ with respective probabilities $p_0,\ldots,p_n$, turns out to be incredibly difficult --- we do not know an optimal discrimination strategy, except for in a few special cases.
 
 
+
+
+
+## Approximate phase estimation {#approximate-phase-estimation}
+
+::: {.todo}
+TO-DO: continue on from \@ref(phase-estimation)
+:::
+
+
+
+
+
 ## How accurate is accurate enough?
 
 We have seen that finite sets of gates can be used to approximate any unitary operation with any prescribed accuracy.
@@ -739,13 +776,16 @@ If we can implement each gate with accuracy $\varepsilon/t$, then we can approxi
 So, at the very least, we want $\varepsilon<\delta/2$.
 
 
+
+
+
 ## *Remarks and exercises* {#remarks-and-exercises-approximations}
 
 ### Operator decompositions {#operator-decompositions}
 
 Analogously to how we can factor polynomials into linear parts, or factor numbers into prime divisors, we can "factor" matrices into smaller components.
 Doing so often helps us to better understand the geometry of the situation: we might be able to understand the transformation described by a single matrix as "some reflection, followed by some rotation, followed by some scaling".
-For us, one specific use of such a "factorisation" (known formally as an **operator decomposition**) is in better understanding various operator norms, as we explain in \@ref(more-operator-norms).
+For us, one specific use of such a "factorisation" (known formally as an **operator decomposition**) is in better understanding various operator norms, as we explain in Exercise \@ref(more-operator-norms).
 
 Here are three operator decompositions that are particularly useful in quantum information theory.
 The second is for arbitrary operators between Hilbert spaces, the first and third are for *normal endomorphisms* (i.e. normal operators from one Hilbert space to itself).
@@ -765,7 +805,7 @@ The second is for arbitrary operators between Hilbert spaces, the first and thir
   where $D$ is the diagonal matrix whose diagonal entries are the eigenvalues $\lambda_k$, and where $U$ is the unitary matrix whose columns are the eigenvectors $\ket{v_k}$.
 
 2. **Singular value decomposition (SVD).**
-  We have already mentioned the SVD in \@ref(the-schmidt-decomposition) when discussing the Schmidt decomposition, but we recall the details here.
+  We have already mentioned the SVD in Exercise \@ref(the-schmidt-decomposition) when discussing the Schmidt decomposition, but we recall the details here.
   Consider *any* (non-zero) operator $A\in\mathcal{B}(\mathcal{H},\mathcal{H}')$.
   From this, we can construct two positive semi-definite operators: $A^\dagger A\in\mathcal{B}(\mathcal{H})$ and $AA^\dagger\in\mathcal{B}(\mathcal{H}')$.
   These are both normal, and so we can apply the spectral decomposition to both.
@@ -851,7 +891,7 @@ The second is for arbitrary operators between Hilbert spaces, the first and thir
 
 ### More operator norms {#more-operator-norms}
 
-We have already seen, all the way back in \@ref(modifying-the-born-rule)^[Think how far you've come since then!], how the Euclidean norm (from which we get the Euclidean distance) is the special case $p=2$ of $p$-norms (also known as [**$\ell^p$-norms**](https://en.wikipedia.org/wiki/Lp_space)), where
+We have already seen, all the way back in Section \@ref(modifying-the-born-rule)^[Think how far you've come since then!], how the Euclidean norm (from which we get the Euclidean distance) is the special case $p=2$ of $p$-norms (also known as [**$\ell^p$-norms**](https://en.wikipedia.org/wiki/Lp_space)), where
 $$
   \|v\|_p \coloneqq \left( \sum_{i=1}^n |v_i|^p \right)^{\frac{1}{p}}
 $$
@@ -1107,7 +1147,7 @@ Prove the following properties of the operator norm:
 3. If $U$ is unitary, then $\|U\|=1$
 4. If $P\neq0$ is an orthogonal projector, then $\|P\|=1$.
 
-Using the singular value decomposition^[Recall Section \@ref(the-schmidt-decomposition)], or otherwise, prove that the operator norm has the following two properties for any operators $A$ and $B$:
+Using the singular value decomposition^[Recall Exercise \@ref(the-schmidt-decomposition)], or otherwise, prove that the operator norm has the following two properties for any operators $A$ and $B$:
 
 5. **Unitary invariance:** $\|UAV\|=\|A\|$ for any unitaries $U$ and $V$
 6. **Sub-multiplicativity:** $\|AB\|\leq\|A\|\|B\|$.
