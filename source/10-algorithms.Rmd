@@ -346,7 +346,7 @@ They all seem to rest on the same generic sequence:
 
 - a Hadamard transform;
 - function evaluation;
-- another Hadamard (or Fourier) transform.^[As explained in Section \@ref(quantum-fourier-transforms), the Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$.]
+- another Hadamard (or Fourier) transform.^[As explained in Section \@ref(quantum-fourier-transform), the Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$.]
 
 As we shall see in a moment, in some cases (such as in Grover's search algorithm) this sequence is repeated several times.
 
@@ -1153,16 +1153,78 @@ First register: $n$ qubits. Second register: $1$ qubit.
 \end{equation*}
 ```
 
-where $U^\triangle$ is defined below, and $FT^\dagger$ is defined in \@ref(quantum-fourier-transform).
+where $U^\triangle$ is defined below, and $FT^\dagger$ is defined in Section \@ref(quantum-fourier-transform).
 ::::
 
-::: {.todo}
-<!-- TO-DO: define U^\triangle -->
-:::
+In this circuit, we write $U^\triangle$ to mean the unitary that performs function evaluation as
+$$
+  \ket{x}\ket{u}
+  \longmapsto e^{ix\varphi}\ket{x}\ket{u}
+$$
+or, in circuit language, the gate that acts on the $i$-th register as a controlled-$U^{2^{n-i}}$ gate:
 
-::: {.todo}
-<!-- TO-DO: note that you can't efficiently implement U^\triangle if all you have is U ! -->
-:::
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\newcommand{\ldotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={xshift=-0.7em}]{\ldots}}
+\newcommand{\ddotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={xshift=-0.7em,yshift=0.3em}]{\ddots}}
+\begin{equation*}
+  \begin{quantikz}
+    & \ctrl{4}
+    & \qw
+  \\
+    & \ctrl{3}
+    & \qw
+  \\
+    & \vdotsgate
+  \\
+    & \ctrl{1}
+    & \qw
+  \\[2em]
+    & \gate{U^\triangle}
+    & \qw
+  \end{quantikz}
+  \qquad=\qquad
+  \begin{quantikz}
+    & \ctrl{4}
+    & \qw
+    & \qw
+    & \ldotsgate
+    & \qw
+    & \qw
+  \\
+    & \qw
+    & \ctrl{3}
+    & \qw
+    & \ldotsgate
+    & \qw
+    & \qw
+  \\
+    & \vdotsgate
+    & \vdotsgate
+    &
+    & \ddotsgate
+    &
+    &
+  \\
+    & \qw
+    & \qw
+    & \qw
+    & \ldotsgate
+    & \ctrl{1}
+    & \qw
+  \\[2em]
+    & \gate{U^{2^{n-1}}}
+    & \gate{U^{2^{n-2}}}
+    & \qw
+    & \ldotsgate
+    & \gate{U}
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+It is important to note, however, that we are sweeping something under the rug here.
+If we can treat $U^\triangle$ as an oracle itself, then this does indeed give an efficient solution, but if all we have access to is $U$ then things are definitely not efficient: we are calling it $2^{n-1}+2^{n-2}+\ldots+2^0=2^n-1$ many times, which is *exponentially bad*!
 
 
 
