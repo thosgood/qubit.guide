@@ -999,7 +999,7 @@ $$
 $$
 for some integers $m$ and $n$.
 
-Our goal is to find the best $t$-bit approximation to ${\varphi}/{2\pi}={m}/{2^n}$ for some fixed $t\in\mathbb{N}$.
+Our task is to determine, using the fewest queries possible, the value of ${\varphi}/{2\pi}={m}/{2^n}$
 ::::
 
 Let's work our way up to finding a circuit to solve this problem, starting with the following simple mathematical observation.
@@ -1039,13 +1039,22 @@ $$
   = e^{m_n\pi i}\ket{u}
 $$
 and now we're happy: $m_n\in\{0,1\}$, so this is an eigenvalue of $U^{2^{n-1}}$ with phase $0$ or $\pi$, reducing us to the original binary observable measurement problem that we have already solved by replacing $U$ with $U^{2^{n-1}}$.
+We have found the $n$-th bit $m_n$!
 
-We've dealt with "shrinking" the distance between the two possible phases (if we have $0$ and $\pi/k$ for some $k\in\mathbb{N}$ then we simply replace $U$ by $U^k$), so now let's look at the other way^[Any interval $[a,b]$ in $\mathbb{R}$ can be turned into any other interval $[c,d]$ by a single shrink (or scale) and a single shift: multiply $a$ and $b$ by $(d-c)/(b-a)$ to get $a'$ and $b'$, and then add $c-a'$ to both $a'$ and $b'$. Make $[a,b]$ the right length, and then just put it in the right place!] of modifying a pair of phases: shifting.
+We've dealt with shrinking^[Any interval $[a,b]$ in $\mathbb{R}$ can be turned into any other interval $[c,d]$ by a single shrink (or scale) and a single shift: multiply $a$ and $b$ by $(d-c)/(b-a)$ to get $a'$ and $b'$, and then add $c-a'$ to both $a'$ and $b'$.] the distance between the two possible phases (if we have $0$ and $\pi/k$ for some $k\in\mathbb{N}$ then we simply replace $U$ by $U^k$), so now let's look at the other way of modifying a pair of phases: shifting.
 We have the same setup --- a phase gate of unknown phase $\varphi$ --- but this time we are promised that $\varphi$ is either $-\pi/2$ or $\pi/2$ (instead of $0$ or $\pi$).
 How can we adapt our original solution to find the phase value?
 
-This one is a bit harder.
-It's clear that "all we need to do" is add $\pi/2$ to each of the phases, since then we'd end up back at $0$ and $\pi$, but how can we actually do this?
+This time we just need to add $\pi/2$ to each of the phases, since then we'd end up back at $0$ and $\pi$.
+This means that we simply need to precede the phase gate by the $\pi/4$-phase gate^[Refer to Section \@ref(phase-gates-galore) for an explanation of this confusing terminology.] $S=\left[\begin{smallmatrix}1&0\\0&i\end{smallmatrix}\right]$.
+
+We already know how to find the value of $m_n$, so let's use this to now find the value of $m_{n-1}$.
+If we just try the same trick as before then we run into problems: it's true that $U^{2^{n-2}}\ket{u}=e^{2^{n-2}\varphi}\ket{u}$, but
+$$
+  2^{n-2}\varphi
+  \equiv \pi m_{n-1}+\pi m_n/2 \mod2\pi
+$$
+so we have an annoying phase of $\pi m_n/2$ in the way.
 
 ::: {.todo}
 <!-- TO-DO -->
