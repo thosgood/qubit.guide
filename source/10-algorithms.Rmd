@@ -30,7 +30,7 @@ How can we adapt this to the world of quantum computing?
 
 In quantum computation, *all elementary operations are reversible* (i.e. unitary), so we need to compute Boolean functions in a reversible fashion --- we can do so as follows:
 $$
-  \ket{x}\ket{y} \mapsto \ket{x}\ket{y\oplus f(x)}.
+  \ket{x}\ket{y} \longmapsto \ket{x}\ket{y\oplus f(x)}.
 $$
 
 The corresponding circuit diagram (for an input register of $n=3$ qubits) is shown in Figure \@ref(fig:n-equals-3-circuit-diagram).
@@ -913,13 +913,12 @@ The exponential separation that this algorithm demonstrates between quantum and 
 
 <div class="video" title="Hadamard and quantum Fourier transforms" data-videoid="qF9Wpgaqqww"></div>
 
-In Section \@ref(deutschs-algorithm) we
+In Section \@ref(deutschs-algorithm), we took the problem of binary observable measurement and at Deutsch's algorithm, which uses quantum Boolean function evaluation as the controlled-$U$ gate.
+Now we're going to generalise the binary observable measurement problem to other controlled-$U$ gates, and in the next section we will see what sort of quantum algorithm this leads us to develop; afterwards, we'll explain how this is the first step towards Shor's algorithm for prime factorisation.
 
-TO-DO: talk (a BIT, because we'll talk about this more in the next section) about 11.4 (Deutsch) and how it relates to binary observable measurement (see 7.5 in v5)
+Let's start by rephrasing binary observable measurement in terms of **eigenvalue estimation**.
 
-TO-DO: this is the first step towards Shor's algorithm!
-
-<!-- Recall Exercise \@ref(unknown-phase), where we were given the usual quantum interference circuit
+Recall the problem: we are given the usual quantum interference circuit
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
 \begin{quantikz}
@@ -931,11 +930,9 @@ TO-DO: this is the first step towards Shor's algorithm!
 \end{quantikz}
 ```
 
-and promised that $\varphi$ was either $0$ or $\pi$, but were only allowed one run of the circuit to determine which one it was.
-This is actually a specific example of a more general problem, namely **eigenvalue estimation**.
-To understand this, let's first give a solution to the above exercise.
+and promised that $\varphi$ is either $0$ or $\pi$, but we are only allowed one run of the circuit to determine which one it was.
 
-Let $U$ be a unitary and $\ket{u}$ an eigenvector.
+So let $U$ be a unitary and $\ket{u}$ an eigenvector.
 If we know that the corresponding eigenvalue is $\pm1$ (i.e. $e^{i\varphi}$ for $\varphi\in\{0,\pi\}$) then we can simply run the phase kick-back circuit from Section \@ref(phase-kick-back) (since the first register is exactly the usual quantum interference circuit we are interested in)
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
@@ -955,7 +952,42 @@ If we know that the corresponding eigenvalue is $\pm1$ (i.e. $e^{i\varphi}$ for 
 \end{equation*}
 ```
 
-To see that this solves our problem, we can just use the one fact that we have yet to use, namely that $\varphi\in\{0,\pi\}$, because $(\cos0,\sin0)=(1,0)$ and $(\cos\pi/2,\sin\pi/2)=(0,1)$, so if we measure $\ket{0}$ the we know that $\varphi$ must have been $0$, and similarly for $\ket{1}$ and $\varphi=\pi$. -->
+To see that this solves our problem, we can just use the one fact that we have yet to use, namely that $\varphi\in\{0,\pi\}$, because $(\cos0,\sin0)=(1,0)$ and $(\cos\pi/2,\sin\pi/2)=(0,1)$, so if we measure $\ket{0}$ the we know that $\varphi$ must have been $0$, and similarly for $\ket{1}$ and $\varphi=\pi$.
+
+Indeed, the fact that quantum Boolean function evaluation is given by
+$$
+  \ket{x}\ket{y} \longmapsto \ket{x}\ket{y\oplus f(x)}
+$$
+means that the unitary $U$ that it implements satisfies $U^1=\id$, since two consecutive evaluations gives
+$$
+  \begin{aligned}
+  \ket{x}\ket{y}
+  \longmapsto& \ket{x}\ket{y\oplus f(x)}
+\\\longmapsto& \ket{x}\ket{y\oplus f(x)\oplus f(x)}
+\\=& \ket{x}\ket{y}.
+  \end{aligned}
+$$
+So we see that the eigenvalues being $\pm1$, or, equivalently, $\varphi$ being $0$ or $\pi$, is fundamental to this story --- this is what we want to generalise, to be able to deal with more values of $\varphi$.
+
+::: {.scenario latex=""}
+We are presented with an oracle that computes a controlled-$U$ gate, along with an eigenstate $\ket{u}$ of $U$ with eigenvalue $e^{i\varphi}$.
+We are promised that $\varphi$ is of the form
+$$
+  \varphi
+  = 2\pi\frac{m}{2^n}
+$$
+for some integers $m$ and $n$.
+
+Our task is to find the best $t$-bit approximation to $m/2^n=\varphi/2\pi$.
+:::
+
+Rather than giving the algorithm that solves this problem immediately, let's work our way up to it, starting with some simple mathematical observations.
+Since $e^{i\varphi}=e^{i(\varphi+2\pi)}$, we can assume $m$ to be an integer between $0$ and $2^n-1$, which means that it has a binary representation of the form
+$$
+  m
+  = \sum_{i=1}^n m_i 2^{n-i}
+$$
+for $m_i\in\{0,1\}$.
 
 ::: {.todo}
 <!-- TO-DO -->
@@ -1025,3 +1057,10 @@ TO-DO: note that this is useful for Shor's
 ::: {.todo}
 <!-- TO-DO: optimality of Grover -->
 :::
+
+[reading the circuit diagram from top to bottom.]: 
+[you might recognise this as exercise \@ref(unknown-phase).]: 
+[**exercise.** prove this!]: 
+[recall the big-$o$ notation introduced in exercise \@ref(big-o).]: 
+[once again, we shall completely ignore the second register from now on, since all the interesting stuff happens in the first.]: 
+[as we shall see in a moment, the actual measurement on the second register is not actually necessary.]: 
