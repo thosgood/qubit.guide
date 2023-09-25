@@ -1239,13 +1239,13 @@ The only remaining part of the circuit to discuss is this mysterious $FT^\dagger
 
 In Section \@ref(phase-estimation) we constructed a circuit to perform phase estimation of an unknown rational phase $\varphi=2\pi m/2^n$.
 The circuit, as per usual, was split into three parts: first some Hadamard gates, then a modified controlled-$U$ gate, and finally some undefined gate $FT^\dagger$.
-Following our usual credo, this last gate should look something like a Hadamard, and we shall see that it is indeed a generalisation of this.
+Following our usual credo, this last gate should look something like a Hadamard, and we shall see that it is indeed related.
 This gate turns out to be pretty foundational, and turns up all over the place, so it's worth taking some time to talk about it in more detail.
 
 If we look back at what we needed this gate to do, we see that it has to contain these compensating phase shifts that depend on which bit $m_i$ of $m$ we are trying to calculate, e.g. $-\pi(m_n/8+m_{n-1}/4+m_{n-2}/2)$ in the case of $m_3$.
 We draw this as a circuit in Figure \@ref(fig:example-iqft-with-measurement).
 
-(ref:example-iqft-with-measurement-caption) The gate $FT^\dagger$ followed by measurement, acting on four qubits. The double vertical lines linking gates indicate that the result of the classical measurement is used to control the application (for example, we want the phase gate on the second register to apply the phase $-\pi/2$ *multiplied by $m_n$*).
+(ref:example-iqft-with-measurement-caption) The gate $FT^\dagger$ followed by measurement, acting on four qubits. The double vertical lines linking gates indicate that the result of the classical measurement is used to control the application (for example, we want the first phase gate on each register to be multiplied by $m_n$).
 
 ```{r example-iqft-with-measurement,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:example-iqft-with-measurement-caption)'}
 \newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
@@ -1280,21 +1280,139 @@ We draw this as a circuit in Figure \@ref(fig:example-iqft-with-measurement).
 \end{equation*}
 ```
 
+Hopefully it's clear how to generalise this definition of the gate to an arbitrary number of qubits, but to give a formal definition it's easier (and also useful) to give a symbolic definition.
 
-
-- **TO-DO: defn bottom of p. 238!!!!**
-- **TO-DO: show it's unitary (p. 238/239)!!!!**
-- **TO-DO: point out how it looks like Hadamard!!!!**
-- **TO-DO: penultimate paragraph of 5.5 on p. 239!!!!**
-- **TO-DO: final paragraph of 5.5 on p.239!!!!**
-
-::: {.todo}
-<!-- .technical Fourier theory in general -->
+::: {.idea latex=""}
+The **quantum Fourier transform** (**QFT**) acting on $n$ qubits is defined by the unitary
+$$
+  U_{\mathrm{FT}}
+  = \frac{1}{\sqrt{N}} \sum_{x,y=0}^{N-1} e^{2\pi ixy/N}\ket{y}\bra{x}
+$$
+where $N=2^n$.
 :::
 
+Note that this is the definition for the gate that would be denoted by $FT$, whereas what we use in the phase estimation circuit is $FT^\dagger$.
+In other words, we are really using the ***inverse* quantum Fourier transform**.
+
+Checking that this matrix is actually unitary is slightly involved, so we'll only sketch how it's done here.
+We can see that
+$$
+  U_{\mathrm{FT}}U_{\mathrm{FT}}^\dagger
+  = \frac{1}{N} \sum_{x,y,z=0}^{N-1} e^{2\pi ix(y-z)/N}\ket{y}\bra{z}
+$$
+since $\ket{x}\ket{y}=\delta_{xy}$, and then we can separately consider the cases $y=z$ and $y\neq z$;
+in the latter case, we'll have to sum a geometric progression, which gives
+$$
+  \begin{aligned}
+    \frac{1}{N} \sum_{x=0}^{N-1} e^{2\pi ix(y-z)/N}
+    &= \frac{1-e^{2\pi i(y-z)}}{1-e^{2\pi i(y-z)/N}}
+  \\&= 0.
+  \end{aligned}
+$$
+
+So in what way does this relate to the Hadamard gate that we already know and love?
+Looking at the $n=1$ case of the definition of $U_{\mathrm{FT}}$ we get
+$$
+  U_{\mathrm{FT}}
+  = \frac{1}{\sqrt{2}}
+  \begin{bmatrix}
+    1 & 1
+  \\1 & -1
+  \end{bmatrix}
+$$
+which is exactly the usual Hadamard gate $H$ on 1 qubit.
+However, if we now look at $n=2$ and compare $U_{\mathrm{FT}}$ with $H\otimes H$ (which we calculated in Exercise \@ref(hadamard-transforms-in-components)), then we see that they differ:
+$$
+  \begin{aligned}
+    U_{\mathrm{FT}}
+    &= \frac{1}{2}
+    \begin{bmatrix}
+      1 & 1 & 1 & 1
+    \\1 & i & -1 & -i
+    \\1 & -1 & 1 & -1
+    \\1 & -i & -1 & i
+    \end{bmatrix}
+  \\H\otimes H
+    &= \frac{1}{2}
+    \begin{bmatrix}
+      1 & 1 & 1 & 1
+    \\1 & -1 & 1 & -1
+    \\1 & 1 & -1 & -1
+    \\1 & -1 & -1 & 1
+    \end{bmatrix}
+  \end{aligned}
+$$
+It turns out the quantum Fourier transform and the Hadamard are both examples of a more general construction known as the [**Fourier transform on finite groups**](https://en.wikipedia.org/wiki/Fourier_transform_on_finite_groups): applied to the cyclic group $\mathbb{Z}/2^n\mathbb{Z}$ we get the QFT; applied to the $n$-fold product $(\mathbb{Z}/2\mathbb{Z})^n$ we get the Hadamard.
+However, we won't need this level of formalism going forward, we just need to remember that we have yet one more useful gate at our disposal!
+
 ::: {.todo}
-<!-- .technical make sure to mention that the Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$ -->
+<!-- .technical Fourier theory in general; DFT; FT on finite groups -->
 :::
+
+The way that we wrote the QFT in Figure \@ref(fig:example-iqft-with-measurement) is not the conventional way in which it normally appears, since we're assuming that we measure the result at the end.
+In general, we might not want to do this, and instead replace the dependence of the corrective phase gates on the classical measurements by controlled qubits, as shown in Figure \@ref(fig:example-iqft-without-measurement).
+
+One other note about conventions is the difference in ordering of bits between the circuit representation above and the unitary operator definition given before: in the circuit, the least significant bit appears in the *first* register as opposed to the last, with increasing significance of bits as we go *up* registers (i.e. down the page).
+We could of course introduce a lot of $\texttt{SWAP}$ gates to make these conventions agree, but this is typically unnecessary if we instead just keep track of which qubits are which and remember what we want to do with each one next.
+
+(ref:example-iqft-without-measurement-caption) The gate $FT^\dagger$ *without* measurement, acting on four qubits. This no longer depends on any classical measurements, but instead uses controlled-phase gates.
+
+```{r example-iqft-without-measurement,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:example-iqft-without-measurement-caption)'}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\newcommand{\ldotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={xshift=-0.7em}]{\ldots}}
+\newcommand{\ddotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={xshift=-0.7em,yshift=0.3em}]{\ddots}}
+\begin{equation*}
+  \begin{quantikz}[column sep=tiny]
+    & \gate{H}
+    & \gate{P_{\pi/2}^\dagger}
+    & \gate{P_{\pi/4}^\dagger}
+    & \gate{P_{\pi/8}^\dagger}
+    & \qw
+    & \qw
+    & \qw
+    & \qw
+    & \qw
+    & \qw
+    & \qw
+  \\
+    & \qw
+    & \ctrl{-1}
+    & \qw
+    & \qw
+    & \gate{H}
+    & \gate{P_{\pi/2}^\dagger}
+    & \gate{P_{\pi/4}^\dagger}
+    & \qw
+    & \qw
+    & \qw
+    & \qw
+  \\
+    & \qw
+    & \qw
+    & \ctrl{-2}
+    & \qw
+    & \qw
+    & \ctrl{-1}
+    & \qw
+    & \gate{H}
+    & \gate{P_{\pi/2}^\dagger}
+    & \qw
+    & \qw
+  \\
+    & \qw
+    & \qw
+    & \qw
+    & \ctrl{-3}
+    & \qw
+    & \qw
+    & \ctrl{-2}
+    & \qw
+    & \ctrl{-1}
+    & \gate{H}
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
 
 
 
