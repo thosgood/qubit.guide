@@ -379,7 +379,7 @@ Our task is to determine, using the fewest queries possible, the value of the $n
 It's quite easy to see how to do this classically: if we input the value $x=00\ldots010\ldots0$, where the $m$-th bit is a $1$ and all other bits are $0$, then $f(x)$ is simply the $m$-th bit of $a$; after $n$ such calls, we will know every bit value, and thus know $a$.
 It is also clear that there *cannot* exist a better classical algorithm: each call to the oracle teaches us exactly one bit of information, and since we must learn $n$ bits, we must query it $n$ times.
 
-In contrast, by running the circuit below, it is possible to determine the value of $a$ with a *single* call to the oracle!
+In contrast, by running the circuit below, it is possible to determine the value of $a$ with a *single* call to the oracle!^[This algorithm is named for Ethan Bernstein and [Umesh Vazirani](https://en.wikipedia.org/wiki/Umesh_Vazirani) who proposed it in 1997.]
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
@@ -519,7 +519,7 @@ Our task is to find, using the fewest queries possible, an input $x\in\{0,1\}^n$
 Suppose that we know that, amongst the $N=2^n$ binary strings, there are $M\ll N$ which are **tagged**, i.e. strings on which $f$ evaluates to $1$.
 Since there is no structure in the database, any classical search requires around $N/M$ steps, i.e. the function $f$ must be evaluated roughly $N/M$ times.
 
-In contrast, there is a quantum search algorithm, implemented by the circuit below, that was proposed in 1996 by [Lov Grover](https://en.wikipedia.org/wiki/Lov_Grover), and which requires only roughly $\sqrt{N/M}$ steps.
+In contrast, there is a quantum search algorithm, implemented by the circuit below, which requires only roughly $\sqrt{N/M}$ steps.^[This algorithm is named for [Lov Grover](https://en.wikipedia.org/wiki/Lov_Grover), who proposed it in 1996.]
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
@@ -708,7 +708,7 @@ If these can be checked at a rate of, say, one million keys per second, then a c
 
 
 
-## Simon's algorithm
+## Simon's algorithm {#simons-algorithm}
 
 <div class="video" title="Simon's algorithm" data-videoid="sxIdRKTdRRU"></div>
 
@@ -737,7 +737,7 @@ This means that the probability of there being at least one matching pair within
 This means that the chance of finding a matching pair is negligible if the oracle is queried on fewer than $m=\sqrt{2^n}$ inputs.
 
 The quantum case, on the other hand, gives a result (again, with "high" probability) within a *linear* number of steps.
-The circuit that solves this problem, shown below, has a familiar Hadamard--function--Hadamard structure, but the second register has now been expanded to $n$ qubits.
+The circuit that solves this problem, shown below, has a familiar Hadamard--function--Hadamard structure, but the second register has now been expanded to $n$ qubits.^[This circuit is named for Daniel Simon, who proposed it in 1994.]
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
@@ -1160,7 +1160,7 @@ where $U^\triangle$ is defined below, and $FT^\dagger$ is defined in Section \@r
 In this circuit, we write $U^\triangle$ to mean the unitary that performs function evaluation as
 $$
   \ket{x}\ket{u}
-  \longmapsto e^{ix\varphi}\ket{x}\ket{u}
+  \longmapsto e^{i\varphi x}\ket{x}\ket{u}
 $$
 or, in circuit language, the gate that acts on the $i$-th register as a controlled-$U^{2^{n-i}}$ gate:
 
@@ -1346,7 +1346,7 @@ It turns out the quantum Fourier transform and the Hadamard are both examples of
 However, we won't need this level of formalism going forward, we just need to remember that we have yet one more useful gate at our disposal!
 
 ::: {.todo}
-<!-- .technical Fourier theory in general; DFT; FT on finite groups -->
+<!-- .technical Fourier theory in general; DFT; FT on finite groups; use for hidden subgroup problems -->
 :::
 
 The way that we wrote the QFT in Figure \@ref(fig:example-iqft-with-measurement) is not the conventional way in which it normally appears, since we're assuming that we measure the result at the end.
@@ -1418,16 +1418,16 @@ We could of course introduce a lot of $\texttt{SWAP}$ gates to make these conven
 
 
 
-## Hidden-order determination
+## Hidden-order determination {#hidden-order-determination}
 
 In the same way that Deutsch's algorithm (\@ref(deutschs-algorithm)) dealt with binary observable measurement for a unitary implementing some function evaluation, the hidden-order determination algorithm that we are now going to study deals with phase estimation for a unitary implementing some function evaluation.^[Deutsch's algorithm is to binary observable measurement as hidden-order determination is to phase estimation.]
 This turns out to be an important step along the path towards Shor's algorithm
 
 :::: {.scenario latex=""}
 ::: {.scenario-title}
-*(Order finding).*
+*(Hidden-order determination).*
 :::
-We are presented with an oracle that computes the function
+We are presented with an oracle that computes the function on $n$ qubits
 $$
   U_a\ket{z}
   = \ket{az\mod{N}}
@@ -1436,6 +1436,10 @@ for some fixed (known) integer $N=2^n$, along with a fixed (known) integer $a$ t
 
 Our task is to determine, using the fewest queries possible, the order $r$ of $a$ modulo $N$, i.e. the smallest positive integer $r$ such that $a^r\equiv1\mod{N}$.
 ::::
+
+Let's be clear and spell out what notational shortcuts we're making here.^[For example, if $n=a=3$, then $U_3$ applied to $\ket{4}=\ket{1}\ket{0}\ket{0}$ is $\ket{12\mod{8}}=\ket{4}=\ket{1}\ket{0}\ket{0}$, and applied to $\ket{5}=\ket{1}\ket{0}\ket{1}$ is $\ket{15\mod{8}}=\ket{7}=\ket{1}\ket{1}\ket{1}$.]
+Every integer $0\leq z<2^n$ corresponds to a basis state $\ket{z}$ of the space of $n$ qubits, given by writing $z$ in binary form.
+So when we write $\ket{az\mod{N}}$, this means that we take the product of the integers $a$ and $z$, take this integer modulo $N$, and then consider the basis state given by writing this result in binary form.
 
 The hypothesis that $N$ is a power of 2 is actually unnecessary, as we will later explain, but we assume it for now since for the sake of ease.
 
@@ -1478,12 +1482,75 @@ $$
 $$
 and so we should get something interesting by just plugging in $\ket{1}$.
 
-::: {.todo}
-<!-- TO-DO: finish -->
-:::
+The actual circuit^[Named for [Peter Shor](https://en.wikipedia.org/wiki/Peter_Shor), who proposed it as part of his factoring algorithm (see Section \@ref(shors-algorithm)) in 1994.] is practically identical to the phase estimation circuit of Section \@ref(phase-estimation), but where $U$ is replaced by $U_a$, and $\ket{u}$ is replaced by $\ket{1}$.
 
-The assumption at the very start that $N$ be of the form $2^n$ is actually not necessary.
-Suppose that it isn't, and let $n$ be the smallest integer such that $N<2^n$.
+:::: {.circuit latex=""}
+::: {.circuit-title}
+*(Shor's order-finding algorithm).*
+:::
+First register: $2n+1$ qubits. Second register: $n$ qubits.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=4]{$\ket{0}^{\otimes 2n+1}$}
+    & \gate{H}
+    & \ctrl{4}
+    & \gate[wires=4,nwires={3}]{FT^\dagger}
+    & \meter{}
+  \\[-1em]
+    & \gate{H}
+    & \ctrl{3}
+    & \qw
+    & \meter{}
+  \\[-1em]
+    &&\vdotsgate
+  \\[-1em]
+    & \gate{H}
+    & \ctrl{1}
+    & \qw
+    & \meter{}
+  \\[2em]
+    \lstick{$\ket{1}^{\otimes n}$}
+    & \qwbundle{n}
+    & \gate{U_{a}^\triangle}
+    & \qw
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+::::
+
+As always, let's step through the circuit.
+Immediately after the first Hadamard we are in the state
+$$
+  \left(\frac{1}{\sqrt{N}}\sum_{x=0}^{N-1}\ket{x}\right)\ket{1}.
+$$
+Next, just after the function evaluation $U_a$, we are in the state
+$$
+  \frac{1}{\sqrt{r}} \sum_{s=0}^{r-1} \ket{\Phi_s}\ket{u_s}
+$$
+where
+$$
+  \ket{\Phi_s}
+  = \frac{1}{\sqrt{N}} \sum_{n=0}^{N-1} e^{i\phi_s x}\ket{x}
+$$
+and $\phi_s=2\pi(s/r)$, so that $e^{i\phi_s x}$ is the eigenvalue of $\ket{u_s}$ for $U_a$.
+
+To calculate the effect of the inverse quantum Fourier transform, we will make the same pedagogical shortcut as we did when studying Simon's algorithm^[There is a deep link between this algorithm and Simon's algorithm. As we have mentioned, hidden-order determination forms a key part of Shor's algorithm; Simon's algorithm and Shor's algorithm (and Deutsch's algorithm, in fact) are all closely related: they are all examples of [hidden subgroup problems](https://en.wikipedia.org/wiki/Hidden_subgroup_problem).] (Section \@ref(simons-algorithm)) and pretend that we make a measurement in the basis $\ket{u_s}$ in the auxiliary system *before* applying the inverse QFT.
+We will measure one of the $r$ possible values of $s$, each with equal probability $1/r$, and doing so will leave the main register in the corresponding state $\ket{\Phi_s}$.
+But this is exactly the picture of what happened after applying $U^\triangle$ in the phase estimation circuit!
+This means that we already know what the inverse QFT will do: it will give us the value of $2^{2n+1}(s/r)$.
+Since this will happen irrelevant of which value of $s$ we measure, we need not actually perform the measurement.^[It is very fortunate that we do not need to perform this measurement, since in general we will not know how to implement it: recall that to construct $\ket{u_s}$ we would need to already know the value of the order $r$ that we are trying to find.]
+
+So running through the entire circuit and then measuring the main register will give us the value of $2^{2n+1}(s/r)$, which is *almost* enough to recover the value of $r$, but not quite: since we didn't measure the auxiliary register, we don't know which value of $s$ we obtained!
+However, now a purely classical (and efficient) algorithm comes to our rescue: the **continued fractions algorithm**.
+This will give us the values of $s$ and $r$ provided that a certain inequality is satisfied, which is always the case if our main register has $2n+1$ qubits.^[The explicit inequality in the continued fractions algorithm actually tells us that $2n+1$ is the smallest possible size for the main register to ensure exactness with complete certainty.]
+We will not delve into these details of the classical post-processing of the measurements since they are no longer quantum; consider this yet another chance for the interested reader to either work out the details themselves or to find the answers elsewhere through some research of their own.
+
+Finally, the assumption at the very start that $N$ be of the form $2^n$ is not actually necessary (just as the assumption that the phase in the phase estimation problem be of the form $2\pi m/2^n$ is not actually necessary).
+Suppose that $N$ isn't of this form, and let $n$ be the smallest integer such that $N<2^n$.
 Then we want to extend $U_a$ to act on $n$ qubits, and we need to be careful how we do so.
 For example, we cannot simply take the same function $U_a\ket{z}=\ket{az\mod{N}}$, since then $U_a\ket{0}=\ket{0}=U_a\ket{N}$ but $\ket{0}$ and $\ket{N}$ are orthogonal (remember, we always assume our bases to be orthonormal!), so this $U_a$ cannot be unitary because it sends orthogonal states to non-orthogonal states.
 The correct modification to make for our purposes is to define
