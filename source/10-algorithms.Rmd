@@ -1430,11 +1430,11 @@ This turns out to be an important step along the path towards Shor's algorithm
 We are presented with an oracle that computes the function
 $$
   U_a\ket{z}
-  = \ket{az\mod N}
+  = \ket{az\mod{N}}
 $$
 for some fixed (known) integer $N=2^n$, along with a fixed (known) integer $a$ that is coprime to $N$.
 
-Our task is to determine, using the fewest queries possible, the order $r$ of $a$ modulo $N$, i.e. the smallest positive integer $r$ such that $a^r\equiv1\mod N$.
+Our task is to determine, using the fewest queries possible, the order $r$ of $a$ modulo $N$, i.e. the smallest positive integer $r$ such that $a^r\equiv1\mod{N}$.
 ::::
 
 The hypothesis that $N$ is a power of 2 is actually unnecessary, as we will later explain, but we assume it for now since for the sake of ease.
@@ -1442,15 +1442,16 @@ The hypothesis that $N$ is a power of 2 is actually unnecessary, as we will late
 First of all, we can write down some eigenstates of $U_a$ parametrised by an integer $s\in\mathbb{Z}$
 $$
   \ket{u_s}
-  = \frac{1}{\sqrt{r}} \sum_{k=0}^{r-1} e^{-2\pi i({sk}/{r})} \ket{a^k\mod N}.
+  = \frac{1}{\sqrt{r}} \sum_{k=0}^{r-1} e^{-2\pi i({sk}/{r})} \ket{a^k\mod{N}}.
 $$
-Let's show that these are indeed eigenstates.
+Since $2\pi i(r+1)k/r\equiv2\pi i(k/r)\mod{2\pi i}$, we see that this gives us $r$ eigenstates, parametrised by $s=0,\ldots,r-1$
+Now let's show that these are indeed eigenstates.
 By the definition of $U_a$,
 $$
   \begin{aligned}
     U_a \ket{u_s}
-    &= \frac{1}{\sqrt{r}}\sum_{k=0}^{r-1} e^{-2\pi i({sk}/{r})} \ket{y^{k+1}\mod N}
-  \\&= \frac{1}{\sqrt{r}}\sum_{j=1}^{r} e^{2\pi i({s}/{r})}e^{-2\pi i({sj}/{r})} \ket{y^{j}\mod N}
+    &= \frac{1}{\sqrt{r}}\sum_{k=0}^{r-1} e^{-2\pi i({sk}/{r})} \ket{y^{k+1}\mod{N}}
+  \\&= \frac{1}{\sqrt{r}}\sum_{j=1}^{r} e^{2\pi i({s}/{r})}e^{-2\pi i({sj}/{r})} \ket{y^{j}\mod{N}}
   \end{aligned}
 $$
 where we simply changed the index of the sum to $j=k+1$.
@@ -1462,16 +1463,20 @@ $$
 which shows that $\ket{u_s}$ is an eigenstate with eigenvalue $e^{2\pi i(s/r)}$.
 
 Of course, we cannot actually prepare any of these eigenstates $\ket{u_s}$ because they require knowledge of the natural number $r$ that we are trying to find!
-But at the very least this now looks a bit like a problem that we have seen before: if we *could* prepare some particular $\ket{u_s}$ then the phase estimation algorithm (from Section \@ref(phase-estimation)) would allow us to calculate $s/r$.
+But at the very least this now looks a bit like a problem that we have seen before: if we *could* prepare some particular $\ket{u_s}$ then the phase estimation algorithm (from Section \@ref(phase-estimation)) would allow us to calculate $s/r$, and thus $r$.
 So let's try one of our always-useful tricks: superposition.
 
-Although we cannot prepare any $\ket{u_s}$ individually, note that
+Although we cannot prepare any $\ket{u_s}$ individually, note that^[Recall that, if $\omega\neq1$ is an $n$-th root of unity, then $\sum_{i=0}^{n-1}\omega^i=0$.]
 $$
   \begin{aligned}
-    \frac{1}{\sqrt{r}} \sum_s \ket{u_s}
-    &= 
+    \frac{1}{\sqrt{r}} \sum_{s=0}^{r-1} \ket{u_s}
+    &= \frac{1}{r} \sum_{s=0}^{r-1} \sum_{k=0}^{r-1} e^{-2\pi i({sk}/{r})} \ket{a^k\mod{N}}
+  \\&= \frac{1}{r} \sum_{k=0}^{r-1} \left(\sum_{s=0}^{r-1} e^{-2\pi i({sk}/{r})}\right) \ket{a^k\mod{N}}
+  \\&= \underbrace{\frac{1}{r} \sum_{s=0}^{r-1} \ket{1}}_{k=0} + \frac{1}{r} \sum_{k=1}^{r-1} \left(\sum_{s=0}^{r-1} e^{-2\pi i({sk}/{r})}\right) \ket{a^k\mod{N}}
+  \\&= \ket{1}
   \end{aligned}
 $$
+and so we should get something interesting by just plugging in $\ket{1}$.
 
 ::: {.todo}
 <!-- TO-DO: finish -->
@@ -1480,12 +1485,12 @@ $$
 The assumption at the very start that $N$ be of the form $2^n$ is actually not necessary.
 Suppose that it isn't, and let $n$ be the smallest integer such that $N<2^n$.
 Then we want to extend $U_a$ to act on $n$ qubits, and we need to be careful how we do so.
-For example, we cannot simply take the same function $U_a\ket{z}=\ket{az\mod N}$, since then $U_a\ket{0}=\ket{0}=U_a\ket{N}$ but $\ket{0}$ and $\ket{N}$ are orthogonal (remember, we always assume our bases to be orthonormal!), so this $U_a$ cannot be unitary because it sends orthogonal states to non-orthogonal states.
+For example, we cannot simply take the same function $U_a\ket{z}=\ket{az\mod{N}}$, since then $U_a\ket{0}=\ket{0}=U_a\ket{N}$ but $\ket{0}$ and $\ket{N}$ are orthogonal (remember, we always assume our bases to be orthonormal!), so this $U_a$ cannot be unitary because it sends orthogonal states to non-orthogonal states.
 The correct modification to make for our purposes is to define
 $$
   U_a\ket{z}
   = \begin{cases}
-    \ket{az\mod N}
+    \ket{az\mod{N}}
     & 0\leq z<N
   \\\ket{z}
     & R\leq z<2^n
