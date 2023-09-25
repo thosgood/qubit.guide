@@ -1076,7 +1076,7 @@ However, we know that all we have to do now is to compensate for this by adding 
     \lstick{$\ket{0}$}
     & \gate{H}
     & \ctrl{1}
-    & \phase{{-\pi m_n}/{2}}
+    & \phase{-\pi\frac{m_n}{2}}
     & \gate{H}
     & \qw \rstick{$\ket{m_{n-1}}$}
   \\\lstick{$\ket{u}$}
@@ -1098,14 +1098,15 @@ For example, the circuit to determine $m_{n-3}$ (given than we already know $m_n
     \lstick{$\ket{0}$}
     & \gate{H}
     & \ctrl{1}
-    & \phase{{-\pi m_n}/{8}}
-    & \phase{{-\pi m_{n-1}}/{4}}
-    & \phase{{-\pi m_{n-2}}/{2}}
+    & \phase{-\pi\frac{m_n}{8}}
+    & \phase{-\pi\frac{m_{n-1}}{4}}
+    & \phase{-\pi\frac{m_{n-2}}{2}}
     & \gate{H}
     & \qw \rstick{$\ket{m_{n-3}}$}
   \\\lstick{$\ket{u}$}
     & \qw
     & \gate{U^{2^{n-3}}}
+    & \qw
     & \qw
     & \qw
     & \qw
@@ -1118,7 +1119,7 @@ The entire process for determining the whole string $m_1\ldots m_n$, solving the
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-*(Controlled-$U$ interference).*
+*(Phase estimation).*
 :::
 First register: $n$ qubits. Second register: $1$ qubit.
 
@@ -1226,6 +1227,8 @@ or, in circuit language, the gate that acts on the $i$-th register as a controll
 It is important to note, however, that we are sweeping something under the rug here.
 If we can treat $U^\triangle$ as an oracle itself, then this does indeed give an efficient solution, but if all we have access to is $U$ then things are definitely not efficient: we are calling it $2^{n-1}+2^{n-2}+\ldots+2^0=2^n-1$ many times, which is *exponentially bad*!
 
+The only remaining part of the circuit to discuss is this mysterious $FT^\dagger$ gate, but this deserves a section of its own.
+
 
 
 
@@ -1234,14 +1237,59 @@ If we can treat $U^\triangle$ as an oracle itself, then this does indeed give an
 
 <div class="video" title="Hadamard and quantum Fourier transforms" data-videoid="qF9Wpgaqqww"></div>
 
-TO-DO: going to define $FT^\dagger$ from \@ref(phase-estimation)
+In Section \@ref(phase-estimation) we constructed a circuit to perform phase estimation of an unknown rational phase $\varphi=2\pi m/2^n$.
+The circuit, as per usual, was split into three parts: first some Hadamard gates, then a modified controlled-$U$ gate, and finally some undefined gate $FT^\dagger$.
+Following our usual credo, this last gate should look something like a Hadamard, and we shall see that it is indeed a generalisation of this.
+This gate turns out to be pretty foundational, and turns up all over the place, so it's worth taking some time to talk about it in more detail.
 
-TO-DO: just a small little detour back into more foundational/less applied stuff
+If we look back at what we needed this gate to do, we see that it has to contain these compensating phase shifts that depend on which bit $m_i$ of $m$ we are trying to calculate, e.g. $-\pi(m_n/8+m_{n-1}/4+m_{n-2}/2)$ in the case of $m_3$.
+We draw this as a circuit in Figure \@ref(fig:example-iqft-with-measurement).
 
-TO-DO: BUT we're going to focus on the "circuit story" instead of the mathematical one (i.e. no mention of actual Fourier theory!)
+(ref:example-iqft-with-measurement-caption) The gate $FT^\dagger$ followed by measurement, acting on four qubits. The double vertical lines linking gates indicate that the result of the classical measurement is used to control the application (for example, we want the phase gate on the second register to apply the phase $-\pi/2$ *multiplied by $m_n$*).
+
+```{r example-iqft-with-measurement,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:example-iqft-with-measurement-caption)'}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\newcommand{\ldotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={xshift=-0.7em}]{\ldots}}
+\newcommand{\ddotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={xshift=-0.7em,yshift=0.3em}]{\ddots}}
+\begin{equation*}
+  \begin{quantikz}
+    & \gate{H}
+    & \meter{\ket{m_n}} \vcw{3}
+  \\
+    & \qw
+    & \gate{P_{\pi/2}^\dagger}
+    & \gate{H}
+    & \meter{\ket{m_{n-1}}} \vcw{2}
+  \\
+    & \qw
+    & \gate{P_{\pi/4}^\dagger}
+    & \qw
+    & \gate{P_{\pi/2}^\dagger}
+    & \gate{H}
+    & \meter{\ket{m_{n-2}}} \vcw{1}
+  \\
+    & \qw
+    & \gate{P_{\pi/8}^\dagger}
+    & \qw
+    & \gate{P_{\pi/4}^\dagger}
+    & \qw
+    & \gate{P_{\pi/2}^\dagger}
+    & \gate{H}
+    & \meter{\ket{m_{n-3}}}
+  \end{quantikz}
+\end{equation*}
+```
+
+
+
+- **TO-DO: defn bottom of p. 238!!!!**
+- **TO-DO: show it's unitary (p. 238/239)!!!!**
+- **TO-DO: point out how it looks like Hadamard!!!!**
+- **TO-DO: penultimate paragraph of 5.5 on p. 239!!!!**
+- **TO-DO: final paragraph of 5.5 on p.239!!!!**
 
 ::: {.todo}
-<!-- TO-DO: finish -->
+<!-- .technical Fourier theory in general -->
 :::
 
 ::: {.todo}
