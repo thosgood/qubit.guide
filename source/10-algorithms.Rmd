@@ -535,7 +535,7 @@ First register: $n$ qubits. Second register: $1$ qubit.
     & \gate{H}
     & \qw
     & \ctrl{4}
-      \gategroup[wires=5,steps=4,background,style={rounded corners,dashed,ultra thick,inner sep=0.5em},label style={yshift=0.4em,align=center}]{Grover iteration operator $G$\\(repeat $O(2^{n/2})$ times)}
+      \gategroup[wires=5,steps=4,background,style={rounded corners,dashed,ultra thick,inner sep=0.5em},label style={yshift=0.4em,align=center}]{Grover iteration operator $G$\\(repeat $\mathcal{O}(2^{n/2})$ times)}
     & \gate{H}
     & \ctrl{4}
     & \gate{H}
@@ -594,7 +594,7 @@ $$
   G = (H^{\otimes n}\otimes\id) U_{f_0}(H^{\otimes n}\otimes\id) U_f.
 $$
 
-After^[Recall the big-$O$ notation introduced in Exercise \@ref(big-o).] $O(2^{n/2})$ applications of $G$, we measure the first register bit-by-bit and obtain the value of $\ket{z}=\ket{z_1z_2\ldots z_n}$, which is such that, *with "high" probability*, $f(z)=1$.
+After^[Recall the big-$\mathcal{O}$ notation introduced in Exercise \@ref(big-o).] $\mathcal{O}(2^{n/2})$ applications of $G$, we measure the first register bit-by-bit and obtain the value of $\ket{z}=\ket{z_1z_2\ldots z_n}$, which is such that, *with "high" probability*, $f(z)=1$.
 In order to actually *see* how this algorithm works, and to justify our use of the phrase "with high probability", we can take a more geometric approach.
 
 First, we define two orthonormal vectors in the Hilbert space describing the first register:^[Once again, we shall completely ignore the second register from now on, since all the interesting stuff happens in the first.]
@@ -929,7 +929,7 @@ $$
   \frac{1}{4}.
 $$
 
-We conclude that we can determine $s$ with some constant probability of error after repeating the algorithm $O(n)$ times.
+We conclude that we can determine $s$ with some constant probability of error after repeating the algorithm $\mathcal{O}(n)$ times.
 The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.
 
 
@@ -1584,7 +1584,7 @@ This is a classically difficult problem, and hence forms the basis of some very 
 More precisely, to factor an integer $R$ classically with the general number field sieve method is a **sub-exponential** problem (i.e. somewhere between polynomial in $R$ and exponential in $R$), whereas Shor's algorithm is **polylogarithmic** (i.e. polynomial in $\log R$).
 This means that Shor's algorithm witnesses integer factorisation as a bounded-error quantum polynomial time problem: it lives in $\texttt{BQP}$ (recall Section \@ref(computational-complexity)).
 
-Since any integer has a unique (up to ordering) prime factorisation^[This fact so is important that it earns the name of [**the fundamental theorem of arithmetic**](https://en.wikipedia.org/wiki/Fundamental_theorem_of_arithmetic)] consisting of finitely many prime numbers, it suffices to find a single prime factor, since then we can simply divide our original number by this and run the algorithm over and over until it terminates, recording the prime factors that we find along the way.
+Since any integer has a unique (up to ordering) prime factorisation^[This fact so is important that it earns the name of the [**fundamental theorem of arithmetic**](https://en.wikipedia.org/wiki/Fundamental_theorem_of_arithmetic)] consisting of finitely many prime numbers, it suffices to find a single prime factor, since then we can simply divide our original number by this and run the algorithm over and over until it terminates, recording the prime factors that we find along the way.
 But still, turning the problem of "find a prime factor" into a problem that we have already solved (namely hidden-order determination) requires some work, so let's get started.
 
 Recall that the **greatest common divisor** $\gcd(m,n)$ (or **highest common factor** $\hcf(m,n)$) of a pair of integers $(m,n)$ is the largest integer that divides both of them.
@@ -1604,7 +1604,7 @@ Let $x$ and $R$ be natural numbers such that
 
 - $R$ is *not* prime;
 - $1<x<R-1$;
-- $x^2\equiv\pm1\mod{R}$.
+- $x^2\equiv1\mod{R}$.
 
 Then both $\hcf(x-1,R)$ and $\hcf(x+1,R)$ are factors of $R$.
 :::
@@ -1639,13 +1639,100 @@ So here we see that $p_1$ must divide either $x+1$ or $x-1$.
 We can continue like this for all the prime factors $p_i$ of $R$, but note that it cannot be the case that *all* the $p_i$ divide *only* $x+1$ and not $x-1$, since this would then force $p_1^{a_1}\ldots p_n^{a_n}=R$ to divide $x+1$, which we have already said cannot happen (and similarly for all the $p_i$ dividing only $x-1$).
 This means that both $\hcf(x-1,R)$ and $\hcf(x+1,R)$ are non-trivial.
 
-::: {.todo}
-<!-- TO-DO -->
+Now let's state another useful lemma (which we will not prove).
+
+::: {.idea latex=""}
+**Lemma.**
+Let $R$ be an odd natural number with $m\geq2$ distinct prime factors.
+If $y$ is chosen uniformly at random from the set of natural numbers that are coprime to and smaller than $R$, then the probability that the order $r$ of $y$ modulo $R$ is even *and* satisfies
+$$
+  y^{r/2}\not\equiv-1\mod{R}
+$$
+is at least
+$$
+  1-\frac{1}{2^m-1}.
+$$
 :::
 
-::: {.todo}
-<!-- mention https://link.springer.com/article/10.1007/s11128-021-03069-1 which shows that, in practice, you basically only need a single call to the quantum hidden-order determination subroutine -->
+How is this lemma useful to us?
+Well, it says that if we randomly pick some $1<y<R$ satisfying the hypotheses, then with non-zero probability (that increases as $R$ has more and more prime factors) it will be such that we can apply the previous lemma to $x=y^{r/2}$, *almost*.
+The one problem is that $x>y$, and so it might also be the case that $x>R$, and the previous lemma needed the assumption that $x<R-1$.
+But we can fix this!
+
+::: {.idea latex=""}
+**Lemma.**
+Let $y$ and $R$ be natural numbers such that
+
+- $R$ is *not* prime;
+- the order $r$ of $y$ modulo $R$ is even;
+- $y^{r/2}>R$;
+
+Then *either* $x+1$ is divisible by $R$, *or* both $\hcf(y^{r/2}-1,R)$ and $\hcf(y^{r/2}+1,R)$ are factors of $R$.
 :::
+
+::: {.proof}
+First of all, recall that the order $r$ is the smallest natural number such that
+$$
+  y^r\equiv1\mod{R}.
+$$
+Since $r$ is even, $y^{r/2}$ is well defined and we can factor
+$$
+  kR=y^r-1=(y^{r/2}+1)(y^{r/2}-1)
+$$
+as before.
+Now we have to do something different, because it is no longer necessarily the case that $y^{r/2}+1$ is smaller than $R$.
+However, we can still show that $R$ does not divide the $y^{r/2}-1$ term, since if it did then we would have that
+$$
+  y^{r/2}\equiv1\mod{R}
+$$
+which contradicts the fact that $r$ is the *smallest* natural number such that this holds.
+So either $R$ divides the $y^{r/2}+1$ term, or it doesn't; in the latter case, we can then apply exactly the same argument as before to show that both $\hcf(y^{r/2}-1,R)$ and $\hcf(y^{r/2}+1,R)$ are factors of $R$.
+:::
+
+The fact that this lemma requires $R$ to be odd and also have at least two distinct prime factors means that we can only apply it if we have checked that both of these things are true.
+In other words, we need to know that $R$ is not even, and also that $R$ is not of the form $p^b$ for some prime $p$.
+But as we've already mentioned, both of these properties can be checked by an efficient algorithm by a classical computer.
+
+Now we're ready to state Shor's algorithm.
+
+:::{.idea latex=""}
+**Shor's algorithm.**
+*(Factoring the natural number $R$.)*
+
+1. Check that $R$ is not prime.
+
+    *If so, stop and return the factor $R$.*
+
+2. Check if $R$ is even.
+  
+    *If so, stop and return the factor $2$.*
+
+3. Check if $R=a^b$ for some integers $a\geq1$ and $b\geq2$.
+
+    *If so, stop and return the factor $a$.*
+
+4. Uniformly at random pick an integer $1<y<R$ and evaluate $\hcf(y,R)$; check if $\hcf(y,R)>1$.
+
+    *If so, stop and return the factor $\hcf(y,R)$.*
+
+5. Compute the order $r$ of $y$ modulo $R$ via hidden-order determination (from Section \@ref(hidden-order-determination)).
+
+6. Check if $r$ is odd.
+
+    *If so, go back to step 4.*
+
+7. Check if $y^{r/2}\equiv-1\mod{R}$.
+
+    *If so, go back to step 4.*
+
+8. Compute $\hcf(y^{r/2}-1,R)$ and $\hcf(y^{r/2}+1,R)$.
+
+    *Stop and return these as factors.*
+:::
+
+Picking it apart, we see that steps 1 to 3 are simply checking easy cases; steps 4 to 7 are checking that the necessary hypotheses are satisfied in order for step 8 to calculate factors of $R$.
+The only place that we use anything quantum in in step 5, where we have to do hidden-order determination.^[Even better, thanks to [a result by Ekerå](https://link.springer.com/article/10.1007/s11128-021-03069-1), one can be rather sure that this quantum subroutine will only need to be run a single time.]
+The fact that steps 6 and 7 won't cause us to get stuck in an endless loop is justified by the fact that they will both be passed over with probability $1-1/(2^{m-1})$, as we mentioned above.
 
 
 
@@ -1688,6 +1775,5 @@ This means that both $\hcf(x-1,R)$ and $\hcf(x+1,R)$ are non-trivial.
 
 ### Writing an integer as a power {#checking-for-power-form}
 
-::: {.todo}
-<!-- TO-DO: Exercise 7.22 -->
-:::
+1. Show that $R=21$ cannot be written in the form $a^b$ for integers $a\geq1$ and $b\geq2$.
+2. Generalise this to a method that could work in $\mathcal{O}(L^3)$ for any value of $R$ that is $L$ bits long.^[*Hint: since $R$ is $L$ bits long, $R<2^L$, and so $b<L$.*]
