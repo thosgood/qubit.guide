@@ -755,8 +755,54 @@ The more general scenario, where some quantum source emits states $\rho_0,\ldots
 
 ## Approximate phase estimation {#approximate-phase-estimation}
 
+In Section \@ref(phase-estimation) we showed how to determine the eigenvalue phase of a controlled-$U$ gate, hidden by an oracle, under the assumption that the phase was of a particularly nice rational form: $2\pi m/2^n$.
+More precisely, we were able to find the integer $m\mod{2^n}$.
+Here we will improve upon this result, explaining how to adapt the same circuit for arbitrary phases.
+
+So say we have some controlled-$U$ gate with eigenvector $\ket{u}$ and eigenvalue $e^{i\varphi}$.
+We can run the same circuit as we did in Section \@ref(phase-estimation):
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=4]{$\ket{0}^{\otimes n}$}
+    & \gate{H}
+    & \ctrl{4}
+    & \gate[wires=4,nwires={3}]{FT^\dagger}
+    & \qw
+  \\[-1em]
+    & \gate{H}
+    & \ctrl{3}
+    & \qw
+    & \qw
+  \\[-1em]
+    &&\vdotsgate
+  \\[-1em]
+    & \gate{H}
+    & \ctrl{1}
+    & \qw
+    & \qw
+  \\[2em]
+    \lstick{$\ket{u}$}
+    & \qw
+    & \gate{U^\triangle}
+    & \qw
+    & \qw \rstick{$\ket{u}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+where the inverse quantum Fourier transform is the coherent version, as in Figure \@ref(fig:example-iqft-without-measurement).
+
+As before, the Hadamard gate followed by the controlled-$U^\triangle$ gate prepare the state
+$$
+  \frac{1}{\sqrt{N}} \sum_{x=0}^{N-1} e^{i\phi x}\ket{x}\ket{u}
+$$
+where $N=2^n$, with $n$ the number of qubits in the first register.
+
 ::: {.todo}
-TO-DO: continue on from \@ref(phase-estimation)
+<!-- TO-DO: finish -->
 :::
 
 
