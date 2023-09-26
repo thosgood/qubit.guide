@@ -755,7 +755,7 @@ The more general scenario, where some quantum source emits states $\rho_0,\ldots
 
 ## Approximate phase estimation {#approximate-phase-estimation}
 
-In Section \@ref(phase-estimation) we showed how to determine the eigenvalue phase of a controlled-$U$ gate, hidden by an oracle, under the assumption that the phase was of a particularly nice rational form: $2\pi m/2^n$.
+In Section \@ref(phase-estimation) we showed how to determine the phase of an eigenvalue of a controlled-$U$ gate, hidden by an oracle, under the assumption that the phase was of a particularly nice rational form: $2\pi m/2^n$.
 More precisely, we were able to find the integer $m\mod{2^n}$.
 Here we will improve upon this result, explaining how to adapt the same circuit for arbitrary phases.
 
@@ -770,7 +770,7 @@ We can run the same circuit as we did in Section \@ref(phase-estimation):
     & \gate{H}
     & \ctrl{4}
     & \gate[wires=4,nwires={3}]{FT^\dagger}
-    & \qw
+    & \qw \rstick[wires=4]{$\ket{\widetilde{y}}$}
   \\[-1em]
     & \gate{H}
     & \ctrl{3}
@@ -793,17 +793,91 @@ We can run the same circuit as we did in Section \@ref(phase-estimation):
 \end{equation*}
 ```
 
-where the inverse quantum Fourier transform is the coherent version, as in Figure \@ref(fig:example-iqft-without-measurement).
-
 As before, the Hadamard gate followed by the controlled-$U^\triangle$ gate prepare the state
 $$
-  \frac{1}{\sqrt{N}} \sum_{x=0}^{N-1} e^{i\phi x}\ket{x}\ket{u}
+  \frac{1}{\sqrt{N}} \sum_{x=0}^{N-1} e^{i\varphi x}\ket{x}\ket{u}
 $$
-where $N=2^n$, with $n$ the number of qubits in the first register.
+where $N=2^n$, with $n$ the number of qubits in the first register, since the phase kick-back leaves the eigenstate $\ket{u}$ unchanged.
+Now we apply the inverse quantum Fourier transform, giving
+$$
+  \frac{1}{N} \sum_{x,y=0}^{N-1} e^{ix(\varphi-2\pi y/N)}\ket{y}\ket{u}.
+$$
+We already know that if $N\varphi/2\pi$ has an exact $n$-bit representation (i.e. if $\varphi=2\pi m/2^n$ with $0\leq m<N$) then we are guaranteed to recover this when we measure the output $\ket{\widetilde{y}}$.
 
-::: {.todo}
-<!-- TO-DO: finish -->
-:::
+If this is not the case, then instead we can only hope for $\ket{\widetilde{y}}$ to be the *best $n$-bit approximation* to $N\varphi/2\pi$.
+This means that the distance between the two can be no more than $1/2$ (otherwise $\ket{\widetilde{y}}$ would round to $N\varphi/2\pi\pm1$ instead).
+Rearranging this inequality gives
+$$
+  \left\vert\varphi-\frac{2\pi\widetilde{y}}{N}\right\vert
+  \leq \frac{\pi}{N}
+$$
+which, if we define $\delta=\varphi-2\pi\widetilde{y}/N$, is exactly $|\delta|\leq\pi/N$.
+Now we can calculate the probability of measuring the result $\ket{\widetilde{y}}$ as
+$$
+  \begin{aligned}
+    p
+    &\coloneqq \frac{1}{N^2}\left\vert\sum_{x=0}^{N-1} e^{ix\delta}\right\vert^2
+  \\&= \frac{\sin^2(N\delta/2)}{N^2\sin^2(\delta/2)}.
+  \end{aligned}
+$$
+Let's see if we can find a lower bound for this probability.
+
+First of all, for small values of $\theta$, we know^[This is from the Taylor expansion $\sin\theta\approx\theta-\theta^3/3!$ and some real analysis. However, this is the sort of fact that you will often see quoted without justification, because it's used so often.] that $\sin\theta<\theta$.
+In particular, $\sin(\delta/2)<\delta/2$.
+Secondly, we can show that $\sin(N\delta/2)>N\delta/\pi$ by using the fact that $N\delta\leq\pi$ (though here we simply provide Figure \@ref(fig:linear-bounds-for-sin-theta) instead of giving a proof).
+Thus
+$$
+  \begin{aligned}
+    p
+    &> \left(\frac{2N\delta}{N\delta\pi}\right)^2
+  \\&= \frac{4}{\pi^2} \approx 0.41
+  \end{aligned}
+$$
+and so we find the best $n$-bit approximation to $\varphi$ with pretty good probability.
+
+In fact, the coefficients in these inequalities work in our favour: the further away a result $\ket{\widetilde{y}}$ is from being the best $n$-bit approximation to $\varphi$, the lower our probability of measuring it.
+This provides a way of getting good approximations with even higher probability, and one that we can choose ourselves, by using more qubits.
+That is, if we increase the number of qubits in the first register to be $t$, for some $t>n$, then we know that with probability $p=4/\pi^2$ we will get the best $t$-bit approximation to $\varphi$.
+But we're only interested in the best $n$-bit approximation, and the $2^{t-n}$ next-most-likely outcomes --- those that will truncate to give the same $n$-bit approximation --- from the $t$-qubit circuit are all the next highest probability ones.
+If one sums everything up carefully, then we can show that the probability of *not* measuring one of these is
+$$
+  \varepsilon
+  \leq \frac{1}{2(2^{t-n}-2)}
+$$
+and so, for any desired $\varepsilon$, we get the best $n$-bit approximation with probability at least $1-\varepsilon$ by setting $t$ to be
+$$
+  t
+  = n + \left\lceil\log_2\left(2+\frac{1}{2\varepsilon}\right)\right\rceil
+$$
+(where $\lceil x\rceil$ denotes the ceiling of $x$, i.e. the smallest integer larger than $x$).
+
+(ref:linear-bounds-for-sin-theta-caption) In the region $0\leq\theta\leq\pi/2$, we can bound $\sin\theta$ above and below by the linear functions $\theta$ and $2\theta/\pi$, respectively.
+
+```{r linear-bounds-for-sin-theta,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4,fig.cap='(ref:linear-bounds-for-sin-theta-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+  \begin{axis}[
+      xmin=-0.1,xmax=1.8,
+      xlabel=$\theta$,
+      ymin=-0.05,ymax=1.1,
+      axis lines=middle,
+      xtick={0,pi/2},
+      xticklabels={$0$,$\pi/2$},
+      ytick={0,1},
+      yticklabels={$0$,$1$},
+      xlabel style={anchor=north,at={(axis description cs:1.05,0.05)}},
+    ]
+    \addplot[domain=0:1.7,samples=200,line width=2pt,secondary]{x};
+    \addplot[domain=0:1.7,samples=200,line width=2pt,secondary]{(2*x)/pi};
+    \addplot[domain=0:1.7,samples=200,line width=2pt,primary]{sin(deg(x))};
+  \end{axis}
+  \draw[thick,dashed] (6.025,0.05) to (6.025,6);
+  \node at (2.75,4.1) {$\theta$};
+  \node at (3.75,3.8) {$\sin\theta$};
+  \node at (4.15,3) {$2\theta/\pi$};
+\end{tikzpicture}
+```
 
 
 
