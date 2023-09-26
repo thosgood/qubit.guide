@@ -1577,9 +1577,67 @@ which is indeed unitary over the whole space of $n$ qubits.
 Given its importance in the field of (post-)quantum cryptography (and thus in the real world), as well as its fame, it would be remiss of us to not dedicate at least one section in this book to Shor's algorithm.
 However, as you will see, the actual quantum part of the algorithm is exactly the order-finding circuit from Section \@ref(hidden-order-determination); the rest is an application of classical number theory to reduce the problem of prime factorisation to the problem of hidden-order determination.
 Because of this, we will not spend too much time on the details --- this is not a book on classical number theory! --- but we hope that this section at least highlights the important fact which is that *other areas of mathematics and physics have much to offer for the aspiring quantum information scientist*.
-Of course, it is infeasible to try to learn *everything* in mathematics, but this is also exactly the point: it's good to be aware that there is a lot of it out there, and that we all have a lot to learn from each others' specialties.
+Of course, it is infeasible to try to learn *everything* in mathematics, but this is also exactly the point: it's good to be aware that there is a lot of it out there, and that we all have a lot to learn from each others' specialities.
 
 The purpose of Shor's algorithm^[There are a few algorithms known by this name, but they are all somewhat related.] is to find the prime factorisation of a composite integer.
+This is a classically difficult problem, and hence forms the basis of some very well-known public-key cryptography schemes, such as RSA (see Exercise \@ref(rsa)), but Shor's algorithm offers a distinct speed-up.
+More precisely, to factor an integer $R$ classically with the general number field sieve method is a **sub-exponential** problem (i.e. somewhere between polynomial in $R$ and exponential in $R$), whereas Shor's algorithm is **polylogarithmic** (i.e. polynomial in $\log R$).
+This means that Shor's algorithm witnesses integer factorisation as a bounded-error quantum polynomial time problem: it lives in $\texttt{BQP}$ (recall Section \@ref(computational-complexity)).
+
+Since any integer has a unique (up to ordering) prime factorisation^[This fact so is important that it earns the name of [**the fundamental theorem of arithmetic**](https://en.wikipedia.org/wiki/Fundamental_theorem_of_arithmetic)] consisting of finitely many prime numbers, it suffices to find a single prime factor, since then we can simply divide our original number by this and run the algorithm over and over until it terminates, recording the prime factors that we find along the way.
+But still, turning the problem of "find a prime factor" into a problem that we have already solved (namely hidden-order determination) requires some work, so let's get started.
+
+Recall that the **greatest common divisor** $\gcd(m,n)$ (or **highest common factor** $\hcf(m,n)$) of a pair of integers $(m,n)$ is the largest integer that divides both of them.
+This can be efficiently computed by a (very old) classical algorithm known as [**Euclid's algorithm**](https://en.wikipedia.org/wiki/Euclidean_algorithm), so we can make use of it in freely.
+In fact, let us now list the things that we can do efficiently with classical algorithms:
+
+- compute the $\hcf$ of two integers (Euclid's algorithm)
+- determine if an integer is prime (the [**Miller--Rabin primality test**](https://en.wikipedia.org/wiki/Miller–Rabin_primality_test))
+- determine if an integer is even (check if the last digit is a $0$ in its binary expansion)
+- determine if an integer $R$ can be written as $R=a^b$ for some integers $a\geq1$ and $b\geq2$ (Exercise \@ref(checking-for-power-form)).
+
+One more small note of terminology: throughout this section, we say **factor** to mean non-trivial factor, i.e. the factors of $R$ are the natural numbers that divide $R$ *apart from* $1$ and $R$.
+
+::: {.idea latex=""}
+**Lemma.**
+Let $x$ and $R$ be natural numbers such that
+
+- $R$ is *not* prime;
+- $1<x<R-1$;
+- $x^2\equiv\pm1\mod{R}$.
+
+Then both $\hcf(x-1,R)$ and $\hcf(x+1,R)$ are factors of $R$.
+:::
+
+Note that $1<x<R-1$ is equivalent to saying that $x\not\equiv\pm1\mod{R}$.
+In other words, *we assume $x$ to be a non-trivial square root of $1$ modulo $R$*.
+
+::: {.proof}
+The hypothesis tells us that
+$$
+  x^2-1 = kR
+$$
+for some integer $k$, and so factoring $x^2-1$ tells us that
+$$
+  R \divides (x+1)(x-1)
+$$
+(where we write $a\divides b$ to mean that $a$ divides $b$).
+
+Now, since $x<R-1$, we know that $x+1<R$ and so $R$ cannot divide $x+1$ because it is simply too big.
+This means, in particular, that $\hcf(x+1,R)\neq R$.
+But now note that if $\hcf(x-1,R)=1$ then, since $R\divides(x+1)(x-1)$, it must be the case that $R\divides x+1$, and we have just said that this cannot happen.
+The same argument applies if we swap $x+1$ and $x-1$, so we have proven that both $\hcf(x-1,R)$ and $\hcf(x+1,R)$ are factors of $R$.
+:::
+
+The essence of the above proof is much simpler than the length might suggest: we are sort of just saying that $R$ cannot divide either $x+1$ or $x-1$ alone, and so must be "split up" into two parts, with one inside $x+1$ and the other inside $x-1$.
+
+Or we could appeal directly to the fundamental theorem of arithmetic.
+Write $R=p_1^{a_1}\ldots p_n^{a_n}$, and now consider each prime factor individually.
+Since $R\divides(x+1)(x-1)$, we know that $p_1\divides(x+1)(x-1)$.
+A very useful fact^[This is the fact that prime numbers are [**prime elements**](https://en.wikipedia.org/wiki/Prime_element) in the ring of integers. The usual definition of "prime number" that we are used to actually says that they are [**irreducible elements**](https://en.wikipedia.org/wiki/Irreducible_element). The link between these two concepts requires some knowledge of ring theory.] about prime numbers is that, if $p$ divides a product $ab$, then either $p$ divides $a$ or $p$ divides $b$.
+So here we see that $p_1$ must divide either $x+1$ or $x-1$.
+We can continue like this for all the prime factors $p_i$ of $R$, but note that it cannot be the case that *all* the $p_i$ divide *only* $x+1$ and not $x-1$, since this would then force $p_1^{a_1}\ldots p_n^{a_n}=R$ to divide $x+1$, which we have already said cannot happen (and similarly for all the $p_i$ dividing only $x-1$).
+This means that both $\hcf(x-1,R)$ and $\hcf(x+1,R)$ are non-trivial.
 
 ::: {.todo}
 <!-- TO-DO -->
@@ -1596,7 +1654,7 @@ The purpose of Shor's algorithm^[There are a few algorithms known by this name, 
 ## *Remarks and exercises* {#remarks-and-exercises-algorithms}
 
 
-### RSA
+### RSA {#rsa}
 
 <div class="video" title="RSA" data-videoid="1rtagYeUvFo"></div>
 
@@ -1625,4 +1683,11 @@ The purpose of Shor's algorithm^[There are a few algorithms known by this name, 
 
 ::: {.todo}
 <!-- TO-DO: optimality of Grover -->
+:::
+
+
+### Writing an integer as a power {#checking-for-power-form}
+
+::: {.todo}
+<!-- TO-DO: Exercise 7.22 -->
 :::
