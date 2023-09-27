@@ -350,10 +350,20 @@ How can they test for this?
 Using the idea of randomness expansion, let's assume that they start with some shared random private seed: some $m$-bit string that only they know.^[Note that we're pushing the problem somewhere else: how can they come up with this shared private seed in the first place? This is the problem of **key distribution**, and we'll return to this again later.]
 They start by generating $n$ of these putative singlet states, and publicly decide on some value $0<p<1$.
 With this, they randomly select $\lceil pn\rceil$ of the pairs to perform a CHSH test on.
+Each test requires two random bits (to determine Alice and Bob's choice of measurement), so in total we will need the length $m$ of their shared random private seed be roughly
+$$
+  m
+  \approx 2pn - pn\log_2 p - n(1-p)\log_2(1-p)
+$$
+where the $\log$ terms are approximately how many bits are required to randomly choose the subset of pairs to test.
 
-::: {.todo latex=""}
-<!-- TO-DO -->
-:::
+Why does this help?
+Well, if somebody has manipulated the device that produces the pairs, then they need to be sure that they haven't altered the pairs that Alice and Bob are testing on.
+But they cannot know in advance which pairs that will be, and so they cannot risk manipulating anything.^[One can be much more quantitative about this by using Chernoff bounds for a simple strategy of "choose at random which pairs to manipulate", but a full proof of security is much more involved than we would like to be here.]
+
+In the fraction $p$ of pairs where a CHSH test is performed, we get at least 1 bit of randomness out: Alice's measurement result is always chosen at random.
+In fact, Bob's result will be partially correlated to Alice's, so we should be able to extract some more randomness from this as well, but we ignore this possibility for the sake of simplicity.
+Thus in the end we create $(2-p)n$ bits of randomness.
 
 
 
