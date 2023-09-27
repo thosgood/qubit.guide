@@ -24,7 +24,7 @@ The story of "hidden variables" dates back to 1935 and grew out of Einstein's wo
 Consider, for example, a single qubit.
 Recalling our previous discussion on compatible operators (Section \@ref(compatible-observables-and-uncertainty)), we know that no quantum state of a qubit can be a simultaneous eigenstate of two *non-commuting* operators, such as $\sigma_x$ and $\sigma_z$.
 Physically, this means that if the qubit has a definite value of $\sigma_x$ then its value of $\sigma_z$ must be indeterminate, and vice versa.
-If we take quantum theory to be a complete description of the world, then we must accept that it is impossible for both $\sigma_x$ and $\sigma_z$ to have definite values for the same qubit at the same time.^[Here it's important that we're really talking about so-called **local** hidden variable theories. We discuss this assumption briefly after talking about the **CHSH inequality** in Section \@ref(chsh-inequality).]
+If we take quantum theory to be a complete description of the world, then we must accept that it is impossible for both $\sigma_x$ and $\sigma_z$ to have definite values for the same qubit at the same time.^[Here it's important that we're really talking about so-called **local** hidden variable theories. We discuss the technical details in \@ref(hidden-loopholes).]
 Einstein felt very uncomfortable about all this: he argued that quantum theory is incomplete, and that observables $\sigma_x$ and $\sigma_z$ may both have simultaneous definite values, although we only have knowledge of one of them at a time.
 This is the hypothesis of **hidden variables**.
 
@@ -65,7 +65,7 @@ $$
 $$
 where $\sigma_x$, $\sigma_y$, and $\sigma_z$ are our old friends the Pauli matrices.
 
-Also recall that any single-qubit observable^[Here we say "observable" instead of "Hermitian operator" (and "value" instead of "eigenvalue") simply because it is a useful skill to be able to switch between being able to speak like a mathematician and like a physicist!] with values $\pm1$ can be represented by the operator
+Also recall that any single-qubit observable^[We say "observable" and "value" instead of "Hermitian operator" and "eigenvalue" because it's useful to be able to switch between speaking like a mathematician and like a physicist!] with values $\pm1$ can be represented by the operator
 $$
   \vec{a}\cdot\vec\sigma
   = a_x\sigma_x + a_y\sigma_y + a_z\sigma_z,
@@ -124,8 +124,9 @@ Let us start by making this assumption that the results of any measurement on an
 
 Imagine the following scenario.
 Alice and Bob, our two characters with a predilection for wacky experiments, are equipped with appropriate measuring devices and sent to two distant locations.
-Assume that Alice and Bob each have a choice of *two* observables that they can measure, each with well defined^[The phrase "well defined" corresponds to our "hidden variable" assumption, i.e. that the observables *always* have *definite* values.] values $+1$ and $-1$ --- say Alice can choose between observables $A_1$ and $A_2$, and Bob between $B_1$ and $B_2$.
-Now, somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob, which we will label $\mathcal{A}$ and $\mathcal{B}$, respectively.
+Assume that Alice and Bob each have a choice of *two* observables that they can measure, each with well defined^[The phrase "well defined" corresponds to our "hidden variable" assumption, i.e. that the observables *always* have *definite* values.] values $+1$ and $-1$.
+Let's say that Alice can choose between observables $A_1$ and $A_2$, and Bob between $B_1$ and $B_2$.
+Now, somewhere in between them there is a source that emits pairs of qubits that fly apart, one towards Alice and one towards Bob.
 For each incoming qubit, Alice and Bob choose randomly, and independently from each other, which particular observable will be measured.
 This means we can think of the observables as random variables $A_k,B_k$ (for $k=1,2$) that take values $\pm1$.
 Using these, we can define a new random variable: the **CHSH quantity**
@@ -160,7 +161,7 @@ There are essentially *two* (very important) assumptions here:
 1. **Hidden variables.** Observables have definite values.
 2. **Locality.** Alice's choice of measurements (choosing between $A_1$ and $A_2$) does not affect the outcomes of Bob's measurement, and vice versa.
 
-We will not discuss the locality assumption here in detail, but let us just give one brief comment.
+We will not discuss the locality assumption right now in detail (see Section \@ref(hidden-loopholes)), but let us just give one brief comment.
 In the hidden variable world a, statement such as "if Bob were to measure $B_1$ then he would register $+1$" must be either true or false (and not "undecidable" or some other such thing!) *prior to Bob's measurement*.
 Without the locality hypothesis, such a statement is ambiguous, since the value of $B_1$ could depend on whether $A_1$ or $A_2$ will be chosen by Alice.
 We do not want this since it implies *instantaneous communication* --- it means that, say, Alice by making a choice between $A_1$ and $A_2$ affects Bob's results: Bob can immediately "see" what Alice "does".
@@ -223,12 +224,13 @@ $$
 $$
 which obviously violates CHSH inequality: $-2\sqrt{2}$ is strictly less than $-2$!
 
-But here is the really important part of this discussion: this violation of the CHSH has been observed in a number of painstakingly careful experiments --- this is not purely theoretical!
+But here is the really important part of this discussion: *this violation of the CHSH has been observed in a number of painstakingly careful experiments --- this is not just theoretical!*
 The early efforts in these experiments were truly heroic, with many many layers of complexity; today, however, such experiments are routine.
 
 ::: {.idea latex=""}
 **Bell's theorem.**
 The behaviour of entangled quantum systems *cannot* be explained by local hidden variables.
+In other words, outcomes in quantum mechanics really are random, and it's not simply our lack of knowledge about some background process.
 :::
 
 
@@ -274,12 +276,14 @@ $$
 $$
 This result is known as the **Tsirelson inequality**.
 
-::: {.idea}
-In classical probability theory, the (absolute value of the) average value of the CHSH quantity
+::: {.idea latex=""}
+In *classical* probability theory, the (absolute value of the) average value of the CHSH quantity
 $$
   S = A_1(B_1 - B_2) + A_2(B_1 + B_2)
 $$
-is bounded by $2$ (and this bound can be attained); in quantum theory, it is bounded by $2\sqrt{2}$ (and this bound can also be attained).
+is bounded by $2$, and this bound can be attained.
+
+In *quantum* theory, the same value is bounded by $2\sqrt{2}$, and this bound can also be attained.
 :::
 
 
@@ -288,7 +292,59 @@ is bounded by $2$ (and this bound can be attained); in quantum theory, it is bou
 
 ## Quantum randomness {#quantum-randomness}
 
-The
+The experimental violations of the CHSH inequality have shown us that there are situations in which the measurement outcomes are truly unknown the instant before the measurement is made, and so the answer must be "chosen" randomly.
+We can make use of this randomness is a number of different ways, the most obvious example of which being a random number generator.
+Indeed, we have already met one suitable implementation:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=1.5}
+\begin{quantikz}
+  \lstick{$\ket{0}$} \qw
+  & \gate{H}
+  & \qw
+\end{quantikz}
+```
+
+The state before measurement is $(\ket{0}+\ket{1})/\sqrt{2}$, so the two possible outcomes occur with equal probability.
+This is a truly random number generator, not like the pseudo-random one that is used if you ask your computer for some random data.
+
+This randomness generator works well as long as we know how it's been built, i.e. that it really is just a Hadamard gate, that the input qubit really has been prepared in the state $\ket{0}$, and that the measurement device is accurate and honest.
+However, we don't all have a Hadamard gate and a supply of prepared qubits lying around at home, so it seems likely that at some point we might have to buy or borrow such a device from a third party.
+But then how can we *know* that it really is doing what it promises, and not just supplying some pseudo-random numbers that might, for example, already be known to the manufacturer?
+This would render the device useless for cryptographic purposes!
+But not only do we want to know that this isn't the case, we would also like the average user to be able to verify this for themselves, without having to know about the internal details.
+In other words, can we find a way of verifying the device via some analysis of just inputs and outputs?
+This is the question of device independence.
+
+::: {.idea latex=""}
+A protocol is **device independent** if its security doesn't depend on trusting the devices on which it is implemented.
+In other words, it has no reliance on trusting the third party who supply you with the devices.
+:::
+
+We can rule out one thing from the start, namely deterministic behaviour.
+If we behave deterministically then we have no hope, since the third party can take this into account and potentially find a way to always fool us.
+But there is another approach that we can try: rather than directly trying to verify the veracity of the device, we can try to use it to turn a small amount of true randomness into a larger amount.
+This is the idea of randomness expansion.
+
+::: {.idea latex=""}
+Starting from an initial seed of private randomness (completely unknown to any other party), **randomness expansion** is the process of extending this to a larger amount of randomness that remains completely private.
+:::
+
+Say that Alice and Bob share a singlet state $\ket{\psi}$ that Alice then measures in the $X$ basis and Bob in the $Z$ basis, each keeping their outcomes private.
+Their results are random and independent: they have generated two new truly random bits, but they only know their own, not both.
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+
+
+
+## Loopholes in Bell tests {#hidden-loopholes}
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
 
 
 
@@ -297,6 +353,76 @@ The
 
 ## *Remarks and exercises* {#remarks-and-exercises-EPR-bell}
 
+
+### XOR games for randomness expansion {#xor-games-randomness-expansion}
+
+The setup of the CHSH inequality that we have described can instead be imagined as a two-player all-or-nothing game between Alice and Bob, so let's study this type of game more generally.
+
+- Alice and Bob each start with an integer **prompt** $a$ and $b$ (respectively), with $1\leq a,b\leq n$.
+  This integer can come from anywhere: they could pick it themselves, or it could be given to them.
+  Having seen this integer, a round of the game consists of them returning an **answer**, $x$ and $y$ (respectively), of length $m$ bits to an oracle.
+  Both the prompt and the answer are kept secret, so that only the corresponding player knows them.
+
+- They win if the **winning condition** computed by the oracle is $1$, and lose if it is $0$.
+  The winning condition is given by
+  $$
+    \begin{cases}
+      1 & \text{if }g_A(x,a,b) = g_B(y,a,b)
+    \\0 & \text{if }g_A(x,a,b) \neq g_B(y,a,b)
+    \end{cases}
+  $$
+  where $g_A$ and $g_B$ are deterministic one-bit-valued functions whose output values are equally likely to be $0$ or $1$ (i.e. they return the value $0$ for exactly half of the possible input triples).
+
+- There exists a *quantum* strategy that always wins.
+  It uses sets of $m$ measurements on a maximally entangled state, and the measurement operators for all possible settings either commute or anti-commute with one another.
+  The measurements are specified by observables that are traceless (i.e. their trace is equal to $0$) and square to the identity.
+
+- The best possible classical strategy fails $f$ of the time, for some fraction $f$.
+
+A single player (say, Alice) can treat this as a single-player game and use it as the basis for a randomness expansion scheme.
+
 ::: {.todo latex=""}
 <!-- TO-DO -->
 :::
+
+
+### XOR games for quantum key distribution
+
+We can also use the setup from Exercise \@ref(xor-games-randomness-expansion) as the basis for a **quantum key distribution scheme**: a process that allows two people to produce a shared random string known only to them.
+
+For the $i$-th round of the game, Alice and Bob randomly (and privately) select their prompts $a_i$ and $b_i$, which they then use to play one round of the game, giving answers $x_i$ and $y_i$.
+They keep a note of all their prompts and answers, as well as the result of the winning condition for each round.
+After many rounds, Alice and Bob publicly announce all their prompts $\{a_1,\ldots,a_n\}$ and $\{b_1,\ldots,b_n\}$.
+
+This means that Alice, for example, now knows the following:^[Bob knows the same, but instead of Alice's answers $\{x_1,\ldots,x_n\}$ he knows his own $\{y_1,\ldots,y_n\}$.]
+
+- both sets of prompts $\{a_1,\ldots,a_n\}$ and $\{b_1,\ldots,b_n\}$
+- her answers $\{x_1,\ldots,x_n\}$
+- the values of $i\in\{1,\ldots,n\}$ for which $g_A(x_i,a_i,b_i)=g_B(y_i,a_i,b_i)$, i.e. the numbers $i_1,\ldots,i_k$ of the rounds that they won.
+
+This is enough information (given that we have run enough rounds) for Alice to determine $g_A$ and Bob to determine $g_B$.
+The two of them can then each compute the $k$-bit string
+$$
+  g_A(x_{i_1},a_{i_1},b_{i_1})\ldots g_A(x_{i_k},a_{i_k},b_{i_k})
+  = g_B(x_{i_1},a_{i_1},b_{i_1})\ldots g_B(x_{i_k},a_{i_k},b_{i_k})
+$$
+which gives their shared key.
+Now they just need to deal with eavesdropping.
+
+By publicly selecting a random selection of rounds and announcing the results of their putative $g_A$ and $g_B$ for these rounds, they can check whether or not their values are coherent with the result of the winning conditions determined by the oracle.^[For example, if they know that they lost round $i$, then it should be the case that $g_A(x_i,a_i,b_i)\neq g_B(y_i,a_i,b_i)$.]
+
+- If everything is coherent with the results, then they can be sure (if they have played enough rounds and compared enough results) that there was no eavesdropping.
+- If the fraction of tests that are coherent with the results is less than $f$, then they must assume that somebody has been eavesdropping, and they should cease communication.
+- Anywhere in between these two cases, they can quantify how much an eavesdropper might know, and then run some method of privacy amplification to further exclude the eavesdropper (at the cost of shortening the key).
+
+
+### Prescribed binary randomness
+
+Find a quantum circuit^[*Hint: what is $\cos^2(\pi/4)$*?] that can act as a random source that outputs $0$ with probability $(2+\sqrt{2})/4$ and $1$ with probability $(2-\sqrt{2})/4$.
+
+
+### Unbiasing bias
+
+Suppose you have a source that produces random bits, but operates with a bias: it outputs $0$ with probability $p$ and $1$ with probability $1-p$, for some fixed $0<p<1$.
+
+Find a method such that, given two outputs from this source, you successfully obtain a single unbiased random bit (i.e. as if the source had $p=1/2$) with probability $2p(1-p)$.
