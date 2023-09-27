@@ -33,6 +33,11 @@ Einstein came up with a number of pretty good arguments for the existence of "hi
 It stood for almost three decades as the most significant challenge to the completeness of quantum theory.
 Then, in 1964, John Bell showed that the (local) hidden variable hypothesis can be tested and refuted.
 
+::: {.idea latex=""}
+Any theory can make predictions, but just because the predictions turn out to be correct, this does not make the theory true --- there may be other, maybe equivalent, explanations.
+The key to the scientific method is **falsifiability**: make one prediction incorrectly, and you have proven your theory is not true.
+:::
+
 :::: {.technical title="No-go theorems" latex="{No-go theorems}"}
 ::: {.todo latex=""}
 <!-- TO-DO: write this -->
@@ -51,7 +56,7 @@ Then, in 1964, John Bell showed that the (local) hidden variable hypothesis can 
 
 ## Quantum correlations {#quantum-correlations}
 
-Consider two entangled qubits in the **singlet**^[We say that a system is **singlet** if all the qubits involved are entangled. This is related to the notion of [**singlet states**](https://en.wikipedia.org/wiki/Singlet_state) in quantum mechanics, which are those with zero net angular momentum.] state
+Consider two entangled qubits in the **singlet**^[We say that a system is **singlet** if all the qubits involved are entangled. For example, the Bell states (Section \@ref(bell-states)) are all singlet states. This is related to the notion of [**singlet states**](https://en.wikipedia.org/wiki/Singlet_state) in quantum mechanics, which are those with zero net angular momentum.] state
 $$
   \ket{\psi}
   = \frac{1}{\sqrt{2}} \left( \ket{01}-\ket{10} \right)
@@ -172,7 +177,7 @@ Now let's see how quantum theory *fundamentally disagrees* with the CHSH inequal
 
 
 
-## Bell's theorem
+## Bell's theorem from CHSH
 
 <div class="video" title="Device-independent tests and Bell inequalities (continued)" data-videoid="P-hk1GnAE6k"></div>
 
@@ -182,6 +187,10 @@ $$
   S = A_1\otimes(B_1-B_2) + A_2\otimes(B_1+B_2).
 $$
 We can now evaluate $\av{S}$ using quantum theory.
+
+::: {.idea latex=""}
+Actually performing these measurements described by $S$ on a pair of qubits is known as a **CHSH test**, or **Bell test**.
+:::
 
 If the two qubits are in the singlet state
 $$
@@ -232,6 +241,10 @@ The early efforts in these experiments were truly heroic, with many many layers 
 The behaviour of entangled quantum systems *cannot* be explained by local hidden variables.
 In other words, outcomes in quantum mechanics really are random, and it's not simply our lack of knowledge about some background process.
 :::
+
+If we can enforce locality in an experimental setup (for example, by ensuring that Alice and Bob are sufficiently far apart so that there is not enough time between Alice making a measurement and Bob receiving his measurement result) then an experimental verification of the CHSH test *proves* to us that the system is behaving in an inherently non-classical and, importantly, *unpredictable* manner.
+This means that this is a good test to see if our devices are performing as they are supposed to, and are untampered by any potential eavesdroppers.^[If an eavesdropper has observed our system to the extent that they can predict out outcomes, then that very predictability means that there is a hidden-variable description of the system, and the CHSH inequality is not violated.]
+In other words, the CHSH test is key for securing quantum protocols, as we will explain in Section \@ref(quantum-randomness).
 
 
 
@@ -322,15 +335,21 @@ In other words, it has no reliance on trusting the third party who supply you wi
 
 We can rule out one thing from the start, namely deterministic behaviour.
 If we behave deterministically then we have no hope, since the third party can take this into account and potentially find a way to always fool us.
-But there is another approach that we can try: rather than directly trying to verify the veracity of the device, we can try to use it to turn a small amount of true randomness into a larger amount.
+But there is another approach that we can try: rather than directly trying to verify the veracity of any given device, we can try to use it to turn a small amount of true randomness into a larger amount.
 This is the idea of randomness expansion.
 
 ::: {.idea latex=""}
 Starting from an initial seed of private randomness (completely unknown to any other party), **randomness expansion** is the process of extending this to a larger amount of randomness that remains completely private.
 :::
 
-Say that Alice and Bob share a singlet state $\ket{\psi}$ that Alice then measures in the $X$ basis and Bob in the $Z$ basis, each keeping their outcomes private.
-Their results are random and independent: they have generated two new truly random bits, but they only know their own, not both.
+Let's consider a different device: one that produces pairs of qubits in singlet states and gives one of its qubits to Alice and one to Bob.
+If Alice then measures her qubit in the $X$ basis, and Bob measures his in the $Z$ basis (each keeping their outcomes private), they each obtain random bits that are independent of one another.
+However, this is only really true if the device truly is giving them singlet states, and not predetermined unentangled states.
+How can they test for this?
+
+Using the idea of randomness expansion, let's assume that they start with some shared random private seed: some $m$-bit string that only they know.^[Note that we're pushing the problem somewhere else: how can they come up with this shared private seed in the first place? This is the problem of **key distribution**, and we'll return to this again later.]
+They start by generating $n$ of these putative singlet states, and publicly decide on some value $0<p<1$.
+With this, they randomly select $\lceil pn\rceil$ of the pairs to perform a CHSH test on.
 
 ::: {.todo latex=""}
 <!-- TO-DO -->
