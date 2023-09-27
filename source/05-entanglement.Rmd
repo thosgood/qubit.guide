@@ -28,7 +28,7 @@ But what exactly is quantum entanglement?
 
 
 
-## One, two, many...
+## From one qubit to two
 
 <div class="video" title="Dimension argument for entanglement" data-videoid="Y52d8Awh96g"></div>
 
@@ -190,7 +190,7 @@ This is shown in Carcassi, Maccone, and Aidala's "The four postulates of quantum
 
 
 
-## Back to qubits
+## More than two qubits, and binary expansions {#more-than-two-qubits-and-binary}
 
 Let's see how this formalism works for qubits.
 The $n$-fold tensor product of vectors from the standard basis $\{\ket{0},\ket{1}\}$ represent binary strings of length $n$.
@@ -216,7 +216,7 @@ $$
   \end{aligned}
 $$
 
-In fact, we can even prepare this register in a superposition of all eight possible binary strings of length $3$ at once: if we apply the tensor product operation $H\otimes H\otimes H$ to the state $\ket{0}\otimes\ket{0}\otimes\ket{0} = \ket{000}$ then we get
+In fact, we can even prepare this register in a superposition of all eight possible binary strings of length 3 at once: if we apply the tensor product operation $H\otimes H\otimes H$ to the state $\ket{0}\otimes\ket{0}\otimes\ket{0} = \ket{000}$ then we get
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=6}
 \begin{equation*}
@@ -233,8 +233,7 @@ In fact, we can even prepare this register in a superposition of all eight possi
     & \qw \rstick{$\frac{\ket{0}+\ket{1}}{\sqrt{2}}$}
   \end{quantikz}
   \right\}
-  =
-  \frac{1}{2^{3/2}}
+  = \frac{1}{2^{3/2}}
   \left\{
     \begin{array}{r}
       \ket{000} + \ket{001} + \ket{010} + \ket{011}
@@ -244,7 +243,7 @@ In fact, we can even prepare this register in a superposition of all eight possi
 \end{equation*}
 ```
 
-The resulting state is exactly a superposition of *all* binary string of length $3$, and can also be written as
+The resulting state is exactly a superposition of *all* binary string of length 3, and can also be written as
 $$
   \frac{1}{\sqrt{2}} \big(\ket{0} + \ket{1}\big)
   \otimes
@@ -256,6 +255,19 @@ $$
 In general, the tensor product operation $H^{\otimes n}$, which means "apply the Hadamard gate to each of your $n$ qubits", is known as the **Hadamard transform**, and it maps product states to product states.
 Like the Hadamard gate in the typical quantum interference circuit, the Hadamard transform opens (and closes) multi-qubit interference.
 
+One final note is on notation, or maybe more a shift of point-of-view.
+We have just explained how applying the Hadamard transform to $n$ qubits gives us the equally weighted superposition of all binary strings of length $n$.
+But rather than writing them as binary strings, we could consider the decimal number represented by each string.
+This means we switch from considering all binary strings of length $n$ to considering all natural numbers from $0$ to $N-1$, where $N=2^n$.
+For example, with $n=3$ qubits, we could either write
+$$
+  \frac{1}{\sqrt{2^n}} \sum_{x\in\{0,1\}^n} \ket{x}
+$$
+or instead switch to the decimal approach with $N=2^n=8$ and write
+$$
+  \frac{1}{\sqrt{N}} \sum_{x=0}^{N-1} \ket{x}
+$$
+so that we are writing $\ket{7}$ to mean $\ket{111}$, and $\ket{3}$ to mean $\ket{011}$, and $\ket{0}$ to mean $\ket{000}$, and so on.
 
 
 
@@ -368,7 +380,7 @@ We will now explore some of its computational implications.
 
 
 
-## Controlled-NOT
+## Controlled-NOT: Bell states, teleportation, and cloning
 
 <div class="video" title="Controlled-NOT" data-videoid="1PJonQOi5M8"></div>
 
@@ -458,7 +470,7 @@ Here is a simple circuit that demonstrates the entangling power of $\texttt{c-NO
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-(Generating entanglement).
+*(Generating entanglement).*
 :::
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
@@ -538,7 +550,7 @@ Consider the following circuit, which is built from a Bell state generator follo
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-(Quantum teleportation).
+*(Quantum teleportation).*
 :::
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
@@ -759,7 +771,7 @@ In order to see the entangling power of the controlled-phase shift gate, conside
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-(Generating entanglement, again).
+*(Generating entanglement, again).*
 :::
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
@@ -869,14 +881,36 @@ In general, an $x$-controlled-$U$ gate can be defined on two registers of arbitr
 
 
 
-### Phase kick-back
 
-Before moving on to the next section, we first describe a simple "trick" --- an unusual way of introducing phase shifts that will be essential for our analysis of quantum algorithms.
+## Universality, revisited
+
+<div class="video" title="Universal sets of gates (for multiple qubits)" data-videoid="IzyAY6US5C4"></div>
+
+We will come across few more gates in this course, but at this stage you already know all the elementary unitary operations that are needed to construct any unitary operation on any number of qubits:
+
+- the Hadamard gate,
+- all phase gates, and
+- the $\texttt{c-NOT}$
+
+These gates form a **universal set of gates**: with $\mathcal{O}(4^{n}n)$ of these gates, we can construct any $n$-qubit unitary operation.^[Recall the big-$\mathcal{O}$ asymptotic notation introduced in Exercise \@ref(big-o): given a _positive_ function $f(n)$, we write $\mathcal{O}(f(n))$ to mean "bounded above by $c\,f(n)$ for some constant $c > 0$ (for sufficiently large $n$)". For example, $15n^2+4n+7$ is $\mathcal{O}(n^2)$.]
+We should mention that there are many different universal sets of gates.
+In fact, almost any gate that can entangle two qubits can be used as a universal gate.
+
+We are particularly interested in any *finite* universal set of gates (such as the one containing the Hadamard, $P_{\frac{\pi}{4}}$ (the $T$ gate), and the $\texttt{c-NOT}$) that can approximate any unitary operation on $n$ qubits with arbitrary precision.
+The price to pay is the number of gates --- better precision requires more gates.
+
+
+
+
+
+## Phase kick-back {#phase-kick-back}
+
+Before moving on to a few more mathematically fundamental questions, we first describe a simple yet omnipresent "trick" --- an unusual way of introducing phase shifts that will be essential for our analysis of quantum algorithms.
 Consider the following circuit.
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-(Controlled-$U$ interference).
+*(Controlled-$U$ interference).*
 :::
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
@@ -971,44 +1005,6 @@ We will return to this topic later on in Section \@ref(more-phase-kick-back), wh
 
 
 
-### Universality, revisited
-
-<div class="video" title="Universal sets of gates (for multiple qubits)" data-videoid="IzyAY6US5C4"></div>
-
-We will come across few more gates in this course, but at this stage you already know all the elementary unitary operations that are needed to construct any unitary operation on any number of qubits:
-
-- the Hadamard gate,
-- all phase gates, and
-- the $\texttt{c-NOT}$
-
-These gates form a **universal set of gates**: with $O(4^{n}n)$ of these gates, we can construct any $n$-qubit unitary operation.^[Recall the big-$O$ asymptotic notation introduced in Exercise \@ref(big-o): given a _positive_ function $f(n)$, we write $O(f(n))$ to mean "bounded above by $c\,f(n)$ for some constant $c > 0$ (for sufficiently large $n$)". For example, $15n^2+4n+7$ is $O(n^2)$.]
-We should mention that there are many different universal sets of gates.
-In fact, almost any gate that can entangle two qubits can be used as a universal gate.
-
-We are particularly interested in any *finite* universal set of gates (such as the one containing the Hadamard, $P_{\frac{\pi}{4}}$ (the $T$ gate), and the $\texttt{c-NOT}$) that can approximate any unitary operation on $n$ qubits with arbitrary precision.
-The price to pay is the number of gates --- better precision requires more gates.
-
-
-
-
-
-### Density operators, and other things to come
-
-The existence of entangled states leads to an obvious question: if we cannot attribute a state vector to an individual qubit, then how can we describe its quantum state?
-In the next few chapters we will see that, when we limit our attentions to a part of a larger system, states are not represented by vectors, measurements are not described by orthogonal projections, and evolution is not unitary.
-As a spoiler, here is a dictionary of some of the new concepts that will soon be introduced:
-
-| | | |
-| -: | :-: | :- |
-| state vectors | $\rightsquigarrow$ | density operators |
-| orthogonal projectors | $\rightsquigarrow$ | positive operator-valued measures |
-| unitary evolutions | $\rightsquigarrow$ | completely-positive trace-preserving maps |
-
-
-
-
-
-
 
 ## Why qubits, subsystems, and entanglement?
 
@@ -1046,6 +1042,22 @@ That is, we spend *less energy*, but the trade off is that we have to spend *mor
 
 It turns out that whichever way we try to represent the number $N$ in the unary encoding (i.e. using $N$ different states of a single chunk of matter), we end up depleting our physical resources (such as energy or time, or even space) at a much greater rate than in the case when we use subsystems.
 This plausibility argument indicates that, for efficient processing of information, the system must be divided into subsystems --- for example, into physical bits.
+
+
+
+
+
+## Density operators, and other things to come
+
+The existence of entangled states leads to an obvious question: if we cannot attribute a state vector to an individual qubit, then how can we describe its quantum state?
+In the next few chapters we will see that, when we limit our attentions to a part of a larger system, states are not represented by vectors, measurements are not described by orthogonal projections, and evolution is not unitary.
+As a spoiler, here is a dictionary of some of the new concepts that will soon be introduced:
+
+| | | |
+| -: | :-: | :- |
+| state vectors | $\rightsquigarrow$ | density operators |
+| orthogonal projectors | $\rightsquigarrow$ | positive operator-valued measures |
+| unitary evolutions | $\rightsquigarrow$ | completely-positive trace-preserving maps |
 
 
 
@@ -1092,13 +1104,13 @@ We shall return to this, and other related phenomena, later on --- it is not at 
 
 
 
-### SWAP circuit
+### SWAP circuit {#swap-circuit}
 
 Show that, for any states $\ket{\psi_1}$ and $\ket{\psi_2}$ of two qubits, the circuit below implements the $\texttt{SWAP}$ operation $\ket{\psi_1}\ket{\psi_2} \mapsto \ket{\psi_2}\ket{\psi_1}$.
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-(Swapping).
+*(Swapping).*
 :::
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
@@ -1126,7 +1138,7 @@ Show that the circuit below gives another implementation of the controlled-$\tex
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-(Controlled-$\texttt{NOT}$, again).
+*(Controlled-$\texttt{NOT}$, again).*
 :::
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
@@ -1149,7 +1161,7 @@ Take a look at the circuit below, where $M$ stands for measurement in the standa
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-(?).
+*(?).*
 :::
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
@@ -1246,30 +1258,30 @@ One qubit is sent to Alice, and one to Bob, who then both perform measurements i
 
 ### Quantum dense coding {#quantum-dense-coding}
 
-::: {.todo}
+::: {.todo latex=""}
 <!-- TO-DO -->
 :::
 
 
 ### Playing with conditional unitaries
 
-The swap gate $S$ on two qubits is defined first on product vectors by $S\colon\ket{a}\ket{b}\mapsto\ket{b}\ket{a}$ and then extended to sums of product vectors by linearity.
+The swap gate $\texttt{SWAP}$ on two qubits is defined first on product vectors by $\texttt{SWAP}\colon\ket{a}\ket{b}\mapsto\ket{b}\ket{a}$ and then extended to sums of product vectors by linearity (see Exercise \@ref(swap-circuit)).
 
-1. Show that the four Bell states $\frac{1}{\sqrt{2}}(\ket{00}\pm\ket{11})$ and $\frac{1}{\sqrt{2}}(\ket{01}\pm\ket{10})$ are eigenvectors of $S$ that form an orthonormal basis in the Hilbert space associated to two qubits.
+1. Show that the four Bell states $\frac{1}{\sqrt{2}}(\ket{00}\pm\ket{11})$ and $\frac{1}{\sqrt{2}}(\ket{01}\pm\ket{10})$ are eigenvectors of $\texttt{SWAP}$ that form an orthonormal basis in the Hilbert space associated to two qubits.
   Which Bell states span the _symmetric subspace_ (i.e. the space spanned by all eigenvectors with eigenvalue $1$), and which the _antisymmetric_ one (i.e. that spanned by eigenvectors with eigenvalue $-1$)?
-  Can $S$ have any eigenvalues apart from $\pm1$?
+  Can $\texttt{SWAP}$ have any eigenvalues apart from $\pm1$?
 
-2. Show that $P_\pm = \frac{1}{2}(\id\pm S)$ are two orthogonal projectors which form the decomposition of the identity and project onto the symmetric and antisymmetric subspaces.
+2. Show that $P_\pm = \frac{1}{2}(\id\pm \texttt{SWAP})$ are two orthogonal projectors which form the decomposition of the identity and project onto the symmetric and antisymmetric subspaces.
   Decompose the state vector $\ket{a}\ket{b}$ of two qubits into symmetric and antisymmetric components.
 
-3. Consider the quantum circuit below, composed of two Hadamard gates, one controlled-$S$ operation (also known as the **controlled-swap**, or [**Fredkin** gate](https://en.wikipedia.org/wiki/Fredkin_gate)), and the measurement $M$ in the computational basis.
+3. Consider the quantum circuit below, composed of two Hadamard gates, one controlled-$\texttt{SWAP}$ operation (also known as the **controlled-swap**, or [**Fredkin** gate](https://en.wikipedia.org/wiki/Fredkin_gate)), and the measurement $M$ in the computational basis.
   Suppose that the state vectors $\ket{a}$ and $\ket{b}$ are normalised but _not_ orthogonal to one another.
   Step through the execution of this network, writing down the quantum states of the three qubits after each of the four computational steps.
   What are the probabilities of observing $0$ or $1$ when the measurement $M$ is finally performed?
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-(Symmetric and antisymmetric projection).
+*(Symmetric and antisymmetric projection).*
 :::
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
@@ -1283,7 +1295,7 @@ The swap gate $S$ on two qubits is defined first on product vectors by $S\colon\
   \\[1em]
     \lstick{$\ket{a}$}
     & \qw
-    & \gate[wires=2][1cm]{S}
+    & \gate[wires=2][1cm]{\texttt{SWAP}}
     & \qw
     & \qw
   \\[-1em]
@@ -1380,7 +1392,7 @@ $$
 $$
 
 ::: {.technical title="The Kronecker product" latex="{The Kronecker product}"}
-This product $A\otimes B$ also known as the [**Kronecker product**](https://en.wikipedia.org/wiki/Kronecker_product) of matrices, which generalises the [**outer product**](https://en.wikipedia.org/wiki/Outer_product) of two vectors that we saw in \@ref(outer-products).
+This product $A\otimes B$ also known as the [**Kronecker product**](https://en.wikipedia.org/wiki/Kronecker_product) of matrices, which generalises the [**outer product**](https://en.wikipedia.org/wiki/Outer_product) of two vectors that we saw in Section \@ref(outer-products).
 :::
 
 The tensor product induces a natural partition of matrices into blocks.
@@ -1416,7 +1428,7 @@ Multiplication of block matrices works pretty much the same as regular matrix mu
     - **partial traces** $(\tr A)\otimes B$ and $A\otimes(\tr B)$.
 
 
-### Hadamard transforms in components
+### Hadamard transforms in components {#hadamard-transforms-in-components}
 
 Consider the Hadamard transform $H\otimes H\otimes H$ on three qubits, which is described by a $(2^3\times2^3)$ matrix.
 We know that
@@ -1487,8 +1499,7 @@ Now, suppose we apply $H\otimes H\otimes H$ to the state $\ket{110}$:
       & \qw \rstick{$\frac{\ket{0}+\ket{1}}{\sqrt{2}}$}
     \end{quantikz}
   \right\}
-  =
-  \frac{1}{2^{3/2}}
+  = \frac{1}{2^{3/2}}
   \left(
     \begin{array}{r}
       \ket{000} + \ket{001} - \ket{010} - \ket{011}

@@ -1,0 +1,1797 @@
+# (PART) Applications {-}
+
+# Quantum algorithms {#quantum-algorithms}
+
+<div class="video" title="Overview" data-videoid="pzC4pUK8s8A"></div>
+
+> About quantum interference in disguise: Hadamard, **function evaluation**, Hadamard.
+> Also about the early quantum algorithms and how they deal with querying oracles, searching for a needle in a haystack, and estimating periodicity of certain functions.
+> Finally, about phase estimation, hidden order determination, and Shor's famous algorithm for prime factorisation, via the (inverse) quantum Fourier transform.
+
+To boil down the theory of classical computers to a single sentence, we can say that they essentially evaluate functions: given $n$-bits of input, they produce $m$-bits of output that are uniquely determined by the input.
+In other words, (very simple) classical computers encode binary functions
+$$
+  f\colon \{0,1\}^n \to \{0,1\}^m
+$$
+and then compute the value of the output for any particular specified $n$-bit argument.
+But we can make an even further simplification: a binary function with an $m$-bit output value is equivalent to $m$-many binary functions with $1$-bit output values (which we call **Boolean functions**).
+In other words, we might just as well say that the basic task performed by a computer is the evaluation of Boolean functions
+$$
+  f\colon \{0,1\}^n \to  \{0,1\}.
+$$
+How can we adapt this to the world of quantum computing?
+
+
+## Quantum Boolean function evaluation
+
+<div class="video" title="Abstract computation and reversible computation" data-videoid="8ok34yT-G4g"></div>
+
+<div class="video" title="Quantum function evaluation" data-videoid="x_umQRMcwtA"></div>
+
+In quantum computation, *all elementary operations are reversible* (i.e. unitary), so we need to compute Boolean functions in a reversible fashion --- we can do so as follows:
+$$
+  \ket{x}\ket{y} \longmapsto \ket{x}\ket{y\oplus f(x)}.
+$$
+
+The corresponding circuit diagram (for an input register of $n=3$ qubits) is shown in Figure \@ref(fig:n-equals-3-circuit-diagram).
+
+(ref:n-equals-3-circuit-diagram-caption) Computing some $f\colon\{0,1\}^3\to\{0,1\}$ in a quantum manner, where $x\in\{0,1\}^3$, $y\in\{0,1\}$, and $\oplus$ denotes $\texttt{XOR}$, or addition modulo $2$.
+
+```{r n-equals-3-circuit-diagram,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:n-equals-3-circuit-diagram-caption)'}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=3]{$\ket{x}$}
+    & \ctrl{3}
+    & \qw \rstick[wires=3]{$\ket{x}$}
+  \\[-1em]
+    & \ctrl{2}
+    & \qw
+  \\[-1em]
+    & \ctrl{1}
+    & \qw
+  \\\lstick{$\ket{y}$}
+    & \gate{f}
+    & \qw \rstick{$\ket{y\oplus f(x)}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+Here we use two registers: the first^[Reading the circuit diagram from top to bottom.] one stores the arguments $\ket{x}$ (where $x\in\{0,1\}^n$ is our binary string input), and the second one the value $f(x)$.
+More precisely, the value $f(x)$ is added bit-wise to the pre-existing binary value $y$ of the second register.
+We usually set $y=0$ to get
+$$
+  \ket{x}\ket{0} \longmapsto \ket{x}\ket{f(x)}.
+$$
+
+Quantum Boolean function evaluation is a special case of the generalised $x$-controlled-$U$ on two registers:
+$$
+  \sum_{x\in\{0,1\}^n} \proj{x}\otimes U_x
+$$
+where $U_x$ is either the identity $\id$ (when $f(x)=0$) or the bit-flip^[Do not confuse the capital $X$ (the Pauli bit-flip operator $\sigma_x$) with the small $x$ (a binary string stored in the first register, and the argument of our Boolean function $f$).] $X$ (when $f(x)=1$).
+We can write this very succinctly as
+$$
+  \sum_{x\in\{0,1\}^n} \proj{x}\otimes X^{f(x)}.
+$$
+Because of this, we sometimes denote the quantum evaluation of the function $f$ by $U_f$, which is a gate on the $(n+1)$ qubits $\ket{x}\ket{y}$.
+
+
+### A worked example
+
+Consider the Boolean function $f\colon\{0,1\}^2\to\{0,1\}$ given by
+$$
+  f(x)
+  = \begin{cases}
+    1 &\text{if $x=01$;}
+  \\0 &\text{otherwise}
+  \end{cases}
+$$
+which we might call the **indicator** (or **characteristic**) function for the binary string $01$, sometimes denoted $\chi_{01}$.
+The evaluation $\ket{x}\ket{y} \mapsto \ket{x}\ket{y\oplus f(x)}$ can be tabulated explicitly:
+$$
+  \begin{array}{cc}
+    \ket{00}\ket{0} \longmapsto \ket{00}\ket{0}
+    & \ket{00}\ket{1} \longmapsto \ket{00}\ket{1}
+  \\\ket{01}\ket{0} \longmapsto \ket{01}\ket{1}
+    & \ket{01}\ket{1} \longmapsto \ket{01}\ket{0}
+  \\\ket{10}\ket{0} \longmapsto \ket{10}\ket{0}
+    & \ket{10}\ket{1} \longmapsto \ket{10}\ket{1}
+  \\\ket{11}\ket{0} \longmapsto \ket{11}\ket{0}
+    & \ket{11}\ket{1} \longmapsto \ket{11}\ket{1}
+  \end{array}
+$$
+and then
+$$
+  \begin{aligned}
+    \sum_{x\in\{0,1\}^2} \ket{x}\bra{x}\otimes X^{f(x)}
+    = &\proj{00} \otimes \id
+    + \proj{01} \otimes X
+  \\+ &\proj{10} \otimes \id
+    + \proj{11} \otimes \id.
+  \end{aligned}
+$$
+
+Finally, the matrix form looks as follows:
+$$
+  \left[
+  \,
+    \begin{array}{c|c|c|c}
+      \mqty{1&0\\0&1}
+      & \mqty{0&0\\0&0}
+      & \mqty{0&0\\0&0}
+      & \mqty{0&0\\0&0}
+    \\\hline
+    \mqty{0&0\\0&0}
+      & \mqty{0&1\\1&0}
+      & \mqty{0&0\\0&0}
+      & \mqty{0&0\\0&0}
+    \\\hline
+    \mqty{0&0\\0&0}
+      & \mqty{0&0\\0&0}
+      & \mqty{1&0\\0&1}
+      & \mqty{0&0\\0&0}
+    \\\hline
+    \mqty{0&0\\0&0}
+      & \mqty{0&0\\0&0}
+      & \mqty{0&0\\0&0}
+      & \mqty{1&0\\0&1}
+    \end{array}
+  \,
+  \right]
+$$
+As you can see, this is a diagonal block matrix: a $(4\times 4)$ matrix with $(2\times 2)$ matrices as entries.
+The rows and the columns of the $(4\times 4)$ matrix are labelled by^[We always use the [**lexicographic order**](https://en.wikipedia.org/wiki/Lexicographic_order) $00<01<10<11$.] the binary strings $00, 01, 10, 11$, and the $(2\times 2)$ matrices on the diagonal represent operations applied to the qubit in the second register.
+Here, all of these matrices on the diagonal are the identity $\id$ except for the $(01,01)$ entry (i.e. the second one), which is the bit-flip $X$.
+This is because $f(01)=1$ (and so we want to turn the control value $y=0$ into $y=1$, which is achieved by applying the bit-flip operator), but $f(x)=0$ for all other binary strings $x$ (and so we want to leave the control value $y=0$ as it is).
+
+
+
+
+
+
+## More phase kick-back {#more-phase-kick-back}
+
+<div class="video" title="Phase kick-back" data-videoid="iSCYkhkWVjw"></div>
+
+What makes quantum evaluation of Boolean functions really interesting --- and what truly sets it apart from classical evaluation --- is its action on a *superposition of different inputs*.
+For example,^[We make two notational simplifications: we usually don't worry about normalisation factors, and we often just write $\sum_x$ to mean $\sum_{x\in\{0,1\}^n}$.]
+$$
+  \sum_{x}\ket{x}\ket{0}
+  \longmapsto
+  \sum_{x}\ket{x}\ket{f(x)}
+$$
+produces $f(x)$ for *all* $x$ in a *single* run.
+However, it is more instructive to see the effect of quantum function evaluation when the qubit in the second register is prepared in the state $\ket{-}\coloneqq\frac{1}{\sqrt{2}}(\ket{0}-\ket{1})=H\ket{1}$, since then
+$$
+  \sum_x\ket{x}\ket{-}
+  \longmapsto
+  \sum_x (-1)^{f(x)}\ket{x}\ket{-}
+$$
+(as shown in Figure \@ref(fig:n-equals-3-minus-circuit-diagram)).
+In words, whenever $f(x)=1$, the bit flip $X$ is applied to the qubit in the second register.
+
+(ref:n-equals-3-minus-circuit-diagram-caption) Computing some $f\colon\{0,1\}^3\to\{0,1\}$ with the second register in state $\ket{-}$.
+
+```{r n-equals-3-minus-circuit-diagram,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:n-equals-3-minus-circuit-diagram-caption)'}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=3]{\footnotesize$\sum_x\ket{x}$}
+    & \ctrl{3}
+    & \qw \rstick[wires=3]{\footnotesize$\sum_x(-1)^{f(x)}\ket{x}$}
+  \\[-1em]
+    & \ctrl{2}
+    & \qw
+  \\[-1em]
+    & \ctrl{1}
+    & \qw
+  \\\lstick{$\ket{-}$}
+    & \gate{f}
+    & \qw \rstick{$\ket{-}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+The reason for defining the state $\ket{-}$ as we do is that it is the eigenstate of $X$ with eigenvalue $-1$, i.e. $X\ket{-}=-\ket{-}$.
+So, due the phase kick-back, whenever $f(x)=1$, the phase factor $-1$ appears in front of the corresponding term $\ket{x}$.
+As you can see, the second register stays in state $\ket{-}$ all the way through the computation --- it is the first register where things happen.
+
+Let us now see how quantum Boolean function evaluation introduces phase shifts in quantum interference experiments, and how such experiments can be viewed as computations.
+
+
+
+
+
+
+## Oracles
+
+The computational power of quantum interference was discovered by counting how many times certain Boolean functions have to be evaluated in order to find the answer to a given problem.
+Imagine a "black box" (sometimes also called an **oracle**) that computes some fixed Boolean function, but whose inner workings are unknown to us.
+Then imagine that we are in a scenario where we want to learn about some given property of the Boolean function, but we have to "pay" (in energy, time, money, or anything!) for each use (often referred to as a **query**) of the box.
+In such a setting, the objective is to minimise number of queries to the oracle while finding out as much information as possible about the function that it computes.
+For this purpose, we ignore everything that happens inside the black box: in our rules of the game, the Boolean function evaluation counts as just *one* computational step.
+
+
+
+
+
+
+## Deutsch's algorithm {#deutschs-algorithm}
+
+<div class="video" title="Deutsch's algorithm" data-videoid="DyINHZoOcLQ"></div>
+
+We start, once more, with the simplest quantum interference circuit
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \phase{\varphi}
+    & \gate{H}
+    & \qw \rstick{$\cos\frac{\varphi}{2}\ket{0} - i\sin\frac{\varphi}{2}\ket{1}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+but let's turn this into a black-box scenario, often known as the **binary observable measurement** problem:^[You might recognise this as Exercise \@ref(unknown-phase), and we will return to this problem again in Section \@ref(phase-estimation).]
+
+- we are allowed to prepare the input in any state that we like;
+- we are allowed to read the output;
+- *but* all we know about the value of $\varphi$ is that it is either $0$ or $\pi$, and we are *not* allowed to "look inside" the phase gate to see which value it is!
+
+With these rules, can we figure out which value $\varphi$ has been set to?
+
+Of course we can --- we're quantum information scientists!
+
+One way of doing it is to prepare the input in the state $\ket{0}$ and check the output: if $\varphi=0$ then the output is always $\ket{0}$, and if $\varphi=\pi$ then it is always $\ket{1}$.
+In other words, a *single run* of the interference experiment is sufficient to determine the difference.
+
+The very first quantum algorithm, proposed by [David Deutsch](https://en.wikipedia.org/wiki/David_Deutsch) in 1985, is very much related to this effect, but where the phase setting is determined by the Boolean function evaluation via the phase kick-back.
+
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Global properties of a one-bit function).*
+:::
+We are presented with an oracle that computes some unknown function $f\colon\{0,1\}\to\{0,1\}$.
+Note that there are only four possibilities for what $f$ can be: it could be one of two **constant** functions (i.e. those where $f(0)=f(1)$), or one of two **balanced** functions (i.e. those where $f(0)\neq f(1)$).
+
+|    | $f(0)$ | $f(1)$ |
+| -: | :----: | :----: |
+| constant | $0$ | $0$ |
+| constant | $1$ | $1$ |
+| balanced | $0$ | $1$ |
+| balanced | $1$ | $0$ |
+
+Our task is to determine, using the fewest queries possible, whether the function computed by the oracle is constant or balanced.
+::::
+
+Note that we are *not* asked for the particular values $f(0)$ and $f(1)$, but *only whether the two values are the same or different*.
+Classical intuition tells us that we have to evaluate both $f(0)$ and $f(1)$ and compare them, which involves evaluating $f$ *twice*.
+But, in the quantum setting, we can solve this problem with a *single* function evaluation, using the following circuit.^[The original version of Deutsch's algorithm provides the correct answer with probability 50%. Here we present a modified/improved version. The more general problem, which deals with unknown functions $f\colon\{0,1\}^n\to\{0,1\}$ for $n\geq1$, is known as the [Deutsch--Jozsa problem](https://en.wikipedia.org/wiki/Deutsch%E2%80%93Jozsa_algorithm).]
+
+:::: {.circuit latex=""}
+::: {.circuit-title}
+*(Deutsch's algorithm).*
+:::
+First register: $1$ qubit. Second register: $1$ qubit.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \gate{H}
+    & \qw \rstick{$\begin{cases}\ket{0}&\mbox{if constant}\\\ket{1}&\mbox{if balanced}\end{cases}$}
+  \\\lstick{$\ket{-}$}
+    & \qw
+    & \gate{f}
+    & \qw
+    & \qw \rstick{$\ket{-}$}
+  \end{quantikz}
+\end{equation*}
+```
+::::
+
+During the function evaluation, the second register "kicks back" the phase factor $(-1)^{f(x)}$ in front of $\ket{x}$, but the state of the second register remains unchanged; the first register is modified as follows:
+$$
+  \begin{aligned}
+    \ket{0}
+    &\xmapsto{H}
+    \ket{0}+\ket{1}
+  \\&\xmapsto{U_f}
+    (-1)^{f(0)}\ket{0} + (-1)^{f(1)}\ket{1}
+  \\&\quad=
+    \ket{0} + (-1)^{f(0)\oplus f(1)}\ket{1}
+  \\&\xmapsto{H}
+    \ket{f(0)\oplus f(1)}.
+  \end{aligned}
+$$
+
+The evolution of the first qubit is thus identical to that described by the circuit diagram
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \phase{\varphi}
+    & \gate{H}
+    & \qw \rstick{$\begin{cases}0&\mbox{if constant}\\1&\mbox{if balanced}\end{cases}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+where the relative phase is $\varphi = (-1)^{f(0)\oplus f(1)}$.
+The first qubit ends in state $\ket{0}$ if the function $f$ is constant, and in state $\ket{1}$ if the function is balanced, and the standard measurement distinguishes these two cases with certainty.^[This is also implemented in the [Quantum Flytrap Virtual Lab](https://lab.quantumflytrap.com/lab/deutsch-jozsa?mode=laser).]
+
+But really this is just the binary observable measurement problem in disguise!
+Indeed, the fact that quantum Boolean function evaluation of a function $f$ is given by
+$$
+  \ket{x}\ket{y} \longmapsto \ket{x}\ket{y\oplus f(x)}
+$$
+means that the unitary $U_f$ has eigenvalues $\pm1$ because it satisfies $U_f^2=\id$, since two consecutive evaluations gives
+$$
+  \begin{aligned}
+  \ket{x}\ket{y}
+  \longmapsto& \ket{x}\ket{y\oplus f(x)}
+\\\longmapsto& \ket{x}\ket{y\oplus f(x)\oplus f(x)}
+\\=& \ket{x}\ket{y}.
+  \end{aligned}
+$$
+So the fact that $1=e^{0}$ and $-1=e^{i\pi}$ means that $U_f$ acts as a phase gate with phase either $0$ or $\pi$.
+We will come back to this link between Deutsch's algorithm and binary observable measurement in Section \@ref(phase-estimation).
+
+Deutsch's result laid the foundation for the new field of quantum computation, and was followed by several other quantum algorithms for various problems.
+They all seem to rest on the same generic sequence:
+
+- a Hadamard transform;
+- function evaluation;
+- another Hadamard (or Fourier) transform.^[As explained in Section \@ref(quantum-fourier-transform), the Hadamard transform is a special case of the Fourier transform over the group $\mathbb{Z}_2^n$.]
+
+As we shall see in a moment, in some cases (such as in Grover's search algorithm) this sequence is repeated several times.
+
+Let us now follow a tour through the three early quantum algorithms, where each one offers a higher-order speed-up when compared to their classical analogues than the last: firstly linear, then quadratic, and finally exponential.
+After this, we will look at generalising binary observable measurement, the corresponding algorithm analogous to Deutsch's, and how this leads us to arguably the most famous quantum algorithm: Shor's algorithm for prime factorisation.
+
+
+
+
+
+
+## The Bernstein--Vazirani algorithm {#the-bernstein-vazirani-algorithm}
+
+<div class="video" title="The Bernstein–Vazirani algorithm" data-videoid="60OHCftlqbA"></div>
+
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Hidden inner-product determination).*
+:::
+We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}$, but we are promised that $f$ is of the form
+$$
+  f(x) = a\cdot x
+  \equiv (a_1\cdot x_1) \oplus \ldots \oplus (a_n\cdot x_n)
+$$
+for some fixed binary string $a=a_1a_2\ldots a_n\in\{0,1\}^n$.
+
+Our task is to determine, using the fewest queries possible, the value of the $n$-bit string $a$.
+::::
+
+It's quite easy to see how to do this classically: if we input the value $x=00\ldots010\ldots0$, where the $m$-th bit is a $1$ and all other bits are $0$, then $f(x)$ is simply the $m$-th bit of $a$; after $n$ such calls, we will know every bit value, and thus know $a$.
+It is also clear that there *cannot* exist a better classical algorithm: each call to the oracle teaches us exactly one bit of information, and since we must learn $n$ bits, we must query it $n$ times.
+
+In contrast, by running the circuit below, it is possible to determine the value of $a$ with a *single* call to the oracle!^[This algorithm is named for Ethan Bernstein and [Umesh Vazirani](https://en.wikipedia.org/wiki/Umesh_Vazirani) who proposed it in 1997.]
+
+:::: {.circuit latex=""}
+::: {.circuit-title}
+*(The Bernstein-Vazirani algorithm).*
+:::
+First register: $n$ qubits. Second register: $1$ qubit.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=4]{$\ket{0}^{\otimes n}$}
+    & \gate{H}
+    & \ctrl{4}
+    & \gate{H}
+    & \qw \rstick{$\ket{a_1}$}
+  \\[-1em]
+    & \gate{H}
+    & \ctrl{3}
+    & \gate{H}
+    & \qw \rstick{$\ket{a_2}$}
+  \\[-1em]
+    &&\vdotsgate
+  \\[-1em]
+    & \gate{H}
+    & \ctrl{1}
+    & \gate{H}
+    & \qw \rstick{$\ket{a_n}$}
+  \\[2em]
+    \lstick{$\ket{-}$}
+    & \qw
+    & \gate{f}
+    & \qw
+    & \qw \rstick{$\ket{-}$}
+  \end{quantikz}
+\end{equation*}
+```
+::::
+
+A quick note on notation: the "$\ldots$" in the circuit means "there are more wires here but they are identical (apart from the numbering) to the ones above".
+You might also see other notation to denote this, such as
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}^{\otimes n}$}
+    &[2mm] \gate{H}\qwbundle{n}
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+or even simply
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}^{\otimes n}$}
+    & \gate{H}\qwbundle[alternate]{}
+    & \qwbundle[alternate]{}
+  \end{quantikz}
+\end{equation*}
+```
+
+Now, stepping through the execution of the circuit (and ignoring the second register, which, as per usual, remains in the state $\ket{-}$ throughout), we obtain
+$$
+  \begin{aligned}
+    \ket{0^{\otimes n}}
+    &\xmapsto{H^{\otimes n}}
+    \left(\frac{1}{\sqrt{2}}\right)^n \sum_{x\in\{0,1\}^n} \ket{x}
+  \\&\xmapsto{U_f}
+    \left(\frac{1}{\sqrt{2}}\right)^n \sum_{x\in\{0,1\}^n} (-1)^{a\cdot x}\ket{x}
+  \\&\xmapsto{H^{\otimes n}}
+    \left(\frac{1}{\sqrt{2}}\right)^n \sum_{x\in\{0,1\}^n}
+    \left[
+      (-1)^{a\cdot x} \left(\frac{1}{\sqrt{2}}\right)^n
+      \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x} \ket{y}
+    \right]
+  \\&\quad= \left(\frac{1}{2}\right)^n \sum_{y\in\{0,1\}^n}
+    \left[
+      \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
+    \right]
+    \ket{y}
+  \end{aligned}
+$$
+where we write the second Hadamard transform as
+$$
+  \ket{x}
+  \longmapsto
+  \left(\frac{1}{\sqrt{2}}\right)^n \sum_{y\in\{0,1\}^n} (-1)^{y\cdot x}\ket{y}.
+$$
+
+To see that this output is indeed equal to $\ket{a}$, we can use the fact^[**Exercise.** Prove this!] that, for any $y\in\{0,1\}^n$,
+$$
+  \sum_{x\in\{0,1\}^n} (-1)^{x\cdot y}
+  = \begin{cases}
+    0 &\text{if $y\neq0$;}
+  \\2^n &\text{if $y=0$}
+  \end{cases}
+$$
+which, in our case, tells us that
+$$
+  \sum_{x\in\{0,1\}^n} (-1)^{(a\oplus y)\cdot x}
+  = \begin{cases}
+    0 &\text{if $y\neq a$;}
+  \\2^n &\text{if $y=a$.}
+  \end{cases}
+$$
+
+In other words, if you take the sum over $x$, then all the terms always cancel out *unless* $a\oplus y = 00\ldots0$, but this happens *if and only if* $y=a$.
+Then the standard bit-by-bit measurement of the first register gives the value of $a$ and solves the problem with a single call to the oracle.
+
+Alternatively, if you don't immediately see how this sum works for $z\neq a$ (where we write $\ket{z}$ to mean the output), you can first calculate the probability that the output is $z=a$.
+In this case it is easy to see that the sum is $2^n$, and that in the final state $\sum_z\lambda_z\ket{z}$ the term $z=a$ has amplitude $1$.
+Thus, by normalisation, all the other terms must be equal to $0$.
+
+
+## Grover's search algorithm
+
+The next algorithm we will study aims to solve the problem of searching for a specific item in an *unsorted* database.
+Think about an old-fashioned phone book: the entries are typically sorted alphabetically, by the name of the person that you want to find.
+However, what if you were in the opposite situation: you had a phone number and wanted to find the corresponding person's name?
+The phone book is not sorted in that way, and to find the number (and hence name) with, say, 50% probability, you would need to search through, on average, 50% of the entries.
+Needless to say, in a large phone book this would take a long time.
+
+While this might seem like a rather contrived problem (a computer database *should* always maintain an index on any searchable field), many problems in computer science can be cast in this form, i.e. that of an **unstructured search**.
+
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Unstructured search).*
+:::
+We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}$.
+
+Our task is to find, using the fewest queries possible, an input $x\in\{0,1\}^n$ such that $f(x)=1$.
+::::
+
+Suppose that we know that, amongst the $N=2^n$ binary strings, there are $M\ll N$ which are **tagged**, i.e. strings on which $f$ evaluates to $1$.
+Since there is no structure in the database, any classical search requires around $N/M$ steps, i.e. the function $f$ must be evaluated roughly $N/M$ times.
+
+In contrast, there is a quantum search algorithm, implemented by the circuit below, which requires only roughly $\sqrt{N/M}$ steps.^[This algorithm is named for [Lov Grover](https://en.wikipedia.org/wiki/Lov_Grover), who proposed it in 1996.]
+
+:::: {.circuit latex=""}
+::: {.circuit-title}
+*(Grover's search).*
+:::
+First register: $n$ qubits. Second register: $1$ qubit.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=4]{$\ket{0}^{\otimes n}$}
+    & \gate{H}
+    & \qw
+    & \ctrl{4}
+      \gategroup[wires=5,steps=4,background,style={rounded corners,dashed,ultra thick,inner sep=0.5em},label style={yshift=0.4em,align=center}]{Grover iteration operator $G$\\(repeat $\mathcal{O}(2^{n/2})$ times)}
+    & \gate{H}
+    & \ctrl{4}
+    & \gate{H}
+    & \qw
+    & \qw \rstick{$\ket{z_1}$}
+  \\[-1em]
+    & \gate{H}
+    & \qw
+    & \ctrl{3}
+    & \gate{H}
+    & \ctrl{3}
+    & \gate{H}
+    & \qw
+    & \qw \rstick{$\ket{z_2}$}
+  \\[-1em]
+    &&&\vdotsgate
+    &&\vdotsgate
+  \\[-1em]
+    & \gate{H}
+    & \qw
+    & \ctrl{1}
+    & \gate{H}
+    & \ctrl{1}
+    & \gate{H}
+    & \qw
+    & \qw \rstick{$\ket{z_n}$}
+  \\[2em]
+    \lstick{$\ket{-}$}
+    & \qw
+    & \qw
+    & \gate{f}
+    & \qw
+    & \gate{f_0}
+    & \qw
+    & \qw
+    & \qw \rstick{$\ket{-}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+where $f_0$ tags the binary string consisting of $n$ zeros:
+$$
+  f_0(x)
+  = \begin{cases}
+    1 &\text{if $x=00\ldots0$;}
+  \\0 &\text{otherwise.}
+  \end{cases}
+$$
+::::
+
+Yet again, we can recognise the typical Hadamard, function evaluation, Hadamard sequence, and yet again we can see that the second register (the bottom qubit, in state $\ket{-}$) plays an auxiliary role: the real action takes place in the first register.
+However, unlike the previous algorithms, a single call to the oracle does not do very much, and we have to build up the quantum interference in the first register through repeated calls to the oracle (without any intermediate measurements!).
+
+Here, the basic step is the **Grover iteration operator $G$**, which is the boxed part of the circuit that we repeat over and over:
+$$
+  G = (H^{\otimes n}\otimes\id) U_{f_0}(H^{\otimes n}\otimes\id) U_f.
+$$
+
+After^[Recall the big-$\mathcal{O}$ notation introduced in Exercise \@ref(big-o).] $\mathcal{O}(2^{n/2})$ applications of $G$, we measure the first register bit-by-bit and obtain the value of $\ket{z}=\ket{z_1z_2\ldots z_n}$, which is such that, *with "high" probability*, $f(z)=1$.
+In order to actually *see* how this algorithm works, and to justify our use of the phrase "with high probability", we can take a more geometric approach.
+
+First, we define two orthonormal vectors in the Hilbert space describing the first register:^[Once again, we shall completely ignore the second register from now on, since all the interesting stuff happens in the first.]
+$$
+  \begin{aligned}
+    \ket{a}
+    &= \frac{1}{\sqrt{N-M}} \sum_{x\in f^{-1}(0)} \!\!\!\!\ket{x}
+  \\\ket{b}
+    &= \frac{1}{\sqrt{M}} \sum_{x\in f^{-1}(1)} \!\!\!\!\ket{x}
+  \end{aligned}
+$$
+where $f^{-1}(i)\coloneqq\{x\in\{0,1\}^n\mid f(x)=i\}$ is the **preimage** of $i$.
+Since these vectors are orthonormal, they are, in particular, linearly independent, and so their span is a two-dimensional subspace --- this is the subspace in which our search will take place.
+
+Using the fact that $f^{-1}(0)$ and $f^{-1}(1)$ form a **partition**^[A **partition** of a set $X$ is a collection of disjoint subsets $X_1,\ldots,X_m\subseteq X$ whose union is all of $X$, i.e. $X_i\cap X_j=\varnothing$ for all $i\neq j$, and $X_1\cup\ldots\cup X_m=X$.] of the space $\{0,1\}^n$, we see that the two-dimensional span of $\ket{a}$ and $\ket{b}$ contains, in particular, the equally-weighted superposition $\ket{s}=H^{\otimes n}\ket{0^{\otimes n}}$ of all binary strings of length $n$:
+$$
+  \begin{aligned}
+    \ket{s}
+    &= \frac{1}{\sqrt{N}}\sum_{x\in\{0,1\}^n}\ket{x}
+  \\&= \frac{1}{\sqrt{N}}\sum_{x\in f^{-1}(0)}\ket{x} + \frac{1}{\sqrt{N}}\sum_{x\in f^{-1}(1)}\ket{x}
+  \\&= \sqrt{\frac{N-M}{N}}\ket{a} + \sqrt{\frac{M}{N}}\ket{b}
+  \\&= (\cos\theta)\ket{a} + (\sin\theta)\ket{b}
+  \end{aligned}
+$$
+where we use the fact that
+$$
+  \sqrt{\frac{N-M}{N}}^2 + \sqrt{\frac{M}{N}}^2
+  = 1
+  = \sin^2\theta+\cos^2\theta
+$$
+to parametrise $\sqrt{\frac{N-M}{N}}$ as $\cos\theta$ and $\sqrt{\frac{M}{N}}$ as $\sin\theta$ (with $\theta\approx\sqrt{\frac{M}{N}}$, since $N\gg M$).
+
+The state $\ket{s}$ is our starting input for our sequence of Grover iterations, and we will show that applying $G$, when restricting to the plane spanned by $\ket{a}$ and $\ket{b}$, amounts to applying a rotation by angle $2\theta$.
+Grover's search algorithm can then be understood as a sequence of rotations which take the input state $\ket{s}$ towards the target state $\ket{b}$.
+
+To see this, note that the unitary transformation induced by the oracle
+$$
+  f\colon \ket{x} \mapsto (-1)^{f(x)}\ket{x}
+$$
+can be written as^[To prove this, it suffices to check that these two transformations agree on the standard basis; since $f^{-1}(0)$ and $f^{-1}(1)$ form a partition, we know that any element (and, in particular, any basis element) is either in the preimage of $0$ or of $1$; if it is in the former, then $I_a$ acts as the identity; if the latter, then $I_a$ acts as $-\id$.]
+$$
+  I_a \coloneqq 2\proj{a}-\id
+$$
+which we can interpret as a reflection through the $\ket{a}$-axis: we see that
+$$
+  \begin{aligned}
+    I_a\ket{a}
+    &= 2\proj{a}\ket{a}-\ket{a}
+  \\&= 2\ket{a}-\ket{a}
+  \\&= \ket{a}
+  \\I_a\ket{b}
+    &= 2\proj{a}\ket{b}-\ket{b}
+  \\&= -\ket{b}
+  \end{aligned}
+$$
+and since $-\ket{b}$ is a vector that points in the opposite direction from $\ket{b}$, it must be a reflection; since $-\ket{b}$ is still orthogonal to $\ket{a}$, the reflection must be in the $\ket{a}$-axis.
+
+Some further algebraic manipulation shows that $I_a = 2\proj{a}-\id = \id-2\proj{b}$.
+Now, in particular, evaluation of $f_0$ can be written as $2\proj{0}-\id$, and thus thought of as a reflection through the $\ket{0}$-axis.
+If we sandwich $f_0$ in between two Hadamards then we obtain $I_s = 2\proj{s}-\id$, which is reflection through the $\ket{s}$-axis.
+By definition then, the Grover iteration operator $G$ is the composition
+$$
+  G = I_s I_a.
+$$
+
+Now recall the purely geometric fact that if we have two intersecting lines $L_1$ and $L_2$ in two-dimensional Euclidean space, meeting with angle $\alpha$, then reflecting an object through $L_1$ and then reflecting the resulting image through $L_2$ is the same as simply rotating the original object around the point of intersection $L_1\cap L_2$ by an angle of $2\alpha$.
+
+The angle between $\ket{a}$ and $\ket{s}$ is $\theta$, so each time $G$ is applied the vector is rotated (around the origin) by an angle of $2\theta$ towards the $\ket{b}$-axis.
+All that remains to do is to just choose the "right" number $r$ of steps such that we end up as close to the $\ket{b}$-axis as possible.
+The state $\ket{s}$ starts at angle $\theta$ to $\ket{a}$, and we should perform our final (and only) measurement when this angle is $\pi/2$, i.e. when $(2r+1)\theta = \pi/2$, which gives
+$$
+  r \approx \frac{\pi}{4}\sqrt{\frac{N}{M}}.
+$$
+
+```{r grover-search-geometrically,engine='tikz',fig.cap='Understanding the Grover search algorithm geometrically.',fig.width=6}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\usetikzlibrary{arrows.meta}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[scale=1.4]
+  \begin{scope}
+    \draw (0,0) circle (1cm);
+    \draw [->] (0,-1.4) to (0,1.4) node [above] {$\ket{b}$};
+    \draw [->] (-1.4,0) to (1.4,0) node [right] {$\ket{a}$};
+    %
+    \draw [thin] (0,0) to (0:0.7) to [bend right,dashed] (20:0.7) to cycle;
+    \node at (10:0.6) {\footnotesize$\theta$};
+    \draw [-Latex,primary] (0,0) to (20:1) node [right] {$\ket{s}$};
+  \end{scope}
+  \node at (0,-1.7) {the initial state};
+  \begin{scope}[shift={(4,0)}]
+    \draw (0,0) circle (1cm);
+    \draw [->] (0,-1.4) to (0,1.4) node [above] {$\ket{b}$};
+    \draw [->] (-1.4,0) to (1.4,0) node [right] {$\ket{a}$};
+    %
+    \draw [thin] (0,0) to (-20:0.7) to [bend right=1.8cm] (60:0.7) to cycle;
+    \node at (-10:0.6) {\footnotesize$\theta$};
+    \node at (10:0.6) {\footnotesize$\theta$};
+    \node at (40:0.55) {\footnotesize$2\theta$};
+    \draw [-Latex,primary] (0,0) to (20:1) node [right] {$\ket{s}$};
+    \draw [-Latex,secondary] (0,0) to (60:1) node [above right] {$I_sI_a\ket{s}$};
+    \draw [-Latex,secondary] (0,0) to (-20:1) node [right] {$I_a\ket{s}$};
+  \end{scope}
+  \node at (4,-1.7) {applying $G=I_sI_a$};
+\end{tikzpicture}
+```
+
+So the quantum algorithm searches an unsorted list of $N$ items in roughly^[Recall that $M\ll N$, so $\sqrt{\frac{N}{M}}\approx\sqrt{N}$.] $\sqrt{N}$ steps: it offers a *quadratic* speed-up when compared to classical search, which can be of immense practical importance.
+For example, cracking some of the more popular modern ciphers, such as [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard), essentially requires a search among *many* binary strings (called **keys**).
+If these can be checked at a rate of, say, one million keys per second, then a classical computer would need over a thousand years to find the correct key, while a quantum computer using Grover's algorithm would find it in less than four minutes.
+
+
+
+## Simon's algorithm {#simons-algorithm}
+
+<div class="video" title="Simon's algorithm" data-videoid="sxIdRKTdRRU"></div>
+
+Here we will see the simplest quantum algorithm that offers an *exponential* speed-up when compared to the best possible classical algorithm.
+
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Hidden binary-addition determination).*
+:::
+We are presented with an oracle that computes some unknown function $f\colon\{0,1\}^n\to\{0,1\}^n$, but we are promised that $f$ satisfies, for all $x\in\{0,1\}^n$,
+$$
+  f(x) = f(x\oplus s)
+$$
+for some fixed $s\in\{0,1\}^n$, which we call the **period** of $f$.
+(We assume that $s$ is *not* the string of $n$ zeros, otherwise the problem becomes trivial.)
+
+Our task is to determine, using the fewest queries possible, the value of the $n$-bit string $s$.
+::::
+
+Note that asking for $f$ to be periodic is equivalent to asking that $f$ be **two-to-one**: for any $y\in\{0,1\}^n$ such that there exists some $x\in\{0,1\}^n$ with $f(x)=y$, there exists *exactly one other* $x'\neq x$ such that $f(x')=y$ as well.
+
+Classically, this problem is exponentially hard.
+We will not go through a detailed proof of this fact, but the intuition is reasonably simple: since there is no structure in the function $f$ that would help us find its period $s$, the best we can do is evaluate $f$ on random inputs and hope that we find some distinct $x$ and $x'$ such that $f(x)=f(x')$, and then we know that $s=x\oplus y$.
+After having made $m$ queries to the oracle, we have a list of $m$-many tuples $(x,f(x))$; there are $m(m-1)/2$ possible pairs which could match within this list, and the probability that a randomly chosen pair match is $1/2^{n-1}$.
+This means that the probability of there being at least one matching pair within the list of $m$ tuples is less than $m^2/2^n$.
+This means that the chance of finding a matching pair is negligible if the oracle is queried on fewer than $m=\sqrt{2^n}$ inputs.
+
+The quantum case, on the other hand, gives a result (again, with "high" probability) within a *linear* number of steps.
+The circuit that solves this problem, shown below, has a familiar Hadamard--function--Hadamard structure, but the second register has now been expanded to $n$ qubits.^[This circuit is named for Daniel Simon, who proposed it in 1994.]
+
+:::: {.circuit latex=""}
+::: {.circuit-title}
+*(Simon's problem).*
+:::
+First register: $n$ qubits. Second register: $n$ qubits.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\begin{equation*}
+    \begin{quantikz}
+      \lstick[wires=4]{$\ket{0}^{\otimes n}$}
+      & \gate{H}
+      & \ctrl{4}
+      & \gate{H}
+      & \qw
+    \\[-1em]
+      & \gate{H}
+      & \ctrl{3}
+      & \gate{H}
+      & \qw
+    \\[-1em]
+      &&\vdotsgate
+    \\[-1em]
+      & \gate{H}
+      & \ctrl{1}
+      & \gate{H}
+      & \qw
+    \\[2em]
+      \lstick[wires=4]{$\ket{0}^{\otimes n}$}
+      & \qw
+      & \gate[wires=4,nwires={3}]{f}
+      & \qw
+      & \qw
+    \\[-1em]
+      & \qw
+      && \qw
+      & \qw
+    \\[-1em]
+      &\vdotsgate
+      &&\vdotsgate
+    \\[-2em]
+      & \qw
+      && \qw
+      & \qw
+    \end{quantikz}
+\end{equation*}
+```
+::::
+
+This time, let's follow the evolution of *both* registers throughout this circuit.
+We start off by preparing the equally-weighted superposition of all $n$-bit strings with the first Hadamard, and then query the oracle:
+$$
+  \begin{aligned}
+    \ket{0^{\otimes n}}\ket{0^{\otimes n}}
+    &\xmapsto{H^{\otimes n}\otimes\id}
+    \frac{1}{\sqrt{2^n}} \sum_x \ket{x}\ket{0^{\otimes n}}
+  \\&\xmapsto{U_f}
+    \frac{1}{\sqrt{2^n}} \sum_x \ket{x}\ket{f(x)}.
+  \end{aligned}
+$$
+The second Hadamard transform on the first register then yields the final output state:
+$$
+  \frac{1}{2^n} \sum_{x,y} (-1)^{x\cdot y} \ket{y}\ket{f(x)}.
+\tag{$\ddagger$}
+$$
+
+But if we measure^[As we shall see in a moment, the actual measurement on the second register is not actually necessary.] the second register *before* applying the second Hadamard transform to the first register, we obtain one of the $2^{n-1}$ possible values of $f(x)$, each equally likely.
+Let's study the implications of this.
+
+Suppose that the outcome of the measurement is $f(a)$ for some $a\in\{0,1\}^n$.
+Given that both $a$ and $a\oplus s$ are mapped to $f(a)$ by $f$, the first register then collapses to the state
+$$
+  \frac{1}{\sqrt{2}}\big( \ket{a} + \ket{a\oplus s} \big).
+$$
+The subsequent Hadamard transform on the first register then gives us the final state^[We write $s^\perp$ to mean the set of all $y\in\{0,1\}^n$ such that $y\cdot s=0$.]
+$$
+  \begin{aligned}
+    &\frac{1}{\sqrt{2^{n+1}}} \sum_y \Big((-1)^{a\cdot y}+(-1)^{(a\oplus s)\cdot y}\Big) \ket{y}\ket{f(a)}
+  \\= &\frac{1}{\sqrt{2^{n+1}}} \sum_y (-1)^{a\cdot y}
+      \Big( 1 + (-1)^{s\cdot y} \Big) \ket{y}\ket{f(a)}
+  \\= &\frac{1}{\sqrt{2^{n-1}}} \sum_{y\in s^\perp}
+      (-1)^{a\cdot y} \ket{y}\ket{f(a)}
+  \end{aligned}
+$$
+where we have used the fact that $(a\oplus s)\cdot y = (a\cdot y)\oplus(s\cdot y)$, and that $1+(-1)^{s\cdot y}$ can have only two values: either $2$ (when $s\cdot y = 0$) or $0$ (when $s\cdot y = 1$).
+Now we finally measure the first register: the outcome is selected at random from all possible values of $y$ such that $a\cdot y = 0$, each occurring with probability $1/(2^{n-1})$.
+
+In fact, we did not have to measure the second register at all: it was a mathematical shortcut, simply taken for pedagogical purposes.
+Instead of collapsing the state to just one term in a superposition, we can express Equation ($\ddagger$) as
+$$
+  \begin{aligned}
+    &\frac{1}{2^n} \sum_{y,f(a)}
+    \Big( (-1)^{a\cdot y} + (-1)^{(a\oplus s)\cdot y} \Big) \ket{y}\ket{f(a)}
+  \\= &\frac{1}{2^n} \sum_{y,f(a)} (-1)^{a\cdot y}
+    \Big( 1 + (-1)^{s\cdot y} \Big) \ket{y}\ket{f(a)}
+  \end{aligned}
+$$
+where the summation over $f(a)$ means summing over all binary strings in the image of $f$, which is a convenient shorthand for the more complicated^[Another (complicated sounding) way of expressing this sum is by choice of a **section** of $f$, i.e. picking *one* element $a_z$ in *each* preimage $f^{-1}(z)$ is equivalent to defining a function $a\colon\{0,1\}^n\to\{0,1\}^n$ by $a\mapsto a_z$ which satisfies $(a\circ f)(z)=z$, or $a\circ f=\id$.] formal statement: for all $z\in\{0,1\}^n$, since our function $f$ is two-to-one, we know that the preimage $f^{-1}(z)$ has either *two* elements or *none*; if it's the latter, then we don't include $z$ in our sum; if it's the former, we *pick one* and call it $a$ (knowing that the other, by the setup, must be $a\oplus s$, which you can see appearing in the first equation above).
+With this, the final output of the algorithm is
+$$
+  \frac{1}{2^{n-1}} \sum_{y\in s^\perp} \ket{y}
+    \sum_{f(a)} (-1)^{a\cdot y} \ket{f(a)}
+$$
+and, again, the measurement outcome is selected at random from all possible values of $y$ such that $s\cdot y=0$.
+
+We are not quite done yet: we cannot infer $s$ from a _single_ output $y$.
+However, once we have found $n-1$ linearly independent strings^[It is important to note that we are talking about the pure "abstract" *binary strings*, and not the corresponding states in the Hilbert space. Concretely, this means that **linearly independent** here means "no string in the set $\{y_1,\ldots,y_n\}$ can be expressed as the bitwise sum of some other strings in this set". That is, we are working with the $\mathbb{Z}/2\mathbb{Z}$-vector space of strings, not the $\mathbb{C}$-vector space of states!] $y_1,y_2,\ldots,y_{n-1}$, we can solve the $n-1$ equations
+$$
+  \left\{
+  \begin{aligned}
+    s\cdot y_1 &= 0
+  \\s\cdot y_2 &= 0
+  \\&\,\,\,\vdots
+  \\s\cdot y_{n-1} &= 0
+  \end{aligned}
+  \right\}
+$$
+to determine a unique value of $s$.
+(Note that we only need $n-1$ values, and not $n$, because $s=0$ will always be a solution, but we have explicitly assumed that this is not the case in our statement of the scenario, and so it suffices to narrow down the space of possible solutions to consist of *two* elements, since then we know that we can just take the non-zero one.)
+
+So we run this algorithm repeatedly, each time obtaining another value of $y$ that satisfies $s\cdot y = 0$.
+Every time we find some new value of $y$ that is linearly independent of all previous ones, we can discard half the potential candidates for $s$.
+
+(ref:simons-diagramatically-caption) Picture all possible binary strings as dots, but with the string $s$ denoted by a star. Every linearly independent $y_{k+1}$ lets us "zoom in" twice as close towards $s$.
+
+```{r simons-diagramatically,engine='tikz',fig.width=6,fig.cap='(ref:simons-diagramatically-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
+\usetikzlibrary{shapes}
+\begin{tikzpicture}[scale=1.1]
+  \begin{scope}
+    \draw (0,0) circle (1.1cm);
+    \node [draw,primary,star,star points=5,fill=white,inner sep=0.02cm] at (-22.5:0.7) {$s$};
+    \foreach \a in {22.5,67.5,...,292.5}
+      \node [dot,fill=primary] at (\a:0.7) {};
+  \end{scope}
+  \begin{scope}[shift={(3,0)}]
+    \draw (0,0) circle (1.1cm);
+    \draw [dashed,ultra thick,secondary] (0,-1.3) to (0,1.3) node [above] {$y_1$};
+    \node [draw,primary,star,star points=5,fill=white,inner sep=0.02cm] at (-22.5:0.7) {$s$};
+    \foreach \a in {22.5,67.5,292.5}
+      \node [dot,fill=primary] at (\a:0.7) {};
+    \foreach \a in {112.5,157.5,...,247.5}
+      \node [dot,fill=black!40] at (\a:0.7){};
+  \end{scope}
+  \begin{scope}[shift={(6,0)}]
+    \draw (0,0) circle (1.1cm);
+    \draw [dashed,ultra thick,secondary] (0,-1.3) to (0,1.3) node [above] {$y_1$};
+    \draw [dashed,ultra thick,secondary] (-1.3,0) to (1.3,0) node [right] {$y_2$};
+    \node [draw,primary,star,star points=5,fill=white,inner sep=0.02cm] at (-22.5:0.7) {$s$};
+    \foreach \a in {22.5,67.5,...,247.5}
+      \node [dot,fill=black!40] at (\a:0.7) {};
+    \node [dot,fill=primary] at (292.5:0.7) {};
+  \end{scope}
+\end{tikzpicture}
+```
+
+Now, the probability that $(n-1)$-many outputs $y_1,\ldots,y_{n-1}$ are linearly independent is
+$$
+  \left( 1-\frac{1}{2^{n-1}} \right)
+  \left( 1-\frac{1}{2^{n-2}} \right)
+  \ldots
+  \left( 1-\frac{1}{2} \right).
+\tag{$\circledast$}
+$$
+To see this, suppose that we have $k$ linearly independent binary strings $y_1,\ldots,y_k$.
+Then these strings span a subspace with $2^k$ elements, consisting of all binary strings of the form $\bigoplus_{i=1}^k b_i y_i$, where $b_1,\ldots,b_k\in\{0,1\}$.
+Now suppose we obtain some $y_{k+1}$.
+It will be linearly independent from the $y_1,\ldots,y_k$ if and only if it lies *outside* the subspace spanned by the $y_1,\ldots,y_k$, which occurs with probability $1-(2^k)/(2^n)$.
+
+We can bound Equation ($\circledast$) from below:^[Use the inequality $$\begin{aligned}(1-x)(1-y)&= 1 - x - y - xy\\&\geq 1 - (x+y)\end{aligned}$$ which holds for any $0<x,y<1$.]
+the probability of obtaining a linearly independent set $\{y_1,\ldots,y_{n-1}\}$ by running the algorithm $n-1$ times (i.e. not having to discard any values and run again) is
+$$
+  \prod_{k=1}^{n-1}
+  \left(
+    1-\frac{1}{2^k}
+  \right)
+  \geq
+  \left[
+    1 -
+    \left(
+      \frac{1}{2^{n-1}} + \frac{1}{2^{n-2}} + \ldots + \frac{1}{4}
+    \right)
+  \right]
+  \cdot \frac{1}{2}
+  >
+  \frac{1}{4}.
+$$
+
+We conclude that we can determine $s$ with some constant probability of error after repeating the algorithm $\mathcal{O}(n)$ times.
+The exponential separation that this algorithm demonstrates between quantum and classical highlights the vast potential of a quantum computer to speed up function evaluation.
+
+
+
+
+
+## Phase estimation {#phase-estimation}
+
+In Section \@ref(deutschs-algorithm), we took the problem of binary observable measurement and at Deutsch's algorithm, which uses quantum Boolean function evaluation as the controlled-$U$ gate.
+Now we're going to generalise the binary observable measurement problem to other controlled-$U$ gates, trying to deduce the value of an unknown phase that can be a lot more general than simply $0$ or $\pi$. Afterwards, we'll explain how this is the first step towards Shor's algorithm for prime factorisation.
+
+Let's start by rephrasing the binary observable measurement problem in terms of **phase estimation** (or **eigenvalue estimation**).
+Recall the problem: we are handed some phase gate of unknown phase $\varphi$, but we are promised that $\varphi$ is either $0$ or $\pi$; we want to figure out which one it is by running a simple circuit one time.
+But this is entirely equivalent to having access to an oracle that computes a controlled-$U$ gate, along with having an eigenstate $\ket{u}$ with eigenvalue $\pm1$ (i.e. $e^{i\varphi}$ for $\varphi\in\{0,\pi\}$), since this acts as a phase gate of phase $0$ or $\pi$ (depending on whether the eigenvalue is $+1$ or $-1$) on the first register when we plug in $\ket{u}$ to the second register.
+This is just phase kick-back again!
+So let's state the problem this way, and use the solution that we have already described in Section \@ref(deutschs-algorithm) (which is really the circuit that we saw all the way back in Section \@ref(phase-kick-back)).
+
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Binary phase estimation).*
+:::
+We are presented with an oracle that computes a controlled-$U$ gate, along with an eigenstate $\ket{u}$ of $U$ with eigenvalue $e^{i\varphi}$
+We are promised that $\varphi$ is either $0$ or $\pi$.
+
+Our task is to determine, using the fewest queries possible, the value of $\varphi$.
+::::
+
+:::: {.circuit latex=""}
+::: {.circuit-title}
+*(Controlled-$U$ interference).*
+:::
+First register: $1$ qubit. Second register: $1$ qubit.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \gate{H}
+    & \qw \rstick{$\begin{cases}\ket{0}&\mbox{if }\varphi=0\\\ket{1}&\mbox{if }\varphi=\pi\end{cases}$}
+  \\\lstick{$\ket{u}$}
+    & \qw
+    & \gate{U}
+    & \qw
+    & \qw \rstick{$\ket{u}$}
+  \end{quantikz}
+\end{equation*}
+```
+::::
+
+So we see that the eigenvalues being $\pm1$, or, equivalently, $\varphi$ being $0$ or $\pi$, is fundamental to this story --- this is what we want to generalise, so that we can deal with more values^[We won't be able to find the value of completely arbitrary phases exactly, only those of a certain rational form. However, we will talk about the problem of arbitrary phases in Section \@ref(approximate-phase-estimation).] of $\varphi$.
+
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Phase estimation).*
+:::
+We are presented with an oracle that computes a controlled-$U$ gate, along with an eigenstate $\ket{u}$ of $U$ with eigenvalue $e^{i\varphi}$.
+We are promised that $\varphi$ is of the form
+$$
+  \varphi
+  = 2\pi\frac{m}{2^n}
+$$
+for some integers $m$ and $n$.
+
+Our task is to determine, using the fewest queries possible, the value of ${\varphi}/{2\pi}={m}/{2^n}$
+::::
+
+Let's work our way up to finding a circuit to solve this problem, starting with the following simple mathematical observation.
+Since $e^{i\varphi}=e^{i(\varphi+2\pi)}$, we can assume $m$ to be an integer between $0$ and $2^n-1$, which means that it has a binary representation of the form
+$$
+  m
+  = \sum_{i=1}^n m_i 2^{n-i}
+$$
+for $m_i\in\{0,1\}$, and so
+$$
+  \varphi
+  = 2\pi\sum_{i=1}^n m_i 2^{-i}
+$$
+
+This helps us rephrase the problem as "find the values of the $m_i$ for $i=1,\ldots,t$".
+
+Now, rather than tackling the full problem, let's try a much smaller modification of the original binary observable measurement problem: we have the same setup --- a phase gate of unknown phase $\varphi$ --- but this time we are promised that $\varphi$ is either $0$ or $\pi/2$ (instead of $0$ or $\pi$).
+How can we adapt our original solution to find the phase value?
+
+After some thought, you might see the trick: if we can apply the phase gate *twice in a row*, then we reduce the problem to the one we have already solved.
+Indeed, if $\varphi=0$ then repeating it twice is the same as simply applying it once; if $\varphi=\pi/2$ then repeating it twice is the same as simply applying a phase gate of phase $\pi$.
+
+Iterating this idea leads us to the first step of solving the general phase estimation problem, since if $U\ket{u}=e^{i\varphi}\ket{u}$ then $U^{2^{n-1}}\ket{u}=e^{2^{n-1}i\varphi}\ket{u}$.
+But
+$$
+  \begin{aligned}
+    2^{n-1}\varphi
+    &= 2^n\pi\frac{m}{2^n}
+  \\&= \pi m
+  \\&= \pi\sum_{i=1}^n m_i 2^{n-i}
+  \\&= \pi m_n + \pi\underbrace{\sum_{i=1}^{n-1}m_i2^{n-i}}_{\text{all divisible by }2}
+  \end{aligned}
+$$
+and so, by the $2\pi$-periodicity of $e^{ix}$, we see that
+$$
+  U^{2^{n-1}}\ket{u}
+  = e^{m_n\pi i}\ket{u}
+$$
+and now we're happy: $m_n\in\{0,1\}$, so this is an eigenvalue of $U^{2^{n-1}}$ with phase $0$ or $\pi$, reducing us to the original binary observable measurement problem that we have already solved by replacing $U$ with $U^{2^{n-1}}$.
+We have found the $n$-th bit $m_n$!
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \gate{H}
+    & \qw \rstick{$\ket{m_n}$}
+  \\\lstick{$\ket{u}$}
+    & \qw
+    & \gate{U^{2^{n-1}}}
+    & \qw
+    & \qw \rstick{$\ket{u}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+We've dealt with shrinking^[Any interval $[a,b]$ in $\mathbb{R}$ can be turned into any other interval $[c,d]$ by a single shrink (or scale) and a single shift: multiply $a$ and $b$ by $(d-c)/(b-a)$ to get $a'$ and $b'$, and then add $c-a'$ to both $a'$ and $b'$.] the distance between the two possible phases (if we have $0$ and $\pi/k$ for some $k\in\mathbb{N}$ then we simply replace $U$ by $U^k$), so now let's look at the other way of modifying a pair of phases: shifting.
+We have the same setup --- a phase gate of unknown phase $\varphi$ --- but this time we are promised that $\varphi$ is either $-\pi/2$ or $\pi/2$ (instead of $0$ or $\pi$).
+How can we adapt our original solution to find the phase value?
+
+This time we just need to add $\pi/2$ to each of the phases, since then we'd end up back at $0$ and $\pi$.
+This means that we simply need to precede (or follow) the phase gate by the $\pi/4$-phase gate^[Refer to Section \@ref(phase-gates-galore) for an explanation of this confusing terminology.] $S=\left[\begin{smallmatrix}1&0\\0&i\end{smallmatrix}\right]$.
+
+We already know how to find the value of $m_n$, so let's use this to now find the value of $m_{n-1}$.
+If we just try the same trick as before then we run into problems: it's true that $U^{2^{n-2}}\ket{u}=e^{2^{n-2}\varphi}\ket{u}$, but
+$$
+  2^{n-2}\varphi
+  \equiv \pi m_{n-1}+\pi m_n/2 \mod2\pi
+$$
+so we have an annoying phase of $\pi m_n/2$ in the way.
+However, we know that all we have to do now is to compensate for this by adding another phase gate:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \phase{-\pi\frac{m_n}{2}}
+    & \gate{H}
+    & \qw \rstick{$\ket{m_{n-1}}$}
+  \\\lstick{$\ket{u}$}
+    & \qw
+    & \gate{U^{2^{n-2}}}
+    & \qw
+    & \qw
+    & \qw \rstick{$\ket{u}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+Once we've got the value of $m_{n-1}$ from this circuit, then we can simply apply the same idea to find $m_{n-2}$, $m_{n-3}$, and so on, until we have all the $m_i$ for $i=1,\ldots,n$.
+For example, the circuit to determine $m_{n-3}$ (given than we already know $m_n$, $m_{n-1}$, and $m_{n-2}$) is
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick{$\ket{0}$}
+    & \gate{H}
+    & \ctrl{1}
+    & \phase{-\pi\frac{m_n}{8}}
+    & \phase{-\pi\frac{m_{n-1}}{4}}
+    & \phase{-\pi\frac{m_{n-2}}{2}}
+    & \gate{H}
+    & \qw \rstick{$\ket{m_{n-3}}$}
+  \\\lstick{$\ket{u}$}
+    & \qw
+    & \gate{U^{2^{n-3}}}
+    & \qw
+    & \qw
+    & \qw
+    & \qw
+    & \qw \rstick{$\ket{u}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+The entire process for determining the whole string $m_1\ldots m_n$, solving the scenario, can be written in a form that looks exactly how we expect: Hadamard--phase--Hadamard, modulo some subtle changes, which we will explain.
+
+:::: {.circuit latex=""}
+::: {.circuit-title}
+*(Phase estimation).*
+:::
+First register: $n$ qubits. Second register: $1$ qubit.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=4]{$\ket{0}^{\otimes n}$}
+    & \gate{H}
+    & \ctrl{4}
+    & \gate[wires=4,nwires={3}]{FT^\dagger}
+    & \qw \rstick{$\ket{m_1}$}
+  \\[-1em]
+    & \gate{H}
+    & \ctrl{3}
+    & \qw
+    & \qw \rstick{$\ket{m_2}$}
+  \\[-1em]
+    &&\vdotsgate
+  \\[-1em]
+    & \gate{H}
+    & \ctrl{1}
+    & \qw
+    & \qw \rstick{$\ket{m_n}$}
+  \\[2em]
+    \lstick{$\ket{u}$}
+    & \qw
+    & \gate{U^\triangle}
+    & \qw
+    & \qw \rstick{$\ket{u}$}
+  \end{quantikz}
+\end{equation*}
+```
+
+where $U^\triangle$ is defined below, and $FT^\dagger$ is defined in Section \@ref(quantum-fourier-transform).
+::::
+
+In this circuit, we write $U^\triangle$ to mean the unitary that performs function evaluation as
+$$
+  \ket{x}\ket{u}
+  \longmapsto e^{i\varphi x}\ket{x}\ket{u}
+$$
+or, in circuit language, the gate that acts on the $i$-th register as a controlled-$U^{2^{n-i}}$ gate:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\newcommand{\ldotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={xshift=-0.7em}]{\ldots}}
+\newcommand{\ddotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={xshift=-0.7em,yshift=0.3em}]{\ddots}}
+\begin{equation*}
+  \begin{quantikz}
+    & \ctrl{4}
+    & \qw
+  \\
+    & \ctrl{3}
+    & \qw
+  \\
+    & \vdotsgate
+  \\
+    & \ctrl{1}
+    & \qw
+  \\[2em]
+    & \gate{U^\triangle}
+    & \qw
+  \end{quantikz}
+  \qquad=\qquad
+  \begin{quantikz}
+    & \ctrl{4}
+    & \qw
+    & \qw
+    & \ldotsgate
+    & \qw
+    & \qw
+  \\
+    & \qw
+    & \ctrl{3}
+    & \qw
+    & \ldotsgate
+    & \qw
+    & \qw
+  \\
+    & \vdotsgate
+    & \vdotsgate
+    &
+    & \ddotsgate
+    &
+    &
+  \\
+    & \qw
+    & \qw
+    & \qw
+    & \ldotsgate
+    & \ctrl{1}
+    & \qw
+  \\[2em]
+    & \gate{U^{2^{n-1}}}
+    & \gate{U^{2^{n-2}}}
+    & \qw
+    & \ldotsgate
+    & \gate{U}
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+It is important to note, however, that we are sweeping something under the rug here.
+If we can treat $U^\triangle$ as an oracle itself, then this does indeed give an efficient solution, but if all we have access to is $U$ then things are definitely not efficient: we are calling it $2^{n-1}+2^{n-2}+\ldots+2^0=2^n-1$ many times, which is *exponentially bad*!
+
+The only remaining part of the circuit to discuss is this mysterious $FT^\dagger$ gate, but this deserves a section of its own.
+
+
+
+
+
+## Quantum Fourier transform {#quantum-fourier-transform}
+
+<div class="video" title="Hadamard and quantum Fourier transforms" data-videoid="qF9Wpgaqqww"></div>
+
+In Section \@ref(phase-estimation) we constructed a circuit to perform phase estimation of an unknown rational phase $\varphi=2\pi m/2^n$.
+The circuit, as per usual, was split into three parts: first some Hadamard gates, then a modified controlled-$U$ gate, and finally some undefined gate $FT^\dagger$.
+Following our usual credo, this last gate should look something like a Hadamard, and we shall see that it is indeed related.
+This gate turns out to be pretty foundational, and turns up all over the place, so it's worth taking some time to talk about it in more detail.
+
+If we look back at what we needed this gate to do, we see that it has to contain these compensating phase shifts that depend on which bit $m_i$ of $m$ we are trying to calculate, e.g. $-\pi(m_n/8+m_{n-1}/4+m_{n-2}/2)$ in the case of $m_3$.
+We draw this as a circuit in Figure \@ref(fig:example-iqft-with-measurement).
+
+(ref:example-iqft-with-measurement-caption) The gate $FT^\dagger$ followed by measurement, acting on four qubits. The double vertical lines linking gates indicate that the result of the classical measurement is used to control the application (for example, we want the first phase gate on each register to be multiplied by $m_n$).
+
+```{r example-iqft-with-measurement,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:example-iqft-with-measurement-caption)'}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\newcommand{\ldotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={xshift=-0.7em}]{\ldots}}
+\newcommand{\ddotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={xshift=-0.7em,yshift=0.3em}]{\ddots}}
+\begin{equation*}
+  \begin{quantikz}
+    & \gate{H}
+    & \meter{\ket{m_n}} \vcw{3}
+  \\
+    & \qw
+    & \gate{P_{\pi/2}^\dagger}
+    & \gate{H}
+    & \meter{\ket{m_{n-1}}} \vcw{2}
+  \\
+    & \qw
+    & \gate{P_{\pi/4}^\dagger}
+    & \qw
+    & \gate{P_{\pi/2}^\dagger}
+    & \gate{H}
+    & \meter{\ket{m_{n-2}}} \vcw{1}
+  \\
+    & \qw
+    & \gate{P_{\pi/8}^\dagger}
+    & \qw
+    & \gate{P_{\pi/4}^\dagger}
+    & \qw
+    & \gate{P_{\pi/2}^\dagger}
+    & \gate{H}
+    & \meter{\ket{m_{n-3}}}
+  \end{quantikz}
+\end{equation*}
+```
+
+Hopefully it's clear how to generalise this definition of the gate to an arbitrary number of qubits, but to give a formal definition it's easier (and also useful) to give a symbolic definition.^[Here we switch from thinking of binary strings of length $n$ to thinking of integers from $0$ to $2^n-1$, as described in Section \@ref(more-than-two-qubits-and-binary). It's good to be comfortable switching between the two!]
+
+::: {.idea latex=""}
+The **quantum Fourier transform** (**QFT**) acting on $n$ qubits is defined by the unitary
+$$
+  U_{\mathrm{FT}}
+  = \frac{1}{\sqrt{N}} \sum_{x,y=0}^{N-1} e^{2\pi ixy/N}\ket{y}\bra{x}
+$$
+where $N=2^n$.
+:::
+
+Note that this is the definition for the gate that would be denoted by $FT$, whereas what we use in the phase estimation circuit is $FT^\dagger$.
+In other words, we are really using the ***inverse* quantum Fourier transform**.
+
+Checking that this matrix is actually unitary is slightly involved, so we'll only sketch how it's done here.
+We can see that
+$$
+  U_{\mathrm{FT}}U_{\mathrm{FT}}^\dagger
+  = \frac{1}{N} \sum_{x,y,z=0}^{N-1} e^{2\pi ix(y-z)/N}\ket{y}\bra{z}
+$$
+since $\ket{x}\ket{y}=\delta_{xy}$, and then we can separately consider the cases $y=z$ and $y\neq z$;
+in the latter case, we'll have to sum a geometric progression, which gives
+$$
+  \begin{aligned}
+    \frac{1}{N} \sum_{x=0}^{N-1} e^{2\pi ix(y-z)/N}
+    &= \frac{1-e^{2\pi i(y-z)}}{1-e^{2\pi i(y-z)/N}}
+  \\&= 0.
+  \end{aligned}
+$$
+
+So in what way does this relate to the Hadamard gate that we already know and love?
+Looking at the $n=1$ case of the definition of $U_{\mathrm{FT}}$ we get
+$$
+  U_{\mathrm{FT}}
+  = \frac{1}{\sqrt{2}}
+  \begin{bmatrix}
+    1 & 1
+  \\1 & -1
+  \end{bmatrix}
+$$
+which is exactly the usual Hadamard gate $H$ on 1 qubit.
+However, if we now look at $n=2$ and compare $U_{\mathrm{FT}}$ with $H\otimes H$ (which we calculated in Exercise \@ref(hadamard-transforms-in-components)), then we see that they differ:
+$$
+  \begin{aligned}
+    U_{\mathrm{FT}}
+    &= \frac{1}{2}
+    \begin{bmatrix}
+      1 & 1 & 1 & 1
+    \\1 & i & -1 & -i
+    \\1 & -1 & 1 & -1
+    \\1 & -i & -1 & i
+    \end{bmatrix}
+  \\H\otimes H
+    &= \frac{1}{2}
+    \begin{bmatrix}
+      1 & 1 & 1 & 1
+    \\1 & -1 & 1 & -1
+    \\1 & 1 & -1 & -1
+    \\1 & -1 & -1 & 1
+    \end{bmatrix}
+  \end{aligned}
+$$
+In fact, we can give a general expression for $U_{\mathrm{FT}}$ on $n$ qubits: it is the $(2^n\times 2^n)$ matrix
+$$
+  U_{\mathrm{FT}}
+  = \frac{1}{\sqrt{2^n}}
+  \begin{bmatrix}
+    1 & 1 & 1 & 1 & \ldots & 1
+  \\1 & \omega & \omega^2 & \omega^3 & \ldots & \omega^{2^n-1}
+  \\1 & \omega^2 & \omega^4 & \omega^6 & \ldots & \omega^{2(2^n-1)}
+  \\1 & \omega^3 & \omega^6 & \omega^9 & \ldots & \omega^{3(2^n-1)}
+  \\\vdots & \vdots & \vdots & \ddots & \vdots
+  \\1 & \omega^{2^n-1} & \omega^{2(2^n-1)} & \omega^{3(2^n-1)} & \ldots & \omega^{(2^n-1)(2^n-1)}
+  \end{bmatrix}
+$$
+where $\omega$ is a primitive $2^n$-root of unity (that is, $\omega^{2^n}=1$, but $\omega^m\neq1$ for any $m<2^n$).
+
+It turns out the quantum Fourier transform and the Hadamard are both examples of a more general construction known as the [**Fourier transform on finite groups**](https://en.wikipedia.org/wiki/Fourier_transform_on_finite_groups): applied to the cyclic group $\mathbb{Z}/2^n\mathbb{Z}$ we get the QFT; applied to the $n$-fold product $(\mathbb{Z}/2\mathbb{Z})^n$ we get the Hadamard.
+However, we won't need this level of formalism going forward, we just need to remember that we have yet one more useful gate at our disposal!
+
+:::: {.technical title="Fourier theory and group representations" latex="{Fourier theory and group representations}"}
+::: {.todo latex=""}
+<!-- TO-DO: .technical Fourier theory in general; DFT; FT on finite groups; use for hidden subgroup problems -->
+:::
+::::
+
+The way that we wrote the QFT in Figure \@ref(fig:example-iqft-with-measurement) is not the conventional way in which it normally appears, since we're assuming that we measure the result at the end.
+In general, we might not want to do this, and instead replace the dependence of the corrective phase gates on the classical measurements by controlled qubits, as shown in Figure \@ref(fig:example-iqft-without-measurement).
+We sometimes refer to this as the **coherent** circuit for the inverse quantum Fourier transform.
+
+One other note about conventions is the difference in ordering of bits between the circuit representation above and the unitary operator definition given before: in the circuit, the least significant bit appears in the *first* register as opposed to the last, with increasing significance of bits as we go *up* registers (i.e. down the page).
+We could of course introduce a lot of $\texttt{SWAP}$ gates to make these conventions agree, but this is typically unnecessary if we instead just keep track of which qubits are which and remember what we want to do with each one next.
+
+(ref:example-iqft-without-measurement-caption) The gate $FT^\dagger$ *without* measurement, acting on four qubits. This no longer depends on any classical measurements, but instead uses controlled-phase gates.
+
+```{r example-iqft-without-measurement,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:example-iqft-without-measurement-caption)'}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\newcommand{\ldotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={xshift=-0.7em}]{\ldots}}
+\newcommand{\ddotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={xshift=-0.7em,yshift=0.3em}]{\ddots}}
+\begin{equation*}
+  \begin{quantikz}[column sep=tiny]
+    & \gate{H}
+    & \gate{P_{\pi/2}^\dagger}
+    & \gate{P_{\pi/4}^\dagger}
+    & \gate{P_{\pi/8}^\dagger}
+    & \qw
+    & \qw
+    & \qw
+    & \qw
+    & \qw
+    & \qw
+    & \qw
+  \\
+    & \qw
+    & \ctrl{-1}
+    & \qw
+    & \qw
+    & \gate{H}
+    & \gate{P_{\pi/2}^\dagger}
+    & \gate{P_{\pi/4}^\dagger}
+    & \qw
+    & \qw
+    & \qw
+    & \qw
+  \\
+    & \qw
+    & \qw
+    & \ctrl{-2}
+    & \qw
+    & \qw
+    & \ctrl{-1}
+    & \qw
+    & \gate{H}
+    & \gate{P_{\pi/2}^\dagger}
+    & \qw
+    & \qw
+  \\
+    & \qw
+    & \qw
+    & \qw
+    & \ctrl{-3}
+    & \qw
+    & \qw
+    & \ctrl{-2}
+    & \qw
+    & \ctrl{-1}
+    & \gate{H}
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+
+
+
+
+
+## Hidden-order determination {#hidden-order-determination}
+
+In the same way that Deutsch's algorithm (\@ref(deutschs-algorithm)) dealt with binary observable measurement for a unitary implementing some function evaluation, the hidden-order determination algorithm that we are now going to study deals with phase estimation for a unitary implementing some function evaluation.^[Deutsch's algorithm is to binary observable measurement as hidden-order determination is to phase estimation.]
+This turns out to be an important step along the path towards Shor's algorithm
+
+:::: {.scenario latex=""}
+::: {.scenario-title}
+*(Hidden-order determination).*
+:::
+We are presented with an oracle that computes the function on $n$ qubits
+$$
+  U_a\ket{z}
+  = \ket{az\mod{N}}
+$$
+for some fixed (known) integer $N=2^n$, along with a fixed (known) integer $a$ that is coprime to $N$.
+
+Our task is to determine, using the fewest queries possible, the order $r$ of $a$ modulo $N$, i.e. the smallest positive integer $r$ such that $a^r\equiv1\mod{N}$.
+::::
+
+Let's be clear and spell out what notational shortcuts we're making here.^[For example, if $n=a=3$, then $U_3$ applied to $\ket{4}=\ket{1}\ket{0}\ket{0}$ is $\ket{12\mod{8}}=\ket{4}=\ket{1}\ket{0}\ket{0}$, and applied to $\ket{5}=\ket{1}\ket{0}\ket{1}$ is $\ket{15\mod{8}}=\ket{7}=\ket{1}\ket{1}\ket{1}$.]
+Every integer $0\leq z<2^n$ corresponds to a basis state $\ket{z}$ of the space of $n$ qubits, given by writing $z$ in binary form.
+So when we write $\ket{az\mod{N}}$, this means that we take the product of the integers $a$ and $z$, take this integer modulo $N$, and then consider the basis state given by writing this result in binary form.
+
+The hypothesis that $N$ is a power of 2 is actually unnecessary, as we will later explain, but we assume it for now since for the sake of ease.
+
+First of all, we can write down some eigenstates of $U_a$ parametrised by an integer $s\in\mathbb{Z}$
+$$
+  \ket{u_s}
+  = \frac{1}{\sqrt{r}} \sum_{k=0}^{r-1} e^{-2\pi i({sk}/{r})} \ket{a^k\mod{N}}.
+$$
+Since $2\pi i(r+1)k/r\equiv2\pi i(k/r)\mod{2\pi i}$, we see that this gives us $r$ eigenstates, parametrised by $s=0,\ldots,r-1$
+Now let's show that these are indeed eigenstates.
+By the definition of $U_a$,
+$$
+  \begin{aligned}
+    U_a \ket{u_s}
+    &= \frac{1}{\sqrt{r}}\sum_{k=0}^{r-1} e^{-2\pi i({sk}/{r})} \ket{y^{k+1}\mod{N}}
+  \\&= \frac{1}{\sqrt{r}}\sum_{j=1}^{r} e^{2\pi i({s}/{r})}e^{-2\pi i({sj}/{r})} \ket{y^{j}\mod{N}}
+  \end{aligned}
+$$
+where we simply changed the index of the sum to $j=k+1$.
+But $r$ is the order of $a$ modulo $N$, so we the $j=r$ term can be written as $j=0$, giving
+$$
+  U_a \ket{u_s}
+  = e^{2\pi i({s}/{r})}\ket{u_s}
+$$
+which shows that $\ket{u_s}$ is an eigenstate with eigenvalue $e^{2\pi i(s/r)}$.
+
+Of course, we cannot actually prepare any of these eigenstates $\ket{u_s}$ because they require knowledge of the natural number $r$ that we are trying to find!
+But at the very least this now looks a bit like a problem that we have seen before: if we *could* prepare some particular $\ket{u_s}$ then the phase estimation algorithm (from Section \@ref(phase-estimation)) would allow us to calculate $s/r$, and thus $r$.
+So let's try one of our always-useful tricks: superposition.
+
+Although we cannot prepare any $\ket{u_s}$ individually, note that^[Recall that, if $\omega\neq1$ is an $n$-th root of unity, then $\sum_{i=0}^{n-1}\omega^i=0$.]
+$$
+  \begin{aligned}
+    \frac{1}{\sqrt{r}} \sum_{s=0}^{r-1} \ket{u_s}
+    &= \frac{1}{r} \sum_{s=0}^{r-1} \sum_{k=0}^{r-1} e^{-2\pi i({sk}/{r})} \ket{a^k\mod{N}}
+  \\&= \frac{1}{r} \sum_{k=0}^{r-1} \left(\sum_{s=0}^{r-1} e^{-2\pi i({sk}/{r})}\right) \ket{a^k\mod{N}}
+  \\&= \underbrace{\frac{1}{r} \sum_{s=0}^{r-1} \ket{1}}_{k=0} + \frac{1}{r} \sum_{k=1}^{r-1} \left(\sum_{s=0}^{r-1} e^{-2\pi i({sk}/{r})}\right) \ket{a^k\mod{N}}
+  \\&= \ket{1}
+  \end{aligned}
+$$
+and so we should get something interesting by just plugging in $\ket{1}$.
+
+The actual circuit^[Named for [Peter Shor](https://en.wikipedia.org/wiki/Peter_Shor), who proposed it as part of his factoring algorithm (see Section \@ref(shors-algorithm)) in 1994.] is practically identical to the phase estimation circuit of Section \@ref(phase-estimation), but where $U$ is replaced by $U_a$, and $\ket{u}$ is replaced by $\ket{1}$.
+
+:::: {.circuit latex=""}
+::: {.circuit-title}
+*(Shor's order-finding algorithm).*
+:::
+First register: $2n+1$ qubits. Second register: $n$ qubits.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\newcommand{\vdotsgate}{\gate[nwires={1},style={fill=white,draw=white},label style={yshift=0.3em}]{\vdots}}
+\begin{equation*}
+  \begin{quantikz}
+    \lstick[wires=4]{$\ket{0}^{\otimes 2n+1}$}
+    & \gate{H}
+    & \ctrl{4}
+    & \gate[wires=4,nwires={3}]{FT^\dagger}
+    & \meter{}
+  \\[-1em]
+    & \gate{H}
+    & \ctrl{3}
+    & \qw
+    & \meter{}
+  \\[-1em]
+    &&\vdotsgate
+  \\[-1em]
+    & \gate{H}
+    & \ctrl{1}
+    & \qw
+    & \meter{}
+  \\[2em]
+    \lstick{$\ket{1}^{\otimes n}$}
+    & \qwbundle{n}
+    & \gate{U_{a}^\triangle}
+    & \qw
+    & \qw
+  \end{quantikz}
+\end{equation*}
+```
+::::
+
+As always, let's step through the circuit.
+Immediately after the first Hadamard we are in the state
+$$
+  \left(\frac{1}{\sqrt{N}}\sum_{x=0}^{N-1}\ket{x}\right)\ket{1}.
+$$
+Next, just after the function evaluation $U_a$, we are in the state
+$$
+  \frac{1}{\sqrt{r}} \sum_{s=0}^{r-1} \ket{\Phi_s}\ket{u_s}
+$$
+where
+$$
+  \ket{\Phi_s}
+  = \frac{1}{\sqrt{N}} \sum_{n=0}^{N-1} e^{i\phi_s x}\ket{x}
+$$
+and $\phi_s=2\pi(s/r)$, so that $e^{i\phi_s x}$ is the eigenvalue of $\ket{u_s}$ for $U_a$.
+
+To calculate the effect of the inverse quantum Fourier transform, we will make the same pedagogical shortcut as we did when studying Simon's algorithm^[There is a deep link between this algorithm and Simon's algorithm. As we have mentioned, hidden-order determination forms a key part of Shor's algorithm; Simon's algorithm and Shor's algorithm (and Deutsch's algorithm, in fact) are all closely related: they are all examples of [hidden subgroup problems](https://en.wikipedia.org/wiki/Hidden_subgroup_problem).] (Section \@ref(simons-algorithm)) and pretend that we make a measurement in the basis $\ket{u_s}$ in the auxiliary system *before* applying the inverse QFT.
+We will measure one of the $r$ possible values of $s$, each with equal probability $1/r$, and doing so will leave the main register in the corresponding state $\ket{\Phi_s}$.
+But this is exactly the picture of what happened after applying $U^\triangle$ in the phase estimation circuit!
+This means that we already know what the inverse QFT will do: it will give us the value of $2^{2n+1}(s/r)$.
+Since this will happen irrelevant of which value of $s$ we measure, we need not actually perform the measurement.^[It is very fortunate that we do not need to perform this measurement, since in general we will not know how to implement it: recall that to construct $\ket{u_s}$ we would need to already know the value of the order $r$ that we are trying to find.]
+
+So running through the entire circuit and then measuring the main register will give us the value of $2^{2n+1}(s/r)$, which is *almost* enough to recover the value of $r$, but not quite: since we didn't measure the auxiliary register, we don't know which value of $s$ we obtained!
+However, now a purely classical (and efficient) algorithm comes to our rescue: the **continued fractions algorithm**.
+This will give us the values of $s$ and $r$ provided that a certain inequality is satisfied, which is always the case if our main register has $2n+1$ qubits.^[The explicit inequality in the continued fractions algorithm actually tells us that $2n+1$ is the smallest possible size for the main register to ensure exactness with complete certainty.]
+We will not delve into these details of the classical post-processing of the measurements since they are no longer quantum; consider this yet another chance for the interested reader to either work out the details themselves or to find the answers elsewhere through some research of their own.
+
+Finally, the assumption at the very start that $N$ be of the form $2^n$ is not actually necessary (just as the assumption that the phase in the phase estimation problem be of the form $2\pi m/2^n$ is not actually necessary).
+Suppose that $N$ isn't of this form, and let $n$ be the smallest integer such that $N<2^n$.
+Then we want to extend $U_a$ to act on $n$ qubits, and we need to be careful how we do so.
+For example, we cannot simply take the same function $U_a\ket{z}=\ket{az\mod{N}}$, since then $U_a\ket{0}=\ket{0}=U_a\ket{N}$ but $\ket{0}$ and $\ket{N}$ are orthogonal (remember, we always assume our bases to be orthonormal!), so this $U_a$ cannot be unitary because it sends orthogonal states to non-orthogonal states.
+The correct modification to make for our purposes is to define
+$$
+  U_a\ket{z}
+  = \begin{cases}
+    \ket{az\mod{N}}
+    & 0\leq z<N
+  \\\ket{z}
+    & R\leq z<2^n
+  \end{cases}
+$$
+which is indeed unitary over the whole space of $n$ qubits.
+
+
+
+
+
+
+## Shor's algorithm {#shors-algorithm}
+
+<div class="video" title="Shor's algorithm" data-videoid="TioipZX7d5U"></div>
+
+Given its importance in the field of (post-)quantum cryptography (and thus in the real world), as well as its fame, it would be remiss of us to not dedicate at least one section in this book to Shor's algorithm.
+However, as you will see, the actual quantum part of the algorithm is exactly the order-finding circuit from Section \@ref(hidden-order-determination); the rest is an application of classical number theory to reduce the problem of prime factorisation to the problem of hidden-order determination.
+Because of this, we will not spend too much time on the details --- this is not a book on classical number theory! --- but we hope that this section at least highlights the important fact which is that *other areas of mathematics and physics have much to offer for the aspiring quantum information scientist*.
+Of course, it is infeasible to try to learn *everything* in mathematics, but this is also exactly the point: it's good to be aware that there is a lot of it out there, and that we all have a lot to learn from each others' specialities.
+
+The purpose of Shor's algorithm^[There are a few algorithms known by this name, but they are all somewhat related.] is to find the prime factorisation of a composite integer.
+This is a classically difficult problem, and hence forms the basis of some very well-known public-key cryptography schemes, such as RSA (see Exercise \@ref(rsa)), but Shor's algorithm offers a distinct speed-up.
+More precisely, to factor an integer $R$ classically with the general number field sieve method is a **sub-exponential** problem (i.e. somewhere between polynomial in $R$ and exponential in $R$), whereas Shor's algorithm is **polylogarithmic** (i.e. polynomial in $\log R$).
+This means that Shor's algorithm witnesses integer factorisation as a bounded-error quantum polynomial time problem: it lives in $\texttt{BQP}$ (recall Section \@ref(computational-complexity)).
+
+Since any integer has a unique (up to ordering) prime factorisation^[This fact so is important that it earns the name of the [**fundamental theorem of arithmetic**](https://en.wikipedia.org/wiki/Fundamental_theorem_of_arithmetic)] consisting of finitely many prime numbers, it suffices to find a single prime factor, since then we can simply divide our original number by this and run the algorithm over and over until it terminates, recording the prime factors that we find along the way.
+But still, turning the problem of "find a prime factor" into a problem that we have already solved (namely hidden-order determination) requires some work, so let's get started.
+
+Recall that the **greatest common divisor** $\gcd(m,n)$ (or **highest common factor** $\hcf(m,n)$) of a pair of integers $(m,n)$ is the largest integer that divides both of them.
+This can be efficiently computed by a (very old) classical algorithm known as [**Euclid's algorithm**](https://en.wikipedia.org/wiki/Euclidean_algorithm), so we can make use of it in freely.
+In fact, let us now list the things that we can do efficiently with classical algorithms:
+
+- compute the $\hcf$ of two integers (Euclid's algorithm)
+- determine if an integer is prime (the [**Miller--Rabin primality test**](https://en.wikipedia.org/wiki/Miller–Rabin_primality_test))
+- determine if an integer is even (check if the last digit is a $0$ in its binary expansion)
+- determine if an integer $R$ can be written as $R=a^b$ for some integers $a\geq1$ and $b\geq2$ (Exercise \@ref(checking-for-power-form)).
+
+One more small note of terminology: throughout this section, we say **factor** to mean non-trivial factor, i.e. the factors of $R$ are the natural numbers that divide $R$ *apart from* $1$ and $R$.
+
+::: {.idea latex=""}
+**Lemma.**
+Let $x$ and $R$ be natural numbers such that
+
+- $R$ is *not* prime;
+- $1<x<R-1$;
+- $x^2\equiv1\mod{R}$.
+
+Then both $\hcf(x-1,R)$ and $\hcf(x+1,R)$ are factors of $R$.
+:::
+
+Note that $1<x<R-1$ is equivalent to saying that $x\not\equiv\pm1\mod{R}$.
+In other words, *we assume $x$ to be a non-trivial square root of $1$ modulo $R$*.
+
+::: {.proof}
+The hypothesis tells us that
+$$
+  x^2-1 = kR
+$$
+for some integer $k$, and so factoring $x^2-1$ tells us that
+$$
+  R \divides (x+1)(x-1)
+$$
+(where we write $a\divides b$ to mean that $a$ divides $b$).
+
+Now, since $x<R-1$, we know that $x+1<R$ and so $R$ cannot divide $x+1$ because it is simply too big.
+This means, in particular, that $\hcf(x+1,R)\neq R$.
+But now note that if $\hcf(x-1,R)=1$ then, since $R\divides(x+1)(x-1)$, it must be the case that $R\divides x+1$, and we have just said that this cannot happen.
+The same argument applies if we swap $x+1$ and $x-1$, so we have proven that both $\hcf(x-1,R)$ and $\hcf(x+1,R)$ are factors of $R$.
+:::
+
+The essence of the above proof is much simpler than the length might suggest: we are sort of just saying that $R$ cannot divide either $x+1$ or $x-1$ alone, and so must be "split up" into two parts, with one inside $x+1$ and the other inside $x-1$.
+
+Or we could appeal directly to the fundamental theorem of arithmetic.
+Write $R=p_1^{a_1}\ldots p_n^{a_n}$, and now consider each prime factor individually.
+Since $R\divides(x+1)(x-1)$, we know that $p_1\divides(x+1)(x-1)$.
+A very useful fact^[This is the fact that prime numbers are [**prime elements**](https://en.wikipedia.org/wiki/Prime_element) in the ring of integers. The usual definition of "prime number" that we are used to actually says that they are [**irreducible elements**](https://en.wikipedia.org/wiki/Irreducible_element). The link between these two concepts requires some knowledge of ring theory.] about prime numbers is that, if $p$ divides a product $ab$, then either $p$ divides $a$ or $p$ divides $b$.
+So here we see that $p_1$ must divide either $x+1$ or $x-1$.
+We can continue like this for all the prime factors $p_i$ of $R$, but note that it cannot be the case that *all* the $p_i$ divide *only* $x+1$ and not $x-1$, since this would then force $p_1^{a_1}\ldots p_n^{a_n}=R$ to divide $x+1$, which we have already said cannot happen (and similarly for all the $p_i$ dividing only $x-1$).
+This means that both $\hcf(x-1,R)$ and $\hcf(x+1,R)$ are non-trivial.
+
+Now let's state another useful lemma (which we will not prove).
+
+::: {.idea latex=""}
+**Lemma.**
+Let $R$ be an odd natural number with $m\geq2$ distinct prime factors.
+If $y$ is chosen uniformly at random from the set of natural numbers that are coprime to and smaller than $R$, then the probability that the order $r$ of $y$ modulo $R$ is even *and* satisfies
+$$
+  y^{r/2}\not\equiv-1\mod{R}
+$$
+is at least
+$$
+  1-\frac{1}{2^m-1}.
+$$
+:::
+
+How is this lemma useful to us?
+Well, it says that if we randomly pick some $1<y<R$ satisfying the hypotheses, then with non-zero probability (that increases as $R$ has more and more prime factors) it will be such that we can apply the previous lemma to $x=y^{r/2}$, *almost*.
+The one problem is that $x>y$, and so it might also be the case that $x>R$, and the previous lemma needed the assumption that $x<R-1$.
+But we can fix this!
+
+::: {.idea latex=""}
+**Lemma.**
+Let $y$ and $R$ be natural numbers such that
+
+- $R$ is *not* prime;
+- the order $r$ of $y$ modulo $R$ is even;
+- $y^{r/2}>R$;
+
+Then *either* $x+1$ is divisible by $R$, *or* both $\hcf(y^{r/2}-1,R)$ and $\hcf(y^{r/2}+1,R)$ are factors of $R$.
+:::
+
+::: {.proof}
+First of all, recall that the order $r$ is the smallest natural number such that
+$$
+  y^r\equiv1\mod{R}.
+$$
+Since $r$ is even, $y^{r/2}$ is well defined and we can factor
+$$
+  kR=y^r-1=(y^{r/2}+1)(y^{r/2}-1)
+$$
+as before.
+Now we have to do something different, because it is no longer necessarily the case that $y^{r/2}+1$ is smaller than $R$.
+However, we can still show that $R$ does not divide the $y^{r/2}-1$ term, since if it did then we would have that
+$$
+  y^{r/2}\equiv1\mod{R}
+$$
+which contradicts the fact that $r$ is the *smallest* natural number such that this holds.
+So either $R$ divides the $y^{r/2}+1$ term, or it doesn't; in the latter case, we can then apply exactly the same argument as before to show that both $\hcf(y^{r/2}-1,R)$ and $\hcf(y^{r/2}+1,R)$ are factors of $R$.
+:::
+
+The fact that this lemma requires $R$ to be odd and also have at least two distinct prime factors means that we can only apply it if we have checked that both of these things are true.
+In other words, we need to know that $R$ is not even, and also that $R$ is not of the form $p^b$ for some prime $p$.
+But as we've already mentioned, both of these properties can be checked by an efficient algorithm by a classical computer.
+
+Now we're ready to state Shor's algorithm.
+
+:::{.idea latex=""}
+**Shor's algorithm.**
+*(Factoring the natural number $R$.)*
+
+1. Check that $R$ is not prime.
+
+    *If so, stop and return the factor $R$.*
+
+2. Check if $R$ is even.
+  
+    *If so, stop and return the factor $2$.*
+
+3. Check if $R=a^b$ for some integers $a\geq1$ and $b\geq2$.
+
+    *If so, stop and return the factor $a$.*
+
+4. Uniformly at random pick an integer $1<y<R$ and evaluate $\hcf(y,R)$; check if $\hcf(y,R)>1$.
+
+    *If so, stop and return the factor $\hcf(y,R)$.*
+
+5. Compute the order $r$ of $y$ modulo $R$ via hidden-order determination (from Section \@ref(hidden-order-determination)).
+
+6. Check if $r$ is odd.
+
+    *If so, go back to step 4.*
+
+7. Check if $y^{r/2}\equiv-1\mod{R}$.
+
+    *If so, go back to step 4.*
+
+8. Compute $\hcf(y^{r/2}-1,R)$ and $\hcf(y^{r/2}+1,R)$.
+
+    *Stop and return these as factors.*
+:::
+
+Picking it apart, we see that steps 1 to 3 are simply checking easy cases; steps 4 to 7 are checking that the necessary hypotheses are satisfied in order for step 8 to calculate factors of $R$.
+The only place that we use anything quantum in in step 5, where we have to do hidden-order determination.^[Even better, thanks to [a result by Ekerå](https://link.springer.com/article/10.1007/s11128-021-03069-1), one can be rather sure that this quantum subroutine will only need to be run a single time.]
+The fact that steps 6 and 7 won't cause us to get stuck in an endless loop is justified by the fact that they will both be passed over with probability $1-1/(2^{m-1})$, as we mentioned above.
+
+
+
+
+
+## *Remarks and exercises* {#remarks-and-exercises-algorithms}
+
+
+### RSA {#rsa}
+
+<div class="video" title="RSA" data-videoid="1rtagYeUvFo"></div>
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+### More complexity classes
+
+<div class="video" title="The power of quantum" data-videoid="3Z29RJ40bVw"></div>
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+### Implementing reflections
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+### Grover's optimality
+
+::: {.todo latex=""}
+<!-- TO-DO: optimality of Grover -->
+:::
+
+
+### Writing an integer as a power {#checking-for-power-form}
+
+1. Show that $R=21$ cannot be written in the form $a^b$ for integers $a\geq1$ and $b\geq2$.
+2. Generalise this to a method that could work in $\mathcal{O}(L^3)$ for any value of $R$ that is $L$ bits long.^[*Hint: since $R$ is $L$ bits long, $R<2^L$, and so $b<L$.*]
