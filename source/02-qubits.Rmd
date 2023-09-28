@@ -291,7 +291,7 @@ It is typically constructed as a sequence of three elementary operations:
 2. a **phase-shift gate**
 3. the **Hadamard gate** again.
 
-We represent it graphically as
+We represent it graphically as^[We sometimes write the phase gate as $P_\varphi$ instead, if it makes the circuit easier to read.]
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4}
 \begin{quantikz}
@@ -585,7 +585,7 @@ $$
   \end{bmatrix}
 $$
 The first version is more common in the quantum information science community, but the second one is sometimes more convenient to use, as it has determinant $1$, and hence belongs to a group called $\mathrm{SU}(2)$.
-We will occasionally switch to the $\mathrm{SU}(2)$ version of phase gates, and this is where the $\frac{\pi}{4}$-phase and $\frac{\pi}{8}$-phase gates get their names, since their $\mathrm{SU}(2)$ versions have $e^{\mp i\pi/4}$ and $e^{\mp i\pi/8}$ (respectively) on the diagonal.
+We will occasionally switch to the $\mathrm{SU}(2)$ version of phase gates, and this is where the $\frac{\pi}{4}$-phase and $\frac{\pi}{8}$-phase gates get their names, since their $\mathrm{SU}(2)$ versions have $e^{\mp i\pi/4}$ and $e^{\mp i\pi/8}$ (respectively) on the diagonal, even though they are actually of phase $\pi/2$ and $\pi/4$ (respectively).
 
 ::: {.technical title="The groups $\mathrm{SU}(2)$ and $\mathrm{SO}(3)$" latex="{The groups $\mathrm{SU}(2)$ and $\mathrm{SO}(3)$}"}
 We will soon explain what this group $\mathrm{SU}(2)$ is and how it relates to another important group called $\mathrm{SO}(3)$, but it turns up in many places throughout quantum physics, as well as mathematics in general.
@@ -949,6 +949,41 @@ It turns out, however, that we can tolerate minor imperfections; the final resul
 
 ## *Remarks and exercises* {#remarks-and-exercises-qubits}
 
+### One simple circuit
+
+Let $B$ be the matrix
+$$
+  B
+  = \frac{1}{\sqrt{2}}
+  \begin{bmatrix}
+    1 & i
+  \\i & 1
+  \end{bmatrix}.
+$$
+
+1. Show that $B$ is unitary.
+2. Find the overall unitary corresponding to the circuit^[If you get the answer $\begin{bmatrix}0&1\\i&0\end{bmatrix}$ then you performed the matrix multiplication in the wrong order!]
+
+    ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+    \begin{quantikz}
+      \lstick{$\ket{0}$} \qw
+      & \gate{H}
+      & \phase{\pi/2}
+      & \gate{B}
+      & \qw \rstick{$\ket{1}$}
+    \end{quantikz}
+    ```
+
+
+### Change of basis
+
+Let
+$$
+  \ket{\psi}
+  = \ket{!!!!}
+$$
+
+
 ### Unknown phase {#unknown-phase}
 
 Consider the usual quantum interference circuit:
@@ -970,6 +1005,11 @@ What can you say about $\varphi$?
 Now you are promised that $\varphi$ is either $0$ or $\pi$.
 You can run the circuit *only once* to find out which of the two phases was chosen.
 Is it possible to then always correctly guess whether $\varphi$ was $0$ or $\pi$?
+
+::: {.idea latex=""}
+This problem forms the basis for a lot of material later on: most quantum algorithms build upon it.
+We will return to it again and again in Section \@ref(quantum-algorithms).
+:::
 
 
 ### One of the many cross-product identities {#cross-product-identity}
