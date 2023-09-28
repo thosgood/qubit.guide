@@ -18,7 +18,7 @@ This is intrinsically linked to **Bell's theorem**, which proves the technical s
 
 
 
-## Hidden variables
+## Hidden variables {#hidden-variables}
 
 The story of "hidden variables" dates back to 1935 and grew out of Einstein's worries about the completeness of quantum theory.
 Consider, for example, a single qubit.
@@ -48,6 +48,10 @@ The key to the scientific method is **falsifiability**: make one prediction inco
 - Bell's = no-go for *local* hidden variables
 - Kochen--Specker = no-go for *non-contextual* hidden variables
 - PBR = no-go for *preparation independent* hidden variables. -->
+
+<!-- "Bell’s theorem does not disprove the existence of hidden variables, but rather disproves the existence of local hidden variables. Should they exist, they cannot be locally determined upon the preparation of the state. This in itself does not rule out the possibility that a qubit has a definite value of σ_x and σ_z at the same time. It is however ruled out by the PBR theorem." -->
+
+<!-- mention sheaf theoretic approach that deals with both locality and contextuality in the same framework? -->
 ::::
 
 
@@ -177,7 +181,7 @@ Now let's see how quantum theory *fundamentally disagrees* with the CHSH inequal
 
 
 
-## Bell's theorem from CHSH
+## Bell's theorem via CHSH
 
 <div class="video" title="Device-independent tests and Bell inequalities (continued)" data-videoid="P-hk1GnAE6k"></div>
 
@@ -250,7 +254,7 @@ In other words, the CHSH test is key for securing quantum protocols, as we will 
 
 
 
-## Tsirelson's inequality
+## Tsirelson's inequality {#tsirelsons-inequality}
 
 > An upper bound on **quantum** correlations.
 
@@ -269,13 +273,13 @@ $$
 $$
 
 Given that $\|A_k\|=\|B_k\|=1$ (for $k=1,2$), it is easy to use these properties to show that $\|S\|\leq4$, but this is a much weaker bound than we want.
-However, one can show^[**Exercise.** Prove this!] that
+However, one can show^[Exercise \@ref(proving-tsirelsons-inequality).] that
 $$
   S^2
   = 4(\id\otimes\id) + [A_1,A_2]\otimes[B_1,B_2].
 $$
 
-Now, the norms of the commutators $\|[A_1, A_2]\|$ and $\|[B_1, B_2]\|$ are bounded by^[**Exercise.** Prove this!] $2$, and $\|S^2\|=\|S\|^2$.
+Now, the norms of the commutators $\|[A_1, A_2]\|$ and $\|[B_1, B_2]\|$ are bounded by^[Exercise \@ref(proving-tsirelsons-inequality).] $2$, and $\|S^2\|=\|S\|^2$.
 All together, this gives
 $$
   \begin{aligned}
@@ -371,6 +375,23 @@ Thus in the end we create $(2-p)n$ bits of randomness.
 
 ## Loopholes in Bell tests {#hidden-loopholes}
 
+When we introduced the idea of hidden variable theories in Section \@ref(hidden-variables), we made some assumptions to simplify the exposition, but these have a big impact on the practical reality of violating Bell tests.
+Any test that does not resolve one or more of these assumptions is said to have a **loophole**.
+For verifying fundamental physics, we are not so worried about these loopholes --- it feels very unlikely that the putative classicality of the experiment is hiding in whatever loophole might be available in a given system.
+But for cryptographic purposes, an adversary will use and loophole at their disposal to try to trick you!
+
+There are three types of key assumptions that we will talk about here, and for each one we provide some exercises to work through in order to explore them further:
+
+- detector efficiency (Exercise \@ref(detector-loophole))
+- locality (Exercise \@ref(locality-loophole))
+- free will (Exercise \@ref(free-will-loophole)).
+
+Let's start with the first, which gives rise to the **detector loophole**.
+When we make a measurement with a real-life device, in practice it doesn't always work --- maybe it just fails to notice a photon flying past.
+Each detector has a parameter $\eta$ known as its **efficiency**: $\eta$ is the probability that the measurement succeeds.
+For testing fundamental physics, it seems reasonable to assume that the successful measurements are a fair sample of what's really going on.
+But if there's an adversary, they might substitute our detectors for completely perfect one, and then deliberately choose to fake a failure whenever their eavesdropping attempts fail.
+
 ::: {.todo latex=""}
 <!-- TO-DO -->
 :::
@@ -441,7 +462,8 @@ By publicly selecting a random selection of rounds and announcing the results of
 
 ### XOR games for randomness expansion
 
-Explain how a single player (say, Alice) can treat this as a single-player game and use it as the basis for a randomness expansion scheme.^[*Hint: unlike in the quantum key distribution scenario from Exercise \@ref(xor-games-for-qkd)*, Alice no longer needs to choose a random subset of rounds to check the winning condition for: she can check all of them.]
+Consider again the scenario of Exercise \@ref(xor-games).
+Explain how Alice by herself can treat this as a single-player game and use it as the basis for a randomness expansion scheme.^[*Hint: unlike in Exercise \@ref(xor-games-for-qkd), Alice no longer needs to choose a random subset of rounds to check the winning condition for: she can check all of them.*]
 
 
 ### Prescribed binary randomness
@@ -454,3 +476,41 @@ Find a quantum circuit^[*Hint: what is $\cos^2(\pi/4)$*?] that can act as a rand
 Suppose you have a source that produces random bits, but operates with a bias: it outputs $0$ with probability $p$ and $1$ with probability $1-p$, for some fixed $0<p<1$.
 
 Find a method such that, given two outputs from this source, you successfully obtain a single unbiased random bit (i.e. as if the source had $p=1/2$) with probability $2p(1-p)$.
+
+
+### Proving Tsirelson's inequality {#proving-tsirelsons-inequality}
+
+Let $A_i$, $B_i$, and $\|-\|$ be as in Section \@ref(tsirelsons-inequality).
+
+1. Prove that
+  $$
+    (A_1\otimes(B_1-B_2)+A_2\otimes(B_1+B_2))^2
+    = 4(\id\otimes\id) + [A_1,A_2]\otimes[B_1,B_2].
+  $$
+2. Prove that
+  $$
+    \|[A_1,A_2]\|
+    \leq 2
+  $$
+  (and the same argument should also apply to $\|[B_1,B_2]\|$).
+
+
+### Detector loophole {#detector-loophole}
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+### Locality loophole {#locality-loophole}
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+### Free-will loophole {#free-will-loophole}
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
