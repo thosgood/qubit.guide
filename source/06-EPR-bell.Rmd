@@ -322,11 +322,11 @@ Indeed, we have already met one suitable implementation:
 ```
 
 The state before measurement is $(\ket{0}+\ket{1})/\sqrt{2}$, so the two possible outcomes occur with equal probability.
-This is a truly random number generator, not like the pseudo-random one that is used if you ask your computer for some random data.
+This is a truly random number generator, not like the pseudorandom one that is used if you ask your computer for some random data.
 
 This randomness generator works well as long as we know how it's been built, i.e. that it really is just a Hadamard gate, that the input qubit really has been prepared in the state $\ket{0}$, and that the measurement device is accurate and honest.
 However, we don't all have a Hadamard gate and a supply of prepared qubits lying around at home, so it seems likely that at some point we might have to buy or borrow such a device from a third party.
-But then how can we *know* that it really is doing what it promises, and not just supplying some pseudo-random numbers that might, for example, already be known to the manufacturer?
+But then how can we *know* that it really is doing what it promises, and not just supplying some pseudorandom numbers that might, for example, already be known to the manufacturer?
 This would render the device useless for cryptographic purposes!
 But not only do we want to know that this isn't the case, we would also like the average user to be able to verify this for themselves, without having to know about the internal details.
 In other words, can we find a way of verifying the device via some analysis of just inputs and outputs?
@@ -376,7 +376,7 @@ Thus in the end we create $(2-p)n$ bits of randomness.
 ## Loopholes in Bell tests {#hidden-loopholes}
 
 When we introduced the idea of hidden variable theories in Section \@ref(hidden-variables), we made some assumptions to simplify the exposition, but these have a big impact on the practical reality of violating Bell tests.
-Any test that does not resolve one or more of these assumptions is said to have a **loophole**.
+Any test that does not satisfy one or more of these assumptions is said to have a **loophole**.
 For verifying fundamental physics, we are not so worried about these loopholes --- it feels very unlikely that the putative classicality of the experiment is hiding in whatever loophole might be available in a given system.
 But for cryptographic purposes, an adversary will use and loophole at their disposal to try to trick you!
 
@@ -392,10 +392,15 @@ Each detector has a parameter $\eta$ known as its **efficiency**: $\eta$ is the 
 For testing fundamental physics, it seems reasonable to assume that the successful measurements are a fair sample of what's really going on.
 But if there's an adversary, they might substitute our detectors for completely perfect one, and then deliberately choose to fake a failure whenever their eavesdropping attempts fail.
 
-::: {.todo latex=""}
-<!-- TO-DO -->
-:::
+The next crucial assumption in the CHSH test is that Alice and Bob are separated by a "large enough" distance in space and time.
+More precisely, if they are physical at distance $L$ from each other, then their random choices of measurement setting, followed by their corresponding carrying out of the measurement, and receipt of the answers, should all be accomplished within a time approximately^[We say "approximately" here because we are avoiding being specific about how we actually define distance.] $L/c$ of each other, where $c$ is the speed of light.
+If Alice and Bob are not far enough away from each other, then they are said to be within each other's **locality**, and so this is known as the **locality loophole**.
 
+The final important assumption that we will mention here involves the availability of true randomness, and emphasises the importance of randomness expansion.
+It asserts that Alice and Bob must be able to choose their measurement settings randomly.
+This freedom to make their own choices is glibly referred to as them having "free will", and so this is known as the **free-will loophole**.
+Resolving the locality loophole puts extremely tight constraints on how quickly choices must be made, to the extent that Alice and Bob cannot make those choices manually --- they need to use random number generators.
+But then they need to able to trust that these generators are indeed random, not merely pseudorandom, otherwise somebody else could know the origin of the "random" numbers and use that information to their advantage.
 
 
 
