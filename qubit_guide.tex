@@ -178,7 +178,7 @@
 
 \title{Introduction to Quantum Information Science}
 \author{\href{https://www.arturekert.org/}{Artur Ekert}, \href{https://thosgood.com}{Tim Hosgood}, \href{http://www.ma.rhul.ac.uk/akay/}{Alastair Kay}, \href{https://fisica.unipv.it/personale/Persona.php?ID=55}{Chiara Macchiavello}}
-\date{Last updated: 28 September 2023 \href{https://github.com/thosgood/qubit.guide/commits/main}{(see change history)}}
+\date{Last updated: 29 September 2023 \href{https://github.com/thosgood/qubit.guide/commits/main}{(see change history)}}
 
 % END METADATA %
 
@@ -226,6 +226,8 @@
 \renewcommand{\leq}{\leqslant}
 \renewcommand{\geq}{\geqslant}
 \renewcommand{\mod}[1]{\ \mathrm{mod}\ #1}
+\renewcommand{\Im}{\operatorname{Im}}
+\renewcommand{\Re}{\operatorname{Re}}
 
 \hypertarget{introduction}{%
 \section*{Introduction}\label{introduction}}
@@ -275,6 +277,10 @@ A basic knowledge of quantum mechanics (especially in the simple context of fini
 Of course, even if you aren't familiar with the formal mathematics of complex numbers and linear algebra, then that shouldn't stop you from reading this book if you want to.
 You might be surprised at how much you can \href{https://en.wikipedia.org/wiki/Black_box}{black box} the bits that you don't understand!
 The caveat stands, however, that, to \emph{really} get to grips with this subject, at least some knowledge of maths is necessary --- and this is not a bad thing!
+
+On that note, every chapter ends with a section called ``\emph{Remarks and exercises}''.
+You will find the same advice in basically every single mathematical text: even just attempting to do the exercises is almost more important than reading the actual book itself.
+For this book, it is doubly true that \emph{you should at least read these sections}, because they contain not just exercises but also further content including worked exercises and further fundamental expository content.
 
 Finally, throughout this text you will find some technical asides.
 These are \emph{not at all} necessary reading, but are just there to provide the exceptionally eager reader (or perhaps those with a more formal mathematical background) with some extra context, as well as some pointers towards further reading.
@@ -367,7 +373,7 @@ This really is a geometric way of thinking, since now addition (and subtraction)
 
 }
 
-\caption{Addition of two complex numbers \(z=x+iy\) and \(z'=x'+iy'\), where we write \(\Re\) (resp. \(\Im\)) for the real (resp. imaginary) part of a complex number: \(\Re(x+iy)=x\) and \(\Im(x+iy)=y\). Commutativity of addition corresponds to what is sometimes called the \textbf{parallelogram law} for addition of vectors.}\label{fig:complex-addition}
+\caption{Addition of two complex numbers \(z=x+iy\) and \(z'=x'+iy'\), where we write \(\operatorname{Re}\) (resp. \(\operatorname{Im}\)) for the real (resp. imaginary) part of a complex number: \(\operatorname{Re}(x+iy)=x\) and \(\operatorname{Im}(x+iy)=y\). Commutativity of addition corresponds to what is sometimes called the \textbf{parallelogram law} for addition of vectors.}\label{fig:complex-addition}
 \end{figure}
 
 But what about multiplication and division?
@@ -2286,7 +2292,7 @@ It is typically constructed as a sequence of three elementary operations:
   the \textbf{Hadamard gate} again.
 \end{enumerate}
 
-We represent it graphically as
+We represent it graphically as\footnote{We sometimes write the phase gate as \(P_\varphi\) instead, if it makes the circuit easier to read.}
 
 \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-19-1} \end{center}
 
@@ -2512,7 +2518,7 @@ or as
   \end{bmatrix}
 \]
 The first version is more common in the quantum information science community, but the second one is sometimes more convenient to use, as it has determinant \(1\), and hence belongs to a group called \(\mathrm{SU}(2)\).
-We will occasionally switch to the \(\mathrm{SU}(2)\) version of phase gates, and this is where the \(\frac{\pi}{4}\)-phase and \(\frac{\pi}{8}\)-phase gates get their names, since their \(\mathrm{SU}(2)\) versions have \(e^{\mp i\pi/4}\) and \(e^{\mp i\pi/8}\) (respectively) on the diagonal.
+We will occasionally switch to the \(\mathrm{SU}(2)\) version of phase gates, and this is where the \(\frac{\pi}{4}\)-phase and \(\frac{\pi}{8}\)-phase gates get their names, since their \(\mathrm{SU}(2)\) versions have \(e^{\mp i\pi/4}\) and \(e^{\mp i\pi/8}\) (respectively) on the diagonal, even though they are actually of phase \(\pi/2\) and \(\pi/4\) (respectively).
 
 \begin{technical}{The groups $\mathrm{SU}(2)$ and $\mathrm{SO}(3)$}
 We will soon explain what this group \(\mathrm{SU}(2)\) is and how it relates to another important group called \(\mathrm{SO}(3)\), but it turns up in many places throughout quantum physics, as well as mathematics in general.
@@ -2802,12 +2808,174 @@ It turns out, however, that we can tolerate minor imperfections; the final resul
 \hypertarget{remarks-and-exercises-qubits}{%
 \subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-qubits}}
 
+\hypertarget{one-simple-circuit}{%
+\subsubsection{One simple circuit}\label{one-simple-circuit}}
+
+Let \(B\) be the matrix
+\[
+  B
+  = \frac{1}{\sqrt{2}}
+  \begin{bmatrix}
+    1 & i
+  \\i & 1
+  \end{bmatrix}.
+\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Show that \(B\) is unitary.
+\item
+  Find the overall unitary corresponding to the circuit\footnote{If you get the answer \(\begin{bmatrix}0&1\\i&0\end{bmatrix}\) then you performed the matrix multiplication in the wrong order!}
+
+  \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-25-1} \end{center}
+\end{enumerate}
+
+\hypertarget{change-of-basis}{%
+\subsubsection{Change of basis}\label{change-of-basis}}
+
+Write the state
+\[
+  |\psi\rangle
+  = \frac{3}{5}|0\rangle + \frac{4}{5}|1\rangle
+\]
+as a superposition of the states \(|\pm\rangle=(|0\rangle\pm|1\rangle)/\sqrt{2}\).
+In other words, find \(\alpha,\beta\in\mathbb{C}\) such that
+\[
+  |\psi\rangle
+  = \alpha|+\rangle + \beta|-\rangle.
+\]
+
+\hypertarget{operators-as-unitary-matrices}{%
+\subsubsection{Operators as unitary matrices}\label{operators-as-unitary-matrices}}
+
+Say we have a linear operator that acts on a qubit as follows:
+\[
+  \begin{aligned}
+    |0\rangle
+    &\mapsto \alpha|0\rangle + \beta|1\rangle
+  \\|1\rangle
+    &\mapsto \beta^\star|0\rangle - \alpha^\star|1\rangle.
+  \end{aligned}
+\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Show that this linear operator is equal to
+  \[
+   M
+   = \big(\alpha|0\rangle+\beta|1\rangle\big)\langle 0| + \big(\beta^\star|0\rangle-\alpha^\star|1\rangle\big)\langle 1|
+    \]
+  by calculating \(M|0\rangle\) and \(M|1\rangle\).
+\item
+  If we pick the standard basis
+  \[
+   |0\rangle
+   \equiv
+   \begin{bmatrix}
+     1\\0
+   \end{bmatrix}
+   \qquad
+   |1\rangle
+   \equiv
+   \begin{bmatrix}
+     1\\0
+   \end{bmatrix}
+    \]
+  then what is the matrix representation of \(M\)?
+\item
+  Verify that \(M\) is unitary.
+\end{enumerate}
+
+\hypertarget{completing-an-orthonormal-basis}{%
+\subsubsection{Completing an orthonormal basis}\label{completing-an-orthonormal-basis}}
+
+Imagine that some quantum system has four energy levels: \(|0\rangle\), \(|1\rangle\), \(|2\rangle\), and \(|3\rangle\).
+Consider the three orthonormal vectors
+\[
+  \begin{aligned}
+    |\psi_1\rangle
+    &= \frac{1}{\sqrt{3}}(|0\rangle+|1\rangle+|2\rangle)
+  \\|\psi_2\rangle
+    &= \frac{1}{\sqrt{2}}(|0\rangle-|2\rangle)
+  \\|\psi_3\rangle
+    &= |3\rangle.
+  \end{aligned}
+\]
+Find a vector \(|\psi_4\rangle\) such that \(\{|\psi_1\rangle,|\psi_2\rangle,|\psi_3\rangle,|\psi_4\rangle\}\) is an orthonormal basis.
+
+\hypertarget{some-sums-of-inner-products}{%
+\subsubsection{Some sums of inner products}\label{some-sums-of-inner-products}}
+
+Let \(\{|v_1\rangle,\ldots,|v_N\rangle\}\) be an orthonormal basis.
+Evaluate the following:\footnote{All of your answers should be numbers (in fact, they'll all even be integers).}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \(\sum_{k=1}^{N-1} k^2 \langle v_{N-1}|v_k\rangle\)
+\item
+  \(\sum_{k=1}^{N-1} k^2 \langle v_N|v_k\rangle\)
+\item
+  \(\sum_{k=1}^N \langle v_{N-1}|v_k\rangle\langle v_k|v_{N-1}\rangle\)
+\item
+  \(\sum_{j,k=1}^{N-1} \langle v_j|v_k\rangle\)
+\end{enumerate}
+
+\hypertarget{some-circuit-identities}{%
+\subsubsection{Some circuit identities}\label{some-circuit-identities}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Prove the following circuit identities, ignoring any global phase:
+
+  \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-26-1} \end{center}
+
+  \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-27-1} \end{center}
+\item
+  Using the above, find \(\theta_1\) and \(\theta_2\) such that
+
+  \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-28-1} \end{center}
+
+  \begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-29-1} \end{center}
+
+  for some value \(\delta\).
+\item
+  We can think of the second identity in the previous question as an implementation of ``if the two \(X\) gates are absent then do nothing; otherwise implement the phase gate \(P_\delta\)''.
+  Given that unitary matrices are normal, adapt this circuit so that implements ``if the two \(X\) gates are absent then do nothing; otherwise implement the unitary \(U\)'' where \(U\) is a one-qubit unitary.
+\end{enumerate}
+
+\hypertarget{unitaries-preserve-length}{%
+\subsubsection{Unitaries preserve length}\label{unitaries-preserve-length}}
+
+Let \(M\) be a linear operator that sends an orthonormal basis \(\{|u_1\rangle,\ldots,|u_N\rangle\}\) to a set of states \(\{|v_1\rangle,\ldots,|v_n\rangle\}\) where each \(|v_i\rangle\) is of length \(1\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Show that the length of the vector \(M(|u_1\rangle+|u_2\rangle)/\sqrt{2}\) is
+  \[
+   \sqrt{1+\operatorname{Re}\langle v_1|v_2\rangle}.
+    \]
+\item
+  Find a correctly normalised superposition \(|\psi\rangle=\lambda(\alpha|u_1\rangle+\beta|u_2\rangle)\) such that \(M|\psi\rangle\) is of length
+  \[
+   \sqrt{1+\operatorname{Im}\langle v_1|v_2\rangle}.
+    \]
+\item
+  Using the above, show that, for all \(|\psi\rangle\) of length \(1\), the vector \(M|\psi\rangle\) is of length \(1\) if and only if \(M\) is unitary.
+\end{enumerate}
+
 \hypertarget{unknown-phase}{%
 \subsubsection{Unknown phase}\label{unknown-phase}}
 
 Consider the usual quantum interference circuit:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-25-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-30-1} \end{center}
 
 Suppose you can control the input of the circuit and measure the output, but you do not know the phase shift \(\varphi\) introduced by the phase gate.
 You prepare input \(|0\rangle\) and register output \(|1\rangle\).
@@ -2817,11 +2985,18 @@ Now you are promised that \(\varphi\) is either \(0\) or \(\pi\).
 You can run the circuit \emph{only once} to find out which of the two phases was chosen.
 Is it possible to then always correctly guess whether \(\varphi\) was \(0\) or \(\pi\)?
 
+\begin{idea}
+This problem forms the basis for a lot of material later on: most quantum algorithms build upon it.
+We will return to it again and again in Section \ref{quantum-algorithms}.
+
+\end{idea}
+
 \hypertarget{cross-product-identity}{%
 \subsubsection{One of the many cross-product identities}\label{cross-product-identity}}
 
 When working with three-dimensional geometry, the \href{https://en.wikipedia.org/wiki/Cross_product}{cross product} of vectors is very useful, so here is an exercise to help you get used to working with it.
-Derive the identity\footnote{\emph{Hint: all you need here are the Pauli matrices' commutation and anti-commutation relations, but it is instructive to derive the identity using the component notation, and below we give a sketch of how such a derivation would go.}}
+
+Let's say we want to derive the identity\footnote{\emph{Hint: all you need here are the Pauli matrices' commutation and anti-commutation relations, but it is instructive to derive the identity using the component notation, and below we give a sketch of how such a derivation would go.}}
 \[
   (\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma})
   = (\vec{a}\cdot\vec{b})\mathbf{1}+ i(\vec{a}\times \vec{b})\cdot \vec{\sigma}.
@@ -2873,7 +3048,7 @@ The goal for the latter is to be able to visualise sequences of unitary operatio
 The goal for the former is to study a way of implementing this gate using physical experiments, and then studying a related construction (the so-called \textbf{Mach--Zehnder interferometer}).
 
 \hypertarget{beamsplitters-against-logic}{%
-\subsection{Physics against logic, via beam-splitters}\label{beamsplitters-against-logic}}
+\subsection{Beam-splitters: physics against logic}\label{beamsplitters-against-logic}}
 
 A \textbf{symmetric beam-splitter} is a cube of glass which reflects half the light that impinges upon it, while allowing the remaining half to pass through unaffected.
 For our purposes it can simply be viewed as a device that has two input and two output ports, which we label with \(|0\rangle\) and \(|1\rangle\) as in Figure \ref{fig:beam-splitter}.
@@ -3004,8 +3179,8 @@ where
 
 \end{idea}
 
-\hypertarget{quantum-interference-revisited-still-about-beam-splitters}{%
-\subsection{Quantum interference, revisited (still about beam-splitters)}\label{quantum-interference-revisited-still-about-beam-splitters}}
+\hypertarget{beam-splitters-quantum-interference-revisited}{%
+\subsection{Beam-splitters: quantum interference, revisited}\label{beam-splitters-quantum-interference-revisited}}
 
 One of the simplest quantum devices in which quantum interference can be controlled is a \textbf{Mach--Zehnder interferometer} --- see Figure \ref{fig:mach-zehnder}.\footnote{You can play around with a virtual Mach--Zehnder interferometer at \href{https://lab.quantumflytrap.com/lab/mach-zehnder}{Quantum Flytrap's \emph{Virtual Lab}}. (There are also lots of other things you can do in this virtual lab --- \href{https://quantumflytrap.com/lab-how-to/}{go have a look!}).}
 
@@ -3063,7 +3238,7 @@ The probability of being transmitted through any phase shifter is always \(1\), 
 But the classical description is \emph{not} correct --- it doesn't agree with physical experiments! --- whence the interference term \(2TR\cos(\varphi_1-\varphi_0)\) in which the phase shifters play the essential role.
 Depending on the \emph{relative} phase \(\varphi=\varphi_1-\varphi_0\) the probability that the detector \(0\) ``clicks'' after having fired a photon into input \(|0\rangle\) can vary from \((T-R)^2\) to \(1\).
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-26-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-31-1} \end{center}
 
 If we do not care about the experimental details, we can represent the action of the Mach--Zehnder interferometer in terms of a diagram, as in Figure \ref{fig:mach-zehnder-diagram}.
 
@@ -3286,16 +3461,28 @@ For example,
   \end{aligned}
 \]
 represent rotations by \(2\theta\) about the \(x\)-, \(y\)- and \(z\)-axis, respectively.
+In fact, these rotations are so important that they get a name.\footnote{Be careful: the precise definition can vary a lot between different texts, with some including a factor of \(1/2\), or even a negative sign.}
+
+\begin{idea}
+Rotating a state about a \textbf{Pauli axis} (the \(x\)-, \(y\)-, or \(z\)-axes) is known as a \textbf{Pauli rotation}.
+We can write these as
+\[
+  e^{i\theta\sigma_k}
+  = (\cos\theta)\mathbf{1}+ (i\sin\theta)\sigma_k
+\]
+for \(k\in{x,y,z}\).
+
+\end{idea}
 
 
 
 \begin{figure}[H]
 
-{\centering \includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-27-1} 
+{\centering \includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-32-1} 
 
 }
 
-\caption{The matrix \(e^{i\theta\vec{n}\cdot\vec{\sigma}}\) rotates the vector \(\vec{s}\) about \(\vec{n}\) by angle \(2\theta\), sending it to a point on the blue circle, which is defined by being the unique circle whose centre is passed through by \(\vec{n}\) and containing \(\vec{s}\).}\label{fig:unnamed-chunk-27}
+\caption{The matrix \(e^{i\theta\vec{n}\cdot\vec{\sigma}}\) rotates the vector \(\vec{s}\) about \(\vec{n}\) by angle \(2\theta\), sending it to a point on the blue circle, which is defined by being the unique circle whose centre is passed through by \(\vec{n}\) and containing \(\vec{s}\).}\label{fig:unnamed-chunk-32}
 \end{figure}
 
 Now we can show that the Hadamard gate
@@ -3340,7 +3527,7 @@ This gives a linear map \(\mathbb{R}^3\to\mathbb{R}^3\), and is thus given by so
   R_U\colon \mathbb{R}^3\to\mathbb{R}^3.
 \]
 
-Next, note that this map is an isometry (a distance preserving operation), since it preserves the scalar product in the Euclidean space: for any two vectors \(\vec{s}\) and \(\vec{t}\),
+Next, note that this map is an \textbf{isometry}\footnote{We will talk more about isometries in Section \ref{random-isometries}.} (a distance preserving operation), since it preserves the scalar product in the Euclidean space: for any two vectors \(\vec{s}\) and \(\vec{t}\),
 \[
   \begin{aligned}
     \vec{s'}\cdot\vec{t'}
@@ -3408,7 +3595,7 @@ which we recognise as a good old textbook formula for an infinitesimal clockwise
 Although this may all seem tediously abstract, it is surprisingly useful.
 Take another look at the single-qubit interference circuit
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-28-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-33-1} \end{center}
 
 and the corresponding sequence of unitary operations
 \[
@@ -3431,7 +3618,7 @@ The single-qubit interference circuit has a simple geometrical meaning: it shows
 
 Now, take a look at this circuit:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-29-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-34-1} \end{center}
 
 What does it represent?
 The central part is a rotation by \(\varphi\) about the \(x\)-axis, sandwiched between two rotations about the \(z\)-axis.
@@ -3467,7 +3654,7 @@ It is important to note that the two axes in question, \(z\) and \(x\), do not h
 
 Now consider the following circuit:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-30-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-35-1} \end{center}
 
 where both \(A\) and \(B\) are unitary operations.
 We claim that \emph{any} unitary \(U\) can be represented in this form, for some \(A\) and \(B\).
@@ -3778,7 +3965,7 @@ In what follows, we use the notation from our algebraic treatment of Pauli opera
    = (\cos\alpha)\mathbf{1}+ (i\sin\alpha)A.
     \]
 \item
-  Show that any \((2\times 2)\) unitary matrix \(U\) can be written, up to an overall multiplicative phase factor, as\footnote{\emph{Hint: the argument here is the same as the argument that \(e^{i\theta}=\cos\theta +i\sin\theta\).}}
+  Show that any \((2\times 2)\) unitary matrix \(U\) can be written, up to an overall multiplicative phase factor, as\footnote{\emph{Hint: the argument here is the same as the argument that \(e^{i\theta}=\cos\theta+i\sin\theta\).}}
   \[
    U
    = e^{i \theta \vec{n}\cdot\vec{\sigma}}
@@ -3823,11 +4010,32 @@ In what follows, we use the notation from our algebraic treatment of Pauli opera
 \hypertarget{phase-as-rotation}{%
 \subsubsection{Phase as rotation}\label{phase-as-rotation}}
 
-Show that\footnote{\emph{Hint: it might be helpful to start with the \(\mathrm{SU}(2)\) version of the phase gate:} \[\begin{aligned}P_\varphi&= e^{-i\frac{\varphi}{2}\sigma_z}\\&= \begin{bmatrix}e^{-i \frac{\varphi}{2}}& 0\\0 & e^{i \frac{\varphi}{2}}\end{bmatrix}\end{aligned}\] \emph{which gives} \[R_{P_\varphi}=\begin{bmatrix}\cos \varphi & -\sin \varphi & 0\\\sin \varphi & \cos \varphi & 0\\0 & 0 & 1\end{bmatrix}\]} the phase gate
-\[
-  P_\varphi = \begin{bmatrix}1&0\\0&e^{i\varphi}\end{bmatrix}
-\]
-represents an anticlockwise rotation about the \(z\)-axis through the angle \(\varphi\).
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Show that\footnote{\emph{Hint: it might be helpful to start with the \(\mathrm{SU}(2)\) version of the phase gate:} \[\begin{aligned}P_\varphi&= e^{-i\frac{\varphi}{2}\sigma_z}\\&= \begin{bmatrix}e^{-i \frac{\varphi}{2}}& 0\\0 & e^{i \frac{\varphi}{2}}\end{bmatrix}\end{aligned}\] \emph{which gives} \[R_{P_\varphi}=\begin{bmatrix}\cos \varphi & -\sin \varphi & 0\\\sin \varphi & \cos \varphi & 0\\0 & 0 & 1\end{bmatrix}\]} the phase gate
+  \[
+    P_\varphi = \begin{bmatrix}1&0\\0&e^{i\varphi}\end{bmatrix}
+  \]
+  represents an anticlockwise rotation about the \(z\)-axis through the angle \(\varphi\).
+\end{enumerate}
+
+\hypertarget{calculating-a-pauli-rotation}{%
+\subsubsection{Calculating a Pauli rotation}\label{calculating-a-pauli-rotation}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Express the Pauli rotation \(e^{i\sigma_y\pi/3}\) as a matrix.
+\item
+  Give a decomposition of this rotation in the form\footnote{\emph{Hint: recall Section \ref{universality-again}}.}
+  \[
+   R_Z(\alpha)HR_Z(\beta)HR_Z(\gamma)
+    \]
+  where \(R_Z(\theta)\) denotes a Pauli \(\sigma_z\)-rotation by angle \(\theta\).
+\end{enumerate}
 
 \hypertarget{geometry-of-the-hadamard}{%
 \subsubsection{Geometry of the Hadamard}\label{geometry-of-the-hadamard}}
@@ -3950,11 +4158,11 @@ When we draw circuit diagrams it is tacitly assumed that such a measurement is p
 
 However, if we want to emphasise the role of the measurement, then we can include it explicitly in the diagram as a special quantum gate, e.g.~as
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-31-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-36-1} \end{center}
 
 or, in an alternative notation, as
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-32-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-37-1} \end{center}
 
 As we can see, if the qubit is prepared in state \(|\psi\rangle = \alpha_0|0\rangle + \alpha_1|1\rangle\) and subsequently measured in the standard basis, then the outcome is \(|k\rangle\) (for \(k=0,1\)) with probability\footnote{This slick argument is a good example of how nice the bra-ket notation can be when we leverage the ambiguity of an expression like \(\langle a||b\rangle|b\rangle\langle a|\), which we can read as the scalar product of two scalars or as a projector sandwiched between a bra and a ket.}
 \[
@@ -4107,7 +4315,7 @@ and the state right after the measurement is the normalised vector \(P|\psi\rang
 
 The measurement may also find the system in the subspace associated with \(Q\) with the probability \(\langle\psi|Q|\psi\rangle = |\alpha_3|^2\), resulting in the post-measurement state \(|e_3\rangle\).
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-33-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-38-1} \end{center}
 
 \hypertarget{observables}{%
 \subsection{Observables}\label{observables}}
@@ -4473,7 +4681,7 @@ Bringing it all together we have the final expression:
 
 We can parametrise \(|\langle s_1|s_2\rangle| = \cos\alpha\), where \(\alpha\) is then the angle between \(|s_1\rangle\) and \(|s_2\rangle\).
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-34-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-39-1} \end{center}
 
 This allows us to express our findings in a clearer way: given two equally likely states, \(|s_1\rangle\) and \(|s_2\rangle\), such that \(|\langle s_1|s_2\rangle| = \cos\alpha\), the probability of correctly identifying the state by a projective measurement is bounded by\footnote{Here we use that \(\cos^2\alpha+\sin^2\alpha=1\) for any \(\alpha\).}
 \[
@@ -4545,7 +4753,6 @@ What is particularly nice, as a bonus result, is that if we make one tiny change
 
 \hypertarget{quantum-states}{%
 \subsubsection*{Quantum states}\label{quantum-states}}
-\addcontentsline{toc}{subsubsection}{Quantum states}
 
 With any isolated quantum system which can be prepared in \(n\) perfectly distinguishable states, we can associate a Hilbert space \(\mathcal{H}\) of dimension \(n\) such that each vector \(|v\rangle\in\mathcal{H}\) of unit length (\(\langle v|v\rangle =1\)) represents a quantum state of the system.
 The overall phase of the vector has no physical significance: \(|v\rangle\) and \(e^{i\varphi}|v\rangle\), for any real \(\varphi\), describe the same state.
@@ -4555,7 +4762,6 @@ In particular, states forming orthonormal bases are always perfectly distinguish
 
 \hypertarget{quantum-evolutions}{%
 \subsubsection*{Quantum evolutions}\label{quantum-evolutions}}
-\addcontentsline{toc}{subsubsection}{Quantum evolutions}
 
 \begin{idea}
 Any physically admissible evolution of an isolated quantum system is represented by a unitary operator.
@@ -4589,20 +4795,18 @@ The state vector changes smoothly: for \(t=0\) the time evolution operator is me
 
 \hypertarget{quantum-circuits}{%
 \subsubsection*{Quantum circuits}\label{quantum-circuits}}
-\addcontentsline{toc}{subsubsection}{Quantum circuits}
 
 In this course we will hardly refer to the Schrödinger equation.
 Instead we will assume that our clever colleagues --- experimental physicists --- are able to implement certain unitary operations, and we will use these unitaries, like lego blocks, to construct other, more complex, unitaries.
 We refer to pre-selected elementary quantum operations as \textbf{quantum logic gates} and we often draw diagrams, called \textbf{quantum circuits}, to illustrate how they act on qubits.
 For example, two unitaries, \(U\) followed by \(V\), acting on a single qubit are represented as
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-35-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-40-1} \end{center}
 
 This diagram should be read from left to right, and the horizontal line represents a qubit that is inertly carried from one quantum operation to another (maybe through space, down a physical wire, but maybe through some other physical implementation --- we don't particularly mind!)
 
 \hypertarget{measurements-1}{%
 \subsubsection*{Measurements}\label{measurements-1}}
-\addcontentsline{toc}{subsubsection}{Measurements}
 
 A complete measurement in quantum theory is determined by the choice of an orthonormal basis \(\{|e_1\rangle,\ldots,|e_n\rangle\}\) in \(\mathcal{H}\), and every such basis (in principle) represents a possible measurement.
 Given a quantum system in state \(|\psi\rangle\) such that
@@ -4682,7 +4886,7 @@ This is because any measurement can be reduced to the standard measurement by pe
   Show that, for any unitary \(U\), the projectors \(UP_kU^\dagger\) also define a measurement.
 \end{enumerate}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-36-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-41-1} \end{center}
 
 \hypertarget{optimal-measurement}{%
 \subsubsection{Optimal measurement}\label{optimal-measurement}}
@@ -4691,7 +4895,7 @@ The optimal measurement to distinguish between the two equally likely non-orthog
 But suppose the states are \emph{not} equally likely: say \(|s_1\rangle\) is chosen with probability \(p_1\) and \(|s_2\rangle\) with probability \(p_2\).
 How would you modify the measurement to maximise the probability of success in this case?
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-37-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-42-1} \end{center}
 
 \hypertarget{alice-knows-what-bob-did}{%
 \subsubsection{Alice knows what Bob did}\label{alice-knows-what-bob-did}}
@@ -4713,8 +4917,8 @@ How does she do it?
 
 \end{todo}
 
-\hypertarget{quantum-entanglement}{%
-\section{Quantum entanglement}\label{quantum-entanglement}}
+\hypertarget{entanglement}{%
+\section{Entanglement}\label{entanglement}}
 
 \begin{quote}
 About the fundamental tool of quantum computing: \textbf{entanglement}, via the formalism of \textbf{tensor products}, which was the missing ingredient from our previous formalism of quantum theory.
@@ -4726,8 +4930,8 @@ But if we want to understand quantum computation --- a complicated quantum inter
 Stepping up from one qubit to two or more is a bigger leap than you might expect.
 Already, with just two qubits, we will encounter the remarkable phenomenon of \textbf{quantum entanglement} and have a chance to discuss some of the most puzzling features of quantum theory that took people decades to understand.
 
-\hypertarget{a-small-history}{%
-\subsection{A small history}\label{a-small-history}}
+\hypertarget{a-very-brief-history}{%
+\subsection{A very brief history}\label{a-very-brief-history}}
 
 The notion of \textbf{quantum entanglement} was the subject of many early debates that focused on the meaning of quantum theory.
 Back in the 1930s, Albert Einstein, Niels Bohr, Werner Heisenberg, and Erwin Schrödinger (to mention just the usual suspects) were trying hard to understand its conceptual consequences.\footnote{E. Schrödinger, ``Discussion of probability relations between separated system''. \emph{Mathematical Proceedings of the Cambridge Philosophical Society} \textbf{31} (1935), pp.~555--563.}
@@ -4896,7 +5100,7 @@ This is shown in Carcassi, Maccone, and Aidala's ``The four postulates of quantu
 \end{technical}
 
 \hypertarget{more-than-two-qubits-and-binary}{%
-\subsection{More than two qubits, and binary expansions}\label{more-than-two-qubits-and-binary}}
+\subsection{More qubits, and binary representations}\label{more-than-two-qubits-and-binary}}
 
 Let's see how this formalism works for qubits.
 The \(n\)-fold tensor product of vectors from the standard basis \(\{|0\rangle,|1\rangle\}\) represent binary strings of length \(n\).
@@ -4924,7 +5128,7 @@ Indeed, if we start with the state \(|011\rangle\) and apply the Hadamard gate t
 
 In fact, we can even prepare this register in a superposition of all eight possible binary strings of length 3 at once: if we apply the tensor product operation \(H\otimes H\otimes H\) to the state \(|0\rangle\otimes|0\rangle\otimes|0\rangle = |000\rangle\) then we get
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-38-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-43-1} \end{center}
 
 The resulting state is exactly a superposition of \emph{all} binary string of length 3, and can also be written as
 \[
@@ -5057,14 +5261,14 @@ For more, see e.g.~Cirici, Salvadó, and Taron's ``Characterization of quantum e
 Quantum entanglement is one of the most fascinating aspects of quantum theory.
 We will now explore some of its computational implications.
 
-\hypertarget{controlled-not-bell-states-teleportation-and-cloning}{%
-\subsection{Controlled-NOT: Bell states, teleportation, and cloning}\label{controlled-not-bell-states-teleportation-and-cloning}}
+\hypertarget{controlled-not}{%
+\subsection{Controlled-NOT}\label{controlled-not}}
 
 How do entangled states arise in real physical situations?
 The short answer is that \emph{entanglement is the result of interactions}.
 It is easy to see that tensor product operations \(U_1\otimes\ldots\otimes U_n\) map product states to product states:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-39-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-44-1} \end{center}
 
 and so any collection of separable qubits remains separable.
 As soon as qubits start interacting with one another, however, they become entangled, and things start to get really interesting.
@@ -5108,7 +5312,7 @@ The \(\texttt{c-NOT}\) gate lets us do many interesting things, and can act in a
 Let us now study some of these things.
 
 \hypertarget{bell-states}{%
-\subsection{The Bell states, and the Bell measurement}\label{bell-states}}
+\subsection{Bell states}\label{bell-states}}
 
 We start with the generation of entanglement.
 Here is a simple circuit that demonstrates the entangling power of \(\texttt{c-NOT}\):\footnote{John Stewart Bell (1928--1990) was a Northern Irish physicist.}
@@ -5117,7 +5321,7 @@ Here is a simple circuit that demonstrates the entangling power of \(\texttt{c-N
 
 \emph{(Generating entanglement).}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-40-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-45-1} \end{center}
 
 \end{circuit}
 
@@ -5183,7 +5387,7 @@ Consider the following circuit, which is built from a Bell state generator follo
 
 \emph{(Quantum teleportation).}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-41-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-46-1} \end{center}
 
 \end{circuit}
 
@@ -5234,7 +5438,7 @@ The first qubit is in a precious quantum state and this state is needed urgently
 The other two qubits are entangled, in the \(\Phi^+=|\psi_{00}\rangle\) state. Alice's colleague, Bob, pops in to collect the qubit.
 Once he is gone, Alice realises that, by mistake, she gave him not the first but the third qubit: the one which is entangled with the second qubit.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-42-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-47-1} \end{center}
 
 The situation seems to be hopeless --- Alice does not know the quantum state of the first qubit, and Bob is now miles away and her communication with him is limited to few bits.
 However, Alice and Bob are both very clever and they both diligently attended their ``Introduction to Quantum Information Science'' classes.
@@ -5263,8 +5467,8 @@ We will better explain the ideas behind these sorts of arguments later on, in Se
 
 \end{technical}
 
-\hypertarget{thou-shalt-not-clone}{%
-\subsection{Thou shalt not clone}\label{thou-shalt-not-clone}}
+\hypertarget{no-cloning-and-no-go}{%
+\subsection{No-cloning, and other no-go theorems}\label{no-cloning-and-no-go}}
 
 Let us now look at something that the controlled-\(\texttt{NOT}\) \emph{seems} to be doing but, in fact, \emph{isn't}.
 It is easy to see that the \(\texttt{c-NOT}\) can copy the bit value of the first qubit:
@@ -5292,9 +5496,9 @@ If we then run our hypothetical cloning machine we get
 \[
   \begin{aligned}
     |\psi\rangle|0\rangle|W\rangle
-    &\mapsto |\psi\rangle|\psi\rangle|W'\rangle
+    &\longmapsto |\psi\rangle|\psi\rangle|W'\rangle
   \\|\phi\rangle|0\rangle|W\rangle
-    &\mapsto |\phi\rangle|\phi\rangle|W''\rangle
+    &\longmapsto |\phi\rangle|\phi\rangle|W''\rangle
   \end{aligned}
 \]
 where the third system, initially in state \(|W\rangle\), represents everything else (say, the internal state of the cloning machine).
@@ -5310,9 +5514,75 @@ Note that, in quantum teleportation, the original state must therefore be \emph{
 The no-cloning property of quantum states leads to interesting applications, of which quantum cryptography is one.
 
 \begin{idea}
+\textbf{The no-cloning theorem.}
 Universal quantum cloners are \emph{impossible}.
 
 \end{idea}
+
+\begin{technical}{Approximate quantum cloning}
+
+\begin{todo}
+
+\end{todo}
+
+\end{technical}
+
+The no-cloning theorem is one of many so-called ``no-go'' theorems in quantum information.
+We won't look at all of them in depth, but it's worth mentioning them here and giving a very rough idea of what each one says.
+
+\begin{itemize}
+\item
+  \textbf{No-teleportation.}
+  \emph{An arbitrary quantum state cannot be entirely expressed with classical information.}
+  \emph{In other words, the process of converting quantum information to classical information cannot be reversed: classical channels cannot transmit quantum information.}
+
+  This can be seen as a consequence of no-cloning: if we were able to turn a quantum state into classical information and then back again, we could simply clone the classical information and then get a cloned copy of our quantum state.
+
+  The name it a bit confusing, because we have just seen that \emph{quantum} teleportation is possible through the use of entanglement, but it refers to the idea of \emph{classical} teleportation of quantum states.
+
+  Note that the ``converse'' to this is possible though: if we start with some \emph{classical} information then we can convert it to quantum information and then back again perfectly fine (for example, using the fact that orthogonal states can be perfectly distinguished).
+\item
+  \textbf{No-broadcasting.}
+  \emph{Given a single copy of a quantum state, it cannot be shared with two or more parties.}
+
+  This is an even more direct consequence of no-cloning: if we can't copy a state, then we have no way of sharing it with multiple people.
+  However, the real technical statement of this theorem involves \textbf{non-pure states}, which require the language of \textbf{density operators} to talk about --- something that we will not see until Section \ref{density-matrices}.
+
+  One particularly unexpected detail here is that the theorem is no longer true if we're provided with more than one copy of the state to start with.
+  For example, in a process known as \textbf{superbroadcasting}\footnote{This is shown in D'Ariano, Macchiavello, and Perinotti's ``Superbroadcasting of mixed states'', arXiv:\href{https://arxiv.org/abs/quant-ph/0506251}{quant-ph/0506251}.}, given four copies of an input state we can actually broadcast six copies!
+\item
+  \textbf{No-deleting.}
+  \emph{Given two copies of an arbitrary quantum state, it is impossible to delete one.}
+
+  You might hear people saying that the fact that we require our quantum operations to be unitary is to do with \textbf{reversibility}\footnote{In fact, we'll talk a bit about reversibility of computation in Section \ref{quantum-boolean-function-evaluation}.}, and so there is a general pattern in quantum theory where theorems will have \textbf{time-dual} versions, giving by taking the same theorem but imagining that time goes in the opposite direction.
+  No-deleting is the time dual of no-cloning, and whereas the latter tells us that quantum states are pretty delicate, the former tells us that they are also in some sense rather robust.
+
+  We might as well state this theorem a bit more precisely, because we have seen almost all of the necessary definitions already: given a qubit in an unknown state \(|\psi\rangle\), there is no \textbf{isometry} \(V\) (Section \ref{random-isometries}) such that
+  \[
+    V\colon
+    |\psi\rangle|\psi\rangle|W\rangle
+    \longmapsto
+    |\psi\rangle|0\rangle|W'\rangle
+  \]
+  with \(|W'\rangle\) being independent of \(|\psi\rangle\).
+  Just as for no-cloning, we can of course delete \emph{some qubits} (for example those in orthogonal states, since these behave a lot like classical bits), but there is no \(V\) that works universally, for \emph{any} arbitrary state \(|\psi\rangle\).
+\item
+  \textbf{No-communication.}
+  \emph{An entangled state cannot be used to transmit information by measurement of a subsystem.}
+
+  We talk about this theorem in the context of a worked example in Exercise \ref{instantaneous-communication}, and we delve into the details when we talk about \textbf{Bell tests} in Section \ref{bells-theorem}, but it is basically the answer to Einstein's worry about ``spooky action at a distance'' that we mentioned back in Section \ref{a-very-brief-history}: the seemingly infinitely fast sending of information between entangled qubits cannot actually send any meaningful information, but only purely random bits.
+
+  This theorem is actually stronger than no-cloning, in that we can prove no-cloning from no-communication.
+
+  Yet again we see another example of how the quantum whole is much greater than the sum of its parts: no-teleportation says that classical channels alone cannot send quantum information; no-communication says that entanglement and measurement alone cannot send quantum information; the quantum teleportation protocol of Section \ref{quantum-teleportation} says that you \emph{can} send quantum information \emph{if you combine both methods together}.
+\item
+  \textbf{No-hiding.}
+  \emph{Quantum information cannot be lost, even through decoherence.}
+
+  This theorem is related to no-deletion, in that it shows the robustness of quantum states.
+  In Section \ref{decoherence-and-basic-quantum-error-correction} we will study the notion of \textbf{decoherence}, which is sort of like ``quantum noise'', and is one of the main problems faced when actually trying to design and build quantum computers in reality.
+  The no-hiding theorem says that, when quantum information is ``lost'' through decoherence, it actually merely moves into the subspace corresponding to the environment --- \emph{we} might have lost it, but nature hasn't.
+\end{itemize}
 
 \hypertarget{controlled-phase-and-controlled-u}{%
 \subsection{Controlled-phase and controlled-U}\label{controlled-phase-and-controlled-u}}
@@ -5353,17 +5623,17 @@ In order to see the entangling power of the controlled-phase shift gate, conside
 
 \emph{(Generating entanglement, again).}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-43-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-48-1} \end{center}
 
 \end{circuit}
 
 In this circuit, first the two Hadamard gates prepare the equally-weighted superposition of all states from the computational basis
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-44-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-49-1} \end{center}
 
 and then the controlled-\(Z\) operation flips the sign in front of \(|11\rangle\)
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-45-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-50-1} \end{center}
 
 which results in an entangled state.
 
@@ -5431,14 +5701,14 @@ The price to pay is the number of gates --- better precision requires more gates
 \hypertarget{phase-kick-back}{%
 \subsection{Phase kick-back}\label{phase-kick-back}}
 
-Before moving on to a few more mathematically fundamental questions, we first describe a simple yet omnipresent ``trick'' --- an unusual way of introducing phase shifts that will be essential for our analysis of quantum algorithms.
+Before moving on, we first describe a simple yet omnipresent ``trick'' --- an unusual way of introducing phase shifts that will be essential for our analysis of quantum algorithms.
 Consider the following circuit.
 
 \begin{circuit}
 
 \emph{(Controlled-\(U\) interference).}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-46-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-51-1} \end{center}
 
 where \(|u\rangle\) is an \emph{eigenstate} of \(U\), so that \(U|u\rangle = e^{i\varphi}|u\rangle\) for some \(\varphi\).
 
@@ -5513,8 +5783,30 @@ Phase kick-back is how we control quantum interference in quantum computation.
 
 We will return to this topic later on in Section \ref{more-phase-kick-back}, when we discuss quantum evaluation of Boolean functions and quantum algorithms.
 
+\hypertarget{density-operators-and-other-things-to-come}{%
+\subsection{Density operators, and other things to come}\label{density-operators-and-other-things-to-come}}
+
+The existence of entangled states leads to an obvious question: if we cannot attribute a state vector to an individual qubit, then how can we describe its quantum state?
+In the next few chapters we will see that, when we limit our attentions to a part of a larger system, states are not represented by vectors, measurements are not described by orthogonal projections, and evolution is not unitary.
+As a spoiler, here is a dictionary of some of the new concepts that will soon be introduced:
+
+\begin{longtable}[]{@{}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2857}}
+  >{\centering\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4286}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2857}}@{}}
+\toprule()
+\endhead
+state vectors & \(\rightsquigarrow\) & density operators \\
+orthogonal projectors & \(\rightsquigarrow\) & positive operator-valued measures \\
+unitary evolutions & \(\rightsquigarrow\) & completely-positive trace-preserving maps \\
+\bottomrule()
+\end{longtable}
+
+\hypertarget{remarks-and-exercises-entanglement}{%
+\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-entanglement}}
+
 \hypertarget{why-qubits-subsystems-and-entanglement}{%
-\subsection{Why qubits, subsystems, and entanglement?}\label{why-qubits-subsystems-and-entanglement}}
+\subsubsection{Why qubits, subsystems, and entanglement?}\label{why-qubits-subsystems-and-entanglement}}
 
 One question that is rather natural to ask at this point is the following:
 
@@ -5551,28 +5843,6 @@ That is, we spend \emph{less energy}, but the trade off is that we have to spend
 It turns out that whichever way we try to represent the number \(N\) in the unary encoding (i.e.~using \(N\) different states of a single chunk of matter), we end up depleting our physical resources (such as energy or time, or even space) at a much greater rate than in the case when we use subsystems.
 This plausibility argument indicates that, for efficient processing of information, the system must be divided into subsystems --- for example, into physical bits.
 
-\hypertarget{density-operators-and-other-things-to-come}{%
-\subsection{Density operators, and other things to come}\label{density-operators-and-other-things-to-come}}
-
-The existence of entangled states leads to an obvious question: if we cannot attribute a state vector to an individual qubit, then how can we describe its quantum state?
-In the next few chapters we will see that, when we limit our attentions to a part of a larger system, states are not represented by vectors, measurements are not described by orthogonal projections, and evolution is not unitary.
-As a spoiler, here is a dictionary of some of the new concepts that will soon be introduced:
-
-\begin{longtable}[]{@{}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2857}}
-  >{\centering\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4286}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2857}}@{}}
-\toprule()
-\endhead
-state vectors & \(\rightsquigarrow\) & density operators \\
-orthogonal projectors & \(\rightsquigarrow\) & positive operator-valued measures \\
-unitary evolutions & \(\rightsquigarrow\) & completely-positive trace-preserving maps \\
-\bottomrule()
-\end{longtable}
-
-\hypertarget{remarks-and-exercises-entanglement}{%
-\subsection{\texorpdfstring{\emph{Remarks and exercises}}{Remarks and exercises}}\label{remarks-and-exercises-entanglement}}
-
 \hypertarget{entangled-or-not}{%
 \subsubsection{Entangled or not?}\label{entangled-or-not}}
 
@@ -5596,7 +5866,10 @@ Assume that \(\mathcal{H}_{\mathcal{A}}\) and \(\mathcal{H}_{\mathcal{B}}\) are 
   is entangled for odd values of \(k\) and unentangled for even values of \(k\). Express the latter case explicitly as a product state.
 \end{enumerate}
 
-There is a lot of interesting physics behind the previous innocuous-looking mathematical statement.
+\hypertarget{instantaneous-communication}{%
+\subsubsection{Instantaneous communication}\label{instantaneous-communication}}
+
+There is a lot of interesting physics behind the innocuous-looking mathematical statement of Exercise \ref{entangled-or-not}.
 For example, think again about the state \((|00\rangle+|11\rangle)/\sqrt{2}\).
 What happens if you measure just the first qubit?
 It is equally likely that you get \(|0\rangle\) or \(|1\rangle\), right?
@@ -5621,7 +5894,7 @@ Show that, for any states \(|\psi_1\rangle\) and \(|\psi_2\rangle\) of two qubit
 
 \emph{(Swapping).}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-47-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-52-1} \end{center}
 
 \end{circuit}
 
@@ -5634,7 +5907,7 @@ Show that the circuit below gives another implementation of the controlled-\(\te
 
 \emph{(Controlled-\(\texttt{NOT}\), again).}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-48-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-53-1} \end{center}
 
 \end{circuit}
 
@@ -5650,7 +5923,7 @@ Take a look at the circuit below, where \(M\) stands for measurement in the stan
 
 \emph{(?).}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-49-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-54-1} \end{center}
 
 \end{circuit}
 
@@ -5691,7 +5964,7 @@ One qubit is sent to Alice, and one to Bob, who then both perform measurements i
   Prior to the measurements in the computational basis, Alice and Bob apply unitary operations \(R_\alpha\) and \(R_\beta\) (respectively), for some fixed values \(\alpha,\beta\in\mathbb{R}\), to their respective qubits:
 \end{enumerate}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-50-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-55-1} \end{center}
 
 where the gate \(R_\theta\) is defined by its action on the basis states:
 \[
@@ -5753,7 +6026,7 @@ The swap gate \(\texttt{SWAP}\) on two qubits is defined first on product vector
 
 \emph{(Symmetric and antisymmetric projection).}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-51-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-56-1} \end{center}
 
 \end{circuit}
 
@@ -5811,7 +6084,7 @@ This is often the easiest way to get the tensor products in practice.
 
 The matrix elements of the tensor product operation \(A\otimes B\)
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-52-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-57-1} \end{center}
 
 are given by
 \[
@@ -5944,7 +6217,7 @@ and thus that
 The rows and columns of \(H\otimes H\otimes H\) are labelled by the triples \(000,001,\ldots,111\).
 Now, suppose we apply \(H\otimes H\otimes H\) to the state \(|110\rangle\):
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-53-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-58-1} \end{center}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -6352,7 +6625,7 @@ The experimental violations of the CHSH inequality have shown us that there are 
 We can make use of this randomness is a number of different ways, the most obvious example of which being a random number generator.
 Indeed, we have already met one suitable implementation:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-54-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-59-1} \end{center}
 
 The state before measurement is \((|0\rangle+|1\rangle)/\sqrt{2}\), so the two possible outcomes occur with equal probability.
 This is a truly random number generator, not like the pseudorandom one that is used if you ask your computer for some random data.
@@ -6815,7 +7088,7 @@ where \(|\pm i\rangle=\frac{1}{\sqrt{2}}(|0\rangle+i|1\rangle)\) and \(|\pm\rang
 
 On the Bloch sphere, these single-qubit stabiliser states lie at the intersection of the three axes with the surface of the sphere.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-55-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-60-1} \end{center}
 
 We can also say something about the remaining two elements of the single-qubit Pauli group: \(\mathbf{1}\) stabilises everything, and \(-\mathbf{1}\) stabilises nothing (except for the zero state, which we explicitly ignore).
 More generally, if \(S\) stabilises something then \(-S\) cannot stabilise the same thing.
@@ -7045,7 +7318,7 @@ Let's start by measuring any single-qubit observable that squares to the identit
 The corresponding operator \(P\) with eigenvalues \(\pm1\) is both Hermitian and unitary, and can thus represent both an observable and a quantum gate.
 If we prepare a qubit in some state \(|\psi\rangle\) and then wish to perform a measurement that will give us a result of \(\pm1\) and leave the qubit in a post-measurement state, namely the corresponding eigenvector, then we can use the following circuit (where \(\propto\) denotes that two states are multiples of one another).
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-56-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-61-1} \end{center}
 
 This construction requires an auxiliary qubit (in the top register), two Hadamard gates, and the tacit assumption that we can construct a controlled-\(P\) operator.
 Stepping through the execution of this circuit, we get
@@ -7065,16 +7338,16 @@ In particular, the \(X\), \(Y\), and \(Z\) observables can be measured using con
 This pattern can easily be extended to an \(n\)-qubit Pauli operator.
 For example, for \(n=3\), a generic circuit that implements a projective measurement onto the \(\pm1\) eigenspaces of \(S=P_1\otimes P_2\otimes P_3\) has the form
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-57-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-62-1} \end{center}
 
 and is usually drawn more compactly as
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-58-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-63-1} \end{center}
 
 In this way, we can measure stabilisers and project onto the subspaces that they stabilise.
 For example, take the stabiliser group \(\mathcal{S}=\langle XX,ZZ\rangle\), and consider the circuit below:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-59-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-64-1} \end{center}
 
 The registered bit values from the first and second (counting from the top) auxiliary qubits tell us how we bisect the Hilbert space with \(XX\) and \(ZZ\) (respectively), recalling that a bit value of \(0\) corresponds to the \(+1\) Pauli eigenvalue, and a bit value of \(1\) to the \(-1\) eigenvalue.
 The first measurement can project \(|\psi\rangle\) either onto \(\frac{1}{2}(\mathbf{1}+XX)\) (in which case the first auxiliary qubit will show \(0\), corresponding to the eigenvalue \(+1\), and the subspace spanned by \(|00\rangle+|11\rangle\) and \(|01\rangle+|10\rangle\)) or onto \(\frac{1}{2}(\mathbf{1}-XX)\) (in which case the first auxiliary qubit will show \(1\), corresponding to the eigenvalue \(-1\), and the subspace spanned by \(|00\rangle-|11\rangle\) and \(|01\rangle-|10\rangle\)).
@@ -7110,7 +7383,7 @@ Any two cosets (i.e.~any two choices of \(g\in G\)) are either entirely equal or
 The relevance of normality here is that if \(H\) is normal, then there is no need to distinguish between left (\(gH\)) and right (\(Hg\)) cosets, and in this case we can construct the \textbf{quotient group} \(G/H\) consisting of cosets with the operation defined by \(gH\cdot g'H=(gg')H\).
 Here is one way to visualise a partition into cosets:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-60-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-65-1} \end{center}
 
 The bottom row represents the subgroup \(H\), and each row above represents a coset, i.e.~a set of elements generated by picking an element \(c_k\) of \(G\) that does not belong to \(H\) nor to any of the previously generated cosets, and then multiplying this element by all elements in \(H\), one at a time.
 This picture above shows that, for any finite group \(G\) and any subgroup \(H\leqslant G\),
@@ -7275,18 +7548,18 @@ Input/Output
 
 and these rules can be expressed as circuit identities, such as
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-61-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-66-1} \end{center}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-62-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-67-1} \end{center}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-63-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-68-1} \end{center}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-64-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-69-1} \end{center}
 
 Let's work through an example to see how these rules work in practice.
 Here's a simple stabiliser circuit:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-65-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-70-1} \end{center}
 
 As we step through this circuit we embark on our \textbf{Clifford walk} between two-qubit stabiliser states:
 \[
@@ -7374,32 +7647,32 @@ whereas the bit-value measurements \(Z\mathbf{1}\) and \(\mathbf{1}Z\) are chara
 
 In terms of circuits, if we want to measure the parity of two qubits prepared in some state \(|\psi\rangle\), then we can use the circuit
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-66-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-71-1} \end{center}
 
 which is different from the circuit which effects the measurement of the individual bit values of the two qubits, namely
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-67-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-72-1} \end{center}
 
 When dealing with stabilisers, we prefer to think of the controlled-\(\texttt{NOT}\) gate as a controlled-\(X\) instead.
 We then draw the parity-measurement circuit as
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-68-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-73-1} \end{center}
 
 But this is a bit confusing, since we are measuring the \(Z\) observable using controlled-\(X\) gates.
 Thankfully, we can use some circuit/Pauli identities to rephrase things in terms of controlled-\(Z\) gates instead:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-69-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-74-1} \end{center}
 
 This is a quantum version of the two-bit parity measurement.
 When the auxiliary qubit (now in the top register) is found in state \(|0\rangle\) then we projected onto the \(+1\) eigenspace of \(ZZ\), which is spanned by the vectors \(|00\rangle\) and \(|11\rangle\); otherwise, we projected onto the \(-1\) eigenspace of \(ZZ\), which is spanned by the vectors \(|01\rangle\) and \(|10\rangle\).
 The circuit above is more commonly drawn simply as
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-70-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-75-1} \end{center}
 
 This scheme can be generalised and used to implement any sequence of Pauli measurements.
 For example, the circuit below shows to consecutive measurements: \(X\mathbf{1}Z\) followed by \(\mathbf{1}YZ\).
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-71-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-76-1} \end{center}
 
 \hypertarget{pauli-group-three-qubits-worked-example}{%
 \subsubsection{The Pauli group of three qubits}\label{pauli-group-three-qubits-worked-example}}
@@ -7529,9 +7802,9 @@ In Section \ref{measuring-pauli-stabilisers} we described a generic method for c
 However, sometimes it may be easier to use equivalent, simpler constructions.
 For example, the following two circuit identities are often used:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-72-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-77-1} \end{center}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-73-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-78-1} \end{center}
 
 These both follows from the fact that \(HZH=X\), and that the control and the target of a controlled-\(Z\) gate can be chosen arbitrarily, since the gate itself is symmetric with respect to this choice (the phase flip only happens when both qubits are in state \(|1\rangle\)).
 
@@ -8264,7 +8537,7 @@ But how?
 The short answer is: by adding (via \emph{tensoring}) and removing (via \emph{partial trace}) physical systems.
 A typical combination of these operations is shown in the following diagram:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-74-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-79-1} \end{center}
 
 Let's explain what this diagram is really saying.
 
@@ -8424,7 +8697,7 @@ An isometry \(V\colon\mathcal{H}\to\mathcal{H}'\) maps the \emph{whole} Hilbert 
 As a consequence, the matrix representation of an isometry is a rectangular matrix formed by selecting only a few of the columns from a unitary matrix.
 For example, given a unitary \(U\) we can construct an isometry \(V\) as follows:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-75-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-80-1} \end{center}
 
 The fact that an isometry \(V\) preserves the inner products comes from the fact that we require \(V^\dagger V=\mathbf{1}_{\mathcal{H}}\);
 we do \emph{not} require \(VV^\dagger=\mathbf{1}_{\mathcal{H'}}\).
@@ -8476,7 +8749,7 @@ We shall return to such channels later on.
 Here is a simple, but important, example, which we will revisit several times in different disguises: that of the \textbf{three-qubit code}.
 Take a qubit in some pure state \(|\psi\rangle=\alpha_0|0\rangle+\alpha_1|1\rangle\), introduce two auxiliary qubits in a fixed state \(|0\rangle|0\rangle\), and apply a unitary operation to the three qubits, namely two controlled-\(\texttt{NOT}\) gates:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-76-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-81-1} \end{center}
 
 The result is the isometric embedding of the \(2\)-dimensional Hilbert space of the first qubit (spanned by \(|0\rangle\) and \(|1\rangle\)) into the \(2\)-dimensional subspace (spanned by \(|000\rangle\) and \(|111\rangle\)) of the \(8\)-dimensional Hilbert space of the three qubits.
 The isometric operator
@@ -8490,7 +8763,7 @@ acts via
 \]
 This three qubit-encoding can be reversed by the mirror image circuit:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-77-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-82-1} \end{center}
 
 This isometry is just one member of a family, as we now explain.
 
@@ -8531,7 +8804,7 @@ Bob can now simply apply \(V_2^\dagger\) and obtain \(|\psi\rangle\).
 Just in case you are curious (as you should be!), below is a diagram of how the four isometries are implemented.
 How would you reverse these operations?
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-78-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-83-1} \end{center}
 
 \hypertarget{evolution-of-open-systems}{%
 \subsection{Evolution of open systems}\label{evolution-of-open-systems}}
@@ -9004,7 +9277,7 @@ When we compose quantum channels, each channel needs its own independent ancilla
 For example, say we have three channels, \(\mathcal{E}_1\), \(\mathcal{E}_2\), and \(\mathcal{E}_3\), with \(\mathcal{E}_i\) defined by the unitary \(U_i\) and the state \(|a_i\rangle\) of its ancilla.
 Then the (sequential) composition \(\mathcal{E}_3\circ\mathcal{E}_2\circ\mathcal{E}_1\) is given by
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-79-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-84-1} \end{center}
 
 where each \(\mathcal{E}_i\) has its own associated ancilla \(|a_i\rangle\).
 For more on this, see Section \ref{markov-approximation}, where we talk about \textbf{Markov approximation}.
@@ -9133,7 +9406,7 @@ Now any linear map \(\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\ma
 \]
 We can now tabulate the \((d\times d)\)-many \((d'\times d')\) matrices \(\mathcal{E}(|i\rangle\langle j|)\) in \(\mathcal{H}'\) by forming a bigger \((dd'\times dd')\) block matrix in \(\mathcal{H}\otimes\mathcal{H}'\):
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-80-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-85-1} \end{center}
 
 After scaling by a factor of \(\frac{1}{d}\), we call this block matrix \(\widetilde{\mathcal{E}}\in\mathcal{B}(\mathcal{H}\otimes\mathcal{H}')\) the \textbf{Choi matrix}\footnote{Man-Duen Choi was brought up in Hong Kong. He received his Ph.D.~degree under the guidance of Chandler Davis at Toronto. He taught at the University of California, Berkeley, from 1973 to 1976, and has worked since then at the University of Toronto. His research has been mainly in operator algebras, operator theory, and polynomial rings. He is particularly interested in examples/counterexamples and \(2\times2\) matrix manipulations.} of \(\mathcal{E}\).
 
@@ -9163,7 +9436,7 @@ If we take \(A\) and \(B\) to be the block matrices \(\rho\otimes\mathbf{1}\) an
 
 This gives us a one-to-one correspondence between linear maps \(\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')\) and matrices \(\widetilde{\mathcal{E}}\) acting on the tensor product \(\mathcal{H}\otimes\mathcal{H}'\), known as the \textbf{Choi--Jamiołkowski isomorphism} \(\mathcal{E}\mapsto\widetilde{\mathcal{E}}\).
 
-\begin{technical}{The Choi–Jamiołkowski isomorphism}
+\begin{technical}{The Choi--Jamiołkowski isomorphism}
 The correspondence between linear maps \(\mathscr{B}(\mathcal{H})\to\mathscr{B}(\mathcal{H'})\) and operators in \(\mathscr{B}(\mathcal{H}\otimes\mathcal{H'})\), known as the \href{https://en.wikipedia.org/wiki/Choi\%E2\%80\%93Jamio\%C5\%82kowski_isomorphism}{\textbf{Choi--Jamiołkowski isomorphism}} (or \href{https://en.wikipedia.org/wiki/Channel-state_duality}{\textbf{channel-state duality}} in the specific setting of quantum information), is another example of a well known correspondence between vectors in \(\mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\) and operators \(\mathscr{B}(\mathcal{H}_{\mathcal{A}}^\star,\mathcal{H}_{\mathcal{B}})\) or \(\mathscr{B}(\mathcal{H}_{\mathcal{B}}^\star,\mathcal{H}_{\mathcal{A}})\).
 
 Take a tensor product vector in \(|a\rangle\otimes|b\rangle\in \mathcal{H}_{\mathcal{A}}\otimes\mathcal{H}_{\mathcal{B}}\).
@@ -9224,7 +9497,7 @@ where \(d=\dim\mathcal{H}\).
 
 Pictorially, we might represent this by something like
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-81-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-86-1} \end{center}
 
 \end{idea}
 
@@ -9671,14 +9944,14 @@ Compare, for example, the following two scenarios.
 
 Firstly:\footnote{Here we have reverted to the convention of writing the ancilla/environment \emph{after} the system of interest instead of \emph{before}.}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-82-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-87-1} \end{center}
 
 Here the system, initially in state \(\rho\), undergoes two stages of evolution, and the environment, initially in state \(|e\rangle\), is \emph{not} discarded after the first unitary evolution \(U_A\); the environment persists and participates in the second unitary evolution \(U_B\).
 In this case the evolutions \(\rho\mapsto\rho'\) and \(\rho\mapsto\rho''\) are both well defined quantum channels, \emph{but the evolution \(\rho'\mapsto\rho''\) is not}: it falls outside the remit of our formalism because the input state of the system and the state of the environment are \emph{not independent}.
 
 Secondly:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-83-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-88-1} \end{center}
 
 Here we have two stages of evolution, as before, but we \emph{discard} the environment after the first unitary, and start the second unitary evolution in a fresh tensor-product state, with a \emph{new} environment;
 the two stages involve \emph{independent environments}.
@@ -9727,7 +10000,7 @@ We say that a state is a \textbf{PPT state}\footnote{``PPT'' stands for \emph{po
 An important thing to note is that separable states are PTT, but the converse is generally \emph{not} true: there exist entangled PPT states.
 However, in the specific case of \emph{two} qubits, the converse \emph{is} true: the PPT states are exactly the separable states.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-84-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-89-1} \end{center}
 
 \hypertarget{partial-inner-product}{%
 \subsubsection{Partial inner product}\label{partial-inner-product}}
@@ -9770,7 +10043,7 @@ Recall that the unitary operator associated with the \(\texttt{c-NOT}\) gate can
 where is \(X\) is the Pauli \(\sigma_x\) gate (i.e.~the \(\texttt{NOT}\) gate).
 Let us step through the following simple circuit:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-85-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-90-1} \end{center}
 
 This time we are interested in the evolution of the \emph{control} qubit: the control qubit will be our system, and the target qubit, initially in a fixed state \(|0\rangle\), will play the role of an ancilla.
 
@@ -10002,7 +10275,7 @@ and for \(\frac{3}{4}\leqslant p\leqslant 1\), the Bloch vector is flipped, and 
 
 Consider the \href{https://en.wikipedia.org/wiki/Toffoli_gate}{\textbf{Toffoli gate}}
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-86-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-91-1} \end{center}
 
 Express \(\rho'\) as a function of \(\rho\) in the Kraus representation.
 
@@ -10312,7 +10585,7 @@ For this purpose, we ignore everything that happens inside the black box: in our
 
 We start, once more, with the simplest quantum interference circuit
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-87-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-92-1} \end{center}
 
 but let's turn this into a black-box scenario, often known as the \textbf{binary observable measurement} problem:\footnote{You might recognise this as Exercise \ref{unknown-phase}, and we will return to this problem again in Section \ref{phase-estimation}.}
 
@@ -10368,7 +10641,7 @@ But, in the quantum setting, we can solve this problem with a \emph{single} func
 
 First register: \(1\) qubit. Second register: \(1\) qubit.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-88-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-93-1} \end{center}
 
 \end{circuit}
 
@@ -10389,7 +10662,7 @@ During the function evaluation, the second register ``kicks back'' the phase fac
 
 The evolution of the first qubit is thus identical to that described by the circuit diagram
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-89-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-94-1} \end{center}
 
 where the relative phase is \(\varphi = (-1)^{f(0)\oplus f(1)}\).
 The first qubit ends in state \(|0\rangle\) if the function \(f\) is constant, and in state \(|1\rangle\) if the function is balanced, and the standard measurement distinguishes these two cases with certainty.\footnote{This is also implemented in the \href{https://lab.quantumflytrap.com/lab/deutsch-jozsa?mode=laser}{Quantum Flytrap Virtual Lab}.}
@@ -10458,18 +10731,18 @@ In contrast, by running the circuit below, it is possible to determine the value
 
 First register: \(n\) qubits. Second register: \(1\) qubit.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-90-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-95-1} \end{center}
 
 \end{circuit}
 
 A quick note on notation: the ``\(\ldots\)'' in the circuit means ``there are more wires here but they are identical (apart from the numbering) to the ones above''.
 You might also see other notation to denote this, such as
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-91-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-96-1} \end{center}
 
 or even simply
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-92-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-97-1} \end{center}
 
 Now, stepping through the execution of the circuit (and ignoring the second register, which, as per usual, remains in the state \(|-\rangle\) throughout), we obtain
 \[
@@ -10555,7 +10828,7 @@ In contrast, there is a quantum search algorithm, implemented by the circuit bel
 
 First register: \(n\) qubits. Second register: \(1\) qubit.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-93-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-98-1} \end{center}
 
 where \(f_0\) tags the binary string consisting of \(n\) zeros:
 \[
@@ -10701,7 +10974,7 @@ The circuit that solves this problem, shown below, has a familiar Hadamard--func
 
 First register: \(n\) qubits. Second register: \(n\) qubits.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-94-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-99-1} \end{center}
 
 \end{circuit}
 
@@ -10854,7 +11127,7 @@ Our task is to determine, using the fewest queries possible, the value of \(\var
 
 First register: \(1\) qubit. Second register: \(1\) qubit.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-95-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-100-1} \end{center}
 
 \end{circuit}
 
@@ -10915,7 +11188,7 @@ and so, by the \(2\pi\)-periodicity of \(e^{ix}\), we see that
 and now we're happy: \(m_n\in\{0,1\}\), so this is an eigenvalue of \(U^{2^{n-1}}\) with phase \(0\) or \(\pi\), reducing us to the original binary observable measurement problem that we have already solved by replacing \(U\) with \(U^{2^{n-1}}\).
 We have found the \(n\)-th bit \(m_n\)!
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-96-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-101-1} \end{center}
 
 We've dealt with shrinking\footnote{Any interval \([a,b]\) in \(\mathbb{R}\) can be turned into any other interval \([c,d]\) by a single shrink (or scale) and a single shift: multiply \(a\) and \(b\) by \((d-c)/(b-a)\) to get \(a'\) and \(b'\), and then add \(c-a'\) to both \(a'\) and \(b'\).} the distance between the two possible phases (if we have \(0\) and \(\pi/k\) for some \(k\in\mathbb{N}\) then we simply replace \(U\) by \(U^k\)), so now let's look at the other way of modifying a pair of phases: shifting.
 We have the same setup --- a phase gate of unknown phase \(\varphi\) --- but this time we are promised that \(\varphi\) is either \(-\pi/2\) or \(\pi/2\) (instead of \(0\) or \(\pi\)).
@@ -10933,12 +11206,12 @@ If we just try the same trick as before then we run into problems: it's true tha
 so we have an annoying phase of \(\pi m_n/2\) in the way.
 However, we know that all we have to do now is to compensate for this by adding another phase gate:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-97-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-102-1} \end{center}
 
 Once we've got the value of \(m_{n-1}\) from this circuit, then we can simply apply the same idea to find \(m_{n-2}\), \(m_{n-3}\), and so on, until we have all the \(m_i\) for \(i=1,\ldots,n\).
 For example, the circuit to determine \(m_{n-3}\) (given than we already know \(m_n\), \(m_{n-1}\), and \(m_{n-2}\)) is
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-98-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-103-1} \end{center}
 
 The entire process for determining the whole string \(m_1\ldots m_n\), solving the scenario, can be written in a form that looks exactly how we expect: Hadamard--phase--Hadamard, modulo some subtle changes, which we will explain.
 
@@ -10948,7 +11221,7 @@ The entire process for determining the whole string \(m_1\ldots m_n\), solving t
 
 First register: \(n\) qubits. Second register: \(1\) qubit.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-99-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-104-1} \end{center}
 
 where \(U^\triangle\) is defined below, and \(FT^\dagger\) is defined in Section \ref{quantum-fourier-transform}.
 
@@ -10961,7 +11234,7 @@ In this circuit, we write \(U^\triangle\) to mean the unitary that performs func
 \]
 or, in circuit language, the gate that acts on the \(i\)-th register as a controlled-\(U^{2^{n-i}}\) gate:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-100-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-105-1} \end{center}
 
 It is important to note, however, that we are sweeping something under the rug here.
 If we can treat \(U^\triangle\) as an oracle itself, then this does indeed give an efficient solution, but if all we have access to is \(U\) then things are definitely not efficient: we are calling it \(2^{n-1}+2^{n-2}+\ldots+2^0=2^n-1\) many times, which is \emph{exponentially bad}!
@@ -11171,7 +11444,7 @@ The actual circuit\footnote{Named for \href{https://en.wikipedia.org/wiki/Peter_
 
 First register: \(2n+1\) qubits. Second register: \(n\) qubits.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-101-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-106-1} \end{center}
 
 \end{circuit}
 
@@ -11468,7 +11741,7 @@ Prove that, for any \(y\in\{0,1\}^n\),
 \section{Quantum cryptography}\label{quantum-cryptography}}
 
 \begin{quote}
-About \textbf{!!!TO-DO!!!}.
+About \ldots{}
 \end{quote}
 
 \begin{todo}
@@ -11590,13 +11863,13 @@ We first express the square of the distance between any two vectors in terms of 
     \|u-v\|^2
     &= \langle u-v|u-v\rangle
   \\&= \langle u|u\rangle - \langle u|v\rangle - \langle v|u\rangle + \langle v|v\rangle
-  \\&= \|u\|^2 +\|v\|^2 - 2\Re\langle u|v\rangle
+  \\&= \|u\|^2 +\|v\|^2 - 2\operatorname{Re}\langle u|v\rangle
   \end{aligned}
 \]
-(where \(\Re(z)\) is the real part of the complex number \(z\)).
+(where \(\operatorname{Re}(z)\) is the real part of the complex number \(z\)).
 Then we can write the Euclidean distance between state vectors as
 \[
-  \|u-v\| = \sqrt{2(1-\Re\langle u|v\rangle)}.
+  \|u-v\| = \sqrt{2(1-\operatorname{Re}\langle u|v\rangle)}.
 \]
 Now if we want to minimise this expression over all rotations\footnote{Recall that multiplication by a complex number corresponds to rotation and scaling, and so multiplication by a phase factor (which is always of unit length) corresponds to just rotation.} of \(v\), then we want \(\langle u|v\rangle\) to be real and as large as possible, i.e.~for \(\langle u|v\rangle=|\langle u|v\rangle|\).
 This gives us a definition of distance.
@@ -11617,7 +11890,7 @@ The justification is that, as we have already said, the usual Euclidean distance
 For \emph{small} values of \(d(u,v)=\|u-v\|\), we can think of this distance as being the angle between the two unit vectors.
 Indeed, if we think of Euclidean (unit) vectors, then the difference \(v-u\) is, for sufficiently small \(\|u-v\|\), just the angle between the two unit vectors (expressed in radians), because a small segment of a circle ``almost'' looks like a triangle.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-102-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-107-1} \end{center}
 
 Alternatively (and more formally), we can see this by writing \(|\langle u|v\rangle|=\cos\alpha\approx1-\alpha^2/2\), since then
 \[
@@ -12213,7 +12486,7 @@ Here we will improve upon this result, explaining how to adapt the same circuit 
 So say we have some controlled-\(U\) gate with eigenvector \(|u\rangle\) and eigenvalue \(e^{i\varphi}\).
 We can run the same circuit as we did in Section \ref{phase-estimation}:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-103-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-108-1} \end{center}
 
 As before, the Hadamard gate followed by the controlled-\(U^\triangle\) gate prepare the state
 \[
@@ -12375,7 +12648,7 @@ where \(D\) is the diagonal matrix of eigenvalues (and so \(\sqrt{D}\) is the di
 Geometrically, we are decomposing any linear transformation into a composition of a rotation or reflection \(V^\dagger\), followed by a scaling by the singular values \(\sqrt{D}\), followed by another rotation or reflection \(U\).
 This maps the unit sphere in \(\mathcal{H}\) onto an ellipsoid in \(\mathcal{H}'\), and the singular values of \(A\) are exactly the lengths of the semi-axes of this ellipsoid.
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-104-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-109-1} \end{center}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -12436,7 +12709,7 @@ One particularly nice consequence of this definition is that
 \]
 for any vector \(v\).
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-105-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-110-1} \end{center}
 
 You might recall that we named the Cauchy--Schwartz inequality as arguably the most useful inequality in analysis.
 Well it turns out that it is actually the special case \(p=2\) of an inequality concerning \(p\)-norms.
@@ -13128,13 +13401,13 @@ It turns out that we can actually rely on the same triple-repetition code, but w
 
 Given some qubit in an unknown pure state \(\alpha|0\rangle + \beta|1\rangle\), we encode it into three qubits by using \(\texttt{c-NOT}\) gates:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-106-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-111-1} \end{center}
 
 Suppose that the \emph{second} qubit is flipped by our noisy channel, so that the encoded state becomes \(\alpha|010\rangle + \beta|101\rangle\).
 Decoding this requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
 So instead we introduce another \emph{two additional} qubits, which we refer to as \textbf{ancilla bits}, both in state \(|0\rangle\), and apply the following \textbf{encoding network}:
 
-\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-107-1} \end{center}
+\begin{center}\includegraphics{qubit_guide_files/figure-latex/unnamed-chunk-112-1} \end{center}
 
 We measure the two ancilla bits (in the standard basis), and the result of the measurement, known as the \textbf{error syndrome}, tells us how to reset the three qubits of the code, as follows.
 
@@ -13170,17 +13443,6 @@ Computation on encoded states using noisy \emph{gates}, however, requires a few 
 
 \hypertarget{quantum-error-correction-and-fault-tolerance}{%
 \section{Quantum error correction and fault tolerance}\label{quantum-error-correction-and-fault-tolerance}}
-
-\begin{quote}
-About \ldots{}
-\end{quote}
-
-\begin{todo}
-
-\end{todo}
-
-\hypertarget{methods-of-computation}{%
-\section{Methods of computation}\label{methods-of-computation}}
 
 \begin{quote}
 About \ldots{}
