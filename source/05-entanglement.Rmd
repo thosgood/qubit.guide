@@ -13,7 +13,7 @@ Already, with just two qubits, we will encounter the remarkable phenomenon of **
 
 
 
-## A very brief history
+## A very brief history {#a-very-brief-history}
 
 The notion of **quantum entanglement** was the subject of many early debates that focused on the meaning of quantum theory.
 Back in the 1930s, Albert Einstein, Niels Bohr, Werner Heisenberg, and Erwin Schrödinger (to mention just the usual suspects) were trying hard to understand its conceptual consequences.^[E. Schrödinger, "Discussion of probability relations between separated system". *Mathematical Proceedings of the Cambridge Philosophical Society* **31** (1935), pp. 555--563.]
@@ -190,7 +190,7 @@ This is shown in Carcassi, Maccone, and Aidala's "The four postulates of quantum
 
 
 
-## More than two qubits, and binary expansions {#more-than-two-qubits-and-binary}
+## More qubits, and binary representations {#more-than-two-qubits-and-binary}
 
 Let's see how this formalism works for qubits.
 The $n$-fold tensor product of vectors from the standard basis $\{\ket{0},\ket{1}\}$ represent binary strings of length $n$.
@@ -380,7 +380,7 @@ We will now explore some of its computational implications.
 
 
 
-## Controlled-NOT: Bell states, teleportation, and cloning
+## Controlled-NOT
 
 <div class="video" title="Controlled-NOT" data-videoid="1PJonQOi5M8"></div>
 
@@ -461,7 +461,7 @@ Let us now study some of these things.
 
 
 
-## The Bell states, and the Bell measurement {#bell-states}
+## Bell states {#bell-states}
 
 <div class="video" title="Bell states" data-videoid="jWzTMtFiG8k"></div>
 
@@ -545,7 +545,7 @@ This property --- having maximal entropy (in some sense) --- makes the Bell stat
 
 
 
-## Quantum teleportation
+## Quantum teleportation {#quantum-teleportation}
 
 <div class="video" title="Quantum teleportation" data-videoid="lbrO_0EImZ4"></div>
 
@@ -673,7 +673,7 @@ We will better explain the ideas behind these sorts of arguments later on, in Se
 
 
 
-## Thou shalt not clone
+## No-cloning, and other no-go theorems
 
 <div class="video" title="Quantum cloning" data-videoid="sy3I932usMQ"></div>
 
@@ -703,9 +703,9 @@ If we then run our hypothetical cloning machine we get
 $$
   \begin{aligned}
     \ket{\psi}\ket{0}\ket{W}
-    &\mapsto \ket{\psi}\ket{\psi}\ket{W'}
+    &\longmapsto \ket{\psi}\ket{\psi}\ket{W'}
   \\\ket{\phi}\ket{0}\ket{W}
-    &\mapsto \ket{\phi}\ket{\phi}\ket{W''}
+    &\longmapsto \ket{\phi}\ket{\phi}\ket{W''}
   \end{aligned}
 $$
 where the third system, initially in state $\ket{W}$, represents everything else (say, the internal state of the cloning machine).
@@ -721,9 +721,69 @@ Note that, in quantum teleportation, the original state must therefore be _destr
 The no-cloning property of quantum states leads to interesting applications, of which quantum cryptography is one.
 
 ::: {.idea latex=""}
+**The no-cloning theorem.**
 Universal quantum cloners are _impossible_.
 :::
 
+:::: {.technical title="Approximate quantum cloning" latex="{Approximate quantum cloning}"}
+::: {.todo latex=""}
+<!-- TO-DO: approximate cloners can still exist! -->
+:::
+::::
+
+The no-cloning theorem is one of many so-called "no-go" theorems in quantum information.
+We won't look at all of them in depth, but it's worth mentioning them here and giving a very rough idea of what each one says.
+
+- **No-teleportation.**
+  *An arbitrary quantum state cannot be entirely expressed with classical information.*
+  *In other words, the process of converting quantum information to classical information cannot be reversed: classical channels cannot transmit quantum information.*
+
+  This can be seen as a consequence of no-cloning: if we were able to turn a quantum state into classical information and then back again, we could simply clone the classical information and then get a cloned copy of our quantum state.
+
+  The name it a bit confusing, because we have just seen that *quantum* teleportation is possible through the use of entanglement, but it refers to the idea of *classical* teleportation of quantum states.
+
+  Note that the "converse" to this is possible though: if we start with some *classical* information then we can convert it to quantum information and then back again perfectly fine (for example, using the fact that orthogonal states can be perfectly distinguished).
+
+- **No-broadcasting.**
+  *Given a single copy of a quantum state, it cannot be shared with two or more parties.*
+
+  This is an even more direct consequence of no-cloning: if we can't copy a state, then we have no way of sharing it with multiple people.
+  However, the real technical statement of this theorem involves **non-pure states**, which require the language of **density operators** to talk about --- something that we will not see until Section \@ref(density-matrices).
+
+  One particularly unexpected detail here is that the theorem is no longer true if we're provided with more than one copy of the state to start with.
+  For example, in a process known as **superbroadcasting**^[This is shown in D'Ariano, Macchiavello, and Perinotti's "Superbroadcasting of mixed states", arXiv:[quant-ph/0506251](https://arxiv.org/abs/quant-ph/0506251).], given four copies of an input state we can actually broadcast six copies!
+
+- **No-deleting.**
+  *Given two copies of an arbitrary quantum state, it is impossible to delete one.*
+
+  You might hear people saying that the fact that we require our quantum operations to be unitary is to do with **reversibility**^[In fact, we'll talk a bit about reversibility of computation in Section \@ref(quantum-boolean-function-evaluation).], and so there is a general pattern in quantum theory where theorems will have **time-dual** versions, giving by taking the same theorem but imagining that time goes in the opposite direction.
+  No-deleting is the time dual of no-cloning, and whereas the latter tells us that quantum states are pretty delicate, the former tells us that they are also in some sense rather robust.
+
+  We might as well state this theorem a bit more precisely, because we have seen almost all of the necessary definitions already: given a qubit in an unknown state $\ket{\psi}$, there is no **isometry** $V$ (Section \@ref(random-isometries)) such that
+  $$
+    V\colon
+    \ket{\psi}\ket{\psi}\ket{W}
+    \longmapsto
+    \ket{\psi}\ket{0}\ket{W'}
+  $$
+  with $\ket{W'}$ being independent of $\ket{\psi}$.
+  Just as for no-cloning, we can of course delete *some qubits* (for example those in orthogonal states, since these behave a lot like classical bits), but there is no $V$ that works universally, for *any* arbitrary state $\ket{\psi}$.
+
+- **No-communication.**
+  *An entangled state cannot be used to transmit information by measurement of a subsystem.*
+
+  We talk about this theorem in the context of a worked example in Exercise \@ref(instantaneous-communication), and we delve into the details when we talk about **Bell tests** in Section \@ref(bells-theorem), but it is basically the answer to Einstein's worry about "spooky action at a distance" that we mentioned back in Section \@ref(a-very-brief-history): the seemingly infinitely fast sending of information between entangled qubits cannot actually send any meaningful information, but only purely random bits.
+
+  This theorem is actually stronger than no-cloning, in that we can prove no-cloning from no-communication.
+
+  Yet again we see another example of how the quantum whole is much greater than the sum of its parts: no-teleportation says that classical channels alone cannot send quantum information; no-communication says that entanglement and measurement alone cannot send quantum information; the quantum teleportation protocol of Section \@ref(quantum-teleportation) says that you *can* send quantum information *if you combine both methods together*.
+
+- **No-hiding.**
+  *Quantum information cannot be lost, even through decoherence.*
+
+  This theorem is related to no-deletion, in that it shows the robustness of quantum states.
+  In Section \@ref(decoherence-and-basic-quantum-error-correction) we will study the notion of **decoherence**, which is sort of like "quantum noise", and is one of the main problems faced when actually trying to design and build quantum computers in reality.
+  The no-hiding theorem says that, when quantum information is "lost" through decoherence, it actually merely moves into the subspace corresponding to the environment --- *we* might have lost it, but nature hasn't.
 
 
 
@@ -901,7 +961,7 @@ The price to pay is the number of gates --- better precision requires more gates
 
 ## Phase kick-back {#phase-kick-back}
 
-Before moving on to a few more mathematically fundamental questions, we first describe a simple yet omnipresent "trick" --- an unusual way of introducing phase shifts that will be essential for our analysis of quantum algorithms.
+Before moving on, we first describe a simple yet omnipresent "trick" --- an unusual way of introducing phase shifts that will be essential for our analysis of quantum algorithms.
 Consider the following circuit.
 
 :::: {.circuit latex=""}
@@ -1000,9 +1060,26 @@ We will return to this topic later on in Section \@ref(more-phase-kick-back), wh
 
 
 
+## Density operators, and other things to come
+
+The existence of entangled states leads to an obvious question: if we cannot attribute a state vector to an individual qubit, then how can we describe its quantum state?
+In the next few chapters we will see that, when we limit our attentions to a part of a larger system, states are not represented by vectors, measurements are not described by orthogonal projections, and evolution is not unitary.
+As a spoiler, here is a dictionary of some of the new concepts that will soon be introduced:
+
+| | | |
+| -: | :-: | :- |
+| state vectors | $\rightsquigarrow$ | density operators |
+| orthogonal projectors | $\rightsquigarrow$ | positive operator-valued measures |
+| unitary evolutions | $\rightsquigarrow$ | completely-positive trace-preserving maps |
 
 
-## Why qubits, subsystems, and entanglement?
+
+
+
+
+## *Remarks and exercises* {#remarks-and-exercises-entanglement}
+
+### Why qubits, subsystems, and entanglement?
 
 <div class="video" title="Why qubits?" data-videoid="0AU6U7bcEh0"></div>
 
@@ -1040,29 +1117,7 @@ It turns out that whichever way we try to represent the number $N$ in the unary 
 This plausibility argument indicates that, for efficient processing of information, the system must be divided into subsystems --- for example, into physical bits.
 
 
-
-
-
-## Density operators, and other things to come
-
-The existence of entangled states leads to an obvious question: if we cannot attribute a state vector to an individual qubit, then how can we describe its quantum state?
-In the next few chapters we will see that, when we limit our attentions to a part of a larger system, states are not represented by vectors, measurements are not described by orthogonal projections, and evolution is not unitary.
-As a spoiler, here is a dictionary of some of the new concepts that will soon be introduced:
-
-| | | |
-| -: | :-: | :- |
-| state vectors | $\rightsquigarrow$ | density operators |
-| orthogonal projectors | $\rightsquigarrow$ | positive operator-valued measures |
-| unitary evolutions | $\rightsquigarrow$ | completely-positive trace-preserving maps |
-
-
-
-
-
-
-## *Remarks and exercises* {#remarks-and-exercises-entanglement}
-
-### Entangled or not?
+### Entangled or not? {#entangled-or-not}
 
 <div class="video" title="Shared randomness" data-videoid="lHTSQxii0t0"></div>
 
@@ -1082,7 +1137,10 @@ Assume that $\mathcal{H}_{\mathcal{A}}$ and $\mathcal{H}_{\mathcal{B}}$ are of e
   $$
   is entangled for odd values of $k$ and unentangled for even values of $k$. Express the latter case explicitly as a product state.
 
-There is a lot of interesting physics behind the previous innocuous-looking mathematical statement.
+
+### Instantaneous communication {#instantaneous-communication}
+
+There is a lot of interesting physics behind the innocuous-looking mathematical statement of Exercise \@ref(entangled-or-not).
 For example, think again about the state $(\ket{00}+\ket{11})/\sqrt{2}$.
 What happens if you measure just the first qubit?
 It is equally likely that you get $\ket{0}$ or $\ket{1}$, right?
