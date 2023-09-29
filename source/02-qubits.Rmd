@@ -990,6 +990,152 @@ $$
 $$
 
 
+
+### Operators as unitary matrices
+
+Say we have a linear operator that acts on a qubit as follows:
+$$
+  \begin{aligned}
+    \ket{0}
+    &\mapsto \alpha\ket{0} + \beta\ket{1}
+  \\\ket{1}
+    &\mapsto \beta^\star\ket{0} - \alpha^\star\ket{1}.
+  \end{aligned}
+$$
+
+1. Show that this linear operator is equal to
+  $$
+    M
+    = \big(\alpha\ket{0}+\beta\ket{1}\big)\bra{0} + \big(\beta^\star\ket{0}-\alpha^\star\ket{1}\big)\bra{1}
+  $$
+  by calculating $M\ket{0}$ and $M\ket{1}$.
+2. If we pick the standard basis
+  $$
+    \ket{0}
+    \equiv
+    \begin{bmatrix}
+      1\\0
+    \end{bmatrix}
+    \qquad
+    \ket{1}
+    \equiv
+    \begin{bmatrix}
+      1\\0
+    \end{bmatrix}
+  $$
+  then what is the matrix representation of $M$?
+3. Verify that $M$ is unitary.
+
+
+### Completing an orthonormal basis
+
+Imagine that some quantum system has four energy levels: $\ket{0}$, $\ket{1}$, $\ket{2}$, and $\ket{3}$.
+Consider the three orthonormal vectors
+$$
+  \begin{aligned}
+    \ket{\psi_1}
+    &= \frac{1}{\sqrt{3}}(\ket{0}+\ket{1}+\ket{2})
+  \\\ket{\psi_2}
+    &= \frac{1}{\sqrt{2}}(\ket{0}-\ket{2})
+  \\\ket{\psi_3}
+    &= \ket{3}.
+  \end{aligned}
+$$
+Find a vector $\ket{\psi_4}$ such that $\{\ket{\psi_1},\ket{\psi_2},\ket{\psi_3},\ket{\psi_4}\}$ is an orthonormal basis.
+
+
+### Some sums of inner products
+
+Let $\{\ket{v_1},\ldots,\ket{v_N}\}$ be an orthonormal basis.
+Evaluate the following:^[All of your answers should be numbers (in fact, they'll all even be integers).]
+
+1. $\sum_{k=1}^{N-1} k^2 \braket{v_{N-1}}{v_k}$
+
+2. $\sum_{k=1}^{N-1} k^2 \braket{v_N}{v_k}$
+
+3. $\sum_{k=1}^N \braket{v_{N-1}}{v_k}\braket{v_k}{v_{N-1}}$
+
+4. $\sum_{j,k=1}^{N-1} \braket{v_j}{v_k}$
+
+
+### Some circuit identities
+
+1. Prove the following circuit identities, ignoring any global phase:
+
+    ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+    \begin{quantikz}
+      \qw
+      & \phase{\alpha}
+      & \phase{\beta}
+      & \qw
+      & = &
+      & \phase{\alpha+\beta}
+      & \qw
+    \end{quantikz}
+    ```
+
+    ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3.5}
+    \begin{quantikz}
+      \qw
+      & \gate{X}
+      & \phase{\alpha}
+      & \gate{X}
+      & \qw
+      & = &
+      & \phase{-\alpha}
+      & \qw
+    \end{quantikz}
+    ```
+
+2. Using the above, find $\theta_1$ and $\theta_2$ such that
+
+    ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+    \begin{quantikz}
+      \qw
+      & \phase{\theta_1}
+      & \phase{\theta_2}
+      & \qw
+      & = &
+      & \qw
+      & \qw
+    \end{quantikz}
+    ```
+
+    ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3.5}
+    \begin{quantikz}
+      \qw
+      & \phase{\theta_1}
+      & \gate{X}
+      & \phase{\theta_2}
+      & \gate{X}
+      & \qw
+      & = &
+      & \phase{\delta}
+      & \qw
+    \end{quantikz}
+    ```
+
+    for some value $\delta$.
+
+3. We can think of the second identity in the previous question as an implementation of "if the two $X$ gates are absent then do nothing; otherwise implement the phase gate $P_\delta$".
+  Given that unitary matrices are normal, adapt this circuit so that implements "if the two $X$ gates are absent then do nothing; otherwise implement the unitary $U$" where $U$ is a one-qubit unitary.
+
+
+### Unitaries preserve length
+
+Let $M$ be a linear operator that sends an orthonormal basis $\{\ket{u_1},\ldots,\ket{u_N}\}$ to a set of states $\{\ket{v_1},\ldots,\ket{v_n}\}$ where each $\ket{v_i}$ is of length $1$.
+
+1. Show that the length of the vector $M(\ket{u_1}+\ket{u_2})/\sqrt{2}$ is
+  $$
+    \sqrt{1+\Re\braket{v_1}{v_2}}.
+  $$
+2. Find a correctly normalised superposition $\ket{\psi}=\lambda(\alpha\ket{u_1}+\beta\ket{u_2})$ such that $M\ket{\psi}$ is of length
+  $$
+    \sqrt{1+\Im\braket{v_1}{v_2}}.
+  $$
+3. Using the above, show that, for all $\ket{\psi}$ of length $1$, the vector $M\ket{\psi}$ is of length $1$ if and only if $M$ is unitary.
+
+
 ### Unknown phase {#unknown-phase}
 
 Consider the usual quantum interference circuit:
@@ -1021,7 +1167,8 @@ We will return to it again and again in Section \@ref(quantum-algorithms).
 ### One of the many cross-product identities {#cross-product-identity}
 
 When working with three-dimensional geometry, the [cross product](https://en.wikipedia.org/wiki/Cross_product) of vectors is very useful, so here is an exercise to help you get used to working with it.
-Derive the identity^[*Hint: all you need here are the Pauli matrices' commutation and anti-commutation relations, but it is instructive to derive the identity using the component notation, and below we give a sketch of how such a derivation would go.*]
+
+Let's say we want to derive the identity^[*Hint: all you need here are the Pauli matrices' commutation and anti-commutation relations, but it is instructive to derive the identity using the component notation, and below we give a sketch of how such a derivation would go.*]
 $$
   (\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma})
   = (\vec{a}\cdot\vec{b})\id + i(\vec{a}\times \vec{b})\cdot \vec{\sigma}.
