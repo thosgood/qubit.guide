@@ -1,7 +1,7 @@
 # Correcting quantum channels {#correcting-quantum-channels}
 
 > About the one big problem that hinders us from physically implementing everything that we've learnt so far: **decoherence**.
-> But also about how we can start to deal with it via some elementary **error correction**, including the Shor [[9,1,3]] quantum code.
+> But also about how we can start to deal with it via some elementary **error correction**, including the **Shor [[9,1,3]] quantum code**.
 
 As the adage goes, "in theory, theory and practice rarely differ; in practice, they often do".
 *In theory*, we know how to build a quantum computer: we can start with simple quantum logic gates and try to integrate them together into quantum networks.
@@ -29,7 +29,7 @@ once we know which subspace the input was sent to, we know which particular isom
 then we simply apply $V^\dagger_k$.
 
 ::: {.idea latex=""}
-Apart from individual unitaries or isometries, the only **correctable** channels are exactly the mixtures of $\{V_i\}$ such that $V^\dagger_i V_j=\delta_{ij}\id$, i.e. mixtures of mutually orthogonal isometries.
+Apart from individual unitaries or isometries, the only **correctable** channels are exactly the statistical mixtures of $\{V_i\}$ such that $V^\dagger_i V_j=\delta_{ij}\id$, i.e. mixtures of mutually orthogonal isometries.
 :::
 
 We shall prove this fact in Section \@ref(correctable-channels)
@@ -125,7 +125,7 @@ He knows that
 
 We can draw this scenario using a diagram that that we have already seen in Section \@ref(pauli-stabilisers):^[In this section we will be using and building upon the theory of stabilisers from Section \@ref(stabilisers) quite a lot.]
 
-```{r,engine='tikz',fig.cap='(ref:stabiliser-bisection-caption)',fig.width=3}
+```{r,engine='tikz',fig.width=3}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \newcommand{\id}{\mathbf{1}}
@@ -136,16 +136,12 @@ We can draw this scenario using a diagram that that we have already seen in Sect
   \node[] (c1) at (3,2.8) {$V_4$};
   \node[] (c3) at (1,1.2) {$V_2$};
   \node[] (c2) at (3,1.2) {$V_3$};
-  \node[primary] (S1+) at (1,4.5) {$+1$};
-  \node[primary] (S1-) at (3,4.5) {$-1$};
-  \node[secondary] (S2+) at (4.5,3) {$+1$};
-  \node[secondary] (S2-) at (4.5,1) {$-1$};
   \node[anchor=north west] (A) at (0,4) {$\substack{\ket{000}\\ \ket{111}}$};
   \node[anchor=north east] (B) at (4,4) {$\substack{\ket{100}\\ \ket{011}}$};
   \node[anchor=south east] (C) at (4,0) {$\substack{\ket{010}\\ \ket{101}}$};
   \node[anchor=south west] (D) at (0,0) {$\substack{\ket{001}\\ \ket{110}}$};
-  \draw (2,0) -- (2,4.5);
-  \draw (0,2) -- (4.5,2);
+  \draw (2,0) -- (2,4);
+  \draw (0,2) -- (4,2);
 \end{tikzpicture}
 ```
 
@@ -201,135 +197,109 @@ We will see how to reverse these operations in Section \@ref(towards-error-corre
 
 ## Correctable channels {#correctable-channels}
 
+In Section \@ref(three-qubit-codes) we stated that the only correctable channels were individual unitaries, individual isometries, and statistical mixtures of mutually orthogonal isometries.^[The latter actually encapsulates the first two anyway.]
+Let's now prove this.
+
+The action of any individual unitary operation $U$ can, of course, be reversed by simply applying the inverse operation, $U^\dagger$;
+the same holds for any isometry $V$, because $V^\dagger V=\id$.
+For example, the process of first adding an auxiliary system in a fixed state and then applying a unitary $U$ to the composite system can be reversed by first applying $U^\dagger$ to the composed system and then discarding the auxiliary system.
+Now let's move on to a *statistical mixture* of isometries.
+
+If all we know is that an isometry $V_i$ is chosen randomly according to some distribution $\{p_i\}_{i\in I}$, then the best we can do in an attempt to reverse the random process is to pick the largest of the $p_i$, say $p_k$, and then apply $V_k^\dagger$.
+Clearly, this approach succeeds in reversing the action of the channel with probability $p_k$.
+However, if there were a way to determine, post factum, which particular isometry was chosen, then we could, of course, perfectly reverse the action of the channel.
+
+Consider a channel $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ given by
+$$
+  \mathcal{E}\colon\rho
+  \longmapsto \rho'
+  = \sum_i p_i V_i\rho V^\dagger_i
+$$
+in which the isometries $V_i$ are mutually orthogonal (i.e. $V_i^\dagger V_j =\delta_{ij}\id$).
+Let $\mathcal{H}'_i$ be the image of $\mathcal{H}$ under $V_i$.
+These images are subspaces in $\mathcal{H}'$, and they are also mutually orthogonal: for any vector $\ket{v}$ in $\mathcal{H}$, the vectors $V_i\ket{v}\in \mathcal{H}'_i$ and $V_j\ket{v}\in \mathcal{H}'_j$ are orthogonal, since
+$$
+  \bra{v}V_i^\dagger V_j\ket{v}
+  = \delta_{ij} \bra{v}\id\ket{v}
+  = \delta_{ij}.
+$$
+We can now perform a measurement defined by the projections onto these mutually orthogonal subspaces $\mathcal{H}'_i$ and find out which particular isometry was chosen (and then perfectly reverse its action by applying the inverse isometry).
+
+Note that, for a measurement on $\mathcal{H}'$ to be well defined, we need to decompose $\mathcal{H}'$ into mutually orthogonal subspaces.
+That is, the direct sum $\bigoplus_i\mathcal{H}'_i$ might not "fill up" the space $\mathcal{H}'$, so we might need to pad out with whatever is "left over" in order to obtain the decomposition of the whole $\mathcal{H}'$ into mutually orthogonal subspaces.
+That extra subspace with which we pad out the direct sum is *not* in the image of the channel: we will never see the result of the measurement corresponding to the projection onto that subspace.
+However, we *need* to add it in order to obtain a complete decomposition of $\mathcal{H}'$.
+
+Here we have Kraus operators $E_i=\sqrt{p_i}V_i$ that satisfy
+$$
+  E^\dagger_i E_j
+  = \sqrt{p_i p_j}\delta_{ij}\id
+$$
+but remember that *the operator-sum decomposition is not unique*, and so the same channel can be described by another, unitarily related, set of Kraus operators, say $K_i = \sum_k U_{ik}E_k$.
+These other operators satisfy
+$$
+  \begin{aligned}
+    K_i^\dagger K_j
+    &= \sum_{k,l} U^\star_{ik} E^\dagger_k E_l U_{jl}
+  \\&= \sum_{k,l} U^\star_{ik} (\sqrt{p_k p_l}\delta_{kl}\id) U_{jl}
+  \\&= \sum_{k} U^\star_{ik} p_k U_{jk}\id
+  \\&= \sigma_{ij}\id
+  \end{aligned}
+$$
+where $\sigma_{ij}$ are elements of a density matrix with eigenvalues $p_i$.
+So the existence of such a density matrix implies that the action of the channel can be reversed, and the original state $\rho$ can be recovered.
+
+Conversely, if the channel $\mathcal{E}$ is correctable, then such a density matrix exists.
+Indeed, in terms of Kraus representations for $\mathcal{E}$ and $\mathcal{R}$, we require that
+$$
+  \rho
+  = (\mathcal{R}\circ\mathcal{E})(\rho)
+  \equiv \sum_{l,j} R_l E_j \rho R^\dagger_l E^\dagger_j
+$$
+for any state $\rho$.
+This means that identity channel $\mathcal{R}\circ\mathcal{E}=\id$ must have all the Kraus operators proportional to the identity:
+$$
+  R_lE_j=\lambda_{lj}\id
+$$
+for some complex numbers $\lambda_{lj}$ such that^[This is the normalisation condition for the Kraus operators $R_lE_j$] $\sum_{l,j} |\lambda_{lj}|^2=1$.
+Then we can write
+$$
+  \begin{aligned}
+    \sum_l E_i^\dagger R_l^\dagger R_l E_j
+    &= E_i^\dagger E_j
+  \\&=\sum_l \lambda^*_{il}\lambda_{jl}\id
+  \\&=\sigma_{ij}\id
+  \end{aligned}
+$$
+where $\sigma_{ij} = \sum_l \lambda^*_{il}\lambda_{jl}$.
+Clearly, $\sigma_{ij}$ is a positive matrix such that $\tr(\sigma_{ij})=1$ and $\sum_i\sigma_{ii}=\sum_{i,l}|\lambda_{il}|^2=1$.
+
+So the condition $E_i^\dagger E_j = \sigma_{ij}\id$ is both necessary *and* sufficient in order for the channel $\mathcal{E}$ to be correctable.
+
+::: {.idea latex=""}
+Let $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ be a quantum channel with Kraus decomposition $\mathcal{E}(\rho)=\sum_i E_i\rho E^\dagger_i$.
+Then the following statements are equivalent:
+
+i. $\mathcal{E}$ is correctable;
+
+ii. $E_i^\dagger E_j = \sigma_{ij}\id$ for some density matrix $\sigma_{ij}$;
+
+iii. there exists a set of orthogonal isometries $\{V_i\}$ and a probability distribution $\{p_i\}$ such that
+    $$
+    \mathcal{E} (\rho) = \sum_i p_i V_i\rho V^\dagger_i
+    $$
+    for every state $\rho$.
+:::
+
+
+
+
+
+## Decoherence and interference {#decoherence-and-interference}
+
+<div class="video" title="Entanglement, interference, and visibility" data-videoid="ot2BAKigS1E"></div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Decoherence simplified
+<div class="video" title="Decoherence vs interference" data-videoid="ZPfdKNzjWbo"></div>
 
 Consider the following interaction between a qubit and its environment:
 $$
@@ -354,28 +324,19 @@ $$
     \longmapsto
     & \Big( \alpha\ket{0} + \beta\ket{1} \Big) \frac{\ket{e_{00}}+\ket{e_{11}}}{2}
   \\+& \Big( \alpha\ket{0} - \beta\ket{1} \Big) \frac{\ket{e_{00}}-\ket{e_{11}}}{2}.
-  \\=& \id\ket{\psi}\ket{e_{\mathbf{1}}} + Z\ket{\psi}\ket{e_Z},
+  \\=& \id\ket{\psi}\ket{e_{\id}} + Z\ket{\psi}\ket{e_Z},
   \end{aligned}
 $$
-where $\ket{e_{\mathbf{1}}} = \frac{1}{2}(\ket{e_{00}} + \ket{e_{11}})$ and $\ket{e_Z} = \frac{1}{2}(\ket{e_{00}} - \ket{e_{11}})$.
+where $\ket{e_{\id}} = \frac{1}{2}(\ket{e_{00}} + \ket{e_{11}})$ and $\ket{e_Z} = \frac{1}{2}(\ket{e_{00}} - \ket{e_{11}})$.
 We can roughly interpret this expression as saying that two things can happen to the qubit: *nothing* $\id$ (first term), or *phase-flip* $Z$ (second term).
 
-This, however, *should not be taken literally* unless the states of the environment, $\ket{e_{\mathbf{1}}}$ and $\ket{e_Z}$, are orthogonal.^[**Exercise.** Why not?]
+This, however, *should not be taken literally* unless the states of the environment, $\ket{e_{\id}}$ and $\ket{e_Z}$, are orthogonal.^[**Exercise.** Why not?]
 
 ::: {.idea latex=""}
 This process is what we refer to as **decoherence**.
 :::
 
-
-
-
-
-## Decoherence and interference
-
-<div class="video" title="Entanglement, interference, and visibility" data-videoid="ot2BAKigS1E"></div>
-
-<div class="video" title="Decoherence vs interference" data-videoid="ZPfdKNzjWbo"></div>
-
+Let's look at something a bit more involved now.
 Suppose a qubit undergoes the usual single-qubit interference evolution, but, between the phase gate and the second Hadamard gate, it is affected by **decoherence**:
 $$
   \begin{aligned}
@@ -388,7 +349,7 @@ $$
 $$
 as described by Figure \@ref(fig:decoherence-interference).
 
-```{r decoherence-interference,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4.5,fig.cap='The usual interference experiment, but with decoherence.'}
+```{r decoherence-interference,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3,fig.cap='The usual interference experiment, but with decoherence.'}
 \begin{quantikz}
   \lstick{$\ket{0}$} \qw
   & \gate{H}
@@ -417,7 +378,7 @@ $$
   \end{aligned}
 $$
 
-```{r visibility-suppression,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5,fig.cap='Visibility suppression.'}
+```{r visibility-suppression,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4,fig.cap='Visibility suppression.'}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \begin{tikzpicture}
@@ -458,12 +419,7 @@ For example, in Deutsch's algorithm (Section \@ref(deutschs-algorithm)) we would
 For $\braket{e_{00}}{e_{11}} = 0$, the case of **perfect decoherence**, the network outputs $0$ or $1$ with equal probabilities, i.e. *it is useless as a computing device*.
 
 ::: {.idea latex=""}
-It is clear that we want to avoid decoherence, or at least diminish its impact on our computing device.
-For this we need **quantum error correction**: we encode the state of a single (logical) qubit across several (physical) qubits.
-:::
-
-::: {.todo latex=""}
-<!-- TO-DO: generalised decoherence as controlled-$U$ gate, varying from $\id$ to controlled-$\texttt{NOT}$ -->
+We want to avoid decoherence, or at least diminish its impact on our computing device.
 :::
 
 If we wish to study the evolution of the qubit alone, then we can do so in terms of density operators: it evolves from the pure state $\proj{\psi}$ to a mixed state, which can be obtained by tracing over the environment.
@@ -492,18 +448,28 @@ $$
   \end{bmatrix}.
 $$
 The off-diagonal elements (originally called **coherences**) vanish as $\braket{e_{00}}{e_{11}}$ approaches zero.
-This is why this particular interaction is called *de*coherence.
+This is why this particular interaction is called ***de*coherence**.
 
 Notice that
 $$
-\ket{\psi}\ket{e} \longmapsto \id \ket{\psi}\ket{e_{\mathbf{1}}}+Z\ket{\psi}\ket{e_Z},
+\ket{\psi}\ket{e} \longmapsto \id \ket{\psi}\ket{e_{\id}}+Z\ket{\psi}\ket{e_Z},
 $$
 implies
 $$
-\proj{\psi}\longmapsto \id \proj{\psi} \id \braket{e_{\mathbf{1}}}{e_{\mathbf{1}}} +Z\proj{\psi} Z\braket{e_Z}{e_Z},
+\proj{\psi}\longmapsto \id \proj{\psi} \id \braket{e_{\id}}{e_{\id}} +Z\proj{\psi} Z\braket{e_Z}{e_Z},
 $$
-*only if* $\braket{e_{\mathbf{1}}}{e_Z}=0$, since otherwise we would have additional cross terms $\id\proj{\psi}Z$ and $Z\proj{\psi}\id$.
-In this case (i.e. when $\braket{e_{\mathbf{1}}}{e_Z}=0$) we can indeed say that, with probability $\braket{e_{\mathbf{1}}}{e_{\mathbf{1}}}$, nothing happens, and, with probability $\braket{e_Z}{e_Z}$, the qubit undergoes the phase-flip $Z$.
+*only if* $\braket{e_{\id}}{e_Z}=0$, since otherwise we would have additional cross terms $\id\proj{\psi}Z$ and $Z\proj{\psi}\id$.
+In this case (i.e. when $\braket{e_{\id}}{e_Z}=0$) we can indeed say that, with probability $\braket{e_{\id}}{e_{\id}}$, nothing happens, and, with probability $\braket{e_Z}{e_Z}$, the qubit undergoes the phase-flip $Z$.
+We can also represent this with the Kraus operators
+$$
+  \begin{aligned}
+    E_0
+    &= \sqrt{\proj{e_\id}} \id
+  \\E_1
+    &= \sqrt{\proj{e_Z}} Z
+  \end{aligned}
+$$
+which can be shown to satisfy $E_0^\dagger E_0+E_1^\dagger E_1=\id$.
 
 
 
@@ -535,7 +501,7 @@ $$
 $$
 which can be written as
 $$
-\ket{\psi}\ket{e} \longmapsto  \id \ket{\psi}\ket{e_{\mathbf{1}}} + Z\ket{\psi} \ket{e_Z} +X\ket{\psi} \ket{e_X} + Y\ket{\psi} \ket{e_Y}.
+\ket{\psi}\ket{e} \longmapsto  \id \ket{\psi}\ket{e_{\id}} + Z\ket{\psi} \ket{e_Z} +X\ket{\psi} \ket{e_X} + Y\ket{\psi} \ket{e_Y}.
 $$
 
 The intuition behind this expression is that four things can happen to the qubit:
@@ -545,7 +511,7 @@ The intuition behind this expression is that four things can happen to the qubit
 3. bit-flip ($X$)
 4. both bit-flip and phase-flip ($Y$).
 
-This is certainly the case when the states $\ket{e_{\mathbf{1}}}, \ket{e_X}, \ket{e_Y}$ and $\ket{e_Z}$ are mutually orthogonal, but if this is not so then we cannot perfectly distinguish between the four alternatives.
+This is certainly the case when the states $\ket{e_{\id}}, \ket{e_X}, \ket{e_Y}$ and $\ket{e_Z}$ are mutually orthogonal, but if this is not so then we cannot perfectly distinguish between the four alternatives.
 
 ::: {.idea latex=""}
 The important thing is the *discretisation of errors*, and the fact that we can reduce quantum errors in this scenario to *two types*: bit-flip errors $X$, and phase-flip errors $Z$.
@@ -561,232 +527,77 @@ $$
   X\otimes Z \otimes \id \otimes \id \otimes Y
   \equiv XZ\id\id Y.
 $$
-We say that such an $E_i$ represents an error consisting of the bit ($X$) error on the first qubit, phase ($Z$) error on the second qubit and both bit and phase ($Y$) error on the fifth qubit.
-Again, *this is not entirely accurate if the corresponding states of the environment are not mutually orthogonal*, but it gives the right kind of intuition nonetheless.
-
-Of course, we can always pick an orthonormal basis $\ket{u_j}$ of the environment and express the system-environment evolution as
-$$
-  \begin{aligned}
-    \ket{\psi}\ket{e}
-    \longmapsto &\sum_{i,j} E_i\ket{\psi}\ket{u_j}\braket{u_j}{e_i}
-    \\&= \sum_{j}\Big( \sum_i \braket{u_j}{e_i} E_i\Big)\ket{\psi}\ket{u_j}
-    \\&= \sum_j M_j\ket{\psi}\ket{u_j}.
-  \end{aligned}
-$$
-The new "error" operators $M_j$ satisfy $\sum_j M_j^\dagger M_j =\id$ but are *not*, in general, unitary.
-Now, the evolution of the density operator $\proj{\psi}$ can be written as 
-$$
-  \proj{\psi}\longmapsto \sum_j M_j\proj{\psi} M_j^\dagger.
-$$
-Which particular errors you choose depends of your choice of the basis in the environment.
-If, instead of $\ket{u_j}$, you pick a different basis, say $\ket{v_k}$, then
-$$
-  \begin{aligned}
-    \ket{\psi}\ket{e}
-    \longmapsto &\sum_j M_j\ket{\psi}\ket{u_j}
-  \\&= \sum_j M_j \ket{\psi}\sum_k\ket{v_k}\braket{v_k}{u_j}
-  \\&= \sum_k \Big(\sum_j \braket{v_k}{u_j} M_j \Big)\ket{\psi}\ket{v_k}
-  \\&= \sum_k N_k\ket{\psi}\ket{v_k},
-  \end{aligned}
-$$
-and, consequently,
-$$
-  \proj{\psi}\longmapsto \sum_k N_k\proj{\psi} N_k^\dagger.
-$$
-The new "errors" still satisfy $\sum_k N_k^\dagger N_k = \id$, and the error operators $N_k$ and $M_j$ are related by the unitary matrix $U_{kj}=\braket{v_k}{u_j}$.
+We say that such an $E_i$ represents an error consisting of the bit error $X$ error on the first qubit, phase error $Z$ error on the second qubit, and both bit and phase $Y$ error on the fifth qubit.^[Again, *this is not entirely accurate if the corresponding states of the environment are not mutually orthogonal*, but it gives the right kind of intuition nonetheless.]
 
 
 
 
 
-## Some errors can be corrected on some states
-
-In another one of their escapades, Alice prepares a quantum object in some state $\ket{\psi}$ and sends it to Bob.
-But en route, the object is intercepted by a malicious third party, Eve, who changes its state by applying one of a prescribed list of unitary operations $U_1,\ldots,U_n$, chosen with probability $p_1,\ldots,p_n$, respectively.
-Let's assume that Alice and Bob know the set of possible unitaries (which we can think of as errors), along with the associated probabilities, but they do *not* know which particular unitary operation was chosen by Eve in this run of their experiment.
-Can Bob reconstruct the state $\ket{\psi}$?
-
-The answer is "yes, but only *sometimes*" --- it depends on the original state $\ket{\psi}$.
-
-Let $\mathcal{H}$ be the Hilbert space pertaining to the object, and let $\mathcal{C}$ be a subspace of $\mathcal{H}$ that contains $\ket{\psi}$.
-Write $\mathcal{C}_i$ to denote the subspace of $\mathcal{H}$ given by the image of $U_i$ applied to $\mathcal{C}$, i.e.
-$$
-  \mathcal{C}_i \coloneqq \{U_i\ket{\phi} \mid \ket{\phi}\in\mathcal{C}\}.
-$$
-Suppose that these subspaces are all orthogonal to one another: for each $\ket{\phi}\in\mathcal{C}$, we have
-$$
-  \bra{\phi}U^\dagger_i U_j\ket{\phi} = \delta_{ij}
-$$
-(and if none of the $U_i$ are equal to the identity, then we also ask for each $\mathcal{C}_i$ to be orthogonal to $\mathcal{C}$).
-Assume that the unitary applied by Eve was $U_k$.
-Then all Bob has to do to reconstruct $\ket{\psi}$ is
-
-- perform a measurement, defined by projectors on the subspaces $\mathcal{C}_i$ for $i=1,\ldots n$
-- identify $k$
-- apply $U_k^\dagger$.
-
-Things hopefully become clearer with an example.
-Consider an object composed of three qubits, and define the subspace $\mathcal{C}$ to be the span of the two basis vectors $\ket{000}$ and $\ket{111}$.
-Suppose Eve applies one of the following four unitary operations, each with equal probability:
-$$
-  \begin{aligned}
-    U_0 &= \id\otimes\id\otimes \id
-  \\U_1 &= X\otimes\id\otimes \id
-  \\U_2 &= \id \otimes X\otimes \id
-  \\U_3 &= \id\otimes\id\otimes X
-  \end{aligned}
-$$
-That is, the identity, or the bit-flip on the first, second, or third qubit.
-These four operations generate the four subspaces
-$$
-  \begin{aligned}
-    \mathcal{C} = \mathcal{C}_0 &= \Big\langle\ket{000},\ket{111}\Big\rangle
-  \\\mathcal{C}_1 &= \Big\langle\ket{100},\ket{011}\Big\rangle
-  \\\mathcal{C}_2 &= \Big\langle\ket{010},\ket{101}\Big\rangle
-  \\\mathcal{C}_3 &= \Big\langle\ket{001},\ket{110}\Big\rangle.
-  \end{aligned}
-$$
-which actually span the eight-dimensional Hilbert space $\mathcal{H}$ of the three qubits, giving us a decomposition into orthogonal subspaces:
-$$
-  \mathcal{H}
-  \cong \mathcal{C}_0 \oplus \mathcal{C}_1 \oplus\mathcal{C}_2 \oplus \mathcal{C}_3
-$$
-
-So suppose Alice prepares $\ket{\psi}=\alpha\ket{000}+\beta\ket{111}$ (which is indeed a vector in $\mathcal{C}$), and Eve ends up applying $U_3$, the bit-flip to the third qubit.
-This generates the state
-$$
-  (\id\otimes\id\otimes X)\ket{\psi}
-  = \alpha\ket{001}+\beta\ket{110} \in \mathcal{C}_3.
-$$
-The projective measurement on these subspaces tells Bob that the new state is in the subspace $\mathcal{C}_3$, and hence the original state can be recovered by the operation $U_3^\dagger=\id\otimes\id\otimes X$.
 
 
 
 
 
-## Repetition codes
 
-In order to give a sense of how quantum error correction actually works, let us begin with a *classical* example of a **repetition code**.
 
-Suppose that Alice is communicating to Bob over a channel which, with some probability $p$, flips each (classical) bit that she transmits.^[This scenario could arise from the channel being noisy, damaged, or even maliciously modified by Eve.]
-Even if Bob *knows* that these potential flips are happening, he cannot always compensate for the errors introduced.
-It could be the case that he receives the binary message, converts it into alphabetic characters, and reads "Hello Bpb".
-Then he would likely think to himself that Alice had intended to send "Hello Bob", and no problems would arise.
-But if the transmitted message instead read "Hellp Bob", then he might be less sure --- maybe Alice had just meant to send "Hello Bob", but maybe she had instead meant to send "Help Bob".
-Of course, if the probability $p$ is high enough, then the actual messages that Bob receives could be more along the lines of "ytlF#kb2F", and at this point both he and Alice decide that they need some way to accommodate for the error-inducing communications channel.
 
-One thing that they might try is to encode each bit into *three* bits:
-$$
-  \begin{aligned}
-    0 &\mapsto 000
-  \\1 &\mapsto 111.
-  \end{aligned}
-$$
-That is, each time Alice wants to send a single logical $0$, she instead sends three physical bits, all in state $0$; each time she wants to send a single logical $1$, she instead sends three physical bits, all in state $1$.
-Bob decodes the bit value by a "majority vote" of the three bits.
-If only one error occurs in a given "block" of three bits, then this error correction procedure is foolproof.
-In general, the net probability of error in a received block is just the likelihood that either two or three errors occur, which is $3p^2(1-p) + p^3$.
-If $p<\frac{1}{2}$, then this probability is indeed less than $p$, and so the three-bit code improves the reliability of the information transfer.
 
-The *quantum* case, however, is more complicated, because we have to worry about both bit-flip *and* phase-flip errors.
 
-But let's start simply: how can we protect a qubit against a *single bit-flip error* $X$?
-It turns out that we can actually rely on the same triple-repetition code, but we just need to use the language of quantum operations.
 
-Given some qubit in an unknown pure state $\alpha\ket{0} + \beta\ket{1}$, we encode it into three qubits by using $\texttt{c-NOT}$ gates:
 
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=8}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick{$\alpha\ket{0}+\beta\ket{1}$}
-    & \ctrl{1}
-    & \ctrl{2}
-    & \qw
-    & \qw
-    \rstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
-    \\
-    \lstick{$\ket{0}$}
-    & \targ{}
-    & \qw
-    & \qw
-    & \qw
-    \\
-    \lstick{$\ket{0}$}
-    & \qw
-    & \targ{}
-    & \qw
-    & \qw
-  \end{quantikz}
-\end{equation*}
-```
 
-Suppose that the *second* qubit is flipped by our noisy channel, so that the encoded state becomes $\alpha\ket{010} + \beta\ket{101}$.
-Decoding this requires some care: if we measure the three qubits directly it would destroy the superposition of states that we are working so hard to protect.
-So instead we introduce another *two additional* qubits, which we refer to as **ancilla bits**, both in state $\ket{0}$, and apply the following **encoding network**:
 
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=8}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick[wires=3]{$\alpha\ket{010}+\beta\ket{101}$}
-    & \ctrl{3}
-    & \qw
-    & \qw
-    & \qw
-    & \qw
-    \\
-    & \qw
-    & \ctrl{2}
-    & \ctrl{3}
-    & \qw
-    & \qw
-    \\
-    & \qw
-    & \qw
-    &\qw
-    & \ctrl{2}
-    & \qw
-    \\
-    \lstick{$\ket{0}$}
-    & \targ{}
-    & \targ{}
-    & \qw
-    & \qw
-    & \meter{}
-    \\
-    \lstick{$\ket{0}$}
-    & \qw
-    & \qw
-    & \targ{}
-    & \targ{}
-    & \meter{}
-  \end{quantikz}
-\end{equation*}
-```
 
-We measure the two ancilla bits (in the standard basis), and the result of the measurement, known as the **error syndrome**, tells us how to reset the three qubits of the code, as follows.
 
-The first ancilla compares qubits one and two (counting from the top), and the second ancilla compares qubits two and three: if the ancilla is measured and found to be the $\ket{0}$ state, then it means that the corresponding qubits were in the *same* state; if it is found in the $\ket{1}$ state, then the corresponding qubits were in *different* states.
-Hence, the four possible error syndromes --- $\ket{00}$, $\ket{01}$, $\ket{10}$, and $\ket{11}$ --- each indicate a different possibility: no errors, or an error in the third, first, or second qubits, respectively.
-In our example we would measure $\ket{11}$, revealing that the first two qubits were in different states, as were the last two qubits, and so the second qubit must have been flipped.
-Knowing the error, we can go back and fix it, simply by applying $X$ to the second qubit.
-The net result is the state $\alpha\ket{000} + \beta\ket{111}$, which is then turned into $(\alpha\ket{0} + \beta\ket{1})\ket{0}\ket{0}$ by running the mirror image of the encoding network.
 
-This three-qubit code^[The code is called a "three-qubit code" because this is how many we need to *encode* it, but to *decode* it we actually need *five* qubits, since we need the ancillas.] that we have just demonstrated is sufficient to protect a qubit against single bit-flips, but not phase-flips.
-But if we know that we *only* have to worry about phase-flips, not bit-flips, then this is actually enough!
-Recall that $HZH=X$, and so it is enough to sandwich the decoherence area in between the Hadamard gates: they will turn phase-flips into bit-flips, and we have just seen how to protect our qubits against $X$-errors.
-Then the encoded state $\alpha\ket{0}+\beta\ket{1}$ now reads $\alpha\ket{+++}+\beta\ket{---}$, where $\ket{\pm}=\ket{0}\pm\ket{1}$.
-That is, to deal with phase-flips instead of bit-flips, we simply use the $\{\ket{+},\ket{-}\}$ basis instead of the $\{\ket{0},\ket{1}\}$ basis.
 
-Finally then, we can consider how to deal with *both* types of errors at once.
-First we encode the qubit using the phase-flip code, and then we encode each of the resulting three qubits of the code using the bit-flip code.
-This gives an error correction scheme that allows us to protect against both types of error by encoding a single logical qubit across *nine* physical qubits, protecting against a *single* quantum error on any of the nine qubits.
 
-If we want to preserve a quantum state for a long time without doing any computations, or if we want to send it through a noisy communications channel, we can just encode the state using a quantum code and decode it when we are done.
-Computation on encoded states using noisy *gates*, however, requires a few more tricks...
 
-::: {.todo latex=""}
-<!-- TO-DO: expand on this last sentence? -->
-:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
