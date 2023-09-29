@@ -165,7 +165,7 @@ The Pauli operators represent **quantum errors**: bit-flip $X$, phase-flip $Z$, 
 
 
 
-## Random isometries
+## Random isometries {#random-isometries}
 
 In many applications, including quantum communication and quantum error correction, it is useful to encode a quantum state of one system into a quantum state of a larger system.
 Such operations are described by *isometries*.^[The word isometric (like pretty much most of the fancy words you come across in this course) comes from Greek, meaning "of the same measures": *isos* means "equal", and *metron* means "a measure", and so an "isometry" is a transformation that preserves distances.]
@@ -257,149 +257,7 @@ $$
   V^\dagger V =\id.
 $$
 
-Now suppose we have isometries $V_1,\ldots,V_n\colon\mathcal{H}\to\mathcal{H}'$.
-If $\mathcal{H}'$ is "sufficiently bigger" than $\mathcal{H}$, and if the images $\mathcal{H}'_i\coloneqq V_i(\mathcal{H})$ do not "overlap" (that is, if the subspaces $\mathcal{H}'_i$ are mutually orthogonal), then we can reverse the action of the channel:
-we can, at least in principle, perform a measurement on $\mathcal{H}'$, defined by the partition $\mathcal{H}'=\mathcal{H}'_1\oplus\mathcal{H}'_2\oplus\ldots\oplus\mathcal{H}'_n$, and find out which subspace contains the output state;
-once we know which subspace the input was sent to, we know which particular isometry $V_k$ was applied by the channel;
-then we simply apply $V^\dagger_k$.
-
-::: {.idea latex=""}
-Apart from single unitaries or isometries, it turns out that the only reversible, or **correctable**, channels (i.e. channels in which the input state can be recovered) are exactly the mixtures of mutually orthogonal isometries $V^\dagger_i V_j=\delta_{ij}\id$.
-We shall return to such channels later on.
-:::
-
-
-## Three-qubit codes
-
-Here is a simple, but important, example, which we will revisit several times in different disguises: that of the **three-qubit code**.
-Take a qubit in some pure state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$, introduce two auxiliary qubits in a fixed state $\ket{0}\ket{0}$, and apply a unitary operation to the three qubits, namely two controlled-$\texttt{NOT}$ gates:
-
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=8}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick{$\alpha_0\ket{0}+\alpha_1\ket{1}$}
-    & \ctrl{1}
-    & \ctrl{2}
-    & \qw
-    & \qw
-    \rstick[wires=3]{$\alpha_0\ket{000}+\alpha_1\ket{111}$}
-    \\
-    \lstick{$\ket{0}$}
-    & \targ{}
-    & \qw
-    & \qw
-    & \qw
-    \\
-    \lstick{$\ket{0}$}
-    & \qw
-    & \targ{}
-    & \qw
-    & \qw
-  \end{quantikz}
-\end{equation*}
-```
-
-The result is the isometric embedding of the $2$-dimensional Hilbert space of the first qubit (spanned by $\ket{0}$ and $\ket{1}$) into the $2$-dimensional subspace (spanned by $\ket{000}$ and $\ket{111}$) of the $8$-dimensional Hilbert space of the three qubits.
-The isometric operator
-$$
-  V = \ket{000}\bra{0} + \ket{111}\bra{1}
-$$
-acts via
-$$
-  \alpha_0\ket{0}+\alpha_1\ket{1}
-  \longmapsto \alpha_0\ket{000}+\alpha_1\ket{111}.
-$$
-This three qubit-encoding can be reversed by the mirror image circuit:
-
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=8}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick[wires=3]{$\alpha_0\ket{000}+\alpha_1\ket{111}$}
-    & \ctrl{2}
-    & \ctrl{1}
-    & \qw
-    & \qw
-    \rstick{$\alpha_0\ket{0}+\alpha_1\ket{1}$}
-    \\
-    & \qw
-    & \targ{}
-    & \qw
-    & \qw
-    \rstick{$\ket{0}$}
-    \\
-    & \targ{}
-    & \qw
-    & \qw
-    & \qw
-    \rstick{$\ket{0}$}
-  \end{quantikz}
-\end{equation*}
-```
-
-This isometry is just one member of a family, as we now explain.
-
-Alice constructs a quantum channel which is a mixture of four isometries.
-The input is a single qubit, and the output is a dilated system composed of three qubits.
-She prepares the input qubit in a state^[Our arguments here can be easily extended to any mixed state $\rho$, but for simplicity we consider the case of a pure state.] $\ket{\psi}$ and then combines it with the two ancillary qubits which are in a fixed state $\ket{0}\ket{0}$.
-Then she applies one of the four, randomly chosen, unitary operations to the three qubits, to generate the following four isometries:
-$$
-  \begin{aligned}
-    V_1 &= \ket{000}\bra{0} + \ket{111}\bra{1}
-  \\V_2 &= \ket{001}\bra{0} + \ket{110}\bra{1}
-  \\V_3 &= \ket{010}\bra{0} + \ket{101}\bra{1}
-  \\V_4 &= \ket{100}\bra{0} + \ket{011}\bra{1}.
-  \end{aligned}
-$$
-
-The three qubits, which form the output of the channel, are given to Bob, whose task is to recover the original state $\ket{\psi}$ of the input qubit.
-In this scenario, Bob, who knows the four isometries, can find out which particular isometry was applied.
-He knows that
-
-- $V_1$ maps $\mathcal{H}$ to $\mathcal{H}'_1$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{000}$ and $\ket{111}$;
-- $V_2$ maps $\mathcal{H}$ to $\mathcal{H}'_2$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{001}$ and $\ket{110}$;
-- $V_3$ maps $\mathcal{H}$ to $\mathcal{H}'_3$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{010}$ and $\ket{101}$;
-- $V_4$ maps $\mathcal{H}$ to $\mathcal{H}'_4$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{100}$ and $\ket{011}$.
-
-Given that these subspaces are mutually orthogonal, and $\mathcal{H}'=\mathcal{H}'_1\oplus\mathcal{H}'_2\oplus\mathcal{H}'_3\oplus\mathcal{H}'_4$, Bob can perform a measurement defined by the projectors on these subspaces.
-For example, if Alice randomly picked $V_2$, then the input state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$ will be mapped to the output state $\alpha_0\ket{001}+\alpha_1\ket{110}$ in the $\mathcal{H}'_2$ subspace.
-Bob's measurement will then detect $\mathcal{H}'_2$ as the subspace where the output state resides, but the measurement (i.e. the corresponding projection) will not affect any state in that subspace.
-Bob can now simply apply $V_2^\dagger$ and obtain $\ket{\psi}$.
-
-Just in case you are curious (as you should be!), below is a diagram of how the four isometries are implemented.
-How would you reverse these operations?
-
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=6}
-\[
-  V_1 =
-  \begin{quantikz}[ampersand replacement=\&]
-    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \hphantomgate{X}\qw \& \qw
-  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
-  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
-  \end{quantikz}
-  \qquad\qquad
-  V_2 =
-  \begin{quantikz}[ampersand replacement=\&]
-    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \gate{X} \& \qw
-  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
-  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
-  \end{quantikz}
-\]
-\[
-  V_3 =
-  \begin{quantikz}[ampersand replacement=\&]
-    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \qw \& \qw
-  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \gate{X} \& \qw
-  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
-  \end{quantikz}
-  \qquad\qquad
-  V_4 =
-  \begin{quantikz}[ampersand replacement=\&]
-    \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \qw \& \qw
-  \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
-  \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \gate{X} \& \qw
-  \end{quantikz}
-\]
-```
+Isometries are incredibly important when it comes to error correction, and we will see them again much more in Section \@ref(correctable-channels).
 
 
 
@@ -514,7 +372,7 @@ where the first is a surjection followed by an injection, and the second is an i
 In the first decomposition, the middle set (namely $\operatorname{Im}(f)$) is unique (up to unique isomorphism); in the second, the middle set (namely $S\sqcup(T\setminus\operatorname{Im}(f))$) is *not* unique (we can use any set given by taking $S$ and adding an extra arbitrary element for each element of $T$ that is not in the image of $f$).
 
 The first of these decompositions is probably much more familiar and friendly looking than the second, but it is indeed the second which is of interest to us here, since it is of the same form as our three-stage process: something injective-looking followed by something surjective-looking.
-Indeed, as shown in Cunningham and Heunen's "Purity through Factorisation" ([arXiv:1705.07652](https://arxiv.org/abs/1705.07652)), Stinespring dilation (which is roughly this three-stage process that we've been talking about) gives rise to a **weak factorisation system**, but *not* an **orthogonal** one.
+Indeed, as shown in Cunningham and Heunen's "Purity through Factorisation", arXiv:[1705.07652](https://arxiv.org/abs/1705.07652), Stinespring dilation (which is roughly this three-stage process that we've been talking about) gives rise to a **weak factorisation system**, but *not* an **orthogonal** one.
 
 These notions (weak and orthogonal factorisation systems) are absolutely fundamental to a large area of modern mathematics that deals with homotopy theory and "higher structures" using the language of [**model categories**](https://en.wikipedia.org/wiki/Model_category).
 :::
