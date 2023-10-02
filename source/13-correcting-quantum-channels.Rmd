@@ -839,9 +839,9 @@ $$
 i.e. when $p<1/2$.
 When $p$ is really small, we can basically ignore the $p^3$ term, since it is even smaller still, and claim that the error probability is reduced from $p$ to roughly $3p^2$.
 
-(ref:error-probability-for-000-caption) What can happen, and with what probability, when we transmit the codeword $000$. With this scheme, we can correct up to one error, and detect up to two.
+(ref:error-probability-for-000-caption) What can happen, and the respective probability, when we transmit the codeword $000$. With this scheme, we can correct up to one error, and detect up to two.
 
-```{r error-probability-for-000,engine='tikz',fig.width=5,fig.cap='(ref:error-probability-for-000-caption)'}
+```{r error-probability-for-000,engine='tikz',fig.width=4,fig.cap='(ref:error-probability-for-000-caption)'}
 \usetikzlibrary{decorations.markings,decorations.pathmorphing,decorations.pathreplacing}
 \begin{tikzpicture}
   \node (initial) at (0,0) {$000$};
@@ -868,11 +868,42 @@ When $p$ is really small, we can basically ignore the $p^3$ term, since it is ev
 
 This simple repetition code encoded one bit into three bits, and corrected up to one error.
 In general, there are classical codes that can encode $k$ bits into $n$ bits and correct up to $r$ errors.
-One more important number that we need is the **distance** of such an encoding, which is defined to be the minimum number of errors that can pass undetected (or, equivalently, the minimum **Hamming distance**^[That is, the number of bit-flips required to move from one to the other. We talk about the Hamming distance more in Section \@ref(metrics).] between two codewords).
+One more important number that we need is the **distance** of such an encoding, which is defined to be the minimum number of errors that can pass undetected (or, equivalently, the minimum Hamming distance^[That is, the number of bit-flips required to move from one to the other; recall Section \@ref(metrics).] between two codewords).
+Looking back at Figure \@ref(fig:error-probability-for-000), we see that if exactly one or two errors occur then we can detect that an error has occurred, since we will have a string where not all of the bits are the same, which means that it is definitely not one of our code words.
+However, if three errors occur then the errors are not only impossible to correct, but they are also *impossible to detect*.
+So the code that we have described has $n=3$, $k=1$, and $d=3$.
 
 ::: {.idea latex=""}
 A code that encodes $k$ bits into $n$ bits and has a distance of $d$ is called an **$[n,k,d]$-code**.
+
+The **rate** of an $[n,k,d]$-code is defined to be $R=k/n$.
 :::
+
+In an $[n,k,d]$-code, the encoder divides the message into chunks of $k$ bits and encodes each $k$-bit string into a pre-determined $n$-bit codeword.
+There are $2^k$ distinct codewords among all $2^n$ binary strings of length $n$.
+The recipient then applies the decoder, which takes chunks of $n$ bits, looks for the nearest codeword (in terms of Hamming distance), and then decodes the $n$-bit string into that $k$-bit codeword.
+For example, in our $3$-bit repetition code, we have the two codewords $000$ and $111$, among all eight binary strings of length $3$, as shown in Figure \@ref(fig:313-all-3-bit-strings).
+
+(ref:313-all-3-bit-strings-caption) All the $3$-bit strings that are within Hamming distance $1$ from $000$ are below the line, and all those that are within Hamming distance $1$ from $111$ are above the line. The decoding process assumes that the former are corrupted versions of $000$, and the latter of $111$.
+
+```{r 313-all-3-bit-strings,engine='tikz',fig.width=4,fig.cap='(ref:313-all-3-bit-strings-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+  \node [draw,thick,circle,primary] at (0,-1.5) {$000$};
+  \node [draw,circle] at (-1,-0.5) {$001$};
+  \node [draw,circle] at (0,-0.5) {$010$};
+  \node [draw,circle] at (1,-0.5) {$100$};
+  \node [draw,circle] at (-1,0.5) {$110$};
+  \node [draw,circle] at (0,0.5) {$101$};
+  \node [draw,circle] at (1,0.5) {$011$};
+  \node [draw,thick,circle,primary] at (0,1.5) {$111$};
+  \draw [thick,secondary] (0,0) circle (2);
+  \draw [thick,dashed,secondary] (-2,0) to (2,0);
+  \draw [->] (2.25,0.1) to node[label={right:{\footnotesize closer to $111$}}]{} (2.25,1.25);
+  \draw [->] (2.25,-0.1) to node[label={right:{\footnotesize closer to $000$}}]{} (2.25,-1.25);
+\end{tikzpicture}
+```
 
 
 
