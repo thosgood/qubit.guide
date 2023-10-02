@@ -556,13 +556,16 @@ which we can also express in a diagram, as in Figure \@ref(fig:decoherence-recoh
 (ref:decoherence-recoherence-caption) The initial state undergoing decoherence followed by recoherence. Here $\mathcal{S}$ is the system of qubits that we want to work with, $\mathcal{N}$ is the environment, and $\mathcal{A}$ is the ancilla that we introduce. The squiggly arrow represents interactions, and the dashed line represents entanglement.
 
 ```{r decoherence-recoherence,engine='tikz',fig.width=8,fig.cap='(ref:decoherence-recoherence-caption)'}
+\usetikzlibrary{decorations.markings,decorations.pathmorphing,decorations.pathreplacing}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
 \newcommand{\ket}[1]{|#1\rangle}
 \begin{tikzpicture}[decoration={snake,segment length=2mm,amplitude=0.5mm,pre length=3mm,post length=3mm}]
   \begin{scope}
     \node[draw,thick,primary,circle] (S) at (0,0) {$\mathcal{S}$};
     \node[draw,thick,primary,circle] (A) at (2,1) {$\mathcal{A}$};
     \node[draw,thick,secondary,circle] (N) at (2,-1) {$\mathcal{N}$};
-    \node at (1,-2) {$\ket{\psi}\ket{e}\ket{a}$};
+    \node (state0) at (1,-2) {$\ket{\psi}\ket{e}\ket{a}$};
   \end{scope}
   \draw [thick] (3,-1.5) to (3,1.5);
   \begin{scope}[shift={(4,0)}]
@@ -570,7 +573,7 @@ which we can also express in a diagram, as in Figure \@ref(fig:decoherence-recoh
     \node[draw,thick,primary,circle] (A) at (2,1) {$\mathcal{A}$};
     \node[draw,thick,secondary,circle] (N) at (2,-1) {$\mathcal{N}$};
     \draw [<->,shorten <=1mm,shorten >=1mm,decorate] (S) to (N);
-    \node at (1,-2) {$\sum_iE_i\ket{\psi}\ket{e_i}\ket{a}$};
+    \node (state1) at (1,-2) {$\sum_iE_i\ket{\psi}\ket{e_i}\ket{a}$};
   \end{scope}
   \draw [thick] (7,-1.5) to (7,1.5);
   \begin{scope}[shift={(8,0)}]
@@ -579,8 +582,10 @@ which we can also express in a diagram, as in Figure \@ref(fig:decoherence-recoh
     \node[draw,thick,secondary,circle] (N) at (2,-1) {$\mathcal{N}$};
     \draw [<->,shorten <=1mm,shorten >=1mm,decorate] (S) to (A);
     \draw [thick,shorten <=1mm,shorten >=1mm,dashed] (S) to (N);
-    \node at (1,-2) {$\sum_{i,k}R_kE_i\ket{\psi}\ket{e_i}\ket{a_k}$};
+    \node (state2) at (1,-2) {$\sum_{i,k}R_kE_i\ket{\psi}\ket{e_i}\ket{a_k}$};
   \end{scope}
+  \draw [|->] (state0) to node[label={below:{\scriptsize decoherence $\mathcal{E}$}}]{} (state1);
+  \draw [|->] (state1) to node[label={below:{\scriptsize recoherence $\mathcal{R}$}}]{} (state2);
 \end{tikzpicture}
 ```
 
@@ -592,9 +597,11 @@ as shown in Figure \@ref(fig:decoherence-recoherence-desired-outcome)
 
 (ref:decoherence-recoherence-desired-outcome-caption) The desired outcome of the decoherence--recoherence process.
 
-```{r decoherence-recoherence-desired-outcome,engine='tikz',fig.width=2.6,fig.cap='(ref:decoherence-recoherence-desired-outcome-caption)'}
+```{r decoherence-recoherence-desired-outcome,engine='tikz',fig.width=2,fig.cap='(ref:decoherence-recoherence-desired-outcome-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
 \newcommand{\ket}[1]{|#1\rangle}
-\begin{tikzpicture}[decoration={snake,segment length=2mm,amplitude=0.5mm,pre length=3mm,post length=3mm}]
+\begin{tikzpicture}
   \node[draw,thick,primary,circle] (S) at (0,0) {$\mathcal{S}$};
   \node[draw,thick,primary,circle] (A) at (2,1) {$\mathcal{A}$};
   \node[draw,thick,secondary,circle] (N) at (2,-1) {$\mathcal{N}$};
