@@ -118,10 +118,10 @@ The three qubits, which form the output of the channel, are given to Bob, whose 
 In this scenario, Bob, who knows the four isometries, can find out which particular isometry was applied.
 He knows that
 
-- $V_1$ maps $\mathcal{H}$ to $\mathcal{H}'_1$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{000}$ and $\ket{111}$;
-- $V_2$ maps $\mathcal{H}$ to $\mathcal{H}'_2$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{001}$ and $\ket{110}$;
-- $V_3$ maps $\mathcal{H}$ to $\mathcal{H}'_3$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{010}$ and $\ket{101}$;
-- $V_4$ maps $\mathcal{H}$ to $\mathcal{H}'_4$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{100}$ and $\ket{011}$.
+- $V_{00}$ maps $\mathcal{H}$ to $\mathcal{H}'_{00}$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{000}$ and $\ket{111}$;
+- $V_{01}$ maps $\mathcal{H}$ to $\mathcal{H}'_{01}$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{001}$ and $\ket{110}$;
+- $V_{10}$ maps $\mathcal{H}$ to $\mathcal{H}'_{10}$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{010}$ and $\ket{101}$;
+- $V_{11}$ maps $\mathcal{H}$ to $\mathcal{H}'_{11}$, which is a subspace of $\mathcal{H}'$ spanned by $\ket{100}$ and $\ket{011}$.
 
 We can draw this scenario using a diagram that that we have already seen in Section \@ref(pauli-stabilisers):^[In this section we will be using and building upon the theory of stabilisers from Section \@ref(stabilisers) quite a lot.]
 
@@ -132,10 +132,10 @@ We can draw this scenario using a diagram that that we have already seen in Sect
 \newcommand{\ket}[1]{|#1\rangle}
 \begin{tikzpicture}
   \draw (0,0) rectangle (4,4);
-  \node[] (c0) at (1,2.8) {$V_1$};
-  \node[] (c1) at (3,2.8) {$V_4$};
-  \node[] (c3) at (1,1.2) {$V_2$};
-  \node[] (c2) at (3,1.2) {$V_3$};
+  \node[] (c0) at (1,2.8) {$V_{00}$};
+  \node[] (c1) at (3,2.8) {$V_{11}$};
+  \node[] (c3) at (1,1.2) {$V_{01}$};
+  \node[] (c2) at (3,1.2) {$V_{10}$};
   \node[anchor=north west] (A) at (0,4) {$\substack{\ket{000}\\ \ket{111}}$};
   \node[anchor=north east] (B) at (4,4) {$\substack{\ket{100}\\ \ket{011}}$};
   \node[anchor=south east] (C) at (4,0) {$\substack{\ket{010}\\ \ket{101}}$};
@@ -145,29 +145,29 @@ We can draw this scenario using a diagram that that we have already seen in Sect
 \end{tikzpicture}
 ```
 
-Given that these subspaces are mutually orthogonal, and $\mathcal{H}'=\mathcal{H}'_1\oplus\mathcal{H}'_2\oplus\mathcal{H}'_3\oplus\mathcal{H}'_4$, Bob can perform a measurement defined by the projectors on these subspaces.
-For example, if Alice randomly picked $V_2$, then the input state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$ will be mapped to the output state $\alpha_0\ket{001}+\alpha_1\ket{110}$ in the $\mathcal{H}'_2$ subspace.
+Given that these subspaces are mutually orthogonal, and $\mathcal{H}'=\mathcal{H}'_{00}\oplus\mathcal{H}'_{01}\oplus\mathcal{H}'_{10}\oplus\mathcal{H}'_{11}$, Bob can perform a measurement defined by the projectors on these subspaces.
+For example, if Alice randomly picked $V_{01}$, then the input state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$ will be mapped to the output state $\alpha_0\ket{001}+\alpha_1\ket{110}$ in the $\mathcal{H}'_{01}$ subspace.
 Bob's measurement
 $$
   P_{01}
   = \proj{001} + \proj{101}
 $$
-will then detect $\mathcal{H}'_2$ as the subspace where the output state resides, but the measurement (i.e. the corresponding projection) will not affect any state in that subspace.
-Bob can now simply apply $V_2^\dagger$ and obtain $\ket{\psi}$.
+will then detect $\mathcal{H}'_{01}$ as the subspace where the output state resides, but the measurement (i.e. the corresponding projection) will not affect any state in that subspace.
+Bob can now simply apply $V_{01}^\dagger$ and obtain $\ket{\psi}$.
 
 Below is a diagram of how the four isometries are implemented.
 We will see how to reverse these operations in Section \@ref(towards-error-correction).
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=6}
 \[
-  V_1 =
+  V_{00} =
   \begin{quantikz}[ampersand replacement=\&]
     \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \hphantomgate{X}\qw \& \qw
   \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
   \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
   \end{quantikz}
   \qquad\qquad
-  V_2 =
+  V_{01} =
   \begin{quantikz}[ampersand replacement=\&]
     \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \gate{X} \& \qw
   \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
@@ -175,14 +175,14 @@ We will see how to reverse these operations in Section \@ref(towards-error-corre
   \end{quantikz}
 \]
 \[
-  V_3 =
+  V_{10} =
   \begin{quantikz}[ampersand replacement=\&]
     \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \qw \& \qw
   \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \gate{X} \& \qw
   \\\lstick{$\ket{0}$} \& \qw \& \targ{} \& \qw \& \qw
   \end{quantikz}
   \qquad\qquad
-  V_4 =
+  V_{11} =
   \begin{quantikz}[ampersand replacement=\&]
     \lstick{$\ket{\psi}$} \& \ctrl{1} \& \ctrl{2} \& \qw \& \qw
   \\\lstick{$\ket{0}$} \& \targ{} \& \qw \& \qw \& \qw
@@ -646,12 +646,112 @@ If a quantum error correction method corrects errors $E_1$ and $E_2$, then it al
 
 ## Towards error correction {#towards-error-correction}
 
-In
+In Section {#three-qubit-codes}, when Alice used a random choice of four isometries to produce a three-qubit output, notice how we can write
+$$
+  \begin{aligned}
+    V_{01}
+    &= (\id\otimes\id\otimes X)V_{00}
+  \\V_{01}
+    &= (\id\otimes X\otimes\id)V_{00}
+  \\V_{01}
+    &= (X\otimes\id\otimes\id)V_{00}
+  \end{aligned}
+$$
+and thus express all of the isometries in terms of $V_{00}$.
+In other words, rather than thinking of Alice as picking randomly between four different isometries, we can imagine that she *always* picks the **encoding** isometry $V_{00}$, and then some noisy process randomly applies one of the four errors $\id$, $\id\id X$, $\id X\id$, or $X\id\id$.
+Correcting the isometry then corresponds to identifying which error happened, fixing it, and then removing the encoding.
+This is the process of **error correction** in a nutshell.
+
+(ref:error-correction-idea-caption) Quantum error correction can be thought of as a three-step process: encoding, transmitting through a noisy channel, and then detecting and decoding.
+
+```{r error-correction-idea,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2,fig.cap='(ref:error-correction-idea-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{quantikz}
+  \lstick{$\ket{\psi}$}
+  & \gategroup[3,steps=4,style={draw=none,rounded corners,fill=secondary!20, inner xsep=2pt},background,label style={align=center,anchor=south,yshift=-0.1cm}]{Encoding}
+  & \qw
+  & \ctrl{1}
+  & \ctrl{2}
+  & \qw
+  & \phantomgate{X}\gategroup[3,style={draw=none,rounded corners,fill=primary!20, inner xsep=6pt},background,label style={text width=2cm,align=center,anchor=south,yshift=-0.1cm}]{Random\\$X$ error}
+  & \qw
+  & \ctrl{2}\gategroup[3,steps=3,style={draw=none,rounded corners,fill=secondary!20, inner xsep=2pt},label style={text width=2cm,align=center,anchor=south,yshift=-0.1cm},background]{Detection\\\& Decoding}
+  & \ctrl{1}
+  & \qw
+  & \qw
+\\
+  && \lstick{$\ket{0}$}
+  & \targ{}
+  & \qw
+  & \qw
+  & \gate[style={dashed}]{X}
+  & \qw
+  & \qw
+  & \targ{}
+  & \meter{}
+\\
+  && \lstick{$\ket{0}$}
+  & \qw
+  & \targ{}
+  & \qw
+  & \qw
+  & \qw
+  & \targ{}
+  & \qw
+  & \meter{}
+\end{quantikz}
+```
+
+When we studied Pauli stabilisers in Section \@ref(pauli-stabilisers), we came across exactly the spaces of this example:
+
+```{r stabiliser-bisection,engine='tikz',fig.width=3}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\newcommand{\id}{\mathbf{1}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \draw (0,0) rectangle (4,4);
+  \node[] (c0) at (1,2.8) {{\color{primary}$+$}{\color{secondary}$+$}};
+  \node[] (c1) at (3,2.8) {{\color{primary}$-$}{\color{secondary}$+$}};
+  \node[] (c2) at (3,1.2) {{\color{primary}$-$}{\color{secondary}$-$}};
+  \node[] (c3) at (1,1.2) {{\color{primary}$+$}{\color{secondary}$-$}};
+  \node[above,secondary] (S1) at (2,4.5) {$ZZ\id$};
+  \node[right,primary] (S2) at (4.5,2) {$\id ZZ$};
+  \node[primary] (S1+) at (1,4.5) {$+1$};
+  \node[primary] (S1-) at (3,4.5) {$-1$};
+  \node[secondary] (S2+) at (4.5,3) {$+1$};
+  \node[secondary] (S2-) at (4.5,1) {$-1$};
+  \node[anchor=north west] (A) at (0,4) {$\substack{\ket{000}\\ \ket{111}}$};
+  \node[anchor=north east] (B) at (4,4) {$\substack{\ket{100}\\ \ket{011}}$};
+  \node[anchor=south east] (C) at (4,0) {$\substack{\ket{010}\\ \ket{101}}$};
+  \node[anchor=south west] (D) at (0,0) {$\substack{\ket{001}\\ \ket{110}}$};
+  \draw (2,0) -- (2,4.5);
+  \draw (0,2) -- (4.5,2);
+\end{tikzpicture}
+```
+
+::: {.idea latex=""}
+The stabiliser formalism gives us a very natural way of describing the error correcting code, along with its correction:
+
+- the **codespace** (i.e. the space with no error) is defined by the two stabilisers $+ZZ\id$ and $+\id ZZ$
+- the error can be determined by measuring the value of these two stabilisers; we simply have to find which of the four possible errors gives the correct (anti-)commutation relations as specified by the measurement outcomes $\pm1$.
+:::
+
+Generalising this idea further is the subject of Section \@ref(the-repetition-code).
+
+We reiterate that, with this formalism, not only can we correct errors such as $X$, but also those such as Pauli rotations $e^{iX\theta}$ that act via
+$$
+  \ket{\psi}
+  \longmapsto \cos\theta\ket{\psi} + i\sin\theta X\ket{\psi}
+$$
+which, when we error correct, splits into two cases: with probability $\cos^2\theta$ we find that no error has happened; with probability $\sin^2\theta$ we find that the error $X$ has happened, and we correct it.
 
 
 
 
 
+## The repetition code {#the-repetition-code}
 
 
 
