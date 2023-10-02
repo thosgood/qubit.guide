@@ -125,7 +125,7 @@ He knows that
 
 We can draw this scenario using a diagram that that we have already seen in Section \@ref(pauli-stabilisers):^[In this section we will be using and building upon the theory of stabilisers from Section \@ref(stabilisers) quite a lot.]
 
-```{r,engine='tikz',fig.width=3}
+```{r,engine='tikz',fig.width=3.5}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \newcommand{\id}{\mathbf{1}}
@@ -646,7 +646,7 @@ If a quantum error correction method corrects errors $E_1$ and $E_2$, then it al
 
 ## Towards error correction {#towards-error-correction}
 
-In Section {#three-qubit-codes}, when Alice used a random choice of four isometries to produce a three-qubit output, notice how we can write
+In Section \@ref(three-qubit-codes), when Alice used a random choice of four isometries to produce a three-qubit output, notice how we can write
 $$
   \begin{aligned}
     V_{01}
@@ -664,7 +664,7 @@ This is the process of **error correction** in a nutshell.
 
 (ref:error-correction-idea-caption) Quantum error correction can be thought of as a three-step process: encoding, transmitting through a noisy channel, and then detecting and decoding.
 
-```{r error-correction-idea,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2,fig.cap='(ref:error-correction-idea-caption)'}
+```{r error-correction-idea,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5,fig.cap='(ref:error-correction-idea-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \begin{quantikz}
@@ -705,7 +705,7 @@ This is the process of **error correction** in a nutshell.
 
 When we studied Pauli stabilisers in Section \@ref(pauli-stabilisers), we came across exactly the spaces of this example:
 
-```{r,engine='tikz',fig.width=3}
+```{r,engine='tikz',fig.width=3.5}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \newcommand{\id}{\mathbf{1}}
@@ -745,7 +745,7 @@ $$
   \ket{\psi}
   \longmapsto \cos\theta\ket{\psi} + i\sin\theta X\ket{\psi}
 $$
-which, when we error correct, splits into two cases: with probability $\cos^2\theta$ we find that no error has happened; with probability $\sin^2\theta$ we find that the error $X$ has happened, and we correct it.
+which, when we error correct, split into two cases: with probability $\cos^2\theta$ we find that no error has happened; with probability $\sin^2\theta$ we find that the error $X$ has happened, and we correct it.
 
 
 
@@ -753,8 +753,126 @@ which, when we error correct, splits into two cases: with probability $\cos^2\th
 
 ## The repetition code {#the-repetition-code}
 
+To give a sense of how quantum error correction actually works, we first need a brief detour to introduce some concepts and methods from the classical theory of error correction.^[Even though quantum problems often require innovative solutions, it is always a good idea to look at the classical world to see if there is anything analogous there, and how it is dealt with.]
+In this particular case, once we have digitised quantum errors, we can see that quantum decoherence is a bit like classical noise (i.e. bit flips), except that we have *two* types of errors: bit flips and phase flips; the former essentially classical, the latter purely quantum.
+But we also know that phase flips can be turned into bit flips if sandwiched between Hadamard transforms: $HZH=X$.
+This opens up the possibility of adapting classical techniques of error correction to the quantum case.
+There is a vast body of knowledge out there about classical error-correcting codes, and we can only scratch the surface here.
 
+Suppose you want to send a $k$-bit message across a noisy channel.
+If you choose to send the message directly, some bits may be flipped, and a different message will likely arrive with a certain number of errors.
+Let's suppose that the transmission channel flips each bit in transit with some fixed probability $p$.
+If this error rate is considered too high, then it can be decreased by introducing some redundancy.
+For example, we could encode each bit into three bits:
+$$
+  \begin{aligned}
+    0
+    &\longmapsto 000
+  \\1
+    &\longmapsto 111.
+  \end{aligned}
+$$
+These two binary strings, $000$ and $111$, are called **codewords**.
+Beforehand, Alice and Bob agree that, from now on, each time you want to send a **logical** $0$, you will encode it as $000$, and each time you want to send a **logical** $1$, you will encode it as $111$.
 
+Here's an example.
+Say that Alice wants to send the message $1011$.
+She first encodes it as the string
+$$
+  111\,000\,111\,111
+$$
+and then sends it to Bob over the noisy channel.
+Note that she is now not sending just four, but instead *twelve* physical bits.
+This is more costly (in terms of time or energy, or maybe even money), but might be worth it to ensure a more reliable transmission.
+Let's say that Bob then receives the message
+$$
+  110\,010\,101\,100.
+$$
+Clearly some errors have occurred!
+In fact, even Bob knows this, because he expects to receive $3$-bit chunks of either all $0$s or all $1$s.
+He uses the "majority vote" decoding method:
+
+- $110$ is decoded as $1$
+- $010$ is decoded as $0$
+- $101$ is decoded as $1$
+- $100$ is decoded as $0$.
+
+As we can see, if a triplet contains either zero or one errors then the decoding returns the correct bit value, otherwise it errs.
+In our example, the first three triplets are correctly decoded, but the fourth suffered two errors and is thus wrongly decoded as $0$.
+This whole process can be represented as
+$$
+  1011
+  \xmapsto{\text{encoding}} 111\,000\,111\,111
+  \xmapsto{\text{noise}} 110\,010\,101\,100
+  \xmapsto{\text{decoding}} 1010.
+$$
+The noisy channel flipped 5 out of the 12 physical bits, and the whole encoding/decoding process reduced this down to only one logical error.
+
+We can make a simple estimate on how good this scheme will be.
+Assuming that the errors are independent^[The assumption that the errors are independent is very important, but not always physically realistic!] then, for any given triplet,
+$$
+  \begin{cases}
+    \text{no errors}
+    & \text{probability }(1-p)^3
+  \\\text{1 error}
+    & \text{probability }3p(1-p)^2
+  \\\text{2 errors}
+    & \text{probability }3p^2(1-p)
+  \\\text{3 errors}
+    & \text{probability }p^3.
+  \end{cases}
+$$
+More succinctly, the probability that $n$ errors occur is
+$$
+  {3\choose n}p^n(1-p)^{3-n}
+$$
+where ${m\choose n}=m!/(n!(m-n)!)$ is the [**binomial coefficient**](https://en.wikipedia.org/wiki/Binomial_coefficient).
+Given that the scheme decodes correctly exactly when we have at most one error, the net probability of errors is just the probability that either two or three errors occur, which is
+$$
+  3p^2(1-p) + p^3.
+$$
+This means that our encoding/decoding scheme actually lowers the probability of error if and only if
+$$
+  3p^2(1-p) + p^3
+  < \frac{1}{2}
+$$
+i.e. when $p<1/2$.
+When $p$ is really small, we can basically ignore the $p^3$ term, since it is even smaller still, and claim that the error probability is reduced from $p$ to roughly $3p^2$.
+
+(ref:error-probability-for-000-caption) What can happen, and with what probability, when we transmit the codeword $000$. With this scheme, we can correct up to one error, and detect up to two.
+
+```{r error-probability-for-000,engine='tikz',fig.width=5,fig.cap='(ref:error-probability-for-000-caption)'}
+\usetikzlibrary{decorations.markings,decorations.pathmorphing,decorations.pathreplacing}
+\begin{tikzpicture}
+  \node (initial) at (0,0) {$000$};
+  \node (0) at (3,1.75) {$000$};
+  \node (1) at (3,1.25) {$001$};
+  \node (2) at (3,0.75) {$010$};
+  \node (3) at (3,0.25) {$011$};
+  \node (4) at (3,-0.25) {$100$};
+  \node (5) at (3,-0.75) {$101$};
+  \node (6) at (3,-1.25) {$110$};
+  \node (7) at (3,-1.75) {$111$};
+  \foreach \x in {0,...,7}
+    \draw [->] (initial) to (\x.west);
+  \draw [decorate,decoration={brace,amplitude=5pt}] (0.north east) to (0.south east);
+  \draw [decorate,decoration={brace,amplitude=5pt}] (1.north east) to (3.south east);
+  \draw [decorate,decoration={brace,amplitude=5pt}] (4.north east) to (6.south east);
+  \draw [decorate,decoration={brace,amplitude=5pt}] (7.north east) to (7.south east);
+  \node [align=left] at (5,1.75) {\footnotesize no errors: $(1-p)^3$};
+  \node [align=left] at (5,0.75) {\footnotesize 1 error: $3p(1-p)^2$\\[-0.25em]\footnotesize \emph{correctable}};
+  \node [align=left] at (5,-0.75) {\footnotesize 2 errors: $3p^2(1-p)$\\[-0.25em]\footnotesize \emph{detectable}};
+  \node [align=left] at (4.525,-1.75) {\footnotesize 3 errors: $p^3$\\[-0.25em]\footnotesize \emph{undetectable}};
+\end{tikzpicture}
+```
+
+This simple repetition code encoded one bit into three bits, and corrected up to one error.
+In general, there are classical codes that can encode $k$ bits into $n$ bits and correct up to $r$ errors.
+One more important number that we need is the **distance** of such an encoding, which is defined to be the minimum number of errors that can pass undetected (or, equivalently, the minimum **Hamming distance**^[That is, the number of bit-flips required to move from one to the other. We talk about the Hamming distance more in Section \@ref(metrics).] between two codewords).
+
+::: {.idea latex=""}
+A code that encodes $k$ bits into $n$ bits and has a distance of $d$ is called an **$[n,k,d]$-code**.
+:::
 
 
 
