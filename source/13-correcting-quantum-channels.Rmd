@@ -900,7 +900,7 @@ For example, in our $3$-bit repetition code, we have the two codewords $000$ and
 
 
 
-## Protecting against bit-flips {#protecting-again-bit-flips}
+## Protecting against bit-flips {#protecting-against-bit-flips}
 
 In order to protect a qubit against bit-flips (thought of as incoherent $X$ rotations), we rely on the same classical repetition code as in Section \@ref(the-classical-repetition-code), but both encoding and error correction are now implemented by quantum operations.^[All the codes we will study have encoding circuits that can be constructed out of controlled-$\texttt{NOT}$ and Hadamard gates: we are dealing with Clifford circuits (recall Section \@ref(clifford-walks-on-stabiliser-states)).]
 Let's return to the example we introduced in Section \@ref(three-qubit-codes).
@@ -1087,7 +1087,7 @@ $$
 
 
 
-## Protecting against phase-flips
+## Protecting against phase-flips {#protecting-against-phase-flips}
 
 We have seen how the classical $[3,1,3]$-code can be adapted to detect and correct for a single quantum bit flip, but in Section \@ref(quantum-errors) we said that there are three possible errors that we need to worry about: bit-flips, phase-flips, and bit-and-phase flips.
 Having dealt with the first, we now deal with the second; finding a way to combine these two solutions to deal with the third is the subject of Section \@ref(protecting-against-bit-phase-flips).
@@ -1162,7 +1162,7 @@ It turns out that we really don't need to do much work in order to solve the pro
 The encoded state that enters the transmission area affected by decoherence now reads $\alpha\ket{+++}+\beta\ket{---}$, where $\ket{\pm}=(\ket{0}\pm\ket{1})/\sqrt{2}$.
 These are eigenstates of $Z$, i.e. $Z\ket{\pm}=\ket{\mp}$, and so errors get transformed into orthogonal, and thus detectable, states.
 
-But just as how the circuit in Section \@ref(protecting-again-bit-flips) only protected against bit-flips, this circuit only protects against phase-flips --- now we need to find a way to combine them.
+But just as how the circuit in Section \@ref(protecting-against-bit-flips) only protected against bit-flips, this circuit only protects against phase-flips --- now we need to find a way to combine them.
 
 
 
@@ -1330,9 +1330,137 @@ In general, the number of errors that can be corrected by a distance $d$ code is
 
 In Section \@ref(composing-correctable-channels) we derived the encoding circuit for the Shor $[[9,1,3]]$-code, so now let's put all the pieces together and understand how this gives an error correction procedure for all possible single-qubit errors.
 
-First
+To start, we encode our qubit with the phase-flip code
+$$
+  \begin{aligned}
+    \ket{0}
+    &\longmapsto \ket{+}\ket{+}\ket{+}
+  \\\ket{1}
+    &\longmapsto \ket{-}\ket{-}\ket{-}
+  \end{aligned}
+$$
+and then we encode each of the resulting three qubits with the bit-flip code
+$$
+  \begin{aligned}
+    \ket{0}
+    &\longmapsto \ket{0}\ket{0}\ket{0}
+  \\\ket{1}
+    &\longmapsto \ket{1}\ket{1}\ket{1}
+  \end{aligned}
+$$
+resulting in a net effect of
+$$
+  \begin{aligned}
+    \ket{0}
+    &\longmapsto (\ket{000}+\ket{111})(\ket{000}+\ket{111})(\ket{000}+\ket{111})/\sqrt{8}
+  \\\ket{1}
+    &\longmapsto (\ket{000}-\ket{111})(\ket{000}-\ket{111})(\ket{000}-\ket{111})/\sqrt{8}.
+  \end{aligned}
+  \tag{$\ddagger$}
+$$
 
+In order to understand how this code works, it is helpful to look at the complete circuit diagram, so let's build it up in a compositional way.
+Rather than drawing the entire circuits from Sections \@ref(protecting-against-bit-flips) and \@ref(protecting-against-phase-flips) again, let's simply draw them as consisting of an encoding gate $C$ and a recovery gate $R$, separated by a zone $[t_1,t_2]$ that corresponds to transmission over the noisy channel.
+Then the bit-flip correction circuit looks like
 
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3}
+\definecolor{primary}{RGB}{177,98,78}
+\begin{quantikz}
+  \lstick{$\ket{\psi}$}
+  & \gate[wires=3,nwires={2,3}]{C} \slice[style={primary},label style={primary}]{$t_1$}
+  & \phantomgate{XX} \slice[style={primary},label style={primary}]{$t_2$}
+  & \gate[wires=3]{R}
+  & \qw \rstick{$\ket{\psi}$}
+\\
+  && \qw
+  & \qw
+\\
+  && \qw
+  & \qw
+\end{quantikz}
+```
+
+and the phase-flip correction looks the same, but with Hadamards sandwiching the transmission zone, so
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4}
+\definecolor{primary}{RGB}{177,98,78}
+\begin{quantikz}
+  \lstick{$\ket{\psi}$}
+  & \gate[wires=3,nwires={2,3}]{C}
+  & \gate{H} \slice[style={primary},label style={primary}]{$t_1$}
+  & \phantomgate{XX} \slice[style={primary},label style={primary}]{$t_2$}
+  & \gate{H}
+  & \gate[wires=3]{R}
+  & \qw \rstick{$\ket{\psi}$}
+\\
+  && \gate{H}
+  & \qw
+  & \gate{H}
+  & \qw
+\\
+  && \gate{H}
+  & \qw
+  & \gate{H}
+  & \qw
+\end{quantikz}
+```
+
+Then we can nest the bit-flip correction circuit into the phase-flip correction circuit by inserting a copy on each of the three wires in the transmission zone, giving us the circuit that implements the encoding of Equation $(\ddagger)$, as shown in Figure \@ref(fig:simplified-bit-flip-and-phase-flip-corrections-composed).
+
+(ref:simplified-bit-flip-and-phase-flip-corrections-composed-caption) Nesting the two correction circuits: one copy of the bit-flip correction circuit on each wire of the phase-flip correction circuit.
+
+```{r simplified-bit-flip-and-phase-flip-corrections-composed,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=8,fig.cap='(ref:simplified-bit-flip-and-phase-flip-corrections-composed-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\begin{quantikz}[row sep=tiny]
+  \lstick{$\ket{\psi}$}
+  & \gate[wires=9,nwires={2,3,4,5,6,7,8,9}]{C}
+  & \gate{H}
+  & \gate[wires=3,nwires={2,3}]{C} \slice[style={primary},label style={primary}]{$t_1$}
+  & \phantomgate{XX} \slice[style={primary},label style={primary}]{$t_2$}
+  & \gate[wires=3]{R}
+  & \gate{H}
+  & \gate[wires=9,nwires={2,3,5,6,8,9}]{R}
+  & \qw \rstick{$\ket{\psi}$}
+\\[-1em]
+  &&&& \qw
+  & \qw
+  &&
+\\[-0.65em]
+  &&&& \qw
+  & \qw
+  &&
+\\
+  && \gate{H}
+  & \gate[wires=3,nwires={2,3}]{C}
+  & \qw
+  & \gate[wires=3]{R}
+  & \gate{H}
+  & \qw
+\\[-0.65em]
+  &&&& \qw
+  & \qw
+  &&
+\\[-0.65em]
+  &&&& \qw
+  & \qw
+  &&
+\\
+  && \gate{H}
+  & \gate[wires=3,nwires={2,3}]{C}
+  & \qw
+  & \gate[wires=3]{R}
+  & \gate{H}
+  & \qw
+\\[-0.65em]
+  &&&& \qw
+  & \qw
+  &&
+\\[-0.65em]
+  &&&& \qw
+  & \qw
+  &&
+\end{quantikz}
+```
 
 
 
