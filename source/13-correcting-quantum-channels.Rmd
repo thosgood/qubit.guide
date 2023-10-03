@@ -1,7 +1,7 @@
 # Correcting quantum channels {#correcting-quantum-channels}
 
 > About the one big problem that hinders us from physically implementing everything that we've learnt so far: **decoherence**.
-> But also about how we can start to deal with it via some elementary **error correction**, including the **Shor [[9,1,3]] quantum code**.
+> But also about how we can start to deal with it via some elementary **error correction**, including the **Shor $[[9,1,3]]$ quantum code**, which generalises the classical **$[3,1,3]$-code**.
 
 As the adage goes, "in theory, theory and practice rarely differ; in practice, they often do".
 *In theory*, we know how to build a quantum computer: we can start with simple quantum logic gates and try to integrate them together into quantum networks.
@@ -518,7 +518,7 @@ $$
   X\otimes Z \otimes \id \otimes \id \otimes Y
   \equiv XZ\id\id Y.
 $$
-We say that such an $E_i$ represents an error consisting of the bit error $X$ error on the first qubit, phase error $Z$ error on the second qubit, and both bit and phase $Y$ error on the fifth qubit.^[One final time: *this is not entirely accurate if the corresponding states of the environment are not mutually orthogonal*, but it gives the right kind of intuition nonetheless.]
+We say that such an $E_i$ represents an error consisting of the bit error (or $X$ error) on the first qubit, phase error (or $Z$ error) on the second qubit, and both bit and phase error (or $Y$ error) on the fifth qubit.^[One final time: *this is not entirely accurate if the corresponding states of the environment are not mutually orthogonal*, but it gives the right kind of intuition nonetheless.]
 
 At first glance, once our bunch of qubits, initially in state $\ket{\psi}$, gets entangled with the environment
 $$
@@ -900,7 +900,7 @@ For example, in our $3$-bit repetition code, we have the two codewords $000$ and
 
 
 
-## Protecting against bit-flips
+## Protecting against bit-flips {#protecting-again-bit-flips}
 
 In order to protect a qubit against bit-flips (thought of as incoherent $X$ rotations), we rely on the same classical repetition code as in Section \@ref(the-classical-repetition-code), but both encoding and error correction are now implemented by quantum operations.^[All the codes we will study have encoding circuits that can be constructed out of controlled-$\texttt{NOT}$ and Hadamard gates: we are dealing with Clifford circuits (recall Section \@ref(clifford-walks-on-stabiliser-states)).]
 Let's return to the example we introduced in Section \@ref(three-qubit-codes).
@@ -1023,7 +1023,7 @@ $$
   \end{aligned}
 $$
 
-(ref:single-bit-flip-complete-circuit-caption) The quantised version of the classical $[3,1,3]$-code. If *at most one* bit-flip error occurs in the shaded region, then this circuit perfectly corrects it, resulting in the successful transmission of the state $\alpha\ket{0}+\beta\ket{1}$.
+(ref:single-bit-flip-complete-circuit-caption) The quantised version of the classical $[3,1,3]$-code. If *at most one* bit-flip error occurs in the shaded region (which denotes the part where we transmit over a noisy channel), then this circuit perfectly corrects it, resulting in the successful transmission of the state $\alpha\ket{0}+\beta\ket{1}$.
 
 ```{r single-bit-flip-complete-circuit,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=8,fig.cap='(ref:single-bit-flip-complete-circuit-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
@@ -1034,25 +1034,27 @@ $$
   & \targ{}
   & \qw
   & \qw
-  & \meter{} \rstick{$\ket{1}$}
+  & \gate[5]{U_c}
+  & \qw
 \\
   &&&& \lstick{$\ket{0}$}
   & \qw
   & \qw
   & \targ{}
   & \targ{}
-  & \meter{} \rstick{$\ket{1}$}
+  & \qw
+  & \qw
 \\
   \lstick{$\alpha\ket{0}+\beta\ket{1}$}
   & \ctrl{1}
   & \ctrl{2}
-  & \gate[3,style={dashed,fill=primary!20}]{X\text{ error}}\gategroup[3,style={draw=none,rounded corners,fill=primary!20,inner xsep=6pt},background]{}
+  & \gate[3,style={dashed,fill=primary!20}]{X\text{ error}}\gategroup[3,style={draw=none,rounded corners,fill=primary!20,inner xsep=2pt},background]{}
   & \qw
   & \ctrl{-2}
   & \qw
   & \qw
   & \qw
-  & \gate[3]{U_c}
+  & \qw
   & \meter{} \rstick{$\alpha\ket{0}+\beta\ket{1}$}
 \\
   \lstick{$\ket{0}$}
@@ -1085,15 +1087,250 @@ $$
 
 
 
-## Turning phase-flips to bit-flips
+## Protecting against phase-flips
 
-Now
+We have seen how the classical $[3,1,3]$-code can be adapted to detect and correct for a single quantum bit flip, but in Section \@ref(quantum-errors) we said that there are three possible errors that we need to worry about: bit-flips, phase-flips, and bit-and-phase flips.
+Having dealt with the first, we now deal with the second; finding a way to combine these two solutions to deal with the third is the subject of Section \@ref(protecting-against-bit-phase-flips).
+
+It turns out that we really don't need to do much work in order to solve the problem of single phase-flip errors if we make use of the fact that $HZH=X$, i.e. phase-flips become bit-flips when sandwiched between Hadamards!
+
+(ref:single-phase-flip-complete-circuit-caption) Using the quantised $[3,1,3]$-code to deal with phase-flips by sandwiching the transmission area between Hadamards.
+
+```{r single-phase-flip-complete-circuit,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=8,fig.cap='(ref:single-phase-flip-complete-circuit-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\begin{quantikz}
+  &&&&&& \lstick{$\ket{0}$}
+  & \targ{}
+  & \targ{}
+  & \qw
+  & \qw
+  & \gate[5]{U_c}
+  & \qw
+\\
+  &&&&&& \lstick{$\ket{0}$}
+  & \qw
+  & \qw
+  & \targ{}
+  & \targ{}
+  & \qw
+  & \qw
+\\
+  \lstick{$\alpha\ket{0}+\beta\ket{1}$}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \gate{H}
+  & \gate[3,style={dashed,fill=primary!20}]{Z\text{ error}}\gategroup[3,style={draw=none,rounded corners,fill=primary!20,inner xsep=2pt},background]{}
+  & \gate{H}
+  & \qw
+  & \ctrl{-2}
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+  & \meter{} \rstick{$\alpha\ket{0}+\beta\ket{1}$}
+\\
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \qw
+  & \gate{H}
+  & \qw
+  & \gate{H}
+  & \qw
+  & \qw
+  & \ctrl{-3}
+  & \ctrl{-2}
+  & \qw
+  & \qw
+  & \qw
+\\
+  \lstick{$\ket{0}$}
+  & \qw
+  & \targ{}
+  & \gate{H}
+  & \qw
+  & \gate{H}
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+  & \ctrl{-3}
+  & \qw
+  & \qw
+\end{quantikz}
+```
+
+The encoded state that enters the transmission area affected by decoherence now reads $\alpha\ket{+++}+\beta\ket{---}$, where $\ket{\pm}=(\ket{0}\pm\ket{1})/\sqrt{2}$.
+These are eigenstates of $Z$, i.e. $Z\ket{\pm}=\ket{\mp}$, and so errors get transformed into orthogonal, and thus detectable, states.
+
+But just as how the circuit in Section \@ref(protecting-again-bit-flips) only protected against bit-flips, this circuit only protects against phase-flips --- now we need to find a way to combine them.
 
 
 
 
 
+## Composing correctable channels {#composing-correctable-channels}
 
+We have already seen that we can compose quantum channels both in sequence and in parallel, using matrix multiplication or the tensor product (respectively).
+When we compose two correctable channels, do we still get a correctable channel?
+Well, if $\{V_i\}$ and $\{W_m\}$ are two sets of channels then
+$$
+  (V_j\otimes W_n)^\dagger(V_i\otimes W_m)
+  = (V_j^\dagger V_i)\otimes(W_n^\dagger W_m)
+$$
+and so if the $V_i$ and the $W_m$ are all isometries, then so too is their parallel composition, since the above then equals $\delta_{ij}\delta_{mn}\id\otimes\id$.
+Similarly, if $V_i\colon\mathcal{B}(\mathcal{H})\to\mathcal{B}(\mathcal{H}')$ and $W_m\colon\mathcal{B}(\mathcal{H}')\to\mathcal{B}(\mathcal{H}'')$, then the composition $W_mV_i$ is meaningful, and
+$$
+  (W_nV_j)^\dagger(W_mV_i)
+  = V_j^\dagger W_n^\dagger W_m V_i
+$$
+and so if the $V_i$ and $W_m$ are all isometries, then so too is their sequential composition, since the above then equals $\delta_{ij}\delta_{mn}\id$.
+
+Let's apply this to our continuing example of single-qubit error correction.
+Recall the isometries
+$$
+  \begin{aligned}
+    V_{00} &= \ket{000}\bra{0} + \ket{111}\bra{1}
+  \\V_{01} &= \ket{001}\bra{0} + \ket{110}\bra{1}
+  \\V_{10} &= \ket{010}\bra{0} + \ket{101}\bra{1}
+  \\V_{11} &= \ket{100}\bra{0} + \ket{011}\bra{1}.
+  \end{aligned}
+$$
+from Section \@ref(three-qubit-codes).
+If we write $\overline{x}$ to mean the complement $\texttt{NOT}(x)$ of a binary string $x$, then these can all be expressed as
+$$
+  V_x
+  = \ket{0x}\bra{0} + \ket{1\overline{x}}\bra{1}.
+$$
+We can define a related set of isometries by
+$$
+  W_x
+  = (H\otimes H\otimes H)V_x
+$$
+which correct for any single $Z$ error, using the fact that $HXH=Z$.
+Then the composites
+$$
+  (V_{y_1}\otimes V_{y_2}\otimes V_{y_3})W_x
+  = (V_{y_1}\otimes V_{y_2}\otimes V_{y_3})(H\otimes H\otimes H)V_x
+$$
+define a set of isometries that map a single qubit to nine qubits as a correctable channel.
+
+If we look at the $y_1=y_2=y_3=x=00$ case, then we can use this to define an encoding procedure, as in Figure \@ref(fig:shor-913-encoding).
+
+(ref:shor-913-encoding-caption) The encoding circuit for the Shor $[[9,1,3]]$-code, implementing $(V_{00}\otimes V_{00}\otimes V_{00})(H\otimes H\otimes H)V_{00}$. The three locations marked with numbers are not part of the circuit, but we will use them to explain how this circuit corrects for arbitrary single-qubit errors.
+
+```{r shor-913-encoding,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4.5,fig.cap='(ref:shor-913-encoding-caption)'}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{quantikz}[row sep=tiny]
+  \lstick{$\alpha\ket{0}+\beta\ket{1}$}
+  & \ctrl{3}
+  & \ctrl{6}
+  & \gate{H}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \qw
+\\
+  \lstick[wires=2]{$\ket{00}$}
+  & \qw
+  & \qw
+  & \qw
+  & \targ{}
+  & \qw
+  & \qw
+\\
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+  & \targ{}
+  & \qw
+\\
+  \lstick[wires=3]{$\ket{000}$}
+  & \targ{}
+  & \phase[minimum size=0,fill=none,label position=20,label distance=5mm,draw=secondary,fill=secondary,circle,text=white]{1}
+  & \gate{H}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \phase[minimum size=0,fill=none,label position=160,label distance=5mm,draw=secondary,fill=secondary,circle,text=white]{2}
+\\[-2.25mm]
+  & \qw
+  & \qw
+  & \qw
+  & \targ{}
+  & \qw
+  & \phase[minimum size=0,fill=none,label position=160,label distance=5mm,draw=secondary,fill=secondary,circle,text=white]{3}
+\\
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+  & \targ{}
+  & \qw
+\\
+  \lstick[wires=3]{$\ket{000}$}
+  & \qw
+  & \targ{}
+  & \gate{H}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \qw
+\\
+  & \qw
+  & \qw
+  & \qw
+  & \targ{}
+  & \qw
+  & \qw
+\\
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+  & \targ{}
+  & \qw
+\end{quantikz}
+```
+
+What errors can this code cope with?
+Trivially, an $X$ on any of the nine qubits corresponds to a different isometry, by construction.
+For example, applying an $X$ at location 3 in Figure \@ref(fig:shor-913-encoding) is picked out by $y_2=10$.
+In other words, each block of three qubits behaves just as it did before.
+
+We also know that, by construction, the code would correct for a single $X$ error at location 1 in the circuit.
+If we propagate this error through the circuit, this is the same as a $Z$ error in location 2, which corresponds to the isometry with $x=10$, and shows that $Z$ errors on the first, fourth, and seventh (i.e. the first in each block of three) qubits can be corrected.
+What about other $Z$ errors?
+Well, let's go back to the subspace created by one of the $V_x$, say $V_{00}$ which is spanned by $\ket{000}$ and $\ket{111}$.
+Then the effect of a single $Z$ error on that space is the same no matter where the $Z$ is applied: a $Z$ error at location 3 has exactly the same effect as a $Z$ error at location 2, since it corresponds to the same isometry, and so the error can still be detected and corrected *without ever needing to know whether the error was at location 2 or location 3*.
+This lack of knowledge means that the code is said to be **degenerate**.
+
+::: {.idea latex=""}
+This circuit gives a nine-qubit encoding that can correct for *any* *single-qubit* error.
+The resulting code is called the **Shor $[[9,1,3]]$-code**, where the $9$ tells us the size of the encoding, the $1$ tells us the input size, and the $3$ tells us the distance (defined below).
+:::
+
+We will describe how the Shor $[[9,1,3]]$-code^[We use double square brackets to emphasise that this is a quantum, not classical, code.] provides single-qubit error correction in more detail in Section \@ref(protecting-against-bit-phase-flips).
+
+Note that, for the Shor $[[9,1,3]]$-code, operators such as $Z_1Z_2\coloneqq Z\otimes Z\otimes\id^{\otimes7}$ are undetectable, but they do not change the logical state:
+$$
+  Z_1Z_2(V_{y_1}\otimes V_{y_2}\otimes V_{y_3})W_x
+  = (V_{y_1}\otimes V_{y_2}\otimes V_{y_3})W_x.
+$$
+However, operators such as $X_1X_2X_3$ are undetectable *and do change* the logical state:
+$$
+  (X\otimes X\otimes X)V_{y_i}
+  = V_{y_i}X.
+$$
+In fact, this is the smallest possible operator (said to be **of weight 3**, since it is built as a tensor product of three non-trivial gates) that can cause this problem of undetectable but fatal errors, and so we say that the Shor code has **distance $d=3$**.
+In general, the number of errors that can be corrected by a distance $d$ code is $\lfloor d/2\rfloor$.
+
+
+
+
+
+## Protecting against bit-phase-flips {#protecting-against-bit-phase-flips}
+
+In Section \@ref(composing-correctable-channels) we derived the encoding circuit for the Shor $[[9,1,3]]$-code, so now let's put all the pieces together and understand how this gives an error correction procedure for all possible single-qubit errors.
+
+First
 
 
 
