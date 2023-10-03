@@ -736,7 +736,7 @@ $$
   \ket{\psi}
   \longmapsto \cos\theta\ket{\psi} + i\sin\theta X\ket{\psi}
 $$
-which, when we error correct, split into two cases: with probability $\cos^2\theta$ we find that no error has happened; with probability $\sin^2\theta$ we find that the error $X$ has happened, and we correct it.
+which, when we error correct, split into two cases: with probability $\cos^2\theta$ we find that no error has happened; with probability $\sin^2\theta$ we find that the error $X$ has happened, and we correct it.^[See Exercise \@ref(three-qubits-correcting-rotations)]
 
 
 
@@ -797,7 +797,7 @@ $$
   \xmapsto{\text{noise}} 110\,010\,101\,100
   \xmapsto{\text{decoding}} 1010.
 $$
-The noisy channel flipped 5 out of the 12 physical bits, and the whole encoding/decoding process reduced this down to only one logical error.
+The noisy channel flipped 5 out of the 12 physical bits, and the whole encoding--decoding process reduced this down to only one logical error.
 
 We can make a simple estimate on how good this scheme will be.
 Assuming that the errors are independent^[The assumption that the errors are independent is very important, but not always physically realistic!] then, for any given triplet,
@@ -822,7 +822,7 @@ Given that the scheme decodes correctly exactly when we have at most one error, 
 $$
   3p^2(1-p) + p^3.
 $$
-This means that our encoding/decoding scheme actually lowers the probability of error if and only if
+This means that our encoding--decoding scheme actually lowers the probability of error if and only if
 $$
   3p^2(1-p) + p^3
   < \frac{1}{2}
@@ -1326,9 +1326,9 @@ In general, the number of errors that can be corrected by a distance $d$ code is
 
 
 
-## Protecting against bit-phase-flips {#protecting-against-bit-phase-flips}
+## Protecting against bit-phase-flips with Shor [[9,1,3]] {#protecting-against-bit-phase-flips}
 
-In Section \@ref(composing-correctable-channels) we derived the encoding circuit for the Shor $[[9,1,3]]$-code, so now let's put all the pieces together and understand how this gives an error correction procedure for all possible single-qubit errors.
+In Section \@ref(composing-correctable-channels) we derived the encoding circuit for the Shor $[[9,1,3]]$-code, so now let's go from the top and put all the pieces together to understand how this gives an error correction procedure for all possible single-qubit errors.^[Although nine qubits is actually more than necessary (we can achieve the same result with a different scheme that only uses five), this code, proposed by Shor in 1995, allows us to more easily see what's really going on.]
 
 To start, we encode our qubit with the phase-flip code
 $$
@@ -1360,7 +1360,7 @@ $$
 $$
 
 In order to understand how this code works, it is helpful to look at the complete circuit diagram, so let's build it up in a compositional way.
-Rather than drawing the entire circuits from Sections \@ref(protecting-against-bit-flips) and \@ref(protecting-against-phase-flips) again, let's simply draw them as consisting of an encoding gate $C$ and a recovery gate $R$, separated by a zone $[t_1,t_2]$ that corresponds to transmission over the noisy channel.
+Rather than drawing the entire circuits from Sections \@ref(protecting-against-bit-flips) and \@ref(protecting-against-phase-flips) again, let's simply draw them as consisting of an encoding gate $C$ and a decoding gate $D$, separated by a zone $[t_1,t_2]$ that corresponds to transmission over the noisy channel.
 Then the bit-flip correction circuit looks like
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3}
@@ -1369,7 +1369,7 @@ Then the bit-flip correction circuit looks like
   \lstick{$\ket{\psi}$}
   & \gate[wires=3,nwires={2,3}]{C} \slice[style={primary},label style={primary}]{$t_1$}
   & \phantomgate{XX} \slice[style={primary},label style={primary}]{$t_2$}
-  & \gate[wires=3]{R}
+  & \gate[wires=3]{D}
   & \qw \rstick{$\ket{\psi}$}
 \\
   && \qw
@@ -1380,7 +1380,7 @@ Then the bit-flip correction circuit looks like
 \end{quantikz}
 ```
 
-and the phase-flip correction looks the same, but with Hadamards sandwiching the transmission zone, so
+and the phase-flip correction looks the same, but with Hadamard gates sandwiching the transmission zone, so
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4}
 \definecolor{primary}{RGB}{177,98,78}
@@ -1390,7 +1390,7 @@ and the phase-flip correction looks the same, but with Hadamards sandwiching the
   & \gate{H} \slice[style={primary},label style={primary}]{$t_1$}
   & \phantomgate{XX} \slice[style={primary},label style={primary}]{$t_2$}
   & \gate{H}
-  & \gate[wires=3]{R}
+  & \gate[wires=3]{D}
   & \qw \rstick{$\ket{\psi}$}
 \\
   && \gate{H}
@@ -1417,9 +1417,9 @@ Then we can nest the bit-flip correction circuit into the phase-flip correction 
   & \gate{H}
   & \gate[wires=3,nwires={2,3}]{C} \slice[style={primary},label style={primary}]{$t_1$}
   & \phantomgate{XX} \slice[style={primary},label style={primary}]{$t_2$}
-  & \gate[wires=3]{R}
+  & \gate[wires=3]{D}
   & \gate{H}
-  & \gate[wires=9,nwires={2,3,5,6,8,9}]{R}
+  & \gate[wires=9,nwires={2,3,5,6,8,9}]{D}
   & \qw \rstick{$\ket{\psi}$}
 \\[-1em]
   &&&& \qw
@@ -1433,7 +1433,7 @@ Then we can nest the bit-flip correction circuit into the phase-flip correction 
   && \gate{H}
   & \gate[wires=3,nwires={2,3}]{C}
   & \qw
-  & \gate[wires=3]{R}
+  & \gate[wires=3]{D}
   & \gate{H}
   & \qw
 \\[-0.65em]
@@ -1448,7 +1448,7 @@ Then we can nest the bit-flip correction circuit into the phase-flip correction 
   && \gate{H}
   & \gate[wires=3,nwires={2,3}]{C}
   & \qw
-  & \gate[wires=3]{R}
+  & \gate[wires=3]{D}
   & \gate{H}
   & \qw
 \\[-0.65em]
@@ -1462,59 +1462,69 @@ Then we can nest the bit-flip correction circuit into the phase-flip correction 
 \end{quantikz}
 ```
 
+:::: {.technical title="Operads" latex="{Operads}"}
+::: {.todo latex=""}
+<!-- TO-DO: operads for expressing nested composition; a hint towards diagrammatic approaches -->
+:::
+::::
 
+Now, if an $X$ error occurs on one of the nine qubits in the circuit in Figure \@ref(fig:simplified-bit-flip-and-phase-flip-corrections-composed) during the time interval $[t_1,t_2]$, it will be corrected by the corresponding inner three-qubit repetition code that corrects for bit-flips.
+In fact, this scheme can tolerate up to three bit-flip errors *provided that they occur in different blocks*.
+For example, writing $X_i$ to mean an $X$ error on the $i$-th qubit, if $X_1$, $X_5$, and $X_7$ all occur then they will all be corrected, but if $X_1$ and $X_2$ both occur then the resulting error will *not* be corrected.
 
+Next, if a $Z$ error occurs on one of the qubits, say the first one, we know that it will *not* be corrected by the inner encoding--decoding circuit (the one taking place on the top three qubits), but it will be passed along and then corrected "one level up", by the outer encoding--decoding circuit (the one taking place on the first, fourth, and seventh qubits).
 
+Finally, what about if a $Y$ error occurs?
+Well, since $Y=ZX$, the inner circuit will correct the $X$ part of the error, and the outer circuit will correct the $Z$ part^[As per usual, any resulting global phase doesn't matter.]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+So quantum error correction is indeed possible: we can remove the unwanted effects of decoherence during transmission through a channel.
+However, this process of encode--transmit--decode doesn't really cover the practical scenario of computation, since in reality we are constantly trying to process our data, and noise could enter at any moment.
+One thus has to *compute on the encoded states the whole time*, whilst also somehow ensuring that even faults occurring during an error correction cycle don't adversely affect the computation.
+This is known as **fault tolerance**, and we will start our journey towards studying it, using the stabiliser formalisation of Section \@ref(stabilisers), in Section \@ref(fault-tolerant-quantum-computation).
 
 
 
 
 
 ## *Remarks and exercises* {#remarks-and-exercises-decoherence}
+
+
+### Decoherence-free subspaces
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+### Repetition encoding and majority voting failure
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+### Correcting Pauli rotations with three qubits {#three-qubits-correcting-rotations}
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+### More on Shor [[9,1,3]]
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+### Distillation for Bell pairs
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+### Composing quantum codes
 
 ::: {.todo latex=""}
 <!-- TO-DO -->
