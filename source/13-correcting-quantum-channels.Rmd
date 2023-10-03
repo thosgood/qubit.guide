@@ -35,31 +35,29 @@ Apart from individual unitaries or isometries, the only **correctable** channels
 We shall prove this fact in Section \@ref(correctable-channels)
 
 Here is a simple but important example: the **three-qubit code**.
-Take a qubit in some pure state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$, introduce two auxiliary qubits in a fixed state $\ket{0}\ket{0}$, and apply a unitary operation to the three qubits, namely two controlled-$\texttt{NOT}$ gates:
+Take a qubit in some pure state $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, introduce two auxiliary qubits in a fixed state $\ket{0}\ket{0}$, and apply a unitary operation to the three qubits, namely two controlled-$\texttt{NOT}$ gates:
 
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=8}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick{$\alpha_0\ket{0}+\alpha_1\ket{1}$}
-    & \ctrl{1}
-    & \ctrl{2}
-    & \qw
-    & \qw
-    \rstick[wires=3]{$\alpha_0\ket{000}+\alpha_1\ket{111}$}
-    \\
-    \lstick{$\ket{0}$}
-    & \targ{}
-    & \qw
-    & \qw
-    & \qw
-    \\
-    \lstick{$\ket{0}$}
-    & \qw
-    & \targ{}
-    & \qw
-    & \qw
-  \end{quantikz}
-\end{equation*}
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4.5}
+\begin{quantikz}
+  \lstick{$\alpha\ket{0}+\beta\ket{1}$}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \qw
+  & \qw
+  \rstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+  \\
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \qw
+  & \qw
+  & \qw
+  \\
+  \lstick{$\ket{0}$}
+  & \qw
+  & \targ{}
+  & \qw
+  & \qw
+\end{quantikz}
 ```
 
 The result is the isometric embedding of the $2$-dimensional Hilbert space of the first qubit (spanned by $\ket{0}$ and $\ket{1}$) into the $2$-dimensional subspace (spanned by $\ket{000}$ and $\ket{111}$) of the $8$-dimensional Hilbert space of the three qubits.
@@ -69,38 +67,31 @@ $$
 $$
 acts via
 $$
-  \alpha_0\ket{0}+\alpha_1\ket{1}
-  \longmapsto \alpha_0\ket{000}+\alpha_1\ket{111}.
+  \alpha\ket{0}+\beta\ket{1}
+  \longmapsto \alpha\ket{000}+\beta\ket{111}.
 $$
 This three qubit-encoding can be reversed by the mirror image circuit:
 
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=8}
-\begin{equation*}
-  \begin{quantikz}
-    \lstick[wires=3]{$\alpha_0\ket{000}+\alpha_1\ket{111}$}
-    & \ctrl{2}
-    & \ctrl{1}
-    & \qw
-    & \qw
-    \rstick{$\alpha_0\ket{0}+\alpha_1\ket{1}$}
-    \\
-    & \qw
-    & \targ{}
-    & \qw
-    & \qw
-    \rstick{$\ket{0}$}
-    \\
-    & \targ{}
-    & \qw
-    & \qw
-    & \qw
-    \rstick{$\ket{0}$}
-  \end{quantikz}
-\end{equation*}
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4.5}
+\begin{quantikz}
+  \lstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+  & \ctrl{2}
+  & \ctrl{1}
+  & \qw \rstick{$\alpha\ket{0}+\beta\ket{1}$}
+\\
+  & \qw
+  & \targ{}
+  & \qw \rstick{$\ket{0}$}
+\\
+  & \targ{}
+  & \qw
+  & \qw \rstick{$\ket{0}$}
+\end{quantikz}
 ```
 
-This isometry is just one member of a family, as we now explain.
+This isometry is just one member of a family, and we will spend the rest of this chapter building up to the general theory, and understanding how this three-qubit encoding is useful in error correction.
 
+Let's start with the following scenario.
 Alice constructs a quantum channel which is a mixture of four isometries.
 The input is a single qubit, and the output is a dilated system composed of three qubits.
 She prepares the input qubit in a state^[Our arguments here can be easily extended to any mixed state $\rho$, but for simplicity we consider the case of a pure state.] $\ket{\psi}$ and then combines it with the two ancillary qubits which are in a fixed state $\ket{0}\ket{0}$.
@@ -146,7 +137,7 @@ We can draw this scenario using a diagram that that we have already seen in Sect
 ```
 
 Given that these subspaces are mutually orthogonal, and $\mathcal{H}'=\mathcal{H}'_{00}\oplus\mathcal{H}'_{01}\oplus\mathcal{H}'_{10}\oplus\mathcal{H}'_{11}$, Bob can perform a measurement defined by the projectors on these subspaces.
-For example, if Alice randomly picked $V_{01}$, then the input state $\ket{\psi}=\alpha_0\ket{0}+\alpha_1\ket{1}$ will be mapped to the output state $\alpha_0\ket{001}+\alpha_1\ket{110}$ in the $\mathcal{H}'_{01}$ subspace.
+For example, if Alice randomly picked $V_{01}$, then the input state $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$ will be mapped to the output state $\alpha\ket{001}+\beta\ket{110}$ in the $\mathcal{H}'_{01}$ subspace.
 Bob's measurement
 $$
   P_{01}
@@ -662,21 +653,21 @@ In other words, rather than thinking of Alice as picking randomly between four d
 Correcting the isometry then corresponds to identifying which error happened, fixing it, and then removing the encoding.
 This is the process of **error correction** in a nutshell.
 
-(ref:error-correction-idea-caption) Quantum error correction can be thought of as a three-step process: encoding, transmitting through a noisy channel, and then detecting and decoding.
+(ref:error-correction-idea-caption) Quantum error correction can be thought of as a three-step process: encoding, transmitting through a noisy channel, and then detecting and decoding. We will give a more accurate depiction of an error correcting diagram, explaining what actually happens in the "detection & decoding portion" in Figure \@ref(fig:single-bit-flip-complete-circuit).
 
 ```{r error-correction-idea,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5,fig.cap='(ref:error-correction-idea-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \begin{quantikz}
   \lstick{$\ket{\psi}$}
-  & \gategroup[3,steps=4,style={draw=none,rounded corners,fill=secondary!20, inner xsep=2pt},background,label style={align=center,anchor=south,yshift=-0.1cm}]{Encoding}
+  & \gategroup[3,steps=4,style={draw=none,rounded corners,fill=secondary!20,inner xsep=2pt},background,label style={align=center,anchor=south,yshift=-0.1cm}]{Encoding}
   & \qw
   & \ctrl{1}
   & \ctrl{2}
   & \qw
-  & \phantomgate{X}\gategroup[3,style={draw=none,rounded corners,fill=primary!20, inner xsep=6pt},background,label style={text width=2cm,align=center,anchor=south,yshift=-0.1cm}]{Random\\$X$ error}
+  & \phantomgate{X}\gategroup[3,style={draw=none,rounded corners,fill=primary!20,inner xsep=6pt},background,label style={text width=2cm,align=center,anchor=south,yshift=-0.1cm}]{Random\\$X$ error}
   & \qw
-  & \ctrl{2}\gategroup[3,steps=3,style={draw=none,rounded corners,fill=secondary!20, inner xsep=2pt},label style={text width=2cm,align=center,anchor=south,yshift=-0.1cm},background]{Detection\\\& Decoding}
+  & \ctrl{2}\gategroup[3,steps=3,style={draw=none,rounded corners,fill=secondary!20,inner xsep=2pt},label style={text width=2cm,align=center,anchor=south,yshift=-0.1cm},background]{Detection\\\& Decoding}
   & \ctrl{1}
   & \qw
   & \qw
@@ -754,8 +745,8 @@ which, when we error correct, split into two cases: with probability $\cos^2\the
 ## The classical repetition code {#the-classical-repetition-code}
 
 To give a sense of how quantum error correction actually works, we first need a brief detour to introduce some concepts and methods from the classical theory of error correction.^[Even though quantum problems often require innovative solutions, it is always a good idea to look at the classical world to see if there is anything analogous there, and how it is dealt with.]
-In this particular case, once we have digitised quantum errors, we can see that quantum decoherence is a bit like classical noise (i.e. bit flips), except that we have *two* types of errors: bit flips and phase flips; the former essentially classical, the latter purely quantum.
-But we also know that phase flips can be turned into bit flips if sandwiched between Hadamard transforms: $HZH=X$.
+In this particular case, once we have digitised quantum errors, we can see that quantum decoherence is a bit like classical noise (i.e. bit-flips), except that we have *two* types of errors: bit-flips and phase-flips; the former essentially classical, the latter purely quantum.
+But we also know that phase-flips can be turned into bit-flips if sandwiched between Hadamard transforms: $HZH=X$.
 This opens up the possibility of adapting classical techniques of error correction to the quantum case.
 There is a vast body of knowledge out there about classical error-correcting codes, and we can only scratch the surface here.
 
@@ -909,11 +900,194 @@ For example, in our $3$-bit repetition code, we have the two codewords $000$ and
 
 
 
-## Protecting against bit flips
+## Protecting against bit-flips
 
-In
+In order to protect a qubit against bit-flips (thought of as incoherent $X$ rotations), we rely on the same classical repetition code as in Section \@ref(the-classical-repetition-code), but both encoding and error correction are now implemented by quantum operations.^[All the codes we will study have encoding circuits that can be constructed out of controlled-$\texttt{NOT}$ and Hadamard gates: we are dealing with Clifford circuits (recall Section \@ref(clifford-walks-on-stabiliser-states)).]
+Let's return to the example we introduced in Section \@ref(three-qubit-codes).
+We take a qubit in some unknown pure state $\alpha\ket{0}+\beta\ket{1}$ and encode it into three qubits, introducing two auxiliary qubits:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4.5}
+\begin{quantikz}
+  \lstick{$\alpha\ket{0}+\beta\ket{1}$}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \qw
+  & \qw
+  \rstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+  \\
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \qw
+  & \qw
+  & \qw
+  \\
+  \lstick{$\ket{0}$}
+  & \qw
+  & \targ{}
+  & \qw
+  & \qw
+\end{quantikz}
+```
+
+Mathematically, this is an isometric^[Recall that an isometry is the generalisation of a unitary but where we are also allowed to bring in additional qubits.] embedding of a two-dimensional space into an eight-dimensional one.
+
+Now suppose that one qubit is flipped, say, the second one.
+The encoded state then becomes $\alpha\ket{010}+\beta\ket{101}$.
+Decoding requires some care: measuring the three qubits directly would destroy the superposition that we are working so hard to protect.
+So instead we introduce two ancilla qubits, both in state $\ket{0}$, and apply the following circuit:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4.5}
+\begin{quantikz}
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \targ{}
+  & \qw
+  & \qw
+  & \meter{} \rstick{$\ket{1}$}
+\\
+  \lstick{$\ket{0}$}
+  & \qw
+  & \qw
+  & \targ{}
+  & \targ{}
+  & \meter{} \rstick{$\ket{1}$}
+\\
+  \lstick[wires=3]{$\alpha\ket{010}+\beta\ket{101}$}
+  & \ctrl{-2}
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+\\
+  & \qw
+  & \ctrl{-3}
+  & \ctrl{-3}
+  & \qw
+  & \qw
+\\
+  & \qw
+  & \qw
+  & \qw
+  & \ctrl{-3}
+  & \qw
+\end{quantikz}
+```
+
+::: {.idea latex=""}
+This decoding circuit is exactly the same as the ones for measuring the Pauli stabilisers $ZZ\id$ and $\id ZZ$ (as described in Section \@ref(measuring-pauli-stabilisers)).
+:::
+
+Measuring the two ancilla qubits gives us what is known as the **error syndrome**, which tells us how to correct the three qubits (known as the **data qubits**) of the code.
+The theory behind this works as follows:
+
+- if the first and second (counting from the top) data qubits are in the same state then the first ancilla will be in the $\ket{0}$ state; otherwise the first ancilla will be in the $\ket{1}$ state
+- if the second and third data qubits are in the same state then the second ancilla will be in the $\ket{0}$ state; otherwise the second ancilla will be in the $\ket{1}$ state.
+
+So the four possible error syndromes each indicate a different scenario:^[Again, for now we are assuming that *at most one* bit-flip error occurs.]
+
+- $\ket{00}$: no error
+- $\ket{01}$: bit-flip in the first data qubit
+- $\ket{10}$: bit-flip in the second data qubit
+- $\ket{11}$: bit-flip in the third data qubit.
+
+In our example, the error syndrome is $\ket{11}$, and so we know that the first and second qubits differ, as do the second and third.
+This means that the first and third must be the same, and the second suffered the bit-flip error.
+Knowing the error, we can now fix it by applying an $X$ gate to the second qubit.
+The final result is the state $\alpha\ket{000}+\beta\ket{111}$, which is then turned into $(\alpha\ket{0}+\beta\ket{1})\ket{00}$ by running the mirror image of the encoding circuit:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4.5}
+\begin{quantikz}
+  \lstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+  & \ctrl{2}
+  & \ctrl{1}
+  & \qw \rstick{$\alpha\ket{0}+\beta\ket{1}$}
+\\
+  & \qw
+  & \targ{}
+  & \qw \rstick{$\ket{00}$}
+\\
+  & \targ{}
+  & \qw
+  & \qw \rstick{$\ket{00}$}
+\end{quantikz}
+```
+
+It is also important to note that the actual error correction can be implemented by a single unitary operation $U_c$ on the five total qubits, with
+$$
+  \begin{aligned}
+    U_c
+    &= \big(\proj{0}\otimes\proj{0}\big)\otimes(\id\id\id)
+  \\&+ \big(\proj{0}\otimes\proj{1}\big)\otimes(\id\id X)
+  \\&+ \big(\proj{1}\otimes\proj{0}\big)\otimes(X\id\id)
+  \\&+ \big(\proj{1}\otimes\proj{1}\big)\otimes(\id X\id).
+  \end{aligned}
+$$
+
+(ref:single-bit-flip-complete-circuit-caption) The quantised version of the classical $[3,1,3]$-code. If *at most one* bit-flip error occurs in the shaded region, then this circuit perfectly corrects it, resulting in the successful transmission of the state $\alpha\ket{0}+\beta\ket{1}$.
+
+```{r single-bit-flip-complete-circuit,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=8,fig.cap='(ref:single-bit-flip-complete-circuit-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{quantikz}
+  &&&& \lstick{$\ket{0}$}
+  & \targ{}
+  & \targ{}
+  & \qw
+  & \qw
+  & \meter{} \rstick{$\ket{1}$}
+\\
+  &&&& \lstick{$\ket{0}$}
+  & \qw
+  & \qw
+  & \targ{}
+  & \targ{}
+  & \meter{} \rstick{$\ket{1}$}
+\\
+  \lstick{$\alpha\ket{0}+\beta\ket{1}$}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \gate[3,style={dashed,fill=primary!20}]{X\text{ error}}\gategroup[3,style={draw=none,rounded corners,fill=primary!20,inner xsep=6pt},background]{}
+  & \qw
+  & \ctrl{-2}
+  & \qw
+  & \qw
+  & \qw
+  & \gate[3]{U_c}
+  & \meter{} \rstick{$\alpha\ket{0}+\beta\ket{1}$}
+\\
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+  & \ctrl{-3}
+  & \ctrl{-2}
+  & \qw
+  & \qw
+  & \qw
+\\
+  \lstick{$\ket{0}$}
+  & \qw
+  & \targ{}
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+  & \ctrl{-3}
+  & \qw
+  & \qw
+\end{quantikz}
+```
 
 
+
+
+
+## Turning phase-flips to bit-flips
+
+Now
 
 
 
