@@ -23,7 +23,7 @@ We say that a quantum channel $\mathcal{E}\colon\mathcal{B}(\mathcal{H})\to\math
 :::
 
 Now suppose we have isometries $V_1,\ldots,V_n\colon\mathcal{H}\to\mathcal{H}'$.
-If $\mathcal{H}'$ is "sufficiently bigger" than $\mathcal{H}$, and if the images $\mathcal{H}'_i\coloneqq V_i(\mathcal{H})$ do not overlap^[More precisely, we say that the $\mathcal{H}'_i$ "do not overlap" to mean that the subspaces $\mathcal{H}'_i$ are mutually orthogonal] then we can reverse the action of the channel:
+If $\mathcal{H}'$ is "sufficiently bigger" than $\mathcal{H}$, and if the images $\mathcal{H}'_i\coloneqq V_i(\mathcal{H})$ do not overlap^[More precisely, we say that the $\mathcal{H}'_i$ "do not overlap" to mean that the subspaces $\mathcal{H}'_i$ are mutually orthogonal] then we can reverse the action of the channel given by a statistical mixture of the $V_i$:
 we can, at least in principle, perform a measurement on $\mathcal{H}'$, defined by the partition $\mathcal{H}'=\mathcal{H}'_1\oplus\mathcal{H}'_2\oplus\ldots\oplus\mathcal{H}'_n$, and find out which subspace contains the output state;
 once we know which subspace the input was sent to, we know which particular isometry $V_k$ was applied by the channel;
 then we simply apply $V^\dagger_k$.
@@ -33,6 +33,58 @@ Apart from individual unitaries or isometries, the only **correctable** channels
 :::
 
 We shall prove this fact in Section \@ref(correctable-channels)
+
+(ref:correctable-visualisation-caption) A visualisation of correctable (left) and non-correctable (right) channels. Each isometry maps the original space to a different space. If those spaces do not overlap, we can detect which one we're in and hence compensate (i.e. correct). If the two spaces partially coincide, however, then there exist states for which we *cannot* detect which isometry occurred.
+
+```{r correctable-visualisation,engine='tikz',fig.cap='(ref:correctable-visualisation-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\usetikzlibrary{decorations,shapes,fit}
+\begin{tikzpicture}
+  \begin{scope}[shift={(-9,0)}] % the figure on the left-hand side
+    \node [draw, diamond, minimum width=2cm,thick,minimum height=1.5cm] at (0,0.75) (start) {$\mathcal{H}$};
+    \node [draw, diamond, minimum width=2cm,thick,minimum height=1.5cm,rotate=15] at (4,2) (a) {$\mathcal{H}_1$};
+    \node [draw, diamond, minimum width=2cm,thick,minimum height=1.5cm,rotate=0] at (6,1.5) (b) {$\mathcal{H}_2$};
+    \node [draw, diamond, minimum width=2cm,thick,minimum height=1.5cm,rotate=-10] at (4,0) (c) {$\mathcal{H}_3$};
+    \node [draw, diamond, minimum width=2cm,thick,minimum height=1.5cm,rotate=45] at (6,-0.5) (d) {$\mathcal{H}_4$};
+    \draw [->,thick] (start) to[out=60,in=150] node [midway,above] {$V_1$} (a);
+    \draw [->,thick] (start) to[out=20,in=-150] node [midway,above] {$V_2$} (b);
+    \draw [->,thick] (start) to[out=-60,in=-150] node [midway,above] {$V_3$} (c);
+    \draw [->,thick] (start) to[out=-80,in=-110] node [midway,above] {$V_4$} (d);
+    \node[draw=secondary,inner sep=-5pt,thick,ellipse,fit=(a) (b) (c) (d),label={above:$\mathcal{H}'$}] {};
+  \end{scope}
+  \begin{scope} % the figure on the right-hand side
+    \begin{scope} % plot the intersections first
+      %\pgfset{shape aspect=0.5} Uncomment this and remove minimum size for this option
+      \pgfset{minimum width=2cm,minimum height=1.5cm}
+      \pgftransformshift{\pgfpoint{4cm}{2cm}}
+      \pgftransformrotate{15}
+      \pgfnode{diamond}{center}{}{nodename}{\pgfusepath{stroke,clip}}
+      \pgftransformreset
+      \node [draw,fill=primary, diamond, minimum width=2cm,thick,minimum height=1.5cm,rotate=0] at (5,1.5) {};
+    \end{scope}
+    \begin{scope}
+      %\pgfset{shape aspect=0.5} Uncomment this and remove minimum size for this option
+      \pgfset{minimum width=2cm,minimum height=1.5cm}
+      \pgftransformshift{\pgfpoint{4cm}{0cm}}
+      \pgftransformrotate{-10}
+      \pgfnode{diamond}{center}{}{nodename}{\pgfusepath{stroke,clip}}
+      \pgftransformreset
+      \node [draw,fill=primary, diamond, minimum width=2cm,thick,minimum height=1.5cm,rotate=45] at (5,-0.5) {};
+    \end{scope}
+    \node [draw, diamond, minimum width=2cm,thick,minimum height=1.5cm] at (0,0.75) (start) {$\mathcal{H}$};
+    \node [draw, diamond, minimum width=2cm,thick,minimum height=1.5cm,rotate=15] at (4,2) (a) {$\mathcal{H}_1$};
+    \node [draw, diamond, minimum width=2cm,thick,minimum height=1.5cm,rotate=0] at (5,1.5) (b) {$\mathcal{H}_2$};
+    \node [draw, diamond, minimum width=2cm,thick,minimum height=1.5cm,rotate=-10] at (4,0) (c) {$\mathcal{H}_3$};
+    \node [draw, diamond, minimum width=2cm,thick,minimum height=1.5cm,rotate=45] at (5,-0.5) (d) {$\mathcal{H}_4$};
+    \draw [->,thick] (start) to[out=60,in=150] node [midway,above] {$V_1$} (a);
+    \draw [->,thick] (start) to[out=20,in=-150] node [pos=0.3,above] {$V_2$} (b);
+    \draw [->,thick] (start) to[out=-60,in=-150] node [midway,above] {$V_3$} (c);
+    \draw [->,thick] (start) to[out=-80,in=-110] node [midway,above] {$V_4$} (d);
+    \node[draw=secondary,inner sep=-5pt,thick,ellipse,fit=(a) (b) (c) (d),label={above:$\mathcal{H}'$}] {};
+  \end{scope}
+\end{tikzpicture}
+```
 
 Here is a simple but important example: the **three-qubit code**.
 Take a qubit in some pure state $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, introduce two auxiliary qubits in a fixed state $\ket{0}\ket{0}$, and apply a unitary operation to the three qubits, namely two controlled-$\texttt{NOT}$ gates:
