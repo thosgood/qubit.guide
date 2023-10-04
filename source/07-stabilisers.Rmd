@@ -304,7 +304,7 @@ We can show this pictorially, as in Figure \@ref(fig:stabiliser-bisection).
 
 (ref:stabiliser-bisection-caption) The stabiliser group $\{ZZ\id,\id ZZ\}$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_S$ which is spanned by $\ket{000}$ and $\ket{111}$. Think of the labels $ZZ\id$ and $\id ZZ$ as the $x$- and $y$-axes, and the sign labels on each square as $(x,y)$-coordinates. So the two squares on the left together make the $+1$ eigenspace of $\id ZZ$, and the two squares on the top make the $+1$ eigenspace of $ZZ\id$.
 
-```{r stabiliser-bisection,engine='tikz',fig.cap='(ref:stabiliser-bisection-caption)',fig.width=3}
+```{r stabiliser-bisection,engine='tikz',fig.cap='(ref:stabiliser-bisection-caption)',fig.width=3.5}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \newcommand{\id}{\mathbf{1}}
@@ -329,6 +329,8 @@ We can show this pictorially, as in Figure \@ref(fig:stabiliser-bisection).
   \draw (0,2) -- (4.5,2);
 \end{tikzpicture}
 ```
+
+This diagram will make a reappearance in Sections \@ref(correcting-quantum-channels) and \@ref(fault-tolerant-quantum-computation).
 
 
 ## Single stabiliser states
@@ -546,7 +548,7 @@ More generally, in "Pauli notation", the outcome $(\pm1,\pm1)$ corresponds to th
 Needless to say, we do not have any control over the actual outcomes of the measurement, but we do now know *which* post-measurement state we have generated.
 This means that we can use the circuit to prepare a desired state by applying an appropriate unitary operation to the final state.
 For example, if we want to generate the state $\ket{00}+\ket{11}$ but actually end up with the state $\ket{00}-\ket{11}$, then we can simply apply the $Z$ operation to any of the two qubits to get the desired result.
-This generic method is now the only way of constructing projective measurements of Pauli observables, however --- see Exercise \@ref(equivalent-projective-pauli-measurements)
+This generic method is not the only way of constructing projective measurements of Pauli observables, however --- see Exercise \@ref(equivalent-projective-pauli-measurements)
 
 
 ## Mathematical detour: normal subgroups
@@ -779,7 +781,7 @@ So we have that $|N(\mathcal{S})|=4\cdot(4^n/2^r)$.
 Finally we have the two quotient groups: $N(\mathcal{S})/\mathcal{S}$ has $4\cdot(4^n/4^r)=4^{n-r+1}$ elements and is isomorphic to $\mathcal{P}_{n-r}$; and $\mathcal{P}_n/N(\mathcal{S})$ has $(4\cdot4^n)/(4\cdot(4^n/2^r))=2^r$ elements.
 
 
-## Clifford walks on stabiliser states
+## Clifford walks on stabiliser states {#clifford-walks-on-stabiliser-states}
 
 There are essentially two ways to define stabiliser states of $n$ qubits.
 We have already seen how we can describe them as simultaneous $+1$ eigenstates of $n$ generators of some stabiliser group $\mathcal{S}\leq\mathcal{P}_n$, but it turns out that we could also define them as the states that are reachable from the $\ket{0}^{\otimes n}$ state using only the $\texttt{c-NOT}$ gate, the Hadamard $H$, and the phase gate $S=\smalldiag{1}{i}$.
@@ -1450,7 +1452,7 @@ $$
 Now let $H\triangleleft G$ be a normal subgroup, and consider the following theorem.
 
 ::: {.idea latex=""}
-**Theorem.** The quotient group $G/H$ is abelian if and only if $[g_1,g_2]\in H$ for all $g_1,g_2\in G$.
+**Theorem.** The quotient $G/H$ is abelian if and only if $[g_1,g_2]\in H$ for all $g_1,g_2\in G$.
 :::
 
 Using this theorem (or otherwise),
@@ -1521,4 +1523,4 @@ For example, the following two circuit identities are often used:
 \end{quantikz}
 ```
 
-These both follows from the fact that $HZH=X$, and that the control and the target of a controlled-$Z$ gate can be chosen arbitrarily, since the gate itself is symmetric with respect to this choice (the phase flip only happens when both qubits are in state $\ket{1}$).
+These both follows from the fact that $HZH=X$, and that the control and the target of a controlled-$Z$ gate can be chosen arbitrarily, since the gate itself is symmetric with respect to this choice: the phase-flip only happens when *both* qubits are in state $\ket{1}$.
