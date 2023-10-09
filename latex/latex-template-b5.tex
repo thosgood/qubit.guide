@@ -1,2 +1,192 @@
 \documentclass[fleqn,b5paper,twoside]{article}
 
+% START PREAMBLE %
+
+
+% Standard packages %
+\usepackage{amsmath,amssymb}
+\usepackage{amsfonts,amsthm,bm}
+\usepackage{enumitem}
+\usepackage{lmodern,mathrsfs}
+\usepackage{array,tabularx}
+\usepackage{graphicx,wrapfig,caption}
+\usepackage{setspace,multicol}
+\usepackage{physics}
+\usepackage{mathtools}
+\usepackage{float}
+
+
+% TikZ %
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{latex/tikz-3dplot-circleofsphere}
+
+
+% Bookdown %
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+% Style %
+
+%% Typography %%
+\usepackage{charter}
+\usepackage[T1]{fontenc}
+% \usepackage[parfill]{parskip}
+
+%% Links and references %%
+\usepackage[breaklinks=true]{hyperref}
+\hypersetup{colorlinks,linkcolor={black},urlcolor={black}}
+\usepackage[noabbrev,capitalise,nameinlink]{cleveref}
+\crefformat{equation}{(#2#1#3)}
+
+%% Page layout %%
+\usepackage{geometry}
+\geometry{%
+  left=.1\paperwidth,
+  top=.1\paperheight,
+  textheight=.8\paperheight,textwidth=.7\paperwidth%
+}
+\savegeometry{tufteish}
+% we switch back to this geometry in index.Rmd, just before "Some mathematical preliminaries" (so for the B5 output we just make this the same as the geometry below)
+\newgeometry{%
+  left=.1\paperwidth,
+  top=.1\paperheight,
+  textheight=.8\paperheight,textwidth=.8\paperwidth%
+} % centre content for the title page and TOC
+\usepackage{sidenotes}
+
+%% Headers and footers %%
+\usepackage{fancyhdr}
+\fancypagestyle{fancy}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0.5pt}%
+  \fancyhead[R]{\rightmark}%
+  \fancyfoot[C]{\small\thepage}%
+}
+\fancypagestyle{noheader}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \fancyfoot[C]%
+  {\small\thepage}%
+}
+\pagestyle{noheader} % we set \pagestyle{fancy} in index.Rmd, just before "Some mathematical preliminaries"
+
+%% Environments %%
+\counterwithin{figure}{section}
+\usepackage{etoolbox}
+\AtBeginEnvironment{quote}{\itshape}
+\usepackage[skins,breakable]{tcolorbox}
+\tcolorboxenvironment{quote}{
+  boxrule=0pt,
+  boxsep=3pt,
+  sharp corners,
+  enhanced jigsaw,
+  borderline west={2pt}{0pt}{gray},
+  before skip=1.5em,
+  after skip=1.5em,
+  breakable,
+}
+\newenvironment{idea}{\everypar{\setlength{\parindent}{1.5em}}}{}
+\tcolorboxenvironment{idea}{
+  boxrule=2pt,
+  boxsep=3pt,
+  colback={white},
+  colframe={secondary},
+  rounded corners,
+  enhanced jigsaw,
+  before skip=1.5em,
+  after skip=1.5em,
+}
+\newenvironment{technical}[1]{\textbf{#1.}\par\vspace{.5\baselineskip}\everypar{\setlength{\parindent}{1.5em}}}{}
+\tcolorboxenvironment{technical}{
+  boxrule=2pt,
+  boxsep=3pt,
+  colback={white},
+  colframe={primary},
+  rounded corners,
+  enhanced jigsaw,
+  before skip=1.5em,
+  after skip=1.5em,
+  breakable,
+  lines before break=5
+}
+\newtheorem*{scenario}{Scenario}
+\AtBeginEnvironment{scenario}{\setlength{\parindent}{1.5em}}
+\tcolorboxenvironment{scenario}{
+  boxrule=2pt,
+  boxsep=3pt,
+  colback={white},
+  colframe={gray},
+  rounded corners,
+  enhanced jigsaw,
+  before skip=1.5em,
+  after skip=1.5em,
+}
+\newtheorem*{circuit}{Circuit}
+\tcolorboxenvironment{circuit}{
+  boxrule=2pt,
+  boxsep=3pt,
+  colback={white},
+  colframe={gray},
+  rounded corners,
+  enhanced jigsaw,
+  before skip=1.5em,
+  after skip=1.5em,
+}
+\newenvironment{todo}{\color{primary}\emph{This section is not yet finished.}}{}
+
+%% Tables %%
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+%% Sections %%
+\let\oldsection\section
+\renewcommand\section{\clearpage\oldsection}
+\let\oldpart\part
+\renewcommand\part{\clearpage\oldpart}
+
+%% Table of contents %%
+\setcounter{tocdepth}{2}
+\usepackage{tocloft}
+\advance\cftsecnumwidth 0.5em\relax
+\advance\cftsubsecindent 0.5em\relax
+\advance\cftsubsecnumwidth 0.5em\relax
+\advance\cftsubsubsecindent 1em\relax
+\advance\cftsubsubsecnumwidth 0.5em\relax
+
+
+% Shortcuts and commands %
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+
+% END PREAMBLE %
+
+
+% START METADATA %
+
+\title{$title$}
+\author{$author$}
+\date{$date$}
+
+% END METADATA %
+
+
+% START DOCUMENT %
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+$body$
+
+\end{document}
+
+% END DOCUMENT %
