@@ -14,6 +14,57 @@
 
 ## The Hamming code {#the-hamming-code}
 
+The challenge in designing efficient error-correcting codes resides in the trade-off between rate and distance.
+Ideally, both quantities should be high: a high rate signifies low overhead in the encoding process (i.e. requiring only a few redundant bits), and a high distance means that many errors can be corrected.
+So can we optimise both of these quantities simultaneously?
+Unfortunately, various established bounds tell us that there is always a trade off, so high-rate codes must have low distance, and high-distance codes must have a low rate.
+Still, there is a lot of ingenuity that goes into designing good error correction codes, and some are still better than others!
+
+For example, in Section \@ref(the-classical-repetition-code) we saw the three-bit repetition code, which has a rate of $R=1/3$ and distance $3$.
+However, the **$[7,4,3]$-Hamming code**^[In the late 1940s, [Richard Hamming](https://en.wikipedia.org/wiki/Richard_Hamming), working at Bell Labs, was exasperated by the fact that the machines running his punch cards (in these heroic times of computer science, punch cards were the state of the art data storage) were good enough to notice *when* there was an error (and halting) but not good enough to know *how* to fix it.] has the same distance, but a better rate of $R=4/7$.
+Figure \@ref(fig:hamming-code-diagrams) show diagrammatic representations of this Hamming code, which we will now study further.
+
+(ref:hamming-code-diagrams-caption) *Left:* The Venn diagram for the $[7,4,3]$-Hamming code. *Right:* The **finite projective plane** diagram for the same code. In both, $d_i$ are the data bits and the $p_i$ are the **parity bits**.
+
+```{r hamming-code-diagrams,engine='tikz',fig.width=5.5,fig.cap='(ref:hamming-code-diagrams-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\definecolor{tertiary}{RGB}{175,195,62}
+\usetikzlibrary{backgrounds}
+\begin{tikzpicture}[scale=1.2]
+	\begin{scope}[scale=0.65]
+		\draw[fill=primary!80,opacity=0.5] (0,0) circle (2);
+		\draw[fill=secondary!80,opacity=0.5] (1,1.7) circle (2);
+		\draw[fill=tertiary!80,opacity=0.5] (2,0) circle (2);
+		\node[] (p1) at (1,2.5) {\footnotesize$p_1$};
+		\node[] (p2) at (-0.8,-0.7) {\footnotesize$p_2$};
+		\node[] (p3) at (2.8,-0.7) {\footnotesize$p_3$};
+		\node[] (d1) at (-0.3,1.2) {\footnotesize$d_1$};
+		\node[] (d2) at (2.3,1.2) {\footnotesize$d_2$};
+		\node[] (d3) at (1,-0.7) {\footnotesize$d_3$};
+		\node[] (d4) at (1,0.5) {\footnotesize$d_4$};
+	\end{scope}
+	\begin{scope}[xscale=0.65,yscale=0.6,shift={(8,0)}]
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (p1) at (0,3) {\footnotesize$p_1$};
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (p2) at (-2.6,-1.5) {\footnotesize$p_2$};
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (p3) at (2.6,-1.5) {\footnotesize$p_3$};
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (d1) at (-1.2975,0.75) {\footnotesize$d_1$};
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (d2) at (1.2975,0.75) {\footnotesize$d_2$};
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (d3) at (0,-1.5) {\footnotesize$d_3$};
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (d4) at (0,0) {\footnotesize$d_4$};
+	  \begin{scope}[on background layer]
+	  	\draw[fill=primary!60] (p2.center) to (d1.center) to (d4.center) to (d3.center) to cycle;
+	  	\draw[fill=secondary!60] (p1.center) to (d2.center) to (d4.center) to (d1.center) to cycle;
+	  	\draw[fill=tertiary!60] (p3.center) to (d3.center) to (d4.center) to (d2.center) to cycle;
+	  \end{scope}
+	\end{scope}
+\end{tikzpicture}
+```
+
+::: {.todo latex=""}
+<!-- TO-DO: technical on finite projective plane -->
+:::
+
 ::: {.todo latex=""}
 <!-- TO-DO -->
 :::
