@@ -21,10 +21,10 @@ Unfortunately, various established bounds tell us that there is always a trade o
 Still, there is a lot of ingenuity that goes into designing good error correction codes, and some are still better than others!
 
 For example, in Section \@ref(the-classical-repetition-code) we saw the three-bit repetition code, which has a rate of $R=1/3$ and distance $3$.
-However, the **$[7,4,3]$-Hamming code**^[In the late 1940s, [Richard Hamming](https://en.wikipedia.org/wiki/Richard_Hamming), working at Bell Labs, was exasperated by the fact that the machines running his punch cards (in these heroic times of computer science, punch cards were the state of the art data storage) were good enough to notice *when* there was an error (and halting) but not good enough to know *how* to fix it.] has the same distance, but a better rate of $R=4/7$.
+However, the **$[7,4,3]$-Hamming code**^[In the late 1940s, [Richard Hamming](https://en.wikipedia.org/wiki/Richard_Hamming), working at Bell Labs, was exasperated by the fact that the machines running his punch cards (in these heroic times of computer science, punch cards were the state of the art data storage) were good enough to notice *when* there was an error (and halting) but not good enough to know *how* to fix it.] has the same distance, but a better rate of $R=4/7>1/3$.
 Figure \@ref(fig:hamming-code-diagrams) show diagrammatic representations of this Hamming code, which we will now study further.
 
-(ref:hamming-code-diagrams-caption) *Left:* The Venn diagram for the $[7,4,3]$-Hamming code. *Right:* The **finite projective plane** diagram for the same code. In both, $d_i$ are the data bits and the $p_i$ are the **parity bits**.
+(ref:hamming-code-diagrams-caption) *Left:* The Venn diagram for the $[7,4,3]$-Hamming code. *Right:* The **finite projective plane** diagram for the same code. In both, $d_i$ are the **data bits** and the $p_i$ are the **parity bits**. The coloured circles (resp. coloured quadrilaterals) are called **plaquettes**.
 
 ```{r hamming-code-diagrams,engine='tikz',fig.width=5.5,fig.cap='(ref:hamming-code-diagrams-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
@@ -61,12 +61,110 @@ Figure \@ref(fig:hamming-code-diagrams) show diagrammatic representations of thi
 \end{tikzpicture}
 ```
 
-::: {.todo latex=""}
-<!-- TO-DO: technical on finite projective plane -->
-:::
+Both diagrams in Figure \@ref(fig:hamming-code-diagrams) describe the same situation, but although the right-hand one is useful for understanding the geometry hidden in the construction and allowing us to generalise to create new codes, and is thus the one that we will tend to use, the Venn diagram on the left-hand side is maybe more suggestive of what's going on.
+
+The idea is that we have a four-bit string $d_1d_2d_3d_4$ consisting of the four **data bits**, and we encode into a seven-bit string^[Sometimes you will see the $[7,4,3]$-Hamming code referred to simply as the **seven-bit Hamming code**.] $d_1d_2d_3d_4p_1p_2p_3$ by appending three **parity bits** $p_1$, $p_2$, and $p_3$, which are defined by
+$$
+	\begin{aligned}
+		p_1
+		&= d_1 + d_2 + d_4 \mod{2}
+	\\p_2
+		&= d_1 + d_3 + d_4 \mod{2}
+	\\p_3
+		&= d_2 + d_3 + d_4 \mod{2}.
+	\end{aligned}
+$$
+You can hopefully see how the triangular diagram in Figure \@ref(fig:hamming-code-diagrams) tells us which data bits are used in defining each parity bit: we take the sum of all data bits in the same **plaquette** (one of the three coloured quadrilaterals) as the parity bit.
+
+We can also express this encoding in matrix notation, defining the **data vector** $\mathbf{d}$ by
+$$
+	\mathbf{d}
+	= \begin{bmatrix}
+		d_1\\d_2\\d_3\\d_4
+	\end{bmatrix}
+$$
+and the **generator matrix**^[Many sources define $G$ to be the transpose of what we use here, but this is just a question of convention.] $G$ by
+$$
+	G
+	= \begin{bmatrix}
+		\begin{array}{cccc}
+			1 & 0 & 0 & 0
+		\\0 & 1 & 0 & 0
+		\\0 & 0 & 1 & 0
+		\\0 & 0 & 0 & 1
+		\\\hline
+			1 & 1 & 0 & 1
+		\\1 & 0 & 1 & 1
+		\\0 & 1 & 1 & 1
+		\end{array}
+	\end{bmatrix}
+$$
+The encoding process is then given by the matrix $G$ acting on the vector $\mathbf{d}$.
+Indeed, since the top $(4\times4)$ part of $G$ is the identity, the first four rows of the output vector $G\mathbf{d}$ will simply be a copy of $\mathbf{d}$; the bottom $(3\times4)$ part of $G$ is chosen precisely so that the last three rows of $G\mathbf{d}$ will be exactly $p_1$, $p_2$, and $p_3$.
+In other words,
+$$
+	G\mathbf{d}
+	= \begin{bmatrix}
+		d_1\\d_2\\d_3\\d_4\\p_1\\p_2\\p_3
+	\end{bmatrix}
+	= \begin{bmatrix}
+		\mathbf{d}\\p_1\\p_2\\p_3
+	\end{bmatrix}.
+$$
+
+By construction, the sum of the four bits in any single plaquette of the code sum to zero.^[Since we are working with classical bits, all addition is taken $\mod{2}$, so sometimes we will neglect to say this explicitly.]
+For example, in the bottom-left (red) plaquette,
+$$
+	\begin{aligned}
+		p_2 + d_1 + d_3 + d_4
+		&= d_1 + d_3 + d_4 + d_1 + d_3 + d_4
+	\\&= 2(d_1 + d_3 + d_4)
+	\\&= 0
+	\end{aligned}
+$$
+and the same argument holds for the other two plaquettes.
+This incredibly simple fact is where the power of the Hamming code lies, since it tells the receiver of the encoded string a lot of information about potential errors.
+
+Let's consider a concrete example.
+Say that Alice encodes her data string $d_1d_2d_3d_4$ and sends the result $G\mathbf{d}$ to Bob, who takes this vector and looks at the sum of the bits in each plaquette, and obtains the following:^[We don't write the values of the bits, only the sums of the bits in each plaquette. This is because the value of the bits won't tell us where the error is, only their sums will.]
+
+```{r,engine='tikz',fig.width=2.5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\definecolor{tertiary}{RGB}{175,195,62}
+\usetikzlibrary{backgrounds}
+\begin{tikzpicture}[xscale=0.65,yscale=0.6]
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (p1) at (0,3) {\footnotesize$p_1$};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (p2) at (-2.6,-1.5) {\footnotesize$p_2$};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (p3) at (2.6,-1.5) {\footnotesize$p_3$};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d1) at (-1.2975,0.75) {\footnotesize$d_1$};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d2) at (1.2975,0.75) {\footnotesize$d_2$};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d3) at (0,-1.5) {\footnotesize$d_3$};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d4) at (0,0) {\footnotesize$d_4$};
+  \begin{scope}[on background layer]
+  	\draw[fill=primary!60] (p2.center) to (d1.center) to (d4.center) to (d3.center) to cycle;
+  	\draw[fill=secondary!60] (p1.center) to (d2.center) to (d4.center) to (d1.center) to cycle;
+  	\draw[fill=tertiary!60] (p3.center) to (d3.center) to (d4.center) to (d2.center) to cycle;
+  \end{scope}
+  \node (l) at (-1.1,-0.65) {$0$};
+  \node (r) at (1.1,-0.65) {$1$};
+  \node (t) at (0,1.25) {$1$};
+\end{tikzpicture}
+```
+
+If we make the assumption that *at most one error occurs*, then this result tells us exactly where the bit-flip happened: it is *not* in the bottom-left (red) plaquette, but it *is* in both the top (blue) and bottom-right (yellow) plaquettes.
+Looking at the diagram^[Here you might find it easier to use the Venn diagram] we see that it must be $d_2$ that was flipped, and so we can correct for this error by simply flipping it back before decoding (note that the decoding process is given by simply forgetting the last three bits of the received string).
 
 ::: {.todo latex=""}
 <!-- TO-DO -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: talk about multiple bit errors -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: technical on finite projective plane and projective codes (somewhere in the text where it makes sense, probably near the end?) -->
 :::
 
 
