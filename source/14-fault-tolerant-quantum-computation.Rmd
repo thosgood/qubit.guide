@@ -20,6 +20,7 @@ So can we optimise both of these quantities simultaneously?
 Unfortunately, various established bounds tell us that there is always a trade off, so high-rate codes must have low distance, and high-distance codes must have a low rate.
 Still, there is a lot of ingenuity that goes into designing good error correction codes, and some are still better than others!
 
+Before looking at quantum codes in more depth, we again start with *classical* codes.
 For example, in Section \@ref(the-classical-repetition-code) we saw the three-bit repetition code, which has a rate of $R=1/3$ and distance $3$.
 However, the **$[7,4,3]$-Hamming code**^[In the late 1940s, [Richard Hamming](https://en.wikipedia.org/wiki/Richard_Hamming), working at Bell Labs, was exasperated by the fact that the machines running his punch cards (in these heroic times of computer science, punch cards were the state of the art data storage) were good enough to notice *when* there was an error (and halting) but not good enough to know *how* to fix it.] has the same distance, but a better rate of $R=4/7>1/3$.
 Figure \@ref(fig:hamming-code-diagrams) show diagrammatic representations of this Hamming code, which we will now study further.
@@ -33,9 +34,9 @@ Figure \@ref(fig:hamming-code-diagrams) show diagrammatic representations of thi
 \usetikzlibrary{backgrounds}
 \begin{tikzpicture}[scale=1.2]
 	\begin{scope}[scale=0.65]
-		\draw[fill=primary!80,opacity=0.5] (0,0) circle (2);
-		\draw[fill=secondary!80,opacity=0.5] (1,1.7) circle (2);
-		\draw[fill=tertiary!80,opacity=0.5] (2,0) circle (2);
+		\draw[fill=primary!60,opacity=0.5] (0,0) circle (2);
+		\draw[fill=secondary!60,opacity=0.5] (1,1.7) circle (2);
+		\draw[fill=tertiary!60,opacity=0.5] (2,0) circle (2);
 		\node[] (p1) at (1,2.5) {\footnotesize$p_1$};
 		\node[] (p2) at (-0.8,-0.7) {\footnotesize$p_2$};
 		\node[] (p3) at (2.8,-0.7) {\footnotesize$p_3$};
@@ -126,7 +127,7 @@ and the same argument holds for the other two plaquettes.
 This incredibly simple fact is where the power of the Hamming code lies, since it tells the receiver of the encoded string a lot of information about potential errors.
 
 Let's consider a concrete example.
-Say that Alice encodes her data string $d_1d_2d_3d_4$ and sends the result $G\mathbf{d}$ to Bob, who takes this vector and looks at the sum of the bits in each plaquette, and obtains the following:^[We don't write the values of the bits, only the sums of the bits in each plaquette. This is because the value of the bits won't tell us where the error is, only their sums will.]
+Say that Alice encodes her data string $d_1d_2d_3d_4$ and sends the result $G\mathbf{d}$ to Bob, who takes this vector and looks at the sum of the bits in each plaquette, and obtains the following:^[We don't write the values of the bits, only the sums of the bits in each plaquette. This is because we don't need to know the value of the bits in order to know where the error is, only the three sums!]
 
 ```{r,engine='tikz',fig.width=2.5}
 \definecolor{primary}{RGB}{177,98,78}
@@ -152,19 +153,112 @@ Say that Alice encodes her data string $d_1d_2d_3d_4$ and sends the result $G\ma
 \end{tikzpicture}
 ```
 
-If we make the assumption that *at most one error occurs*, then this result tells us exactly where the bit-flip happened: it is *not* in the bottom-left (red) plaquette, but it *is* in both the top (blue) and bottom-right (yellow) plaquettes.
+*If we make the assumption that at most one error occurs*, then this result tells us exactly where the bit-flip happened: it is *not* in the bottom-left (red) plaquette, but it *is* in both the top (blue) and bottom-right (yellow) plaquettes.
 Looking at the diagram^[Here you might find it easier to use the Venn diagram] we see that it must be $d_2$ that was flipped, and so we can correct for this error by simply flipping it back before decoding (note that the decoding process is given by simply forgetting the last three bits of the received string).
+
+We can describe the error location process in terms of matrices as well, using the **parity-check matrix**^[Here is yet another $H$, to go with the Hadamard and the Hamiltonian...] $H$, given by
+$$
+	H
+	= \begin{bmatrix}
+		\begin{array}{cccc|ccc}
+			1 & 1 & 0 & 1 & 1 & 0 & 0
+		\\1 & 0 & 1 & 1 & 0 & 1 & 0
+		\\0 & 1 & 1 & 1 & 0 & 0 & 1
+		\end{array}
+	\end{bmatrix}.
+$$
+Note that the rows of $H$ are exactly the coefficients of the parity-check equations for each plaquette, where we order them top--left--right (blue--red--yellow).
+For example, to get the sum corresponding to the bottom-left (red) plaquette, we need to sum the first, third, fourth, and sixth bits of the encoded string $d_1d_2d_3d_4p_1p_2p_3$, and these are exactly the non-zero entries of the second row of $H$.
+The columns of $H$ are, as we will explain in a moment, the error syndromes.
+
+The parity-check matrix $H$ is defined exactly so that^[Mathematically, this is saying that $H$ is defined as the kernel of $G^T$ (modulo 2), and vice versa.]
+$$
+	H\mathbf{c}
+	= 0
+	\iff
+	\mathbf{c}\text{ is a codeword}
+$$
+where codewords are exactly those vectors of the form $G\mathbf{d}$ for some data vector $d$.
+Now we can see a bit more into how things work, since linearity of matrix multiplication tells us that, if a receiver receives $\mathbf{c}+\mathbf{e}$ where $\mathbf{e}$ is the error,
+$$
+	\begin{aligned}
+		H(\mathbf{c}+\mathbf{e})
+		&= H\mathbf{c}+H\mathbf{e}
+	\\&=H\mathbf{e}.
+	\end{aligned}
+$$
+Decoding the message then consists of finding the most probable error $\mathbf{e}$ that yields the output $H\mathbf{e}$.
+If $\mathbf{e}$ is a single bit flip error, then $H\mathbf{e}$ is exactly a column of $H$, which justifies us describing the columns as error syndromes.
+We can construct a table describing all of the possible error syndromes, and which bit they indicate for us to correct:
+
+| **Syndrome** | $000$ | $110$ | $101$ | $011$ | $111$ | $100$ | $010$ | $001$ | 
+| :--- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| **Correction** | - | $d_1$ | $d_2$ | $d_3$ | $d_4$ | $p_1$ | $p_2$ | $p_3$ |
+
+There is another common way of diagrammatically representing parity-check matrices, as a **Tanner graph**.
+This is a bipartite graph^[A graph (which is a collection of **nodes** and **edges** between some of them) is **bipartite** if the nodes can be split into two sets such that all the edges go from one element of the first set to one element of the second.] consisting of two types of nodes: the codeword nodes (one for each bit of the codeword, drawn as circles), and the syndrome nodes (one for each bit of the syndrome, drawn as squares).
+The edges in the Tanner graph are such that the parity-check matrix $H$ is exactly the **adjacency matrix** of the graph, i.e. the matrix that has a $1$ in the $(i,j)$-th position if the $i$-th syndrome node is connected to the $j$-th codeword node, and a $0$ otherwise.
+
+(ref:hamming-code-tanner-graph-caption) The Tanner graph for the $[7,4,3]$-Hamming code. Note the patterns : $d_1$, $d_2$, and $d_3$ are each connected to two syndrome bits, $d_4$ is connected to three, and $p_1$, $p_2$, and $p_3$ are each connected to just one.
+
+```{r hamming-code-tanner-graph,engine='tikz',fig.width=4,fig.cap='(ref:hamming-code-tanner-graph-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+	\node[draw,fill=primary!60,circle,minimum size=8mm] (d1) at (-3,2) {$d_1$};
+	\node[draw,fill=primary!60,circle,minimum size=8mm] (d2) at (-2,2) {$d_2$};
+	\node[draw,fill=primary!60,circle,minimum size=8mm] (d3) at (-1,2) {$d_3$};
+	\node[draw,fill=primary!60,circle,minimum size=8mm] (d4) at (0,2) {$d_4$};
+	\node[draw,fill=primary!60,circle,minimum size=8mm] (p1) at (1,2) {$p_1$};
+	\node[draw,fill=primary!60,circle,minimum size=8mm] (p2) at (2,2) {$p_2$};
+	\node[draw,fill=primary!60,circle,minimum size=8mm] (p3) at (3,2) {$p_3$};
+	%
+	\node[draw,fill=secondary!60,minimum size=8mm] (s1) at (-2,0) {$s_1$};
+	\node[draw,fill=secondary!60,minimum size=8mm] (s2) at (0,0) {$s_2$};
+	\node[draw,fill=secondary!60,minimum size=8mm] (s3) at (2,0) {$s_3$};
+	%
+	\draw (d1.south) to (s1.north);
+	\draw (d1.south) to (s2.north);
+	\draw (d2.south) to (s1.north);
+	\draw (d2.south) to (s3.north);
+	\draw (d3.south) to (s2.north);
+	\draw (d3.south) to (s3.north);
+	\draw (d4.south) to (s1.north);
+	\draw (d4.south) to (s2.north);
+	\draw (d4.south) to (s3.north);
+	\draw (p1.south) to (s1.north);
+	\draw (p2.south) to (s2.north);
+	\draw (p3.south) to (s3.north);
+\end{tikzpicture}
+```
+
+This construction of the $[7,4,3]$-Hamming code can be generalised to result in a $[2^r-1,2^r-r-1,3]$-Hamming code^[How do we know that the distance is always 3? Well, there are *triples* of columns in the parity-check matrix that, when added together, give all zeros. This means that there are sets of 3 errors such that, if they all occur together, the syndrome will be zero, and so the distance is no more than 3. Meanwhile, all the columns are distinct, so no *pair* of columns add together trivially, which means that the distance must be greater than 2.] for any $r\geq2$, where each column of the parity-check matrix is a different binary string, excluding the string of all $0$ bits.
+It's noteworthy that only a logarithmic number of parity checks are necessary to correct all single-bit errors.
+However, there are some downsides to Hamming codes.
+The rate $R=(2^r-r-1)/(2^r-1)$ approaches $1$ as $r\to\infty$, but Hamming codes are impractical in highly noisy environments because they have a fixed distance of $3$.
+
+Hamming codes are special cases of a larger family of codes called **linear codes**, which are constructed by judicious choices of the generators matrices or parity-check matrices (since one determines the other), and can offer different trade-offs between the code rates and distances.
+
+:::: {.technical title="Multiple-bit errors in the Hamming code" latex="{Multiple-bit errors in the Hamming code}"}
+::: {.todo latex=""}
+<!-- TO-DO: talk about multiple-bit errors -->
+:::
+::::
+
+:::: {.technical title="Projective codes" latex="{Projective codes}"}
+::: {.todo latex=""}
+<!-- TO-DO: technical on finite projective plane and projective codes (somewhere in the text where it makes sense, probably near the end?) -->
+:::
+::::
+
+
+
+
+
+## Quantum codes from classical {#quantum-codes-from-classical}
 
 ::: {.todo latex=""}
 <!-- TO-DO -->
-:::
-
-::: {.todo latex=""}
-<!-- TO-DO: talk about multiple bit errors -->
-:::
-
-::: {.todo latex=""}
-<!-- TO-DO: technical on finite projective plane and projective codes (somewhere in the text where it makes sense, probably near the end?) -->
 :::
 
 
