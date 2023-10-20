@@ -237,7 +237,7 @@ It's noteworthy that only a logarithmic number of parity checks are necessary to
 However, there are some downsides to Hamming codes.
 The rate $R=(2^r-r-1)/(2^r-1)$ approaches $1$ as $r\to\infty$, but Hamming codes are impractical in highly noisy environments because they have a fixed distance of $3$.
 
-Hamming codes are special cases of a larger family of codes called **linear codes**, which are constructed by judicious choices of the generators matrices or parity-check matrices (since one determines the other), and can offer different trade-offs between the code rates and distances.
+Hamming codes are special cases of a larger family of codes called **linear codes**^[Slightly more formally, a linear code is one in which the codewords form a vector space.], which are constructed by judicious choices of the generators matrices or parity-check matrices (since one determines the other), and can offer different trade-offs between the code rates and distances.
 
 :::: {.technical title="Multiple-bit errors in the Hamming code" latex="{Multiple-bit errors in the Hamming code}"}
 ::: {.todo latex=""}
@@ -245,7 +245,7 @@ Hamming codes are special cases of a larger family of codes called **linear code
 :::
 ::::
 
-:::: {.technical title="Projective codes" latex="{Projective codes}"}
+:::: {.technical title="The Fano plane" latex="{The Fano plane}"}
 ::: {.todo latex=""}
 <!-- TO-DO: technical on finite projective plane and projective codes (somewhere in the text where it makes sense, probably near the end?) -->
 :::
@@ -256,6 +256,68 @@ Hamming codes are special cases of a larger family of codes called **linear code
 
 
 ## Quantum codes from classical {#quantum-codes-from-classical}
+
+We would like to use the insights gained from our study of classical codes to help us build quantum codes.
+Let's start with a classical $[n,k,d]$-code (such as the Hamming $[7,4,3]$), with parity-check matrix $H$ and generator $G$.
+Each row $r$ of $H$ is a binary string $x_r=x_{r,1}x_{r,2}\ldots x_{r,n}$, where $x_{i,j}$ is the $(i,j)$-th element of $H$.
+For $1\leq r\leq n$, we define a stabiliser generator
+$$
+	G_r
+	\coloneqq X_{x_r}
+	\coloneqq \otimes_{j=1}^n X^{x_{r,j}}.
+$$
+For example, in the case of the $[7,4,3]$-Hamming code, we have
+$$
+	H
+	= \begin{bmatrix}
+		\begin{array}{cccc|ccc}
+			1 & 1 & 0 & 1 & 1 & 0 & 0
+		\\1 & 0 & 1 & 1 & 0 & 1 & 0
+		\\0 & 1 & 1 & 1 & 0 & 0 & 1
+		\end{array}
+	\end{bmatrix}.
+$$
+so the three rows define three generators
+$$
+	\begin{aligned}
+		G_1
+		&= X_{1101100}
+		= XX\id XX\id\id
+	\\G_2
+		&= X_{1011010}
+		= X\id XX\id X\id
+	\\G_3
+		&= X_{0111001}
+		= \id XXX\id\id X.
+	\end{aligned}
+$$
+
+Now consider a state $\ket{\psi}$ that is stabilised by these generators, i.e. such that
+$$
+	G_r\ket{\psi}
+	= \ket{\psi}.
+$$
+What happens if a $Z$ error occurs on a particular qubit: what measurement results do we get when we measure the stabilisers?
+Well, writing $Z_j$ to mean a $Z$ error on the $j$-th qubit, as usual,
+$$
+	\begin{aligned}
+		G_r Z_j\ket{\psi}
+		&= (-1)^{x_{r,j}} G_r\ket{\psi}
+	\\&= (-1)^{x_{r,j}} \ket{\psi}.
+	\end{aligned}
+$$
+So the measurement outcome directly corresponds to the $(r,j)$-th entry $x_{r,j}$ of the parity check matrix.
+Generally, if this $Z_j$ error occurs, then measuring for all rows $r$ will give measurement outcomes that directly correspond to the $j$-th column of the parity check matrix.
+This is just the same lookup table as in the classical case: this codespace is a distance $d$ error correcting code for single $Z$ errors.
+Using the $[7,4,3]$-Hamming code as an example again, we get the following table:
+
+| **Error:** | - | $Z_1$ | $Z_2$ | $Z_3$ | $Z_4$ | $Z_5$ | $Z_6$ | $Z_7$ |
+| -------: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| **$G_1$ outcome:** | $+1$ | $-1$ | $-1$ | $+1$ | $-1$ | $-1$ | $+1$ | $+1$ |
+| **$G_2$ outcome:** | $+1$ | $-1$ | $+1$ | $-1$ | $-1$ | $+1$ | $-1$ | $+1$ |
+| **$G_3$ outcome:** | $+1$ | $+1$ | $-1$ | $-1$ | $-1$ | $+1$ | $+1$ | $-1$ |
+
+So if we measure the three stabilisers and get the measurement sequence $(-1,1,1)$ then the corresponding bit string $(1,0,0)$ in the $[7,4,3]$-Hamming code tells us that there was an error on $p_1$, i.e. a $Z_5$ error.
 
 ::: {.todo latex=""}
 <!-- TO-DO -->
