@@ -90,7 +90,7 @@ $$
 		d_1\\d_2\\d_3\\d_4
 	\end{bmatrix}
 $$
-and the **generator matrix**^[Many sources define $G$ to be the transpose of what we use here, but this is just a question of convention.] $G$ by
+and the **generator matrix**^[Many sources define $G$ to be the transpose of what we use here, but this is just a question of convention. Because of this, we'll be dealing with the *column* (not row) spaces of matrices, also known as the **range**.] $G$ by
 $$
 	G
 	= \begin{bmatrix}
@@ -107,9 +107,7 @@ $$
 	\end{bmatrix}
 $$
 
-::: {.idea latex=""}
 The vector space spanned by the columns of the generator matrix $G$ is known as the **codespace** of the code, and any vector in this space is known as a **codeword**.
-:::
 
 The encoding process is then given by the matrix $G$ acting on the vector $\mathbf{d}$.
 Indeed, since the top $(4\times4)$ part of $G$ is the identity, the first four rows of the output vector $G\mathbf{d}$ will simply be a copy of $\mathbf{d}$; the bottom $(3\times4)$ part of $G$ is chosen precisely so that the last three rows of $G\mathbf{d}$ will be exactly $p_1$, $p_2$, and $p_3$.
@@ -180,13 +178,9 @@ $$
 $$
 Note that the rows of $H$ are exactly the coefficients of the parity-check equations for each plaquette, where we order them top--left--right (blue--red--yellow).
 For example, to get the sum corresponding to the bottom-left (red) plaquette, we need to sum the first, third, fourth, and sixth bits of the encoded string $d_1d_2d_3d_4p_1p_2p_3$, and these are exactly the non-zero entries of the second row of $H$.
+The columns of the parity-check matrix $H$ are known as the **error syndromes**, for reasons we will now explain
 
-::: {.idea latex=""}
-The columns of the parity check matrix $H$ are known as the **error syndromes**.
-:::
-
-Why do we call the columns of the parity check matrix $H$ error syndromes?
-Well, $H$ is defined exactly so that^[Recall that codewords are exactly those vectors of the form $G\mathbf{d}$ for some data vector $\mathbf{d}$]
+The parity-check matrix $H$ is defined exactly so that^[Recall that codewords are exactly those vectors of the form $G\mathbf{d}$ for some data vector $\mathbf{d}$]
 $$
 	H\mathbf{c}
 	= 0
@@ -261,8 +255,8 @@ These are constructed by judicious choices of the generators matrices or parity-
 ::::
 
 One last piece of the puzzle that we need to understand is the notion of dual codes.
-We will write $\operatorname{span}(G)$ to mean the vector space spanned by the columns of the matrix $G$.
-Given a code^[Usually, for linear codes, people talk of the code $C$ as being equal to the codespace, i.e. the span of the columns of $G$. For now, however, it is notationally simpler to denote a code by these two key matrices.] $C=(G,H)$ expressed in terms of its generator matrix and parity-check matrix, we know that the columns of $G$ span the kernel of $H$, i.e. that $\operatorname{span}(G)=\operatorname{ker}(H)$.
+We will write $\range(G)$ to mean the vector space spanned by the columns of the matrix $G$.
+Given a code^[Usually, for linear codes, people talk of the code $C$ as being equal to the codespace, i.e. the span of the columns of $G$. For now, however, it is notationally simpler to denote a code by these two key matrices.] $C=(G,H)$ expressed in terms of its generator matrix and parity-check matrix, we know that the columns of $G$ span the kernel of $H$, i.e. that $\range(G)=\ker(H)$.
 Why is this?
 Well, because this is equivalent to saying that a vector is in the span of the columns of $G$ exactly when it is of the form $G\mathbf{d}$ for some data vector $\mathbf{d}$, i.e. exactly when it is a codeword, and we have already shown this above.
 In particular then,
@@ -270,22 +264,64 @@ $$
 	H\cdot G
 	= 0
 $$
-(which merely says that $\operatorname{span}(G)\subseteq\operatorname{ker}(H)$).
+(which merely says that $\range(G)\subseteq\ker(H)$).
+
 But, taking the transpose of the above equality, we see that
 $$
 	G^T\cdot H^T
 	= 0
 $$
-and so we can define a code $C^\perp=(H^T,G^T)$, whose codewords are exactly the columns of $H^T$, i.e. the rows of $H$.
+and so^[This tells us that $\range(H^T)\subseteq\ker(G^T)$, but we can show that this is an equality using the fact that $\range(G)=\ker(H)$ is an equality.] we can define a code $C^\perp=(H^T,G^T)$, whose codewords are exactly the columns of $H^T$, i.e. the rows of $H$.
 This is known as the **dual code** (of $C$).
 Since $G$ has $n$ rows and $k$ columns, and $H$ has $n-k$ rows and $n$ columns, we see that the dimension of the codespace of $C$ (i.e. the span of the columns of $G$) and the dimension of the codespace of $C^\perp$ (i.e. the span of the rows of $H$) must sum to $n$.
 In fact, if $C$ is an $[n,k,d]$-code, then $C^\perp$ is an $[n,n-k,d']$ code, where $d'$ is not usually related to $d$ in any obvious way.
 A nice example is the $[7,4,3]$-Hamming code, whose dual is a $[7,3,4]$-code known as the **shortened Hadamard code**.
 
 It is immediate that $(C^\perp)^\perp=C$, but it is interesting to ask about the relationship between $C$ and $C^\perp$.
-Then we say that a code is **weakly self-dual** (or **self-orthogonal**) if $\operatorname{span}(G)\subseteq\operatorname{span}(H^T)$, and **self-dual** if $\operatorname{span}(G)=\operatorname{span}(H^T)$.
+Then we say that a code is **weakly self-dual** (or **self-orthogonal**) if $\range(G)\subseteq\range(H^T)$, and **self-dual** if $\range(G)=\range(H^T)$.
 In other words, a code is weakly-self dual if its codespace is a subspace of the codespace of its dual, and self-dual if these two codespaces are actually equal.
-We said above that $\dim\operatorname{span}(G)+\dim\operatorname{span}(H^T)=n$, so we see that for a code to be self-dual it must be the case that $n$ is even, but this is only a necessary condition, not a sufficient one!
+We said above that $\dim\range(G)+\dim\range(H^T)=n$, so we see that for a code to be self-dual it must be the case that $n$ is even, but this is only a necessary condition, not a sufficient one!
+
+::: {.idea latex=""}
+An $[n,k,d]$-linear code $C$ is described by two matrices:
+
+- The **generator** matrix $G$, which is an $(n\times k)$ matrix
+	$$
+		G =
+		\begin{bmatrix}
+			\begin{array}{c}
+				\id_{k\times k}
+			\\\hline
+				P
+			\end{array}
+		\end{bmatrix}
+	$$
+	for some $((n-k)\times(n-k))$ matrix $P$.
+	The columns of $G$ are **codewords**, and and form a basis for the **codespace** $\range(G)$.
+- The **parity-check** matrix $H$, which is an $((n-k)\times n)$ matrix
+	$$
+		H =
+		\begin{bmatrix}
+			\begin{array}{c|c}
+				Q & \id_{(n-k)\times(n-k)}
+			\end{array}
+		\end{bmatrix}
+	$$
+	for some $((n-k)\times k)$ matrix $Q$.
+	The columns of $H$ are **error syndromes**.
+
+The matrices $G$ and $H$ have to satisfy one of the two equivalent conditions
+$$
+	\range(G)
+	= \ker(H)
+	\qquad\text{or}\qquad
+	\range(H^T)
+	= \ker(G^T).
+$$
+We can guarantee this by taking $Q=-P$.
+
+Finally, given a code $C=(G,H)$, its **dual code** is $C^\perp=(H^T,G^T)$.
+:::
 
 
 
@@ -359,29 +395,28 @@ We have used a classical code to help us correct for $Z$ errors in the quantum c
 If we take a second classical code, with parameters $[n,k',d']$ and parity-check matrix $H'$, and use it to define $Z$-type stabilisers $G'_r=Z_{x_r}$ then we will have a distance $d'$ protection against $X$ errors.
 However, we cannot simply pick the two classical codes arbitrary: if the scheme is the work, then the $X$-type and $Z$-type stabilisers must actually *be* stabilisers, i.e. they must commute.
 How can we tell if this happens?
-Well, if $x$ is a row of $H$, and $y$ a row of $H'$, then the we need the number of positions from $1$ to $n$ with *both* a $Z$ and an $X$ to be even, as these are the ones that individually anti-commute.
+Well, if $x$ is a row of $H$, and $z$ a row of $H'$, then the we need the number of positions $i\in\{1,\ldots,n\}$ such that $x_i=z_i=1$ to be even, as these are the ones that will give operators that individually anti-commute ($XZ=-ZX$).
 In notation, this is the same as asking that
 $$
-	x\cdot y
+	x\cdot z
 	\equiv 0\mod{2}.
 $$
-This is the same as saying that $y$, which is a row of $H'$, must be a codeword of the first code, which has parity-check matrix $H$.
-Applying this reasoning to all rows $y$, we see that we need
+This is the same as saying that $z$, which is a row of $H'$, must be a codeword of the first code: by definition of the parity-check matrix $H$, we need that $Hz=0$.
+Applying this reasoning to all rows $z$, we see that we need
 $$
 	H\cdot {H'}^T
 	= 0
 $$
 or, in other words,
 $$
-	\operatorname{span}({H'}^T)
-	\subseteq\operatorname{ker}(H).
+	\range({H'}^T)
+	\subseteq\ker(H).
 $$
-But we know that $\operatorname{ker}(H)=\operatorname{span}(G)$, and so this is equivalent to asking for
+But we know that $\range(G)=\ker(H)$, and so this is equivalent to asking for
 $$
-	\operatorname{span}({H'}^T)
-	\subseteq\operatorname{span}(G).
+	\range({H'}^T)
+	\subseteq\range(G).
 $$
-As an important example that we will soon return to, note that if $(G,H)$ is weakly self-dual, then **TO-DO: what? I'm confused, it seems like you don't need weakly self-dual at all, since ${H'}^T=G$, which always satisfies this... !!!!!!!!!!!!!!!!!!!!!!!!!!!**
 
 
 We can figure out some key properties of combining an $[n,k,d]$-code $(G,H)$ for $X$-stabilisers and an $[n,k',d']$-code $(G',H')$ for $Z$-stabilisers without too much difficult.
@@ -399,15 +434,25 @@ $$
 	[[n, k+k'-n, \min(d,d')]]
 $$
 quantum error correction code, and its decoding is well understood based on the classical decoding methods applied independently for $X$ errors and $Z$ errors.
+This general construction of quantum error correcting codes is known as the **CSS construction**, for its originators [Robert Calderbank](https://en.wikipedia.org/wiki/Robert_Calderbank), [Peter Shor](https://en.wikipedia.org/wiki/Peter_Shor), and [Andrew Steane](https://en.wikipedia.org/wiki/Andrew_Steane).
 
 ::: {.idea latex=""}
-This general construction of quantum error correcting codes is known as the **CSS construction**, for its originators [Robert Calderbank](https://en.wikipedia.org/wiki/Robert_Calderbank), [Peter Shor](https://en.wikipedia.org/wiki/Peter_Shor), and [Andrew Steane](https://en.wikipedia.org/wiki/Andrew_Steane).
-Given an $[n,k,d]$-code $C=(G,H)$ and an $[n,k',d']$-code $C'=(G',H')$ such that **TO-DO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**, the **CSS code** (of $C$ over $C'$) is an $[[n,k+k'-n,\min(d,d')]]$-code.
+Given an $[n,k,d]$-code $C_1=(G_1,H_1)$ and an $[n,k_2,d_2]$-code $C_2=(G_2,H_2)$ such that $\range(H_2^T)\subseteq\range(G_1)$, the **CSS code** $\operatorname{CSS}(C_1,C_2)$ constructed as above is an $[[n,k_1+k_2-n,\min(d_1,d_2)]]$-code.
 :::
 
+As always, one needs to be careful of conventions!
+Many sources define a code to be the codespace $\range{G}$ itself instead of the pair $(G,H)$, and usually also replace $C_2$ with ${C_2}^\perp$ in the statement of the CSS construction.^[In particular, what we have defined would often be called the CSS construction of $C_1$ over ${C_2}^\perp$ (instead of over $C_2$).]
+
 Before moving on, let's look at the remaining details of applying the CSS construction to the $[7,4,3]$-Hamming code.
-We can show that this classical code is weakly self-dual: the rows of the parity-check matrix $H$ are also codewords, and so we can apply the CSS construction.
-This means that we can use it to define both our $X$-type and $Z$-type generators: using the notation of Section \@ref(pauli-stabilisers), the group of generators is generated by
+Let $C_1=C_2=(G,H)$ be the $[7,4,3]$-Hamming code with $G$ and $H$ as in Section \@ref(the-hamming-code).
+To apply the CSS construction, we need to check that $\range(H_2^T)\subseteq\range(G_1)$.
+Since $C_1=C_2$, this is simply asking that the $[7,4,3]$-Hamming code be weakly self-dual, i.e. that
+$$
+	\range(H^T)
+	\subseteq\range(G)
+$$
+which can be checked to be true by hand.
+This means that we can use the $[7,4,3]$-Hamming code to define both our $X$-type and $Z$-type generators: using the notation of Section \@ref(pauli-stabilisers), the group of generators is generated by
 $$
   \begin{array}{c|ccccccc|}
     + & X & X & \id & X & X & \id & \id
@@ -534,25 +579,7 @@ A round of error correction can be performed by measuring each of the stabiliser
 	& \ctrl{7}
 	& \gate{H}
 	& \meter{}
-\\& \qw
-	& \gate{X}
-	& \gate{X}
-	& \qw
-	& \gate{Z}
-	& \gate{Z}
-	& \qw
-	& \qw
-	& \qw
-\\& \qw
-	& \gate{X}
-	& \qw
-	& \gate{X}
-	& \gate{Z}
-	& \qw
-	& \gate{Z}
-	& \qw
-	& \qw
-\\& \qw
+\\[-1em]
 	& \qw
 	& \gate{X}
 	& \gate{X}
@@ -561,7 +588,29 @@ A round of error correction can be performed by measuring each of the stabiliser
 	& \gate{Z}
 	& \qw
 	& \qw
-\\& \qw
+	& \qw
+\\[-1em]
+	& \qw
+	& \gate{X}
+	& \qw
+	& \gate{X}
+	& \gate{Z}
+	& \qw
+	& \gate{Z}
+	& \qw
+	& \qw
+\\[-1em]
+	& \qw
+	& \qw
+	& \gate{X}
+	& \gate{X}
+	& \qw
+	& \gate{Z}
+	& \gate{Z}
+	& \qw
+	& \qw
+\\[-1em]
+	& \qw
 	& \gate{X}
 	& \gate{X}
 	& \gate{X}
@@ -570,16 +619,7 @@ A round of error correction can be performed by measuring each of the stabiliser
 	& \gate{Z}
 	& \qw
 	& \qw
-\\& \qw
-	& \gate{X}
-	& \qw
-	& \qw
-	& \gate{Z}
-	& \qw
-	& \qw
-	& \qw
-	& \qw
-\\& \qw
+\\[-1em]
 	& \qw
 	& \gate{X}
 	& \qw
@@ -588,7 +628,19 @@ A round of error correction can be performed by measuring each of the stabiliser
 	& \qw
 	& \qw
 	& \qw
-\\& \qw
+	& \qw
+\\[-1em]
+	& \qw
+	& \qw
+	& \gate{X}
+	& \qw
+	& \qw
+	& \gate{Z}
+	& \qw
+	& \qw
+	& \qw
+\\[-1em]
+	& \qw
 	& \qw
 	& \qw
 	& \gate{X}
@@ -600,10 +652,19 @@ A round of error correction can be performed by measuring each of the stabiliser
 \end{quantikz}
 ```
 
+
+
+
+
+## Logical operators {#logical-operators}
+
+::: {.todo latex=""}
+<!-- TO-DO: basically we're going to use all the normal subgroup stuff from section 7.blah -->
+:::
+
 ::: {.todo latex=""}
 <!-- TO-DO -->
 :::
-
 
 
 
