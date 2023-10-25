@@ -113,15 +113,14 @@ $$
 and since there are 5 anticommuting components, we see that $ZXYXYZXXY$ and $ZX\id ZZX\id YZ$ anticommute.
 
 Finally, the square of any element in $\mathcal{P}_n$ is $\pm\id$.
-Indeed, all the elements in the Pauli group are unitary, and each one is either Hermitian (overall phase $\pm1$ and squares to $\id$) or anti-Hermitian (overall phase $\pm i$ and squares to $-\id$).
+Indeed, all the elements in the Pauli group are unitary, and each one is either *Hermitian* (overall phase $\pm1$ and squares to $\id$) or *anti-Hermitian* (overall phase $\pm i$ and squares to $-\id$).
 As per usual, we are only really interested in working with the Hermitian elements, and we refer to *these* as the Pauli operators.
 
 ::: {.idea latex=""}
 An **$n$-qubit Pauli operator** is a Hermitian element of the $n$-qubit Pauli group $\mathcal{P}_n$.
 :::
 
-Since the Pauli operators are self-inverse (they square to the identity), their eigenvalues can only be $\pm1$.
-Furthermore, these eigenvalues must be of the same degeneracy, and the eigenspaces corresponding to each eigenvalue are of the same dimension, as we can see by taking the trace of a Pauli operator:
+Not only do elements of $\mathcal{P}_n$ have eigenvalues equal to $\pm1$, these eigenvalues must be of the same degeneracy, and the eigenspaces corresponding to each eigenvalue are of the same dimension, as we can see by taking the trace:
 $$
   \tr(P_1\otimes P_2\otimes\ldots\otimes P_n) = (\tr P_1)(\tr P_2)\ldots(\tr P_n)
 $$
@@ -139,9 +138,8 @@ More generally, we can define a vector subspace (rather than just a single vecto
 Such operators are called **stabilisers**.
 
 ::: {.idea latex=""}
-We say that an operator $S$ **stabilises** a (non-zero) state $\ket{\psi}$ if $S\ket{\psi}=\ket{\psi}$.
-We say that $S$ stabilises a subspace $V$ if $S$ stabilises every state in $V$.
-Then we call $\ket{\psi}$ (or $V$) the **stabiliser state** (or **stabiliser subspace**).
+We say that an operator $S$ **stabilises** a (non-zero) state $\ket{\psi}$ if $S\ket{\psi}=\ket{\psi}$, and we then call $\ket{\psi}$ a **stabiliser state**.
+We say that $S$ stabilises a subspace $V$ if $S$ stabilises every state in $V$, and we call the largest subspace $V_S$ that is stabilised by $S$ the **stabiliser subspace**.
 :::
 
 In other words, an operator $S$ stabilises a state $\ket{\psi}$ (or the state is fixed by the operator) if $\ket{\psi}$ is an eigenstate of $S$ with eigenvalue $1$.
@@ -181,7 +179,7 @@ We can also say something about the remaining two elements of the single-qubit P
 More generally, if $S$ stabilises something then $-S$ cannot stabilise the same thing.
 
 The set of all stabilisers of a given state or given subspace form a group: if $S\ket{\psi}=\ket{\psi}$, then multiplying both sides by $S^{-1}$ shows that the inverse of a stabiliser is again a stabiliser; the composition of two stabilisers is again a stabiliser, since $(ST)\ket{\psi}=S(T\ket{\psi})=S\ket{\psi}=\ket{\psi}$; and as we have just said, the identity is always a stabiliser.
-This group is called the **stabiliser group** of the given state or subspace.
+This group is called the **stabiliser group** $\mathcal{S}$ of the given state or subspace.
 
 Using this language, we can rephrase the previous example by saying that the stabiliser group of the state $\ket{1}$ is $\{\id,Z\}=\langle Z\rangle$, the stabiliser group of the state $\ket{0}$ is $\{\id,-Z\}=\langle -Z\rangle$, the stabiliser group of the state $\ket{+}$ is $\{\id,X\}=\langle X\rangle$, and so on.
 If we take the tensor product of a two states, with stabiliser groups $\mathcal{A}$ and $\mathcal{B}$ (respectively), then the resulting tensor product state has stabiliser group given by the cartesian product $\mathcal{A}\times\mathcal{B}$.
@@ -251,7 +249,7 @@ An **$n$-qubit Pauli stabiliser group** is any subgroup of $\mathcal{P}_n$ that 
 Its elements are called **Pauli stabilisers**.
 :::
 
-Recall that, in order for the subspace $V_S$ stabilised by some group $S$ to be non-trivial, we need $-\id\not\in S$.
+Recall that, in order for the subspace $V_\mathcal{S}$ stabilised by some group $\mathcal{S}$ to be non-trivial, we need $-\id\not\in\mathcal{S}$.
 Given that all Pauli operators square to the identity, and all pairs of Pauli operators either commute or anticommute, this implies that if we want some Pauli operators to stabilise anything then they must *commute*.
 Indeed, if $S_1$ and $S_2$ are two Pauli operators that anticommute, and $\ket{\psi}$ is any vector stabilised by both of them, then
 $$
@@ -264,7 +262,7 @@ $$
 $$
 which means that $\ket{\psi}=0$.
 But saying that we are looking at a stabiliser group consisting of Pauli stabilisers that all commute with one another (as opposed to anticommuting) is exactly saying that we have an abelian subgroup of $\mathcal{P}_n$; if we want it to be non-trivial, then we need it to not contain $-\id$.
-Conversely, if we pick any abelian subgroup of $\mathcal{P}_n$ that does not contain $-\id$, this stabilises *some* subspace $V_S$.
+Conversely, if we pick any abelian subgroup of $\mathcal{P}_n$ that does not contain $-\id$, this stabilises *some* subspace $V_\mathcal{S}$.
 
 The size of any Pauli stabiliser $\mathcal{S}$ is $|\mathcal{S}|=2^r$, where $r$ is some positive integer, since we can always find some choice of generators $G_1,\ldots,G_r$, and then any operator $S\in\mathcal{S}$ can be written as^[An interesting small exercise here is to explain why the product of any *independent* Pauli stabilisers cannot be equal to the identity.]
 $$
@@ -284,8 +282,8 @@ For example, the Bell state $\Phi^+=\ket{00}+\ket{11}$ is stabilised by the grou
 This stabiliser group has $(2^2-1)(2^2-2)/2!=3$ presentations, namely $\langle XX,ZZ\rangle$, $\langle -YY,XX\rangle$, and $\langle ZZ,-YY\rangle$.
 
 So now we know the size of a Pauli stabiliser, but what can we say about the dimension of the subspace that it stabilises?
-If $|\mathcal{S}|=2^r$ then the corresponding stabiliser subspace $V_S$ has dimension $2^{n-r}$ (where $n$ is the number of qubits, i.e. such that $\mathcal{S}\subseteq\mathcal{P}_n$).
-To see this, we can look at the projector $P_S$ onto $V_S$, since once we have a projector onto any subspace we know that the dimension of that subspace is exactly the trace of the projector (we can prove this by thinking about the matrix of the projector in the diagonal form).
+If $|\mathcal{S}|=2^r$ then the corresponding stabiliser subspace $V_\mathcal{S}$ has dimension $2^{n-r}$ (where $n$ is the number of qubits, i.e. such that $\mathcal{S}\subseteq\mathcal{P}_n$).
+To see this, we can look at the projector $P_S$ onto $V_\mathcal{S}$, since once we have a projector onto any subspace we know that the dimension of that subspace is exactly the trace of the projector (we can prove this by thinking about the matrix of the projector in the diagonal form).
 In our case (using the result of Exercise \@ref(stabilisers-and-projectors)) we calculate that
 $$
   \begin{aligned}
@@ -304,10 +302,10 @@ Let $G_1,\ldots,G_r$ be a presentation of a Pauli stabiliser $\mathcal{S}$.
 For each operator $G_i$, half its eigenvalues are $+1$ and another half are $-1$, so each $G_i$ bisects the $2^n$-dimensional Hilbert space of $n$ qubits into two eigenspaces of equal size.
 So $G_1$ gives two $2^{n-1}$-dimensional subspaces: one for the $+1$ eigenvalue and one for the $-1$ eigenvalue.
 Forgetting about the $-1$ part and just focusing on the $+1$ part, $G_2$ then splits this $2^{n-1}$-dimensional subspace into two $2^{n-2}$-dimensional subspaces, since it is independent from $G_1$ (as we justify in Exercise \@ref(stabilisers-and-projectors)).
-Repeating this procedure, forgetting about the $-1$ subspace each time, leads us to consider the simultaneous $+1$ eigenspace of $G_1,\ldots,G_r$, where each time we pass from $\{G_1,G_2,\ldots,G_i\}$ to $\{G_1,G_2,\ldots,G_i,G_{i+1}\}$ we bisect the subspace into two equal parts once more, eventually ending with the $2^{n-2}$-dimensional subspace $V_S$, as above.
+Repeating this procedure, forgetting about the $-1$ subspace each time, leads us to consider the simultaneous $+1$ eigenspace of $G_1,\ldots,G_r$, where each time we pass from $\{G_1,G_2,\ldots,G_i\}$ to $\{G_1,G_2,\ldots,G_i,G_{i+1}\}$ we bisect the subspace into two equal parts once more, eventually ending with the $2^{n-2}$-dimensional subspace $V_\mathcal{S}$, as above.
 We can show this pictorially, as in Figure \@ref(fig:stabiliser-bisection).
 
-(ref:stabiliser-bisection-caption) The stabiliser group $\{ZZ\id,\id ZZ\}$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_S$ which is spanned by $\ket{000}$ and $\ket{111}$. Think of the labels $ZZ\id$ and $\id ZZ$ as the $x$- and $y$-axes, and the sign labels on each square as $(x,y)$-coordinates. So the two squares on the left together make the $+1$ eigenspace of $\id ZZ$, and the two squares on the top make the $+1$ eigenspace of $ZZ\id$.
+(ref:stabiliser-bisection-caption) The stabiliser group $\{ZZ\id,\id ZZ\}$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_\mathcal{S}$ which is spanned by $\ket{000}$ and $\ket{111}$. Think of the labels $ZZ\id$ and $\id ZZ$ as the $x$- and $y$-axes, and the sign labels on each square as $(x,y)$-coordinates. So the two squares on the left together make the $+1$ eigenspace of $\id ZZ$, and the two squares on the top make the $+1$ eigenspace of $ZZ\id$.
 
 ```{r stabiliser-bisection,engine='tikz',fig.cap='(ref:stabiliser-bisection-caption)',fig.width=3.5}
 \definecolor{primary}{RGB}{177,98,78}
@@ -623,7 +621,7 @@ This fact is known as **Lagrange's theorem** (although [Joseph-Louis Lagrange](h
 
 It seems like it was [Évariste Galois](https://en.wikipedia.org/wiki/Évariste_Galois) who recognised that *normal* subgroups were worthy of special attention.
 Given an arbitrary subgroup $H\leq G$, we can construct a larger subgroup $K\leq G$ in which $H$ is normal, i.e. such that $H\triangleleft K\leq G$.
-The largest such subgroup $K$ is called the **normaliser of $H$ in $G$**, denoted by $N_G(H)$, and we can construct it explicitly:
+The largest such subgroup $K$ is called the **normaliser of $H$ in $G$**, denoted by^[When the ambient group $G$ is evident, we often simply denote the normaliser by $N(H)$. But the choice of the group $G$ still matters!] $N_G(H)$, and we can construct it explicitly:
 $$
   N_G(H) = \{g\in G \mid ghg^{-1}\in H\text{ for all }h\in H\}.
 $$
