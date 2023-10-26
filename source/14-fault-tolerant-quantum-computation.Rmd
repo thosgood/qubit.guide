@@ -743,14 +743,14 @@ The cosets of $\mathcal{S}$ inside $N(\mathcal{S})$ are called **logical operato
 
 We now return to the example of the three-qubit code from Section \@ref(three-qubit-codes), and, even further back, the diagram from Section \@ref(pauli-stabilisers), which we repeat as Figure \@ref(fig:stabiliser-bisection-again) below.
 
-(ref:stabiliser-bisection-again-caption) The stabiliser group $\mathcal{S}=\{ZZ\id,\id ZZ\}$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_\mathcal{S}$ which is spanned by $\ket{000}$ and $\ket{111}$.
+(ref:stabiliser-bisection-again-caption) The stabiliser group $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_\mathcal{S}$ which is spanned by $\ket{000}$ and $\ket{111}$.
 
 ```{r stabiliser-bisection-again,engine='tikz',fig.cap='(ref:stabiliser-bisection-again-caption)',fig.width=3.5}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \newcommand{\id}{\mathbf{1}}
 \newcommand{\ket}[1]{|#1\rangle}
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=1.35]
   \draw (0,0) rectangle (4,4);
   \node[] (c0) at (1,2.8) {$\mathcal{C}=\,${\color{primary}$+$}{\color{secondary}$+$}};
   \node[] (c1) at (3,2.8) {$\mathcal{C}_1=\,${\color{primary}$-$}{\color{secondary}$+$}};
@@ -766,8 +766,8 @@ We now return to the example of the three-qubit code from Section \@ref(three-qu
   \node[anchor=north east] (B) at (4,4) {$\substack{\ket{100}\\ \ket{011}}$};
   \node[anchor=south east] (C) at (4,0) {$\substack{\ket{010}\\ \ket{101}}$};
   \node[anchor=south west] (D) at (0,0) {$\substack{\ket{001}\\ \ket{110}}$};
-  \draw (2,0) to (2,4.5);
-  \draw (0,2) to (4.5,2);
+  \draw[->] (2,0) to (2,4.5);
+  \draw[->] (0,2) to (4.5,2);
 \end{tikzpicture}
 ```
 
@@ -808,7 +808,7 @@ Let's make this happen!
 The normaliser of $\mathcal{S}$ inside $\mathcal{P}_3$ is
 $$
 	N(\mathcal{S})
-	= \{\id,XXX,YYY,ZZZ\} \times \langle ZZ\id,\id ZZ\rangle
+	= \{\id,XXX,YYY,ZZZ\} \times \mathcal{S}
 $$
 which we have written in such a way that we can just read off the cosets: there are four of them, and they are represented by $\id$, $XXX$, $YYY$, and $ZZZ$.
 These four (implementations of) logical operators all get given the obvious names:
@@ -840,9 +840,22 @@ The natural question to ask is then how to find all the implementations, but thi
 In the example above, we see that $Z_1=Z\id\id$ is exactly $\id ZZ\cdot ZZZ$.
 Because of this, we should really write something like $Z_L=ZZZ\mathcal{S}$, or $Z_L=[ZZZ]$, to make clear that $ZZZ$ is just one specific representation of $Z_L$, but you will find that people often conflate implementations with logical operators themselves and simply write $Z_L=ZZZ$.
 
+The quotient group^[Recall that the elements of the quotient group $G/H$ are exactly the cosets of $H\triangleleft G$.] $N(\mathcal{S})/\mathcal{S}$ gives us the logical operators, so the next thing to ask is what we get from the quotient group $\mathcal{P}_n/N(\mathcal{S})$.
+
+::: {.idea latex=""}
+The cosets of $N(\mathcal{S})$ inside $\mathcal{P}_n$ are **errors** on the codespace $V_\mathcal{S}$.
+:::
+
+Again, we can write $\mathcal{P}_n$ in such a way that we can immediately read off the cosets:
+$$
+	\mathcal{P}_3
+	= \{X\id\id, \id X\id, \id\id X\} \times N(\mathcal{S}) \times \{\pm1,\pm i\}.
+$$
+Ignoring the phases, the three errors are single bit-flips: $X\id\id$, $\id X\id$, and $\id\id X$.
+
 ::: {.todo latex=""}
 <!-- TO-DO: -->
-- ok so $N(S)/S$ gives us logical operators, now what about$P/N(S)$?
+- ok so $N(S)/S$ gives us logical operators, now what about $P/N(S)$?
 - it gives us the *errors*
 - **DO AN .idea FOR THIS, JUST AS FOR LOGICAL OPERATORS**
 - draw the diagram (make it vertically tiered or something) showing stabilisers, normalisers, and errors
