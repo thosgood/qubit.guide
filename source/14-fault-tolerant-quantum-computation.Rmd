@@ -296,7 +296,7 @@ An $[n,k,d]$-linear code $C$ is described by two matrices:
 			\end{array}
 		\end{bmatrix}
 	$$
-	for some $((n-k)\times(n-k))$ matrix $P$.
+	for some $((n-k)\times k)$ matrix $P$.
 	The columns of $G$ are **codewords**, and and form a basis for the **codespace** $\range(G)$.
 - The **parity-check** matrix $H$, which is an $((n-k)\times n)$ matrix
 	$$
@@ -464,11 +464,11 @@ $$
   \end{array}
 $$
 The result is a $[[7,1,3]]$-code, generally attributed to Steane and thus known as the **Steane code**, that encodes one logical qubit across seven physical ones, and that is able to correct for any single-qubit Pauli error.
-We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:tanner-graph-7-1-3).
+We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:tanner-graph-713).
 
-(ref:tanner-graph-7-1-3-caption) The Tanner graph of the Steane code. For CSS codes, there are two types of "parity checks": one for detecting $X$ errors (solid lines), and one for $Z$ errors (dashed lines).
+(ref:tanner-graph-713-caption) The Tanner graph of the Steane code. For CSS codes, there are two types of "parity checks": one for detecting $X$ errors (solid lines), and one for $Z$ errors (dashed lines).
 
-```{r tanner-graph-7-1-3,engine='tikz',fig.width=4,fig.cap='(ref:tanner-graph-7-1-3-caption)'}
+```{r tanner-graph-713,engine='tikz',fig.width=4,fig.cap='(ref:tanner-graph-713-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \begin{tikzpicture}
@@ -652,6 +652,11 @@ A round of error correction can be performed by measuring each of the stabiliser
 \end{quantikz}
 ```
 
+Not all quantum codes arise from combining classical ones like this, and even for those that do, working with the generator and parity-check matrices can often be cumbersome.
+Indeed, a truly *quantum* code will not have a single one of each, since this is not sufficient to deal with the purely quantum phenomena of superposition.
+For example, as the Tanner graph in Figure \@ref(fig:tanner-graph-713) shows, we have *two* parity check matrices in the case of CSS codes.
+When working with quantum codes, the stabiliser formalism really becomes much more useful --- our next aim is to justify this with some examples and explanation.
+
 
 
 
@@ -736,9 +741,9 @@ Since the cosets of $\mathcal{S}$ inside $N(\mathcal{S})$ give well defined acti
 The cosets of $\mathcal{S}$ inside $N(\mathcal{S})$ are called **logical operators**, and any representative of a coset is an **implementation** for that logical operator.
 :::
 
-Returning to the example of the three-qubit code from Section \@ref(three-qubit-codes), and, even further back, the diagram from Section \@ref(pauli-stabilisers), which we repeat as Figure \@ref(fig:stabiliser-bisection-again) below.
+We now return to the example of the three-qubit code from Section \@ref(three-qubit-codes), and, even further back, the diagram from Section \@ref(pauli-stabilisers), which we repeat as Figure \@ref(fig:stabiliser-bisection-again) below.
 
-(ref:stabiliser-bisection-again-caption) The stabiliser group $\{ZZ\id,\id ZZ\}$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_\mathcal{S}$ which is spanned by $\ket{000}$ and $\ket{111}$.
+(ref:stabiliser-bisection-again-caption) The stabiliser group $\mathcal{S}=\{ZZ\id,\id ZZ\}$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_\mathcal{S}$ which is spanned by $\ket{000}$ and $\ket{111}$.
 
 ```{r stabiliser-bisection-again,engine='tikz',fig.cap='(ref:stabiliser-bisection-again-caption)',fig.width=3.5}
 \definecolor{primary}{RGB}{177,98,78}
@@ -771,8 +776,7 @@ $$
 	\mathcal{C}
 	= \langle\ket{000},\ket{111}\rangle
 $$
-**!!!!!!!!!!!!!!!!!!!! TO-DO: write down $G$ and $H$ for this code! !!!!!!!!!!!!!!!!!!!!**
-But the codespace $\mathcal{C}$ is exactly the stabiliser space $V_\mathcal{S}$ of the stabiliser group
+which is exactly the stabiliser space $V_\mathcal{S}$ of the stabiliser group
 $$
 	\mathcal{S}
 	= \langle ZZ\id,\id ZZ\rangle
@@ -782,17 +786,62 @@ $$
 	\mathcal{C}\oplus\mathcal{C}_1\oplus\mathcal{C}_2\oplus\mathcal{C}_3
 $$
 as shown in Figure \@ref(fig:stabiliser-bisection-again).
+Since we have chosen a specific basis for each of these subspaces, we should give things a name.
+
+::: {.idea latex=""}
+The basis vectors of the codespace $\mathcal{C}=V_\mathcal{S}$ are called **logical states**.
+:::
+
+In our example then, we have two logical states: **logical $0$** and **logical $1$**, which we denote by
+$$
+	\begin{aligned}
+		\ket{0}_L
+		&\coloneqq \ket{000}
+	\\\ket{1}_L
+		&\coloneqq \ket{111}.
+	\end{aligned}
+$$
+The justification for these names is twofold: firstly, $\ket{0}_L$ is exactly the encoding of $\ket{0}$, the "actual" zero state; and secondly, this state $\ket{0}_L$ will behave exactly as the zero state should when acted upon by the logical operators.
+For example, the operator $X$ sends $\ket{0}$ to $\ket{1}$, so the *logical* $X$ should send the *logical* $\ket{0}$ to the *logical* $\ket{1}$.
+Let's make this happen!
+
 The normaliser of $\mathcal{S}$ inside $\mathcal{P}_3$ is
 $$
 	N(\mathcal{S})
 	= \{\id,XXX,YYY,ZZZ\} \times \langle ZZ\id,\id ZZ\rangle
 $$
 which we have written in such a way that we can just read off the cosets: there are four of them, and they are represented by $\id$, $XXX$, $YYY$, and $ZZZ$.
+These four (implementations of) logical operators all get given the obvious names:
+$$
+	\begin{aligned}
+		\id_L
+		&\coloneqq \id
+	\\X_L
+		&\coloneqq XXX
+	\\Y_L
+		&\coloneqq YYY
+	\\Z_L
+		&\coloneqq ZZZ
+	\end{aligned}
+$$
+But note that these are not necessarily the smallest weight implementations!
+For example, any single $Z_i$ (i.e. a $Z$ acting on the $i$-th qubit) will have the same logical effect as $ZZZ$, as we can see by looking at how it acts on the logical states:
+$$
+	\begin{aligned}
+		Z_1\ket{1}_L
+		&= Z\id\id\ket{111}
+	\\&= -\ket{111}
+	\\&= ZZZ\ket{111}
+	\\&= ZZZ\ket{1}_L.
+	\end{aligned}
+$$
+In contrast, $XXX$ *is* the smallest weight logical $X$ implementation.
+The natural question to ask is then how to find all the implementations, but this is answered by going back to the very definition of them as coset representatives: *if $P$ is some implementation of a logical operator, then so too is $SP$ for any $S\in\mathcal{S}$*.
+In the example above, we see that $Z_1=Z\id\id$ is exactly $\id ZZ\cdot ZZZ$.
+Because of this, we should really write something like $Z_L=ZZZ\mathcal{S}$, or $Z_L=[ZZZ]$, to make clear that $ZZZ$ is just one specific representation of $Z_L$, but you will find that people often conflate implementations with logical operators themselves and simply write $Z_L=ZZZ$.
 
 ::: {.todo latex=""}
 <!-- TO-DO: -->
-- give some lower weight implementations
-- mention that $G_iL$ is another implementation of a logical operator $L$ for any $G_i$
 - ok so $N(S)/S$ gives us logical operators, now what about$P/N(S)$?
 - it gives us the *errors*
 - **DO AN .idea FOR THIS, JUST AS FOR LOGICAL OPERATORS**
