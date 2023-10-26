@@ -2,10 +2,10 @@
 
 > About more classical error correction and the **Hamming code**, how they generalise to quantum codes called **CSS codes**, including the **[[7,1,3]]-code**.
 > Also about a family of quantum codes known as the **surface code** which have large distances, and stabilisers that can all be measured on small numbers of neighbouring qubits.
-> Finally about computing in the presence of errors: logical gates and **fault tolerance**.
+> Finally about computing in the presence of errors: **logical states**, **logical operators**, and **fault tolerance**, all via the formalism of stabilisers.
 
 ::: {.todo latex=""}
-<!-- TO-DO -->
+<!-- TO-DO: basically we want to go from simple error correction to fault-tolerant computation, working with encoded states using logical operators -->
 :::
 
 
@@ -37,13 +37,13 @@ Figure \@ref(fig:hamming-code-diagrams) show diagrammatic representations of thi
 		\draw[fill=primary!60,opacity=0.5] (0,0) circle (2);
 		\draw[fill=secondary!60,opacity=0.5] (1,1.7) circle (2);
 		\draw[fill=tertiary!60,opacity=0.5] (2,0) circle (2);
-		\node[] (p1) at (1,2.5) {\footnotesize$p_1$};
-		\node[] (p2) at (-0.8,-0.7) {\footnotesize$p_2$};
-		\node[] (p3) at (2.8,-0.7) {\footnotesize$p_3$};
-		\node[] (d1) at (-0.3,1.2) {\footnotesize$d_1$};
-		\node[] (d2) at (2.3,1.2) {\footnotesize$d_2$};
-		\node[] (d3) at (1,-0.7) {\footnotesize$d_3$};
-		\node[] (d4) at (1,0.5) {\footnotesize$d_4$};
+		\node (p1) at (1,2.5) {\footnotesize$p_1$};
+		\node (p2) at (-0.8,-0.7) {\footnotesize$p_2$};
+		\node (p3) at (2.8,-0.7) {\footnotesize$p_3$};
+		\node (d1) at (-0.3,1.2) {\footnotesize$d_1$};
+		\node (d2) at (2.3,1.2) {\footnotesize$d_2$};
+		\node (d3) at (1,-0.7) {\footnotesize$d_3$};
+		\node (d4) at (1,0.5) {\footnotesize$d_4$};
 	\end{scope}
 	\begin{scope}[xscale=0.65,yscale=0.6,shift={(8,0)}]
 		\node[fill=white,draw=black,circle,inner sep=0.75mm] (p1) at (0,3) {\footnotesize$p_1$};
@@ -672,6 +672,7 @@ You will perhaps have noticed that we haven't written out what the stabiliser st
 There is a simple reason for this: at this point, we don't actually know!
 There's a little more work to be done --- the stabilisers have provided us with a two-dimensional space, but if we have $\ket{0}$ and $\ket{1}$ to encode, how are they mapped within the space?
 So far, it's undefined, and there is a lot of freedom to choose, but the structures provided by group theory are quite helpful here in providing some natural choices.
+Furthermore, better understanding these structures is the first step towards figuring out how to upgrade from simple error correction to fault-tolerant computation.
 We're going to turn back all the way to Sections \@ref(normal-subgroups) and \@ref(pauli-normalisers), where we discovered how to think about normalisers of stabiliser groups inside the Pauli group.
 Let's start with a brief recap.
 
@@ -745,27 +746,27 @@ We now return to the example of the three-qubit code from Section \@ref(three-qu
 
 (ref:stabiliser-bisection-again-caption) The stabiliser group $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_\mathcal{S}$ which is spanned by $\ket{000}$ and $\ket{111}$.
 
-```{r stabiliser-bisection-again,engine='tikz',fig.cap='(ref:stabiliser-bisection-again-caption)',fig.width=3.5}
+```{r stabiliser-bisection-again,engine='tikz',fig.cap='(ref:stabiliser-bisection-again-caption)',fig.width=4}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \newcommand{\id}{\mathbf{1}}
 \newcommand{\ket}[1]{|#1\rangle}
 \begin{tikzpicture}[scale=1.35]
   \draw (0,0) rectangle (4,4);
-  \node[] (c0) at (1,2.8) {$\mathcal{C}=\,${\color{primary}$+$}{\color{secondary}$+$}};
-  \node[] (c1) at (3,2.8) {$\mathcal{C}_1=\,${\color{primary}$-$}{\color{secondary}$+$}};
-  \node[] (c2) at (3,1.2) {$\mathcal{C}_2=\,${\color{primary}$-$}{\color{secondary}$-$}};
-  \node[] (c3) at (1,1.2) {$\mathcal{C}_3=\,${\color{primary}$+$}{\color{secondary}$-$}};
+  \node (c0) at (1,2.8) {$\mathcal{C}=\,${\color{primary}$+$}{\color{secondary}$+$}};
+  \node (c1) at (3,2.8) {$\mathcal{C}_1=\,${\color{primary}$-$}{\color{secondary}$+$}};
+  \node (c2) at (3,1.2) {$\mathcal{C}_2=\,${\color{primary}$-$}{\color{secondary}$-$}};
+  \node (c3) at (1,1.2) {$\mathcal{C}_3=\,${\color{primary}$+$}{\color{secondary}$-$}};
   \node[above,secondary] (S1) at (2,4.5) {$ZZ\id$};
   \node[right,primary] (S2) at (4.5,2) {$\id ZZ$};
   \node[primary] (S1+) at (1,4.5) {$+1$};
   \node[primary] (S1-) at (3,4.5) {$-1$};
   \node[secondary] (S2+) at (4.5,3) {$+1$};
   \node[secondary] (S2-) at (4.5,1) {$-1$};
-  \node[anchor=north west] (A) at (0,4) {$\substack{\ket{000}\\ \ket{111}}$};
-  \node[anchor=north east] (B) at (4,4) {$\substack{\ket{100}\\ \ket{011}}$};
-  \node[anchor=south east] (C) at (4,0) {$\substack{\ket{010}\\ \ket{101}}$};
-  \node[anchor=south west] (D) at (0,0) {$\substack{\ket{001}\\ \ket{110}}$};
+  \node[anchor=north west] (A) at (0,4) {$\substack{\ket{000}\\\ket{111}}$};
+  \node[anchor=north east] (B) at (4,4) {$\substack{\ket{100}\\\ket{011}}$};
+  \node[anchor=south east] (C) at (4,0) {$\substack{\ket{010}\\\ket{101}}$};
+  \node[anchor=south west] (D) at (0,0) {$\substack{\ket{001}\\\ket{110}}$};
   \draw[->] (2,0) to (2,4.5);
   \draw[->] (0,2) to (4.5,2);
 \end{tikzpicture}
@@ -851,14 +852,28 @@ $$
 	\mathcal{P}_3
 	= \{X\id\id, \id X\id, \id\id X\} \times N(\mathcal{S}) \times \{\pm1,\pm i\}.
 $$
-Ignoring the phases, the three errors are single bit-flips: $X\id\id$, $\id X\id$, and $\id\id X$.
+Ignoring the phases, the three errors are single bit-flips: $X\id\id$, $\id X\id$, and $\id\id X$; these errors $X_i$ map the codespace^[Since we are only considering the case of *single* bit-flips, not multiple ones, we don't need to worry about the fact that e.g. $X_2$ maps $\mathcal{C}_3$ to $\mathcal{C}_1$ as well.] $\mathcal{C}$ to the subspace $\mathcal{C}_i$, as shown in Figure \@ref(fig:errors-mapping-c-to-ci).
+
+(ref:errors-mapping-c-to-ci-caption) The single bit-flip error $X_i$ maps the codespace $\mathcal{C}$ to the subspace $\mathcal{C}_i$, e.g. $X_2\ket{000}=\ket{010}\in\mathcal{C}_2$.
+
+```{r errors-mapping-c-to-ci,engine='tikz',fig.cap='(ref:errors-mapping-c-to-ci-caption)',fig.width=2}
+\newcommand\id{\mathbf{1}}
+\begin{tikzpicture}
+	\node[draw,circle,minimum size=8mm] (C) at (0,3) {$\mathcal{C}$};
+	\node[draw,circle,minimum size=8mm] (C1) at (3,3) {$\mathcal{C}_1$};
+	\node[draw,circle,minimum size=8mm] (C3) at (0,0) {$\mathcal{C}_3$};
+	\node[draw,circle,minimum size=8mm] (C2) at (3,0) {$\mathcal{C}_2$};
+	%
+	\draw[<->,shorten >=1mm,shorten <=1mm] (C) to node[fill=white]{$X\id\id$} (C1);
+	\draw[<->,shorten >=1mm,shorten <=1mm] (C) to node[fill=white]{$\id X\id$} (C2);
+	\draw[<->,shorten >=1mm,shorten <=1mm] (C) to node[fill=white]{$\id\id X$} (C3);
+\end{tikzpicture}
+```
 
 ::: {.todo latex=""}
 <!-- TO-DO: -->
-- ok so $N(S)/S$ gives us logical operators, now what about $P/N(S)$?
-- it gives us the *errors*
-- **DO AN .idea FOR THIS, JUST AS FOR LOGICAL OPERATORS**
 - draw the diagram (make it vertically tiered or something) showing stabilisers, normalisers, and errors
+- explain "The structure within the normaliser is mirror across each of the cosets"
 :::
 
 ::: {.todo latex=""}
