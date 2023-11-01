@@ -463,7 +463,7 @@ $$
   \\+ & \id & Z & Z & Z & \id & \id & Z
   \end{array}
 $$
-The result is a $[[7,1,3]]$-code, generally attributed to Steane and thus known as the **Steane code**, that encodes one logical qubit across seven physical ones, and that is able to correct for any single-qubit Pauli error.
+The result is a $[[7,1,3]]$-code, generally attributed to Steane and thus known as the **Steane code**, or simply the **seven-qubit code**, that encodes one logical qubit across seven physical ones, and that is able to correct for any single-qubit Pauli error.
 We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:tanner-graph-713).
 
 (ref:tanner-graph-713-caption) The Tanner graph of the Steane code. For CSS codes, there are two types of "parity checks": one for detecting $X$ errors (solid lines), and one for $Z$ errors (dashed lines).
@@ -661,7 +661,7 @@ When working with quantum codes, the stabiliser formalism really becomes much mo
 
 
 
-## Logical operators {#logical-operators}
+## Logical operators and errors {#logical-operators}
 
 <div class="video" title="Pauli operators in error correction" data-videoid="kd3ahY55DYA"></div>
 
@@ -793,7 +793,7 @@ Since we have chosen a specific basis for each of these subspaces, we should giv
 The basis vectors of the codespace $\mathcal{C}=V_\mathcal{S}$ are called **logical states**.
 :::
 
-In our example then, we have two logical states: **logical $0$** and **logical $1$**, which we denote by
+In our example then, we have two logical states^[Since the logical states are, in particular, vectors in the codespace, we might still refer to them sometimes as codewords.]: **logical $0$** and **logical $1$**, which we denote by
 $$
 	\begin{aligned}
 		\ket{0}_L
@@ -873,13 +873,100 @@ Ignoring the phases, the three errors are single bit-flips: $X\id\id$, $\id X\id
 ::: {.todo latex=""}
 <!-- TO-DO: -->
 - draw the diagram (make it vertically tiered or something) showing stabilisers, normalisers, and errors
-- explain "The structure within the normaliser is mirror across each of the cosets"
+- explain "The structure within the normaliser is mirrored across each of the cosets"
 :::
 
 ::: {.todo latex=""}
-<!-- TO-DO -->
+<!-- TO-DO: -->
+"Once we have the representatives of the cosets of N(S)/S, we can arbitrarily choose one of them ..."
 :::
 
+
+
+
+
+## Other ways of encoding
+
+There are many other ways in which an unknown state $\ket{\psi}$ of a single qubit can be encoded into an $n$-qubit CSS code.
+For example, imagine that we were able to construct the following circuit:
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+\begin{quantikz}
+	\lstick{$\ket{\psi}$}
+	& \ctrl{1}
+	& \targ{1}
+  & \qw \rstick{$\ket{0}$}
+\\\lstick{$\ket{0}_L$}
+	& \gate{X_L} \qwbundle[alternate]{}
+  & \ctrlbundle{-1}
+  & \qwbundle[alternate]{} \rstick{$\ket{\psi}_L$}
+\end{quantikz}
+```
+
+This would transfer the state $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$ into a logical version $\ket{\psi}_L$, since it enacts the transformations
+$$
+	\begin{aligned}
+		(\alpha\ket{0} + \beta\ket{1})\ket{0}_L
+		&\longmapsto \alpha\ket{0}\ket{0}_L + \beta\ket{1}\ket{1}_L
+	\\&\longmapsto \ket{0}(\alpha\ket{0}_L + \beta\ket{1}_L).
+	\end{aligned}
+$$
+But we still need to figure out how to actually implement this circuit using only gates that we already know about, namely $X_L$ and $Z_L$.
+
+The first is reasonably simple: if the control qubit is in state $\ket{1}$, then we want to apply $X_L$ to the target.
+Since $X_L$ can be^[If we want to keep the circuit as simple as possible, then we should choose the smallest weight representative of $X_L$, which might not be just a tensor product of all $X$ operators. For example, in the seven-qubit code there is an implementation of $X_L$ of weight $3$.] expressed as a tensor product of Pauli $X$ operators, this means that the controlled-$X_L$ is just a bunch of controlled-$\texttt{NOT}$ gates, each controlled by the top qubit, and targeting each of the qubits of the encoded state.
+
+The second step is maybe not so obvious, but there's a trick that we can use here!
+We know that the top qubit should end in the $\ket{0}$ state, so we can do anything we want to it.
+For example, let's apply a Hadamard gate and then measure it --- why not?
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3.5}
+\begin{quantikz}
+	\lstick{$\ket{\psi}$}
+	& \ctrl{1}
+	& \targ{1}
+  & \gate{H}
+  & \meter{}
+\\\lstick{$\ket{0}_L$}
+	& \gate{X_L} \qwbundle[alternate]{}
+  & \ctrlbundle{-1}
+  & \qwbundle[alternate]{}
+  & \qwbundle[alternate]{} \rstick{$\ket{\psi}_L$}
+\end{quantikz}
+```
+
+But now we can recall how controlled-$\texttt{NOT}$ (which is simply a controlled-$X$) interacts with the Hadamard: the circuit above is equivalent to the circuit below.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3.5}
+\begin{quantikz}
+	\lstick{$\ket{\psi}$}
+	& \ctrl{1}
+  & \gate{H}
+  & \ctrl{1}
+  & \meter{}
+\\\lstick{$\ket{0}_L$}
+	& \gate{X_L} \qwbundle[alternate]{}
+  & \qwbundle[alternate]{}
+  & \gate{Z_L} \qwbundle[alternate]{}
+  & \qwbundle[alternate]{} \rstick{$\ket{\psi}_L$}
+\end{quantikz}
+```
+
+This is a circuit that we could build, since the only "new" gates that it uses are $X_L$ and $Z_L$, which we have many descriptions (i.e. implementations) for thanks to the stabiliser formalism.
+If we really like, however, we could go one step further and replace the controlled-$Z_L$ with a $Z_L$ after the measurement:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3.5}
+\begin{quantikz}
+	\lstick{$\ket{\psi}$}
+	& \ctrl{1}
+  & \gate{H}
+  & \meter{} \vcw{1}
+\\\lstick{$\ket{0}_L$}
+	& \gate{X_L} \qwbundle[alternate]{}
+  & \qwbundle[alternate]{}
+  & \gate{Z_L} \qwbundle[alternate]{}
+  & \qwbundle[alternate]{} \rstick{$\ket{\psi}_L$}
+\end{quantikz}
+```
 
 
 
@@ -892,9 +979,20 @@ Ignoring the phases, the three errors are single bit-flips: $X\id\id$, $\id X\id
 <!-- TO-DO -->
 - recall $G$ and $H$ and $\mathcal{C}$
 - describe $S$
+- describe the codewords/logical states
 - describe $N(S)/S$
 - describe $P/N(S)$
 :::
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+
+
+
+## Error-correcting conditions {#error-correcting-conditions}
 
 ::: {.todo latex=""}
 <!-- TO-DO -->
