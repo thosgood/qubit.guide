@@ -661,7 +661,7 @@ When working with quantum codes, the stabiliser formalism really becomes much mo
 
 
 
-## Logical operators {#logical-operators}
+## Logical operators ... {#logical-operators}
 
 <div class="video" title="Pauli operators in error correction" data-videoid="kd3ahY55DYA"></div>
 
@@ -743,7 +743,7 @@ The diagram from Section \@ref(pauli-stabilisers) was useful in describing this 
 
 (ref:stabiliser-bisection-again-caption) The stabiliser group $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_\mathcal{S}$ which is spanned by $\ket{000}$ and $\ket{111}$.
 
-```{r stabiliser-bisection-again,engine='tikz',fig.cap='(ref:stabiliser-bisection-again-caption)',fig.width=4}
+```{r stabiliser-bisection-again,engine='tikz',fig.cap='(ref:stabiliser-bisection-again-caption)',fig.width=3.5}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
 \newcommand{\id}{\mathbf{1}}
@@ -786,12 +786,8 @@ Since we have chosen a specific basis for each of these subspaces, we should giv
 The (orthogonal) basis vectors of the codespace $\mathcal{C}=V_\mathcal{S}$ are called **logical states**.
 :::
 
-::: {.todo latex=""}
-<!-- TODO -->
-mention that these are generally superpositions (but we'll call them "codewords" sometimes anyway), so we see that the three-qubit code is "essentially classical" (in some sense WHICH YOU SHOULD MAKE PRECISE)
-:::
-
-In our example then, we have two logical states: **logical $0$** and **logical $1$**, which we denote by
+In general^[Note that the logical states for the three-qubit code are actually *not* superpositions. This reflects the fact that this code is really just a classical repetition code --- it only protects against one type of error --- embedded into the quantum world.], the logical states will be *superpositions* of states, but we still sometimes refer to them as codewords.
+In our example of the three-qubit code, we have two logical states: **logical $0$** and **logical $1$**, which we denote by
 $$
 	\begin{aligned}
 		\ket{0}_L
@@ -853,7 +849,7 @@ $$
 
 
 
-## Logical errors {#logical-errors}
+## ... and logical errors {#logical-errors}
 
 The quotient group^[Recall that the elements of the quotient group $G/H$ are exactly the cosets of $H\triangleleft G$.] $N(\mathcal{S})/\mathcal{S}$ gave us logical operators, so the next thing to ask is what we get from the quotient group $\mathcal{P}_n/N(\mathcal{S})$.
 
@@ -864,9 +860,9 @@ The cosets of $N(\mathcal{S})$ inside $\mathcal{P}_n$ are **errors** on the code
 Again, we can write $\mathcal{P}_n$ in such a way that we can immediately read off the cosets:
 $$
 	\mathcal{P}_3
-	= \{X\id\id, \id X\id, \id\id X\} \times N(\mathcal{S}) \times \{\pm1,\pm i\}.
+	= \{\id, X\id\id, \id X\id, \id\id X\} \times N(\mathcal{S}) \times \{\pm1,\pm i\}.
 $$
-Ignoring the phases, the three errors are single bit-flips: $X\id\id$, $\id X\id$, and $\id\id X$; these errors $X_i$ map the codespace^[Since we are only considering the case of *single* bit-flips, not multiple ones, we don't need to worry about the fact that e.g. $X_2$ maps $\mathcal{C}_3$ to $\mathcal{C}_1$ as well.] $\mathcal{C}$ to the subspace $\mathcal{C}_i$, as shown in Figure \@ref(fig:errors-mapping-c-to-ci).
+Ignoring the phases, the three (non-trivial) errors are single bit-flips: $X\id\id$, $\id X\id$, and $\id\id X$; these errors $X_i$ map the codespace^[Since we are only considering the case of *single* bit-flips, not multiple ones, we don't need to worry about the fact that e.g. $X_2$ maps $\mathcal{C}_3$ to $\mathcal{C}_1$ as well.] $\mathcal{C}$ to the subspace $\mathcal{C}_i$, as shown in Figure \@ref(fig:errors-mapping-c-to-ci).
 
 (ref:errors-mapping-c-to-ci-caption) The single bit-flip error $X_i$ maps the codespace $\mathcal{C}$ to the subspace $\mathcal{C}_i$, e.g. $X_2\ket{000}=\ket{010}\in\mathcal{C}_2$.
 
@@ -884,12 +880,68 @@ Ignoring the phases, the three errors are single bit-flips: $X\id\id$, $\id X\id
 \end{tikzpicture}
 ```
 
-::: {.todo latex=""}
-<!-- TO-DO: -->
-- explain "The structure within the normaliser is mirrored across each of the cosets"
-:::
+These errors also let us understand how the structure of the codespace is mirrored across each of the cosets.
+In other words, we picked $\mathcal{C}$ to be our codespace, but what if we had instead picked $\mathcal{C}_1$?
+Well, we would get exactly the same code, just expressed in a different way, and this "different way" is described entirely by the error $X\id\id$.
+What we mean by this is the following:^[Recall that conjugation expresses a change of basis: given an invertible $(n\times n)$ matrix $B$, we can turn a basis $\{v_1,\ldots,v_n\}$ into a new basis $\{Bv_1,\ldots,Bv_n\}$, and to write any operator $A$ in this new basis we simply calculate $BAB^{-1}$ ("undo the change of basis, apply $A$, then redo the change of basis").]
 
-(ref:decomposition-of-pauli-on-codespaces-caption) A visualisation of how the stabilisers, normalisers, and arbitrary Pauli operators act on the codespace decomposition: stabilisers act as the identity, normalisers move the subspace around within itself, and Pauli operators move the whole space around without any regard for the subspace decomposition.
+- We can write $\mathcal{C}_1$ as the stabiliser space of $\mathcal{S}$ conjugated by $X\id\id$, i.e.
+	$$
+		\begin{aligned}
+			(X\id\id)\langle ZZ\id, \id ZZ \rangle(X\id\id)^{-1}
+			&= \langle (X\id\id)(ZZ\id)(X\id\id)^{-1}, (X\id\id)(\id ZZ)(X\id\id)^{-1} \rangle
+		\\&= \langle -ZZ\id, \id ZZ \rangle
+		\end{aligned}
+	$$
+	and, indeed, $\ket{100}$ and $\ket{011}$ are both stabilised by this group.
+- The logical states of $\mathcal{C}_1$ are, by definition as our chosen basis, the elements $\ket{100}$ and $\ket{011}$, but note that these are exactly the images of the logical states of $\mathcal{C}$ under the error $X\id\id$, i.e.
+	$$
+		\begin{aligned}
+			\ket{0}_{L,1}
+			&\coloneqq \ket{100}
+			= X\id\id\ket{000}
+		\\\ket{1}_{L,1}
+			&\coloneqq \ket{011}
+			= X\id\id\ket{111}
+		\end{aligned}
+	$$
+- The logical operators on $\mathcal{C}_1$ are the logical operators on $\mathcal{C}$ conjugated by $X\id\id$, i.e
+	$$
+		\begin{aligned}
+			X_{L,1}
+			&\coloneqq (X\id\id)(XXX)(X\id\id)^{-1}
+		\\&= XXX
+		\\Z_{L,1}
+			&\coloneqq (X\id\id)(ZZZ)(X\id\id)^{-1}
+		\\&= -ZZZ
+		\end{aligned}
+	$$
+	and, indeed, $X_{L,1}$ and $Z_{L,1}$ behave as expected on the new logical states, i.e.
+	$$
+		\begin{aligned}
+			X_{L,1}\colon
+			\ket{0}_{L,1}
+			&\longmapsto \ket{1}_{L,1}
+		\\\ket{1}_{L,1}
+			&\longmapsto \ket{0}_{L,1}
+		\\Z_{L,1}\colon
+			\ket{0}_{L,1}
+			&\longmapsto \ket{0}_{L,1}
+		\\\ket{1}_{L,1}
+			&\longmapsto -\ket{1}_{L,1}
+		\end{aligned}
+	$$
+	as you can check by hand.
+
+All in all, the chain of normal subgroups
+$$
+	\mathcal{S}
+	\triangleleft N(\mathcal{S})
+	\triangleleft \mathcal{P}_n
+$$
+really does describe the full structure of the code: logical states, logical operators, and errors.
+
+(ref:decomposition-of-pauli-on-codespaces-caption) A visualisation of how the stabilisers, normalisers, and arbitrary Pauli operators act on the codespace decomposition: stabilisers act as the identity, normalisers move each subspace around within itself, and Pauli operators swap subspaces around between one another.
 
 ```{r decomposition-of-pauli-on-codespaces,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:decomposition-of-pauli-on-codespaces-caption)',fig.width=8}
 \newcommand{\id}{\mathbf{1}}
@@ -986,12 +1038,13 @@ Ignoring the phases, the three errors are single bit-flips: $X\id\id$, $\id X\id
 
 In Section \@ref(the-shor-913-code), we iterated the three-qubit code to obtain the Shor $[[9,1,3]]$-code.
 We explain how this looks from the stabiliser formalism in Exercise \@ref(shor-913-exercise).
+After a small detour in Section \@ref(encoding-circuits) to study how encoding circuits can be constructed, we will return to the Steane code in Section \@ref(the-steane-713-code) and see how the stabiliser formalism allows us to write down the codewords without much difficulty at all.
 
 
 
 
 
-## Other ways of encoding
+## Encoding circuits {#encoding-circuits}
 
 There are many other ways in which an unknown state $\ket{\psi}$ of a single qubit can be encoded into an $n$-qubit CSS code.
 For example, imagine that we were able to construct the following circuit:
