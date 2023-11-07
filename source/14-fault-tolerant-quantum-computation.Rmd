@@ -463,7 +463,7 @@ $$
   \\+ & \id & Z & Z & Z & \id & \id & Z
   \end{array}
 $$
-The result is a $[[7,1,3]]$-code, generally attributed to Steane and thus known as the **Steane code**, or simply the **seven-qubit code**, that encodes one logical qubit across seven physical ones, and that is able to correct for any single-qubit Pauli error.
+The result is a $[[7,1,3]]$-code, generally attributed to  and thus known as the **Steane code**, or simply the **seven-qubit code**, that encodes one logical qubit across seven physical ones, and that is able to correct for any single-qubit Pauli error.
 We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:tanner-graph-713).
 
 (ref:tanner-graph-713-caption) The Tanner graph of the Steane code. For CSS codes, there are two types of "parity checks": one for detecting $X$ errors (solid lines), and one for $Z$ errors (dashed lines).
@@ -769,7 +769,7 @@ The diagram from Section \@ref(pauli-stabilisers) was useful in describing this 
 \end{tikzpicture}
 ```
 
-To use the terminology of error correction codes, we are taking our codespace to be
+To use the terminology of error correction codes, we are taking our codespace to be^[We want to encode a single qubit, which lives in a two-dimensional space (spanned by $\ket{0}$ and $\ket{1}$), so it makes sense that we want our codespace to also be two-dimensional.]
 $$
 	\mathcal{C}
 	= \langle\ket{000},\ket{111}\rangle
@@ -783,11 +783,12 @@ and the total eight-dimensional Hilbert space of three qubits is decomposed into
 Since we have chosen a specific basis for each of these subspaces, we should give things a name.
 
 ::: {.idea latex=""}
-The (orthogonal) basis vectors of the codespace $\mathcal{C}=V_\mathcal{S}$ are called **logical states**.
+The (orthogonal) basis vectors of the codespace $\mathcal{C}=V_\mathcal{S}$ are called **logical states**, and are usually taken to be the encodings of $\ket{0}$ and $\ket{1}$.
 :::
 
 In general^[Note that the logical states for the three-qubit code are actually *not* superpositions. This reflects the fact that this code is really just a classical repetition code --- it only protects against one type of error --- embedded into the quantum world.], the logical states will be *superpositions* of states, but we still sometimes refer to them as codewords.
-In our example of the three-qubit code, we have two logical states: **logical $0$** and **logical $1$**, which we denote by
+
+In our example of the three-qubit code, we have the two logical states **logical $0$** and **logical $1$**, which we denote by
 $$
 	\begin{aligned}
 		\ket{0}_L
@@ -1038,8 +1039,7 @@ really does describe the full structure of the code: logical states, logical ope
 "Hence when we encode, we encode [...] to the stabiliser state of $\mathcal{S}$ and $\pm Z_L$."
 :::
 
-In Section \@ref(the-shor-913-code), we iterated the three-qubit code to obtain the Shor $[[9,1,3]]$-code.
-We explain how this looks from the stabiliser formalism in Exercise \@ref(shor-913-exercise).
+In Section \@ref(the-shor-913-code), we iterated the three-qubit code to obtain the Shor $[[9,1,3]]$-code, and we saw more on how this looks from the stabiliser formalism in Exercise \@ref(more-on-shor-913).
 But now let's look at how simple it is to study the Steane code with this approach.
 
 
@@ -1049,11 +1049,84 @@ But now let's look at how simple it is to study the Steane code with this approa
 
 <div class="video" title="Seven-qubit code and transversal constructions" data-videoid="vZ5p_fJbTMc"></div>
 
+At the end of Section \@ref(quantum-codes-from-classical) we showed that the CSS construction could be applied to the Hamming $[7,4,3]$-code over itself to obtain the so-called Steane $[[7,1,3]]$-code, which has generators $G_1,\ldots,G_6$ given by the rows in the matrix^[Note that this matrix is just like two copies of the generator matrix for the Hamming $[7,4,3]$-code stacked on top of one another: the first with $X$-type stabilisers, and the second with $Z$-type stabilisers.]
+$$
+  \begin{bmatrix}
+    X & X & \id & X & X & \id & \id
+  \\X & \id & X & X & \id & X & \id
+  \\\id & X & X & X & \id & \id & X
+  \\Z & Z & \id & Z & Z & \id & \id
+  \\Z & \id & Z & Z & \id & Z & \id
+  \\\id & Z & Z & Z & \id & \id & Z
+  \end{bmatrix}.
+$$
+
+Now, what are the logical states for this code?
+Well, by definition they should be basis states for the stabiliser space $V_{\langle G_1,\ldots,G_6\rangle}$, but the "real" motivation for them is that they should just be the encodings of $\ket{0}$ and $\ket{1}$ in the code.
+So the real question is just *how do we actually encode states with a code described by the stabiliser formalism?*
+But we have already secretly answered this in Exercise \@ref(stabilisers-and-projectors)!
+This exercise shows that the projector onto the $\pm1$-eigenspace of any $G_i$ is given by $\frac{1}{2}(\id\pm G_i)$.
+
+::: {.idea latex=""}
+Given a stabiliser code with stabiliser generators $G_1,\ldots,G_s$, the projector onto the codespace (i.e. the encoding) is given by
+$$
+	\prod_{i=1}^s \frac{1}{2}(\id+G_i).
+$$
+:::
+
+In other words, we want to define
+$$
+	\ket{0}_L
+	\coloneqq \frac{1}{\sqrt{2^3}} \left(\prod_{i=1}^6 (\id+G_i)\right) \ket{0}^{\otimes7}
+$$
+since this will be in the $+1$-eigenspace of all of the $G_i$, which is exactly the stabiliser space $V_{\langle G_1,\ldots,G_6\rangle}$.
+Similarly, we set
+$$
+	\ket{1}_L
+	\coloneqq \frac{1}{\sqrt{2^3}} \left(\prod_{i=1}^6 (\id+G_i)\right) \ket{1}^{\otimes7}.
+$$
+
+One thing to note is that the order of the product over the $G_i$ doesn't matter here: by design, every stabiliser generator commutes with every other^[We need all the generators to commute in order for the simultaneous $+1$-eigenspace to exist!], since they "overlap" (i.e. have non-identity terms) in an *even* number of positions, so any $-1$ signs arising from anti-commutativity will cancel out with one another.
+For $\ket{0}_L$, when we expand out the product $\prod_i(\id+G_i)$, we can simply move all the $Z$-type terms to the right and then forget them, since $Z$ acts trivially on $\ket{0}$.
+This means that we're left with only the $X$-type terms, and there are eight of these:
+$$
+	\begin{aligned}
+		\ket{0}_L
+		\coloneqq \frac{1}{\sqrt{8}} \big(
+		& \id + G_1 + G_2 + G_3
+	\\+& G_1G_2 + G_1G_3 + G_2G_3 + G_1G_2G_3
+		\big) \ket{0000000}
+	\\= \frac{1}{\sqrt{8}} \big(
+		&\ket{0000000} + \ket{1101100} + \ket{1011010} + \ket{0111001}
+	\\+&\ket{0110110} + \ket{1010101} + \ket{1100011} + \ket{0001111}
+		\big).
+	\end{aligned}
+$$
+You can check by hand that this superposition is indeed invariant under each of the $G_i$.
+Now, we could perform a similar calculation for $\ket{1}_L$, but since we have a CSS code we already know that $X_L=X^{\otimes7}$ is an implementation for the logical $X$ operator, so we can simply use this:
+$$
+	\begin{aligned}
+		\ket{1}_L
+		&\coloneqq X_L\ket{0}_L
+	\\&= \frac{1}{\sqrt{8}} \big(
+		\ket{1111111} + \ket{0010011} + \ket{0100101} + \ket{1000110}
+	\\&\phantom{\frac{1}{\sqrt{8}}\big(}
+		+\ket{1001001} + \ket{0101010} + \ket{0011100} + \ket{1110000}
+		\big).
+	\end{aligned}
+$$
+
+We know what the logical states are, and by the previous discussions we also know what the logical operators are: cosets of $\langle G_1,\ldots,G_6\rangle$ within its stabiliser in $\mathcal{P}_7$.
+For example, not only is $X^{\otimes7}$ an implementation of $X_L$, but so too is^[You can check this by hand: see that $\id\id X\id\id XX$ sends $\ket{0}_L$ to $\ket{1}_L$.] $\id\id X\id\id XX$.
+
+Finally, let's look at the errors, which are really the whole reason we care about these stabiliser codes in the first place!
+
+
 ::: {.todo latex=""}
 <!-- TO-DO -->
 - recall $G$ and $H$ and $\mathcal{C}$
 - describe $S$
-- describe the logical states **!!! is it true that they are basis vectors? !!!**
+- describe the logical states
 - describe $N(S)/S$
 - describe $P/N(S)$
 :::
