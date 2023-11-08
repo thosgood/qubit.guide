@@ -1058,8 +1058,9 @@ $$
   \\Z & Z & \id & Z & Z & \id & \id
   \\Z & \id & Z & Z & \id & Z & \id
   \\\id & Z & Z & Z & \id & \id & Z
-  \end{bmatrix}.
+  \end{bmatrix}
 $$
+and codespace given by the corresponding stabiliser space $\mathcal{C}=V_{\langle G_1,\ldots,G_6\rangle}$.
 
 Now, what are the logical states for this code?
 Well, by definition they should be basis states for the stabiliser space $V_{\langle G_1,\ldots,G_6\rangle}$, but the "real" motivation for them is that they should just be the encodings of $\ket{0}$ and $\ket{1}$ in the code.
@@ -1116,19 +1117,27 @@ $$
 	\end{aligned}
 $$
 
+::: {.todo latex=""}
+<!-- TO-DO -->
+Note that these codewords are different from those on e.g. Wikipedia
+:::
+
 We know what the logical states are, and by the previous discussions we also know what the logical operators are: cosets of $\langle G_1,\ldots,G_6\rangle$ within its stabiliser in $\mathcal{P}_7$.
 For example, not only is $X^{\otimes7}$ an implementation of $X_L$, but so too is^[You can check this by hand: see that $\id\id X\id\id XX$ sends $\ket{0}_L$ to $\ket{1}_L$.] $\id\id X\id\id XX$.
 
 Finally, let's look at the errors, which are really the whole reason we care about these stabiliser codes in the first place!
-
+This is going to be generalising the work we did in Section \@ref(measuring-pauli-stabilisers), where we constructed circuits to project onto stabiliser spaces.
 
 ::: {.todo latex=""}
-<!-- TO-DO -->
-- recall $G$ and $H$ and $\mathcal{C}$
-- describe $S$
-- describe the logical states
-- describe $N(S)/S$
-- describe $P/N(S)$
+<!-- TO-DO: suffices to measure X-type stabilisers because we're working in a basis that lives in the Z-eigenstate; if we switched to the +/- basis then we'd just measure the Z-type stabilisers instead -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: give the circuit for encoding logical zero (which is just the Pauli projection); describe how logical X commutes with all the X-type stabilisers so if we start with a logical X then we'd end with a logical 1; generalise this with a logical c-NOT to encode an arbitrary psi -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: mention the unitary implementation of this (no projections/measurements), which is useful for complexity theory stuff but not so much in practice (it's not fault tolerant!) -->
 :::
 
 ::: {.todo latex=""}
@@ -1143,6 +1152,11 @@ Finally, let's look at the errors, which are really the whole reason we care abo
 
 There are many other ways in which an unknown state $\ket{\psi}$ of a single qubit can be encoded into an $n$-qubit CSS code.
 For example, imagine that we were able to construct the following circuit:
+
+::: {.todo latex=""}
+<!-- TO-DO: footnote here: above we did "logical c-NOT then stabilisers" but we said that they commute; here we apply that and are switching the order (note that we first prepare logical 0) -->
+:::
+
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
 \begin{quantikz}
 	\lstick{$\ket{\psi}$}
@@ -1221,6 +1235,10 @@ If we really like, however, we could go one step further and replace the control
   & \qwbundle[alternate]{} \rstick{$\ket{\psi}_L$}
 \end{quantikz}
 ```
+
+::: {.todo latex=""}
+<!-- TO-DO: fault-tolerance is only as good as its weakest part, and whenever you encode a single state then you have a distance 1 scenario, so it's bad!! basically, in practice, we don't want to encode some arbitrary ket{psi}, but instead start with logical 0 and then do all our logic there -->
+:::
 
 
 
