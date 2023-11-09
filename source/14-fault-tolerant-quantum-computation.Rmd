@@ -469,7 +469,7 @@ $$
   \end{array}
 $$
 The result is a $[[7,1,3]]$-code, generally attributed to  and thus known as the **Steane code**, or simply the **seven-qubit code**, that encodes one logical qubit across seven physical ones, and that is able to correct for any single-qubit Pauli error.
-We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:tanner-graph-713).
+We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:tanner-graph-713), but we will return to a proper in-depth study of this code in Section \@ref(the-steane-713-code).
 
 (ref:tanner-graph-713-caption) The Tanner graph of the Steane code. For CSS codes, there are two types of "parity checks": one for detecting $X$ errors (solid lines), and one for $Z$ errors (dashed lines).
 
@@ -518,143 +518,6 @@ We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:
 	\draw (q6.south) to (s5.north);
 	\draw (q7.south) to (s6.north);
 \end{tikzpicture}
-```
-
-A round of error correction can be performed by measuring each of the stabilisers in the standard way:
-
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=6}
-\begin{quantikz}
-	\lstick[wires=6]{$\ket{0}^{\otimes6}$}
-	& \gate{H}
-	& \ctrl{10}
-	& \qw
-	& \qw
-	& \qw
-	& \qw
-	& \qw
-	& \gate{H}
-	& \meter{}
-\\[-1.5em]
-	& \gate{H}
-	& \qw
-	& \ctrl{10}
-	& \qw
-	& \qw
-	& \qw
-	& \qw
-	& \gate{H}
-	& \meter{}
-\\[-1.5em]
-	& \gate{H}
-	& \qw
-	& \qw
-	& \ctrl{10}
-	& \qw
-	& \qw
-	& \qw
-	& \gate{H}
-	& \meter{}
-\\[-1.5em]
-	& \gate{H}
-	& \qw
-	& \qw
-	& \qw
-	& \ctrl{7}
-	& \qw
-	& \qw
-	& \gate{H}
-	& \meter{}
-\\[-1.5em]
-	& \gate{H}
-	& \qw
-	& \qw
-	& \qw
-	& \qw
-	& \ctrl{7}
-	& \qw
-	& \gate{H}
-	& \meter{}
-\\[-1.5em]
-	& \gate{H}
-	& \qw
-	& \qw
-	& \qw
-	& \qw
-	& \qw
-	& \ctrl{7}
-	& \gate{H}
-	& \meter{}
-\\[-1em]
-	& \qw
-	& \gate{X}
-	& \gate{X}
-	& \qw
-	& \gate{Z}
-	& \gate{Z}
-	& \qw
-	& \qw
-	& \qw
-\\[-1em]
-	& \qw
-	& \gate{X}
-	& \qw
-	& \gate{X}
-	& \gate{Z}
-	& \qw
-	& \gate{Z}
-	& \qw
-	& \qw
-\\[-1em]
-	& \qw
-	& \qw
-	& \gate{X}
-	& \gate{X}
-	& \qw
-	& \gate{Z}
-	& \gate{Z}
-	& \qw
-	& \qw
-\\[-1em]
-	& \qw
-	& \gate{X}
-	& \gate{X}
-	& \gate{X}
-	& \gate{Z}
-	& \gate{Z}
-	& \gate{Z}
-	& \qw
-	& \qw
-\\[-1em]
-	& \qw
-	& \gate{X}
-	& \qw
-	& \qw
-	& \gate{Z}
-	& \qw
-	& \qw
-	& \qw
-	& \qw
-\\[-1em]
-	& \qw
-	& \qw
-	& \gate{X}
-	& \qw
-	& \qw
-	& \gate{Z}
-	& \qw
-	& \qw
-	& \qw
-\\[-1em]
-	& \qw
-	& \qw
-	& \qw
-	& \gate{X}
-	& \qw
-	& \qw
-	& \gate{Z}
-	& \qw
-	& \qw
-\end{quantikz}
 ```
 
 Not all quantum codes arise from combining classical ones like this^[For example, the five-qubit code, which is the smallest code that can correct for all possible single errors on a single qubit, is demonstrably *not* a CSS code, as can be shown by the non-existence of something called a **transversal** controlled-$\texttt{NOT}$ gate.], and even for those that do, working with the generator and parity-check matrices can often be cumbersome.
@@ -1060,15 +923,15 @@ $$
   \\\id & Z & Z & Z & \id & \id & Z
   \end{bmatrix}
 $$
-and codespace given by the corresponding stabiliser space $\mathcal{C}=V_{\langle G_1,\ldots,G_6\rangle}$.
+and codespace given by the corresponding stabiliser space $\mathcal{C}=V_\mathcal{S}$, where $\mathcal{S}=\langle G_1,\ldots,G_6\rangle$.
 
 Now, what are the logical states for this code?
 Well, by definition they should be basis states for the stabiliser space $V_{\langle G_1,\ldots,G_6\rangle}$, but the "real" motivation for them is that they should just be the encodings of $\ket{0}$ and $\ket{1}$ in the code.
-So the real question is just *how do we actually encode states with a code described by the stabiliser formalism?*
+So the question becomes just *how do we actually encode states with a code described by the stabiliser formalism?*
 But we have already secretly answered this in Exercise \@ref(stabilisers-and-projectors): the projector onto the $\pm1$-eigenspace of any $G_i$ is given by $\frac{1}{2}(\id\pm G_i)$.
 
 ::: {.idea latex=""}
-Given a stabiliser code with stabiliser generators $G_1,\ldots,G_s$, the projector onto the codespace (i.e. the encoding) is given by
+Given stabiliser generators $G_1,\ldots,G_s$, the projector onto the stabiliser space $V_{\langle G_1,\ldots,G_n\rangle}$ (i.e. the encoding for the corresponding stabiliser code) is given by
 $$
 	\prod_{i=1}^s \frac{1}{2}(\id+G_i).
 $$
@@ -1086,7 +949,7 @@ $$
 	\coloneqq \frac{1}{\sqrt{2^3}} \left(\prod_{i=1}^6 (\id+G_i)\right) \ket{1}^{\otimes7}.
 $$
 
-One thing to note is that the order of the product over the $G_i$ doesn't matter here: by design, every stabiliser generator commutes with every other^[We need all the generators to commute in order for the simultaneous $+1$-eigenspace to exist!], since they "overlap" (i.e. have non-identity terms) in an *even* number of positions, so any $-1$ signs arising from anti-commutativity will cancel out with one another.
+One thing to note is that the order of the product over the $G_i$ doesn't matter here: by design, every stabiliser generator commutes with every other^[We *need* all the generators to commute in order for the simultaneous $+1$-eigenspace to exist!], since they "overlap" (i.e. have non-identity terms) in an *even* number of positions, so any $-1$ signs arising from anti-commutativity will cancel out with one another.
 So for $\ket{0}_L$, when we expand out the product $\prod_i(\id+G_i)$, we can simply move all the $Z$-type terms to the right and then forget them, since $Z$ acts trivially on $\ket{0}$.
 
 This means that we're left with only the $X$-type terms, and there are eight of these:^[If you look up the codewords for the Steane code elsewhere, you might find different expressions, but this is simply an artifact of using a different indexing convention, i.e. of expressing the parity check matrix of the Hamming code in a different basis.]
@@ -1179,75 +1042,172 @@ If we are trying to design things for the real world, where qubits can undergo d
 We have already done the hard work for this though, in Section \@ref(measuring-pauli-stabilisers), when we constructed circuits to project onto Pauli stabiliser spaces.
 This gives us the encoding circuit in Figure \@ref(fig:projection-steane-encoding).
 
-(ref:projection-steane-encoding-caption) Another possible encoding circuit for the Steane code, which uses three ancilla bits to ensure fault tolerance, but is non-unitary (since it involves measurement). The measurements of the ancilla bits are used to apply the necessary $Z$-type corrections.
+(ref:projection-steane-encoding-caption) Another possible encoding circuit for the Steane code, which uses three ancilla bits to ensure fault tolerance when encoding arbitrary states, but is non-unitary (since it involves measurement). The measurements of the ancilla bits can be used to apply the necessary $Z$-type corrections.
 
 ```{r projection-steane-encoding,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5,fig.cap='(ref:projection-steane-encoding-caption)'}
 \begin{quantikz}
-	\lstick{$\ket{0}$}
+	\lstick[wires=3]{$\ket{0}^{\otimes3}$}
 	& \gate{H}
 	& \ctrl{7}
 	& \qw
 	& \qw
 	& \gate{H}
-	& \meter{} \vcw{1}
-\\\lstick{$\ket{0}$}
-	& \gate{H}
+	& \meter{}
+\\& \gate{H}
 	& \qw
 	& \ctrl{7}
 	& \qw
 	& \gate{H}
-	& \meter{} \vcw{1}
-\\\lstick{$\ket{0}$}
-	& \gate{H}
+	& \meter{}
+\\& \gate{H}
 	& \qw
 	& \qw
 	& \ctrl{7}
 	& \gate{H}
-	& \meter{} \vcw{7}
+	& \meter{}
 \\\lstick[wires=7]{$\ket{0}^{\otimes7}$}
 	& \qw
 	& \gate{X}
 	& \gate{X}
 	& \qw
 	& \qw
-	& \gate{Z}
 	& \qw \rstick[wires=7]{$\ket{0}_L$}
 \\& \qw
 	& \gate{X}
 	& \qw
 	& \gate{X}
 	& \qw
-	& \gate{Z}
 	& \qw
 \\& \qw
 	& \qw
 	& \gate{X}
 	& \gate{X}
 	& \qw
-	& \gate{Z}
 	& \qw
 \\& \qw
 	& \gate{X}
 	& \gate{X}
 	& \gate{X}
 	& \qw
-	& \gate{Z}
 	& \qw
 \\& \qw
 	& \gate{X}
 	& \qw
 	& \qw
 	& \qw
-	& \gate{Z}
 	& \qw
 \\& \qw
 	& \qw
 	& \gate{X}
 	& \qw
 	& \qw
-	& \gate{Z}
 	& \qw
 \\& \qw
+	& \qw
+	& \qw
+	& \gate{X}
+	& \qw
+	& \qw
+\end{quantikz}
+```
+
+::: {.todo latex=""}
+<!-- TO-DO: here the only possible error when just looking at \ket{0} is a global phase, so we won't worry about actually making use of the fault-tolerant capabilities of this encoding circuit until we talk about encoding arbitrary states in Section \@ref(encoding-arbitrary-states) -->
+:::
+
+Finally, let's look at the errors, which are arguably the main reason we care about these stabiliser codes in the first place.
+
+::: {.todo latex=""}
+<!-- TO-DO: ok, now what about detecting/correcting errors when we've encoded a state and are actually "doing" computation? -->
+:::
+
+
+
+
+
+## Encoding arbitrary states {#encoding-arbitrary-states}
+
+::: {.todo latex=""}
+<!-- TO-DO: fault-tolerance is only as good as its weakest part, and whenever you encode a single state then you have a distance 1 scenario, so it's bad!! basically, in practice, we don't want to encode some arbitrary ket{psi}, but instead start with logical 0 and then do all our logic there -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: explain how logical X commutes with all the X-type stabilisers so if we start with a logical X then we'd end with a logical 1; generalise this with a logical c-NOT to encode an arbitrary psi using the circuit from Figure \@ref(projection-steane-encoding) -->
+:::
+
+(ref:projection-arbitrary-steane-encoding-caption) **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO-DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+
+```{r projection-arbitrary-steane-encoding,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5,fig.cap='(ref:projection-arbitrary-steane-encoding-caption)'}
+\begin{quantikz}
+	\lstick[wires=3]{$\ket{0}^{\otimes3}$}
+	& \gate{H}
+	& \ctrl{7}
+	& \qw
+	& \qw
+	& \gate{H}
+	& \meter{} \vcw{1}
+\\& \gate{H}
+	& \qw
+	& \ctrl{7}
+	& \qw
+	& \gate{H}
+	& \meter{} \vcw{1}
+\\& \gate{H}
+	& \qw
+	& \qw
+	& \ctrl{7}
+	& \gate{H}
+	& \meter{} \vcw{7}
+\\\lstick{$\ket{0}$}
+	& \qw
+	& \gate{X}
+	& \gate{X}
+	& \qw
+	& \qw
+	& \gate{Z}
+	& \qw \rstick[wires=7]{$\ket{\psi}_L$}
+\\\lstick{$\ket{0}$}
+	& \qw
+	& \gate{X}
+	& \qw
+	& \gate{X}
+	& \qw
+	& \gate{Z}
+	& \qw
+\\\lstick{$\ket{\psi}$}
+	& \ctrl{4}
+	& \qw
+	& \gate{X}
+	& \gate{X}
+	& \qw
+	& \gate{Z}
+	& \qw
+\\\lstick{$\ket{0}$}
+	& \qw
+	& \gate{X}
+	& \gate{X}
+	& \gate{X}
+	& \qw
+	& \gate{Z}
+	& \qw
+\\\lstick{$\ket{0}$}
+	& \qw
+	& \gate{X}
+	& \qw
+	& \qw
+	& \qw
+	& \gate{Z}
+	& \qw
+\\\lstick{$\ket{0}$}
+	& \gate{X}
+	& \qw
+	& \gate{X}
+	& \qw
+	& \qw
+	& \gate{Z}
+	& \qw
+\\\lstick{$\ket{0}$}
+	& \gate{X}
 	& \qw
 	& \qw
 	& \gate{X}
@@ -1257,32 +1217,13 @@ This gives us the encoding circuit in Figure \@ref(fig:projection-steane-encodin
 \end{quantikz}
 ```
 
+The three measurements in the encoding circuit in Figure \@ref(fig:projection-steane-encoding) allow us to correct for any single-qubit error in the encoding process, just as we did in Section \@ref(measuring-pauli-stabilisers), using the lookup table from Section \@ref(quantum-codes-from-classical).
+If we measure $(+++)$, then no error has occurred, but if we measure, say, $(-++)$, then we know that the error $Z_5$ (a $Z$ error on the $j$-th qubit) has affected our encoding, and so we must correct for this.
+But there is some ambiguity here, described exactly by the cosets we've been looking at throughout: we have said that errors correspond to *cosets* of $N(\mathcal{S})$ inside $\mathcal{P}_n$, so which representative of $Z_5\times N(\mathcal{S})$ should we pick to correct with?
+Let's think carefully.
+
 ::: {.todo latex=""}
 <!-- TO-DO: recall how we use the three ancilla measurements to apply $Z$-corrections -->
-:::
-
-Finally, let's look at the errors, which are arguably the main reason we care about these stabiliser codes in the first place.
-
-::: {.todo latex=""}
-<!-- TO-DO: ok, now what about detecting/correcting errors when we've encoded a state and are actually "doing" computation? -->
-:::
-
-::: {.todo latex=""}
-<!-- TO-DO -->
-:::
-
-
-
-
-
-## Encoding circuits {#encoding-circuits}
-
-::: {.todo latex=""}
-<!-- TO-DO: fault-tolerance is only as good as its weakest part, and whenever you encode a single state then you have a distance 1 scenario, so it's bad!! basically, in practice, we don't want to encode some arbitrary ket{psi}, but instead start with logical 0 and then do all our logic there -->
-:::
-
-::: {.todo latex=""}
-<!-- TO-DO: explain how logical X commutes with all the X-type stabilisers so if we start with a logical X then we'd end with a logical 1; generalise this with a logical c-NOT to encode an arbitrary psi using the circuit from Figure \@ref(projection-steane-encoding) -->
 :::
 
 There are many other ways in which an unknown state $\ket{\psi}$ of a single qubit can be encoded into an $n$-qubit CSS code.
@@ -1313,7 +1254,7 @@ $$
 	\\&\longmapsto \ket{0}(\alpha\ket{0}_L + \beta\ket{1}_L).
 	\end{aligned}
 $$
-But we still need to figure out how to actually implement this circuit using only gates that we already know about, namely $X_L$ and $Z_L$.
+But it would be much nicer if we could build this circuit out of the logical operators that we have been studying so much: $X_L$ and $Z_L$.
 
 The first is reasonably simple: if the control qubit is in state $\ket{1}$, then we want to apply $X_L$ to the target.
 Since $X_L$ can be^[If we want to keep the circuit as simple as possible, then we should choose the smallest weight representative of $X_L$, which might not be just a tensor product of all $X$ operators. For example, in the seven-qubit code there is an implementation of $X_L$ of weight $3$.] expressed as a tensor product of Pauli $X$ operators, this means that the controlled-$X_L$ is just a bunch of controlled-$\texttt{NOT}$ gates, each controlled by the top qubit, and targeting each of the qubits of the encoded state.
@@ -1354,7 +1295,7 @@ But now we can recall how controlled-$\texttt{NOT}$ (which is simply a controlle
 \end{quantikz}
 ```
 
-This is a circuit that we could build, since the only "new" gates that it uses are $X_L$ and $Z_L$, which we have many descriptions (i.e. implementations) for thanks to the stabiliser formalism.
+This is a circuit that we could build, since we know all about the many implementations of $X_L$ and $Z_L$ thanks to the stabiliser formalism.
 If we really like, however, we could go one step further and replace the controlled-$Z_L$ with a $Z_L$ after the measurement:
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3.5}
