@@ -5,7 +5,11 @@
 > Finally about computing in the presence of errors: **logical states**, **logical operators**, and **fault tolerance**, all via the formalism of stabilisers.
 
 ::: {.todo latex=""}
-<!-- TO-DO: basically we want to go from simple error correction to fault-tolerant computation, working with encoded states using logical operators; we will really just focus on qubit errors, but it's interesting to think about gate errors and measurement errors too! -->
+<!-- TO-DO: basically we want to go from simple error correction to fault-tolerant computation, working with encoded states using logical operators; fault-tolerance can be defined as circuits such that, if an error occurs on a single qubit, then it doesn't produce more errors in the same block; we will really just focus on qubit errors, but it's interesting to think about gate errors and measurement errors too! -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: mention practicality and NISQ devices; threshold theorem -->
 :::
 
 
@@ -1111,15 +1115,7 @@ This gives us the encoding circuit in Figure \@ref(fig:projection-steane-encodin
 \end{quantikz}
 ```
 
-::: {.todo latex=""}
-<!-- TO-DO: here the only possible error when just looking at \ket{0} is a global phase, so we won't worry about actually making use of the fault-tolerant capabilities of this encoding circuit until we talk about encoding arbitrary states in Section \@ref(encoding-arbitrary-states) -->
-:::
-
-Finally, let's look at the errors, which are arguably the main reason we care about these stabiliser codes in the first place.
-
-::: {.todo latex=""}
-<!-- TO-DO: ok, now what about detecting/correcting errors when we've encoded a state and are actually "doing" computation? -->
-:::
+Understanding the error-correction capabilities of this encoding circuit is best done when studying encoding of *arbitrary* states, which is the subject of Section \@ref(encoding-arbitrary-states).
 
 
 
@@ -1254,7 +1250,8 @@ $$
 	\\&\longmapsto \ket{0}(\alpha\ket{0}_L + \beta\ket{1}_L).
 	\end{aligned}
 $$
-But it would be much nicer if we could build this circuit out of the logical operators that we have been studying so much: $X_L$ and $Z_L$.
+But what do we actually mean by this circuit?
+We haven't defined controlled-$X_L$, nor what it means for a c-$\texttt{NOT}$ to be controlled by a logical state.
 
 The first is reasonably simple: if the control qubit is in state $\ket{1}$, then we want to apply $X_L$ to the target.
 Since $X_L$ can be^[If we want to keep the circuit as simple as possible, then we should choose the smallest weight representative of $X_L$, which might not be just a tensor product of all $X$ operators. For example, in the seven-qubit code there is an implementation of $X_L$ of weight $3$.] expressed as a tensor product of Pauli $X$ operators, this means that the controlled-$X_L$ is just a bunch of controlled-$\texttt{NOT}$ gates, each controlled by the top qubit, and targeting each of the qubits of the encoded state.
@@ -1263,7 +1260,7 @@ The second step is maybe not so obvious, but there's a trick that we can use her
 We know that the top qubit should end in the $\ket{0}$ state, so we can do anything we want to it.
 For example, let's apply a Hadamard gate and then measure it --- why not?
 
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3.5}
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3}
 \begin{quantikz}
 	\lstick{$\ket{\psi}$}
 	& \ctrl{1}
