@@ -381,13 +381,18 @@ $$
 So the measurement outcome directly corresponds to the $(r,j)$-th entry $x_{r,j}$ of the parity check matrix.
 Generally, if this $Z_j$ error occurs, then measuring for all rows $r$ will give measurement outcomes that directly correspond to the $j$-th column of the parity check matrix.
 This is just the same lookup table as in the classical case: this codespace is a distance $d$ error correcting code for single $Z$ errors.
-Using the $[7,4,3]$-Hamming code as an example again, we get the following table:
+Using the $[7,4,3]$-Hamming code as an example again, we get the following table, where we write $\pm$ to mean $\pm1$:
 
-| **Error:** | - | $Z_1$ | $Z_2$ | $Z_3$ | $Z_4$ | $Z_5$ | $Z_6$ | $Z_7$ |
-| -------: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| **$G_1$ outcome:** | $+1$ | $-1$ | $-1$ | $+1$ | $-1$ | $-1$ | $+1$ | $+1$ |
-| **$G_2$ outcome:** | $+1$ | $-1$ | $+1$ | $-1$ | $-1$ | $+1$ | $-1$ | $+1$ |
-| **$G_3$ outcome:** | $+1$ | $+1$ | $-1$ | $-1$ | $-1$ | $+1$ | $+1$ | $-1$ |
+| Error | $G_1$ outcome | $G_2$ outcome | $G_3$ outcome |
+| :-: | :-: | :-: | :-: |
+| none | $+$ | $+$ | $+$ |
+| $Z_1$ | $-$ | $-$ | $+$ |
+| $Z_2$ | $-$ | $+$ | $-$ |
+| $Z_3$ | $+$ | $-$ | $-$ |
+| $Z_4$ | $-$ | $-$ | $-$ |
+| $Z_5$ | $-$ | $+$ | $+$ |
+| $Z_6$ | $+$ | $-$ | $+$ |
+| $Z_7$ | $+$ | $+$ | $-$ |
 
 So if we measure the three stabilisers and get the measurement sequence $(-1,1,1)$ then the corresponding bit string $(1,0,0)$ in the $[7,4,3]$-Hamming code tells us that there was an error on $p_1$, i.e. a $Z_5$ error.
 
@@ -440,7 +445,7 @@ This general construction of quantum error correcting codes is known as the **CS
 Given an $[n,k,d]$-code $C_1=(G_1,H_1)$ and an $[n,k_2,d_2]$-code $C_2=(G_2,H_2)$ such that $\range(H_2^T)\subseteq\range(G_1)$, the **CSS code** $\operatorname{CSS}(C_1,C_2)$ constructed as above is an $[[n,k_1+k_2-n,\min(d_1,d_2)]]$-code.
 :::
 
-As always, one needs to be careful of conventions!
+As always, one needs to be careful of conventions.
 Many sources define a code to be the codespace $\range{G}$ itself instead of the pair $(G,H)$, and usually also replace $C_2$ with ${C_2}^\perp$ in the statement of the CSS construction.^[In particular, what we have defined would often be called the CSS construction of $C_1$ over ${C_2}^\perp$ (instead of over $C_2$).]
 
 Before moving on, let's look at the remaining details of applying the CSS construction to the $[7,4,3]$-Hamming code.
@@ -1116,14 +1121,15 @@ We know what the logical states are, and by the previous discussions we also kno
 For example, not only is $X^{\otimes7}$ an implementation of $X_L$, but so too is^[You can check this by hand: see that $\id\id X\id\id XX$ sends $\ket{0}_L$ to $\ket{1}_L$.] $\id\id X\id\id XX$.
 
 So how can we actually access these logical states in order to do computation with them?
-In other words, we need to design an **encoding circuit** that allows us to prepare the state $\ket{0}_L$.
-
-::: {.todo latex=""}
-<!-- TO-DO: suffices to measure X-type stabilisers because we're working in a basis that lives in the Z-eigenstate; if we switched to the +/- basis then we'd just measure the Z-type stabilisers instead; "hence when we encode, we encode [...] to the stabiliser state of S and \pm Z_L" -->
-:::
+In other words, we need to design an **encoding circuit** that allows us to prepare the states $\ket{0}_L$ and $\ket{1}_L$ so that we can then perform computation on them.
+As above, we will be able to neglect the $Z$-type stabilisers, because we're working in the computational basis.
+More specifically, since $\ket{0}$ and $\ket{1}$ live in the $\pm1$-eigenspace for $Z$, we don't need to further project them to the stabiliser spaces of the $Z$-type stabilisers; we start with a basis in the stabiliser space for $\pm Z$, and when we encode we obtain a basis in the stabiliser space for $\mathcal{S}$ and $\pm Z_L$.
+This sort of duality always happens for CSS codes, and note that the choice of $X$ versus $Z$ isn't "special" --- if we switch to the $\ket{\pm}$ basis then it would suffice to measure $Z$-type stabilisers, since we are already in the $\pm1$-eigenspace for $X$.
+If this seems confusing, then don't worry: look at the circuits below, follow the evolution of the input state through them, and then see what would happen if you did the same thing after adding the gates for the three missing $Z$-type stabilisers as well.
+You will see that (up to a possible global phase) nothing changes.
 
 Inspired by the classical Hamming $[7,4,3]$-code, we can think of the last three qubits in our seven-qubit encoding as the parity-check qubits, and read off the layout of the circuit from the parity-check matrix: the $(3\times3)$ identity submatrix corresponds to the controls.
-This gives us the encoding circuit of Figure \@ref(fig:unitary-steane-encoding).
+This gives us the encoding circuit in Figure \@ref(fig:unitary-steane-encoding).
 
 (ref:unitary-steane-encoding-caption) One possible encoding circuit for the Steane code, requiring no ancilla bits.
 
@@ -1171,10 +1177,7 @@ This gives us the encoding circuit of Figure \@ref(fig:unitary-steane-encoding).
 This circuit describes a unitary operation (it has no measurements), and its particularly compact form makes it very useful for certain complexity-theoretic calculations, but it has one major drawback: it is not itself fault tolerant!
 If we are trying to design things for the real world, where qubits can undergo decoherence, then we should compensate for this in *all* our quantum computation, *including* the circuits we use to prepare states.^[If you want people to be able to stay dry if it's raining, then you might build a tunnel from location A to location B so that they can use this for cover. But this isn't going to stop people from getting wet on their (necessary) journey from their home to location A!]
 We have already done the hard work for this though, in Section \@ref(measuring-pauli-stabilisers), when we constructed circuits to project onto Pauli stabiliser spaces.
-
-::: {.todo latex=""}
-<!-- TO-DO: give the circuit for encoding logical zero (which is just the Pauli projection); describe how logical X commutes with all the X-type stabilisers so if we start with a logical X then we'd end with a logical 1; generalise this with a logical c-NOT to encode an arbitrary psi -->
-:::
+This gives us the encoding circuit in Figure \@ref(fig:projection-steane-encoding).
 
 (ref:projection-steane-encoding-caption) Another possible encoding circuit for the Steane code, which uses three ancilla bits to ensure fault tolerance, but is non-unitary (since it involves measurement). The measurements of the ancilla bits are used to apply the necessary $Z$-type corrections.
 
@@ -1254,6 +1257,10 @@ We have already done the hard work for this though, in Section \@ref(measuring-p
 \end{quantikz}
 ```
 
+::: {.todo latex=""}
+<!-- TO-DO: recall how we use the three ancilla measurements to apply $Z$-corrections -->
+:::
+
 Finally, let's look at the errors, which are arguably the main reason we care about these stabiliser codes in the first place.
 
 ::: {.todo latex=""}
@@ -1270,11 +1277,19 @@ Finally, let's look at the errors, which are arguably the main reason we care ab
 
 ## Encoding circuits {#encoding-circuits}
 
+::: {.todo latex=""}
+<!-- TO-DO: fault-tolerance is only as good as its weakest part, and whenever you encode a single state then you have a distance 1 scenario, so it's bad!! basically, in practice, we don't want to encode some arbitrary ket{psi}, but instead start with logical 0 and then do all our logic there -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: explain how logical X commutes with all the X-type stabilisers so if we start with a logical X then we'd end with a logical 1; generalise this with a logical c-NOT to encode an arbitrary psi using the circuit from Figure \@ref(projection-steane-encoding) -->
+:::
+
 There are many other ways in which an unknown state $\ket{\psi}$ of a single qubit can be encoded into an $n$-qubit CSS code.
 For example, imagine that we were able to construct the following circuit:
 
 ::: {.todo latex=""}
-<!-- TO-DO: footnote here: above we did "logical c-NOT then stabilisers" but we said that they commute; here we apply that and are switching the order (note that we first prepare logical 0) -->
+<!-- TO-DO: footnote here: above we did "logical c-NOT then stabilisers" but we said that they commute; here we apply that commutativity and are switching the order (see how we first prepare logical 0, since we feed it into the bottom registers?) -->
 :::
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
@@ -1355,10 +1370,6 @@ If we really like, however, we could go one step further and replace the control
   & \qwbundle[alternate]{} \rstick{$\ket{\psi}_L$}
 \end{quantikz}
 ```
-
-::: {.todo latex=""}
-<!-- TO-DO: fault-tolerance is only as good as its weakest part, and whenever you encode a single state then you have a distance 1 scenario, so it's bad!! basically, in practice, we don't want to encode some arbitrary ket{psi}, but instead start with logical 0 and then do all our logic there -->
-:::
 
 
 
