@@ -1123,15 +1123,49 @@ Understanding the error-correction capabilities of this encoding circuit is best
 
 ## Encoding arbitrary states {#encoding-arbitrary-states}
 
-::: {.todo latex=""}
-<!-- TO-DO: fault-tolerance is only as good as its weakest part, and whenever you encode a single state then you have a distance 1 scenario, so it's bad!! basically, in practice, we don't want to encode some arbitrary ket{psi}, but instead start with logical 0 and then do all our logic there -->
-:::
+We have just seen two circuits for encoding the logical $0$ state, but what about if we want to encode an arbitrary state?
+That is, we already have some qubit in an interesting state $\ket{\psi}$ and we want to use the Steane code^[What we say here can be applied to other stabiliser codes, but we stick with the Steane code to make it easier to look at specific examples.] to protect it against decoherence.
 
-::: {.todo latex=""}
-<!-- TO-DO: explain how logical X commutes with all the X-type stabilisers so if we start with a logical X then we'd end with a logical 1; generalise this with a logical c-NOT to encode an arbitrary psi using the circuit from Figure \@ref(projection-steane-encoding) -->
-:::
+Before we look at this question, it's important to mention something about practical use here.
+As is often the case, a chain is only as strong as its weakest link, and the process of encoding a single qubit into seven qubits is a particularly error-prone process.
+In practice, it is much more desirable to start with logical $0$ and *then* do all of our computation, knowing that we are already in the "protected" world of a stabiliser code.
+However, we can use the encoding circuit from Figure \@ref(fig:projection-steane-encoding) to at least fix single-qubit errors that might arise in the process of encoding an arbitrary state.
 
-(ref:projection-arbitrary-steane-encoding-caption) **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO-DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+We know that all the $X$-type stabilisers for the Steane code have an even number of $X$ terms in them, and so will commute with any implementation of the logical $X$ operator $X_L$.
+Since the (bottom register of the) encoding circuit in Figure \@ref(fig:projection-steane-encoding) simply applies the $X$-type stabilisers to $\ket{0}^{\otimes7}$, we can use this commutativity.
+Indeed, by construction of the logical operators and the logical states, we know that encoding $\ket{0}^{\otimes7}$ to $\ket{0}_L$ and then applying $X_L$ gives us the state $\ket{1}_L$.
+But then the commutativity of $X_L$ with the $X$-type stabilisers tells us that we *also* obtain $\ket{1}_L$ if we first apply $X_L$ to $\ket{0}^{\otimes7}$ and then encode.
+Symbolically, writing $E$ to mean the operation of applying the encoding circuit,
+$$
+	\begin{aligned}
+		\ket{1}_L
+		&= X_L\ket{0}_L
+	\\&= X_LE\ket{0}^{\otimes7}
+	\\&= EX_L\ket{0}^{\otimes7}
+	\end{aligned}
+$$
+where we can pick any implementation of $X_L$ that we like, such as $X^{\otimes7}$ or $\id\id X\id\id XX$.
+This tells us that there are two ways of obtaining $\ket{1}_L$ from $\ket{0}_L$:
+
+1. apply $X_L$ and then encode
+2. encode and then apply $X_L$.
+
+Now let's generalise this, replacing the $X_L$ with a controlled version, controlled exactly by the state $\ket{\psi}$ that we wish to encode.
+If $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, then we want to construct the logical state
+$$
+	\ket{\psi}_L
+	\coloneqq \alpha\ket{0}_L + \beta\ket{1}_L.
+$$
+Let's look at the first option from above: applying $X_L$ and then encoding.
+For a simpler circuit, we can use the low-weight implementation $\id\id X\id\id XX$ of $X_L$, so that we prepare the state
+$$
+	\alpha\ket{0}_L + \beta\ket{1}_L
+	= \alpha\ket{0000000} + \beta\ket{0010011}
+$$
+and then feed this into the encoding circuit from before.
+This gives us the circuit in Figure \@ref(fig:projection-arbitrary-steane-encoding).
+
+(ref:projection-arbitrary-steane-encoding-caption) Preparing the logical version $\ket{\psi}_L$ of an arbitrary state $\ket{\psi}$ in a way that allows us to correct for any single-qubit errors in the encoding process. Here the $Z$-gates are applied depending on the outcomes of the measurements on the three ancilla bits, in the way described below.
 
 ```{r projection-arbitrary-steane-encoding,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5,fig.cap='(ref:projection-arbitrary-steane-encoding-caption)'}
 \begin{quantikz}
@@ -1222,12 +1256,13 @@ Let's think carefully.
 <!-- TO-DO: recall how we use the three ancilla measurements to apply $Z$-corrections -->
 :::
 
-There are many other ways in which an unknown state $\ket{\psi}$ of a single qubit can be encoded into an $n$-qubit CSS code.
-For example, imagine that we were able to construct the following circuit:
-
 ::: {.todo latex=""}
-<!-- TO-DO: footnote here: above we did "logical c-NOT then stabilisers" but we said that they commute; here we apply that commutativity and are switching the order (see how we first prepare logical 0, since we feed it into the bottom registers?) -->
+<!-- TO-DO: ok but point out in big letters this fact that we already said once: THERE IS NO WAY OF CHECKING THAT THE VERY FIRST STEP DIDN'T HAVE ANY ERRORS, I.E. \ket{\psi} |-> \alpha 0000000 + \beta 0010011  !!!!!!-->
+<!-- TO-DO: should we make this clear in the diagram? put a big red box around that very first step????? IF SO, UPDATE THE FIGURE CAPTION -->
 :::
+
+Now let's look at the second option from before: encoding and then applying $X_L$.
+Imagine that we were able to construct the following circuit:
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
 \begin{quantikz}
