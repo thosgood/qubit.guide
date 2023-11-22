@@ -36,7 +36,7 @@ Apart from individual unitaries or isometries, the only **correctable** channels
 
 We shall prove this fact in Section \@ref(correctable-channels)
 
-(ref:correctable-visualisation-caption) A visualisation of correctable (left) and non-correctable (right) channels. Each isometry maps the original space to a different space. If those spaces do not overlap, we can detect which one we're in and hence compensate (i.e. correct). If the two spaces partially coincide, however, then there exist states for which we *cannot* detect which isometry occurred.
+(ref:correctable-visualisation-caption) A visualisation of correctable (left) and non-correctable (right) channels. Each isometry $V_i$, which is chosen with some probability $p_i$, maps the original space to a different space. If those spaces do not overlap, we can detect which one we're in and hence compensate (i.e. correct). If the two spaces partially coincide, however, then there exist states for which we *cannot* detect which isometry occurred.
 
 ```{r correctable-visualisation,engine='tikz',fig.cap='(ref:correctable-visualisation-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
@@ -44,16 +44,16 @@ We shall prove this fact in Section \@ref(correctable-channels)
 \usetikzlibrary{decorations,shapes,fit}
 \begin{tikzpicture}
   \begin{scope}[shift={(-9,0)}] % the figure on the left-hand side
-    \node [draw, minimum width=1cm,thick,minimum height=1cm] at (0,0.75) (start) {$\mathcal{H}$};
-    \node [draw, minimum width=1cm,thick,minimum height=1cm,rotate=15] at (4,2) (a) {$\mathcal{H}_1$};
-    \node [draw, minimum width=1cm,thick,minimum height=1cm,rotate=0] at (5.5,1.5) (b) {$\mathcal{H}_2$};
-    \node [draw, minimum width=1cm,thick,minimum height=1cm,rotate=-10] at (4,0) (c) {$\mathcal{H}_3$};
-    \node [draw, minimum width=1cm,thick,minimum height=1cm,rotate=45] at (5.5,-0.5) (d) {$\mathcal{H}_4$};
+    \node [draw,primary,minimum width=1cm,thick,minimum height=1cm] at (0,0.75) (start) {$\mathcal{H}$};
+    \node [draw,primary,minimum width=1cm,thick,minimum height=1cm,rotate=15] at (4,2) (a) {$\mathcal{H}_1$};
+    \node [draw,primary,minimum width=1cm,thick,minimum height=1cm,rotate=0] at (5.5,1.5) (b) {$\mathcal{H}_2$};
+    \node [draw,primary,minimum width=1cm,thick,minimum height=1cm,rotate=-10] at (4,0) (c) {$\mathcal{H}_3$};
+    \node [draw,primary,minimum width=1cm,thick,minimum height=1cm,rotate=25] at (5.5,-0.5) (d) {$\mathcal{H}_4$};
     \draw [->,thick] (start) to[out=60,in=150] node [midway,above] {$V_1$} (a);
     \draw [->,thick] (start) to[out=20,in=-150] node [pos=0.35,above] {$V_2$} (b);
-    \draw [->,thick] (start) to[out=-60,in=-150] node [midway,above] {$V_3$} (c);
-    \draw [->,thick] (start) to[out=-80,in=-110] node [midway,above] {$V_4$} (d);
-    \node[draw=secondary,inner sep=5pt,thick,ellipse,fit=(a) (b) (c) (d),label={above:$\mathcal{H}'$}] {};
+    \draw [->,thick] (start) to[out=-60,in=-170] node [midway,above] {$V_3$} (c);
+    \draw [->,thick] (start) to[out=-80,in=-160] node [midway,above] {$V_4$} (d);
+    \node[draw=secondary,inner sep=15pt,thick,fit=(a) (b) (c) (d),label={[text=secondary]above:$\mathcal{H}'$}] {};
   \end{scope}
   \begin{scope} % the figure on the right-hand side
     \begin{scope} % plot the intersections first
@@ -72,18 +72,18 @@ We shall prove this fact in Section \@ref(correctable-channels)
       \pgftransformrotate{-10}
       \pgfnode{rectangle}{center}{}{nodename}{\pgfusepath{stroke,clip}}
       \pgftransformreset
-      \node [draw,fill=primary, minimum width=1cm,thick,minimum height=1cm,rotate=45] at (5.25,-0.5) {};
+      \node [draw,fill=primary, minimum width=1cm,thick,minimum height=1cm,rotate=25] at (5.25,-0.5) {};
     \end{scope}
-    \node [draw, minimum width=1cm,thick,minimum height=1cm] at (0,0.75) (start) {$\mathcal{H}$};
-    \node [draw, minimum width=1cm,thick,minimum height=1cm,rotate=15] at (4,2) (a) {$\mathcal{H}_1$};
-    \node [draw, minimum width=1cm,thick,minimum height=1cm,rotate=0] at (4.85,1.5) (b) {$\mathcal{H}_2$};
-    \node [draw, minimum width=1cm,thick,minimum height=1cm,rotate=-10] at (4.5,0) (c) {$\mathcal{H}_3$};
-    \node [draw, minimum width=1cm,thick,minimum height=1cm,rotate=45] at (5.25,-0.5) (d) {$\mathcal{H}_4$};
+    \node [draw,primary,minimum width=1cm,thick,minimum height=1cm] at (0,0.75) (start) {$\mathcal{H}$};
+    \node [draw,primary,minimum width=1cm,thick,minimum height=1cm,rotate=15] at (4,2) (a) {$\mathcal{H}_1$};
+    \node [draw,primary,minimum width=1cm,thick,minimum height=1cm,rotate=0] at (4.85,1.5) (b) {$\mathcal{H}_2$};
+    \node [draw,primary,minimum width=1cm,thick,minimum height=1cm,rotate=-10] at (4.5,0) (c) {$\mathcal{H}_3$};
+    \node [draw,primary,minimum width=1cm,thick,minimum height=1cm,rotate=25] at (5.25,-0.5) (d) {$\mathcal{H}_4$};
     \draw [->,thick] (start) to[out=60,in=150] node [midway,above] {$V_1$} (a);
     \draw [->,thick] (start) to[out=20,in=-150] node [pos=0.3,above] {$V_2$} (b);
-    \draw [->,thick] (start) to[out=-60,in=-150] node [midway,above] {$V_3$} (c);
-    \draw [->,thick] (start) to[out=-80,in=-110] node [midway,above] {$V_4$} (d);
-    \node[draw=secondary,inner sep=7pt,thick,ellipse,fit=(a) (b) (c) (d),label={above:$\mathcal{H}'$}] {};
+    \draw [->,thick] (start) to[out=-60,in=-170] node [midway,above] {$V_3$} (c);
+    \draw [->,thick] (start) to[out=-80,in=-160] node [midway,above] {$V_4$} (d);
+    \node[draw=secondary,inner sep=15pt,thick,fit=(a) (b) (c) (d),label={[text=secondary]above:$\mathcal{H}'$}] {};
   \end{scope}
 \end{tikzpicture}
 ```
