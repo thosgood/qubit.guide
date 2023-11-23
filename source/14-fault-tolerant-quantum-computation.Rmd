@@ -385,7 +385,7 @@ $$
 So the measurement outcome directly corresponds to the $(r,j)$-th entry $x_{r,j}$ of the parity check matrix.
 Generally, if this $Z_j$ error occurs, then measuring for all rows $r$ will give measurement outcomes that directly correspond to the $j$-th column of the parity check matrix.
 This is just the same lookup table as in the classical case: this codespace is a distance $d$ error correcting code for single $Z$ errors.
-Using the $[7,4,3]$-Hamming code as an example again, we get the following table, where we write $\pm$ to mean $\pm1$:
+Using the $[7,4,3]$-Hamming code as an example again, we get the following table of error syndromes, where we write $\pm$ to mean $\pm1$:
 
 | Error | $G_1$ outcome | $G_2$ outcome | $G_3$ outcome |
 | :-: | :-: | :-: | :-: |
@@ -527,7 +527,11 @@ We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:
 Not all quantum codes arise from combining classical ones like this^[For example, the five-qubit code, which is the smallest code that can correct for all possible single errors on a single qubit, is demonstrably *not* a CSS code, as can be shown by the non-existence of something called a **transversal** controlled-$\texttt{NOT}$ gate.], and even for those that do, working with the generator and parity-check matrices can often be cumbersome.
 Indeed, a truly *quantum* code will not have a single one of each, since this is not sufficient to deal with the purely quantum phenomena of superposition.
 For example, as the Tanner graph in Figure \@ref(fig:tanner-graph-713) shows, we have *two* parity check matrices in the case of CSS codes.
-When working with quantum codes, the stabiliser formalism really becomes much more useful --- our next aim is to justify this with some examples and explanation.
+When working with truly quantum codes, the stabiliser formalism really becomes much more useful --- our next aim is to justify this with some examples and explanation.
+
+::: {.todo latex=""}
+<!-- TO-DO: that diagram showing how Tanner graphs correspond to parity check circuits -->
+:::
 
 
 
@@ -706,7 +710,7 @@ $$
 In contrast, $XXX$ *is* the smallest weight logical $X$ implementation.
 The natural question to ask is then how to find all the implementations, but this is answered by going back to the very definition of them as coset representatives: *if $P$ is some implementation of a logical operator, then so too is $SP$ for any $S\in\mathcal{S}$*.
 In the example above, we see that $Z_1=Z\id\id$ is exactly $\id ZZ\cdot ZZZ$.
-Because of this, we should really write something like $Z_L=ZZZ\mathcal{S}$, or $Z_L=[ZZZ]$, to make clear that $ZZZ$ is just one specific representation of $Z_L$, but you will find that people often conflate implementations with logical operators themselves and simply write $Z_L=ZZZ$.
+Because of this, we should really write something like $Z_L=ZZZ\mathcal{S}$, or $Z_L=[ZZZ]$, to make clear that $ZZZ$ is just one specific representation of $Z_L$, but you will find that people often conflate implementations with the logical operators themselves and simply write $Z_L=ZZZ$.
 
 Generally, for any CSS code encoding a single qubit into $n$-qubits, we define the logical $X$ and logical $Z$ operators to be the (equivalence classes of) the tensor products of all $X$ operators or all $Z$ operators (respectively), i.e.
 $$
@@ -906,13 +910,40 @@ really does describe the full structure of the code: logical states, logical ope
 \end{tikzpicture}
 ```
 
-In Section \@ref(the-shor-913-code), we iterated the three-qubit code to obtain the Shor $[[9,1,3]]$-code, and we saw more on how this looks from the stabiliser formalism in Exercise \@ref(more-on-shor-913).
-But now let's look at how simple it is to study the Steane code with this approach.
+But this stabiliser formalism introduces some new ambiguity.
+In Section \@ref(quantum-codes-from-classical), we saw how measuring the three ancilla qubits in the $[7,4,3]$-Hamming code gave us an error syndrome that we could use to determine on which qubit a $Z$-error had occurred.
+However, the stabiliser formalism is much more general: it makes no assumptions that only single-qubit errors can occur.
+We can see this in our new definition of an error as a *coset* instead of as a single operator.
+So if the error syndrome just tells us a specific coset $E\times N(\mathcal{S})$, how do we know which representative of that coset (i.e. which specific Pauli operator) to apply to fix the error?
+The technically correct answer is short: *it depends*.
+To uncover a more useful answer, let's take a step back and look at the scenarios that we're actually trying to model here.
 
 
 
 
-## The Steane [[7,1,3]]-code {#the-steane-713-code}
+
+## Error-correcting conditions {#error-correcting-conditions}
+
+::: {.todo latex=""}
+<!-- TO-DO: ok so what's the actual scenario? can arbitrary errors occur? are they adversarial? it turns out that sometimes we can perfectly correct all errors, even if there are lots of them, and sometimes we can't, even if there are few -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: what we really need is a way of describing the scenario: we pick some stabiliser (which gives us a code), and then we have some set of errors that can occur -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: these diagrams with dots, that describe the whole scenario, with the rectangle being the code and the dots being the possible errors; talk about global phase being important for picking the coset, but then not necessary afterwards when it comes to picking a representative within that coset (hence why we draw these diagrams as a single sheet) -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+
+
+## Encoding for the Steane [[7,1,3]]-code {#the-steane-713-code}
 
 <div class="video" title="Seven-qubit code and transversal constructions" data-videoid="vZ5p_fJbTMc"></div>
 
@@ -1056,66 +1087,80 @@ This gives us the encoding circuit in Figure \@ref(fig:projection-steane-encodin
 	& \qw
 	& \qw
 	& \gate{H}
-	& \meter{}
+	& \meter{} \vcw{1}
 \\& \gate{H}
 	& \qw
 	& \ctrl{7}
 	& \qw
 	& \gate{H}
-	& \meter{}
+	& \meter{} \vcw{1}
 \\& \gate{H}
 	& \qw
 	& \qw
 	& \ctrl{7}
 	& \gate{H}
-	& \meter{}
+	& \meter{} \vcw{7}
 \\\lstick[wires=7]{$\ket{0}^{\otimes7}$}
 	& \qw
 	& \gate{X}
 	& \gate{X}
 	& \qw
 	& \qw
+	& \gate{Z}
 	& \qw \rstick[wires=7]{$\ket{0}_L$}
 \\& \qw
 	& \gate{X}
 	& \qw
 	& \gate{X}
 	& \qw
+	& \gate{Z}
 	& \qw
 \\& \qw
 	& \qw
 	& \gate{X}
 	& \gate{X}
 	& \qw
+	& \gate{Z}
 	& \qw
 \\& \qw
 	& \gate{X}
 	& \gate{X}
 	& \gate{X}
 	& \qw
+	& \gate{Z}
 	& \qw
 \\& \qw
 	& \gate{X}
 	& \qw
 	& \qw
 	& \qw
+	& \gate{Z}
 	& \qw
 \\& \qw
 	& \qw
 	& \gate{X}
 	& \qw
 	& \qw
+	& \gate{Z}
 	& \qw
 \\& \qw
 	& \qw
 	& \qw
 	& \gate{X}
 	& \qw
+	& \gate{Z}
 	& \qw
 \end{quantikz}
 ```
 
-Understanding the error-correction capabilities of this encoding circuit is best done when studying encoding of *arbitrary* states, which is the subject of Section \@ref(encoding-arbitrary-states).
+The three measurements in the encoding circuit in Figure \@ref(fig:projection-steane-encoding) allow us to correct for any single-qubit error in the encoding process, just as we did in Section \@ref(measuring-pauli-stabilisers), using the lookup table from Section \@ref(quantum-codes-from-classical).
+If we measure $(+++)$, then no error has occurred, but if we measure, say, $(-++)$, then we know that the error $Z_5$ (a $Z$ error on the $j$-th qubit) has affected our encoding, and so we must correct for this.
+<!-- But there is some ambiguity here, described exactly by the cosets we've been looking at throughout: we have said that errors correspond to *cosets* of $N(\mathcal{S})$ inside $\mathcal{P}_n$, so which representative of $Z_5\times N(\mathcal{S})$ should we pick to correct with?
+Let's think carefully. -->
+
+::: {.todo latex=""}
+<!-- TO-DO: recall how we use the three ancilla measurements to apply $Z$-corrections; TALK ABOUT COSETS -->
+:::
 
 
 
@@ -1129,7 +1174,6 @@ That is, we already have some qubit in an interesting state $\ket{\psi}$ and we 
 Before we look at this question, it's important to mention something about practical use here.
 As is often the case, a chain is only as strong as its weakest link, and the process of encoding a single qubit into seven qubits is a particularly error-prone process.
 In practice, it is much more desirable to start with logical $0$ and *then* do all of our computation, knowing that we are already in the "protected" world of a stabiliser code.
-However, we can use the encoding circuit from Figure \@ref(fig:projection-steane-encoding) to at least fix single-qubit errors that might arise in the process of encoding an arbitrary state.
 
 We know that all the $X$-type stabilisers for the Steane code have an even number of $X$ terms in them, and so will commute with any implementation of the logical $X$ operator $X_L$.
 Since the (bottom register of the) encoding circuit in Figure \@ref(fig:projection-steane-encoding) simply applies the $X$-type stabilisers to $\ket{0}^{\otimes7}$, we can use this commutativity.
@@ -1165,7 +1209,7 @@ $$
 and then feed this into the encoding circuit from before.
 This gives us the circuit in Figure \@ref(fig:projection-arbitrary-steane-encoding).
 
-(ref:projection-arbitrary-steane-encoding-caption) Preparing the logical version $\ket{\psi}_L$ of an arbitrary state $\ket{\psi}$ in a way that allows us to correct for any single-qubit errors in the *encoding* process, but *not* the *preparation* process (highlighted in red). Here the $Z$-gates are applied depending on the outcomes of the measurements on the three ancilla bits, in the way described below.
+(ref:projection-arbitrary-steane-encoding-caption) Preparing the logical version $\ket{\psi}_L$ of an arbitrary state $\ket{\psi}$ in a way that allows us to correct for any single-qubit errors in the *encoding* process, but *not* the *preparation* process (highlighted in red).
 
 ```{r projection-arbitrary-steane-encoding,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5,fig.cap='(ref:projection-arbitrary-steane-encoding-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
@@ -1247,15 +1291,6 @@ This gives us the circuit in Figure \@ref(fig:projection-arbitrary-steane-encodi
 	& \qw
 \end{quantikz}
 ```
-
-The three measurements in the encoding circuit in Figure \@ref(fig:projection-steane-encoding) allow us to correct for any single-qubit error in the encoding process, just as we did in Section \@ref(measuring-pauli-stabilisers), using the lookup table from Section \@ref(quantum-codes-from-classical).
-If we measure $(+++)$, then no error has occurred, but if we measure, say, $(-++)$, then we know that the error $Z_5$ (a $Z$ error on the $j$-th qubit) has affected our encoding, and so we must correct for this.
-But there is some ambiguity here, described exactly by the cosets we've been looking at throughout: we have said that errors correspond to *cosets* of $N(\mathcal{S})$ inside $\mathcal{P}_n$, so which representative of $Z_5\times N(\mathcal{S})$ should we pick to correct with?
-Let's think carefully.
-
-::: {.todo latex=""}
-<!-- TO-DO: recall how we use the three ancilla measurements to apply $Z$-corrections -->
-:::
 
 ::: {.todo latex=""}
 <!-- TO-DO: ok but point out in big letters this fact that we already said once: THERE IS NO WAY OF CHECKING THAT THE VERY FIRST STEP DIDN'T HAVE ANY ERRORS, I.E. \ket{\psi} |-> \alpha 0000000 + \beta 0010011  !!!!!!-->
@@ -1344,16 +1379,6 @@ If we really like, however, we could go one step further and replace the control
   & \qwbundle[alternate]{} \rstick{$\ket{\psi}_L$}
 \end{quantikz}
 ```
-
-
-
-
-
-## Error-correcting conditions {#error-correcting-conditions}
-
-::: {.todo latex=""}
-<!-- TO-DO -->
-:::
 
 
 
