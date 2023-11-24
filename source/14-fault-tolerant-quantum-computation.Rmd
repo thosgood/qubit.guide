@@ -9,6 +9,10 @@
 :::
 
 ::: {.todo latex=""}
+<!-- TO-DO: we start by continuing to talk about error correction, moving slowly towards fault-tolerance -->
+:::
+
+::: {.todo latex=""}
 <!-- TO-DO: mention practicality and NISQ devices; threshold theorem -->
 :::
 
@@ -29,7 +33,7 @@ For example, in Section \@ref(the-classical-repetition-code) we saw the three-bi
 However, the **$[7,4,3]$-Hamming code**^[In the late 1940s, [Richard Hamming](https://en.wikipedia.org/wiki/Richard_Hamming), working at Bell Labs, was exasperated by the fact that the machines running his punch cards (in these heroic times of computer science, punch cards were the state of the art data storage) were good enough to notice *when* there was an error (and halting) but not good enough to know *how* to fix it.] has the same distance, but a better rate of $R=4/7>1/3$.
 Figure \@ref(fig:hamming-code-diagrams) show diagrammatic representations of this Hamming code, which we will now study further.
 
-(ref:hamming-code-diagrams-caption) *Left:* The Venn diagram for the $[7,4,3]$-Hamming code. *Right:* The **finite projective plane** diagram for the same code. In both, $d_i$ are the **data bits** and the $p_i$ are the **parity bits**. The coloured circles (resp. coloured quadrilaterals) are called **plaquettes**.
+(ref:hamming-code-diagrams-caption) *Left:* The Venn diagram for the $[7,4,3]$-Hamming code. *Right:* The **plaquette** (or **finite projective plane**) diagram for the same code. In both, $d_i$ are the **data bits** and the $p_i$ are the **parity bits**. The coloured circles (resp. coloured quadrilaterals) are called **plaquettes**.
 
 ```{r hamming-code-diagrams,engine='tikz',fig.width=5.5,fig.cap='(ref:hamming-code-diagrams-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
@@ -211,36 +215,37 @@ There is another common way of diagrammatically representing parity-check matric
 This is a bipartite graph^[A graph (which is a collection of **nodes** and **edges** between some of them) is **bipartite** if the nodes can be split into two sets such that all the edges go from one element of the first set to one element of the second.] consisting of two types of nodes: the codeword nodes (one for each bit of the codeword, drawn as circles), and the syndrome nodes (one for each bit of the syndrome, drawn as squares).
 The edges in the Tanner graph are such that the parity-check matrix $H$ is exactly the **adjacency matrix** of the graph, i.e. the matrix that has a $1$ in the $(i,j)$-th position if the $i$-th syndrome node is connected to the $j$-th codeword node, and a $0$ otherwise.
 
-(ref:hamming-code-tanner-graph-caption) The Tanner graph for the $[7,4,3]$-Hamming code. Note the patterns : $d_1$, $d_2$, and $d_3$ are each connected to two syndrome bits, $d_4$ is connected to three, and $p_1$, $p_2$, and $p_3$ are each connected to just one.
+(ref:hamming-code-tanner-graph-caption) The Tanner graph for the $[7,4,3]$-Hamming code. Comparing this to the plaquette diagram in Figure \@ref(fig:hamming-code-diagrams), we see that we simply replace plaquettes by syndrome nodes.
 
 ```{r hamming-code-tanner-graph,engine='tikz',fig.width=4,fig.cap='(ref:hamming-code-tanner-graph-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
-\begin{tikzpicture}
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (d1) at (-3,2) {$d_1$};
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (d2) at (-2,2) {$d_2$};
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (d3) at (-1,2) {$d_3$};
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (d4) at (0,2) {$d_4$};
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (p1) at (1,2) {$p_1$};
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (p2) at (2,2) {$p_2$};
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (p3) at (3,2) {$p_3$};
-	%
-	\node[draw,fill=secondary!60,minimum size=8mm] (s1) at (-2,0) {$s_1$};
-	\node[draw,fill=secondary!60,minimum size=8mm] (s2) at (0,0) {$s_2$};
-	\node[draw,fill=secondary!60,minimum size=8mm] (s3) at (2,0) {$s_3$};
-	%
-	\draw (d1.south) to (s1.north);
-	\draw (d1.south) to (s2.north);
-	\draw (d2.south) to (s1.north);
-	\draw (d2.south) to (s3.north);
-	\draw (d3.south) to (s2.north);
-	\draw (d3.south) to (s3.north);
-	\draw (d4.south) to (s1.north);
-	\draw (d4.south) to (s2.north);
-	\draw (d4.south) to (s3.north);
-	\draw (p1.south) to (s1.north);
-	\draw (p2.south) to (s2.north);
-	\draw (p3.south) to (s3.north);
+\usetikzlibrary{backgrounds}
+\begin{tikzpicture}[yscale=0.9]
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d4) at (0,0) {\footnotesize$d_4$};
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d1) at (150:1.5) {\footnotesize$d_1$};
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d2) at (30:1.5) {\footnotesize$d_2$};
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d3) at (-90:1.5) {\footnotesize$d_3$};
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (p1) at (90:3) {\footnotesize$p_1$};
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (p2) at (210:3) {\footnotesize$p_2$};
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (p3) at (-30:3) {\footnotesize$p_3$};
+  %
+  \node[draw,fill=secondary!60,minimum size=5mm] (s1) at (90:1.5) {$s_1$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s2) at (210:1.5) {$s_2$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s3) at (-30:1.5) {$s_3$};
+  %
+	\draw (d1) to (s1);
+	\draw (d1) to (s2);
+	\draw (d2) to (s1);
+	\draw (d2) to (s3);
+	\draw (d3) to (s2);
+	\draw (d3) to (s3);
+	\draw (d4) to (s1);
+	\draw (d4) to (s2);
+	\draw (d4) to (s3);
+	\draw (p1) to (s1);
+	\draw (p2) to (s2);
+	\draw (p3) to (s3);
 \end{tikzpicture}
 ```
 
@@ -1296,7 +1301,10 @@ This gives us the circuit in Figure \@ref(fig:projection-arbitrary-steane-encodi
 
 ::: {.todo latex=""}
 <!-- TO-DO: ok but point out in big letters this fact that we already said once: THERE IS NO WAY OF CHECKING THAT THE VERY FIRST STEP DIDN'T HAVE ANY ERRORS, I.E. \ket{\psi} |-> \alpha 0000000 + \beta 0010011  !!!!!!-->
-<!-- TO-DO: should we make this clear in the diagram? put a big red box around that very first step????? IF SO, UPDATE THE FIGURE CAPTION -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: BASICALLY this is good for ERROR CORRECTION (send through a noisy channel but you can prepare stuff first) but not FAULT TOLERANCE (always living in the noise) -->
 :::
 
 Now let's look at the second option from before: encoding and then applying $X_L$.
@@ -1396,6 +1404,10 @@ If we really like, however, we could go one step further and replace the control
 
 ::: {.todo latex=""}
 <!-- TO-DO: (theorem) CSS code <=> admits strictly transversal c-NOT -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: (theorem) CSS code (?<)=> admits strictly transversal Hadamard -->
 :::
 
 ::: {.todo latex=""}
