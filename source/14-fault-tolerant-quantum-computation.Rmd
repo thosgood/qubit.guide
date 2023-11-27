@@ -995,12 +995,17 @@ To find a more useful answer, let's take a step back and look at the scenarios t
 :::
 
 ::: {.todo latex=""}
-<!-- TO-DO: ok so what's the actual scenario? can arbitrary errors (IN THIS PARAGRAPH we mean "actual error", i.e. not the whole coset but a specific element --- COME UP WITH SOME GOOD TERMINOLOGY TO DISTINGUISH BETWEEN THESE TWO USES!!!) occur? are they adversarial? it turns out that sometimes we can perfectly correct all errors, even if there are lots of them, and sometimes we can't, even if there are few --- it all depends on how the errors are spread across the cosets -->
+<!-- TO-DO: ok so what's the actual scenario? can arbitrary errors (IN THIS PARAGRAPH we mean "actual error", i.e. not the whole coset but a specific element --- COME UP WITH SOME GOOD TERMINOLOGY TO DISTINGUISH BETWEEN THESE TWO USES!!! "COMPUTATIONAL ERROR" TO MEAN THE ACTUAL ELEMENT, NOT THE COSET?) occur? are they adversarial? it turns out that sometimes we can perfectly correct all errors, even if there are lots of them, and sometimes we can't, even if there are few --- it all depends on how the errors are spread across the cosets -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: what we really need is a way of describing the scenario: we pick some stabiliser (which gives us a code), and then we have some set of errors that can occur -->
 :::
 
 ::: {.todo latex=""}
 <!-- TO-DO: draw the entire stabiliser coset diagram for the three-qubit code; note how all the single weight errors (for $X$ and $Z$, BUT NOT Y) always appear in a single row within an "error" (where "error" = coset) -->
-<!-- TO-DO: SHOW (PROVE) how applying the correction corresponding to that row will fix ALL ERRORS IN THE SAME ROW; so if our possible errors always appear in the same row then we can perfectly error correct! -->
+<!-- TO-DO: SHOW (PROVE) how applying the correction corresponding to that row will fix ALL ERRORS IN THE SAME ROW; so if our possible errors always appear in the same row then we can perfectly error correct! APART FROM ....... -->
+<!-- TO-DO: SHOW (PROVE) that we can NEVER correct anything in the normaliser that ISN'T in the stabiliser (e.g. the single-weight Z errors) -->
 <!-- TO-DO: BUT NOTE THAT SINGLE WEIGHT Y ERRORS DON'T APPEAR IN THE SAME ROW, AND THIS IS WHY WE NEED TWO COPIES OF THIS (i.e. nine-qubit code) IN ORDER TO CORRECT FOR EVERYTHING --- ONE DOES THE X ERRORS (ignoring the Z) AND THEN WE HAVE THE COPY WITH X-TYPE STABILISERS THAT FIXES THE Z ERRORS (ignoring the X) -->
 :::
 
@@ -1134,12 +1139,115 @@ To find a more useful answer, let's take a step back and look at the scenarios t
 ```
 
 ::: {.todo latex=""}
-<!-- TO-DO: what we really need is a way of describing the scenario: we pick some stabiliser (which gives us a code), and then we have some set of errors that can occur -->
-:::
-
-::: {.todo latex=""}
 <!-- TO-DO: these diagrams with dots, that describe the whole scenario, with the rectangle being the code and the dots being the possible errors; talk about global phase being important for picking the coset, but then not necessary afterwards when it comes to picking a representative within that coset (hence why we draw these diagrams as a single sheet) -->
 :::
+
+(ref:weight-1-errors-in-three-qubit-code-caption) *Left:* All of the computational errors of weight at most $1$ from Figure \@ref(fig:all-cosets-three-qubit-code) marked with dots. *Right:* Only the $X$-type computational errors of weight at most $1$.
+
+```{r weight-1-errors-in-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:weight-1-errors-in-three-qubit-code-caption)',fig.width=4}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\usetikzlibrary{calc}
+\newcommand{\id}{\mathbf{1}}
+\begin{tikzpicture}[scale=0.3]
+	\begin{scope}
+	  \draw [fill=primary!60,thick] (0,0) rectangle (10,1);
+	  \draw [fill=secondary!60,thick] (0,1) rectangle (10,4);
+	  \draw [fill=primary!25,thick] (0,4) rectangle (10,5);
+	  \draw [fill=secondary!25,thick] (0,5) rectangle (10,8);
+	  \draw [fill=primary!25,thick] (0,8) rectangle (10,9);
+	  \draw [fill=secondary!25,thick] (0,9) rectangle (10,12);
+	  \draw [fill=primary!25,thick] (0,12) rectangle (10,13);
+	  \draw [fill=secondary!25,thick] (0,13) rectangle (10,16);
+	  \draw [dotted] (0,2) to (10,2);
+	  \draw [dotted] (0,3) to (10,3);
+	  \draw [dotted] (0,5) to (10,5);
+	  \draw [dotted] (0,6) to (10,6);
+	  \draw [dotted] (0,7) to (10,7);
+	  \draw [thick] (0,8) to (10,8);
+	  \draw [dotted] (0,9) to (10,9);
+	  \draw [dotted] (0,10) to (10,10);
+	  \draw [dotted] (0,11) to (10,11);
+	  \draw [thick] (0,12) to (10,12);
+	  \draw [dotted] (0,13) to (10,13);
+	  \draw [dotted] (0,14) to (10,14);
+	  \draw [dotted] (0,15) to (10,15);
+	  %
+	  \foreach \dot in {(1,1),(2,4),(3,4),(4,4),(1,5),(3,8),(1,9),(4,12),(1,13),(2,16)} % the list of grid coordinates for dots
+	    \path let \p1 = \dot in node at ($(\x1*2.5,\y1)+(-1.25,-0.5)$) {$\bullet$};
+	  %
+	  \node at (5,-1) {\footnotesize All errors of weight $\leqslant1$};
+  \end{scope}
+	\begin{scope}[shift={(12,0)}]
+	  \draw [fill=primary!60,thick] (0,0) rectangle (10,1);
+	  \draw [fill=secondary!60,thick] (0,1) rectangle (10,4);
+	  \draw [fill=primary!25,thick] (0,4) rectangle (10,5);
+	  \draw [fill=secondary!25,thick] (0,5) rectangle (10,8);
+	  \draw [fill=primary!25,thick] (0,8) rectangle (10,9);
+	  \draw [fill=secondary!25,thick] (0,9) rectangle (10,12);
+	  \draw [fill=primary!25,thick] (0,12) rectangle (10,13);
+	  \draw [fill=secondary!25,thick] (0,13) rectangle (10,16);
+	  \draw [dotted] (0,2) to (10,2);
+	  \draw [dotted] (0,3) to (10,3);
+	  \draw [dotted] (0,5) to (10,5);
+	  \draw [dotted] (0,6) to (10,6);
+	  \draw [dotted] (0,7) to (10,7);
+	  \draw [thick] (0,8) to (10,8);
+	  \draw [dotted] (0,9) to (10,9);
+	  \draw [dotted] (0,10) to (10,10);
+	  \draw [dotted] (0,11) to (10,11);
+	  \draw [thick] (0,12) to (10,12);
+	  \draw [dotted] (0,13) to (10,13);
+	  \draw [dotted] (0,14) to (10,14);
+	  \draw [dotted] (0,15) to (10,15);
+	  %
+	  \foreach \dot in {(1,1),(1,5),(1,9),(1,13)} % the list of grid coordinates for dots
+	    \path let \p1 = \dot in node at ($(\x1*2.5,\y1)+(-1.25,-0.5)$) {$\bullet$};
+    %
+    \node at (5,-1) {\footnotesize $X$ errors of weight $\leqslant1$};
+  \end{scope}
+\end{tikzpicture}
+```
+
+
+
+
+
+<!-- \definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\usetikzlibrary{calc}
+\newcommand{\id}{\mathbf{1}}
+\begin{tikzpicture}[scale=0.5]
+  \draw [fill=primary!60,thick] (0,0) rectangle (10,1);
+  \draw [fill=secondary!60,thick] (0,1) rectangle (10,4);
+  \draw [fill=primary!25,thick] (0,4) rectangle (10,5);
+  \draw [fill=secondary!25,thick] (0,5) rectangle (10,8);
+  \draw [fill=primary!25,thick] (0,8) rectangle (10,9);
+  \draw [fill=secondary!25,thick] (0,9) rectangle (10,12);
+  \draw [fill=primary!25,thick] (0,12) rectangle (10,13);
+  \draw [fill=secondary!25,thick] (0,13) rectangle (10,16);
+  \draw [dotted] (0,2) to (10,2);
+  \draw [dotted] (0,3) to (10,3);
+  \draw [dotted] (0,5) to (10,5);
+  \draw [dotted] (0,6) to (10,6);
+  \draw [dotted] (0,7) to (10,7);
+  \draw [thick] (0,8) to (10,8);
+  \draw [dotted] (0,9) to (10,9);
+  \draw [dotted] (0,10) to (10,10);
+  \draw [dotted] (0,11) to (10,11);
+  \draw [thick] (0,12) to (10,12);
+  \draw [dotted] (0,13) to (10,13);
+  \draw [dotted] (0,14) to (10,14);
+  \draw [dotted] (0,15) to (10,15);
+  %
+  \foreach \dot in {(1,2)}
+    \path let \p1 = \dot in node at ($(\x1*2.5,\y1)+(-1.25,-0.5)$) {test};
+\end{tikzpicture} -->
+
+
+
+
+
 
 ::: {.todo latex=""}
 <!-- TO-DO -->
