@@ -220,7 +220,6 @@ The edges in the Tanner graph are such that the parity-check matrix $H$ is exact
 ```{r hamming-code-tanner-graph,engine='tikz',fig.width=4,fig.cap='(ref:hamming-code-tanner-graph-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
-\usetikzlibrary{backgrounds}
 \begin{tikzpicture}[yscale=0.9]
   \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d4) at (0,0) {\footnotesize$d_4$};
   \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d1) at (150:1.5) {\footnotesize$d_1$};
@@ -250,7 +249,7 @@ The edges in the Tanner graph are such that the parity-check matrix $H$ is exact
 ```
 
 ::: {.todo latex=""}
-<!-- TO-DO: that diagram showing how Tanner graphs correspond to parity check circuits -->
+<!-- TO-DO: that diagram showing how Tanner graphs correspond to parity check circuits (one reason why tanner graphs are really useful!) -->
 :::
 
 Back to Hamming codes!
@@ -494,60 +493,57 @@ $$
 The result is a $[[7,1,3]]$-code, generally attributed to  and thus known as the **Steane code**, or simply the **seven-qubit code**, that encodes one logical qubit across seven physical ones, and that is able to correct for any single-qubit Pauli error.
 We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:tanner-graph-713), but we will return to a proper in-depth study of this code in Section \@ref(encoding-circuits).
 
-(ref:tanner-graph-713-caption) The Tanner graph of the Steane code. For CSS codes, there are two types of "parity checks": one for detecting $X$ errors (solid lines), and one for $Z$ errors (dashed lines).
+(ref:tanner-graph-713-caption) The Tanner graph of the Steane code. You can think of this graph as taking two copies of the $[7,4,3]$-Hamming code Tanner graph and gluing them together at all of the data nodes. For any CSS code there are two types of "parity checks": one for detecting $X$ errors (solid lines), and one for $Z$ errors (dashed lines).
 
 ```{r tanner-graph-713,engine='tikz',fig.width=4,fig.cap='(ref:tanner-graph-713-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
 \definecolor{secondary}{RGB}{91,132,177}
-\begin{tikzpicture}
-	\node[draw,fill=secondary!60,minimum size=8mm] (s1) at (-2,4) {$s_1$};
-	\node[draw,fill=secondary!60,minimum size=8mm] (s2) at (0,4) {$s_2$};
-	\node[draw,fill=secondary!60,minimum size=8mm] (s3) at (2,4) {$s_3$};
-	%
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (q1) at (-3,2) {$q_1$};
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (q2) at (-2,2) {$q_2$};
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (q3) at (-1,2) {$q_3$};
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (q4) at (0,2) {$q_4$};
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (q5) at (1,2) {$q_5$};
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (q6) at (2,2) {$q_6$};
-	\node[draw,fill=primary!60,circle,minimum size=8mm] (q7) at (3,2) {$q_7$};
-	%
-	\node[draw,fill=secondary!60,minimum size=8mm] (s4) at (-2,0) {$s_4$};
-	\node[draw,fill=secondary!60,minimum size=8mm] (s5) at (0,0) {$s_5$};
-	\node[draw,fill=secondary!60,minimum size=8mm] (s6) at (2,0) {$s_6$};
-	%
-	\draw[dashed] (s1.south) to (q1.north);
-	\draw[dashed] (s1.south) to (q2.north);
-	\draw[dashed] (s1.south) to (q4.north);
-	\draw[dashed] (s1.south) to (q5.north);
-	\draw[dashed] (s2.south) to (q1.north);
-	\draw[dashed] (s2.south) to (q3.north);
-	\draw[dashed] (s2.south) to (q4.north);
-	\draw[dashed] (s2.south) to (q6.north);
-	\draw[dashed] (s3.south) to (q2.north);
-	\draw[dashed] (s3.south) to (q3.north);
-	\draw[dashed] (s3.south) to (q4.north);
-	\draw[dashed] (s3.south) to (q7.north);
-	\draw (q1.south) to (s4.north);
-	\draw (q1.south) to (s5.north);
-	\draw (q2.south) to (s5.north);
-	\draw (q2.south) to (s6.north);
-	\draw (q3.south) to (s4.north);
-	\draw (q3.south) to (s6.north);
-	\draw (q4.south) to (s4.north);
-	\draw (q4.south) to (s5.north);
-	\draw (q4.south) to (s6.north);
-	\draw (q5.south) to (s4.north);
-	\draw (q6.south) to (s5.north);
-	\draw (q7.south) to (s6.north);
+\begin{tikzpicture}[xscale=1.3,yscale=1.2]
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d4) at (0,0) {\footnotesize$d_4$};
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d1) at (150:1.5) {\footnotesize$d_1$};
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d2) at (30:1.5) {\footnotesize$d_2$};
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d3) at (-90:1.5) {\footnotesize$d_3$};
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (p1) at (90:3) {\footnotesize$p_1$};
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (p2) at (210:3) {\footnotesize$p_2$};
+  \node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (p3) at (-30:3) {\footnotesize$p_3$};
+  %
+  \node[draw,fill=secondary!60,minimum size=5mm] (s4) at (75:1.5) {$s_4$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s5) at (195:1.5) {$s_5$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s6) at (-45:1.5) {$s_6$};
+  %
+  \draw[dashed] (d1) to (s4);
+  \draw[dashed] (d1) to (s5);
+  \draw[dashed] (d2) to (s4);
+  \draw[dashed] (d2) to (s6);
+  \draw[dashed] (d3) to (s5);
+  \draw[dashed] (d3) to (s6);
+  \draw[dashed] (d4) to (s4);
+  \draw[dashed] (d4) to (s5);
+  \draw[dashed] (d4) to (s6);
+  \draw[dashed] (p1) to (s4);
+  \draw[dashed] (p2) to (s5);
+  \draw[dashed] (p3) to (s6);
+  %
+  \node[draw,fill=secondary!60,minimum size=5mm] (s1) at (105:1.5) {$s_1$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s2) at (225:1.5) {$s_2$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s3) at (-15:1.5) {$s_3$};
+  %
+  \draw (d1) to (s1);
+  \draw (d1) to (s2);
+  \draw (d2) to (s1);
+  \draw (d2) to (s3);
+  \draw (d3) to (s2);
+  \draw (d3) to (s3);
+  \draw (d4) to (s1);
+  \draw (d4) to (s2);
+  \draw (d4) to (s3);
+  \draw (p1) to (s1);
+  \draw (p2) to (s2);
+  \draw (p3) to (s3);
 \end{tikzpicture}
 ```
 
-::: {.todo latex=""}
-<!-- TO-DO: redraw tanner graph -->
-:::
-
-Not all quantum codes arise from combining classical ones like this^[For example, the five-qubit code, which is the smallest code that can correct for all possible single errors on a single qubit, is demonstrably *not* a CSS code, as can be shown by the non-existence of something called a **transversal** controlled-$\texttt{NOT}$ gate.], and even for those that do, working with the generator and parity-check matrices can often be cumbersome.
+Not all quantum codes arise from combining classical ones like this^[For example, the **five-qubit code**, which is the smallest code that can correct for all possible single-qubit errors, is demonstrably *not* a CSS code, as can be shown by the non-existence of something called a **transversal** controlled-$\texttt{NOT}$ gate.], and even for those that do, working with the generator and parity-check matrices can often be cumbersome.
 Indeed, a truly *quantum* code will not have a single one of each, since this is not sufficient to deal with the purely quantum phenomena of superposition.
 For example, as the Tanner graph in Figure \@ref(fig:tanner-graph-713) shows, we have *two* parity check matrices in the case of CSS codes.
 When working with truly quantum codes, the stabiliser formalism really becomes much more useful --- our next aim is to justify this with some examples and explanation.
