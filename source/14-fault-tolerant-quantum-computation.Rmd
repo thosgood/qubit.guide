@@ -999,8 +999,137 @@ To find a more useful answer, let's take a step back and look at the scenarios t
 :::
 
 ::: {.todo latex=""}
-<!-- TO-DO: draw the entire stabiliser coset diagram for the three-qubit code; note how all the single weight errors (for $Y$ and $Z$) always appear as in a single row within an "error" (where "error" = coset); show how applying the correction corresponding to that row will fix ALL ERRORS IN THE SAME ROW; so if our possible errors always appear in the same row then we can perfectly error correct! -->
+<!-- TO-DO: draw the entire stabiliser coset diagram for the three-qubit code; note how all the single weight errors (for $X$ and $Z$) always appear as in a single row within an "error" (where "error" = coset); show how applying the correction corresponding to that row will fix ALL ERRORS IN THE SAME ROW; so if our possible errors always appear in the same row then we can perfectly error correct! BUT NOTE THAT SINGLE WEIGHT Y ERRORS DON'T APPEAR IN THE SAME ROW, AND THIS IS WHY WE NEED TWO COPIES OF THIS (i.e. nine-qubit code) IN ORDER TO CORRECT FOR EVERYTHING --- ONE DOES THE X ERRORS (ignoring the Z) AND THEN WE HAVE THE COPY WITH X-TYPE STABILISERS THAT FIXES THE Z ERRORS (ignoring the X) -->
 :::
+
+(ref:all-cosets-three-qubit-code-caption) The entire group $\mathcal{P}_3$ with the coset structure induced by the stabiliser group $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$. Note that we are ignoring global phase, but we will justify this simplification later on.
+
+```{r all-cosets-three-qubit-code,engine='tikz',fig.cap='(ref:all-cosets-three-qubit-code-caption)',fig.width=6}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\usetikzlibrary{decorations.markings,decorations.pathmorphing,decorations.pathreplacing}
+\newcommand{\id}{\mathbf{1}}
+\begin{tikzpicture}[scale=0.5]
+  \draw [fill=primary!60,thick] (0,0) rectangle (10,1);
+  \draw [fill=secondary!60,thick] (0,1) rectangle (10,4);
+  \draw [fill=primary!25,thick] (0,4) rectangle (10,5);
+  \draw [fill=secondary!25,thick] (0,5) rectangle (10,8);
+  \draw [fill=primary!25,thick] (0,8) rectangle (10,9);
+  \draw [fill=secondary!25,thick] (0,9) rectangle (10,12);
+  \draw [fill=primary!25,thick] (0,12) rectangle (10,13);
+  \draw [fill=secondary!25,thick] (0,13) rectangle (10,16);
+  \draw [dotted] (0,2) to (10,2);
+  \draw [dotted] (0,3) to (10,3);
+  \draw [dotted] (0,5) to (10,5);
+  \draw [dotted] (0,6) to (10,6);
+  \draw [dotted] (0,7) to (10,7);
+  \draw [thick] (0,8) to (10,8);
+  \draw [dotted] (0,9) to (10,9);
+  \draw [dotted] (0,10) to (10,10);
+  \draw [dotted] (0,11) to (10,11);
+  \draw [thick] (0,12) to (10,12);
+  \draw [dotted] (0,13) to (10,13);
+  \draw [dotted] (0,14) to (10,14);
+  \draw [dotted] (0,15) to (10,15);
+  %
+  \draw[decoration={brace,raise=5pt},decorate]
+  (0,0.2) to node[left=6pt] {$N(\mathcal{S})$} (0,3.8);
+  \draw[decoration={brace,raise=5pt},decorate]
+  (0,4.2) to node[left=6pt] {$(X\id\id)\cdot N(\mathcal{S})$ } (0,7.8);
+  \draw[decoration={brace,raise=5pt},decorate]
+  (0,8.2) to node[left=6pt] {$(\id X\id)\cdot N(\mathcal{S})$ } (0,11.8);
+  \draw[decoration={brace,raise=5pt},decorate]
+  (0,12.2) to node[left=6pt] {$(\id\id X)\cdot N(\mathcal{S})$ } (0,15.8);
+  %
+  \draw [<-] (10.2,0.5) to (11,0.5) node[right]{$\mathcal{S}$};
+  \draw [<-] (10.2,1.5) to (11,1.5) node[right]{$(XXX)\cdot\mathcal{S}$};
+  \draw [<-] (10.2,2.5) to (11,2.5) node[right]{$(YYY)\cdot\mathcal{S}$};
+  \draw [<-] (10.2,3.5) to (11,3.5) node[right]{$(ZZZ)\cdot\mathcal{S}$};
+  % ROW 1.1
+  \node at (1.25,0.5) {$\id$};
+  \draw[thick] (2.5,0) to (2.5,16);
+  \node at (3.75,0.5) {$ZZ\id$};
+  \draw[thick] (5,0) to (5,16);
+  \node at (6.25,0.5) {$\id ZZ$};
+  \draw[thick] (7.5,0) to (7.5,16);
+  \node at (8.75,0.5) {$Z\id Z$};
+  % ROW 1.2
+  \node at (1.25,1.5) {$XXX$};
+  \node at (3.75,1.5) {$YYX$};
+  \node at (6.25,1.5) {$XYY$};
+  \node at (8.75,1.5) {$YXY$};
+  % ROW 1.3
+  \node at (1.25,2.5) {$YYY$};
+  \node at (3.75,2.5) {$XXY$};
+  \node at (6.25,2.5) {$YXX$};
+  \node at (8.75,2.5) {$XYX$};
+  % ROW 1.4
+  \node at (1.25,3.5) {$ZZZ$};
+  \node at (3.75,3.5) {$\id\id Z$};
+  \node at (6.25,3.5) {$Z\id\id$};
+  \node at (8.75,3.5) {$\id Z\id$};
+  % ROW 2.1
+  \node at (1.25,4.5) {$X\id\id$};
+  \node at (3.75,4.5) {$YZ\id$};
+  \node at (6.25,4.5) {$XZZ$};
+  \node at (8.75,4.5) {$Y\id Z$};
+  % ROW 2.2
+  \node at (1.25,5.5) {$\id XX$};
+  \node at (3.75,5.5) {$ZYX$};
+  \node at (6.25,5.5) {$\id YY$};
+  \node at (8.75,5.5) {$ZXY$};
+  % ROW 2.3
+  \node at (1.25,6.5) {$ZYY$};
+  \node at (3.75,6.5) {$\id XY$};
+  \node at (6.25,6.5) {$ZXX$};
+  \node at (8.75,6.5) {$\id YX$};
+  % ROW 2.4
+  \node at (1.25,7.5) {$YZZ$};
+  \node at (3.75,7.5) {$X\id Z$};
+  \node at (6.25,7.5) {$Y\id\id$};
+  \node at (8.75,7.5) {$XZ\id$};
+  % ROW 3.1
+  \node at (1.25,8.5) {$\id X\id$};
+  \node at (3.75,8.5) {$ZY\id$};
+  \node at (6.25,8.5) {$\id YZ$};
+  \node at (8.75,8.5) {$ZXZ$};
+  % ROW 3.2
+  \node at (1.25,9.5) {$X\id X$};
+  \node at (3.75,9.5) {$YZX$};
+  \node at (6.25,9.5) {$XZY$};
+  \node at (8.75,9.5) {$Y\id Y$};
+  % ROW 3.3
+  \node at (1.25,10.5) {$YZY$};
+  \node at (3.75,10.5) {$X\id Y$};
+  \node at (6.25,10.5) {$Y\id X$};
+  \node at (8.75,10.5) {$XZX$};
+  % ROW 3.4
+  \node at (1.25,11.5) {$ZYZ$};
+  \node at (3.75,11.5) {$\id XZ$};
+  \node at (6.25,11.5) {$ZX\id$};
+  \node at (8.75,11.5) {$\id Y\id$};
+  % ROW 4.1
+  \node at (1.25,12.5) {$\id\id X$};
+  \node at (3.75,12.5) {$ZZX$};
+  \node at (6.25,12.5) {$\id ZY$};
+  \node at (8.75,12.5) {$Z\id Y$};
+  % ROW 4.2
+  \node at (1.25,13.5) {$XX\id$};
+  \node at (3.75,13.5) {$YY\id$};
+  \node at (6.25,13.5) {$XYZ$};
+  \node at (8.75,13.5) {$YXZ$};
+  % ROW 4.3
+  \node at (1.25,14.5) {$YYZ$};
+  \node at (3.75,14.5) {$XXZ$};
+  \node at (6.25,14.5) {$YXZ$};
+  \node at (8.75,14.5) {$XY\id$};
+  % ROW 4.4
+  \node at (1.25,15.5) {$ZZX$};
+  \node at (3.75,15.5) {$\id\id Y$};
+  \node at (6.25,15.5) {$Z\id X$};
+  \node at (8.75,15.5) {$\id ZX$};
+\end{tikzpicture}
+```
 
 ::: {.todo latex=""}
 <!-- TO-DO: what we really need is a way of describing the scenario: we pick some stabiliser (which gives us a code), and then we have some set of errors that can occur -->
