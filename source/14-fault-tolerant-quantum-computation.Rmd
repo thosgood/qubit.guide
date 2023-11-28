@@ -680,7 +680,7 @@ Since the cosets of $\mathcal{S}$ inside $N(\mathcal{S})$ give well defined acti
 The cosets of $\mathcal{S}$ inside $N(\mathcal{S})$ are called **logical operators**, and any representative of a coset is an **implementation** for that logical operator.
 :::
 
-Let's try to understand this in the context of an example: the three-qubit code from Section \@ref(three-qubit-codes).
+Let's try to understand this in the context of an example: the three-qubit code from Section \@ref(three-qubit-code).
 The diagram from Section \@ref(pauli-stabilisers) was useful in describing this example, so we repeat it as Figure \@ref(fig:stabiliser-bisection-again) below.
 
 (ref:stabiliser-bisection-again-caption) The stabiliser group $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_\mathcal{S}$ which is spanned by $\ket{000}$ and $\ket{111}$.
@@ -799,7 +799,7 @@ Even more generally, for any $[[n,k,d]]$-code constructed from a stabiliser $\ma
 The quotient group^[Recall that the elements of the quotient group $G/H$ are exactly the cosets of $H\triangleleft G$.] $N(\mathcal{S})/\mathcal{S}$ gave us logical operators, so the next thing to ask is what we get from the quotient group $\mathcal{P}_n/N(\mathcal{S})$.
 
 ::: {.idea latex=""}
-The cosets of $N(\mathcal{S})$ inside $\mathcal{P}_n$ are **errors** on the codespace $V_\mathcal{S}$.
+The cosets of $N(\mathcal{S})$ inside $\mathcal{P}_n$ are **logical errors** on the codespace $V_\mathcal{S}$.
 :::
 
 Again, we can write $\mathcal{P}_n$ in such a way that we can immediately read off the cosets:
@@ -990,19 +990,17 @@ To find a more useful answer, let's take a step back and look at the scenarios t
 
 ## Error-correcting conditions {#error-correcting-conditions}
 
-::: {.todo latex=""}
-<!-- TO-DO: recap definition(s) (.idea) of stabiliser codes (and logical operators and errors and etc.) -->
-:::
+We can summarise the notion of a stabiliser code that we have defined rather succinctly: everything is determined by picking a stabiliser group, i.e. an abelian subgroup $\mathcal{S}$ of the Pauli group $\mathcal{P}_n$ that does not contain $-\id$.
+From this, we call the stabiliser subspace $V_\mathcal{S}$ the codespace, we call its basis vectors the codewords, and we call cosets of $\mathcal{S}$ inside its normaliser $N(\mathcal{S})$ logical operators, and cosets of $N(\mathcal{S})$ inside $\mathcal{P}_n$ logical errors.
 
-::: {.todo latex=""}
-<!-- TO-DO: ok so what's the actual scenario? can arbitrary errors (IN THIS PARAGRAPH we mean "actual error", i.e. not the whole coset but a specific element --- COME UP WITH SOME GOOD TERMINOLOGY TO DISTINGUISH BETWEEN THESE TWO USES!!! "COMPUTATIONAL ERROR" TO MEAN THE ACTUAL ELEMENT, NOT THE COSET?) occur? are they adversarial? it turns out that sometimes we can perfectly correct all errors, even if there are lots of them, and sometimes we can't, even if there are few --- it all depends on how the errors are spread across the cosets -->
-:::
+By setting up some ancilla qubits and constructing appropriate quantum circuits^[We will see these circuits soon, starting in Section \@ref(encoding-circuits).], we can enact any logical operator in such a way that we also measure an error syndrome, which points at a specific logical error.
+But unlike in our study of the Steane code in Section \@ref(quantum-codes-from-classical), we can no longer simply apply the corresponding operator to fix the error, because the error is a whole coset --- it contains many individual Pauli operators.
 
-::: {.todo latex=""}
-<!-- TO-DO: what we really need is a way of describing the scenario: we pick some stabiliser (which gives us a code), and then we have some set of errors that can occur -->
-:::
+To fix an example to keep in mind, we return yet again to the three-qubit code.
+In Figure \@ref(fig:all-cosets-three-qubit-code) we draw a diagram grouping together all the elements of $\mathcal{P}_3$ into the coset structure induced by $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$.
+This is analogous to the diagrams that we saw back in Exercise \@ref(pauli-group-three-qubits-worked-example), but with the simplification of ignoring phase.^[Formally, we can think of ignoring phase as looking at the quotient of $\mathcal{P}_3$ by the subgroup $\langle\pm\id,\pm i\rangle$, which gives us an abelian group.]
 
-(ref:all-cosets-three-qubit-code-caption) The entire group $\mathcal{P}_3$ with the coset structure induced by the stabiliser group $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$. Note that we are ignoring global phase, but we will justify this simplification later on.
+(ref:all-cosets-three-qubit-code-caption) The entire group $\mathcal{P}_3$ with the coset structure induced by the stabiliser group $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$. Note that we are ignoring global phase.
 
 ```{r all-cosets-three-qubit-code,engine='tikz',fig.cap='(ref:all-cosets-three-qubit-code-caption)',fig.width=6}
 \definecolor{primary}{RGB}{177,98,78}
@@ -1131,14 +1129,79 @@ To find a more useful answer, let's take a step back and look at the scenarios t
 \end{tikzpicture}
 ```
 
+As we can see by looking at Figure \@ref(fig:all-cosets-three-qubit-code), if we somehow measure an error syndrome pointing to the error $X\id\id$, for example, then there are 16 possible errors that could have occurred!
+We said that the stabiliser formalism would be *better* than our previous approach, so why do things seem so much worse now?
+Well, we are forgetting one key assumption that we made before that we have yet to impose in the stabiliser formalism: *up until now, we have only studied single-qubit errors*.
+Thinking back to our introduction of the three-qubit code in Section \@ref(three-qubit-code), we were specifically trying to deal with single bit-flip errors, i.e. only $X\id\id$, $\id X\id$, and $\id\id X$ (as well as the trivial error $\id\id\id$, which we must not forget about, as we shall see).
+If we look back at Figure \@ref(fig:all-cosets-three-qubit-code) with this in mind, we notice something particularly nice: each of these single $X$-type errors lives in a different coset, and each coset contains exactly one of these errors.
+
+In other words, *if we assume that only single bit-flip errors can occur*, then the stabiliser formalism describes errors in exactly the same way as before, since the cosets are in bijection with the specific errors.^[It's easy to get confused with terminology here, since we say "error" to mean two different things, namely a coset of the normaliser inside the Pauli group, and also a specific element within that coset. If things get too confusing, we might refer to the former as "logical errors" and the latter as "specific errors".]
+But here is where the power of the stabiliser formalism can really shine through, since it allows us to understand what type of error scenarios our code can actually deal with.
+That is, rather than thinking about a code as something being built to correct for a specific set of errors, the stabiliser formalism lets us say "here is a code", and then ask "for which sets of errors is this code actually useful?".
+The answer to this question lies in understanding how any set of specific errors is distributed across the cosets, and we can draw even simpler versions of the diagram in Figure \@ref(fig:all-cosets-three-qubit-code) to figure this out.
+
 ::: {.todo latex=""}
-<!-- TO-DO: SHOW (PROVE --- maybe this is 12.4 in v5?) how applying the correction corresponding to that row will fix ALL ERRORS IN THE SAME ROW; so if our possible errors always appear in the same row then we can perfectly error correct! APART FROM ....... -->
-<!-- TO-DO: SHOW (PROVE) that we can NEVER correct anything in the normaliser that ISN'T in the stabiliser (e.g. the single-weight Z errors) -->
-<!-- TO-DO: BUT NOTE THAT SINGLE WEIGHT Y ERRORS DON'T APPEAR IN THE SAME ROW, AND THIS IS WHY WE NEED TWO COPIES OF THIS (i.e. nine-qubit code) IN ORDER TO CORRECT FOR EVERYTHING --- ONE DOES THE X ERRORS (ignoring the Z) AND THEN WE HAVE THE COPY WITH X-TYPE STABILISERS THAT FIXES THE Z ERRORS (ignoring the X) -->
+<!-- TO-DO:
+	1. draw the dot diagram of all weight 1 X-type errors
+	2. note (and prove) that specific errors in the same row are also corrected for free
+	3. note (and prove) that we cannot ever hope to correct errors in the normaliser that are not in the stabiliser
+	4. come up with the two rules
+	5. draw the diagrams of all weight 1 X-, Y-, and Z-type errors to see which ones follow the rules
+	6. so we take a code and then get given a set of possible errors; we draw the diagram and see if it follows the rules; if it does, then we can perfectly error correct; if not, then we can still do probabilistic error correction! (maybe make this a new section)
+-->
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+::: {.todo latex=""}
+<!-- TO-DO: ok so what's the actual scenario? can arbitrary errors (IN THIS PARAGRAPH we mean "actual error", i.e. not the whole coset but a specific element --- COME UP WITH SOME GOOD TERMINOLOGY TO DISTINGUISH BETWEEN THESE TWO USES!!! "COMPUTATIONAL ERROR" TO MEAN THE ACTUAL ELEMENT, NOT THE COSET?) occur? are they adversarial? it turns out that sometimes we can perfectly correct all errors, even if there are lots of them, and sometimes we can't, even if there are few --- it all depends on how the errors are spread across the cosets -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: what we really need is a way of describing the scenario: we pick some stabiliser (which gives us a code), and then we have some set of errors that can occur -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: ok, but what about "actual" errors? SHOW (PROVE --- maybe this is 12.4 in v5?) how applying the correction corresponding to that row will fix ALL ERRORS IN THE SAME ROW; so if our possible errors always appear in the same row then we can perfectly error correct! -->
+<!-- TO-DO: let's start with something our codes can NEVER fix... SHOW (PROVE) that we can NEVER correct anything in the normaliser that ISN'T in the stabiliser (e.g. the single-weight Z errors) -->
+<!-- TO-DO: THIS IS WHY WE NEED TWO COPIES OF THIS (i.e. nine-qubit code) IN ORDER TO CORRECT FOR EVERYTHING --- ONE DOES THE X ERRORS (ignoring the Z) AND THEN WE HAVE THE COPY WITH X-TYPE STABILISERS THAT FIXES THE Z ERRORS (ignoring the X) (but we see that we could have one instead fix the Y errors) -->
 :::
 
 ::: {.todo latex=""}
 <!-- TO-DO: these diagrams with dots, that describe the whole scenario, with the rectangle being the code and the dots being the possible errors; talk about global phase being important for picking the coset, but then not necessary afterwards when it comes to picking a representative within that coset (hence why we draw these diagrams as a single sheet) -->
+<!-- TO-DO: BE CAREFUL with these diagrams! recall that cosets of S inside P don't really make sense (since it's not normal); also, when we quotient by \pm1,\pm i we make P abelian so the (image under this quotient of the) normaliser is no longer actually the normaliser; etc. etc. -->
 :::
 
 ::: {.todo latex=""}
