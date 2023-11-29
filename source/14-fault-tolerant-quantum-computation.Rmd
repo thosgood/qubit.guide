@@ -977,7 +977,7 @@ really does describe the full structure of the code: logical states, logical ope
 ```
 
 But this stabiliser formalism introduces some new ambiguity.
-In Section \@ref(quantum-codes-from-classical), we saw how measuring the three ancilla qubits in the $[7,4,3]$-Hamming code gave us an error syndrome that we could use to determine on which qubit a $Z$-error had occurred.
+In Section \@ref(quantum-codes-from-classical), we saw how measuring the three ancilla qubits in the $[7,4,3]$-Hamming code gave us an error syndrome that we could use to determine on which qubit a $Z$-error had occurred, and back in Section \@ref(correcting-bit-flips) we saw the analogous error-syndrome setup for the three-qubit code.
 However, the stabiliser formalism is much more general: it makes no assumptions that only single-qubit errors can occur.
 We can see this in our new definition of an error as a *coset* instead of as a single operator.
 So if the error syndrome just tells us a specific coset $E\times N(\mathcal{S})$, how do we know which representative of that coset (i.e. which specific Pauli operator) to apply to fix the error?
@@ -998,7 +998,7 @@ But unlike in our study of the Steane code in Section \@ref(quantum-codes-from-c
 
 To fix an example to keep in mind, we return yet again to the three-qubit code.
 In Figure \@ref(fig:all-cosets-three-qubit-code) we draw a diagram grouping together all the elements of $\mathcal{P}_3$ into the coset structure induced by $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$.
-This is analogous to the diagrams that we saw back in Exercise \@ref(pauli-group-three-qubits-worked-example), but with the simplification of ignoring phase.^[Formally, we can think of ignoring phase as looking at the quotient of $\mathcal{P}_3$ by the subgroup $\langle\pm\id,\pm i\rangle$, which gives us an abelian group.]
+This is analogous to the diagrams that we saw back in Exercise \@ref(pauli-group-three-qubits-worked-example), but with the simplification of ignoring phase.^[Formally, we can think of ignoring phase as looking at the quotient of $\mathcal{P}_3$ by the subgroup $\langle\pm\id,\pm i\rangle$, which results in an abelian group.]
 
 (ref:all-cosets-three-qubit-code-caption) The entire group $\mathcal{P}_3$ with the coset structure induced by the stabiliser group $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$. Note that we are ignoring global phase.
 
@@ -1136,9 +1136,80 @@ Thinking back to our introduction of the three-qubit code in Section \@ref(three
 If we look back at Figure \@ref(fig:all-cosets-three-qubit-code) with this in mind, we notice something particularly nice: each of these single $X$-type errors lives in a different coset, and each coset contains exactly one of these errors.
 
 In other words, *if we assume that only single bit-flip errors can occur*, then the stabiliser formalism describes errors in exactly the same way as before, since the cosets are in bijection with the specific errors.^[It's easy to get confused with terminology here, since we say "error" to mean two different things, namely a coset of the normaliser inside the Pauli group, and also a specific element within that coset. If things get too confusing, we might refer to the former as "logical errors" and the latter as "specific errors".]
-But here is where the power of the stabiliser formalism can really shine through, since it allows us to understand what type of error scenarios our code can actually deal with.
-That is, rather than thinking about a code as something being built to correct for a specific set of errors, the stabiliser formalism lets us say "here is a code", and then ask "for which sets of errors is this code actually useful?".
+But here is where the power of the stabiliser formalism can really shine through, since it allows us to understand what type of error scenarios our code can actually deal with in full generality.
+That is, rather than thinking about a code as something being built to correct for a specific set of errors, the stabiliser formalism lets us say "here is a code", and *then* ask "for which sets of errors is this code actually useful?".
 The answer to this question lies in understanding how any set of specific errors is distributed across the cosets, and we can draw even simpler versions of the diagram in Figure \@ref(fig:all-cosets-three-qubit-code) to figure this out.
+
+Returning to the scenario where we assume that only single bit-flip errors can occur, we can mark the corresponding specific errors in Figure \@ref(fig:all-cosets-three-qubit-code) --- namely $\id$, $X\id\id$, $\id X\id$, and $\id\id X$ --- with a dot.
+We do this in Figure \@ref(fig:weight-1-x-errors-three-qubit-code), which is the first of many more diagrams of this form.
+Although we are working with the specific example of the three-qubit code in mind, these diagrams are meant to be understood more generally as applying to any stabiliser code.
+As we shall soon see, we don't really need to worry about making sure that we have the right number of rows in each small rectangle (i.e. the right number of cosets of $\mathcal{S}$ inside $N(\mathcal{S})$), and in some sense we don't even really need to worry about what the specific errors *are*.
+
+(ref:weight-1-x-errors-three-qubit-code-caption) All specific $X$-type errors of weight at most $1$ from Figure \@ref(fig:all-cosets-three-qubit-code), each marked by a dot.
+
+```{r weight-1-x-errors-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:weight-1-x-errors-three-qubit-code-caption)',fig.width=2}
+\begin{tikzpicture}
+	\ErrorDotDiagram{(1,1),(1,5),(1,9),(1,13)}
+\end{tikzpicture}
+```
+
+As we said above, if each logical error (i.e. coset) contains exactly one specific error (i.e. Pauli operator), then we already know how to apply corrections based on the error-syndrome measurements.
+In terms of the diagram in Figure \@ref(fig:weight-1-x-errors-three-qubit-code), this rule becomes rather simple: *if each small rectangle contains exactly one dot, then we can error correct*.
+
+But can we say something more interesting than this?
+Well, let's consider what happens if we have a diagram that looks like this:
+
+```{r engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2}
+\begin{tikzpicture}
+	\ErrorDotDiagram{(1,1),(1,5),(2,5),(1,9),(1,13)}
+\end{tikzpicture}
+```
+
+That is, we're considering a scenario where there are *two* possible errors that can occur for a specific error syndrome.
+In the example of the three-qubit code, we're looking at the scenario where any single bit-flip error can occur, but *also* the operator $YZ\id$ might affect our computation, enacting a bit-phase-flip on the first qubit and a phase-flip on the second.
+What would then happen if we measured the error syndrome $\ket{01}$?
+We know (from Section \@ref(correcting-bit-flips)) that this corresponds to the *logical* error $(X\id\id)\cdot\mathcal{S}$, but both $X\id\id$ *and* $YZ\id$ live in this coset, so we're back to the question posed at the end of Section \@ref(logical-errors): how do we pick which operator to use to correct the error?
+
+Here's the fantastic fact: in this case, *it doesn't matter*!
+Say we pick $X\id\id$, but the error that had actually affected our qubits, originally in some encoded state $\ket{\psi}$, was $YZ\id$.
+Then by applying the "correction" $X\id\id$ our qubits would be in the state
+$$
+	(X\id\id)(YZ\id)\ket{\psi}
+	= (ZZ\id)\ket{\psi}
+$$
+(where, once again, we ignore global phases).
+But $\ket{\psi}$ is, by construction, some codeword, which exactly means that it is stabilised by $ZZ\id$, and so
+$$
+	(X\id\id)(YZ\id)\ket{\psi}
+	= \ket{\psi}.
+$$
+We can fully generalise this to improve upon the previous rule: *if all the dots in any given small rectangle are all in the same row, then we can perfectly error correct*.
+
+To prove this, we just return to the definition of cosets and the properties of the Pauli group.^[This is one of those arguments where it's easy to get lost in the notation. Try picking two specific errors $P_1$ and $P_2$ in the same row somewhere in Figure \@ref(fig:all-cosets-three-qubit-code) and following through the argument, figuring out what $E$, $P$, $P'_1$, and $P'_2$ are as you go.]
+If two specific errors $P_1$ and $P_2$ are in the same row inside some coset $E\cdot N(\mathcal{S})$, then by definition they both come from the same coset $P\cdot\mathcal{S}$, i.e.
+$$
+	\begin{aligned}
+		P_1
+		&= EP'_1
+	\\P_2
+		&= EP'_2
+	\end{aligned}
+$$
+where $P'_1,P'_2\in P\cdot\mathcal{S}$.
+Then $EP$ corrects both $P_1$ and $P_2$, since (again, ignore global phase, which means that Pauli operators commute)
+$$
+	\begin{aligned}
+		(EP)P_i
+		&= (EP)(EP'_i)
+	\\&= E^2 PP'_i
+	\\&= PP'_i
+		\in\mathcal{S}
+	\end{aligned}
+$$
+because Pauli operators square to $\id$, and $P'_i\in P\cdot\mathcal{S}$.
+
+We also get the converse statement from this argument: *if any small rectangle contains dots in different rows, then we cannot error correct*.
+This is because we need $EP$ to correct for some errors, and some different $EP'$ to correct for others, and we have no way of choosing which one to correct with when we measure the error syndrome for $E$ without already knowing which error took place.^[Just to be clear, if we knew which errors took place, then we wouldn't have to worry about error correction at all, because we'd always know how to perfectly recover the desired state. And remember that we can't measure to find out which error took place, since this would destroy the state that we're trying so hard to preserve!]
 
 ::: {.todo latex=""}
 <!-- TO-DO:
@@ -1146,9 +1217,15 @@ The answer to this question lies in understanding how any set of specific errors
 	2. note (and prove) that specific errors in the same row are also corrected for free
 	3. note (and prove) that we cannot ever hope to correct errors in the normaliser that are not in the stabiliser
 	4. come up with the two rules
-	5. draw the diagrams of all weight 1 X-, Y-, and Z-type errors to see which ones follow the rules
-	6. so we take a code and then get given a set of possible errors; we draw the diagram and see if it follows the rules; if it does, then we can perfectly error correct; if not, then we can still do probabilistic error correction! (maybe make this a new section)
+	4.5. POINT OUT THAT GLOBAL PHASE MATTERS FOR ERROR-SYNDROMES BUT NOT FOR SPECIFIC ERRORS
+	5. draw the diagrams of all weight 1 X-, Y-, and Z-type errors to see which ones follow the rules --- MAYBE MOVE THIS TO AN EXERCISE+REMARK?
+	5.5 write a full explanation of the Y-type errors in the remarks+exercises? it maybe looks a bit worrying because the rows aren't the ones corresponding to the stabiliser
+	6. so we take a code and then get given a set of possible errors; we draw the diagram and see if it follows the rules; if it does, then we can perfectly error correct; if not, then we can still do probabilistic error correction! (maybe make this a new section? exercise?)
 -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: note somewhere that "single qubit errors" is the same as assuming "lowest weight errors", and for any probabilistic approach the assumption that errors are independent means that higher weight errors happen with lower probability --- HOWEVER the stabiliser formalism doesn't care about this "independent error" assumption, and we can draw all these little dot diagrams for arbitrary probability distributions on the errors! -->
 :::
 
 
@@ -1208,9 +1285,9 @@ The answer to this question lies in understanding how any set of specific errors
 <!-- TO-DO: .idea with the two rules: nothing in the normaliser that isn't in the stabiliser; in any coset, everything must be in a single (but arbitrary) row -->
 :::
 
-(ref:all-weight-1-errors-in-three-qubit-code-caption) All computational errors of weight at most $1$ from Figure \@ref(fig:all-cosets-three-qubit-code). Note that this describes a *non*-correctable scenario. In fact, *both* of the two rules are broken.
+(ref:all-weight-1-errors-three-qubit-code-caption) All computational errors of weight at most $1$ from Figure \@ref(fig:all-cosets-three-qubit-code). Note that this describes a *non*-correctable scenario. In fact, *both* of the two rules are broken.
 
-```{r all-weight-1-errors-in-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:all-weight-1-errors-in-three-qubit-code-caption)',fig.width=2.25}
+```{r all-weight-1-errors-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:all-weight-1-errors-three-qubit-code-caption)',fig.width=2.25}
 \begin{tikzpicture}
 	\ErrorDotDiagram{(1,1),(2,4),(3,4),(4,4),(1,5),(3,8),(1,9),(4,12),(1,13),(2,16)}
   \node at (1.5,-0.5) {\footnotesize All errors of weight $\leq1$};
@@ -1218,9 +1295,9 @@ The answer to this question lies in understanding how any set of specific errors
 \end{tikzpicture}
 ```
 
-(ref:xyz-type-weight-1-errors-in-three-qubit-code-caption) Different types of computational errors of weight at most $1$ from Figure \@ref(fig:all-cosets-three-qubit-code). *Left to right:* $X$-type errors (correctable); $Y$-type errors (correctable); $Z$-type errors (non-correctable).
+(ref:xyz-type-weight-1-errors-three-qubit-code-caption) Different types of computational errors of weight at most $1$ from Figure \@ref(fig:all-cosets-three-qubit-code). *Left to right:* $X$-type errors (correctable); $Y$-type errors (correctable); $Z$-type errors (non-correctable).
 
-```{r xyz-type-weight-1-errors-in-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:xyz-type-weight-1-errors-in-three-qubit-code-caption)',fig.width=8}
+```{r xyz-type-weight-1-errors-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:xyz-type-weight-1-errors-three-qubit-code-caption)',fig.width=8}
 \begin{tikzpicture}
 	\begin{scope}
 		\ErrorDotDiagram{(1,1),(1,5),(1,9),(1,13)}
@@ -1460,9 +1537,10 @@ This gives us the encoding circuit in Figure \@ref(fig:projection-steane-encodin
 ```
 
 The three measurements in the encoding circuit in Figure \@ref(fig:projection-steane-encoding) allow us to correct for any single-qubit error in the encoding process, just as we did in Section \@ref(measuring-pauli-stabilisers), using the lookup table from Section \@ref(quantum-codes-from-classical).
-If we measure $(+++)$, then no error has occurred, but if we measure, say, $(-++)$, then we know that the error $Z_5$ (a $Z$ error on the $j$-th qubit) has affected our encoding, and so we must correct for this.
+If we measure $(+++)$, then no error has occurred, but if we measure, say, $(-++)$, then we know that the error $Z_5$ has affected our encoding, and so we must correct for this.
 <!-- But there is some ambiguity here, described exactly by the cosets we've been looking at throughout: we have said that errors correspond to *cosets* of $N(\mathcal{S})$ inside $\mathcal{P}_n$, so which representative of $Z_5\times N(\mathcal{S})$ should we pick to correct with?
 Let's think carefully. -->
+<!-- OK BUT IF WE JUST ASSUME SINGLE QUBIT ERRORS, AS PER USUAL, THEN WE KNOW THAT $Z_5$ ACTUALLY IS A PHASE-FLIP ERROR ON THE FIFTH QUBIT -->
 
 ::: {.todo latex=""}
 <!-- TO-DO: recall how we use the three ancilla measurements to apply $Z$-corrections; TALK ABOUT COSETS -->
