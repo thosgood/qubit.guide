@@ -1141,11 +1141,11 @@ That is, rather than thinking about a code as something being built to correct f
 The answer to this question lies in understanding how any set of specific errors is distributed across the cosets, and we can draw even simpler versions of the diagram in Figure \@ref(fig:all-cosets-three-qubit-code) to figure this out.
 
 Returning to the scenario where we assume that only single bit-flip errors can occur, we can mark the corresponding specific errors in Figure \@ref(fig:all-cosets-three-qubit-code) --- namely $\id$, $X\id\id$, $\id X\id$, and $\id\id X$ --- with a dot.
-We do this in Figure \@ref(fig:weight-1-x-errors-three-qubit-code), which is the first of many more diagrams of this form.
+We do this in Figure \@ref(fig:weight-1-x-errors-three-qubit-code), which is the first of many more diagrams of this form, which we call **error-dot diagrams**.
 Although we are working with the specific example of the three-qubit code in mind, these diagrams are meant to be understood more generally as applying to any stabiliser code.
 As we shall soon see, we don't really need to worry about making sure that we have the right number of rows in each small rectangle (i.e. the right number of cosets of $\mathcal{S}$ inside $N(\mathcal{S})$), and in some sense we don't even really need to worry about what the specific errors *are*.
 
-(ref:weight-1-x-errors-three-qubit-code-caption) All specific $X$-type errors of weight at most $1$ from Figure \@ref(fig:all-cosets-three-qubit-code), each marked by a dot.
+(ref:weight-1-x-errors-three-qubit-code-caption) All specific $X$-type errors of weight at most $1$ from Figure \@ref(fig:all-cosets-three-qubit-code), each marked by a dot. We informally refer to the four cosets corresponding to $N(\mathcal{S})\triangleleft\mathcal{P}_n$ as **boxes** and the (copy of the) four cosets corresponding to $\mathcal{S}\triangleleft N(\mathcal{S})$ as **rows**.
 
 ```{r weight-1-x-errors-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:weight-1-x-errors-three-qubit-code-caption)',fig.width=2}
 \begin{tikzpicture}
@@ -1154,7 +1154,7 @@ As we shall soon see, we don't really need to worry about making sure that we ha
 ```
 
 As we said above, if each logical error (i.e. coset) contains exactly one specific error (i.e. Pauli operator), then we already know how to apply corrections based on the error-syndrome measurements.
-In terms of the diagram in Figure \@ref(fig:weight-1-x-errors-three-qubit-code), this rule becomes rather simple: *if each small rectangle contains exactly one dot, then we can error correct*.
+In terms of the diagram in Figure \@ref(fig:weight-1-x-errors-three-qubit-code), this rule becomes rather simple: *if each box contains exactly one dot, then we can error correct*.
 
 But can we say something more interesting than this?
 Well, let's consider what happens if we have a diagram that looks like this:
@@ -1183,7 +1183,7 @@ $$
 	(X\id\id)(YZ\id)\ket{\psi}
 	= \ket{\psi}.
 $$
-We can fully generalise this to improve upon the previous rule: *if all the dots in any given small rectangle are all in the same row, then we can perfectly error correct*.
+We can fully generalise this to improve upon the previous rule: *if all the dots in any given box are all in the same row, then we can perfectly error correct*.
 
 To prove this, we just return to the definition of cosets and the properties of the Pauli group.^[This is one of those arguments where it's easy to get lost in the notation. Try picking two specific errors $P_1$ and $P_2$ in the same row somewhere in Figure \@ref(fig:all-cosets-three-qubit-code) and following through the argument, figuring out what $E$, $P$, $P'_1$, and $P'_2$ are as you go.]
 If two specific errors $P_1$ and $P_2$ are in the same row inside some coset $E\cdot N(\mathcal{S})$, then by definition they both come from the same coset $P\cdot\mathcal{S}$, i.e.
@@ -1208,110 +1208,57 @@ $$
 $$
 because Pauli operators square to $\id$, and $P'_i\in P\cdot\mathcal{S}$.
 
-We also get the converse statement from this argument: *if any small rectangle contains dots in different rows, then we cannot error correct*.
+We also get the converse statement from this argument: *if any box contains dots in different rows, then we cannot error correct*.
 This is because we need $EP$ to correct for some errors, and some different $EP'$ to correct for others, and we have no way of choosing which one to correct with when we measure the error syndrome for $E$ without already knowing which error took place.^[Just to be clear, if we knew which errors took place, then we wouldn't have to worry about error correction at all, because we'd always know how to perfectly recover the desired state. And remember that we can't measure to find out which error took place, since this would destroy the state that we're trying so hard to preserve!]
 
-::: {.todo latex=""}
-<!-- TO-DO:
-	1. draw the dot diagram of all weight 1 X-type errors
-	2. note (and prove) that specific errors in the same row are also corrected for free
-	3. note (and prove) that we cannot ever hope to correct errors in the normaliser that are not in the stabiliser
-	4. come up with the two rules
-	4.5. POINT OUT THAT GLOBAL PHASE MATTERS FOR ERROR-SYNDROMES BUT NOT FOR SPECIFIC ERRORS
-	5. draw the diagrams of all weight 1 X-, Y-, and Z-type errors to see which ones follow the rules --- MAYBE MOVE THIS TO AN EXERCISE+REMARK?
-	5.5 write a full explanation of the Y-type errors in the remarks+exercises? it maybe looks a bit worrying because the rows aren't the ones corresponding to the stabiliser
-	6. so we take a code and then get given a set of possible errors; we draw the diagram and see if it follows the rules; if it does, then we can perfectly error correct; if not, then we can still do probabilistic error correction! (maybe make this a new section? exercise?)
--->
-:::
+So is this the whole story?
+Almost, but one detail is worth making explicit, concerning maybe the most innocuous looking error of all: the identity error.
+Consider a scenario like the following:
 
-::: {.todo latex=""}
-<!-- TO-DO: note somewhere that "single qubit errors" is the same as assuming "lowest weight errors", and for any probabilistic approach the assumption that errors are independent means that higher weight errors happen with lower probability --- HOWEVER the stabiliser formalism doesn't care about this "independent error" assumption, and we can draw all these little dot diagrams for arbitrary probability distributions on the errors! -->
-:::
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-::: {.todo latex=""}
-<!-- TO-DO: ok so what's the actual scenario? can arbitrary errors (IN THIS PARAGRAPH we mean "actual error", i.e. not the whole coset but a specific element --- COME UP WITH SOME GOOD TERMINOLOGY TO DISTINGUISH BETWEEN THESE TWO USES!!! "COMPUTATIONAL ERROR" TO MEAN THE ACTUAL ELEMENT, NOT THE COSET?) occur? are they adversarial? it turns out that sometimes we can perfectly correct all errors, even if there are lots of them, and sometimes we can't, even if there are few --- it all depends on how the errors are spread across the cosets -->
-:::
-
-::: {.todo latex=""}
-<!-- TO-DO: what we really need is a way of describing the scenario: we pick some stabiliser (which gives us a code), and then we have some set of errors that can occur -->
-:::
-
-::: {.todo latex=""}
-<!-- TO-DO: ok, but what about "actual" errors? SHOW (PROVE --- maybe this is 12.4 in v5?) how applying the correction corresponding to that row will fix ALL ERRORS IN THE SAME ROW; so if our possible errors always appear in the same row then we can perfectly error correct! -->
-<!-- TO-DO: let's start with something our codes can NEVER fix... SHOW (PROVE) that we can NEVER correct anything in the normaliser that ISN'T in the stabiliser (e.g. the single-weight Z errors) -->
-<!-- TO-DO: THIS IS WHY WE NEED TWO COPIES OF THIS (i.e. nine-qubit code) IN ORDER TO CORRECT FOR EVERYTHING --- ONE DOES THE X ERRORS (ignoring the Z) AND THEN WE HAVE THE COPY WITH X-TYPE STABILISERS THAT FIXES THE Z ERRORS (ignoring the X) (but we see that we could have one instead fix the Y errors) -->
-:::
-
-::: {.todo latex=""}
-<!-- TO-DO: these diagrams with dots, that describe the whole scenario, with the rectangle being the code and the dots being the possible errors; talk about global phase being important for picking the coset, but then not necessary afterwards when it comes to picking a representative within that coset (hence why we draw these diagrams as a single sheet) -->
-<!-- TO-DO: BE CAREFUL with these diagrams! recall that cosets of S inside P don't really make sense (since it's not normal); also, when we quotient by \pm1,\pm i we make P abelian so the (image under this quotient of the) normaliser is no longer actually the normaliser; etc. etc. -->
-:::
-
-::: {.todo latex=""}
-<!-- TO-DO: .idea with the two rules: nothing in the normaliser that isn't in the stabiliser; in any coset, everything must be in a single (but arbitrary) row -->
-:::
-
-(ref:all-weight-1-errors-three-qubit-code-caption) All computational errors of weight at most $1$ from Figure \@ref(fig:all-cosets-three-qubit-code). Note that this describes a *non*-correctable scenario. In fact, *both* of the two rules are broken.
-
-```{r all-weight-1-errors-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:all-weight-1-errors-three-qubit-code-caption)',fig.width=2.25}
+```{r engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2}
 \begin{tikzpicture}
-	\ErrorDotDiagram{(1,1),(2,4),(3,4),(4,4),(1,5),(3,8),(1,9),(4,12),(1,13),(2,16)}
+	\ErrorDotDiagram{(1,1),(2,4),(3,4),(4,4)}
 \end{tikzpicture}
 ```
 
-(ref:xyz-type-weight-1-errors-three-qubit-code-caption) Different types of computational errors of weight at most $1$ from Figure \@ref(fig:all-cosets-three-qubit-code). *Left to right:* $X$-type errors (correctable); $Y$-type errors (correctable); $Z$-type errors (non-correctable).
+In the case of the three-qubit code, this corresponds to the possible specific errors being single phase-flips $Z\id\id$, $\id Z\id$, and $\id\id Z$.
+But here we see how misleading it is to omit mention of the identity error $\id\id\id$, because the single phase-flips all live in the same $N(\mathcal{S})$ coset as $\id\id\id$, but different $\mathcal{S}$ cosets.
+That is, they are in the same box, but a different row.
+By our above discussion, this means that we cannot correct for these errors --- indeed, if we measure the error syndrome corresponding to "no error", then we don't know whether there truly was no error or if one of these single phase-flips happened instead.
+To put it succinctly, we nearly *always* make the assumption that *no errors at all might occur*, which is exactly the same as saying that *the trivial error $\id$ might occur*.
+This means that we cannot correct for any errors that are found in the normaliser of $\mathcal{S}$ but not in $\mathcal{S}$ itself.
+Although this is technically a sub-rule of the previous rule, it's worth pointing out explicitly.
 
-```{r xyz-type-weight-1-errors-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:xyz-type-weight-1-errors-three-qubit-code-caption)',fig.width=8}
-\begin{tikzpicture}
-	\begin{scope}
-		\ErrorDotDiagram{(1,1),(1,5),(1,9),(1,13)}
-  \end{scope}
-	\begin{scope}[shift={(4,0)}]
-		\ErrorDotDiagram{(1,1),(3,8),(4,12),(2,16)}
-  \end{scope}
-	\begin{scope}[shift={(8,0)}]
-		\ErrorDotDiagram{(1,1),(2,4),(3,4),(4,4)}
-  \end{scope}
-\end{tikzpicture}
-```
+::: {.idea latex=""}
+An error-dot diagram describes a perfectly correctable set of errors if and only if the following two rules are satisfied:
 
-::: {.todo latex=""}
-<!-- TO-DO -->
+1. In any given box, all the dots are in the same row.
+2. Any dots in the bottom box are in the bottom row.
+
+(The second rule follows from the first as long as the scenario in question allows the possibility for no errors to occur.)
 :::
+
+Of course, we can state these conditions without making reference to the dot-error diagrams, instead using the same mathematical objects that we've been using all along.
+Proving the following version of the statement is the content of Exercise \@ref(error-correcting-conditions-algebraically).
+
+::: {.idea latex=""}
+Let $\mathcal{E}\subseteq\mathcal{P}_n$ be a set of specific errors.
+Then the stabiliser code defined by $\mathcal{S}$ can perfectly correct for all errors in $\mathcal{E}$ if and only if
+$$
+	E_1^\dagger E_2
+	\in N(\mathcal{S})\setminus\mathcal{S}
+$$
+for all $E_1,E_2\in\mathcal{E}$.
+:::
+
+You might notice that we've been sometimes been saying "*perfectly* correctable" instead of just "correctable".
+This is because there might be scenarios where we are happy with being able to correct errors not perfectly, but instead merely with some high probability.
+We discuss this further in Exercise \@ref(non-perfectly-correctable-errors).
+
+One last point that is important for those who care about mathematical correctness concerns our treatment of global phases.
+We *do* need to care about global phases in order to perform error-syndrome measurements, but *once we have the error syndrome we can forget about them*.
+We talk more about this in Exercise \@ref(global-phase-or-not-for-errors).
+
 
 
 
@@ -1825,3 +1772,99 @@ If we really like, however, we could go one step further and replace the control
 
 
 <div class="video" title="Fault-tolerant computation and threshold theorems" data-videoid="TPUElc_4amo"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## *Remarks and exercises* {#remarks-and-exercises-fault-tolerant-quantum-computation}
+
+
+### Error correcting conditions for the three-qubit code
+
+::: {.todo latex=""}
+<!-- TO-DO: talk about how we could use the three-qubit code twice and correct for Y and Z (instead of X and Z) to get a modified nine-qubit code; also just draw a bunch more of these diagrams? -->
+:::
+
+(ref:all-weight-1-errors-three-qubit-code-caption) All computational errors of weight at most $1$ for the three-qubit code given by $\langle ZZ\id,\id ZZ\rangle$. Note that this describes a *non*-correctable scenario. In fact, *both* of the two rules are broken.
+
+```{r all-weight-1-errors-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:all-weight-1-errors-three-qubit-code-caption)',fig.width=2.25}
+\begin{tikzpicture}
+	\ErrorDotDiagram{(1,1),(2,4),(3,4),(4,4),(1,5),(3,8),(1,9),(4,12),(1,13),(2,16)}
+\end{tikzpicture}
+```
+
+(ref:xyz-type-weight-1-errors-three-qubit-code-caption) Different types of computational errors of weight at most $1$. *Left to right:* $X$-type errors (correctable); $Y$-type errors (correctable); $Z$-type errors (non-correctable).
+
+```{r xyz-type-weight-1-errors-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:xyz-type-weight-1-errors-three-qubit-code-caption)',fig.width=8}
+\begin{tikzpicture}
+	\begin{scope}
+		\ErrorDotDiagram{(1,1),(1,5),(1,9),(1,13)}
+  \end{scope}
+	\begin{scope}[shift={(4,0)}]
+		\ErrorDotDiagram{(1,1),(3,8),(4,12),(2,16)}
+  \end{scope}
+	\begin{scope}[shift={(8,0)}]
+		\ErrorDotDiagram{(1,1),(2,4),(3,4),(4,4)}
+  \end{scope}
+\end{tikzpicture}
+```
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+
+### Do we care about global phase or not? {#global-phase-or-not-for-errors}
+
+::: {.todo latex=""}
+<!-- TO-DO: these diagrams with dots, that describe the whole scenario, with the rectangle being the code and the dots being the possible errors; talk about global phase being important for picking the coset, but then not necessary afterwards when it comes to picking a representative within that coset (hence why we draw these diagrams as a single sheet) -->
+<!-- TO-DO: BE CAREFUL with these diagrams! recall that cosets of S inside P don't really make sense (since it's not normal); also, when we quotient by \pm1,\pm i we make P abelian so the (image under this quotient of the) normaliser is no longer actually the normaliser; etc. etc. -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+
+### Probabilistic error correction {#non-perfectly-correctable-errors}
+
+::: {.todo latex=""}
+<!-- TO-DO: note somewhere that "single qubit errors" is the same as assuming "lowest weight errors", and for any probabilistic approach the assumption that errors are independent means that higher weight errors happen with lower probability --- HOWEVER the stabiliser formalism doesn't care about this "independent error" assumption, and we can draw all these little dot diagrams for arbitrary probability distributions on the errors! -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO -->
+:::
+
+
+
+### Error-correcting conditions, algebraically {#error-correcting-conditions-algebraically}
+
+Let $\mathcal{S}\leq\mathcal{P}_n$ be a stabiliser group, and let $\mathcal{E}\subseteq\mathcal{P}_n$ be a set of specific errors.
+Prove that the stabiliser code defined by $\mathcal{S}$ can perfectly correct for all errors in $\mathcal{E}$ if and only if
+$$
+	E_1^\dagger E_2
+	\in N(\mathcal{S})\setminus\mathcal{S}
+$$
+for all $E_1,E_2\in\mathcal{E}$.
