@@ -991,7 +991,7 @@ To find a more useful answer, let's take a step back and look at the scenarios t
 ## Error-correcting conditions {#error-correcting-conditions}
 
 We can summarise the notion of a stabiliser code that we have defined rather succinctly: everything is determined by picking a stabiliser group, i.e. an abelian subgroup $\mathcal{S}$ of the Pauli group $\mathcal{P}_n$ that does not contain $-\id$.
-From this, we call the stabiliser subspace $V_\mathcal{S}$ the codespace, we call its basis vectors the codewords, and we call cosets of $\mathcal{S}$ inside its normaliser $N(\mathcal{S})$ logical operators, and cosets of $N(\mathcal{S})$ inside $\mathcal{P}_n$ logical errors.
+From this, we define the codespace to be the stabiliser subspace $V_\mathcal{S}$, the codewords to be a choice of basis vectors, the logical operators to be the cosets of $\mathcal{S}\triangleleft N(\mathcal{S})$, and the logical errors to be the cosets of $N(\mathcal{S})\triangleleft\mathcal{P}_n$.
 
 By setting up some ancilla qubits and constructing appropriate quantum circuits^[We will see these circuits soon, starting in Section \@ref(encoding-circuits).], we can enact any logical operator in such a way that we also measure an error syndrome, which points at a specific logical error.
 But unlike in our study of the Steane code in Section \@ref(quantum-codes-from-classical), we can no longer simply apply the corresponding operator to fix the error, because the error is a whole coset --- it contains many individual Pauli operators.
@@ -1290,8 +1290,6 @@ This is because we need $EP$ to correct for some errors, and some different $EP'
 ```{r all-weight-1-errors-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:all-weight-1-errors-three-qubit-code-caption)',fig.width=2.25}
 \begin{tikzpicture}
 	\ErrorDotDiagram{(1,1),(2,4),(3,4),(4,4),(1,5),(3,8),(1,9),(4,12),(1,13),(2,16)}
-  \node at (1.5,-0.5) {\footnotesize All errors of weight $\leq1$};
-  \node at (1.5,-0.75) {\footnotesize --- \textit{not} correctable};
 \end{tikzpicture}
 ```
 
@@ -1301,18 +1299,12 @@ This is because we need $EP$ to correct for some errors, and some different $EP'
 \begin{tikzpicture}
 	\begin{scope}
 		\ErrorDotDiagram{(1,1),(1,5),(1,9),(1,13)}
-    \node at (1.5,-0.5) {\footnotesize $X$ errors of weight $\leq1$};
-	  \node at (1.5,-0.75) {\footnotesize --- \textit{perfectly} correctable};
   \end{scope}
 	\begin{scope}[shift={(4,0)}]
 		\ErrorDotDiagram{(1,1),(3,8),(4,12),(2,16)}
-    \node at (1.5,-0.5) {\footnotesize $Y$ errors of weight $\leq1$};
-	  \node at (1.5,-0.75) {\footnotesize --- \textit{perfectly} correctable};
   \end{scope}
 	\begin{scope}[shift={(8,0)}]
 		\ErrorDotDiagram{(1,1),(2,4),(3,4),(4,4)}
-    \node at (1.5,-0.5) {\footnotesize $Z$ errors of weight $\leq1$};
-	  \node at (1.5,-0.75) {\footnotesize --- \textit{not} correctable};
   \end{scope}
 \end{tikzpicture}
 ```
