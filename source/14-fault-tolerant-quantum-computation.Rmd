@@ -1265,9 +1265,7 @@ We talk more about this in Exercise \@ref(global-phase-or-not-for-errors).
 
 ## Encoding circuits {#encoding-circuits}
 
-::: {.todo latex=""}
-<!-- TO-DO: we've being doing lots of abstract theory, so now let's look at some actual circuits -->
-:::
+The previous sections have set up a lot of abstract theory about stabiliser codes, so now let's take some time to look at more concrete aspects, such as the quantum circuits that actually let us build these codes "in practice".
 
 At the end of Section \@ref(quantum-codes-from-classical) we showed that the CSS construction could be applied to the Hamming $[7,4,3]$-code over itself to obtain the so-called Steane $[[7,1,3]]$-code, which has generators $G_1,\ldots,G_6$ given by the rows in the matrix^[Note that this matrix is just like two copies of the generator matrix for the Hamming $[7,4,3]$-code stacked on top of one another: the first with $X$-type stabilisers, and the second with $Z$-type stabilisers.]
 $$
@@ -1285,7 +1283,7 @@ and codespace given by the corresponding stabiliser space $\mathcal{C}=V_\mathca
 Now, what are the logical states for this code?
 Well, by definition they should be basis states for the stabiliser space $V_{\langle G_1,\ldots,G_6\rangle}$, but the "real" motivation for them is that they should just be the encodings of $\ket{0}$ and $\ket{1}$ in the code.
 So the question becomes just *how do we actually encode states with a code described by the stabiliser formalism?*
-But we have already secretly answered this in Exercise \@ref(stabilisers-and-projectors): the projector onto the $\pm1$-eigenspace of any $G_i$ is given by $\frac{1}{2}(\id\pm G_i)$.
+But it turns out that we have already secretly answered this question in Exercise \@ref(stabilisers-and-projectors): the projector onto the $\pm1$-eigenspace of any $G_i$ is given by $\frac{1}{2}(\id\pm G_i)$.
 
 ::: {.idea latex=""}
 Given stabiliser generators $G_1,\ldots,G_s$, the projector onto the stabiliser space $V_{\langle G_1,\ldots,G_n\rangle}$ (i.e. the encoding for the corresponding stabiliser code) is given by
@@ -1477,13 +1475,8 @@ This gives us the encoding circuit in Figure \@ref(fig:projection-steane-encodin
 
 The three measurements in the encoding circuit in Figure \@ref(fig:projection-steane-encoding) allow us to correct for any single-qubit error in the encoding process, just as we did in Section \@ref(measuring-pauli-stabilisers), using the lookup table from Section \@ref(quantum-codes-from-classical).
 If we measure $(+++)$, then no error has occurred, but if we measure, say, $(-++)$, then we know that the error $Z_5$ has affected our encoding, and so we must correct for this.
-<!-- But there is some ambiguity here, described exactly by the cosets we've been looking at throughout: we have said that errors correspond to *cosets* of $N(\mathcal{S})$ inside $\mathcal{P}_n$, so which representative of $Z_5\times N(\mathcal{S})$ should we pick to correct with?
-Let's think carefully. -->
-<!-- OK BUT IF WE JUST ASSUME SINGLE QUBIT ERRORS, AS PER USUAL, THEN WE KNOW THAT $Z_5$ ACTUALLY IS A PHASE-FLIP ERROR ON THE FIFTH QUBIT -->
-
-::: {.todo latex=""}
-<!-- TO-DO: recall how we use the three ancilla measurements to apply $Z$-corrections; TALK ABOUT COSETS -->
-:::
+Of course, as we now know from Section \@ref(error-correcting-conditions), what it means to correct for the $Z_5$ error depends on which errors can possibly occur.
+If we make the usual assumption that only errors of weight $1$ (i.e. single-qubit errors) can occur, then the $Z_5$ error is exactly that: a phase-flip on the fifth qubit.
 
 
 
@@ -1615,13 +1608,15 @@ This gives us the circuit in Figure \@ref(fig:projection-arbitrary-steane-encodi
 \end{quantikz}
 ```
 
-::: {.todo latex=""}
-<!-- TO-DO: ok but point out in big letters this fact that we already said once: THERE IS NO WAY OF CHECKING THAT THE VERY FIRST STEP DIDN'T HAVE ANY ERRORS, I.E. \ket{\psi} |-> \alpha 0000000 + \beta 0010011  !!!!!!-->
-:::
-
-::: {.todo latex=""}
-<!-- TO-DO: BASICALLY this is good for ERROR CORRECTION (send through a noisy channel but you can prepare stuff first) but not FAULT TOLERANCE (always living in the noise) -->
-:::
+To repeat ourselves, the very first step of this circuit that enacts
+$$
+	\ket{0}\ket{0}\ket{\psi}\ket{0}\ket{0}\ket{0}\ket{0}
+	\longmapsto \alpha\ket{0000000} + \beta\ket{0010011}
+$$
+(where $\ket{\psi}=\alpha\ket{0} + \beta\ket{1}$) is *not* protected by any error correction scheme.
+If $\ket{\psi}$ is some easily reproducible state, like $\ket{0}$, then we don't really mind so much, since we could instead use a circuit where all seven qubits are initially in state $\ket{\psi}$, avoiding this problem altogether.^[Thanks to the no-cloning theorem (Section \@ref(no-cloning-and-no-go)), we know that there is no way of getting around this problem of only having one copy of the state $\ket{\psi}$. The preparation part of the circuit doesn't clone it, but instead just "smears it out" across three qubits instead of one.]
+But if $\ket{\psi}$ is the outcome of some previous computation, or just a state that we don't have complete knowledge of, then we will always be faced with some uncertainty --- did this preparation part of the circuit undergo an error or not?
+These sorts of problems are avoided if we can design truly fault-tolerant computational systems, instead of relying on mere error correction.
 
 Now let's look at the second option from before: encoding and then applying $X_L$.
 Imagine that we were able to construct the following circuit:
