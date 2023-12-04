@@ -494,7 +494,6 @@ $$
 	\subseteq\range(G).
 $$
 
-
 We can figure out some key properties of combining an $[n,k,d]$-code $(G,H)$ for $X$-stabilisers and an $[n,k',d']$-code $(G',H')$ for $Z$-stabilisers without too much difficult.
 Since our first code encodes $k$ bits, the generator $G$ has $k$ rows, and the parity-check matrix $H$ has $n-k$ rows.
 Thus there are $n-k$ of the $X$-type generators, and $n-k'$ of the $Z$-type generators; in total there are $2n-(k+k')$ generators.
@@ -592,7 +591,7 @@ We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:
 \end{tikzpicture}
 ```
 
-Not all quantum codes arise from combining classical ones like this^[For example, the **five-qubit code**, which is the smallest code that can correct for all possible single-qubit errors, is demonstrably *not* a CSS code, as can be shown by the non-existence of something called a **transversal** controlled-$\texttt{NOT}$ gate.], and even for those that do, working with the generator and parity-check matrices can often be cumbersome.
+Not all quantum codes arise from combining classical ones like this^[For example, the **five-qubit code**, which is the smallest code that can correct for all possible single-qubit errors, is demonstrably *not* a CSS code, as can be shown by the non-existence of something called a **transversal** controlled-$\texttt{NOT}$ gate (we discuss this in Section \@ref(transversal-gates)).], and even for those that do, working with the generator and parity-check matrices can often be cumbersome.
 Indeed, a truly *quantum* code will not have a single one of each, since this is not sufficient to deal with the purely quantum phenomena of superposition.
 For example, as the Tanner graph in Figure \@ref(fig:tanner-graph-713) shows, we have *two* parity check matrices in the case of CSS codes.
 When working with truly quantum codes, the stabiliser formalism really becomes much more useful --- our next aim is to justify this with some examples and explanation.
@@ -1729,24 +1728,41 @@ Let $U$ be a single-qubit unitary, representing some computational gate whose lo
 - If there exist single-qubit unitaries $V_1,\ldots,V_n$ such that $V_1\otimes\ldots\otimes V_n$ is an implementation for $U_L$, then we say that $U$ is **weakly transversal**.
 :::
 
-<!-- TO-DO: order of "difficulty" (easy to hard) is c-NOT, Hadamard, S, and then T (impossible) -->
+For our purposes, we don't really mind so much whether a gate is strictly or weakly transversal, so we'll sometimes just refer to them both as "transversal".^[This is another piece of terminology where different sources use different conventions, so it's always a good idea to check which definition of transversal is being used.]
+The reason that we care about transversal gates at all (be they weak or strong) is because they are *inherently fault tolerant*.
+What do we mean by this?
+Well, by their very nature, if an error affects one (physical) qubit, then transversal gates *will not* propagate that error, because they involve no interaction between different (physical) qubits.
+There is also the bonus that transversal gates are implemented by a single "gate step", rather than some sequential combination of gates, which also has positive implications for fault tolerance (thanks to the **threshold theorem**, which we will see in Section \@ref(putting-it-all-together)) as well as making the overall complexity generally simpler.
 
-::: {.todo latex=""}
-<!-- TO-DO: ok so we know how to do Pauli gates without having to decode, but what about all the other gates that we've been using before? for universal computation recall (cref) that it suffices to have all Clifford gates + T -->
-<!-- TO-DO: different definitions of transversal -->
+The next natural question to ask is this: "which of the four gates necessary for universal computation are transversal for which codes"?
+As we shall see, the Steane code admits a lot of transversal gates, due to it being a particularly nice example of a CSS code, whereas the three-qubit code and (thus) the Shor code do not admit quite so many.
+
+To begin with, we might as well say what we already know in terms of this new vocabulary.
+
+::: {.idea latex=""}
+If $\mathcal{C}$ is a CSS code, then all Pauli operators are (weakly) transversal.
+:::
+
+This is immediate by construction: implementations of the logical Pauli operators are, in particular, elements of $\mathcal{P}_n$, which are exactly $n$-fold tensor products (of Pauli operators).
+<!-- TO-DO: is this also immediate for (strongly) transversal ? -->
+
+::: {.idea latex=""}
+If $\mathcal{C}$ is a CSS code, then $\texttt{c-NOT}$ is (strictly) transversal.
 :::
 
 ::: {.todo latex=""}
-<!-- TO-DO: (theorem) code is a stabiliser code => logical Paulis are transversal -->
-:::
-
-::: {.todo latex=""}
-<!-- TO-DO: (theorem) code is a CSS code => admits strictly transversal c-NOT -->
+<!-- TO-DO: (proof) code is a CSS code => admits strictly transversal c-NOT -->
 <!-- TO-DO: actually this is an <=>, right? -->
 :::
 
+::: {.idea latex=""}
+If $\mathcal{C}=\operatorname{CSS}(C_1,C_1)$ is a CSS code of a (necessarily weakly self-dual) code over itself, then the Hadamard is (strictly) transversal.
+:::
+
+Note that this theorem applies in particular to the Steane code, which is the CSS code of the Hamming $[7,4,3]$-code over itself.
+
 ::: {.todo latex=""}
-<!-- TO-DO: (theorem) code is a CSS code of the same code over itself => admits strictly transversal Hadamard -->
+<!-- TO-DO: (proof) code is a CSS code of the same code over itself => admits strictly transversal Hadamard -->
 :::
 
 ::: {.todo latex=""}
@@ -1754,9 +1770,35 @@ Let $U$ be a single-qubit unitary, representing some computational gate whose lo
 <!-- SUPER IMPORTANT: logical+ is NOT +++ !!! logical+ is 1/2(0_L+1_L), which IS entangled (it's GHZ), but +++ is just a sum of all binary strings of length three divided by sqrt(8), which is NOT entangled -->
 :::
 
-::: {.todo latex=""}
-<!-- TO-DO: Eastin--Knill -->
+::: {.idea latex=""}
+If $\mathcal{C}=\operatorname{CSS}(C_1,C_1)$, and **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO-DO: another condition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**, then the $S$ gate is (strictly) transversal.
 :::
+
+Note that this theorem *also* applies in particular to the Steane code.
+
+::: {.todo latex=""}
+<!-- TO-DO: (proof) S gate (maybe leave as an exercise?) -->
+:::
+
+::: {.idea latex=""}
+If $\mathcal{C}=\operatorname{CSS}(C_1,C_1)$, and **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO-DO: another condition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**, then the $T$ gate is *not* transversal.
+:::
+
+Note first of all that the theorems we have been giving in this section have been getting only more specific, so any code satisfying the hypotheses of one theorem also satisfy those of all preceding theorems.
+In other words, any CSS code of the form $\operatorname{CSS}(C_1,C_1)$ **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO-DO: another condition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!** (such as the Steane code) is such that controlled-$\texttt{NOT}$, the Hadamard, and the $S$ gate are all transversal.
+If the $T$ gate were also transversal, then we would have a *universal* set of gates that are *all* transversal.
+This would be fantastic, but mathematics tells us that it is just too good to be true.
+
+::: {.idea latex=""}
+**The [Eastin--Knill Theorem](https://en.wikipedia.org/wiki/Eastin–Knill_theorem).**
+**!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO-DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: what about T? well we don't even need to do any theorem proving, because Eastin--Knill tells us that it's impossible (not even just for CSS, but for ANY) -->
+:::
+
+<!-- TO-DO: order of "difficulty" (easy to hard) is c-NOT, Hadamard, S, and then T (impossible); table summarising which ones are transversal for Steane and for Shor (or maybe just for general CSS conditions) -->
 
 ::: {.todo latex=""}
 <!-- TO-DO -->
@@ -1771,11 +1813,15 @@ Let $U$ be a single-qubit unitary, representing some computational gate whose lo
 <div class="video" title="Fault-tolerant computation and threshold theorems" data-videoid="TPUElc_4amo"></div>
 
 ::: {.todo latex=""}
-<!-- TO-DO: okay so... what does computation actually look like? whenever we have our logical gates do we always just wrap them in Hadamard-controlled-Hadamard ancilla circuits and then measure and correct? -->
+<!-- TO-DO: threshold theorems (and NISQ etc?) -->
 :::
 
 ::: {.todo latex=""}
-<!-- TO-DO: threshold theorems (and NISQ etc?) -->
+<!-- TO-DO: how can we get around Eastin--Knill? -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: okay so... what does computation actually look like? whenever we have our logical gates do we always just wrap them in Hadamard-controlled-Hadamard ancilla circuits and then measure and correct? -->
 :::
 
 ::: {.todo latex=""}
