@@ -5,10 +5,6 @@
 > Finally about computing in the presence of errors: **logical states**, **logical operators**, and **logical errors** --- all via the formalism of stabilisers --- and the **transversal gates** that we can implement to act on them.
 
 ::: {.todo latex=""}
-<!-- TO-DO: definition of fault tolerance in 4.2 of https://arxiv.org/abs/0904.2557 -->
-:::
-
-::: {.todo latex=""}
 <!-- TO-DO: basically we want to go from simple error correction to fault-tolerant computation, working with encoded states using logical operators; fault-tolerance can be defined as circuits such that, if an error occurs on a single qubit, then it doesn't produce more errors in the same block; we will really just focus on qubit errors, but it's interesting to think about gate errors and measurement errors too! -->
 <!-- TO-DO: we start by continuing to talk about error correction, moving slowly towards fault-tolerance -->
 <!-- TO-DO: mention (that we will talk about) practicality and NISQ devices; threshold theorem -->
@@ -512,7 +508,7 @@ quantum error correction code, and its decoding is well understood based on the 
 This general construction of quantum error correcting codes is known as the **CSS construction**, for its originators [Robert Calderbank](https://en.wikipedia.org/wiki/Robert_Calderbank), [Peter Shor](https://en.wikipedia.org/wiki/Peter_Shor), and [Andrew Steane](https://en.wikipedia.org/wiki/Andrew_Steane).
 
 ::: {.idea latex=""}
-Given an $[n,k,d]$-code $C_1=(G_1,H_1)$ and an $[n,k_2,d_2]$-code $C_2=(G_2,H_2)$ such that $\range(H_2^T)\subseteq\range(G_1)$, the **CSS code** $\operatorname{CSS}(C_1,C_2)$ constructed as above is an $[[n,k_1+k_2-n,\min(d_1,d_2)]]$-code.
+Given an $[n,k_1,d_1]$-code $C_1=(G_1,H_1)$ and an $[n,k_2,d_2]$-code $C_2=(G_2,H_2)$ such that $\range(H_2^T)\subseteq\range(G_1)$, the **CSS code** $\operatorname{CSS}(C_1,C_2)$ constructed as above is an $[[n,k_1+k_2-n,\min(d_1,d_2)]]$-code.
 :::
 
 As always, one needs to be careful of conventions.
@@ -1403,7 +1399,7 @@ If we are trying to design things for the real world, where qubits can undergo d
 We have already done the hard work for this though, in Section \@ref(measuring-pauli-stabilisers), when we constructed circuits to project onto Pauli stabiliser spaces.
 This gives us the encoding circuit in Figure \@ref(fig:projection-steane-encoding).
 
-(ref:projection-steane-encoding-caption) Another possible encoding circuit for the Steane code, which uses three ancilla bits to ensure fault tolerance when encoding arbitrary states, but is non-unitary (since it involves measurement). The measurements of the ancilla bits can be used to apply the necessary $Z$-type corrections.
+(ref:projection-steane-encoding-caption) Another possible encoding circuit for the Steane code, which uses three ancilla bits for error correction when encoding arbitrary states, but is non-unitary (since it involves measurement). The measurements of the ancilla bits can be used to apply the necessary $Z$-type corrections.
 
 ```{r projection-steane-encoding,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5,fig.cap='(ref:projection-steane-encoding-caption)'}
 \begin{quantikz}
@@ -1723,9 +1719,11 @@ It so happens that each of these is a little bit more tricky than the previous o
 Suppose we're interested in some $[[n,k,d]]$ stabiliser code $\mathcal{C}$.
 Let $U$ be a single-qubit unitary, representing some computational gate whose logical version $U_L$ we want to study.
 
-- If $U^{\otimes n}$ is an implementation for $U_L$ (i.e. if its effect on the codespace is exactly the effect of logical $U$) then we say that $U$ is **strictly transversal** (for the code $\mathcal{C}$).
+- If $U^{\otimes n}$ is an implementation for $U_L$ (i.e. if its effect on the codespace is exactly the effect of logical $U$) then we say that $U$ is **strictly transversal**.
 
 - If there exist single-qubit unitaries $V_1,\ldots,V_n$ such that $V_1\otimes\ldots\otimes V_n$ is an implementation for $U_L$, then we say that $U$ is **weakly transversal**.
+
+It's important to note that "being transversal" isn't an intrinsic property of an operator, but depends on the code: a gate might be transversal with respect to one code but not transversal with respect to another.
 :::
 
 For our purposes, we don't really mind so much whether a gate is strictly or weakly transversal, so we'll sometimes just refer to them both as "transversal".^[This is another piece of terminology where different sources use different conventions, so it's always a good idea to check which definition of transversal is being used.]
@@ -1743,8 +1741,12 @@ To begin with, we might as well say what we already know in terms of this new vo
 If $\mathcal{C}$ is a CSS code, then all Pauli operators are (weakly) transversal.
 :::
 
-This is immediate by construction: implementations of the logical Pauli operators are, in particular, elements of $\mathcal{P}_n$, which are exactly $n$-fold tensor products (of Pauli operators).
-<!-- TO-DO: is this also immediate for (strongly) transversal ? -->
+This is immediate by construction: implementations of the logical Pauli operators are, in particular, elements of $\mathcal{P}_n$, which are exactly $n$-fold tensor products (of Pauli operators).^[In the example of the Steane code, we saw that $X$ and $Z$ are actually *strictly* transversal. The question of when this happens forms part of Exercise \@ref(odd-parity-transversal-gates).]
+
+For other gates, we need to do a bit more work.
+Generally, to show that some operator $U$ is transversal, we need to show two things: that $U^{\otimes n}$ preserves the codespace, and then that it actually enacts the logical $U$ operation.
+
+<!-- TO-DO: the action of a unitary U is given by conjugation!!!!! -->
 
 ::: {.idea latex=""}
 If $\mathcal{C}$ is a CSS code, then $\texttt{c-NOT}$ is (strictly) transversal.
@@ -1755,11 +1757,18 @@ If $\mathcal{C}$ is a CSS code, then $\texttt{c-NOT}$ is (strictly) transversal.
 <!-- TO-DO: actually this is an <=>, right? -->
 :::
 
+This is essentially all we can say for an arbitrary CSS code, but our main example of interest has been the Steane code, which is of a very special form: it is a CSS code of a classical code over itself, namely the Hamming $[7,4,3]$-code.
+We can say quite a bit more about CSS codes of this specific type.
+
 ::: {.idea latex=""}
-If $\mathcal{C}=\operatorname{CSS}(C_1,C_1)$ is a CSS code of a (necessarily weakly self-dual) code over itself, then the Hadamard is (strictly) transversal.
+If $\mathcal{C}=\operatorname{CSS}(C,C)$, then the Hadamard is (strictly) transversal.
 :::
 
-Note that this theorem applies in particular to the Steane code, which is the CSS code of the Hamming $[7,4,3]$-code over itself.
+To prove this, we start by just writing down the action of $H^{\otimes n}$ on any stabiliser, say of $X$-type: if $x$ is some row of the parity-check matrix $H$ of the classical code $C$, then
+$$
+	H^{\otimes n}X_x H^{\otimes n}
+	= Z_x
+$$
 
 ::: {.todo latex=""}
 <!-- TO-DO: (proof) code is a CSS code of the same code over itself => admits strictly transversal Hadamard -->
@@ -1767,27 +1776,35 @@ Note that this theorem applies in particular to the Steane code, which is the CS
 
 ::: {.todo latex=""}
 <!-- TO-DO: three qubit (or, in general, any repetition code) has no hope of admitting transversal H, since the logical states are unentangled, but the logical H sends logical 0 to logical +, which is entangled; even with the weak definition of transversal (U_1\otimes U_2\otimes U_3) there's no way of ever getting entanglement -->
-<!-- SUPER IMPORTANT: logical+ is NOT +++ !!! logical+ is 1/2(0_L+1_L), which IS entangled (it's GHZ), but +++ is just a sum of all binary strings of length three divided by sqrt(8), which is NOT entangled -->
+<!-- SUPER IMPORTANT: logical+ is NOT +++ !!! logical+ is (1/2)(0_L+1_L), which IS entangled (it's GHZ), but +++ is just a sum of all binary strings of length three divided by sqrt(8), which is NOT entangled -->
 :::
+
+Something else that is special, perhaps surprisingly, about the Steane code is the *parity* of the number of qubits that it uses: $7$ is an *odd* number.
 
 ::: {.idea latex=""}
-If $\mathcal{C}=\operatorname{CSS}(C_1,C_1)$, and **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO-DO: another condition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**, then the $S$ gate is (strictly) transversal.
+If $\mathcal{C}=\operatorname{CSS}(C,C)$ is an $n$-qubit code with $n$ odd, then the $S$ gate is (weakly) transversal.
 :::
 
-Note that this theorem *also* applies in particular to the Steane code.
-
-::: {.todo latex=""}
-<!-- TO-DO: (proof) S gate (maybe leave as an exercise?) -->
-:::
+Proving this statement doesn't require any special tricks, and is a good test that you really understand what's going on, so we leave it as part of Exercise \@ref(odd-parity-transversal-gates).
 
 ::: {.idea latex=""}
-If $\mathcal{C}=\operatorname{CSS}(C_1,C_1)$, and **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO-DO: another condition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**, then the $T$ gate is *not* transversal.
+If $\mathcal{C}=\operatorname{CSS}(C,C)$ is an $n$-qubit code with $n$ odd, then the $T$ gate is *not* transversal.
 :::
 
 Note first of all that the theorems we have been giving in this section have been getting only more specific, so any code satisfying the hypotheses of one theorem also satisfy those of all preceding theorems.
-In other words, any CSS code of the form $\operatorname{CSS}(C_1,C_1)$ **!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TO-DO: another condition !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!** (such as the Steane code) is such that controlled-$\texttt{NOT}$, the Hadamard, and the $S$ gate are all transversal.
+In other words, any $n$-qubit CSS code of the form $\operatorname{CSS}(C,C)$ with $n$ odd (such as the Steane code) is such that controlled-$\texttt{NOT}$, the Hadamard, and the $S$ gate are all transversal.
+We can summarise these results in a table describing which gates are transversal for the code $\operatorname{CSS}(C_1,C_2)$, with extra hypotheses increasing in strictness from left to right:
+
+|  | no conditions | $C_1=C_2$ | $C_1=C_2$ and odd parity |
+|:---:|:---:|:---:|:---:|
+| $P$ | $\checkmark$ | $\checkmark$ | $\checkmark$ |
+| $\texttt{c-NOT}$ | $\checkmark$ | $\checkmark$ | $\checkmark$ |
+| $H$ |  | $\checkmark$ | $\checkmark$ |
+| $S$ |  |  | $\checkmark$ |
+| $T$ |  |  | $\times$ |
+
 If the $T$ gate were also transversal, then we would have a *universal* set of gates that are *all* transversal.
-This would be fantastic, but mathematics tells us that it is just too good to be true.
+This would be fantastic, but mathematics tells us that it would be just too good to be true.
 
 ::: {.idea latex=""}
 **The [Eastin--Knill Theorem](https://en.wikipedia.org/wiki/Eastin–Knill_theorem).**
@@ -1818,6 +1835,10 @@ This would be fantastic, but mathematics tells us that it is just too good to be
 
 ::: {.todo latex=""}
 <!-- TO-DO: how can we get around Eastin--Knill? -->
+:::
+
+::: {.todo latex=""}
+<!-- TO-DO: definition of fault tolerance (as in 4.2 of https://arxiv.org/abs/0904.2557 ?) -->
 :::
 
 ::: {.todo latex=""}
@@ -1950,3 +1971,17 @@ $$
 	\in N(\mathcal{S})\setminus\mathcal{S}
 $$
 for all $E_1,E_2\in\mathcal{E}$.
+
+
+
+### Transversal gates for odd-parity codes {#odd-parity-transversal-gates}
+
+Let $C=(G,H)$ be a weakly self-dual code, so that we can define the CSS code $\mathcal{C}=\operatorname{CSS}(C,C)$.
+Assume that $\mathcal{C}$ is an $n$-qubit code with $n$ *odd*.
+
+1. Prove that the weight (i.e. the number of non-zero entries) of each row of $H$ must be even.
+2. Prove that $X$ and $Z$ are *strictly* transversal for $\mathcal{C}$.
+	What is the importance of $n$ being odd?
+3. What is the effect of the operator $S^{\otimes n}$?
+	Note that your answer should depend on $n$.
+	*Hint: recall that $SZS^\dagger=Z$ but $SXS^\dagger=Y$, and don't forget that $Y=iXZ$ has a phase of $i$!*
