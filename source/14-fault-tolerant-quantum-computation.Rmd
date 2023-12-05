@@ -974,7 +974,7 @@ really does describe the full structure of the code: logical states, logical ope
   \node (paul) at (9.25,-1) {Paulis};
   %
   \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=7pt}] (stab.center) to node[yshift=-18pt]{\footnotesize logical operators} (norm.center);
-  \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=7pt}] (norm.center) to node[yshift=-18pt]{\footnotesize errors} (paul.center);
+  \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=7pt}] (norm.center) to node[yshift=-18pt]{\footnotesize logical errors} (paul.center);
 \end{tikzpicture}
 ```
 
@@ -1137,15 +1137,15 @@ Well, we are forgetting one key assumption that we made before that we have yet 
 Thinking back to our introduction of the three-qubit code in Section \@ref(three-qubit-code), we were specifically trying to deal with single bit-flip errors, i.e. only $X\id\id$, $\id X\id$, and $\id\id X$ (as well as the trivial error $\id\id\id$, which we must not forget about, as we shall see).
 If we look back at Figure \@ref(fig:all-cosets-three-qubit-code) with this in mind, we notice something particularly nice: each of these single $X$-type errors lives in a different coset, and each coset contains exactly one of these errors.
 
-In other words, *if we assume that only single bit-flip errors can occur*, then the stabiliser formalism describes errors in exactly the same way as before, since the cosets are in bijection with the specific errors.^[It's easy to get confused with terminology here, since we say "error" to mean two different things, namely a coset of the normaliser inside the Pauli group, and also a specific element within that coset. If things get too confusing, we might refer to the former as "logical errors" and the latter as "specific errors".]
+In other words, *if we assume that only single bit-flip errors can occur*, then the stabiliser formalism describes errors in exactly the same way as before, since the cosets are in bijection with the physical errors.^[It's easy to get confused with terminology here, since we say "error" to mean two different things, namely a coset of the normaliser inside the Pauli group, and also a specific element within that coset. If things get too confusing, we might refer to the former as "logical errors" and the latter as "physical errors".]
 But here is where the power of the stabiliser formalism can really shine through, since it allows us to understand what type of error scenarios our code can actually deal with in full generality.
 That is, rather than thinking about a code as something being built to correct for a specific set of errors, the stabiliser formalism lets us say "here is a code", and *then* ask "for which sets of errors is this code actually useful?".
-The answer to this question lies in understanding how any set of specific errors is distributed across the cosets, and we can draw even simpler versions of the diagram in Figure \@ref(fig:all-cosets-three-qubit-code) to figure this out.
+The answer to this question lies in understanding how any set of physical errors is distributed across the cosets, and we can draw even simpler versions of the diagram in Figure \@ref(fig:all-cosets-three-qubit-code) to figure this out.
 
-Returning to the scenario where we assume that only single bit-flip errors can occur, we can mark the corresponding specific errors in Figure \@ref(fig:all-cosets-three-qubit-code) --- namely $\id$, $X\id\id$, $\id X\id$, and $\id\id X$ --- with a dot.
+Returning to the scenario where we assume that only single bit-flip errors can occur, we can mark the corresponding physical errors in Figure \@ref(fig:all-cosets-three-qubit-code) --- namely $\id$, $X\id\id$, $\id X\id$, and $\id\id X$ --- with a dot.
 We do this in Figure \@ref(fig:weight-1-x-errors-three-qubit-code), which is the first of many more diagrams of this form, which we call **error-dot diagrams**.
 Although we are working with the specific example of the three-qubit code in mind, these diagrams are meant to be understood more generally as applying to any stabiliser code.
-As we shall soon see, we don't really need to worry about making sure that we have the right number of rows in each small rectangle (i.e. the right number of cosets of $\mathcal{S}$ inside $N(\mathcal{S})$), and in some sense we don't even really need to worry about what the specific errors *are*.
+As we shall soon see, we don't really need to worry about making sure that we have the right number of rows in each small rectangle (i.e. the right number of cosets of $\mathcal{S}$ inside $N(\mathcal{S})$), and in some sense we don't even really need to worry about what the physical errors *are*.
 
 (ref:weight-1-x-errors-three-qubit-code-caption) All specific $X$-type errors of weight at most $1$ from Figure \@ref(fig:all-cosets-three-qubit-code), each marked by a dot. We informally refer to the four cosets corresponding to $N(\mathcal{S})\triangleleft\mathcal{P}_n$ as **boxes** and the (copy of the) four cosets corresponding to $\mathcal{S}\triangleleft N(\mathcal{S})$ as **rows**.
 
@@ -1155,7 +1155,7 @@ As we shall soon see, we don't really need to worry about making sure that we ha
 \end{tikzpicture}
 ```
 
-As we said above, if each logical error (i.e. coset) contains exactly one specific error (i.e. Pauli operator), then we already know how to apply corrections based on the error-syndrome measurements.
+As we said above, if each logical error (i.e. coset) contains exactly one physical error (i.e. Pauli operator), then we already know how to apply corrections based on the error-syndrome measurements.
 In terms of the diagram in Figure \@ref(fig:weight-1-x-errors-three-qubit-code), this rule becomes rather simple: *if each box contains exactly one dot, then we can error correct*.
 
 But can we say something more interesting than this?
@@ -1167,7 +1167,7 @@ Well, let's consider what happens if we have a diagram that looks like this:
 \end{tikzpicture}
 ```
 
-That is, we're considering a scenario where there are *two* possible errors that can occur for a specific error syndrome.
+That is, we're considering a scenario where there are *two* possible errors that can occur for a physical error syndrome.
 In the example of the three-qubit code, we're looking at the scenario where any single bit-flip error can occur, but *also* the operator $YZ\id$ might affect our computation, enacting a bit-phase-flip on the first qubit and a phase-flip on the second.
 What would then happen if we measured the error syndrome $\ket{01}$?
 We know (from Section \@ref(correcting-bit-flips)) that this corresponds to the *logical* error $(X\id\id)\cdot\mathcal{S}$, but both $X\id\id$ *and* $YZ\id$ live in this coset, so we're back to the question posed at the end of Section \@ref(logical-errors): how do we pick which operator to use to correct the error?
@@ -1187,8 +1187,8 @@ $$
 $$
 We can fully generalise this to improve upon the previous rule: *if all the dots in any given box are all in the same row, then we can perfectly error correct*.
 
-To prove this, we just return to the definition of cosets and the properties of the Pauli group.^[This is one of those arguments where it's easy to get lost in the notation. Try picking two specific errors $P_1$ and $P_2$ in the same row somewhere in Figure \@ref(fig:all-cosets-three-qubit-code) and following through the argument, figuring out what $E$, $P$, $P'_1$, and $P'_2$ are as you go.]
-If two specific errors $P_1$ and $P_2$ are in the same row inside some coset $E\cdot N(\mathcal{S})$, then by definition they both come from the same coset $P\cdot\mathcal{S}$, i.e.
+To prove this, we just return to the definition of cosets and the properties of the Pauli group.^[This is one of those arguments where it's easy to get lost in the notation. Try picking two physical errors $P_1$ and $P_2$ in the same row somewhere in Figure \@ref(fig:all-cosets-three-qubit-code) and following through the argument, figuring out what $E$, $P$, $P'_1$, and $P'_2$ are as you go.]
+If two physical errors $P_1$ and $P_2$ are in the same row inside some coset $E\cdot N(\mathcal{S})$, then by definition they both come from the same coset $P\cdot\mathcal{S}$, i.e.
 $$
 	\begin{aligned}
 		P_1
@@ -1223,7 +1223,7 @@ Consider a scenario like the following:
 \end{tikzpicture}
 ```
 
-In the case of the three-qubit code, this corresponds to the possible specific errors being single phase-flips $Z\id\id$, $\id Z\id$, and $\id\id Z$.
+In the case of the three-qubit code, this corresponds to the possible physical errors being single phase-flips $Z\id\id$, $\id Z\id$, and $\id\id Z$.
 But here we see how misleading it is to omit mention of the identity error $\id\id\id$, because the single phase-flips all live in the same $N(\mathcal{S})$ coset as $\id\id\id$, but different $\mathcal{S}$ cosets.
 That is, they are in the same box, but a different row.
 By our above discussion, this means that we cannot correct for these errors --- indeed, if we measure the error syndrome corresponding to "no error", then we don't know whether there truly was no error or if one of these single phase-flips happened instead.
@@ -1244,7 +1244,7 @@ Of course, we can state these conditions without making reference to the dot-err
 Proving the following version of the statement is the content of Exercise \@ref(error-correcting-conditions-algebraically).
 
 ::: {.idea latex=""}
-Let $\mathcal{E}\subseteq\mathcal{P}_n$ be a set of specific errors.
+Let $\mathcal{E}\subseteq\mathcal{P}_n$ be a set of physical errors.
 Then the stabiliser code defined by $\mathcal{S}$ can perfectly correct for all errors in $\mathcal{E}$ if and only if
 $$
 	E_1^\dagger E_2
@@ -2046,7 +2046,7 @@ While this doesn't entirely fix the problem, it is easier to think of schemes th
 
 ### Error-correcting conditions, algebraically {#error-correcting-conditions-algebraically}
 
-Let $\mathcal{S}\leq\mathcal{P}_n$ be a stabiliser group, and let $\mathcal{E}\subseteq\mathcal{P}_n$ be a set of specific errors.
+Let $\mathcal{S}\leq\mathcal{P}_n$ be a stabiliser group, and let $\mathcal{E}\subseteq\mathcal{P}_n$ be a set of physical errors.
 Prove that the stabiliser code defined by $\mathcal{S}$ can perfectly correct for all errors in $\mathcal{E}$ if and only if
 $$
 	E_1^\dagger E_2
