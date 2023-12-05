@@ -254,7 +254,7 @@ The edges in the Tanner graph are such that the parity-check matrix $H$ is exact
 ```
 
 One particularly useful aspect of Tanner graphs is how simple it is to convert to and from the corresponding parity-check quantum circuits.
-There is a syndrome node for each ancilla qubit, and a data node for each data qubit; there are paths between syndrome and data nodes whenever there is a controlled-$\texttt{NOT}$ between the corresponding qubits.
+There is a syndrome node for each ancilla qubit, and a data node for each data qubit; there are paths between syndrome and data nodes whenever there is a controlled-$\NOT$ between the corresponding qubits.
 We show a simple example in Figure \@ref(fig:quantum-circuit-to-tanner-graph).
 
 (ref:quantum-circuit-to-tanner-graph-caption) *Left:* The quantum circuit for a parity-check operation. *Right:* The corresponding Tanner graph.
@@ -587,7 +587,7 @@ We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:
 \end{tikzpicture}
 ```
 
-Not all quantum codes arise from combining classical ones like this^[For example, the **five-qubit code**, which is the smallest code that can correct for all possible single-qubit errors, is demonstrably *not* a CSS code, as can be shown by the non-existence of something called a **transversal** controlled-$\texttt{NOT}$ gate (we discuss this in Section \@ref(transversal-gates)).], and even for those that do, working with the generator and parity-check matrices can often be cumbersome.
+Not all quantum codes arise from combining classical ones like this^[For example, the **five-qubit code**, which is the smallest code that can correct for all possible single-qubit errors, is demonstrably *not* a CSS code, as can be shown by the non-existence of something called a **transversal** controlled-$\NOT$ gate (we discuss this in Section \@ref(transversal-gates)).], and even for those that do, working with the generator and parity-check matrices can often be cumbersome.
 Indeed, a truly *quantum* code will not have a single one of each, since this is not sufficient to deal with the purely quantum phenomena of superposition.
 For example, as the Tanner graph in Figure \@ref(fig:tanner-graph-713) shows, we have *two* parity check matrices in the case of CSS codes.
 When working with truly quantum codes, the stabiliser formalism really becomes much more useful --- our next aim is to justify this with some examples and explanation.
@@ -1297,13 +1297,13 @@ $$
 In other words, we want to define
 $$
 	\ket{0}_L
-	\coloneqq \frac{1}{\sqrt{2^3}} \left(\prod_{i=1}^6 (\id+G_i)\right) \ket{0}^{\otimes7}
+	\coloneqq \frac{1}{\sqrt{2^6}} \left(\prod_{i=1}^6 (\id+G_i)\right) \ket{0}^{\otimes7}
 $$
 since this will be in the $+1$-eigenspace of all of the $G_i$, which is exactly the stabiliser space $V_{\langle G_1,\ldots,G_6\rangle}$.
 Similarly, we set
 $$
 	\ket{1}_L
-	\coloneqq \frac{1}{\sqrt{2^3}} \left(\prod_{i=1}^6 (\id+G_i)\right) \ket{1}^{\otimes7}.
+	\coloneqq \frac{1}{\sqrt{2^6}} \left(\prod_{i=1}^6 (\id+G_i)\right) \ket{1}^{\otimes7}.
 $$
 
 One thing to note is that the order of the product over the $G_i$ doesn't matter here: by design, every stabiliser generator commutes with every other^[We *need* all the generators to commute in order for the simultaneous $+1$-eigenspace to exist!], since they "overlap" (i.e. have non-identity terms) in an *even* number of positions, so any $-1$ signs arising from anti-commutativity will cancel out with one another.
@@ -1313,7 +1313,7 @@ This means that we're left with only the $X$-type terms, and there are eight of 
 $$
 	\begin{aligned}
 		\ket{0}_L
-		\coloneqq \frac{1}{\sqrt{8}} \big(
+		\coloneqq \frac{1}{\sqrt{2^3}} \big(
 		& \id + G_1 + G_2 + G_3
 	\\+& G_1G_2 + G_1G_3 + G_2G_3 + G_1G_2G_3
 		\big) \ket{0000000}
@@ -1645,10 +1645,10 @@ $$
 	\end{aligned}
 $$
 But what do we actually mean by this circuit?
-We haven't defined controlled-$X_L$, nor what it means for a c-$\texttt{NOT}$ to be controlled by a logical state.
+We haven't defined controlled-$X_L$, nor what it means for a c-$\NOT$ to be controlled by a logical state.
 
 The first is reasonably simple: if the control qubit is in state $\ket{1}$, then we want to apply $X_L$ to the target.
-Since $X_L$ can be^[If we want to keep the circuit as simple as possible, then we should choose the smallest weight representative of $X_L$, which might not be just a tensor product of all $X$ operators. For example, in the seven-qubit code there is an implementation of $X_L$ of weight $3$.] expressed as a tensor product of Pauli $X$ operators, this means that the controlled-$X_L$ is just a bunch of controlled-$\texttt{NOT}$ gates, each controlled by the top qubit, and targeting each of the qubits of the encoded state.
+Since $X_L$ can be^[If we want to keep the circuit as simple as possible, then we should choose the smallest weight representative of $X_L$, which might not be just a tensor product of all $X$ operators. For example, in the seven-qubit code there is an implementation of $X_L$ of weight $3$.] expressed as a tensor product of Pauli $X$ operators, this means that the controlled-$X_L$ is just a bunch of controlled-$\NOT$ gates, each controlled by the top qubit, and targeting each of the qubits of the encoded state.
 
 The second step is maybe not so obvious, but there's a trick that we can use here!
 We know that the top qubit should end in the $\ket{0}$ state, so we can do anything we want to it.
@@ -1669,7 +1669,7 @@ For example, let's apply a Hadamard gate and then measure it --- why not?
 \end{quantikz}
 ```
 
-But now we can recall how controlled-$\texttt{NOT}$ (which is simply a controlled-$X$) interacts with the Hadamard: the circuit above is equivalent to the circuit below.
+But now we can recall how controlled-$\NOT$ (which is simply a controlled-$X$) interacts with the Hadamard: the circuit above is equivalent to the circuit below.
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3.5}
 \begin{quantikz}
@@ -1712,7 +1712,7 @@ If we really like, however, we could go one step further and replace the control
 <div class="video" title="Seven-qubit code and transversal constructions" data-videoid="vZ5p_fJbTMc"></div>
 
 Using everything that we have seen about the stabiliser formalism so far, we now know how to encode our qubits and compute on them, but the only computations that we really know how to implement in a circuit are the Pauli operators.
-As mentioned in Section \@ref(clifford-walks-on-stabiliser-states), we can achieve universal computation if we have access to the Clifford gates (controlled-$\texttt{NOT}$, Hadamard, and $S=P_{\pi/2}$) and the non-Clifford gate $T=P_{\pi/4}$.
+As mentioned in Section \@ref(clifford-walks-on-stabiliser-states), we can achieve universal computation if we have access to the Clifford gates (controlled-$\NOT$, Hadamard, and $S=P_{\pi/2}$) and the non-Clifford gate $T=P_{\pi/4}$.
 It so happens that each of these is a little bit more tricky than the previous one, but to understand what we mean by this we need to give a definition.
 
 ::: {.idea latex=""}
@@ -1745,19 +1745,105 @@ This is immediate by construction: implementations of the logical Pauli operator
 
 For other gates, we need to do a bit more work.
 Generally, to show that some operator $U$ is transversal, we need to show two things: that $U^{\otimes n}$ preserves the codespace, and then that it actually enacts the logical $U$ operation.
-
-<!-- TO-DO: the action of a unitary U is given by conjugation!!!!! -->
+In order to do this, we need to understand how unitaries $V$ (such as $V=U^{\otimes n}$) actually act on stabilisers, given that we already know they act as $\ket{\psi}\mapsto V\ket{\psi}$ on states.
+So say that $P\in\mathcal{S}$ is some stabiliser, and $\ket{\psi}$ is in the corresponds codespace, so that $P\ket{\psi}=\ket{\psi}$.
+We can notice that
+$$
+	\begin{aligned}
+		(VPV^\dagger)V\ket{\psi}
+		&= VP(V^\dagger V)\ket{\psi}
+	\\&= VP\ket{\psi}
+	\\&= V\ket{\psi}
+	\end{aligned}
+$$
+which says that $VPV^\dagger$ stabilises $V\ket{\psi}$.
+In other words, unitaries act on stabilisers by conjugation: $P\mapsto VPV^\dagger$.
 
 ::: {.idea latex=""}
-If $\mathcal{C}$ is a CSS code, then $\texttt{c-NOT}$ is (strictly) transversal.
+If $\mathcal{C}$ is a CSS code, then $\cNOT$ is (strictly) transversal.
 :::
+
+To be clear what we mean by this, we're claiming we can get a logical controlled-$\NOT$ gate on two "qubits" $q_1$ and $q_2$ by simply using controlled-$\NOT$ gates on each corresponding pair of physical qubits in the encoding:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.25}
+\begin{quantikz}
+	\lstick[wires=3]{$q_1$}
+	& \ctrl{3}
+	& \qw
+	& \qw
+	& \qw
+\\& \qw
+	& \ctrl{3}
+	& \qw
+	& \qw
+\\& \qw
+	& \qw
+	& \ctrl{3}
+	& \qw
+\\\lstick[wires=3]{$q_2$}
+	& \targ
+	& \qw
+	& \qw
+	& \qw
+	& \qw
+\\& \qw
+	& \targ
+	& \qw
+	& \qw
+	& \qw
+\\& \qw
+	& \qw
+	& \targ
+	& \qw
+	& \qw
+\end{quantikz}
+```
+
+Let's write $\cNOT_L$ to mean this $\cNOT^{\otimes n}$, and then prove that it deserves this name.
+By writing out the matrix for $\cNOT$, we see that $\cNOT^\dagger=\cNOT$, and so $\cNOT_L$ acts on stabilisers via $P\mapsto \cNOT_L P\cNOT_L$.
+Since we have are working with a CSS code, we know that we can our stabiliser generators are all either of $X$-type or of $Z$-type, i.e. of the form $X_x$ or $Z_x$ where $x$ is some row of the parity check matrix.
+This means that $\mathcal{S}\otimes\mathcal{S}$ is generated by four types of stabilisers: $X_x\otimes\id$, $\id\otimes X_x$, $Z_x\otimes\id$, and $\id\otimes Z_x$.
+What does $\cNOT_L$ do to each of these?
+Well,
+$$
+	\begin{aligned}
+		\cNOT_L(X_x\otimes\id)\cNOT_L
+		&= X_x\otimes X_x
+		= (X_x\otimes\id)(\id\otimes X_x)
+	\\\cNOT_L(\id\otimes X_x)\cNOT_L
+		&= \id\otimes X_x
+	\\\cNOT_L(Z_x\otimes\id)\cNOT_L
+		&= Z_x\otimes Z_x
+		= (Z_x\otimes\id)(\id\otimes Z_x)
+	\\\cNOT_L(\id\otimes Z_x)\cNOT_L
+		&= \id\otimes Z_x
+	\end{aligned}
+$$
+and so it sends stabilisers to stabilisers, and thus preserves the codespace.
+
+The only other thing we need to check is that it actually acts how a logical $\cNOT$ should act: it should be the case that
+$$
+	\begin{aligned}
+		\cNOT_L\colon
+		X_L\otimes\id
+		&\longmapsto X_L\otimes X_L
+	\\\id\otimes X_L
+		&\longmapsto \id\otimes X_L
+	\\Z_L\otimes\id
+		&\longmapsto Z_L\otimes \id
+	\\\id\otimes Z_L
+		&\longmapsto Z_L\otimes Z_L
+	\end{aligned}
+$$
+since this is exactly how $\cNOT$ acts for $X$ and $Z$.
 
 ::: {.todo latex=""}
 <!-- TO-DO: (proof) code is a CSS code => admits strictly transversal c-NOT -->
-<!-- TO-DO: actually this is an <=>, right? -->
+<!-- TO-DO: .technical: actually this is an <=>, right? -->
 :::
 
-This is essentially all we can say for an arbitrary CSS code, but our main example of interest has been the Steane code, which is of a very special form: it is a CSS code of a classical code over itself, namely the Hamming $[7,4,3]$-code.
+This is essentially all we can say for an arbitrary CSS code: Pauli operators and controlled-$\NOT$ are transversal.
+But our main example of interest has been the Steane code, which is of a very special form: it is a CSS code of a classical code over itself, namely the Hamming $[7,4,3]$-code.
 We can say quite a bit more about CSS codes of this specific type.
 
 ::: {.idea latex=""}
@@ -1792,13 +1878,13 @@ If $\mathcal{C}=\operatorname{CSS}(C,C)$ is an $n$-qubit code with $n$ odd, then
 :::
 
 Note first of all that the theorems we have been giving in this section have been getting only more specific, so any code satisfying the hypotheses of one theorem also satisfy those of all preceding theorems.
-In other words, any $n$-qubit CSS code of the form $\operatorname{CSS}(C,C)$ with $n$ odd (such as the Steane code) is such that controlled-$\texttt{NOT}$, the Hadamard, and the $S$ gate are all transversal.
+In other words, any $n$-qubit CSS code of the form $\operatorname{CSS}(C,C)$ with $n$ odd (such as the Steane code) is such that controlled-$\NOT$, the Hadamard, and the $S$ gate are all transversal.
 We can summarise these results in a table describing which gates are transversal for the code $\operatorname{CSS}(C_1,C_2)$, with extra hypotheses increasing in strictness from left to right:
 
 |  | no conditions | $C_1=C_2$ | $C_1=C_2$ and odd parity |
 |:---:|:---:|:---:|:---:|
 | $P$ | $\checkmark$ | $\checkmark$ | $\checkmark$ |
-| $\texttt{c-NOT}$ | $\checkmark$ | $\checkmark$ | $\checkmark$ |
+| $\cNOT$ | $\checkmark$ | $\checkmark$ | $\checkmark$ |
 | $H$ |  | $\checkmark$ | $\checkmark$ |
 | $S$ |  |  | $\checkmark$ |
 | $T$ |  |  | $\times$ |
@@ -1814,8 +1900,6 @@ This would be fantastic, but mathematics tells us that it would be just too good
 ::: {.todo latex=""}
 <!-- TO-DO: what about T? well we don't even need to do any theorem proving, because Eastin--Knill tells us that it's impossible (not even just for CSS, but for ANY) -->
 :::
-
-<!-- TO-DO: order of "difficulty" (easy to hard) is c-NOT, Hadamard, S, and then T (impossible); table summarising which ones are transversal for Steane and for Shor (or maybe just for general CSS conditions) -->
 
 ::: {.todo latex=""}
 <!-- TO-DO -->
