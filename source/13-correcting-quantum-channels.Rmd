@@ -3,7 +3,7 @@
 <div class="video" title="Overview of quantum error correction" data-videoid="WJr7jqpjge0"></div>
 
 > About the one big problem that hinders us from physically implementing everything that we've learnt so far: **decoherence**.
-> But also about how we can start to deal with it via some elementary **error correction**, including the **Shor $[[9,1,3]]$ quantum code**, which generalises the classical **$[3,1,3]$-code**.
+> But also about how we can start to deal with it via some elementary **error correction**, including the **Shor $[[9,1,3]]$ quantum code**, which generalises the classical **three-bit repetition code**.
 
 As the adage goes, "in theory, theory and practice rarely differ; in practice, they often do".
 *In theory*, we know how to build a quantum computer: we can start with simple quantum logic gates and try to integrate them together into quantum networks.
@@ -1546,14 +1546,17 @@ This is known as **fault tolerance**, and studying this, using the stabiliser fo
 
 ## Error-correcting assumptions
 
-::: {.todo latex=""}
-<!-- TO-DO: we're assuming that only single-qubit errors occur, but ALSO that no errors affect our ancilla bits when we do syndrome measurement, and also that we have no measurement errors, and also that all our gates are correctly implemented, and also ... -->
-<!-- TO-DO: we'll look at how to deal with the first assumption in the next section, but the others? eesh -->
-:::
+Throughout this section we have been making certain key assumptions about how errors can occur.
+For example, we have always assumed that all errors are independent, and that only single-qubit errors can occur.
+Although this describes many simple scenarios, it is does not do a very good job of modelling what happens in practice.
+It might be the case that many-qubit errors can occur, and that once a specific error has occurred it makes other errors more or less likely.
+Before we can describe fully fault-tolerant computation, we need to be able to deal with these more complicated scenarios, and this forms the topic of a large chunk of Section \@ref(fault-tolerant-quantum-computation).
 
-::: {.todo latex=""}
-<!-- TO-DO -->
-:::
+However, there are other assumptions that we are making that we will *not* discuss in this text, because they fall out of the scope of "introductory" and instead become the topic of specialised research in error correction and fault tolerance.
+One such assumption is that we never have any errors affecting our ancilla qubits, so that we can trust our error-syndrome measurements; similarly we assume that when we actually come to apply the error correction, we can do so in an error-free environment.
+Another assumption is something more "implementation-focused", namely that we are correctly operating the measurement devices, and that they are well-calibrated, otherwise we run into the problem of **measurement errors**.
+Often combined with this is the problem of **state preparation**^[The combination of state preparation and measurement errors is sometimes called **SPAM**. This can be dealt with in various ways, since their effect does not get worse as circuit depth increases.] --- how do we know that we really are preparing the state that we call $\ket{0}$?
+Such worries, and many more besides, are important if we wish to develop a truly robust theory of error correction.
 
 
 
