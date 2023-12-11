@@ -1943,8 +1943,8 @@ One popular method is called **magic state distillation**, which is the idea tha
 \begin{quantikz}
 	\lstick{$T\ket{+}$}
 	& \targ{}
-	& \meter{}
-\\\lstick{\ket{\psi}}
+	& \meter{} \vcw{1}
+\\\lstick{$\ket{\psi}$}
 	& \ctrl{-1}
 	& \gate{S}
 	& \qw \rstick{$T\ket{\psi}$}
@@ -2075,8 +2075,74 @@ Assume that $\mathcal{C}$ is an $n$-qubit code with $n$ *odd*.
 
 
 
-## Using magic states {#using-magic-states}
+### Using magic states {#using-magic-states}
 
-::: {.todo latex=""}
-<!-- TO-DO -->
-:::
+In Section \@ref(transversal-gates) we said that we can apply the $T$ gate using a magic state $T\ket{+}$ using the circuit below:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+\begin{quantikz}
+	\lstick{$T\ket{+}$}
+	& \targ{}
+	& \meter{} \vcw{1}
+\\\lstick{$\ket{\psi}$}
+	& \ctrl{-1}
+	& \gate{S}
+	& \qw \rstick{$T\ket{\psi}$}
+\end{quantikz}
+```
+
+We could prove this just by following through the evolution of the circuit and checking it by hand, but this doesn't feel very insightful.
+Let's show a better way to understand this circuit.
+
+1. Prove that the following circuit does indeed have the claimed output:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+\begin{quantikz}
+	\lstick{$\ket{0}$}
+	& \targ{}
+	& \phase{\theta}
+	& \targ{}
+	& \qw \rstick{$\ket{0}$}
+\\\lstick{$\ket{\psi}$}
+	& \ctrl{-1}
+	& \qw
+	& \ctrl{-1}
+	& \qw \rstick{$P_\theta\ket{\psi}$}
+\end{quantikz}
+```
+
+2. Taking inspiration from the second half of Section \@ref(encoding-arbitrary-states), show that the previous circuit is equivalent to the following:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+\begin{quantikz}
+	\lstick{$\ket{0}$}
+	& \targ{}
+	& \phase{\theta}
+	& \gate{H}
+	& \meter{} \vcw{1}
+\\\lstick{$\ket{\psi}$}
+	& \ctrl{-1}
+	& \qw
+	& \qw
+	& \gate{Z}
+	& \qw
+\end{quantikz}
+```
+
+3. By running the previous circuit backwards in time (replacing measurement with an outcome that we choose via state preparation, and vice versa), show that the following circuit gives the claimed output:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+\begin{quantikz}
+	\lstick{$P_{-\theta}\ket{+}$}
+	& \targ{}
+	& \meter{} \vcw{1}
+\\\lstick{$P_\theta\ket{\psi}$}
+	& \ctrl{-1}
+	& \gate{P_{-2\theta}}
+	& \qw \rstick{$\ket{\psi}$}
+\end{quantikz}
+```
+
+Note that setting $\theta=-\pi/4$ gives us exactly the magic state $T$ gate circuit that we wanted.
+
+4. The previous circuit seems to give a very general methods for applying phase gates $P_\theta$ for arbitrary $\theta$, but it is actually only useful as a method if there exists some integer $k$ such that $2^k\theta\equiv0\mod{2\pi}$. Why?
