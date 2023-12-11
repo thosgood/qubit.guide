@@ -7,6 +7,14 @@
 <script type="text/javascript" src="./web/lite-yt-embed.js"></script>
 
 <script type="text/javascript">
+  // Custom class for external links
+  function setExternalLinks() {
+    $("a[href^='http']").each(function() {
+      this.setAttribute("class", "external-link");
+      // this.setAttribute("target", "_blank");
+    });
+  }
+
   $document.ready(function() {
     // 1. Header bar customisations
 
@@ -97,7 +105,8 @@
     // or clicking the icon
     $(".technical-toggle, .technical > .fa").click(function() {
       $(this).siblings(".technical-contents").slideToggle("fast", function() {
-        // Animation complete.
+        // Animation complete
+        setExternalLinks();
       });
     });
 
@@ -116,19 +125,13 @@
 
     // Select any <a> tag whose href value does *not* start with "http"
     $("a").not("a[href^='http']").each(function() {
-      // TO-DO
-      var pretty_url = this.getAttribute("href").replace(".html","");
-      this.setAttribute("href", pretty_url)
+      if (this.getAttribute("href") !== null) {
+        var pretty_url = this.getAttribute("href").replace(".html","");
+        this.setAttribute("href", pretty_url)
+      };
     });
 
-
-    // 6. Small other stuff
-
-    // Custom class for external links
-    // TO-DO: why doesn't this work inside .technical and .idea divs?
-    $("a[href^='http']").each(function() {
-      this.setAttribute("class", "external-link");
-      // this.setAttribute("target", "_blank");
-    });
+    // 6. External links custom class
+    setExternalLinks();
   });
 </script>
