@@ -64,11 +64,37 @@ Figure \@ref(fig:hamming-code-diagrams) show diagrammatic representations of thi
 \end{tikzpicture}
 ```
 
-:::: {.technical title="The Fano plane" latex="{The Fano plane}"}
-::: {.todo latex=""}
-<!-- TO-DO: technical on finite projective plane and projective codes (somewhere in the text where it makes sense, probably near the end?) -->
+::: {.technical title="The Fano plane" latex="{The Fano plane}"}
+We say that the plaquette diagram in Figure \@ref(fig:hamming-code-diagrams) could also be called a *finite projective plane* diagram because of how it resembles the [**Fano plane**](https://en.wikipedia.org/wiki/Fano_plane), which is the [**projective space** of dimension $2$](https://en.wikipedia.org/wiki/Projective_plane) over the [**field with $2$ elements**](https://en.wikipedia.org/wiki/Finite_field).
+
+```{r,engine='tikz',fig.width=2.5}
+\usetikzlibrary{backgrounds}
+\begin{tikzpicture}[scale=0.7]
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (p1) at (0,3) {};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (p2) at (-2.6,-1.5) {};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (p3) at (2.6,-1.5) {};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d1) at (-1.2975,0.75) {};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d2) at (1.2975,0.75) {};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d3) at (0,-1.5) {};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d4) at (0,0) {};
+	%
+  \begin{scope}[on background layer]
+  	\draw (p1.center) to (p2.center) to (p3.center) to cycle;
+		\draw (p1.center) to (d3.center);
+		\draw (p2.center) to (d2.center);
+		\draw (p3.center) to (d1.center);
+		\draw (d4) circle (1.495cm);
+	\end{scope}
+\end{tikzpicture}
+```
+
+In fact, there is more than a mere visual similarity between these two diagrams: we will soon introduce the formal definition of a **linear code**, and there is a special family of these known as **projective codes**, which are those such that the columns of the generator matrix (another character who we shall soon meet) are all distinct and non-zero.
+
+Projective codes are particularly interesting because they allow us to apply geometric methods to study the properties of the code.
+For example, the columns of the parity check matrix of a projective code correspond to points in some projective space.
+Furthermore, since the geometry in question concerns *finite dimensional* spaces over *finite* fields, we end up coming across a lot of familiar (and useful) combinatorics.
+This is partially due to the fact that finite geometry can be understood as an example of an [**incidence structure**](https://en.wikipedia.org/wiki/Incidence_structure).
 :::
-::::
 
 Both diagrams in Figure \@ref(fig:hamming-code-diagrams) describe the same situation, but although the right-hand one is useful for understanding the geometry hidden in the construction and allowing us to generalise to create new codes, and is thus the one that we will tend to use, the Venn diagram on the left-hand side is maybe more suggestive of what's going on.
 
@@ -198,7 +224,7 @@ $$
 	\end{aligned}
 $$
 Decoding the message then consists of finding the most probable error $\mathbf{e}$ that yields the output $H\mathbf{e}$.
-If $\mathbf{e}$ is a single bit flip error, then $H\mathbf{e}$ is exactly a column of $H$, which justifies us describing the columns as error syndromes.
+If $\mathbf{e}$ is a single bit-flip error, then $H\mathbf{e}$ is exactly a column of $H$, which justifies us describing the columns as error syndromes.
 We can construct a table describing all of the possible error syndromes, and which bit they indicate for us to correct:
 
 | **Syndrome** | $000$ | $110$ | $101$ | $011$ | $111$ | $100$ | $010$ | $001$ | 
@@ -208,13 +234,37 @@ We can construct a table describing all of the possible error syndromes, and whi
 The above construction of the $[7,4,3]$-Hamming code can be generalised to result in a $[2^r-1,2^r-r-1,3]$-Hamming code^[How do we know that the distance is always 3? Well, there are *triples* of columns in the parity-check matrix that, when added together, give all zeros. This means that there are sets of 3 errors such that, if they all occur together, the syndrome will be zero, and so the distance is no more than 3. Meanwhile, all the columns are distinct, so no *pair* of columns add together trivially, which means that the distance must be greater than 2.] for any $r\geq2$, where each column of the parity-check matrix is a different binary string, excluding the string of all $0$ bits.
 It's noteworthy that only a logarithmic number of parity checks are necessary to correct all single-bit errors.
 However, there are some downsides to Hamming codes.
-The rate $R=(2^r-r-1)/(2^r-1)$ approaches $1$ as $r\to\infty$, but Hamming codes are impractical in highly noisy environments because they have a fixed distance of $3$.
+Although the rate $R=(2^r-r-1)/(2^r-1)$ approaches $1$ as $r\to\infty$, Hamming codes are impractical in highly noisy environments because they have a fixed distance of $3$.
 
-:::: {.technical title="Multiple-bit errors in the Hamming code" latex="{Multiple-bit errors in the Hamming code}"}
-::: {.todo latex=""}
-<!-- TO-DO: talk about multiple-bit errors -->
+::: {.technical title="Double-bit errors in the Hamming code" latex="{Double-bit errors in the Hamming code}"}
+Although the $[7,4,3]$-Hamming code can only deal with single-bit errors, it can be extended to an $[8,4,4]$-code, at least *detecting* double-bit errors, by adding a single extra parity bit $p_4$, given by taking the sum of all the other seven bits:
+
+```{r,engine='tikz',fig.width=2.5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\definecolor{tertiary}{RGB}{175,195,62}
+\begin{tikzpicture}[scale=0.7]
+	\draw[fill=primary!60,opacity=0.5] (0,0) circle (2);
+	\draw[fill=secondary!60,opacity=0.5] (1,1.7) circle (2);
+	\draw[fill=tertiary!60,opacity=0.5] (2,0) circle (2);
+	\draw[dashed] (1,0.85) circle (3.75);
+	\node (p1) at (1,2.5) {\footnotesize$p_1$};
+	\node (p2) at (-0.8,-0.7) {\footnotesize$p_2$};
+	\node (p3) at (2.8,-0.7) {\footnotesize$p_3$};
+    \node (p4) at (1,4.1) {\footnotesize$p_4$};
+	\node (d1) at (-0.3,1.2) {\footnotesize$d_1$};
+	\node (d2) at (2.3,1.2) {\footnotesize$d_2$};
+	\node (d3) at (1,-0.7) {\footnotesize$d_3$};
+	\node (d4) at (1,0.5) {\footnotesize$d_4$};
+\end{tikzpicture}
+```
+
+How does this work?
+Well, let's assume that up to *two* bit-flip errors could occur.
+The decoding process then starts by looking at this new parity bit $p_4$ in the received string and seeing if it is indeed equal to the sum of all the other bits, saying that it is "correct" if so, and "incorrect" if not.
+If $p_4$ is *incorrect*, then there has been a *single-bit* error, and we can just look at the rest of the string $d_1d_2d_3d_4p_1p_2p_3$ and apply the previous $[7,4,3]$-Hamming code decoding process, with the caveat that if this tells us that no errors have occurred, then it must be the case that the single-bit error actually flipped the parity bit $p_4$ itself.
+If $p_4$ is *correct*, then there has either been no error or a double bit-flip error; to see which is the case we can measure the $[7,4,3]$-Hamming code error syndrome of $d_1d_2d_3d_4p_1p_2p_3$, and this will tell us the $\texttt{XOR}$ of the two bit-flip locations; if this is $0$ then either no error has occurred or two errors affected the same bit, cancelling each other out.
 :::
-::::
 
 Before moving on, it will be useful to introduce another common way of diagrammatically representing parity-check matrices called a **Tanner graph**.
 This is a bipartite graph^[A graph (which is a collection of **nodes** and **edges** between some of them) is **bipartite** if the nodes can be split into two sets such that all the edges go from one element of the first set to one element of the second.] consisting of two types of nodes: the **codeword** (or **data**) nodes (one for each bit of the codeword, drawn as circles), and the **syndrome** nodes (one for each bit of the syndrome, drawn as squares).
