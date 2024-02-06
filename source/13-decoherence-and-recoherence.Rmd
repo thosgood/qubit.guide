@@ -1,4 +1,4 @@
-# Correcting quantum channels {#correcting-quantum-channels}
+# Decoherence and recoherence {#decoherence-and-recoherence}
 
 <div class="video" title="Overview of quantum error correction" data-videoid="WJr7jqpjge0"></div>
 
@@ -9,7 +9,7 @@ As the adage goes, "in theory, theory and practice rarely differ; in practice, t
 *In theory*, we know how to build a quantum computer: we can start with simple quantum logic gates and try to integrate them together into quantum networks.
 However, if we keep on putting quantum gates together into networks we will quickly run into some serious problems *in practice*: the more interacting qubits involved, the harder it is to prevent them from getting entangled with the environment.
 This unwelcome entanglement, also known as **decoherence**, destroys the interference, and thus the power, of quantum computing.
-To counteract this problem, we will look at the idea of **error correcting codes**, which protect our data against unwanted errors, but at the cost of encoding it across more ancillary qubits.
+To counteract this problem, we will start to look at the idea of **error correcting codes**, which protect our data against unwanted errors, but at the cost of encoding it across more ancillary qubits.
 
 
 
@@ -88,7 +88,7 @@ We shall prove this fact in Section \@ref(correctable-channels)
 \end{tikzpicture}
 ```
 
-Here is a simple but important example: the **three-qubit code**.^[We will return to this example, using the language of stabilisers from Chapter \@ref(stabilisers), in Chapter \@ref(fault-tolerant-quantum-computation).]
+Here is a simple but important example: the **three-qubit code**.^[We will return to this example, using the language of stabilisers from Chapter \@ref(stabilisers), in Chapter \@ref(error-correction).]
 Take a qubit in some pure state $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, introduce two auxiliary qubits in a fixed state $\ket{0}\ket{0}$, and apply a unitary operation to the three qubits, namely two controlled-$\NOT$ gates:
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4.5}
@@ -213,6 +213,510 @@ We will see how to reverse these operations in Section \@ref(towards-error-corre
   \end{quantikz}
 \]
 ```
+
+
+
+
+
+## Towards error correction {#towards-error-correction}
+
+<div class="video" title="Inverting quantum channels" data-videoid="dBqLrfFNJko"></div>
+
+<div class="video" title="Inverting quantum channels (revisited)" data-videoid="c4ruTbmVl_Q"></div>
+
+<div class="video" title="Correctable errors" data-videoid="gJYfrnpLNHw"></div>
+
+<div class="video" title="Changing correctable errors" data-videoid="7RyusTzOw6Y"></div>
+
+In Section \@ref(three-qubit-code), when Alice used a random choice of four isometries to produce a three-qubit output, notice how we can write
+$$
+  \begin{aligned}
+    V_{01}
+    &= (\id\otimes\id\otimes X)V_{00}
+  \\V_{01}
+    &= (\id\otimes X\otimes\id)V_{00}
+  \\V_{01}
+    &= (X\otimes\id\otimes\id)V_{00}
+  \end{aligned}
+$$
+and thus express all of the isometries in terms of $V_{00}$.
+In other words, rather than thinking of Alice as picking randomly between four different isometries, we can imagine that she *always* picks the **encoding** isometry $V_{00}$, and then some noisy process randomly applies one of the four actions $\id$, $\id\id X$, $\id X\id$, or $X\id\id$.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\usetikzlibrary{decorations,shapes,fit}
+\begin{tikzpicture}
+  \node [draw,secondary,minimum width=1cm,thick,minimum height=1cm] at (-4,0.75) (origin) {$\mathcal{H}$};
+  \draw [->,thick] (origin) to node [midway,above] {encode} (start);
+  \node [draw,primary,minimum width=1cm,thick,minimum height=1cm] at (0,0.75) (start) {$\mathcal{C}$};
+  \node [draw,primary,minimum width=1cm,thick,minimum height=1cm,rotate=15] at (4,2) (a) {$\mathcal{C}_1$};
+  %\node [draw,primary,minimum width=1cm,thick,minimum height=1cm,rotate=0] at (5.5,1.5) (b) {$\mathcal{C}_2$};
+  \node [draw,primary,minimum width=1cm,thick,minimum height=1cm,rotate=-10] at (4,0.3) (c) {$\mathcal{C}_2$};
+  \node [draw,primary,minimum width=1cm,thick,minimum height=1cm,rotate=25] at (5.5,-0.5) (d) {$\mathcal{C}_3$};
+  \draw [->,thick] (start) to[out=60,in=150] node [midway,above] {$E_1$} (a);
+  \draw [->,thick] (start) to[out=20,in=150] node [pos=0.35,above] {$E_2$} (c);
+  \draw [->,thick] (start) to[out=-60,in=-1,loop] node [midway,right] {$E_0$} (c);
+  \draw [->,thick] (start) to[out=-80,in=-160] node [midway,above] {$E_3$} (d);
+  \node[draw=secondary,inner sep=15pt,thick,fit=(start) (a) (b) (c) (d),label={[text=secondary]above:$\mathcal{H}'$}] {};
+\end{tikzpicture}
+```
+
+Correcting the isometry then corresponds to identifying which error happened, fixing it, and then removing the encoding: a process known as **decoding**.
+This is the format of **error correction** in a nutshell.
+
+(ref:error-correction-idea-caption) Quantum error correction can be thought of as a three-step process: encoding, transmitting through a noisy channel, and then detecting and decoding. We will give a more accurate depiction of an error correcting diagram, explaining what actually happens in the "detection & decoding portion" in Figure \@ref(fig:single-bit-flip-complete-circuit).
+
+```{r error-correction-idea,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5,fig.cap='(ref:error-correction-idea-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{quantikz}
+  \lstick{$\ket{\psi}$}
+  & \gategroup[3,steps=4,style={draw=none,rounded corners,fill=secondary!20,inner xsep=2pt},background,label style={align=center,anchor=south,yshift=-0.1cm}]{Encoding}
+  & \qw
+  & \ctrl{1}
+  & \ctrl{2}
+  & \qw
+  & \phantomgate{X}\gategroup[3,style={draw=none,rounded corners,fill=primary!20,inner xsep=6pt},background,label style={text width=2cm,align=center,anchor=south,yshift=-0.1cm}]{Random\\$X$ error}
+  & \qw
+  & \ctrl{2}\gategroup[3,steps=3,style={draw=none,rounded corners,fill=secondary!20,inner xsep=2pt},label style={text width=2cm,align=center,anchor=south,yshift=-0.1cm},background]{Detection\\\& Decoding}
+  & \ctrl{1}
+  & \qw
+  & \qw
+\\
+  && \lstick{$\ket{0}$}
+  & \targ{}
+  & \qw
+  & \qw
+  & \gate[style={dashed}]{X}
+  & \qw
+  & \qw
+  & \targ{}
+  & \meter{}
+\\
+  && \lstick{$\ket{0}$}
+  & \qw
+  & \targ{}
+  & \qw
+  & \qw
+  & \qw
+  & \targ{}
+  & \qw
+  & \meter{}
+\end{quantikz}
+```
+
+When we studied Pauli stabilisers in Section \@ref(pauli-stabilisers), we came across exactly the spaces of this example:
+
+```{r,engine='tikz',fig.width=3.5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\newcommand{\id}{\mathbf{1}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \draw (0,0) rectangle (4,4);
+  \node (c0) at (1,2.8) {{\color{primary}$+$}{\color{secondary}$+$}};
+  \node (c1) at (3,2.8) {{\color{primary}$-$}{\color{secondary}$+$}};
+  \node (c2) at (3,1.2) {{\color{primary}$-$}{\color{secondary}$-$}};
+  \node (c3) at (1,1.2) {{\color{primary}$+$}{\color{secondary}$-$}};
+  \node[above,secondary] (S1) at (2,4.5) {$ZZ\id$};
+  \node[right,primary] (S2) at (4.5,2) {$\id ZZ$};
+  \node[primary] (S1+) at (1,4.5) {$+1$};
+  \node[primary] (S1-) at (3,4.5) {$-1$};
+  \node[secondary] (S2+) at (4.5,3) {$+1$};
+  \node[secondary] (S2-) at (4.5,1) {$-1$};
+  \node[anchor=north west] (A) at (0,4) {$\substack{\ket{000}\\\ket{111}}$};
+  \node[anchor=north east] (B) at (4,4) {$\substack{\ket{100}\\\ket{011}}$};
+  \node[anchor=south east] (C) at (4,0) {$\substack{\ket{010}\\\ket{101}}$};
+  \node[anchor=south west] (D) at (0,0) {$\substack{\ket{001}\\\ket{110}}$};
+  \draw (2,0) -- (2,4.5);
+  \draw (0,2) -- (4.5,2);
+\end{tikzpicture}
+```
+
+::: {.idea latex=""}
+The stabiliser formalism gives us a very natural way of describing the error correcting code, along with its correction:
+
+- the **codespace** (i.e. the space with no error) is defined by the two stabilisers $+ZZ\id$ and $+\id ZZ$
+- the error can be determined by measuring the value of these two stabilisers; we simply have to find which of the four possible errors gives the correct (anti-)commutation relations as specified by the measurement outcomes $\pm1$.
+:::
+
+Generalising this idea further is the subject of Section \@ref(the-classical-repetition-code).
+
+::: {.idea latex=""}
+If a set $\{V_x\}$ of correctable isometries are related by
+$$
+  V_x = U_xV_0
+$$
+for some set of unitaries $\{U_x\}$ with $U_0=\id$, then an **encoding** operation $V_0$ provides protection against the **errors** $U_x$.
+:::
+
+
+
+
+
+## Discretisation of quantum errors
+
+When a quantum computer interacts and becomes entangled with its environment, it impacts the environment in such a way that the environment maintains a *physical record* of how the computer arrived at the desired output.
+Here, in our simplistic diagram, we consider only two computational paths.
+```{r,engine='tikz'}
+  \begin{tikzpicture}[scale=0.5]
+    \node (initial) at (0,0) [blob=primary] {\small I};
+    \node (final1) at (4.2,-0.5) [blob=primary,inner sep=2pt] {\small $O_1$};
+    \node (final2) at (3.8,-1.5) [blob=primary,inner sep=2pt] {\small $O_2$};
+    \draw [process] (initial) to [out=50,in=120]  (final1);
+    \draw [process] (initial) to [out=-70,in=-150] (final2);
+  \end{tikzpicture}
+```
+With decoherence present, quantum computation spills out the environment and results in not one, but two output states:
+$$
+  \begin{aligned}
+    \ket{O_1}
+    = \ket{O}\ket{e_1}
+    &= \text{``computer shows output $O$, the environment knows that path 1 was taken''}
+    \ket{O_2}
+    = \ket{O}\ket{e_2}
+    &= \text{``computer shows output $O$, the environment knows that path 2 was taken''}
+  \end{aligned}
+$$
+
+The two final states $O_1$ and $O_2$ are identical if and only if $|\braket{e_1}{e_1}|=1$.
+In this case, the environment does not know anything about what happened during the computation --- there is quantum interference --- and we add probability amplitudes corresponding to the two computational paths.
+In contrast, the two final states $O_1$ and $O_2$ are completely different if and only if $|\braket{e_1}{e_2}|=0$.
+Then there is only one path to the output --- there is no quantum interference --- and there is nothing to add.
+Of course, there are also midway cases $0<|\braket{e_1}{e_2}|<1$ corresponding to partial distinguishability of the final states.
+
+If we wish to study the evolution of the qubit alone, then we can do so in terms of density operators: it evolves from the pure state $\proj{\psi}$ to a mixed state, which can be obtained by tracing over the environment.
+We know that the state vector $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$ evolves as
+$$
+  \left( \alpha\ket{0} +\beta \ket{1}\right)\ket{e} \longmapsto
+  \alpha \ket{0}\ket{e_{00}} +\beta \ket{1} \ket{e_{11}}
+$$
+and we can write this as the evolution of the projector $\proj{\psi}$, and then trace over the environment to obtain
+$$
+  \begin{aligned}
+    \proj{\psi} \longmapsto & |\alpha|^2\proj{0} \braket{e_{00}}{e_{00}}+ \alpha\beta^\star \ket{0}\bra{1}\braket{e_{11}}{e_{00}}
+  \\+ &\alpha^\star\beta \ket{1}\bra{0}\braket{e_{00}}{e_{11}}  + |\beta|^2\proj{1}\braket{e_{11}}{e_{11}}.
+  \end{aligned}
+$$
+Written in matrix form, this is
+$$
+  \begin{bmatrix}
+    |\alpha|^2 & \alpha\beta^\ast
+  \\\alpha^\ast\beta & |\beta|^2
+  \end{bmatrix}
+  \longmapsto
+  \begin{bmatrix}
+    |\alpha|^2 & \alpha\beta^\ast \braket{e_{11}}{e_{00}}
+    \\\alpha^\ast\beta \braket{e_{00}}{e_{11}} & |\beta|^2
+  \end{bmatrix}.
+$$
+The off-diagonal elements (originally called **coherences**) vanish as $\braket{e_{00}}{e_{11}}$ approaches zero.
+This is why this particular interaction is called ***de*coherence**.
+
+Notice that
+$$
+\ket{\psi}\ket{e} \longmapsto \id \ket{\psi}\ket{e_{\id}}+Z\ket{\psi}\ket{e_Z},
+$$
+implies
+$$
+\proj{\psi}\longmapsto \id \proj{\psi} \id \braket{e_{\id}}{e_{\id}} +Z\proj{\psi} Z\braket{e_Z}{e_Z},
+$$
+*only if* $\braket{e_{\id}}{e_Z}=0$, since otherwise we would have additional cross terms $\id\proj{\psi}Z$ and $Z\proj{\psi}\id$.
+In this case (i.e. when $\braket{e_{\id}}{e_Z}=0$) we can indeed say that, with probability $\braket{e_{\id}}{e_{\id}}$, nothing happens, and, with probability $\braket{e_Z}{e_Z}$, the qubit undergoes the phase-flip $Z$.
+We can also represent this with the Kraus operators
+$$
+  \begin{aligned}
+    E_0
+    &= \sqrt{\proj{e_\id}} \id
+  \\E_1
+    &= \sqrt{\proj{e_Z}} Z
+  \end{aligned}
+$$
+which can be shown to satisfy $E_0^\dagger E_0+E_1^\dagger E_1=\id$.
+
+The process of decoherence is continuous.
+It involves the environment gradually acquiring information about computational paths and the associated relative environmental states ($\ket{e_0}$ and $\ket{e_1}$ in our example above), which evolve over time to become increasingly orthogonal to one another.
+Despite this, we can perceive the influence of the environment on our system of interest --- a collection of qubits in a quantum computer --- in terms of discrete operations.
+In essence, *we can digitise quantum errors*.
+
+
+
+
+
+## Digitising quantum errors {#digitising-quantum-errors}
+
+<div class="video" title="Digitising quantum errors" data-videoid="7C_mvw-YDjE"></div>
+
+<div class="video" title="Quantum errors" data-videoid="JTWNu73Ip1A"></div>
+
+The most general qubit-environment interaction is of the form
+$$
+  \begin{aligned}
+    \ket{0}\ket{e} &\longmapsto \ket{0}\ket{e_{00}} + \ket{1}\ket{e_{01}}
+  \\\ket{1}\ket{e} &\longmapsto \ket{1}\ket{e_{10}} + \ket{0}\ket{e_{11}}
+  \end{aligned}
+$$
+where the states of the environment are neither normalised nor orthogonal.
+This leads to decoherence
+$$
+  \begin{aligned}
+    \Big( \alpha\ket{0} + \beta\ket{1} \Big) \ket{e} \longmapsto
+    & \Big( \alpha\ket{0} + \beta\ket{1} \Big) \frac{\ket{e_{00}}+\ket{e_{11}}}{2}
+  \\+& \Big( \alpha\ket{0} - \beta\ket{1} \Big) \frac{\ket{e_{00}}-\ket{e_{11}}}{2}
+  \\+& \Big( \alpha\ket{1} + \beta\ket{0} \Big) \frac{\ket{e_{01}}+\ket{e_{10}}}{2}
+  \\+& \Big( \alpha\ket{1} - \beta\ket{0} \Big) \frac{\ket{e_{01}}-\ket{e_{10}}}{2}.
+  \end{aligned}
+$$
+which can be written as
+$$
+\ket{\psi}\ket{e} \longmapsto  \id \ket{\psi}\ket{e_{\id}} + Z\ket{\psi} \ket{e_Z} +X\ket{\psi} \ket{e_X} + Y\ket{\psi} \ket{e_Y}.
+$$
+
+The intuition behind this expression is that four things can happen to the qubit:
+
+1. nothing ($\id$)
+2. phase-flip ($Z$)
+3. bit-flip ($X$)
+4. both bit-flip and phase-flip ($Y$).
+
+This is certainly the case when the states $\ket{e_{\id}}, \ket{e_X}, \ket{e_Y}$ and $\ket{e_Z}$ are mutually orthogonal, but if this is not so then we cannot perfectly distinguish between the four alternatives.^[We will soon stop warning that this intuition is not entirely accurate, so keep it in mind!]
+
+::: {.idea latex=""}
+We can reduce quantum errors in this general scenario to just *two types*: bit-flip errors $X$, and phase-flip errors $Z$.
+
+In short, *if we can correct Pauli errors then we can correct all errors*.
+:::
+
+In general, given $n$ qubits in state $\ket{\psi}$, and an environment in state $\ket{e}$, the joint evolution can be expanded as^[The sum is from $i=1$ to $4^n$ because there are $4^n$ different (tensor products of) Pauli operators acting on $n$ qubits.]
+$$
+  \ket{\psi}\ket{e} \longmapsto \sum_{i=1}^{4^n} E_i\ket{\psi}\ket{e_i},
+$$
+where the $E_i$ are the $n$-fold tensor products of the Pauli operators and the $\ket{e_i}$ are the corresponding states of the environment (which, again, are not assumed to be normalised or mutually orthogonal).
+For example, in the case $n=5$, a typical operator $E_i$ may look like
+$$
+  X\otimes Z \otimes \id \otimes \id \otimes Y
+  \equiv XZ\id\id Y.
+$$
+We say that such an $E_i$ represents an error consisting of the bit error (or $X$ error) on the first qubit, phase error (or $Z$ error) on the second qubit, and both bit and phase error (or $Y$ error) on the fifth qubit.^[One final time: *this is not entirely accurate if the corresponding states of the environment are not mutually orthogonal*, but it gives the right kind of intuition nonetheless.]
+
+In terms of density operators, we have a quantum channel described by the Kraus operators $E_i$ above
+$$
+  \rho
+  \longmapsto \sum_i E_i\rho E_i^\dagger
+$$
+that acts on any input state $\rho$, be it mixed or pure.
+In particular, this channel turns the pure state $\ket{\psi}$ into a statistical mixture of states $\ket{\widetilde{\psi_i}}=E_i\ket{\psi}$.
+Note that the $\ket{\widetilde{\psi_i}}$ are not normalised:
+$$
+  p_i
+  \coloneqq \braket{\widetilde{\psi_i}}{\widetilde{\psi_i}}
+  = \bra{\psi}E_i^\dagger E_i\ket{\psi}
+$$
+is exactly the probability with which the normalised version of $E_i\ket{\psi}$ appears in the mixture.
+This mixture may arise if one measures the environment in the $\ket{e_i}$ basis and then forgets about the result.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -498,7 +1002,7 @@ which can be shown to satisfy $E_0^\dagger E_0+E_1^\dagger E_1=\id$.
 
 
 
-## Quantum errors {#quantum-errors}
+## Digitising quantum errors {#digitising-quantum-errors}
 
 <div class="video" title="Digitising quantum errors" data-videoid="7C_mvw-YDjE"></div>
 
@@ -669,116 +1173,51 @@ If a quantum error correction method corrects errors $E_1$ and $E_2$, then it al
 
 
 
-## Towards error correction {#towards-error-correction}
 
-<div class="video" title="Inverting quantum channels" data-videoid="dBqLrfFNJko"></div>
 
-<div class="video" title="Inverting quantum channels (revisited)" data-videoid="c4ruTbmVl_Q"></div>
 
-<div class="video" title="Correctable errors" data-videoid="gJYfrnpLNHw"></div>
 
-<div class="video" title="Changing correctable errors" data-videoid="7RyusTzOw6Y"></div>
 
-In Section \@ref(three-qubit-code), when Alice used a random choice of four isometries to produce a three-qubit output, notice how we can write
-$$
-  \begin{aligned}
-    V_{01}
-    &= (\id\otimes\id\otimes X)V_{00}
-  \\V_{01}
-    &= (\id\otimes X\otimes\id)V_{00}
-  \\V_{01}
-    &= (X\otimes\id\otimes\id)V_{00}
-  \end{aligned}
-$$
-and thus express all of the isometries in terms of $V_{00}$.
-In other words, rather than thinking of Alice as picking randomly between four different isometries, we can imagine that she *always* picks the **encoding** isometry $V_{00}$, and then some noisy process randomly applies one of the four errors $\id$, $\id\id X$, $\id X\id$, or $X\id\id$.
-Correcting the isometry then corresponds to identifying which error happened, fixing it, and then removing the encoding: a process known as **decoding**.
-This is the format of **error correction** in a nutshell.
 
-(ref:error-correction-idea-caption) Quantum error correction can be thought of as a three-step process: encoding, transmitting through a noisy channel, and then detecting and decoding. We will give a more accurate depiction of an error correcting diagram, explaining what actually happens in the "detection & decoding portion" in Figure \@ref(fig:single-bit-flip-complete-circuit).
 
-```{r error-correction-idea,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5,fig.cap='(ref:error-correction-idea-caption)'}
-\definecolor{primary}{RGB}{177,98,78}
-\definecolor{secondary}{RGB}{91,132,177}
-\begin{quantikz}
-  \lstick{$\ket{\psi}$}
-  & \gategroup[3,steps=4,style={draw=none,rounded corners,fill=secondary!20,inner xsep=2pt},background,label style={align=center,anchor=south,yshift=-0.1cm}]{Encoding}
-  & \qw
-  & \ctrl{1}
-  & \ctrl{2}
-  & \qw
-  & \phantomgate{X}\gategroup[3,style={draw=none,rounded corners,fill=primary!20,inner xsep=6pt},background,label style={text width=2cm,align=center,anchor=south,yshift=-0.1cm}]{Random\\$X$ error}
-  & \qw
-  & \ctrl{2}\gategroup[3,steps=3,style={draw=none,rounded corners,fill=secondary!20,inner xsep=2pt},label style={text width=2cm,align=center,anchor=south,yshift=-0.1cm},background]{Detection\\\& Decoding}
-  & \ctrl{1}
-  & \qw
-  & \qw
-\\
-  && \lstick{$\ket{0}$}
-  & \targ{}
-  & \qw
-  & \qw
-  & \gate[style={dashed}]{X}
-  & \qw
-  & \qw
-  & \targ{}
-  & \meter{}
-\\
-  && \lstick{$\ket{0}$}
-  & \qw
-  & \targ{}
-  & \qw
-  & \qw
-  & \qw
-  & \targ{}
-  & \qw
-  & \meter{}
-\end{quantikz}
-```
 
-When we studied Pauli stabilisers in Section \@ref(pauli-stabilisers), we came across exactly the spaces of this example:
 
-```{r,engine='tikz',fig.width=3.5}
-\definecolor{primary}{RGB}{177,98,78}
-\definecolor{secondary}{RGB}{91,132,177}
-\newcommand{\id}{\mathbf{1}}
-\newcommand{\ket}[1]{|#1\rangle}
-\begin{tikzpicture}
-  \draw (0,0) rectangle (4,4);
-  \node (c0) at (1,2.8) {{\color{primary}$+$}{\color{secondary}$+$}};
-  \node (c1) at (3,2.8) {{\color{primary}$-$}{\color{secondary}$+$}};
-  \node (c2) at (3,1.2) {{\color{primary}$-$}{\color{secondary}$-$}};
-  \node (c3) at (1,1.2) {{\color{primary}$+$}{\color{secondary}$-$}};
-  \node[above,secondary] (S1) at (2,4.5) {$ZZ\id$};
-  \node[right,primary] (S2) at (4.5,2) {$\id ZZ$};
-  \node[primary] (S1+) at (1,4.5) {$+1$};
-  \node[primary] (S1-) at (3,4.5) {$-1$};
-  \node[secondary] (S2+) at (4.5,3) {$+1$};
-  \node[secondary] (S2-) at (4.5,1) {$-1$};
-  \node[anchor=north west] (A) at (0,4) {$\substack{\ket{000}\\\ket{111}}$};
-  \node[anchor=north east] (B) at (4,4) {$\substack{\ket{100}\\\ket{011}}$};
-  \node[anchor=south east] (C) at (4,0) {$\substack{\ket{010}\\\ket{101}}$};
-  \node[anchor=south west] (D) at (0,0) {$\substack{\ket{001}\\\ket{110}}$};
-  \draw (2,0) -- (2,4.5);
-  \draw (0,2) -- (4.5,2);
-\end{tikzpicture}
-```
 
-::: {.idea latex=""}
-The stabiliser formalism gives us a very natural way of describing the error correcting code, along with its correction:
 
-- the **codespace** (i.e. the space with no error) is defined by the two stabilisers $+ZZ\id$ and $+\id ZZ$
-- the error can be determined by measuring the value of these two stabilisers; we simply have to find which of the four possible errors gives the correct (anti-)commutation relations as specified by the measurement outcomes $\pm1$.
-:::
 
-Generalising this idea further is the subject of Section \@ref(the-classical-repetition-code).
 
-We reiterate that, with this formalism, not only can we correct errors such as $X$, but also those such as Pauli rotations $e^{iX\theta}$ that act via
-$$
-  \ket{\psi}
-  \longmapsto \cos\theta\ket{\psi} + i\sin\theta X\ket{\psi}
-$$
-which, when we error correct, split into two cases: with probability $\cos^2\theta$ we find that no error has happened; with probability $\sin^2\theta$ we find that the error $X$ has happened, and we correct it.^[See Exercise \@ref(three-qubits-correcting-rotations)]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1143,7 +1582,7 @@ $$
 
 <div class="video" title="Three-qubit repetition code for phase-flip errors" data-videoid="az_JPhNpWFo"></div>
 
-We have seen how the classical $[3,1,3]$-code can be adapted to detect and correct for a single quantum bit-flip, but in Section \@ref(quantum-errors) we said that there are three possible errors that we need to worry about: bit-flips, phase-flips, and bit-and-phase flips.
+We have seen how the classical $[3,1,3]$-code can be adapted to detect and correct for a single quantum bit-flip, but in Section \@ref(digitising-quantum-errors) we said that there are three possible errors that we need to worry about: bit-flips, phase-flips, and bit-and-phase flips.
 Having dealt with the first, we now deal with the second; finding a way to combine these two solutions to deal with the third is the subject of Section \@ref(the-shor-913-code).
 
 It turns out that we really don't need to do much work in order to solve the problem of single phase-flip errors if we make use of the fact that $HZH=X$, i.e. phase-flips become bit-flips when sandwiched between Hadamards!
@@ -1551,7 +1990,7 @@ Well, since $Y=ZX$, the inner circuit will correct the $X$ part of the error, an
 So quantum error correction is indeed possible: we can remove the unwanted effects of decoherence during transmission through a channel.
 However, this process of encode--transmit--decode doesn't really cover the practical scenario of computation, since in reality we are constantly trying to process our data, and noise could enter at any moment.
 One thus has to *compute on the encoded states the whole time*, whilst also somehow ensuring that even faults occurring during an error correction cycle don't adversely affect the computation.
-This is known as **fault tolerance**, and studying this, using the stabiliser formalisation of Section \@ref(stabilisers), is the goal of Section \@ref(fault-tolerant-quantum-computation).
+This is known as **fault tolerance**, and studying this, using the stabiliser formalisation of Section \@ref(stabilisers), is the goal of Section \@ref(error-correction).
 
 
 
@@ -1563,7 +2002,7 @@ Throughout this section we have been making certain key assumptions about how er
 For example, we have always assumed that all errors are independent, and that only single-qubit errors can occur.
 Although this describes many simple scenarios, it is does not do a very good job of modelling what happens in practice.
 It might be the case that many-qubit errors can occur, and that once a specific error has occurred it makes other errors more or less likely.
-Before we can describe fully fault-tolerant computation, we need to be able to deal with these more complicated scenarios, and this forms the topic of a large chunk of Section \@ref(fault-tolerant-quantum-computation).
+Before we can describe fully fault-tolerant computation, we need to be able to deal with these more complicated scenarios, and this forms the topic of a large chunk of Section \@ref(error-correction).
 
 However, there are other assumptions that we are making that we will *not* discuss in this text, because they fall out of the scope of "introductory" and instead become the topic of specialised research in error correction and fault tolerance.
 One such assumption is that we never have any errors affecting our ancilla qubits, so that we can trust our error-syndrome measurements; similarly we assume that when we actually come to apply the error correction, we can do so in an error-free environment.
