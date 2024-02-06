@@ -647,7 +647,9 @@ In other words, the scenario where, with probability $\cos^2\frac{\theta}{2}$ we
 
 
 
-## Repetition coding {#repetition-coding}
+## The classical repetition code {#the-classical-repetition-code}
+
+<div class="video" title="Classical repetition codes" data-videoid="11VOJrHAlYI"></div>
 
 We have now essentially met all the concepts of quantum error correction, but everything has been phrased in terms of correctable isometries.
 Now we need to repeat much the same information from a slightly different perspective, including a brief detour to introduce some concepts and methods from the classical theory of error correction.
@@ -660,6 +662,398 @@ $$
 This opens up the possibility of adopting classical techniques of error correction to the quantum case.
 There is a vast body of knowledge out there about classical error-correcting codes, and we can only scratch the surface here.
 
+Suppose you want to send a $k$-bit message across a noisy channel.
+If you choose to send the message directly, some bits may be flipped, and a different message will likely arrive with a certain number of errors.
+Let's suppose that the transmission channel flips each bit in transit with some fixed probability $p$.
+If this error rate is considered too high, then it can be decreased by introducing some redundancy.
+For example, we could encode each bit into three bits:
+$$
+  \begin{aligned}
+    0
+    &\longmapsto 000
+  \\1
+    &\longmapsto 111.
+  \end{aligned}
+$$
+These two binary strings, $000$ and $111$, are called **codewords**.
+Beforehand, Alice and Bob agree that, from now on, each time you want to send a **logical** $0$, you will encode it as $000$, and each time you want to send a **logical** $1$, you will encode it as $111$.
+
+Here's an example.
+Say that Alice wants to send the message $1011$.
+She first encodes it as the string
+$$
+  111\,000\,111\,111
+$$
+and then sends it to Bob over the noisy channel.
+Note that she is now not sending just four, but instead *twelve* physical bits.
+This is more costly (in terms of time or energy, or maybe even money), but might be worth it to ensure a more reliable transmission.
+Let's say that Bob then receives the message
+$$
+  110\,010\,101\,100.
+$$
+Clearly some errors have occurred!
+In fact, even Bob knows this, because he expects to receive $3$-bit chunks of either all $0$s or all $1$s.
+He uses the "majority vote" decoding method:
+
+- $110$ is decoded as $1$
+- $010$ is decoded as $0$
+- $101$ is decoded as $1$
+- $100$ is decoded as $0$.
+
+As we can see, if a triplet contains either zero or one errors then the decoding returns the correct bit value, otherwise it errs.
+In our example, the first three triplets are correctly decoded, but the fourth suffered two errors and is thus wrongly decoded as $0$.
+This whole process can be represented as
+$$
+  1011
+  \xmapsto{\text{encoding}} 111\,000\,111\,111
+  \xmapsto{\text{noise}} 110\,010\,101\,100
+  \xmapsto{\text{decoding}} 1010.
+$$
+The noisy channel flipped 5 out of the 12 physical bits, and the whole encoding--decoding process reduced this down to only one logical error.
+
+We can make a simple estimate on how good this scheme will be.
+Assuming that the errors are independent^[The assumption that the errors are independent is very important, but not always physically realistic!] then, for any given triplet,
+$$
+  \begin{cases}
+    \text{no errors}
+    & \text{probability }(1-p)^3
+  \\\text{1 error}
+    & \text{probability }3p(1-p)^2
+  \\\text{2 errors}
+    & \text{probability }3p^2(1-p)
+  \\\text{3 errors}
+    & \text{probability }p^3.
+  \end{cases}
+$$
+More succinctly, the probability that $n$ errors occur is
+$$
+  {3\choose n}p^n(1-p)^{3-n}
+$$
+where $\binom{m}{n}=m!/(n!(m-n)!)$ is the [**binomial coefficient**](https://en.wikipedia.org/wiki/Binomial_coefficient).
+Given that the scheme decodes correctly exactly when we have at most one error, the net probability of errors is just the probability that either two or three errors occur, which is
+$$
+  3p^2(1-p) + p^3.
+$$
+This means that our encoding--decoding scheme actually lowers the probability of error if and only if
+$$
+  3p^2(1-p) + p^3
+  < \frac{1}{2}
+$$
+i.e. when $p<1/2$.
+This important number is known as the **error threshold** of the code, and is a good judge of how useful a code actually is.
+When $p$ is really small, we can basically ignore the $p^3$ term, since it is even smaller still, and claim that the error probability is reduced from $p$ to roughly $3p^2$.
+
+(ref:error-probability-for-000-caption) What can happen, and the respective probability, when we transmit the codeword $000$. With this scheme, we can correct up to one error, and detect up to two. Note that when two errors occur, the "majority vote" correction scheme actually gives the *wrong* "correction".
+
+```{r error-probability-for-000,engine='tikz',fig.width=4,fig.cap='(ref:error-probability-for-000-caption)'}
+\usetikzlibrary{decorations.markings,decorations.pathmorphing,decorations.pathreplacing}
+\begin{tikzpicture}[xscale=0.4,yscale=0.5]
+  \begin{scope}
+    \node (0) at (1,8) [fill=gray!20] {$000$};
+    \node (000) at (10,8) [fill=green!20] {$000$};
+    \node (001) at (10,7) [fill=yellow!20] {$001$};
+    \node (010) at (10,6) [fill=yellow!20] {$010$};
+    \node (100) at (10,5) [fill=yellow!20] {$100$};
+    \node (110) at (10,4) [fill=orange!40] {$110$};
+    \node (101) at (10,3) [fill=orange!40] {$101$};
+    \node (011) at (10,2) [fill=orange!40] {$011$};
+    \node (111) at (10,1) [fill=red!20] {$111$};
+    \draw[->,thick] (0) to (000.west);
+    \draw[->,thick] (0) to (001.west);
+    \draw[->,thick] (0) to (010.west);
+    \draw[->,thick] (0) to (100.west);
+    \draw[->,thick] (0) to (110.west);
+    \draw[->,thick] (0) to (101.west);
+    \draw[->,thick] (0) to (011.west);
+    \draw[->,thick] (0) to (111.west);
+    \draw [decorate,decoration={brace,amplitude=5pt,raise=2pt}] (000.north east) to (000.south east);
+    \draw [decorate,decoration={brace,amplitude=5pt,raise=2pt}] (001.north east) to (100.south east);
+    \draw [decorate,decoration={brace,amplitude=5pt,raise=2pt}] (110.north east) to (011.south east);
+    \draw [decorate,decoration={brace,amplitude=5pt,raise=2pt}] (111.north east) to (111.south east);
+    \node (noer) at (11.5,8) [right] {$(1-p)^{3}$};
+    \node (one) at (11.5,6) [right] {$3p(1-p)^{2}$};
+    \node (two) at (11.5,3) [right] {$3p^{2}(1-p)$};
+    \node (three) at (11.5,1) [right] {$p^{3}$};
+  \end{scope}
+  \begin{scope}[shift={(22,0)}]
+    \node (0) at (10,8) [fill=gray!20] {$000$};
+    \node (1) at (10,1) [fill=gray!20] {$111$};
+    \node (000) at (1,8) [fill=green!20] {$000$ };
+    \node (001) at (1,7) [fill=yellow!20] {$001$};
+    \node (010) at (1,6) [fill=yellow!20] {$010$};
+    \node (100) at (1,5) [fill=yellow!20] {$100$};
+    \node (110) at (1,4) [fill=orange!40] {$110$};
+    \node (101) at (1,3) [fill=orange!40] {$101$};
+    \node (011) at (1,2) [fill=orange!40] {$011$};
+    \node (111) at (1,1) [fill=red!20] {$111$};
+    \draw[->,thick] (000.east) to (0);
+    \draw[->,thick] (001.east) to (0);
+    \draw[->,thick] (010.east) to (0);
+    \draw[->,thick] (100.east) to (0);
+    \draw[->,thick] (110.east) to (1);
+    \draw[->,thick] (101.east) to (1);
+    \draw[->,thick] (011.east) to (1);
+    \draw[->,thick] (111.east) to (1);
+    \draw [decorate,decoration={brace,amplitude=5pt,raise=2pt}] (000.south west) to (000.north west);
+    \draw [decorate,decoration={brace,amplitude=5pt,raise=2pt}] (100.south west) to (001.north west);
+    \draw [decorate,decoration={brace,amplitude=5pt,raise=2pt}] (011.south west) to (110.north west);
+    \draw [decorate,decoration={brace,amplitude=5pt,raise=2pt}] (111.south west) to (111.north west);
+    \node (noer) at (-0.5,8) [left] {no error};
+    \node[align=right] (one) at (-0.5,6) [left] {one error\\[-0.4em]\textit{correctable}};
+    \node[align=right] (two) at (-0.5,3) [left] {two errors\\[-0.4em]\textit{detectable}};
+    \node[align=right] (three) at (-0.5,1) [left] {three errors\\[-0.4em]\textit{not detectable}};
+  \end{scope}
+\end{tikzpicture}
+```
+
+In this example, we can see that if one or two errors occur, then the resulting bit string will no longer be a valid codeword, which makes the error detectable.
+For example, if the bit string $101$ appears in our message, then we know that some error must have occurred, because $101$ is not a codeword, so we never would have sent it.
+We can't be certain *which* error has occurred, since it could have been a single bit-flip on $111$ (more likely) or a double bit-flip on $000$ (less likely), but we know for sure that *one of these two* went wrong.
+In the worst case scenario, where three bit-flips happen, the error will be undetectable: it will turn $000$ into $111$ (and vice versa).
+This results in what is known as a **logical error**, where the corrupted string is also a codeword, leaving us with no indication that anything has gone wrong.
+
+Below a certain error threshold, the three-bit code improves the reliability of the information transfer.
+This simple repetition code encoded one bit into three bits, and corrected up to one error.
+In general, there are classical codes that can encode $k$ bits into $n$ bits and correct up to $r$ errors.
+One more important number that we need is the **distance** of such an encoding, which is defined to be the minimum number of errors that can pass undetected (or, equivalently, the minimum Hamming distance^[That is, the number of bit-flips required to move from one to the other; recall Section \@ref(metrics).] between two codewords).
+More generally, the distance $d$ relates to the number of errors $t$ that a code can correct by
+$$
+  d = 2t+1
+$$
+
+Looking back again at Figure \@ref(fig:error-probability-for-000), we see that if exactly one or two errors occur in our three-bit code then we can detect that an error has occurred, since we will have a string where not all of the bits are the same, which means that it is definitely not one of our code words.
+However, if three errors occur then the errors are not only impossible to correct, but they are also *impossible to detect*.
+So the code that we have described has $n=3$, $k=1$, and $d=3$.
+
+::: {.idea latex=""}
+A code that encodes $k$ bits into $n$ bits and has a distance of $d$ is called an **$[n,k,d]$-code**.
+The **rate** of an $[n,k,d]$-code is defined to be $R=k/n$.
+:::
+
+In an $[n,k,d]$-code, the encoder divides the message into chunks of $k$ bits and encodes each $k$-bit string into a pre-determined $n$-bit codeword.
+There are $2^k$ distinct codewords among all $2^n$ binary strings of length $n$.
+The recipient then applies the decoder, which takes chunks of $n$ bits, looks for the nearest codeword (in terms of Hamming distance), and then decodes the $n$-bit string into that $k$-bit codeword.
+For example, in our $3$-bit repetition code, we have the two codewords $000$ and $111$, among all eight binary strings of length $3$, as shown in Figure \@ref(fig:313-all-3-bit-strings).
+
+(ref:313-all-3-bit-strings-caption) All the $3$-bit strings that are within Hamming distance $1$ from $000$ are below the line, and all those that are within Hamming distance $1$ from $111$ are above the line. The decoder assumes that the former are corrupted versions of $000$, and the latter of $111$.
+
+```{r 313-all-3-bit-strings,engine='tikz',fig.width=4,fig.cap='(ref:313-all-3-bit-strings-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+  \node [draw,thick,circle,primary] at (0,-1.5) {$000$};
+  \node [draw,circle] at (-1,-0.5) {$001$};
+  \node [draw,circle] at (0,-0.5) {$010$};
+  \node [draw,circle] at (1,-0.5) {$100$};
+  \node [draw,circle] at (-1,0.5) {$110$};
+  \node [draw,circle] at (0,0.5) {$101$};
+  \node [draw,circle] at (1,0.5) {$011$};
+  \node [draw,thick,circle,primary] at (0,1.5) {$111$};
+  \draw [thick,secondary] (0,0) circle (2);
+  \draw [thick,dashed,secondary] (-2,0) to (2,0);
+  \draw [->] (2.25,0.1) to node[label={right:{\footnotesize closer to $111$}}]{} (2.25,1.25);
+  \draw [->] (2.25,-0.1) to node[label={right:{\footnotesize closer to $000$}}]{} (2.25,-1.25);
+\end{tikzpicture}
+
+
+
+
+
+
+
+
+## Correcting bit-flips {#correcting-bit-flips}
+
+<div class="video" title="Three-qubit repetition code for bit-flip errors" data-videoid="9mr9c35xJ2g"></div>
+
+In order to protect a qubit against bit-flips (thought of as incoherent $X$ rotations), we rely on the same classical repetition code as in Section \@ref(the-classical-repetition-code), but both encoding and error correction are now implemented by quantum operations.^[All the codes we will study have encoding circuits that can be constructed out of controlled-$\NOT$ and Hadamard gates: we are dealing with *Clifford circuits* (Section \@ref(clifford-walks-on-stabiliser-states)).]
+Let's return to the example of the three-qubit code that we introduced in Section \@ref(three-qubit-code).
+We take a qubit in some unknown pure state $\alpha\ket{0}+\beta\ket{1}$ and encode it into three qubits, introducing two auxiliary qubits:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4.5}
+\begin{quantikz}
+  \lstick{$\alpha\ket{0}+\beta\ket{1}$}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \qw
+  & \qw
+  \rstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+  \\
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \qw
+  & \qw
+  & \qw
+  \\
+  \lstick{$\ket{0}$}
+  & \qw
+  & \targ{}
+  & \qw
+  & \qw
+\end{quantikz}
+```
+
+Mathematically, this is an isometric^[Recall that an isometry is the generalisation of a unitary but where we are also allowed to bring in additional qubits.] embedding of a two-dimensional space into an eight-dimensional one.
+It is important to note that this is *not* just the classical repetition code "but with qubits instead of bits" --- this would be *impossible* to construct, since the no-cloning theorem tells us that we can never build a circuit that enacts
+$$
+  \alpha\ket{0}+\beta\ket{1}
+  \longmapsto (\alpha\ket{0}+\beta\ket{1})(\alpha\ket{0}+\beta\ket{1})(\alpha\ket{0}+\beta\ket{1}).
+$$
+Rather than repeating the qubit like this, the three-qubit code sort of "smears it out" across three qubits, resulting in the *entangled* state $\alpha\ket{000}+\beta\ket{111}$.
+
+Now suppose that one qubit is flipped, say, the second one.
+The encoded state then becomes $\alpha\ket{010}+\beta\ket{101}$.
+Decoding^[There is a subtle difference between **decoding** and **unencoding**: the latter consists of simply reversing the encoding process; the former consists of using the results of measurements (the **error syndrome**) to perform a more adapted "unencoding".] requires some care: measuring the three qubits directly would destroy the superposition that we are working so hard to protect.
+So instead we introduce two ancilla qubits, both in state $\ket{0}$, and apply the following circuit:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4.5}
+\begin{quantikz}
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \targ{}
+  & \qw
+  & \qw
+  & \meter{} \rstick{$\ket{1}$}
+\\
+  \lstick{$\ket{0}$}
+  & \qw
+  & \qw
+  & \targ{}
+  & \targ{}
+  & \meter{} \rstick{$\ket{1}$}
+\\
+  \lstick[wires=3]{$\alpha\ket{010}+\beta\ket{101}$}
+  & \ctrl{-2}
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+\\
+  & \qw
+  & \ctrl{-3}
+  & \ctrl{-3}
+  & \qw
+  & \qw
+\\
+  & \qw
+  & \qw
+  & \qw
+  & \ctrl{-3}
+  & \qw
+\end{quantikz}
+```
+
+::: {.idea latex=""}
+This decoding circuit is exactly the same as the ones for measuring the Pauli stabilisers $ZZ\id$ and $\id ZZ$ (as described in Section \@ref(measuring-pauli-stabilisers)).
+:::
+
+Measuring the two ancilla qubits gives us what is known as the **error syndrome** (or sometimes just **syndrome**, for short), which tells us how to correct the three qubits (known as the **data qubits**) of the code.
+The theory behind this works as follows:
+
+- if the first and second (counting from the top) data qubits are in the same state then the first ancilla will be in the $\ket{0}$ state; otherwise the first ancilla will be in the $\ket{1}$ state
+- if the second and third data qubits are in the same state then the second ancilla will be in the $\ket{0}$ state; otherwise the second ancilla will be in the $\ket{1}$ state.
+
+So the four possible error syndromes each indicate a different scenario:^[Again, for now we are assuming that *at most one* bit-flip error occurs.]
+
+- $\ket{00}$: no error
+- $\ket{01}$: bit-flip in the first data qubit
+- $\ket{10}$: bit-flip in the second data qubit
+- $\ket{11}$: bit-flip in the third data qubit.
+
+In our example, the error syndrome is $\ket{11}$, and so we know that the first and second qubits differ, as do the second and third.
+This means that the first and third must be the same, and the second suffered the bit-flip error.
+Knowing the error, we can now fix it by applying an $X$ gate to the second qubit.
+The final result is the state $\alpha\ket{000}+\beta\ket{111}$, which is then turned into $(\alpha\ket{0}+\beta\ket{1})\ket{00}$ by running the mirror image of the encoding circuit:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4.5}
+\begin{quantikz}
+  \lstick[wires=3]{$\alpha\ket{000}+\beta\ket{111}$}
+  & \ctrl{2}
+  & \ctrl{1}
+  & \qw \rstick{$\alpha\ket{0}+\beta\ket{1}$}
+\\
+  & \qw
+  & \targ{}
+  & \qw \rstick{$\ket{00}$}
+\\
+  & \targ{}
+  & \qw
+  & \qw \rstick{$\ket{00}$}
+\end{quantikz}
+```
+
+It is also important to note that the actual error correction can be implemented by a single unitary operation $U_c$ on the five total qubits, with
+$$
+  \begin{aligned}
+    U_c
+    &= \big(\proj{0}\otimes\proj{0}\big)\otimes(\id\id\id)
+  \\&+ \big(\proj{0}\otimes\proj{1}\big)\otimes(\id\id X)
+  \\&+ \big(\proj{1}\otimes\proj{0}\big)\otimes(X\id\id)
+  \\&+ \big(\proj{1}\otimes\proj{1}\big)\otimes(\id X\id).
+  \end{aligned}
+$$
+We draw the general circuit for bit-flip protection in Figure \@ref(single-bit-flip-complete-circuit), writing out this $U_c$ in full, denoting the error-syndrome measurement by $a,b$.
+
+(ref:single-bit-flip-complete-circuit-caption) The quantised version of the classical $[3,1,3]$-code. If *at most one* bit-flip error occurs in the shaded region (which denotes the part where we transmit over a noisy channel), then this circuit perfectly corrects it, resulting in the successful transmission of the state $\alpha\ket{0}+\beta\ket{1}$.
+
+```{r single-bit-flip-complete-circuit,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=8,fig.cap='(ref:single-bit-flip-complete-circuit-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{quantikz}
+  &&&& \lstick{$\ket{0}$}
+  & \targ{}
+  & \targ{}
+  & \qw
+  & \qw
+  & \meter{} \vcw{4} \rstick{a}
+\\
+  &&&& \lstick{$\ket{0}$}
+  & \qw
+  & \qw
+  & \targ{}
+  & \targ{}
+  & \meter{} \rstick{b}
+\\
+  \lstick{$\alpha\ket{0}+\beta\ket{1}$}
+  & \ctrl{1}
+  & \ctrl{2}
+  & \gate[3,style={dashed,fill=primary!20}]{X\text{ error}}\gategroup[3,style={draw=none,rounded corners,fill=primary!20,inner xsep=2pt},background]{}
+  & \qw
+  & \ctrl{-2}
+  & \qw
+  & \qw
+  & \qw
+  & \gate{X^{a(1-b)}}
+  & \meter{} \rstick{$\alpha\ket{0}+\beta\ket{1}$}
+\\
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+  & \ctrl{-3}
+  & \ctrl{-2}
+  & \qw
+  & \gate{X^{ab}}
+  & \qw
+\\
+  \lstick{$\ket{0}$}
+  & \qw
+  & \targ{}
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+  & \qw
+  & \ctrl{-3}
+  & \gate{X^{(1-a)b}}
+  & \qw
+\end{quantikz}
+```
+
+It is useful to represent syndrome measurements in terms of stabilisers.
+For example, a computational basis measurement is represented by the Pauli $Z$ operator.
 
 
 
@@ -1311,56 +1705,6 @@ Thus if the errors $E_i$ form a basis in the matrix space --- as is the case for
 ::: {.idea latex=""}
 If a quantum error correction method corrects errors $E_1$ and $E_2$, then it also corrects any linear combination of $E_1$ and $E_2$.
 :::
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
