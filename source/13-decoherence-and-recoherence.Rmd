@@ -359,13 +359,15 @@ for some set of unitaries $\{U_x\}$ with $U_0=\id$, then an **encoding** operati
 When a quantum computer interacts and becomes entangled with its environment, it impacts the environment in such a way that the environment maintains a *physical record* of how the computer arrived at the desired output.
 Here, in our simplistic diagram, we consider only two computational paths.
 ```{r,engine='tikz'}
-  \begin{tikzpicture}[scale=0.5]
-    \node (initial) at (0,0) [blob=primary] {\small I};
-    \node (final1) at (4.2,-0.5) [blob=primary,inner sep=2pt] {\small $O_1$};
-    \node (final2) at (3.8,-1.5) [blob=primary,inner sep=2pt] {\small $O_2$};
-    \draw [process] (initial) to [out=50,in=120]  (final1);
-    \draw [process] (initial) to [out=-70,in=-150] (final2);
-  \end{tikzpicture}
+\tikzset{blob/.style args={#1}{circle,draw,fill={#1}}}
+\tikzset{process/.style={thick,->,shorten >=0.1cm,shorten <=0.1cm}}
+\begin{tikzpicture}[scale=0.5]
+  \node (initial) at (0,0) [blob=primary] {\small I};
+  \node (final1) at (4.2,-0.5) [blob=primary,inner sep=2pt] {\small $O_1$};
+  \node (final2) at (3.8,-1.5) [blob=primary,inner sep=2pt] {\small $O_2$};
+  \draw [process] (initial) to [out=50,in=120]  (final1);
+  \draw [process] (initial) to [out=-70,in=-150] (final2);
+\end{tikzpicture}
 ```
 With decoherence present, quantum computation spills out the environment and results in not one, but two output states:
 $$
@@ -519,7 +521,7 @@ This mixture may arise if one measures the environment in the $\ket{e_i}$ basis 
 
 
 
-## When can recoherence work?
+## When can there be recoherence?
 
 If we could measure the environment in the $\ket{e_i}$ basis without forgetting the result, then we would know what kind of error had occurred (say, some $E_k$) and could then simply restore the original state $\ket{\psi}$ by reversing the action of $E_k$.
 But the challenge lies in our lack of control over the environment.
@@ -815,10 +817,7 @@ Below a certain error threshold, the three-bit code improves the reliability of 
 This simple repetition code encoded one bit into three bits, and corrected up to one error.
 In general, there are classical codes that can encode $k$ bits into $n$ bits and correct up to $r$ errors.
 One more important number that we need is the **distance** of such an encoding, which is defined to be the minimum number of errors that can pass undetected (or, equivalently, the minimum Hamming distance^[That is, the number of bit-flips required to move from one to the other; recall Section \@ref(metrics).] between two codewords).
-More generally, the distance $d$ relates to the number of errors $t$ that a code can correct by
-$$
-  d = 2t+1
-$$
+More generally, the distance $d$ relates to the number of errors $t$ that a code can correct by $d=2t+1$, or, equivalently, $t=\lfloor d/2\rfloor$.
 
 Looking back again at Figure \@ref(fig:error-probability-for-000), we see that if exactly one or two errors occur in our three-bit code then we can detect that an error has occurred, since we will have a string where not all of the bits are the same, which means that it is definitely not one of our code words.
 However, if three errors occur then the errors are not only impossible to correct, but they are also *impossible to detect*.
@@ -1106,16 +1105,14 @@ It turns out that we really don't need to do much work in order to solve the pro
   & \targ{}
   & \qw
   & \qw
-  & \gate[5]{U_c}
-  & \qw
+  & \meter{} \vcw{4} \rstick{a}
 \\
   &&&&&& \lstick{$\ket{0}$}
   & \qw
   & \qw
   & \targ{}
   & \targ{}
-  & \qw
-  & \qw
+  & \meter{} \rstick{b}
 \\
   \lstick{$\alpha\ket{0}+\beta\ket{1}$}
   & \ctrl{1}
@@ -1128,7 +1125,7 @@ It turns out that we really don't need to do much work in order to solve the pro
   & \qw
   & \qw
   & \qw
-  & \qw
+  & \gate{Z^{a(1-b)}}
   & \meter{} \rstick{$\alpha\ket{0}+\beta\ket{1}$}
 \\
   \lstick{$\ket{0}$}
@@ -1142,7 +1139,7 @@ It turns out that we really don't need to do much work in order to solve the pro
   & \ctrl{-3}
   & \ctrl{-2}
   & \qw
-  & \qw
+  & \gate{Z^{ab}}
   & \qw
 \\
   \lstick{$\ket{0}$}
@@ -1156,7 +1153,7 @@ It turns out that we really don't need to do much work in order to solve the pro
   & \qw
   & \qw
   & \ctrl{-3}
-  & \qw
+  & \gate{Z^{(1-a)b}}
   & \qw
 \end{quantikz}
 ```
@@ -1321,8 +1318,7 @@ $$
   (X\otimes X\otimes X)V_{y_i}
   = V_{y_i}X.
 $$
-In fact, this is the smallest possible operator (said to be **of weight 3**, since it is built as a tensor product of three non-trivial gates) that can cause this problem of undetectable but fatal errors, and so we say that the Shor code has **distance $d=3$**.
-In general, the number of errors that can be corrected by a distance $d$ code is $\lfloor d/2\rfloor$.
+In fact, this is the smallest possible operator (said to be **of weight 3**, since it is built as a tensor product of three non-trivial gates) that can cause this problem of undetectable but fatal errors, which is exactly the same as saying that the Shor code has distance $d=3$.
 
 
 
