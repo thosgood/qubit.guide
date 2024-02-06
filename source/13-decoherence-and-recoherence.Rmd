@@ -520,6 +520,149 @@ This mixture may arise if one measures the environment in the $\ket{e_i}$ basis 
 
 
 
+## When can recoherence work?
+
+If we could measure the environment in the $\ket{e_i}$ basis without forgetting the result, then we would know what kind of error had occurred (say, some $E_k$) and could then simply restore the original state $\ket{\psi}$ by reversing the action of $E_k$.
+But the challenge lies in our lack of control over the environment.
+At first glance, once our bunch of qubits, initially in state $\ket{\psi}$, gets entangled with the environment
+$$
+  \ket{\psi}\ket{e}
+  \longmapsto \sum_i E_i\ket{\psi}\ket{e_i}
+$$
+the situation looks rather hopeless --- we do not have any control over the environment.
+However, there is a way around this.
+We can couple the qubits to an auxiliary system that we *do* control (an ancilla), and then attempt to transfer the qubits--environment entanglement to a qubits--ancilla entanglement.
+In other words, we prepare the ancilla in some prescribed state $\ket{a}$ and try to undo the decoherence $\mathcal{E}$ using some **recovery** or **recoherence** operator $\mathcal{R}$ that acts as
+$$
+  \ket{\psi}\ket{a}
+  \longmapsto \sum_k R_k\ket{\psi}\ket{a_k}.
+$$
+Thus decoherence followed by recoherence acts as
+$$
+  \begin{aligned}
+    \mathcal{R}\mathcal{E}\colon
+    \ket{\psi}\ket{e}\ket{a}
+    &\longmapsto \sum_i E_i\ket{\psi}\ket{e_i}\ket{a}
+  \\&\longmapsto \sum_{i,k} R_kE_i \ket{\psi}\ket{e_i}\ket{a_k}
+  \end{aligned}
+$$
+which we can also express in a diagram, as in Figure \@ref(fig:decoherence-recoherence).
+
+(ref:decoherence-recoherence-caption) The initial state undergoing decoherence followed by recoherence. Here $\mathcal{S}$ is the system of qubits that we want to work with, $\mathcal{N}$ is the environment, and $\mathcal{A}$ is the ancilla that we introduce. The squiggly arrow represents interactions, and the dashed line represents entanglement.
+
+```{r decoherence-recoherence,engine='tikz',fig.width=8,fig.cap='(ref:decoherence-recoherence-caption)'}
+\usetikzlibrary{decorations.markings,decorations.pathmorphing,decorations.pathreplacing}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}[decoration={snake,segment length=2mm,amplitude=0.5mm,pre length=3mm,post length=3mm}]
+  \begin{scope}
+    \node[draw,thick,primary,circle] (S) at (0,0) {$\mathcal{S}$};
+    \node[draw,thick,primary,circle] (A) at (2,1) {$\mathcal{A}$};
+    \node[draw,thick,secondary,circle] (N) at (2,-1) {$\mathcal{N}$};
+    \node (state0) at (1,-2) {$\ket{\psi}\ket{e}\ket{a}$};
+  \end{scope}
+  \draw [thick] (3,-1.5) to (3,1.5);
+  \begin{scope}[shift={(4,0)}]
+    \node[draw,thick,primary,circle] (S) at (0,0) {$\mathcal{S}$};
+    \node[draw,thick,primary,circle] (A) at (2,1) {$\mathcal{A}$};
+    \node[draw,thick,secondary,circle] (N) at (2,-1) {$\mathcal{N}$};
+    \draw [<->,shorten <=1mm,shorten >=1mm,decorate] (S) to (N);
+    \node (state1) at (1,-2) {$\sum_iE_i\ket{\psi}\ket{e_i}\ket{a}$};
+  \end{scope}
+  \draw [thick] (7,-1.5) to (7,1.5);
+  \begin{scope}[shift={(8,0)}]
+    \node[draw,thick,primary,circle] (S) at (0,0) {$\mathcal{S}$};
+    \node[draw,thick,primary,circle] (A) at (2,1) {$\mathcal{A}$};
+    \node[draw,thick,secondary,circle] (N) at (2,-1) {$\mathcal{N}$};
+    \draw [<->,shorten <=1mm,shorten >=1mm,decorate] (S) to (A);
+    \draw [thick,shorten <=1mm,shorten >=1mm,dashed] (S) to (N);
+    \node (state2) at (1,-2) {$\sum_{i,k}R_kE_i\ket{\psi}\ket{e_i}\ket{a_k}$};
+  \end{scope}
+  \draw [|->] (state0) to node[label={below:{\scriptsize decoherence $\mathcal{E}$}}]{} (state1);
+  \draw [|->] (state1) to node[label={below:{\scriptsize recoherence $\mathcal{R}$}}]{} (state2);
+\end{tikzpicture}
+```
+
+But for this to help us, we need to end up with in a state where the ancilla and the environment are entangled with one another, and the qubit is entangled with nothing, i.e. a state of the form
+$$
+  \ket{\psi}\otimes(\text{some entangled state of the ancilla and environment})
+$$
+as shown in Figure \@ref(fig:decoherence-recoherence-desired-outcome)
+
+(ref:decoherence-recoherence-desired-outcome-caption) The desired outcome of the decoherence--recoherence process.
+
+```{r decoherence-recoherence-desired-outcome,engine='tikz',fig.width=2,fig.cap='(ref:decoherence-recoherence-desired-outcome-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \node[draw,thick,primary,circle] (S) at (0,0) {$\mathcal{S}$};
+  \node[draw,thick,primary,circle] (A) at (2,1) {$\mathcal{A}$};
+  \node[draw,thick,secondary,circle] (N) at (2,-1) {$\mathcal{N}$};
+  \draw [thick,shorten <=1mm,shorten >=1mm,dashed] (N) to (A);
+  \node at (1,-2) {$\ket{\psi}\otimes\sum_{i,k}\lambda_{i,k}\ket{e_i}\ket{a_k}$};
+\end{tikzpicture}
+```
+
+Ideally we would like this to hold for *all* states $\ket{\psi}$, but this turns out to be too much to ask: as we shall see in a moment, we will have to confine our recoverable states to those that belong to a subspace called the **codespace**.
+But then at least for these states we expect to have
+$$
+  \sum_{i,k} R_kE_i \ket{\psi}\ket{e_i}\ket{a_k}
+  = \sum_{i,k} \ket{\psi}\otimes\lambda_{ik}\ket{e_i}\ket{a_k}.
+$$
+The ability of $R_k$ to perform the correction like this means that
+$$
+  R_kE_i
+  = \lambda_{ik}\id
+$$
+when acting on the codespace states $\ket{\psi}$.
+In turn, this means that
+$$
+  \begin{aligned}
+    \sum_k (R_k E_j)^\dagger(R_k E_i)
+    &= E_j^\dagger \left(\sum_k R_k^\dagger R_k\right) E_i
+  \\&= E_j^\dagger E_i
+  \\&= \lambda_{jk}^\star\lambda_{ik}\id
+  \end{aligned}
+$$
+which reminds us of the hopefully now-familiar condition for being able to correct a randomly chosen isometry.
+
+Last but not least, note that the recoherence operator $\mathcal{R}$ not only allows us to recover from the errors $E_i$, but also from any errors that are in the linear span of these.
+Thus if the errors $E_i$ form a basis in the matrix space --- as is the case for the Pauli matrices together with the identity --- then once we design an error recovery scheme for the $E_i$, we will be able to correct *any* error.
+
+::: {.idea latex=""}
+If a quantum error correction method corrects errors $E_1$ and $E_2$, then it also corrects any linear combination of $E_1$ and $E_2$.
+:::
+
+For example, in Section \@ref(towards-error-correction) we saw how the three-qubit encoding could correct for one of the possible errors^[Quite often we will write $X_i$ to mean "an $X$ error on the $i$-th qubit", so that e.g. $X_2=\id\otimes X_2\otimes\id\ldots\otimes\id$.] $\id$, $X_1$, $X_2$, or $X_3$.
+But not only can we correct for this discrete set of errors, we can also correct for any linear combination of them, such as $R_{X_1}^(\theta)$, which acts as
+$$
+  \ket{\psi}
+  \xmapsto{R_{X_1}(\theta)} \cos\frac{\theta}{2}\ket{\psi} + i\sin\frac{\theta}{2}X_1\ket{\psi}.
+$$
+In other words, the scenario where, with probability $\cos^2\frac{\theta}{2}$ we find that no error occurred, and with probability $\sin^2\frac{\theta}{2}$ we find that the error $X_1$ occurred and correct it.
+
+
+
+
+
+## Repetition coding {#repetition-coding}
+
+We have now essentially met all the concepts of quantum error correction, but everything has been phrased in terms of correctable isometries.
+Now we need to repeat much the same information from a slightly different perspective, including a brief detour to introduce some concepts and methods from the classical theory of error correction.
+Even though quantum problems often require novel solutions, it is always a good idea to look at the classical world to see if there is anything equivalent there, and, if so, how people deal with it.
+In this particular case, once we have digitised quantum errors, we can see that quantum decoherence is a bit like classical noise (i.e. bit-flips), except that we have *two* types of errors: these classical bit-flips, and then the purely quantum phase-flips.
+But there's one key thing that we know relating these two types of errors, namely that phase-flips can be turned into bit-flips by sandwiching then between Hadamard transforms:
+$$
+  HZH = X.
+$$
+This opens up the possibility of adopting classical techniques of error correction to the quantum case.
+There is a vast body of knowledge out there about classical error-correcting codes, and we can only scratch the surface here.
+
+
+
+
 
 
 
