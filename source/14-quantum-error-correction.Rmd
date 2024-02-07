@@ -1049,7 +1049,7 @@ In order to give a more precise explanation, we need to take a step back and loo
 
 
 
-## Logical operators, but a different approach {#logical-operators-differently}
+## Logical operators (a different approach) {#logical-operators-differently}
 
 ::: {.todo}
 <!-- TO-DO: 12.3 from main.pdf -->
@@ -1334,7 +1334,7 @@ We talk more about this in Exercise \@ref(global-phase-or-not-for-errors).
 
 
 
-## Code distance and thresholds
+## Code distance and thresholds {#code-distance-and-thresholds}
 
 Given an error model in which, in principle, all Pauli errors are possible but low-weight^[Recall that the weight $|P|$ of a Pauli operator $P=P_1\otimes\ldots\otimes P_n$ is the number of non-identity $P_i$. For example, $\id\id\id$ has weight $0$, $Z\id\id$ and $\id X\id$ have weight $1$, and $XXX$ has weight $3$.] errors are more likely than the high-weight errors, it makes perfect sense to look for an error correcting a code which can perfectly correct errors with weight at most $t$ for some "good" value of $t$.
 Such a code will fail will with probability roughly equal to the total probability of any error of weight larger than $t$ occurring.
@@ -1342,11 +1342,28 @@ This probability of failure is called the **logical error probability**.
 The goal of quantum error correction is to use all the tricks we have discussed so far (and many more) to realise *logical* qubits with logical error rates *below* the error rate of the constituent *physical* qubits.
 
 As in the case of classical codes, the **distance** of a quantum code is defined as the minimum weight error that can go undetected by the code.
-In other words,
+In other words, it is the minimum weight Pauli operator than can transform one codeword state into another.
+But as we've seen, all such operators are in $N(\mathcal{S})\setminus\mathcal{S}$, which means that
+$$
+	d
+	= \min_{P\in N(\mathcal{S})\setminus\mathcal{S}}|P|.
+$$
+Now our goal is less ambitious: we are not aiming to correct *all* possible Pauli errors, but only those of weight at most $t$, where $t$ satisfies $d=2t+1$.
+So how can a code with distance $d$ do this?
 
-::: {.todo}
-<!-- TO-DO: write -->
-:::
+Firstly, note that, if we take a product of two errors $E_i$ and $E_j$, each of weight at most $t$, then the resulting Pauli operator $E_iE_j$ will have weight at most $2t$, and by definition $2t<d$.
+Therefore the product of these errors can never be a logical operator, since the logical operators in $N(\mathcal{S})\setminus\mathcal{S}$ have weight at least $d$.
+Thus if one of these errors $E_i$ occurs and our decoding procedure picks another error $E_j$ that gives rise to the same syndrome (i.e. that belongs to the same error family) and applies the latter to the encoded qubits, then we know that $E_iE_j\not\in N(\mathcal{S})\setminus\mathcal{S}$, which means that $E_iE_j\in\mathcal{S}$ acts as the identity on the codespace.
+
+Needless to say, from the perspective of code distance alone, the larger the value of $d$ the better we can correct for more errors.
+For this, we need the logical errors (i.e. the logical operations on the codespace $L\in N(\mathcal{S})\setminus\mathcal{S}$) to have the largest possible weight --- by our assumptions about our error model, these occur with low probability, and thus keep the logical error probability low.
+
+The [**threshold theorem**](https://en.wikipedia.org/wiki/Threshold_theorem) for stabiliser codes asserts that if the physical error probability $p$ of individual qubits is below a certain threshold value $p_\mathrm{th}$ then increasing the distance of the code will decrease the logical error probability.
+This principle implies that quantum error correction codes *could theoretically* suppress the logical error rate indefinitely.
+However, if the physical error rate $p$ is *greater than* the threshold value $p_\mathrm{th}$, then quantum encoding actually becomes counterproductive.
+So the threshold value serves as a critical experimental benchmark for quantum computing experiments, since achieving it is essential for the feasibility of quantum error correction.
+
+As of 2024^[Giving precise numbers is precarious due to the rapid advancements in quantum error correction technology.], the upper bound for this threshold value is approximately $p_\mathrm{th}=0.1$.
 
 
 
@@ -1485,7 +1502,7 @@ This gives us the encoding circuit in Figure \@ref(fig:unitary-steane-encoding).
 
 
 
-## Surface codes
+## Surface codes {#surface-codes}
 
 ::: {.todo}
 <!-- TO-DO: write -->
@@ -1863,6 +1880,13 @@ If we really like, however, we could go one step further and replace the control
   & \qwbundle[alternate]{} \rstick{$\ket{\psi}_L$}
 \end{quantikz}
 ```
+
+
+### Five-qubit code
+
+::: {.todo}
+<!-- TO-DO: L11, section 12 -->
+:::
 
 
 
