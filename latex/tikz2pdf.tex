@@ -53,6 +53,136 @@
 \end{scope}
 }
 
+% Surface code diagrams
+\tikzset{
+data/.style={circle,draw,fill=primary,minimum size=0.6cm},
+ancilla/.style={rectangle,draw,fill=gray!40,minimum size=0.6cm},
+zwire/.style={thick},
+xwire/.style={thick,dashed}
+}
+
+\newcommand{\plottoric}[1]{
+  \def\s{1.5cm}
+  %draw the vertices
+  \foreach \x in {0,...,#1} {
+    \foreach \y in {0,...,#1} {
+      \pgfmathtruncatemacro{\tot}{\x+\y};
+      \pgfmathtruncatemacro{\index}{\x+(#1+1)*\y};
+      \ifodd\index
+        \pgfmathtruncatemacro{\place}{(\index+1)/2};
+      \else
+        \pgfmathtruncatemacro{\place}{(\index+2)/2};
+      \fi
+      \ifodd\tot
+        \node [ancilla,alias=S\place] (a\x\y) at (\x*\s,-\y*\s) {};
+        \node [above right=0.01cm of a\x\y,inner sep=0] {$S_{\place}$};
+      \else 
+        \node [data,alias=D\place] (a\x\y) at (\x*\s,-\y*\s) {};
+        \node [above right=0.12cm of a\x\y,inner sep=0] {$D_{\place}$};
+      \fi
+    }
+  }
+  \begin{scope}[on background layer]
+    %draw horizontal/vertical lines
+    \foreach \x in {0,...,#1}{
+      %vertical
+      \ifodd\x
+        \draw [xwire] (a\x0)--(a\x#1);
+      \else
+        \draw [zwire] (a\x0)--(a\x#1);
+      \fi
+      %horizontal
+      \ifodd\x
+        \draw [zwire] (a0\x)--(a#1\x);
+      \else
+        \draw [xwire] (a0\x)--(a#1\x);
+      \fi
+    }
+  \end{scope}
+}
+
+\newcommand{\plottoricnoancilla}[1]{
+  %  \def\width{1} %there are \width+1 rows and columns
+  \def\s{1.5cm}
+  %draw the vertices
+  \foreach \x in {0,...,#1} {
+    \foreach \y in {0,...,#1} {
+      \pgfmathtruncatemacro{\tot}{\x+\y};
+      \pgfmathtruncatemacro{\index}{\x+(#1+1)*\y};
+      \ifodd\index
+        \pgfmathtruncatemacro{\place}{(\index+1)/2};
+      \else
+        \pgfmathtruncatemacro{\place}{(\index+2)/2};
+      \fi
+      \ifodd\tot
+        \coordinate [alias=S\place] (a\x\y) at (\x*\s,-\y*\s) {};
+        %\node [above right=0.01cm of a\x\y,inner sep=0] {$A_{\place}$};
+      \else 
+        \node [data,alias=D\place] (a\x\y) at (\x*\s,-\y*\s) {};
+      %\node [above right=0.12cm of a\x\y,inner sep=0] {$D_{\place}$};
+      \fi
+    }
+  }
+  \begin{scope}[on background layer]
+    %draw horizontal/vertical lines
+    \foreach \x in {0,...,#1}{
+      %vertical
+      \ifodd\x
+        \draw [xwire] (a\x0)--(a\x#1);
+      \else
+        \draw [zwire] (a\x0)--(a\x#1);
+      \fi
+      %horizontal
+      \ifodd\x
+        \draw [zwire] (a0\x)--(a#1\x);
+      \else
+        \draw [xwire] (a0\x)--(a#1\x);
+      \fi
+    }
+  \end{scope}
+}
+
+\newcommand{\plotprimal}[1]{
+  %  \def\width{1} %there are \width+1 rows and columns
+  \def\s{1.5cm}
+  %draw the vertices
+  \foreach \x in {0,...,#1} {
+    \foreach \y in {0,...,#1} {
+      \pgfmathtruncatemacro{\tot}{\x+\y};
+      \pgfmathtruncatemacro{\index}{\x+(#1+1)*\y};
+      \ifodd\index
+        \pgfmathtruncatemacro{\place}{(\index+1)/2};
+      \else
+        \pgfmathtruncatemacro{\place}{(\index+2)/2};
+      \fi
+      \ifodd\tot
+        \coordinate [alias=S\place] (a\x\y) at (\x*\s,-\y*\s) {};
+        %\node [above right=0.01cm of a\x\y,inner sep=0] {$A_{\place}$};
+      \else 
+        \node [data,alias=D\place] (a\x\y) at (\x*\s,-\y*\s) {};
+        %\node [above right=0.12cm of a\x\y,inner sep=0] {$D_{\place}$};
+      \fi
+    }
+  }
+  \begin{scope}[on background layer]
+    %draw horizontal/vertical lines
+    \foreach \x in {0,...,#1}{
+      %vertical
+      \ifodd\x
+        \draw [white] (a\x0)--(a\x#1);
+      \else
+        \draw [zwire] (a\x0)--(a\x#1);
+      \fi
+      %horizontal
+      \ifodd\x
+        \draw [zwire] (a0\x)--(a#1\x);
+      \else
+        \draw [white] (a0\x)--(a#1\x);
+      \fi
+    }
+  \end{scope}
+}
+
 \begin{document}
 \begin{preview}
 %% TIKZ_CODE %%
