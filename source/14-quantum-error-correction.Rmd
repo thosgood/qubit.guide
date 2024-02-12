@@ -1,13 +1,12 @@
 # Quantum error correction {#error-correction}
 
 > About more classical error correction and the **Hamming codes**, how they generalise to quantum codes called **CSS codes**, including the **Steane [[7,1,3]]-code**.
-> Also about a family of quantum codes known as the **surface code** which have large distances, and stabilisers that can all be measured on small numbers of neighbouring qubits.
-> Finally about computing in the presence of errors: **logical states**, **logical operators**, and **error families** --- all via the formalism of stabilisers --- and the **transversal gates** that we can implement to act on them.
+> Also about computing in the presence of errors: **logical states**, **logical operators**, and **error families** --- all via the formalism of stabilisers --- and the **transversal gates** that we can implement to act on them.
 
-::: {.todo latex=""}
-<!-- TO-DO: basically we want to go from simple error correction to fault-tolerant computation, working with encoded states using logical operators; fault-tolerance can be defined as circuits such that, if an error occurs on a single qubit, then it doesn't produce more errors in the same block; we will really just focus on qubit errors, but it's interesting to think about gate errors and measurement errors too! -->
-<!-- TO-DO: we start by continuing to talk about error correction, moving slowly towards fault-tolerance -->
-:::
+We have seen a way of dealing with the computational errors introduced by the physical problem of decoherence, namely the Shor $[[9,1,3]]$ code, but this is just the start of the story.
+There is a vast body of work on *classical* error correction, so it's sensible to ask if we can adapt this to help us in the world of quantum computation.
+As we shall see, we can actually use quite a lot of the theory of classical error-correction codes, and in doing so we will start to really make use of the stabiliser formalism introduced all the way back in Chapter \@ref(stabilisers).
+But note that this *still* isn't the end of the story: our goal is so-called **fault-tolerant computation**, which we come to in Chapter \@ref(fault-tolerance).
 
 
 
@@ -15,11 +14,11 @@
 
 ## The Hamming code {#the-hamming-code}
 
-The challenge in designing efficient error-correcting codes resides in the trade-off between rate and distance.
+The challenge in designing efficient error-correcting codes resides in the trade-off between *rate* and *distance* (introduced in Section \@ref(the-classical-repetition-code)).
 Ideally, both quantities should be high: a high rate signifies low overhead in the encoding process (i.e. requiring only a few redundant bits), and a high distance means that many errors can be corrected.
 So can we optimise both of these quantities simultaneously?
 Unfortunately, various established bounds tell us that there is always a trade off, so high-rate codes must have low distance, and high-distance codes must have a low rate.
-Still, there is a lot of ingenuity that goes into designing good error correction codes, and some are still better than others!
+Still, there is a lot of ingenuity that goes into designing good error-correction codes, and some are still better than others!
 
 Before looking at quantum codes in more depth, we again start with *classical* codes.
 For example, in Section \@ref(the-classical-repetition-code) we saw the three-bit repetition code, which has a rate of $R=1/3$ and distance $3$.
@@ -519,7 +518,7 @@ If we take a second classical code, with parameters $[n,k',d']$ and parity-check
 However, we cannot simply pick the two classical codes arbitrary: if the scheme is the work, then the $X$-type and $Z$-type stabilisers must actually *be* stabilisers, i.e. they must commute.
 
 ::: {.idea latex=""}
-The challenge in creating quantum error correction codes often lies in finding good commuting sets of stabilisers.
+The challenge in creating quantum error-correction codes often lies in finding good commuting sets of stabilisers.
 :::
 
 How can we tell if this happens?
@@ -560,7 +559,7 @@ In summary then, we have created an
 $$
 	[[n, k+k'-n, \min(d,d')]]
 $$
-quantum error correction code, and its decoding is well understood based on the classical decoding methods applied independently for $X$ errors and $Z$ errors.
+quantum error-correction code, and its decoding is well understood based on the classical decoding methods applied independently for $X$ errors and $Z$ errors.
 This general construction of quantum error correcting codes is known as the **CSS construction**, for its originators [Robert Calderbank](https://en.wikipedia.org/wiki/Robert_Calderbank), [Peter Shor](https://en.wikipedia.org/wiki/Peter_Shor), and [Andrew Steane](https://en.wikipedia.org/wiki/Andrew_Steane).
 
 ::: {.idea latex=""}
@@ -662,7 +661,7 @@ When working with truly quantum codes, the stabiliser formalism really becomes m
 *Here we are going to use the abstract group theory that we developed back in Sections \@ref(normal-subgroups) and \@ref(pauli-normalisers), but there are other ways of explaining this material.*
 *In Section \@(logical-operators-differently) we tell the same story from a different point of view, so if you find this section confusing then don't worry --- you can always come back to it after reading the other one!*
 
-We have been slowly building up towards constructing quantum error correction codes using the stabiliser formalism, but there is one major detail that we have yet to mention.
+We have been slowly building up towards constructing quantum error-correction codes using the stabiliser formalism, but there is one major detail that we have yet to mention.
 You will perhaps have noticed that we haven't written out what the stabiliser states actually *are*, nor what the encoding circuits look like.
 There is a simple reason for this: at this point, we don't actually know!
 There's a little more work to be done --- the stabilisers have provided us with a two-dimensional space, but if we have $\ket{0}$ and $\ket{1}$ to encode, how are they mapped within the space?
@@ -698,7 +697,7 @@ $$
 	\qquad\text{and}\qquad
 	\mathcal{P}_n/N(\mathcal{S}).
 $$
-How does this help us with our stabiliser error correction codes?
+How does this help us with our stabiliser error-correction codes?
 Let's look first at the former: cosets of $\mathcal{S}$ inside its normaliser $N(\mathcal{S})$.
 
 If $\ket{\psi}\in V_\mathcal{S}$ is a state in the stabilised subspace^[For us here, the stabilised subspace $V_\mathcal{S}$ is exactly the codespace, and the stabilisers generating $\mathcal{S}$ are exactly the elements $G_r\in\mathcal{P}_n$ constructed from the rows of $H$ as at the start of Section \@ref(quantum-codes-from-classical).], then any element $g\in\mathcal{S}$ always satisfies
@@ -764,7 +763,7 @@ The diagram from Section \@ref(pauli-stabilisers) was useful in describing this 
 \end{tikzpicture}
 ```
 
-To use the terminology of error correction codes, we are taking our codespace to be^[We want to encode a single qubit, which lives in a two-dimensional space (spanned by $\ket{0}$ and $\ket{1}$), so it makes sense that we want our codespace to also be two-dimensional.]
+To use the terminology of error-correction codes, we are taking our codespace to be^[We want to encode a single qubit, which lives in a two-dimensional space (spanned by $\ket{0}$ and $\ket{1}$), so it makes sense that we want our codespace to also be two-dimensional.]
 $$
 	\mathcal{C}
 	= \langle\ket{000},\ket{111}\rangle
@@ -1056,9 +1055,12 @@ In order to give a more precise explanation, we need to take a step back and loo
 
 ## Logical operators (a different approach) {#logical-operators-differently}
 
+We have said a few times now that the main challenge in finding good quantum error-correction codes often lies in finding "good commuting sets of stabilisers", so let's take this seriously and try to rediscover the definitions from Sections \@ref(logical-operators) and \@ref(error-families) by starting just with commutativity.
+
+Again, we already know that the Pauli matrices provide a useful basis with respect to which we can decompose the effects of any quantum channel^["Correct the Paulis and you correct them all."], so we should carefully understand how the Pauli operators $P\in\mathcal{P}_n$ interact with any putative error-correcting code.
+
 ::: {.todo}
 <!-- TO-DO: 12.3 from main.pdf -->
-<!-- TO-DO: we said that "The challenge in creating quantum error correction codes often lies in finding good commuting sets of stabilisers" so let's phrase everything in terms of commutativity -->
 :::
 
 
@@ -1365,7 +1367,7 @@ Needless to say, from the perspective of code distance alone, the larger the val
 For this, we need the logical errors (i.e. the logical operations on the codespace $L\in N(\mathcal{S})\setminus\mathcal{S}$) to have the largest possible weight --- by our assumptions about our error model, these occur with low probability, and thus keep the logical error probability low.
 
 The [**threshold theorem**](https://en.wikipedia.org/wiki/Threshold_theorem) for stabiliser codes asserts that if the physical error probability $p$ of individual qubits is below a certain threshold value $p_\mathrm{th}$ then increasing the distance of the code will decrease the logical error probability.
-This principle implies that quantum error correction codes *could theoretically* suppress the logical error rate indefinitely.
+This principle implies that quantum error-correction codes *could theoretically* suppress the logical error rate indefinitely.
 However, if the physical error rate $p$ is *greater than* the threshold value $p_\mathrm{th}$, then quantum encoding actually becomes counterproductive.
 So the threshold value serves as a critical experimental benchmark for quantum computing experiments, since achieving it is essential for the feasibility of quantum error correction.
 We will return to the threshold theorem in more detail in Chapter \@ref(fault-tolerance).
