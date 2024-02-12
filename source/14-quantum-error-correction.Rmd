@@ -1075,14 +1075,15 @@ $$
 	P\sigma
 	= (-1)^{c(P,\sigma)} \sigma P.
 $$
-Furthermore, this function has a nice relation on products:
+Furthermore, this function has a nice relation on products: writing $\oplus$ to mean addition $\mod{2}$, we can see that
 $$
 	c(P,\sigma\tau)
 	= c(P,\sigma) \oplus c(P,\tau)
 $$
-(where we write $\oplus$ to mean addition $\mod{2}$) which reminds us of the fact that two anticommuting operators multiplied together produce a commuting operator.
+which reminds us of the fact that two anticommuting operators multiplied together produce a commuting operator.
 
-Given a stabiliser group^[We saw in Section \@ref(quantum-codes-from-classical) that an $[n,k,d]$ code had $n-k$ stabiliser generators, so we preemptively label our generators from $1$ to $n-k$.] $\mathcal{S}=\langle g_1,\ldots,g_{n-k}\rangle$, we define the **error syndrome** $\underline{e}_P$ of a Pauli operator $P$ to be the vector consisting of all the values $c(P,g_i)$, i.e.
+Now fix some stabiliser group^[We saw in Section \@ref(quantum-codes-from-classical) that an $[n,k,d]$ code had $n-k$ stabiliser generators, so we preemptively label our generators from $1$ to $n-k$.] $\mathcal{S}=\langle g_1,\ldots,g_{n-k}\rangle$.
+We define the **error syndrome** $\underline{e}_P$ of a Pauli operator $P$ to be the vector consisting of all the values $c(P,g_i)$, i.e.
 $$
 	\underline{e}_P
 	= \big( c(P,g_1), \ldots, c(P,g_{n-k}) \big).
@@ -1091,6 +1092,27 @@ It follows from the the above relation of $c(P,\sigma)$ on products that
 $$
 	\underline{e}_{P\sigma}
 	= \underline{e}_P\oplus\underline{e}_\sigma.
+$$
+
+The set of Pauli operators that have *zero* syndrome are special, and form a set known as the **normaliser**:
+$$
+	N(\mathcal{S})
+	\coloneqq \big\{ P\in\mathcal{P}_n \mid c(P,\sigma)=0\text{ for all }\sigma\in\mathcal{S} \big\}.
+$$
+Since all elements of the stabiliser $\mathcal{S}$ commute with one another, we know that $\mathcal{S}\subseteq N(\mathcal{S})$, but in general the normaliser is strictly larger.
+Now, by the definition of the normaliser and the multiplicative property of $c(P,\sigma)$, if some Pauli operator $P$ has a particular error syndrome $\underline{e}_P$ then $P\sigma$ has the *same* error syndrome *for any* $\sigma\in N(\mathcal{S})$.
+This lets us gather together the Pauli operators into sets, which we call the **error families**, consisting of those Pauli operators which all have the same error syndrome.
+By the above, these can be described by some representative operator $P$, along with all other $P\sigma$ for $\sigma\in N(\mathcal{S})$, since the *only* way for $P$ and $Q$ to have the same error syndrome is for them to satisfy $Q=P\sigma$ for some $\sigma\in N(\mathcal{S})$.
+
+Now for some counting.
+Since an error syndrome is exactly an $n$-bit string, there are $2^{n-k}$ possible different error syndromes.
+Each error family is, by construction, of size $|N(\mathcal{S})|$.
+All together, the error families contain every single Pauli operator, of which there are $4^n$.
+With this, we can calculate the size of the normaliser:
+$$
+	N(\mathcal{S})
+	= 4^n/2^{n-k}
+	= 2^{n+k}.
 $$
 
 ::: {.todo}
