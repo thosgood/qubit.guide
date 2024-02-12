@@ -522,7 +522,7 @@ The challenge in creating quantum error-correction codes often lies in finding g
 :::
 
 How can we tell if this happens?
-Well, if $x$ is a row of $H$, and $z$ a row of $H'$, then the we need the number of positions $i\in\{1,\ldots,n\}$ such that $x_i=z_i=1$ to be even, as these are the ones that will give operators that individually anti-commute ($XZ=-ZX$).
+Well, if $x$ is a row of $H$, and $z$ a row of $H'$, then the we need the number of positions $i\in\{1,\ldots,n\}$ such that $x_i=z_i=1$ to be even, as these are the ones that will give operators that individually anticommute ($XZ=-ZX$).
 In notation, this is the same as asking that
 $$
 	x\cdot z
@@ -1055,9 +1055,43 @@ In order to give a more precise explanation, we need to take a step back and loo
 
 ## Logical operators (a different approach) {#logical-operators-differently}
 
-We have said a few times now that the main challenge in finding good quantum error-correction codes often lies in finding "good commuting sets of stabilisers", so let's take this seriously and try to rediscover the definitions from Sections \@ref(logical-operators) and \@ref(error-families) by starting just with commutativity.
+We have said a few times now that the main challenge in finding good quantum error-correction codes often lies in finding "good commuting sets of stabilisers", so let's take this seriously and try to rediscover the definitions from Sections \@ref(logical-operators) and \@ref(error-families) by starting with just commutativity.
 
-Again, we already know that the Pauli matrices provide a useful basis with respect to which we can decompose the effects of any quantum channel^["Correct the Paulis and you correct them all."], so we should carefully understand how the Pauli operators $P\in\mathcal{P}_n$ interact with any putative error-correcting code.
+Again, we already know that the Pauli matrices provide a useful basis with respect to which we can decompose the effects of any quantum channel^["Correct the Paulis and you correct them all."], so we should carefully understand how the Pauli operators $P\in\mathcal{P}_n$ interact with any error-correcting code.
+For this, we introduce the notation
+$$
+	c(P,\sigma)
+	\coloneqq
+	\begin{cases}
+		0
+		&P \text{ and } \sigma \text{ commute}
+	\\1
+		&P \text{ and } \sigma \text{ anticommute}
+	\end{cases}
+$$
+for any Pauli operator $P$ and any other operator $\sigma$.
+A particularly nice thing about this choice of definition (as opposed to taking $c(P,\sigma)\in\{\pm1\}$, say) is that we can write
+$$
+	P\sigma
+	= (-1)^{c(P,\sigma)} \sigma P.
+$$
+Furthermore, this function has a nice relation on products:
+$$
+	c(P,\sigma\tau)
+	= c(P,\sigma) \oplus c(P,\tau)
+$$
+(where we write $\oplus$ to mean addition $\mod{2}$) which reminds us of the fact that two anticommuting operators multiplied together produce a commuting operator.
+
+Given a stabiliser group^[We saw in Section \@ref(quantum-codes-from-classical) that an $[n,k,d]$ code had $n-k$ stabiliser generators, so we preemptively label our generators from $1$ to $n-k$.] $\mathcal{S}=\langle g_1,\ldots,g_{n-k}\rangle$, we define the **error syndrome** $\underline{e}_P$ of a Pauli operator $P$ to be the vector consisting of all the values $c(P,g_i)$, i.e.
+$$
+	\underline{e}_P
+	= \big( c(P,g_1), \ldots, c(P,g_{n-k}) \big).
+$$
+It follows from the the above relation of $c(P,\sigma)$ on products that
+$$
+	\underline{e}_{P\sigma}
+	= \underline{e}_P\oplus\underline{e}_\sigma.
+$$
 
 ::: {.todo}
 <!-- TO-DO: 12.3 from main.pdf -->
@@ -1419,7 +1453,7 @@ $$
 	\coloneqq \frac{1}{2^6} \left(\prod_{i=1}^6 (\id+G_i)\right) \ket{1}^{\otimes7}.
 $$
 
-One thing to note is that the order of the product over the $G_i$ doesn't matter here: by design, every stabiliser generator commutes with every other^[We *need* all the generators to commute in order for the simultaneous $+1$-eigenspace to exist!], since they "overlap" (i.e. have non-identity terms) in an *even* number of positions, so any $-1$ signs arising from anti-commutativity will cancel out with one another.
+One thing to note is that the order of the product over the $G_i$ doesn't matter here: by design, every stabiliser generator commutes with every other^[We *need* all the generators to commute in order for the simultaneous $+1$-eigenspace to exist!], since they "overlap" (i.e. have non-identity terms) in an *even* number of positions, so any $-1$ signs arising from anticommutativity will cancel out with one another.
 So for $\ket{0}_L$, when we expand out the product $\prod_i(\id+G_i)$, we can simply move all the $Z$-type terms to the right and then forget them, since $Z$ acts trivially on $\ket{0}$.
 
 This means that we're left with only the $X$-type terms, and there are eight of these:^[If you look up the codewords for the Steane code elsewhere, you might find different expressions, but this is simply an artifact of expressing the parity check matrix of the Hamming code in a different basis. Note also that here we have normalised the state.]
