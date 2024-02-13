@@ -189,7 +189,7 @@ Say that Alice encodes her data string $d_1d_2d_3d_4$ and sends the result $G\ma
 ```
 
 *If we make the assumption that at most one error occurs*^[This assumption is crucial here, and we investigate what happens if we drop it in Section \@ref(error-correcting-conditions).] then this result tells us exactly where the bit-flip happened: it is *not* in the bottom-left (red) plaquette, but it *is* in both the top (blue) and bottom-right (yellow) plaquettes.
-Looking at the diagram we see that it must be $d_2$ that was flipped, and so we can correct for this error by simply flipping it back before decoding (note that the decoding process is given by simply forgetting the last three bits of the received string).
+Looking at the diagram we see that it must be $d_2$ that was flipped, and so we can correct for this error by simply flipping it back before unencoding (where the unencoding process is given by simply forgetting the last three bits of the received string).
 
 We can describe the error location process in terms of matrices as well, using the **parity-check matrix**^[Here is yet another $H$, to go with the Hadamard and the Hamiltonian...] $H$, given by
 $$
@@ -378,8 +378,7 @@ An **$[n,k,d]$-linear code** $C$ is described by two matrices:
 		\begin{bmatrix}
 			\begin{array}{c}
 				\id_{k\times k}
-			\\\hline
-				P
+			\\P
 			\end{array}
 		\end{bmatrix}
 	$$
@@ -389,7 +388,7 @@ An **$[n,k,d]$-linear code** $C$ is described by two matrices:
 	$$
 		H =
 		\begin{bmatrix}
-			\begin{array}{c|c}
+			\begin{array}{cc}
 				Q & \id_{(n-k)\times(n-k)}
 			\end{array}
 		\end{bmatrix}
@@ -405,7 +404,7 @@ $$
 	\range(H^T)
 	= \ker(G^T).
 $$
-We can ensure this by taking $Q=-P$.
+We can ensure this by taking $Q=-P$ (see Exercise \@ref(generator-and-parity-check-matrices)).
 :::
 
 One last piece of the puzzle that we need to understand is the notion of **dual codes**.
@@ -660,6 +659,7 @@ When working with truly quantum codes, the stabiliser formalism really becomes m
 
 *Here we are going to use the abstract group theory that we developed back in Sections \@ref(normal-subgroups) and \@ref(pauli-normalisers), but there are other ways of explaining this material.*
 *In Section \@(logical-operators-differently) we tell the same story from a different point of view, so if you find this section confusing then don't worry --- you can always come back to it after reading the other one!*
+*It's always a good idea to have multiple viewpoints.*
 
 We have been slowly building up towards constructing quantum error-correction codes using the stabiliser formalism, but there is one major detail that we have yet to mention.
 You will perhaps have noticed that we haven't written out what the stabiliser states actually *are*, nor what the encoding circuits look like.
@@ -864,7 +864,7 @@ The cosets of $N(\mathcal{S})$ inside $\mathcal{P}_n$ are **error families** on 
 The individual elements of any error family (i.e. the elements of $\mathcal{P}_n$) are called **physical errors**.
 :::
 
-Again, we can write $\mathcal{P}_n$ in such a way that we can immediately read off the cosets:
+Again, we can write $\mathcal{P}_3$ in such a way that we can immediately read off the cosets:
 $$
 	\mathcal{P}_3
 	= \{\id, X\id\id, \id X\id, \id\id X\} \times N(\mathcal{S}) \times \{\pm1,\pm i\}.
@@ -1083,12 +1083,12 @@ $$
 which reminds us of the fact that two anticommuting operators multiplied together produce a commuting operator.
 
 Now fix some stabiliser group^[We saw in Section \@ref(quantum-codes-from-classical) that an $[n,k,d]$ code had $n-k$ stabiliser generators, so we preemptively label our generators from $1$ to $n-k$.] $\mathcal{S}=\langle g_1,\ldots,g_{n-k}\rangle$.
-We define the **error syndrome** $\underline{e}_P$ of a Pauli operator $P$ to be the vector consisting of all the values $c(P,g_i)$, i.e.
+We define the **error syndrome** $\underline{e}_P$ of a Pauli operator $P$ to be the vector of all the values $c(P,g_i)$, i.e.
 $$
 	\underline{e}_P
 	= \big( c(P,g_1), \ldots, c(P,g_{n-k}) \big).
 $$
-It follows from the the above relation of $c(P,\sigma)$ on products that
+It follows from the the above relation of how $c(P,-)$ turns products into sums that
 $$
 	\underline{e}_{P\sigma}
 	= \underline{e}_P\oplus\underline{e}_\sigma.
@@ -1100,20 +1100,95 @@ $$
 	\coloneqq \big\{ P\in\mathcal{P}_n \mid c(P,\sigma)=0\text{ for all }\sigma\in\mathcal{S} \big\}.
 $$
 Since all elements of the stabiliser $\mathcal{S}$ commute with one another, we know that $\mathcal{S}\subseteq N(\mathcal{S})$, but in general the normaliser is strictly larger.
-Now, by the definition of the normaliser and the multiplicative property of $c(P,\sigma)$, if some Pauli operator $P$ has a particular error syndrome $\underline{e}_P$ then $P\sigma$ has the *same* error syndrome *for any* $\sigma\in N(\mathcal{S})$.
-This lets us gather together the Pauli operators into sets, which we call the **error families**, consisting of those Pauli operators which all have the same error syndrome.
+Now, by the definition of the normaliser and the multiplicative property of $c(P,-)$, if some Pauli operator $P$ has a particular error syndrome $\underline{e}_P$ then $P\sigma$ has the *same* error syndrome *for any* $\sigma\in N(\mathcal{S})$.
+This lets us gather together the Pauli operators into sets, which we call the **error cosets**, consisting of those Pauli operators which all have the same error syndrome.
 By the above, these can be described by some representative operator $P$, along with all other $P\sigma$ for $\sigma\in N(\mathcal{S})$, since the *only* way for $P$ and $Q$ to have the same error syndrome is for them to satisfy $Q=P\sigma$ for some $\sigma\in N(\mathcal{S})$.
 
 Now for some counting.
 Since an error syndrome is exactly an $n$-bit string, there are $2^{n-k}$ possible different error syndromes.
-Each error family is, by construction, of size $|N(\mathcal{S})|$.
-All together, the error families contain every single Pauli operator, of which there are $4^n$.
+Each error coset is, by construction, of size $|N(\mathcal{S})|$.
+All together, the error cosets contain every single Pauli operator, of which there are $4^n$.
 With this, we can calculate the size of the normaliser:
 $$
 	N(\mathcal{S})
 	= 4^n/2^{n-k}
 	= 2^{n+k}.
 $$
+
+So the Pauli group is subdivided into error cosets^[We called these error *families* in Section \@ref(error-families).] by the normaliser, and every Pauli in the same coset has the same error syndrome.
+If we perform a syndrome measurement after passing through some noisy channel and get the result $\underline{e}$, then the effect of the channel is collapsed to being a linear combination of the terms inside the error coset corresponding to the error syndrome $\underline{e}$.
+By applying *any* element of that error coset, we are mapped back to the normaliser.
+
+In fact, there is further substructure^[We will see that this structure is exactly that of a *subgroup*, and that it will be sufficient to just look at the values on the generators when defining the logical syndrome.] within the normaliser, and this is also reflected in each error family.
+Given a Pauli operator $P\in N(\mathcal{S})$ in the normaliser, we define its **logical syndrome** to be the vector $\underline{\ell}_P$ of all the values $c(P,\sigma)$, where $\sigma$ ranges over $N(\mathcal{S})$.
+Note that, for any $\tau\in\mathcal{S}$, we have $\underline{\ell}_P=\underline{\ell}_{P\tau}$.
+Again, this splits the normaliser Pauli operators into sets, which we call the **logical cosets**, each being defined by having the same logical syndrome.
+
+::: {.idea latex=""}
+The error cosets divide up the Pauli group, with the normaliser as one specific example; the logical cosets divide up the normaliser, with the stabiliser as one specific example --- see Figures \@ref(fig:slicing-pn-into-cosets) and \@ref(fig:decomposition-of-pauli-on-codespaces).
+:::
+
+Each operator that's in the normaliser but *not* in the stabiliser preserves the codespace (because it doesn't change the error syndrome), but it must do something non-trivial *inside* the codespace (because it's not in the stabiliser).
+It thus acts on the logical, encoded, qubits, and so we call it a **logical operator**.
+Moreover, these logical operators either commute or anticommute with one another.
+This should remind you of the Pauli operators themselves, and, indeed, we choose to associate these logical operators with **logical Pauli operators**.
+Which are which?
+Well, the choice is still arbitrary, as long as we get the relative commutation properties correct: it should be the case that $c(Z_L,X_L)=1$, for example.
+In the case of a CSS code, there are always $Z$-type representatives that we can choose to take as the logical $Z$, and $X$-type representatives for the logical $X$.
+
+Let's do some more counting.
+Since each logical coset is of size $|\mathcal{S}|=2^{n-k}$, there must be $|N(\mathcal{S})|/|\mathcal{S}|=4^k$ logical cosets, each corresponding to one of the $4^k$ logical Pauli operators on $k$ qubits, and each described uniquely by a logical syndrome vector $\underline{\ell}$, and in such a way that every possible value of $\underline{\ell}$ is accounted for.
+However, recall that $\underline{\ell}_P=\underline{\ell}_{P\tau}$ for any $\tau\in\mathcal{S}$.
+This means that we don't need to record *all* the commutation values, but only a set of $2k$ many values, so that $\ell\in\{0,1\}^{2k}$.
+All in all, we can choose any linearly independent set of values we want for the generators, as long as we recall that any operator will commute with itself, and we require the symmetry $c(\sigma,\tau)=c(\tau,\sigma)$.
+For example, we could take
+$$
+	\begin{bmatrix}
+		\underline{\ell}_1
+	\\\underline{\ell}_2
+	\\\vdots
+	\\\underline{\ell}_{2k}
+	\end{bmatrix}
+	= \begin{bmatrix}
+		0 & 1
+	\\1 & 0
+	\end{bmatrix}^{\oplus k}
+$$
+which would naturally select pairs $(\underline{\ell}_{2n-1},\underline{\ell}_{2n})$ as having the correct commutation relations necessary for them to act as logical $Z$ and logical $X$ for the $n$-th logical qubit.
+
+::: {.idea latex=""}
+Logical operators specify how to split the codespace, and are representatives of the logical cosets.
+In particular, the $\pm1$ eigenstates of $Z_L$ define the **logical codewords**.
+Generically, these codewords are superpositions of basis states.
+:::
+
+We emphasise out one final important point before returning to the example of the three-qubit repetition code.
+
+::: {.idea latex=""}
+While we *can* measure the *error* syndrome (all the stabilisers commute), we *cannot* measure the *logical* syndrome (not all the logical operators commute).
+Indeed, we must not even try --- measuring just one such value is equivalent to performing a measurement of the logical qubit, destroying the superposition of the very state with which we're trying to compute!
+:::
+
+So, back to the example of the three-qubit code from Section \@ref(three-qubit-code).^[Here we're going to repeat some things that we already said in Sections \@ref(logical-operators) and \@ref(error-families).]
+Recall that the stabilisers are generated by $ZZ\id$ and $\id ZZ$.
+The normaliser is the set of Pauli operators that commute with all these stabilisers, which we can succinctly write as
+$$
+	N(\mathcal{S})
+	= \langle ZZ\id,\id ZZ\rangle \times \{\id,XXX,YYY,ZZZ\}
+$$
+which already depicts the structure of the logical cosets: they are represented by $XXX$, $YYY$, and $ZZZ$.
+Using these representatives, we can evaluate the commutation properties:
+$$
+	\begin{array}{c|ccc}
+		c(-,-) & XXX & YYY & ZZZ
+	\\[0.25em]\hline
+	\\[-1em]XXX & 0 & 1 & 1
+	\\YYY & 1 & 0 & 1
+	\\ZZZ & 1 & 1 & 0
+	\end{array}
+$$
+From this we can see that *any* pair of these will work as the logical generators $Z_L$ and $X_L$, since they all satisfy the required property of $c(Z_L,X_L)=1$ and $c(Z_L,Z_L)=c(X_L,X_L)=0$.
+In other words, although it's "natural" to define $Z_L\coloneqq ZZZ$ and $X_L\coloneqq XXX$, we could just as well decide to set $Z_L\coloneqq XXX$ and $X_L=YYY$!
 
 ::: {.todo}
 <!-- TO-DO: 12.3 from main.pdf -->
@@ -1388,11 +1463,18 @@ for all $E_1,E_2\in\mathcal{E}$.
 
 You might notice that we've been sometimes been saying "*perfectly* correctable" instead of just "correctable".
 This is because there might be scenarios where we are happy with being able to correct errors not perfectly, but instead merely with some high probability.
-We discuss this further in Exercise \@ref(non-perfectly-correctable-errors).
+
+::: {.todo latex=""}
+<!-- TO-DO: note somewhere that "single qubit errors" is the same as "lowest weight errors", and for any probabilistic approach the assumption that errors are independent means that higher weight errors happen with lower probability --- HOWEVER the stabiliser formalism doesn't care about this "independent error" assumption, and we can draw all these little dot diagrams for arbitrary probability distributions on the errors! instead of a dot we could just put a probability -->
+:::
 
 One last point that is important for those who care about mathematical correctness concerns our treatment of global phases.
 We *do* need to care about global phases in order to perform error-syndrome measurements, but *once we have the error syndrome we can forget about them*.
-We talk more about this in Exercise \@ref(global-phase-or-not-for-errors).
+
+::: {.todo latex=""}
+<!-- TO-DO: these diagrams with dots, that describe the whole scenario, with the rectangle being the code and the dots being the possible errors; talk about global phase being important for picking the coset, but then not necessary afterwards when it comes to picking a representative within that coset (hence why we draw these diagrams as a single sheet) -->
+<!-- TO-DO: BE CAREFUL with these diagrams! recall that cosets of S inside P don't really make sense (since it's not normal); also, when we quotient by \pm1,\pm i we make P abelian so the (image under this quotient of the) normaliser is no longer actually the normaliser; etc. etc. -->
+:::
 
 
 
@@ -1567,67 +1649,7 @@ This gives us the encoding circuit in Figure \@ref(fig:unitary-steane-encoding).
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## *Remarks and exercises* {#remarks-and-exercises-error-correction}
-
-### Error-correcting encoding circuits
+## Encoding arbitrary states {#encoding-arbitrary-states}
 
 The encoding circuit in Figure \@ref(fig:unitary-steane-encoding) describes a unitary operation (it has no measurements), and its particularly compact form makes it very useful for certain complexity-theoretic calculations, but it has one major drawback: it is not itself fault tolerant!
 If we are trying to design things for the real world, where qubits can undergo decoherence, then we should compensate for this in *all* our quantum computation, *including* the circuits we use to prepare states.^[If you want people to be able to stay dry if it's raining, then you might build a tunnel from location A to location B so that they can use this for cover. But this isn't going to stop people from getting wet on their (necessary) journey from their home to location A!]
@@ -1715,11 +1737,7 @@ If we measure $(+++)$, then no error has occurred, but if we measure, say, $(-++
 Of course, as we now know from Section \@ref(error-correcting-conditions), what it means to correct for the $Z_5$ error depends on which errors can possibly occur.
 If we make the usual assumption that only errors of weight $1$ (i.e. single-qubit errors) can occur, then the $Z_5$ error is exactly that: a phase-flip on the fifth qubit.
 
-
-
-### Encoding arbitrary states {#encoding-arbitrary-states}
-
-We have just seen two circuits for encoding the logical $0$ state, but what about if we want to encode an arbitrary state?
+So now we have seen two circuits for encoding the logical $0$ state, but what about if we want to encode an arbitrary state?
 That is, we already have some qubit in an interesting state $\ket{\psi}$ and we want to use the Steane code^[What we say here can be applied to other stabiliser codes, but we stick with the Steane code to make it easier to look at specific examples.] to protect it against decoherence.
 
 Before we look at this question, it's important to mention something about practical use here.
@@ -1937,11 +1955,10 @@ If we really like, however, we could go one step further and replace the control
 ```
 
 
-### Five-qubit code
 
-::: {.todo}
-<!-- TO-DO: L11, section 12 -->
-:::
+
+
+## *Remarks and exercises* {#remarks-and-exercises-error-correction}
 
 
 
@@ -1981,27 +1998,45 @@ If we really like, however, we could go one step further and replace the control
 
 
 
-### Do we care about global phase or not? {#global-phase-or-not-for-errors}
+### Classical Hamming code
 
-::: {.todo latex=""}
-<!-- TO-DO: these diagrams with dots, that describe the whole scenario, with the rectangle being the code and the dots being the possible errors; talk about global phase being important for picking the coset, but then not necessary afterwards when it comes to picking a representative within that coset (hence why we draw these diagrams as a single sheet) -->
-<!-- TO-DO: BE CAREFUL with these diagrams! recall that cosets of S inside P don't really make sense (since it's not normal); also, when we quotient by \pm1,\pm i we make P abelian so the (image under this quotient of the) normaliser is no longer actually the normaliser; etc. etc. -->
-:::
+1. How is the binary message $0101$ encoded in the Hamming $[7,4,3]$ code?
+2. If we receive the string $1011011$ from Alice, who encoded her message in the Hamming $[7,4,3]$ code, then what is the error syndrome? What correction should we make? What is the decoded message?
 
-::: {.todo latex=""}
+
+
+### Generator and parity-check matrices {#generator-and-parity-check-matrices}
+
+Show that, if the $(n\times k)$ generator matrix for an $[n,k,d]$-linear code is written in the form
+$$
+	G
+	= \begin{bmatrix}
+		\id
+	\\P
+	\end{bmatrix}
+$$
+where $P$ is an $((n-k)\times k)$ binary matrix, then the parity-check matrix can be written as
+$$
+	H
+	= \begin{bmatrix}
+		P & \id
+	\end{bmatrix}.
+$$
+
+
+
+## A big parity check matrix
+
+::: {.todo}
 <!-- TO-DO -->
 :::
 
 
 
-### Probabilistic error correction {#non-perfectly-correctable-errors}
+### Five-qubit code
 
-::: {.todo latex=""}
-<!-- TO-DO: note somewhere that "single qubit errors" is the same as "lowest weight errors", and for any probabilistic approach the assumption that errors are independent means that higher weight errors happen with lower probability --- HOWEVER the stabiliser formalism doesn't care about this "independent error" assumption, and we can draw all these little dot diagrams for arbitrary probability distributions on the errors! instead of a dot we could just put a probability -->
-:::
-
-::: {.todo latex=""}
-<!-- TO-DO -->
+::: {.todo}
+<!-- TO-DO: L11, section 12 -->
 :::
 
 
@@ -2015,91 +2050,3 @@ $$
 	\in N(\mathcal{S})\setminus\mathcal{S}
 $$
 for all $E_1,E_2\in\mathcal{E}$.
-
-
-
-### Transversal gates for odd-parity codes {#odd-parity-transversal-gates}
-
-Let $C=(G,H)$ be a weakly self-dual code, so that we can define the CSS code $\mathcal{C}=\operatorname{CSS}(C,C)$.
-Assume that $\mathcal{C}$ is an $n$-qubit code with $n$ *odd*.
-
-1. Prove that the weight (i.e. the number of non-zero entries) of each row of $H$ must be even.
-2. Prove that $X$ and $Z$ are *strictly* transversal for $\mathcal{C}$.
-	What is the importance of $n$ being odd?
-3. What is the effect of the operator $S^{\otimes n}$?
-	Note that your answer should depend on $n$.
-	*Hint: recall that $SZS^\dagger=Z$ but $SXS^\dagger=Y$, and don't forget that $Y=iXZ$ has a phase of $i$!*
-
-
-
-### Using magic states {#using-magic-states}
-
-In Section \@ref(transversal-gates) we said that we can apply the $T$ gate using a magic state $T\ket{+}$ using the circuit below:
-
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
-\begin{quantikz}
-	\lstick{$T\ket{+}$}
-	& \targ{}
-	& \meter{} \vcw{1}
-\\\lstick{$\ket{\psi}$}
-	& \ctrl{-1}
-	& \gate{S}
-	& \qw \rstick{$T\ket{\psi}$}
-\end{quantikz}
-```
-
-We could prove this just by following through the evolution of the circuit and checking it by hand, but this doesn't feel very insightful.
-Let's show a better way to understand this circuit.
-
-1. Prove that the following circuit does indeed have the claimed output:
-
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
-\begin{quantikz}
-	\lstick{$\ket{0}$}
-	& \targ{}
-	& \phase{\theta}
-	& \targ{}
-	& \qw \rstick{$\ket{0}$}
-\\\lstick{$\ket{\psi}$}
-	& \ctrl{-1}
-	& \qw
-	& \ctrl{-1}
-	& \qw \rstick{$P_\theta\ket{\psi}$}
-\end{quantikz}
-```
-
-2. Taking inspiration from the second half of Section \@ref(encoding-arbitrary-states), show that the previous circuit is equivalent to the following:
-
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
-\begin{quantikz}
-	\lstick{$\ket{0}$}
-	& \targ{}
-	& \phase{\theta}
-	& \gate{H}
-	& \meter{} \vcw{1}
-\\\lstick{$\ket{\psi}$}
-	& \ctrl{-1}
-	& \qw
-	& \qw
-	& \gate{Z}
-	& \qw
-\end{quantikz}
-```
-
-3. By running the previous circuit backwards in time (replacing measurement with an outcome that we choose via state preparation, and vice versa), show that the following circuit gives the claimed output:
-
-```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
-\begin{quantikz}
-	\lstick{$P_{-\theta}\ket{+}$}
-	& \targ{}
-	& \meter{} \vcw{1}
-\\\lstick{$P_\theta\ket{\psi}$}
-	& \ctrl{-1}
-	& \gate{P_{-2\theta}}
-	& \qw \rstick{$\ket{\psi}$}
-\end{quantikz}
-```
-
-Note that setting $\theta=-\pi/4$ gives us exactly the magic state $T$ gate circuit that we wanted.
-
-4. The previous circuit seems to give a very general methods for applying phase gates $P_\theta$ for arbitrary $\theta$, but it is actually only useful as a method if there exists some integer $k$ such that $2^k\theta\equiv0\mod{2\pi}$. Why?

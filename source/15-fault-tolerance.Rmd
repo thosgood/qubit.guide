@@ -111,13 +111,14 @@
 
 
 
+<!-- ## *Remarks and exercises* {#remarks-and-exercises-fault-tolerance} -->
 
 
-<!-- ### Transversal gates {#transversal-gates}
+
+<!-- ### Transversal gates in more detail {#detailed-transversal-gates}
 
 <div class="video" title="Seven-qubit code and transversal constructions" data-videoid="vZ5p_fJbTMc"></div>
 
-Using everything that we have seen about the stabiliser formalism so far, we now know how to encode our qubits and compute on them, but the only computations that we really know how to implement in a circuit are the Pauli operators.
 As mentioned in Section \@ref(clifford-walks-on-stabiliser-states), we can achieve universal computation if we have access to the Clifford gates (controlled-$\NOT$, Hadamard, and $S=P_{\pi/2}$) and the non-Clifford gate $T=P_{\pi/4}$.
 It so happens that each of these is a little bit more tricky than the previous one, but to understand what we mean by this we need to give a definition.
 
@@ -354,3 +355,91 @@ One popular method is called **magic state distillation**, which is the idea tha
 
 While this doesn't entirely fix the problem, it is easier to think of schemes that attempt to produce high-quality magic states, perhaps by making many poor-quality copies and then "distilling" a higher-quality version from them.
  -->
+
+
+
+<!-- ### Transversal gates for odd-parity codes {#odd-parity-transversal-gates}
+
+Let $C=(G,H)$ be a weakly self-dual code, so that we can define the CSS code $\mathcal{C}=\operatorname{CSS}(C,C)$.
+Assume that $\mathcal{C}$ is an $n$-qubit code with $n$ *odd*.
+
+1. Prove that the weight (i.e. the number of non-zero entries) of each row of $H$ must be even.
+2. Prove that $X$ and $Z$ are *strictly* transversal for $\mathcal{C}$.
+  What is the importance of $n$ being odd?
+3. What is the effect of the operator $S^{\otimes n}$?
+  Note that your answer should depend on $n$.
+  *Hint: recall that $SZS^\dagger=Z$ but $SXS^\dagger=Y$, and don't forget that $Y=iXZ$ has a phase of $i$!* -->
+
+
+
+<!-- ### Using magic states {#using-magic-states}
+
+In Section \@ref(transversal-gates) we said that we can apply the $T$ gate using a magic state $T\ket{+}$ using the circuit below:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+\begin{quantikz}
+  \lstick{$T\ket{+}$}
+  & \targ{}
+  & \meter{} \vcw{1}
+\\\lstick{$\ket{\psi}$}
+  & \ctrl{-1}
+  & \gate{S}
+  & \qw \rstick{$T\ket{\psi}$}
+\end{quantikz}
+```
+
+We could prove this just by following through the evolution of the circuit and checking it by hand, but this doesn't feel very insightful.
+Let's show a better way to understand this circuit.
+
+1. Prove that the following circuit does indeed have the claimed output:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+\begin{quantikz}
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \phase{\theta}
+  & \targ{}
+  & \qw \rstick{$\ket{0}$}
+\\\lstick{$\ket{\psi}$}
+  & \ctrl{-1}
+  & \qw
+  & \ctrl{-1}
+  & \qw \rstick{$P_\theta\ket{\psi}$}
+\end{quantikz}
+```
+
+2. Taking inspiration from the second half of Section \@ref(encoding-arbitrary-states), show that the previous circuit is equivalent to the following:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+\begin{quantikz}
+  \lstick{$\ket{0}$}
+  & \targ{}
+  & \phase{\theta}
+  & \gate{H}
+  & \meter{} \vcw{1}
+\\\lstick{$\ket{\psi}$}
+  & \ctrl{-1}
+  & \qw
+  & \qw
+  & \gate{Z}
+  & \qw
+\end{quantikz}
+```
+
+3. By running the previous circuit backwards in time (replacing measurement with an outcome that we choose via state preparation, and vice versa), show that the following circuit gives the claimed output:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+\begin{quantikz}
+  \lstick{$P_{-\theta}\ket{+}$}
+  & \targ{}
+  & \meter{} \vcw{1}
+\\\lstick{$P_\theta\ket{\psi}$}
+  & \ctrl{-1}
+  & \gate{P_{-2\theta}}
+  & \qw \rstick{$\ket{\psi}$}
+\end{quantikz}
+```
+
+Note that setting $\theta=-\pi/4$ gives us exactly the magic state $T$ gate circuit that we wanted.
+
+4. The previous circuit seems to give a very general methods for applying phase gates $P_\theta$ for arbitrary $\theta$, but it is actually only useful as a method if there exists some integer $k$ such that $2^k\theta\equiv0\mod{2\pi}$. Why? -->
