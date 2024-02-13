@@ -22,10 +22,10 @@ Still, there is a lot of ingenuity that goes into designing good error-correctio
 
 Before looking at quantum codes in more depth, we again start with *classical* codes.
 For example, in Section \@ref(the-classical-repetition-code) we saw the three-bit repetition code, which has a rate of $R=1/3$ and distance $3$.
-However, the **$[7,4,3]$-Hamming code**^[In the late 1940s, [Richard Hamming](https://en.wikipedia.org/wiki/Richard_Hamming), working at Bell Labs, was exasperated by the fact that the machines running his punch cards (in these heroic times of computer science, punch cards were the state of the art data storage) were good enough to notice *when* there was an error (and halting) but not good enough to know *how* to fix it.] has the same distance, but a better rate of $R=4/7>1/3$.
+However, the **Hamming $[7,4,3]$ code**^[In the late 1940s, [Richard Hamming](https://en.wikipedia.org/wiki/Richard_Hamming), working at Bell Labs, was exasperated by the fact that the machines running his punch cards (in these heroic times of computer science, punch cards were the state of the art data storage) were good enough to notice *when* there was an error (and halting) but not good enough to know *how* to fix it.] has the same distance, but a better rate of $R=4/7>1/3$.
 Figure \@ref(fig:hamming-code-diagrams) show diagrammatic representations of this Hamming code, which we will now study further.
 
-(ref:hamming-code-diagrams-caption) *Left:* The Venn diagram for the $[7,4,3]$-Hamming code. *Right:* The **plaquette** (or **finite projective plane**) diagram for the same code. In both, $d_i$ are the **data bits** and the $p_i$ are the **parity bits**. The coloured circles (resp. coloured quadrilaterals) are called **plaquettes**.
+(ref:hamming-code-diagrams-caption) *Left:* The Venn diagram for the Hamming $[7,4,3]$ code. *Right:* The **plaquette** (or **finite projective plane**) diagram for the same code. In both, $d_i$ are the **data bits** and the $p_i$ are the **parity bits**. The coloured circles (resp. coloured quadrilaterals) are called **plaquettes**.
 
 ```{r hamming-code-diagrams,engine='tikz',fig.width=5.5,fig.cap='(ref:hamming-code-diagrams-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
@@ -96,7 +96,7 @@ This is partially due to the fact that finite geometry can be understood as an e
 
 Both diagrams in Figure \@ref(fig:hamming-code-diagrams) describe the same situation, but although the right-hand one is useful for understanding the geometry hidden in the construction and allowing us to generalise to create new codes, and is thus the one that we will tend to use, the Venn diagram on the left-hand side is maybe more suggestive of what's going on.
 
-The idea is that we have a four-bit string $d_1d_2d_3d_4$ consisting of the four **data bits**, and we encode into a seven-bit string^[Sometimes you will see the $[7,4,3]$-Hamming code referred to simply as the **seven-bit Hamming code**.] $d_1d_2d_3d_4p_1p_2p_3$ by appending three **parity bits** $p_1$, $p_2$, and $p_3$, which are defined by
+The idea is that we have a four-bit string $d_1d_2d_3d_4$ consisting of the four **data bits**, and we encode into a seven-bit string^[Sometimes you will see the Hamming $[7,4,3]$ code referred to simply as the **seven-bit Hamming code**, the **$[7,4,3]$ code**, or even just **the** Hamming code.] $d_1d_2d_3d_4p_1p_2p_3$ by appending three **parity bits** $p_1$, $p_2$, and $p_3$, which are defined by
 $$
 	\begin{aligned}
 		p_1
@@ -229,13 +229,13 @@ We can construct a table describing all of the possible error syndromes, and whi
 | :--- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | **Correction** | - | $d_1$ | $d_2$ | $d_3$ | $d_4$ | $p_1$ | $p_2$ | $p_3$ |
 
-The above construction of the $[7,4,3]$-Hamming code can be generalised to result in a $[2^r-1,2^r-r-1,3]$-Hamming code^[How do we know that the distance is always 3? Well, there are *triples* of columns in the parity-check matrix that, when added together, give all zeros. This means that there are sets of 3 errors such that, if they all occur together, the syndrome will be zero, and so the distance is no more than 3. Meanwhile, all the columns are distinct, so no *pair* of columns add together trivially, which means that the distance must be greater than 2.] for any $r\geq2$, where each column of the parity-check matrix is a different binary string, excluding the string of all $0$ bits.
+The above construction of the Hamming $[7,4,3]$ code can be generalised to result in a Hamming $[2^r-1,2^r-r-1,3]$ code^[How do we know that the distance is always 3? Well, there are *triples* of columns in the parity-check matrix that, when added together, give all zeros. This means that there are sets of 3 errors such that, if they all occur together, the syndrome will be zero, and so the distance is no more than 3. Meanwhile, all the columns are distinct, so no *pair* of columns add together trivially, which means that the distance must be greater than 2.] for any $r\geq2$, where each column of the parity-check matrix is a different binary string, excluding the string of all $0$ bits.
 It's noteworthy that only a logarithmic number of parity checks are necessary to correct all single-bit errors.
 However, there are some downsides to Hamming codes.
 Although the rate $R=(2^r-r-1)/(2^r-1)$ approaches $1$ as $r\to\infty$, Hamming codes are impractical in highly noisy environments because they have a fixed distance of $3$.
 
 ::: {.technical title="Double-bit errors in the Hamming code" latex="{Double-bit errors in the Hamming code}"}
-Although the $[7,4,3]$-Hamming code can only deal with single-bit errors, it can be extended to an $[8,4,4]$-code, at least *detecting* double-bit errors, by adding a single extra parity bit $p_4$, given by taking the sum of all the other seven bits:
+Although the Hamming $[7,4,3]$ code can only deal with single-bit errors, it can be extended to an $[8,4,4]$ code, at least *detecting* double-bit errors, by adding a single extra parity bit $p_4$, given by taking the sum of all the other seven bits:
 
 ```{r,engine='tikz',fig.width=2.5}
 \definecolor{primary}{RGB}{177,98,78}
@@ -260,15 +260,15 @@ Although the $[7,4,3]$-Hamming code can only deal with single-bit errors, it can
 How does this work?
 Well, let's assume that up to *two* bit-flip errors could occur.
 The decoding process then starts by looking at this new parity bit $p_4$ in the received string and seeing if it is indeed equal to the sum of all the other bits, saying that it is "correct" if so, and "incorrect" if not.
-If $p_4$ is *incorrect*, then there has been a *single-bit* error, and we can just look at the rest of the string $d_1d_2d_3d_4p_1p_2p_3$ and apply the previous $[7,4,3]$-Hamming code decoding process, with the caveat that if this tells us that no errors have occurred, then it must be the case that the single-bit error actually flipped the parity bit $p_4$ itself.
-If $p_4$ is *correct*, then there has either been no error or a double bit-flip error; to see which is the case we can measure the $[7,4,3]$-Hamming code error syndrome of $d_1d_2d_3d_4p_1p_2p_3$, and this will tell us the $\texttt{XOR}$ of the two bit-flip locations; if this is $0$ then either no error has occurred or two errors affected the same bit, cancelling each other out.
+If $p_4$ is *incorrect*, then there has been a *single-bit* error, and we can just look at the rest of the string $d_1d_2d_3d_4p_1p_2p_3$ and apply the previous Hamming $[7,4,3]$ code decoding process, with the caveat that if this tells us that no errors have occurred, then it must be the case that the single-bit error actually flipped the parity bit $p_4$ itself.
+If $p_4$ is *correct*, then there has either been no error or a double bit-flip error; to see which is the case we can measure the Hamming $[7,4,3]$ code error syndrome of $d_1d_2d_3d_4p_1p_2p_3$, and this will tell us the $\texttt{XOR}$ of the two bit-flip locations; if this is $0$ then either no error has occurred or two errors affected the same bit, cancelling each other out.
 :::
 
 Before moving on, it will be useful to introduce another common way of diagrammatically representing parity-check matrices called a **Tanner graph**.
 This is a bipartite graph^[A graph (which is a collection of **nodes** and **edges** between some of them) is **bipartite** if the nodes can be split into two sets such that all the edges go from one element of the first set to one element of the second.] consisting of two types of nodes: the **codeword** (or **data**) nodes (one for each bit of the codeword, drawn as circles), and the **syndrome** nodes (one for each bit of the syndrome, drawn as squares).
 The edges in the Tanner graph are such that the parity-check matrix $H$ is exactly the **adjacency matrix** of the graph, i.e. the matrix that has a $1$ in the $(i,j)$-th position if the $i$-th syndrome node is connected to the $j$-th codeword node, and a $0$ otherwise.
 
-(ref:hamming-code-tanner-graph-caption) The Tanner graph for the $[7,4,3]$-Hamming code. Comparing this to the plaquette diagram in Figure \@ref(fig:hamming-code-diagrams), we see that we simply replace plaquettes by syndrome nodes (hence our choice of colours). It is not immediately evident that this graph is bipartite, but try drawing it with all the syndrome nodes in one row and all the data nodes in another row below to see that it is.
+(ref:hamming-code-tanner-graph-caption) The Tanner graph for the Hamming $[7,4,3]$ code. Comparing this to the plaquette diagram in Figure \@ref(fig:hamming-code-diagrams), we see that we simply replace plaquettes by syndrome nodes (hence our choice of colours). It is not immediately evident that this graph is bipartite, but try drawing it with all the syndrome nodes in one row and all the data nodes in another row below to see that it is.
 
 ```{r hamming-code-tanner-graph,engine='tikz',fig.width=4,fig.cap='(ref:hamming-code-tanner-graph-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
@@ -370,7 +370,7 @@ These are constructed by judicious choices of the generators matrices or parity-
 We have already seen the example of the Hamming $[7,4,3]$ code, but let's state the general framework a bit more abstractly.
 
 ::: {.idea latex=""}
-An **$[n,k,d]$-linear code** $C$ is described by two matrices:
+An **$[n,k,d]$ linear code** $C$ is described by two matrices:
 
 - The **generator** matrix $G$, which is an $(n\times k)$ matrix
 	$$
@@ -427,8 +427,8 @@ $$
 and so^[This tells us that $\range(H^T)\subseteq\ker(G^T)$, but we can show that this is an equality using the fact that $\range(G)=\ker(H)$ is an equality.] we can define a code $C^\perp=(H^T,G^T)$, whose codewords are exactly the columns of $H^T$, i.e. the rows of $H$.
 This is known as the **dual code** of $C$.
 Since $G$ has $n$ rows and $k$ columns, and $H$ has $n-k$ rows and $n$ columns, we see that the dimension of the codespace of $C$ (i.e. the span of the columns of $G$) and the dimension of the codespace of $C^\perp$ (i.e. the span of the rows of $H$) must sum to $n$.
-In fact, if $C$ is an $[n,k,d]$-code, then $C^\perp$ is an $[n,n-k,d']$ code, where $d'$ is not usually related to $d$ in any obvious way.
-A nice example is the $[7,4,3]$-Hamming code, whose dual is a $[7,3,4]$-code known as the **shortened Hadamard code**.
+In fact, if $C$ is an $[n,k,d]$ code, then $C^\perp$ is an $[n,n-k,d']$ code, where $d'$ is not usually related to $d$ in any obvious way.
+A nice example is the Hamming $[7,4,3]$ code, whose dual is a $[7,3,4]$ code known as the **shortened Hadamard code**.
 
 ::: {.idea latex=""}
 Given a code $C=(G,H)$, its **dual code** is $C^\perp=(H^T,G^T)$.
@@ -446,7 +446,7 @@ We said above that $\dim\range(G)+\dim\range(H^T)=n$, so we see that for a code 
 ## Quantum codes from classical {#quantum-codes-from-classical}
 
 We would like to use the insights gained from our study of classical codes to help us build quantum codes.
-Let's start with a classical $[n,k,d]$-code (such as the Hamming $[7,4,3]$), with parity-check matrix $H$ and generator $G$.
+Let's start with a classical $[n,k,d]$ code (such as the Hamming $[7,4,3]$), with parity-check matrix $H$ and generator $G$.
 Each row $r$ of $H$ is a binary string $x_r=x_{r,1}x_{r,2}\ldots x_{r,n}$, where $x_{i,j}$ is the $(i,j)$-th element of $H$.
 For $1\leq r\leq n$, we define a stabiliser generator
 $$
@@ -454,7 +454,7 @@ $$
 	\coloneqq X_{x_r}
 	\coloneqq \otimes_{j=1}^n X^{x_{r,j}}.
 $$
-For example, in the case of the $[7,4,3]$-Hamming code, we have
+For example, in the case of the Hamming $[7,4,3]$ code, we have
 $$
 	H
 	= \begin{bmatrix}
@@ -497,7 +497,7 @@ $$
 So the measurement outcome directly corresponds to the $(r,j)$-th entry $x_{r,j}$ of the parity check matrix.
 Generally, if this $Z_j$ error occurs, then measuring for all rows $r$ will give measurement outcomes that directly correspond to the $j$-th column of the parity check matrix.
 This is just the same lookup table as in the classical case: this codespace is a distance $d$ error correcting code for single $Z$ errors.
-Using the $[7,4,3]$-Hamming code as an example again, we get the following table of error syndromes, where we write $\pm$ to mean $\pm1$:
+Using the Hamming $[7,4,3]$ code as an example again, we get the following table of error syndromes, where we write $\pm$ to mean $\pm1$:
 
 | Error | $G_1$ outcome | $G_2$ outcome | $G_3$ outcome |
 | :-: | :-: | :-: | :-: |
@@ -510,7 +510,7 @@ Using the $[7,4,3]$-Hamming code as an example again, we get the following table
 | $Z_6$ | $+$ | $-$ | $+$ |
 | $Z_7$ | $+$ | $+$ | $-$ |
 
-So if we measure the three stabilisers and get the measurement sequence $(-1,1,1)$ then the corresponding bit string $(1,0,0)$ in the $[7,4,3]$-Hamming code tells us that there was an error on $p_1$, i.e. a $Z_5$ error.
+So if we measure the three stabilisers and get the measurement sequence $(-1,1,1)$ then the corresponding bit string $(1,0,0)$ in the Hamming $[7,4,3]$ code tells us that there was an error on $p_1$, i.e. a $Z_5$ error.
 
 We have used a classical code to help us correct for $Z$ errors in the quantum case.
 If we take a second classical code, with parameters $[n,k',d']$ and parity-check matrix $H'$, and use it to define $Z$-type stabilisers $G'_r=Z_{x_r}$ then we will have a distance $d'$ protection against $X$ errors.
@@ -544,7 +544,7 @@ $$
 	\subseteq\range(G).
 $$
 
-We can figure out some key properties of combining an $[n,k,d]$-code $(G,H)$ for $X$-stabilisers and an $[n,k',d']$-code $(G',H')$ for $Z$-stabilisers without too much difficult.
+We can figure out some key properties of combining an $[n,k,d]$ code $(G,H)$ for $X$-stabilisers and an $[n,k',d']$ code $(G',H')$ for $Z$-stabilisers without too much difficult.
 Since our first code encodes $k$ bits, the generator $G$ has $k$ rows, and the parity-check matrix $H$ has $n-k$ rows.
 Thus there are $n-k$ of the $X$-type generators, and $n-k'$ of the $Z$-type generators; in total there are $2n-(k+k')$ generators.
 Since each generator halves the dimension, the dimension of the Hilbert space defined by the stabilisers is
@@ -562,22 +562,22 @@ quantum error-correction code, and its decoding is well understood based on the 
 This general construction of quantum error correcting codes is known as the **CSS construction**, for its originators [Robert Calderbank](https://en.wikipedia.org/wiki/Robert_Calderbank), [Peter Shor](https://en.wikipedia.org/wiki/Peter_Shor), and [Andrew Steane](https://en.wikipedia.org/wiki/Andrew_Steane).
 
 ::: {.idea latex=""}
-Given an $[n,k_1,d_1]$-code $C_1=(G_1,H_1)$ and an $[n,k_2,d_2]$-code $C_2=(G_2,H_2)$ such that $\range(H_2^T)\subseteq\range(G_1)$, the **CSS code** $\operatorname{CSS}(C_1,C_2)$ constructed as above is an $[[n,k_1+k_2-n,\min(d_1,d_2)]]$-code.
+Given an $[n,k_1,d_1]$ code $C_1=(G_1,H_1)$ and an $[n,k_2,d_2]$ code $C_2=(G_2,H_2)$ such that $\range(H_2^T)\subseteq\range(G_1)$, the **CSS code** $\operatorname{CSS}(C_1,C_2)$ constructed as above is an $[[n,k_1+k_2-n,\min(d_1,d_2)]]$ code.
 :::
 
 As always, one needs to be careful of conventions.
 Many sources define a code to be the codespace $\range{G}$ itself instead of the pair $(G,H)$, and usually also replace $C_2$ with ${C_2}^\perp$ in the statement of the CSS construction.^[In particular, what we have defined would often be called the CSS construction of $C_1$ over ${C_2}^\perp$ (instead of over $C_2$).]
 
-Before moving on, let's look at the remaining details of applying the CSS construction to the $[7,4,3]$-Hamming code.
-Let $C_1=C_2=(G,H)$ be the $[7,4,3]$-Hamming code with $G$ and $H$ as in Section \@ref(the-hamming-code).
+Before moving on, let's look at the remaining details of applying the CSS construction to the Hamming $[7,4,3]$ code.
+Let $C_1=C_2=(G,H)$ be the Hamming $[7,4,3]$ code with $G$ and $H$ as in Section \@ref(the-hamming-code).
 To apply the CSS construction, we need to check that $\range(H_2^T)\subseteq\range(G_1)$.
-Since $C_1=C_2$, this is simply asking that the $[7,4,3]$-Hamming code be weakly self-dual, i.e. that
+Since $C_1=C_2$, this is simply asking that the Hamming $[7,4,3]$ code be weakly self-dual, i.e. that
 $$
 	\range(H^T)
 	\subseteq\range(G)
 $$
 which can be checked to be true by hand.
-This means that we can use the $[7,4,3]$-Hamming code to define both our $X$-type and $Z$-type generators: using the notation of Section \@ref(pauli-stabilisers), the group of generators is generated by
+This means that we can use the Hamming $[7,4,3]$ code to define both our $X$-type and $Z$-type generators: using the notation of Section \@ref(pauli-stabilisers), the group of generators is generated by
 $$
   \begin{array}{c|ccccccc|}
     + & X & X & \id & X & X & \id & \id
@@ -588,10 +588,10 @@ $$
   \\+ & \id & Z & Z & Z & \id & \id & Z
   \end{array}
 $$
-The result is a $[[7,1,3]]$-code, generally attributed to  and thus known as the **Steane code**, or simply the **seven-qubit code**, that encodes one logical qubit across seven physical ones, and that is able to correct for any single-qubit Pauli error.
+The result is a $[[7,1,3]]$ code, generally attributed to  and thus known as the **Steane code**, or simply the **seven-qubit code**, that encodes one logical qubit across seven physical ones, and that is able to correct for any single-qubit Pauli error.
 We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:tanner-graph-713), but we will return to a proper in-depth study of this code in Section \@ref(encoding-circuits).
 
-(ref:tanner-graph-713-caption) The Tanner graph of the Steane code. You can think of this graph as taking two copies of the $[7,4,3]$-Hamming code Tanner graph and gluing them together at all of the data nodes. For any CSS code there are two types of "parity checks": one for detecting $X$ errors (solid lines), and one for $Z$ errors (dashed lines).
+(ref:tanner-graph-713-caption) The Tanner graph of the Steane code. You can think of this graph as taking two copies of the Hamming $[7,4,3]$ code Tanner graph and gluing them together at all of the data nodes. For any CSS code there are two types of "parity checks": one for detecting $X$ errors (solid lines), and one for $Z$ errors (dashed lines).
 
 ```{r tanner-graph-713,engine='tikz',fig.width=4,fig.cap='(ref:tanner-graph-713-caption)'}
 \definecolor{primary}{RGB}{177,98,78}
@@ -840,7 +840,7 @@ $$
 	\end{aligned}
 $$
 
-Even more generally, for any $[[n,k,d]]$-code constructed from a stabiliser $\mathcal{S}$, it will be the case that^[Proving this is a bit of a task!] $N(\mathcal{S})/S\cong\mathcal{P}_k$.
+Even more generally, for any $[[n,k,d]]$ code constructed from a stabiliser $\mathcal{S}$, it will be the case that^[Proving this is a bit of a task!] $N(\mathcal{S})/S\cong\mathcal{P}_k$.
 
 Just a warning before moving on: this discussion might make logical states sound pointlessly simple --- logical $0$ is just given by three copies of $\ket{0}$, so what's the point?
 But this apparent simplicity is due to the fact that the three-qubit code is somehow not very quantum at all (these logical states are not superpositions), and in general things get a lot more complicated.
@@ -1039,7 +1039,7 @@ really does describe the full structure of the code: logical states, logical ope
 ```
 
 But this stabiliser formalism introduces some new ambiguity.
-In Section \@ref(quantum-codes-from-classical), we saw how measuring the three ancilla qubits in the $[7,4,3]$-Hamming code gave us an error syndrome that we could use to determine on which qubit a $Z$-error had occurred, and back in Section \@ref(correcting-bit-flips) we saw the analogous error-syndrome setup for the three-qubit code.
+In Section \@ref(quantum-codes-from-classical), we saw how measuring the three ancilla qubits in the Hamming $[7,4,3]$ code gave us an error syndrome that we could use to determine on which qubit a $Z$-error had occurred, and back in Section \@ref(correcting-bit-flips) we saw the analogous error-syndrome setup for the three-qubit code.
 However, the stabiliser formalism is much more general: it makes no assumptions that only single-qubit errors can occur.
 This means that error syndromes will now only tell us which error *family* has occurred, not which specific *physical* error like they did before.
 At first, this seems like a definite downgrade from our previous theory --- the actual errors that affect our circuits are still the *physical* errors, but now we have no way of knowing which one occurred, only which family it lives in!
@@ -1516,7 +1516,7 @@ As of 2024^[Giving precise numbers is precarious due to the rapid advancements i
 
 The previous sections have set up a lot of abstract theory about stabiliser codes, so now let's take some time to look at more concrete aspects, such as the quantum circuits that actually let us build these codes "in practice".
 
-At the end of Section \@ref(quantum-codes-from-classical) we showed that the CSS construction could be applied to the Hamming $[7,4,3]$ code over itself to obtain the so-called Steane $[[7,1,3]]$ code, which has generators $G_1,\ldots,G_6$ given by the rows in the matrix^[Note that this matrix is just like two copies of the generator matrix for the Hamming $[7,4,3]$-code stacked on top of one another: the first with $X$-type stabilisers, and the second with $Z$-type stabilisers.]
+At the end of Section \@ref(quantum-codes-from-classical) we showed that the CSS construction could be applied to the Hamming $[7,4,3]$ code over itself to obtain the so-called Steane $[[7,1,3]]$ code, which has generators $G_1,\ldots,G_6$ given by the rows in the matrix^[Note that this matrix is just like two copies of the generator matrix for the Hamming $[7,4,3]$ code stacked on top of one another: the first with $X$-type stabilisers, and the second with $Z$-type stabilisers.]
 $$
   \begin{bmatrix}
     X & X & \id & X & X & \id & \id
@@ -1994,6 +1994,14 @@ If we really like, however, we could go one step further and replace the control
 
 
 
+### Five-qubit code
+
+::: {.todo}
+<!-- TO-DO: L11, section 12 -->
+:::
+
+
+
 ### Hamming code encodings and decodings
 
 1. How is the binary message $0101$ encoded in the Hamming $[7,4,3]$ code?
@@ -2003,7 +2011,7 @@ If we really like, however, we could go one step further and replace the control
 
 ### Generator and parity-check matrices {#generator-and-parity-check-matrices}
 
-Show that, if the $(n\times k)$ generator matrix for an $[n,k,d]$-linear code is written in the form
+Show that, if the $(n\times k)$ generator matrix for an $[n,k,d]$ linear code is written in the form
 $$
 	G
 	= \begin{bmatrix}
@@ -2089,16 +2097,88 @@ Consider the simpler example below.
 
 ### Five-qubit repetition code
 
+Consider the five-qubit repetition code
+$$
+	\begin{aligned}
+		\ket{0}
+		&\mapsto \ket{+}^{\otimes5}
+	\\\ket{1}
+		&\mapsto \ket{-}^{\otimes5}.
+	\end{aligned}
+$$
+
+1. What are the stabilisers of this code?
+2. What is the normaliser of this code?
+3. Which of the following sets of errors satisfy the error correcting conditions for this code?
+		a. $X_1$, $Z_5$
+		b. $X_1$, $X_2$, $X_3$, $X_4$
+		c. $Z_1$, $Z_2$, $Z_3$, $Z_4$
+		d. $Z_1Z_2$, $Z_2Z_4$, $Z_1Z_4$
+
+
+
+### An error in the Steane $[[7,1,3]]$ code
+
+One logical qubit is encoded in seven physical qubits using the Steane $[[7,1,3]]$ code, which then experiences the error
+$$
+	E = X\id Y\id\id Z\id.
+$$
+
+1. What is the resulting error syndrome?
+2. What is the smallest-weight error with the same error syndrome as $E$?
+3. If we apply the smallest-weight error from above as our correction, then what is the net logical error on the encoded qubit?
+
+
+
+### Non-degenerate codes
+
+An $[n,k,d]$ code is said to be **non-degenerate** if every Pauli operator of weight $\leq\lfloor d/2\rfloor$ has a distinct error syndrome.
+
+Prove that all the stabilisers for a non-degenerate code have weight $\geq d$.
+
+
+
+### The smallest $d=3$ CSS code
+
+The $[[7,1,3]]$ code is the smallest possible CSS code with distance $d=3$.
+Let's prove that now, making the simplification that we will only consider *non-degenerate* codes.
+
+1. If we construct a CSS code using two parity-check matrices $H_1$ and $H_2$, with $m_1$ and $m_2$ rows (respectively), and we want our code to encode one logical qubit into $n$ physical qubits, then how are the numbers $m_1$, $m_2$, and $n$ related?
+
+2. Explain why the columns of a non-degenerate $d=3$ code must be distinct.
+	Hence conclude that $2^{m_i}\geq n+1$ for $i=1,2$.
+
+3. Conclude that the smallest possible non-degenerate CSS code with $d=3$ has $n=7$ qubits.
+
+
+
+### CSS codes from a single matrix
+
+Let $H$ be an $(n\times m)$ binary matrix, with $m>n$, whose rows are linearly independent.
+When taken as a parity-check matrix, it thus defines an $[m,m-n,d]$ code.
+Even though $H^T$ cannot be the parity-check matrix of a code (simply because $m>n$), it still has a well defined distance $d^T$.
+
+Show that
+$$
+	\begin{aligned}
+		H_X
+		&=
+		\begin{bmatrix}
+			\id_{m\times m}\otimes H
+			& H^T\otimes\id_{n\times n}
+		\end{bmatrix}
+	\\H_Z
+		&=
+		\begin{bmatrix}
+			H\otimes\id_{n\times n}
+			& \id_{m\times m}\otimes H^T
+		\end{bmatrix}
+	\end{aligned}
+$$
+defines a CSS code with specification $[[n^2+m^2,(n-m)^2,\min(d,d^t)]]$.
+
 ::: {.todo}
 <!-- TO-DO -->
-:::
-
-
-
-### Five-qubit code
-
-::: {.todo}
-<!-- TO-DO: L11, section 12 -->
 :::
 
 
