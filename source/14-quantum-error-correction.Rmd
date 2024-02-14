@@ -1647,7 +1647,7 @@ This gives us the encoding circuit in Figure \@ref(fig:unitary-steane-encoding).
 
 ## Encoding arbitrary states {#encoding-arbitrary-states}
 
-The encoding circuit in Figure \@ref(fig:unitary-steane-encoding) describes a unitary operation (it has no measurements), and its particularly compact form makes it very useful for certain complexity-theoretic calculations, but it has one major drawback: it is not itself fault tolerant!
+The encoding circuit in Figure \@ref(fig:unitary-steane-encoding) describes a unitary operation (it has no measurements), and its particularly compact form makes it very useful for certain complexity-theoretic calculations, but it has one major drawback: it is not itself protected against errors!
 If we are trying to design things for the real world, where qubits can undergo decoherence, then we should compensate for this in *all* our quantum computation, *including* the circuits we use to prepare states.^[If you want people to be able to stay dry if it's raining, then you might build a tunnel from location A to location B so that they can use this for cover. But this isn't going to stop people from getting wet on their (necessary) journey from their home to location A!]
 We have already done the hard work for this though, in Section \@ref(measuring-pauli-stabilisers), when we constructed circuits to project onto Pauli stabiliser spaces.
 This gives us the encoding circuit in Figure \@ref(fig:projection-steane-encoding).
@@ -2000,6 +2000,10 @@ If we really like, however, we could go one step further and replace the control
 <!-- TO-DO: L11, section 12 -->
 :::
 
+::: {.todo}
+<!-- TO-DO: mention quantum secret sharing ([[5,1,3]] can be used to share a secret between 5 parties, protected against up to 2 dishonest ones) -->
+:::
+
 
 
 ### Hamming code encodings and decodings
@@ -2177,10 +2181,6 @@ $$
 $$
 defines a CSS code with specification $[[n^2+m^2,(n-m)^2,\min(d,d^t)]]$.
 
-::: {.todo}
-<!-- TO-DO -->
-:::
-
 
 
 ### Error-correcting conditions, algebraically {#error-correcting-conditions-algebraically}
@@ -2192,3 +2192,65 @@ $$
 	\in N(\mathcal{S})\setminus\mathcal{S}
 $$
 for all $E_1,E_2\in\mathcal{E}$.
+
+
+
+### Steane error correction: towards fault tolerance
+
+We have seen how we can measure the stabilisers of a stabiliser code by using a Hadamard test, resulting in $\pm1$ outcomes.
+From these, we can determine where the errors are likely to have occurred and then correct them.
+In Chapter \@ref(fault-tolerance), we will see that the scenario of fault-tolerant computation requires us to be very careful with how we construct our error-correcting circuits in order to minimise the propagation of faults that occur during the error-process itself.
+A particularly useful strategy is to not have multiple qubits interacting, but this contradicts the measurements of the stabilisers, since these, by definition, act on many qubits.
+There are a variety of ways to deal with this.
+In the case of CSS codes, Steane himself provided a particularly elegant method, which we will now explore.
+
+Note that, while we are *motivated* by the possibility of there being faults during the error correction, for now we will still assume that the error-correction process proceeds perfectly, and we are only trying to identify and fix errors on the incoming (logical) state $\ket{\psi}_L$.
+
+As we shall later see, CSS codes all have **transversal** $\cNOT$ gates: applying a $\cNOT$ to each physical qubit gives exactly the effect of a $\cNOT$ on the logical qubit.
+In other words, we can implement the logical operator $\cNOT_L$ by taking a tensor product of usual controlled-$\texttt{NOT}$ gates.
+What this means for us right now is that, at the logical level, we can consider circuits such as^[We are assuming the availability of the logical states $\ket{0}_L$ and $\ket{+}_L$, but **state preparation** is another challenge that we will eventually have to deal with!]
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
+\begin{quantikz}
+  \lstick{$\ket{\psi}_L$}
+  & \ctrl{1}
+  & \qw \rstick{$\ket{\psi}_L$}
+\\\lstick{$\ket{0}_L$}
+  & \targ \qw
+  & \qw \rstick{$\ket{0}_L$}
+\end{quantikz}
+\qquad
+\begin{quantikz}
+  \lstick{$\ket{\psi}_L$}
+  & \ctrl{1}
+  & \qw \rstick{$\ket{\psi}_L$}
+\\\lstick{$\ket{+}_L$}
+  & \targ \qw
+  & \qw \rstick{$\ket{+}_L$}
+\end{quantikz}
+```
+
+1. Verify that the above circuits do indeed have the claimed outputs.
+
+This means that, if the qubits are in the logical space (i.e. have undergone no errors), then the action of the circuit is trivial.
+So what happens if there's an error?
+Let's assume that we're working with an $[[n,1,d]]$ CSS code.
+
+2. If an $X$ or $Z$ error has already affected the input logical state $\ket{\psi}_L$ on a specific physical qubit (say, the $i$-th) in the circuit on the left above, what are the possible errors on the final state?
+3. If an $X$ or $Z$ error has already affected the input logical state $\ket{\psi}_L$ on a specific physical qubit (say, the $i$-th) in the circuit on the right above, what are the possible errors on the final state?
+
+In other words, we see that single errors cannot propagate to more than one error on each logical qubit.
+This will prove to be very useful when thinking about fault tolerance, as the same is also true if errors occur during the circuit.
+Now we should see how error correction works.
+Let's consider the circuit on the left above.
+
+4. The $X$ stabilisers are defined by the rows of a parity-check matrix $H$.
+	We measure each physical qubit of the second logical qubit, $\ket{0}_L$, in the $X$ basis at the end of the circuit.
+	In the absence of any errors, we get a measurement outcome $y\in\{0,1\}^n$.
+	What is the value of $H\cdot y$?
+5. If a weight-$w$ $Z$-error occurs on the state $\ket{\psi}_L$ *before* the (transversal) controlled-$\texttt{NOT}$, where $2w<d$, then what are the possible measurement outcomes?
+	How do we identify which corrections to make?
+
+So this circuit allows us to correct $Z$-errors on the input, but it does absolutely nothing to $X$-errors.
+
+6. Show that the circuit on the right above enables the correction of $X$-errors in a similar way, where the extra logical qubit is now measured by measuring each individual qubit in the $Z$ (i.e. computational) basis.
