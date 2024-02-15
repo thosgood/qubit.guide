@@ -2077,9 +2077,22 @@ $$
 
 Consider the Tanner graph below.
 
-::: {.todo}
-<!-- TO-DO -->
-:::
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d1) at (0,0) {$d_1$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d2) at (1,0) {$d_2$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d3) at (2,0) {$d_3$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d4) at (3,0) {$d_4$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d5) at (4,0) {$d_5$};
+	\node[draw,fill=secondary!60,minimum size=5mm] (s) at (1.5,1.5) {$s$};
+	\draw (s) to (d1);
+	\draw (s) to (d4);
+	\draw[dashed] (s) to (d2);
+	\draw[dashed] (s) to (d3);
+\end{tikzpicture}
+```
 
 Recall that we use solid lines to denote $X$-parity checks and dashed lines to denote $Z$-parity checks.
 
@@ -2089,9 +2102,34 @@ Recall that we use solid lines to denote $X$-parity checks and dashed lines to d
 At the end of Section \@ref(the-hamming-code), in Figure \@ref(fig:quantum-circuit-to-tanner-graph), we claimed an equivalence between Tanner graphs (for detecting the parity of $X$ errors) and circuits.
 Consider the simpler example below.
 
-::: {.todo}
-<!-- TO-DO -->
-:::
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{quantikz}
+	\lstick{$\ket{0}$}
+	& \targ{}
+	& \targ{}
+	& \meterD{s}
+\\\lstick[wires=2]{$\ket{\psi}$}
+	& \ctrl{-1}
+	& \qw
+	& \qw
+\\& \qw
+	& \ctrl{-2}
+	& \qw
+\end{quantikz}
+\quad
+\begin{tikzpicture}[baseline=0.07cm]
+	\draw[dashed,gray] (-1,0.8) to (3,0.8);
+	\draw[dashed,gray] (-1,0) to (3,0);
+	\draw[dashed,gray] (-1,-0.65) to (3,-0.65);
+	%
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d1) at (0,0) {$d_1$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d2) at (2,-0.65) {$d_2$};
+	\node[draw,fill=secondary!60,minimum size=5mm] (s) at (1,0.8) {$s$};
+	\draw (d1) to (s) to (d2);
+\end{tikzpicture}
+```
 
 3. Prove that these two are equivalent.
 4. Draw the circuit for measuring the parity of $Z$ errors.
