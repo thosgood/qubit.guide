@@ -1360,7 +1360,7 @@ As we shall soon see, we don't really need to worry about making sure that we ha
 ```
 
 As we said above, if each error family (i.e. coset) contains exactly one physical error (i.e. Pauli operator), then we already know how to apply corrections based on the error-syndrome measurements.
-In terms of the diagram in Figure \@ref(fig:weight-1-x-errors-three-qubit-code), this rule becomes rather simple: *if each family contains exactly one dot, then we can error correct*.
+In terms of the diagram in Figure \@ref(fig:weight-1-x-errors-three-qubit-code), this rule becomes rather simple: *if each error family contains exactly one dot, then we can error correct*.
 
 But can we say something more interesting than this?
 Well, let's consider what happens if we have a diagram that looks like this:
@@ -1389,7 +1389,7 @@ $$
 	(X\id\id)(YZ\id)\ket{\psi}
 	= \ket{\psi}.
 $$
-We can fully generalise this to improve upon the previous rule: *if all the dots in any given family are all in the same row, then we can perfectly error correct*.
+We can fully generalise this to improve upon the previous rule: *if all the dots in any given error family are all in the same row, then we can perfectly error correct*.
 
 To prove this, we just return to the definition of cosets and the properties of the Pauli group.^[This is one of those arguments where it's easy to get lost in the notation. Try picking two physical errors $P_1$ and $P_2$ in the same row somewhere in Figure \@ref(fig:all-cosets-three-qubit-code) and following through the argument, figuring out what $E$, $P$, $P'_1$, and $P'_2$ are as you go.]
 If two physical errors $P_1$ and $P_2$ are in the same row inside some family $E\cdot N(\mathcal{S})$, then by definition they both come from the same coset $P\cdot\mathcal{S}$, i.e.
@@ -1438,8 +1438,8 @@ Although this is technically a sub-rule of the previous rule, it's worth pointin
 ::: {.idea latex=""}
 An error-dot diagram describes a perfectly correctable set of errors if and only if the following two rules are satisfied:
 
-1. In any given family, all the dots are in the same row.
-2. Any dots in the bottom family are in the bottom row.
+1. In any given error family, all the dots are in the same row.
+2. Any dots in the bottom error family are in the bottom row.
 
 (The second rule follows from the first as long as the scenario in question allows the possibility for no errors to occur.)
 :::
@@ -1460,17 +1460,15 @@ for all $E_1,E_2\in\mathcal{E}$.
 You might notice that we've been sometimes been saying "*perfectly* correctable" instead of just "correctable".
 This is because there might be scenarios where we are happy with being able to correct errors not perfectly, but instead merely with some high probability.
 
-::: {.todo latex=""}
-<!-- TO-DO: note somewhere that "single qubit errors" is the same as "lowest weight errors", and for any probabilistic approach the assumption that errors are independent means that higher weight errors happen with lower probability --- HOWEVER the stabiliser formalism doesn't care about this "independent error" assumption, and we can draw all these little dot diagrams for arbitrary probability distributions on the errors! instead of a dot we could just put a probability -->
-:::
+These dot-error diagrams are also able to describe more probabilistic scenarios.
+We have been saying "single-qubit errors", but we could just have well have been saying "lowest-weight errors", and then the assumption that errors are independent of one another means that higher-weight errors happen with lower probability.
+But the stabiliser formalism (and thus the error-dot diagrams) don't care about this "independent errors" assumption!
+What this means is that we could refine our diagrams: instead of merely drawing dots to denote which errors can occur, we could also label them with specific probabilities.
+So we could describe a scenario where, for example, one specific high-weight error happens annoyingly often.
 
-One last point that is important for those who care about mathematical correctness concerns our treatment of global phases.
+One last point that is important for those who care about mathematical correctness concerns our treatment of global phases.^[We are being slightly informal with the way we draw these dot-error diagrams: cosets of $\mathcal{S}$ itself inside $\mathcal{P}_n$ don't make sense, as we've said, because $\mathcal{S}$ is generally not normal inside $\mathcal{P}_n$. Also, when we quotient by $\{\pm1,\pm i\}$ (by drawing just a single sheet, instead of four as in the diagrams in Exercise \@ref(pauli-group-three-qubits-worked-example)), we make $\mathcal{P}$ abelian, and this makes the normaliser no longer the actual normaliser.]
 We *do* need to care about global phases in order to perform error-syndrome measurements, but *once we have the error syndrome we can forget about them*.
-
-::: {.todo latex=""}
-<!-- TO-DO: these diagrams with dots, that describe the whole scenario, with the rectangle being the code and the dots being the possible errors; talk about global phase being important for picking the coset, but then not necessary afterwards when it comes to picking a representative within that coset (hence why we draw these diagrams as a single sheet) -->
-<!-- TO-DO: BE CAREFUL with these diagrams! recall that cosets of S inside P don't really make sense (since it's not normal); also, when we quotient by \pm1,\pm i we make P abelian so the (image under this quotient of the) normaliser is no longer actually the normaliser; etc. etc. -->
-:::
+In other words, we need the global phase in order to pick the error family, but not to pick a representative within it.
 
 
 
@@ -1960,9 +1958,12 @@ If we really like, however, we could go one step further and replace the control
 
 ### Error correcting conditions for the three-qubit code
 
-::: {.todo latex=""}
-<!-- TO-DO: talk about how we could use the three-qubit code twice and correct for Y and Z (instead of X and Z) to get a modified nine-qubit code; also just draw a bunch more of these diagrams? -->
-:::
+When building the Shor $[[9,1,3]]$ code, we used the three-qubit code twice: once to correct for $X$-errors, and once for $Z$-errors.
+However, there is no reason why we couldn't instead have used one copy to correct for $Y$-errors instead of $X$-errors, and we can see this using the dot-error diagrams.
+
+Consider the stabiliser code given by $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$.
+In Figure \@ref(fig:all-weight-1-errors-three-qubit-code) we draw all the computational errors of weight at most $1$, and we see that this does *not* describe a correctable scenario.
+That is, as we already know, the three-qubit code cannot alone correct for all single-qubit errors.
 
 (ref:all-weight-1-errors-three-qubit-code-caption) All computational errors of weight at most $1$ for the three-qubit code given by $\langle ZZ\id,\id ZZ\rangle$. Note that this describes a *non*-correctable scenario. In fact, *both* of the two rules are broken.
 
@@ -1971,6 +1972,9 @@ If we really like, however, we could go one step further and replace the control
 	\ErrorDotDiagram{(1,1),(2,4),(3,4),(4,4),(1,5),(3,8),(1,9),(4,12),(1,13),(2,16)}
 \end{tikzpicture}
 ```
+
+But now let's look at $X$-, $Y$-, and $Z$-errors all individually and see what happens.
+As Figure \@ref(fig:xyz-type-weight-1-errors-three-qubit-code) shows, the three-qubit code given by $\langle ZZ\id,\id ZZ\rangle$ can correct for all $X$-errors (as we already knew), but also for all $Y$-errors!
 
 (ref:xyz-type-weight-1-errors-three-qubit-code-caption) Different types of computational errors of weight at most $1$. *Left to right:* $X$-type errors (correctable); $Y$-type errors (correctable); $Z$-type errors (non-correctable).
 
@@ -1987,10 +1991,6 @@ If we really like, however, we could go one step further and replace the control
   \end{scope}
 \end{tikzpicture}
 ```
-
-::: {.todo latex=""}
-<!-- TO-DO -->
-:::
 
 
 
