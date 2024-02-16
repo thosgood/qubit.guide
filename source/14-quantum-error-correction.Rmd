@@ -1994,15 +1994,72 @@ As Figure \@ref(fig:xyz-type-weight-1-errors-three-qubit-code) shows, the three-
 
 
 
-### Five-qubit code
+### The smallest $d=3$ code, full stop
 
-::: {.todo}
-<!-- TO-DO: L11, section 12 -->
-:::
+We have already seen the Shor $[[9,1,3]]$ code, which can protect against any single-qubit error.
+Despite its simplicity, it is not the smallest code that can do this: that title belongs to the $[[5,1,3]]$ stabiliser code, given by
+$$
+	\mathcal{S}
+	= \langle XZZX\id, \id ZXXZ, X\id XZZ, ZX\id XZ\rangle
+$$
+shown as a Tanner graph in Figure \@ref(fig:five-qubit-code-tanner).
+Note that the stabiliser generators (i.e. parity checks) are related to each other by cyclic shifts: we just take different length-five chunks from the infinite string $XZZX\id XZZX\id XZZX\id\ldots$.
+This code is unusual compared to the ones we have seen before, since it's actually impossible to write its generators as operators that consist of either all $X$ or all $Z$.
 
-::: {.todo}
-<!-- TO-DO: mention quantum secret sharing ([[5,1,3]] can be used to share a secret between 5 parties, protected against up to 2 dishonest ones) -->
-:::
+(ref:five-qubit-code-tanner-caption) The Tanner graph for the $[[5,1,3]]$ stabiliser code. Solid lines represent $X$-checks, and dashed ones $Z$-checks.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:five-qubit-code-tanner-caption)',fig.width=3.5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d1) at (0,0) {$d_1$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d2) at (1,0) {$d_2$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d3) at (2,0) {$d_3$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d4) at (3,0) {$d_4$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d5) at (4,0) {$d_5$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s1) at (1,1.5) {$s_1$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s2) at (3,1.5) {$s_2$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s3) at (1,-1.5) {$s_3$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s4) at (3,-1.5) {$s_4$};
+  %
+  \draw (s1) to (d1);
+  \draw[dashed] (s1) to (d2);
+  \draw[dashed] (s1) to (d3);
+  \draw (s1) to (d4);
+  %
+  \draw (s2) to (d2);
+  \draw[dashed] (s2) to (d3);
+  \draw[dashed] (s2) to (d4);
+  \draw (s2) to (d5);
+  %
+  \draw (s3) to (d1);
+  \draw (s3) to (d3);
+  \draw[dashed] (s3) to (d4);
+  \draw[dashed] (s3) to (d5);
+  %
+  \draw[dashed] (s4) to (d1);
+  \draw (s4) to (d2);
+  \draw (s4) to (d4);
+  \draw[dashed] (s4) to (d5);
+\end{tikzpicture}
+```
+
+This $[[5,1,3]]$ code truly is optimal, in that it is the smallest possible^[Note that this code is *not* a CSS code! To prove this, we could use theorems about **transversal gates**. The smallest CSS code with $d=3$ is described in Exercise \@ref(smallest-d-3-css-code).] quantum error correcting code with $d=3$.
+Indeed, suppose that we have $n$ qubits representing one logical qubit, and each error $X$, $Y$, or $Z$ on any of these $n$ qubits maps the two-dimensional codespace to a different, mutually orthogonal subspace.^[Here we are tacitly assuming that the code is **non-degenerate** (see Exercise \@ref(non-degenerate-codes)).]
+This means that we have to fit the codespace, plus $3n$ two-dimensional subspaces, into the $2^n$-dimensional Hilbert space associated with the $n$ qubits.
+This implies that we need to satisfy
+$$
+  2(1+3n) \leq 2^n
+$$
+which tells us that we must have at least $n\geq5$.
+
+The counting argument above tells us that the smallest code must have *at least* five qubits, but doesn't tell us if we can actually make one with exactly five qubits!
+How do we actually go about finding optimal codes then?
+The answer is simply that we do not know --- there is no universal prescription for designing optimal quantum codes.
+But we do know quite a few things about designing *good* quantum codes.
+
+One last thing to mention is how this code displays that quantum codes can be used for more than just error correction.
+The $[[5,1,3]]$ code gives a way of designing a [**$((3,5))$ quantum secret sharing**](https://en.wikipedia.org/wiki/Quantum_secret_sharing) protocol.
 
 
 
@@ -2174,7 +2231,7 @@ $$
 
 
 
-### Non-degenerate codes
+### Non-degenerate codes {#non-degenerate-codes}
 
 An $[n,k,d]$ code is said to be **non-degenerate** if every Pauli operator of weight $\leq\lfloor d/2\rfloor$ has a distinct error syndrome.
 
@@ -2182,7 +2239,7 @@ Prove that all the stabilisers for a non-degenerate code have weight $\geq d$.
 
 
 
-### The smallest $d=3$ CSS code
+### The smallest $d=3$ CSS code {#smallest-d-3-css-code}
 
 The $[[7,1,3]]$ code is the smallest possible CSS code with distance $d=3$.
 Let's prove that now, making the simplification that we will only consider *non-degenerate* codes.
