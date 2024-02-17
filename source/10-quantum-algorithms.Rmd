@@ -1063,7 +1063,7 @@ We already know how to find the value of $m_n$, so let's use this to now find th
 If we just try the same trick as before then we run into problems: it's true that $U^{2^{n-2}}\ket{u}=e^{2^{n-2}\varphi}\ket{u}$, but
 $$
   2^{n-2}\varphi
-  \equiv \pi m_{n-1}+\pi m_n/2 \mod2\pi
+  \equiv \pi m_{n-1}+\pi m_n/2 \mod{2\pi}
 $$
 so we have an annoying phase of $\pi m_n/2$ in the way.
 However, we know that all we have to do now is to compensate for this by adding another phase gate:
@@ -1595,12 +1595,12 @@ However, as you will see, the actual quantum part of the algorithm is exactly th
 Because of this, we will not spend too much time on the details --- this is not a book on classical number theory! --- but we hope that this section at least highlights the important fact which is that *other areas of mathematics and physics have much to offer for the aspiring quantum information scientist*.
 Of course, it is infeasible to try to learn *everything* in mathematics, but this is also exactly the point: it's good to be aware that there is a lot of it out there, and that we all have a lot to learn from each others' specialities.
 
-The purpose of Shor's algorithm^[There are a few algorithms known by this name, but they are all somewhat related.] is to find the prime factorisation of a composite integer.
+The purpose of Shor's algorithm^[There are a few algorithms known by the name of "Shor's algorithm", but they are all somewhat related.] is to find the prime factorisation of a composite integer.
 This is a classically difficult problem, and hence forms the basis of some very well-known public-key cryptography schemes, such as RSA (see Exercise \@ref(rsa)), but Shor's algorithm offers a distinct speed-up.
 More precisely, to factor an integer $R$ classically with the general number field sieve method is a **sub-exponential** problem (i.e. somewhere between polynomial in $R$ and exponential in $R$), whereas Shor's algorithm is **polylogarithmic** (i.e. polynomial in $\log R$).
 This means that Shor's algorithm witnesses integer factorisation as a bounded-error quantum polynomial time problem: it lives in $\texttt{BQP}$ (recall Section \@ref(computational-complexity)).
 
-Since any integer has a unique (up to ordering) prime factorisation^[This fact so is important that it earns the name of the [**fundamental theorem of arithmetic**](https://en.wikipedia.org/wiki/Fundamental_theorem_of_arithmetic)] consisting of finitely many prime numbers, it suffices to find a single prime factor, since then we can simply divide our original number by this and run the algorithm over and over until it terminates, recording the prime factors that we find along the way.
+Since any integer has a unique (up to ordering) prime factorisation^[The fact that prime factorisation is essentially unique is so is important that it earns the name of the [**fundamental theorem of arithmetic**](https://en.wikipedia.org/wiki/Fundamental_theorem_of_arithmetic).] consisting of finitely many prime numbers, it suffices to find a single prime factor, since then we can simply divide our original number by this and run the algorithm over and over until it terminates, recording the prime factors that we find along the way.
 But still, turning the problem of "find a prime factor" into a problem that we have already solved (namely hidden-order determination) requires some work, so let's get started.
 
 Recall that the **greatest common divisor** $\gcd(m,n)$ (or **highest common factor** $\hcf(m,n)$) of a pair of integers $(m,n)$ is the largest integer that divides both of them.
@@ -1650,7 +1650,7 @@ The essence of the above proof is much simpler than the length might suggest: we
 Or we could appeal directly to the fundamental theorem of arithmetic.
 Write $R=p_1^{a_1}\ldots p_n^{a_n}$, and now consider each prime factor individually.
 Since $R\divides(x+1)(x-1)$, we know that $p_1\divides(x+1)(x-1)$.
-A very useful fact^[This is the fact that prime numbers are [**prime elements**](https://en.wikipedia.org/wiki/Prime_element) in the ring of integers. The usual definition of "prime number" that we are used to actually says that they are [**irreducible elements**](https://en.wikipedia.org/wiki/Irreducible_element). The link between these two concepts requires some knowledge of ring theory.] about prime numbers is that, if $p$ divides a product $ab$, then either $p$ divides $a$ or $p$ divides $b$.
+A very useful fact^[This "very useful fact" is secretly just the fact that prime numbers are [**prime elements**](https://en.wikipedia.org/wiki/Prime_element) in the ring of integers. The usual definition of "prime number" that we are used to ("only divisible by 1 and itself") actually says that they are [**irreducible elements**](https://en.wikipedia.org/wiki/Irreducible_element). The link between these two concepts requires some knowledge of ring theory.] about prime numbers is that, if $p$ divides a product $ab$, then either $p$ divides $a$ or $p$ divides $b$.
 So here we see that $p_1$ must divide either $x+1$ or $x-1$.
 We can continue like this for all the prime factors $p_i$ of $R$, but note that it cannot be the case that *all* the $p_i$ divide *only* $x+1$ and not $x-1$, since this would then force $p_1^{a_1}\ldots p_n^{a_n}=R$ to divide $x+1$, which we have already said cannot happen (and similarly for all the $p_i$ dividing only $x-1$).
 This means that both $\hcf(x-1,R)$ and $\hcf(x+1,R)$ are non-trivial.
@@ -1746,7 +1746,7 @@ Now we're ready to state Shor's algorithm.
     *Stop and return these as factors.*
 :::
 
-Picking it apart, we see that steps 1 to 3 are simply checking easy cases; steps 4 to 7 are checking that the necessary hypotheses are satisfied in order for step 8 to calculate factors of $R$.
+Picking it apart, we see that steps 1 to 3 are simply checking easy cases; steps 4, 6, and 7 are checking that the necessary hypotheses are satisfied in order for step 8 to calculate factors of $R$.
 The only place that we use anything quantum in in step 5, where we have to do hidden-order determination.^[Even better, thanks to [a result by Ekerå](https://link.springer.com/article/10.1007/s11128-021-03069-1), one can be rather sure that this quantum subroutine will only need to be run a single time.]
 The fact that steps 6 and 7 won't cause us to get stuck in an endless loop is justified by the fact that they will both be passed over with probability $1-1/(2^{m-1})$, as we mentioned above.
 

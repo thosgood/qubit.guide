@@ -1,6 +1,6 @@
 # Qubits {#qubits}
 
-> About **quantum bits** and **quantum circuits**, including the "impossible" **square root of $\texttt{NOT}$**, as well as an introduction to **single-qubit unitaries** and rotations of the **Bloch sphere**, and the implications concerning **universal gates**.
+> About **quantum bits** and **quantum circuits**, including the "impossible" **square root of $\NOT$**, as well as an introduction to **single-qubit unitaries** and rotations of the **Bloch sphere**, and the implications concerning **universal gates**.
 
 When studying classical information theory, one single bit isn't usually the most interesting object to think about --- it's either $0$ or $1$.
 Yet in the quantum case, just working with one "quantum bit" (which we call a **qubit**) opens up a whole world of interesting mathematics.
@@ -136,7 +136,7 @@ Thus the matrix multiplication $VU$ (watch the order of matrices) in one swoop t
 
 Such a two-state machine that we have just described in abstract terms is usually realised as a controlled evolution of a two-state system, called a **quantum bit**, or **qubit** for short.^[More general $n$-state systems can also be of interest, and are sometimes called **q-nits**; three-state systems in particular are sometimes called **qutrits**. In this book, however, we will only concern ourselves with qubits, since they readily generalise the classical notion of bits (and also give us more than enough interesting constructions to get started with!).]
 For example, the state $\ket{0}$ may be chosen to be the lowest energy state of an atom (the **ground state**), and state $\ket{1}$ a higher energy state (the **excited state**).
-Pulses of light of the appropriate frequency, duration, and intensity can take the atom back and forth between the basis states $\ket{0}$ and $\ket{1}$ (implementing logical $\texttt{NOT}$).
+Pulses of light of the appropriate frequency, duration, and intensity can take the atom back and forth between the basis states $\ket{0}$ and $\ket{1}$ (implementing logical $\NOT$).
 
 Some other pulses (say, half the duration or intensity) will take the atom into states that have no classical analogue.
 Such states are called **coherent superpositions** of $\ket{0}$ and $\ket{1}$, and represent a qubit in state $\ket{0}$ with some amplitude $\alpha_0$ and in state $\ket{1}$ with some other amplitude $\alpha_1$.
@@ -411,24 +411,25 @@ Consider the following task:
 
 > Design a logic gate that operates on a single bit and such that when it is followed by another, identical, logic gate the output is always the negation of the input.
 
-Let us call the resulting logic gate **the square root of $\texttt{NOT}$**, or $\sqrt{\texttt{NOT}}$.
+Let us call the resulting logic gate **the square root of $\NOT$**, or $\sqrt{\NOT}$.
 
 ```{r,engine='tikz',fig.width=3}
+\providecommand{\NOT}{\texttt{NOT}}
 \tikzset{operator/.style={draw,fill=white}}
   \begin{tikzpicture}[scale=1.3]
     \draw [fill=gray!40,rounded corners=2mm] (-1.2,-0.4) rectangle (1.2,0.4);
-    \draw (-1.5,0) to (-1,0) to node [operator] {$\sqrt{\texttt{NOT}}$} (0,0) to node [operator] {$\sqrt{\texttt{NOT}}$} (1,0) to (1.5,0);
-    \node at (0,-0.65) {$\texttt{NOT}$};
+    \draw (-1.5,0) to (-1,0) to node [operator] {$\sqrt{\NOT}$} (0,0) to node [operator] {$\sqrt{\NOT}$} (1,0) to (1.5,0);
+    \node at (0,-0.65) {$\NOT$};
   \end{tikzpicture}
 ```
 
 A simple check, such as an attempt to construct a truth table, should persuade you that there is no such operation in logic.
-It may seem reasonable to argue that since there is no such operation in logic, $\sqrt{\texttt{NOT}}$ is impossible.
+It may seem reasonable to argue that since there is no such operation in logic, $\sqrt{\NOT}$ is impossible.
 But it does exist!
 Experimental physicists routinely construct such "impossible" gates in their laboratories.
-It is a physically admissible operation described by the unitary matrix^[There are infinitely many unitary operations that act as the square root of $\texttt{NOT}$.]
+It is a physically admissible operation described by the unitary matrix^[There are infinitely many unitary operations that act as the square root of $\NOT$.]
 $$
-  \sqrt{\texttt{NOT}}
+  \sqrt{\NOT}
   = \frac{1}{2}
   \begin{bmatrix}
     1+i & 1-i
@@ -458,9 +459,10 @@ $$
   \end{bmatrix}.
 $$
 
-(ref:sqrt-not-caption) A computation that, when repeated, gives exactly $\texttt{NOT}$. An unlabelled line means that it has probability $1$, and the lack of a line corresponds to having probability $0$.
+(ref:sqrt-not-caption) A computation that, when repeated, gives exactly $\NOT$. An unlabelled line means that it has probability $1$, and the lack of a line corresponds to having probability $0$.
 
 ```{r sqrt-not,engine='tikz',fig.cap='(ref:sqrt-not-caption)'}
+\providecommand{\NOT}{\texttt{NOT}}
 \tikzset{dot/.style={fill,shape=circle,minimum size=5pt,inner sep=0pt}}
 \tikzset{centrelabel/.style={pos=0.5,fill=white}}
 \begin{tikzpicture}[xscale=3,yscale=2]
@@ -488,15 +490,16 @@ $$
   \draw [thick] (i0) to (o1);
   \draw [thick] (i1) to (o0);
   %
-  \node at (0.5,-0.45) {$\sqrt{\texttt{NOT}}$};
-  \node at (1.5,-0.45) {$\sqrt{\texttt{NOT}}$};
-  \node at (3.5,-0.45) {\texttt{NOT}};
+  \node at (0.5,-0.45) {$\sqrt{\NOT}$};
+  \node at (1.5,-0.45) {$\sqrt{\NOT}$};
+  \node at (3.5,-0.45) {\NOT};
 \end{tikzpicture}
 ```
 
 We could also step through the circuit diagram and follow the evolution of the state vector:
 
 ```{r,engine='tikz',fig.width=5}
+\providecommand{\NOT}{\texttt{NOT}}
 \tikzset{operator/.style={draw,fill=white}}
 \newcommand{\ket}[1]{|#1\rangle}
 \begin{tikzpicture}
@@ -504,13 +507,13 @@ We could also step through the circuit diagram and follow the evolution of the s
     \node (input) at (-1.5,0) {$\ket{0}$};
     \node (inter) at (0,0) {$\frac{1}{\sqrt{2}}\left[e^{i\frac{\pi}{4}}\ket{0}+e^{-i\frac{\pi}{4}}\ket{1}\right]$};
     \node (output) at (1.5,0) {$\ket{1}$};
-    \draw[|->] (input) to node[label=above:{$\sqrt{\texttt{NOT}}$}]{} (inter);
-    \draw[|->] (inter) to node[label=above:{$\sqrt{\texttt{NOT}}$}]{} (output);
+    \draw[|->] (input) to node[label=above:{$\sqrt{\NOT}$}]{} (inter);
+    \draw[|->] (inter) to node[label=above:{$\sqrt{\NOT}$}]{} (output);
   \end{scope}
 \end{tikzpicture}
 ```
 
-Or, if you prefer to work with column vectors and matrices, you can write the two consecutive application of $\sqrt{\texttt{NOT}}$ to state $\ket{0}$ as^[Just remember that circuits diagrams are read from *left to right*, and vector and matrix operations go from *right to left*.]
+Or, if you prefer to work with column vectors and matrices, you can write the two consecutive application of $\sqrt{\NOT}$ to state $\ket{0}$ as^[Just remember that circuits diagrams are read from *left to right*, and vector and matrix operations go from *right to left*.]
 $$
   \begin{bmatrix}0\\1\end{bmatrix}
   \,\longleftarrow\!\!\!\vert\,\,
@@ -524,7 +527,7 @@ $$
 $$
 where each "$\longleftarrow\!\!\!\vert$" denotes multiplication by $\frac{1}{\sqrt{2}}\begin{bmatrix}e^{i\frac{\pi}{4}}&e^{-i\frac{\pi}{4}}\\e^{-i\frac{\pi}{4}}&e^{i\frac{\pi}{4}}\end{bmatrix}$.
 
-One way or another, quantum theory explains the behaviour of $\sqrt{\texttt{NOT}}$, and so, reassured by the physical experiments^[One such experiment (which we will soon discuss, in Section \@ref(beamsplitters-against-logic)) is the so-called Mach-Zehnder interferometer.] that corroborate this theory, logicians are now entitled to propose a new logical operation $\sqrt{\texttt{NOT}}$.
+One way or another, quantum theory explains the behaviour of $\sqrt{\NOT}$, and so, reassured by the physical experiments^[One such experiment (which we will soon discuss, in Section \@ref(beamsplitters-against-logic)) is the so-called Mach-Zehnder interferometer.] that corroborate this theory, logicians are now entitled to propose a new logical operation $\sqrt{\NOT}$.
 Why?
 Because a faithful physical model for it exists in nature!
 
@@ -587,7 +590,7 @@ $$
 The first version is more common in the quantum information science community, but the second one is sometimes more convenient to use, as it has determinant $1$, and hence belongs to a group called $\mathrm{SU}(2)$.
 We will occasionally switch to the $\mathrm{SU}(2)$ version of phase gates, and this is where the $\frac{\pi}{4}$-phase and $\frac{\pi}{8}$-phase gates get their names, since their $\mathrm{SU}(2)$ versions have $e^{\mp i\pi/4}$ and $e^{\mp i\pi/8}$ (respectively) on the diagonal, even though they are actually of phase $\pi/2$ and $\pi/4$ (respectively).
 
-::: {.technical title="The groups $\mathrm{SU}(2)$ and $\mathrm{SO}(3)$" latex="{The groups $\mathrm{SU}(2)$ and $\mathrm{SO}(3)$}"}
+::: {.technical title="The groups SU(2) and SO(3)" latex="{The groups $\mathrm{SU}(2)$ and $\mathrm{SO}(3)$}"}
 We will soon explain what this group $\mathrm{SU}(2)$ is and how it relates to another important group called $\mathrm{SO}(3)$, but it turns up in many places throughout quantum physics, as well as mathematics in general.
 Other places you might see $\mathrm{SU}(2)$ appear are when talking about [**quaternions**](https://en.wikipedia.org/wiki/Quaternion) (which are somehow the next thing in the sequence $\mathbb{R}\hookrightarrow\mathbb{C}\hookrightarrow\mathbb{H}$) and two of the four "fundamental interactions", namely electromagnetism and the weak nuclear force, which get bundled together into something known as [**electroweak interaction**](https://en.wikipedia.org/wiki/Electroweak_interaction).
 
@@ -617,6 +620,7 @@ One "high-level" way of dealing with this, in the language of gauge theory, is t
 
 Adding to our collection of common single-qubit gates, we now look at the three **Pauli operators**^[Most of the time we refer to "operators" as "matrices", where the implicit assumption is that we are using the standard basis $\{\ket{0},\ket{1}\}$.] $\sigma_x$, $\sigma_y$, and $\sigma_z$, also denoted by $X$, $Y$, and $Z$, respectively.
 These three operators, combined with the identity, satisfy a lot of nice formal properties, which we shall examine briefly here, and then return to in more detail later on, in Section \@ref(pauli-matrices-algebraically).
+After that, these operators will turn up everywhere, so it's good to get familiar with them!
 
 ::: {.idea specific_to="html"}
 |  |  |  |
@@ -649,11 +653,11 @@ These three operators, combined with the identity, satisfy a lot of nice formal 
 :::
 
 The identity is just a quantum wire, and we have already seen (Section \@ref(phase-gates-galore)) the $X$ and $Z$ gates as the bit-flip and phase-flip, respectively.
-Note that, of the $X$ and $Z$ gates, only the $X$ gate has a classical analogue (namely the logical $\texttt{NOT}$ operator).
+Note that, of the $X$ and $Z$ gates, only the $X$ gate has a classical analogue (namely the logical $\NOT$ operator).
 The remaining gate, the $Y$ operator, describes the combined effect of both the bit- and the phase-flip: $ZX=iY$.
 
 In fact, this is just one of the equations that the Pauli matrices satisfy.
-The Pauli matrices are unitary and Hermitian, they square to the identity, and they anti-commute.
+The Pauli matrices are unitary and Hermitian, they square to the identity, and they anticommute.
 By this last point, we mean that
 $$
   \begin{aligned}
@@ -937,7 +941,7 @@ Indeed, within $n$ applications (for^[The notation $x\gg y$ is rather imprecise,
 So we can use *just one* phase gate to *approximate* the *three* phase gates in the circuit in Figure \@ref(fig:universal-circuit-for-2-by-2).
 
 There are other ways of implementing irrational rotations of the Bloch sphere.
-For example, take the Hadamard gate and the $T$ gate (also known as the $\frac{\pi}{8}$-phase gate, as we saw earlier in Section \@ref(phase-gates-galore)).
+For example, take the Hadamard gate and the $T$ gate (also known as the $\pi/8$-phase gate, despite being the phase gate $P_\varphi$ for $\varphi=\pi/4$ as we saw earlier in Section \@ref(phase-gates-galore)).
 You can check that the compositions $THTH$ and $HTHT$ represent rotations by angles which are irrational multiples of $\pi$, about two different axes.
 We can then compose a sequence of these two rotations to approximate any other rotation of the sphere.
 This may look very nice in theory, but there are issues with the actual physical implementation of this approach: in reality, all the gates in the circuit will operate with only *finite* precision, and the phase gates will deviate from implementing the required *irrational* rotations.
@@ -1160,7 +1164,7 @@ Is it possible to then always correctly guess whether $\varphi$ was $0$ or $\pi$
 
 ::: {.idea latex=""}
 This problem forms the basis for a lot of material later on: most quantum algorithms build upon it.
-We will return to it again and again in Section \@ref(quantum-algorithms).
+We will return to it again and again in Chapter \@ref(quantum-algorithms).
 :::
 
 
@@ -1168,7 +1172,7 @@ We will return to it again and again in Section \@ref(quantum-algorithms).
 
 When working with three-dimensional geometry, the [cross product](https://en.wikipedia.org/wiki/Cross_product) of vectors is very useful, so here is an exercise to help you get used to working with it.
 
-Let's say we want to derive the identity^[*Hint: all you need here are the Pauli matrices' commutation and anti-commutation relations, but it is instructive to derive the identity using the component notation, and below we give a sketch of how such a derivation would go.*]
+Let's say we want to derive the identity^[*Hint: all you need here are the Pauli matrices' commutation and anticommutation relations, but it is instructive to derive the identity using the component notation, and below we give a sketch of how such a derivation would go.*]
 $$
   (\vec{a}\cdot\vec{\sigma})(\vec{b}\cdot\vec{\sigma})
   = (\vec{a}\cdot\vec{b})\id + i(\vec{a}\times \vec{b})\cdot \vec{\sigma}.

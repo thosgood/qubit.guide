@@ -1,0 +1,2353 @@
+# Quantum error correction {#error-correction}
+
+> About more classical error correction and the **Hamming codes**, how they generalise to quantum codes called **CSS codes**, including the **Steane [[7,1,3]]-code**.
+> Also about computing in the presence of errors: **logical states**, **logical operators**, and **error families** --- all via the formalism of stabilisers --- and the **transversal gates** that we can implement to act on them.
+
+We have seen a way of dealing with the computational errors introduced by the physical problem of decoherence, namely the Shor $[[9,1,3]]$ code, but this is just the start of the story.
+There is a vast body of work on *classical* error correction, so it's sensible to ask if we can adapt this to help us in the world of quantum computation.
+As we shall see, we can actually use quite a lot of the theory of classical error-correction codes, and in doing so we will start to really make use of the stabiliser formalism introduced all the way back in Chapter \@ref(stabilisers).
+But note that this *still* isn't the end of the story: our goal is so-called **fault-tolerant computation**, which we come to in Chapter \@ref(fault-tolerance).
+
+
+
+
+
+## The Hamming code {#the-hamming-code}
+
+The challenge in designing efficient error-correcting codes resides in the trade-off between *rate* and *distance* (introduced in Section \@ref(the-classical-repetition-code)).
+Ideally, both quantities should be high: a high rate signifies low overhead in the encoding process (i.e. requiring only a few redundant bits), and a high distance means that many errors can be corrected.
+So can we optimise both of these quantities simultaneously?
+Unfortunately, various established bounds tell us that there is always a trade off, so high-rate codes must have low distance, and high-distance codes must have a low rate.
+Still, there is a lot of ingenuity that goes into designing good error-correction codes, and some are still better than others!
+
+Before looking at quantum codes in more depth, we again start with *classical* codes.
+For example, in Section \@ref(the-classical-repetition-code) we saw the three-bit repetition code, which has a rate of $R=1/3$ and distance $3$.
+However, the **Hamming $[7,4,3]$ code**^[In the late 1940s, [Richard Hamming](https://en.wikipedia.org/wiki/Richard_Hamming), working at Bell Labs, was exasperated by the fact that the machines running his punch cards (in these heroic times of computer science, punch cards were the state of the art data storage) were good enough to notice *when* there was an error (and halting) but not good enough to know *how* to fix it.] has the same distance, but a better rate of $R=4/7>1/3$.
+Figure \@ref(fig:hamming-code-diagrams) show diagrammatic representations of this Hamming code, which we will now study further.
+
+(ref:hamming-code-diagrams-caption) *Left:* The Venn diagram for the Hamming $[7,4,3]$ code. *Right:* The **plaquette** (or **finite projective plane**) diagram for the same code. In both, $d_i$ are the **data bits** and the $p_i$ are the **parity bits**. The coloured circles (resp. coloured quadrilaterals) are called **plaquettes**.
+
+```{r hamming-code-diagrams,engine='tikz',fig.width=5.5,fig.cap='(ref:hamming-code-diagrams-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\definecolor{tertiary}{RGB}{175,195,62}
+\usetikzlibrary{backgrounds}
+\begin{tikzpicture}[scale=1.2]
+	\begin{scope}[scale=0.65]
+		\draw[fill=primary!60,opacity=0.5] (0,0) circle (2);
+		\draw[fill=secondary!60,opacity=0.5] (1,1.7) circle (2);
+		\draw[fill=tertiary!60,opacity=0.5] (2,0) circle (2);
+		\node (p1) at (1,2.5) {\footnotesize$p_1$};
+		\node (p2) at (-0.8,-0.7) {\footnotesize$p_2$};
+		\node (p3) at (2.8,-0.7) {\footnotesize$p_3$};
+		\node (d1) at (-0.3,1.2) {\footnotesize$d_1$};
+		\node (d2) at (2.3,1.2) {\footnotesize$d_2$};
+		\node (d3) at (1,-0.7) {\footnotesize$d_3$};
+		\node (d4) at (1,0.5) {\footnotesize$d_4$};
+	\end{scope}
+	\begin{scope}[xscale=0.65,yscale=0.6,shift={(8,0)}]
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (p1) at (0,3) {\footnotesize$p_1$};
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (p2) at (-2.6,-1.5) {\footnotesize$p_2$};
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (p3) at (2.6,-1.5) {\footnotesize$p_3$};
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (d1) at (-1.2975,0.75) {\footnotesize$d_1$};
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (d2) at (1.2975,0.75) {\footnotesize$d_2$};
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (d3) at (0,-1.5) {\footnotesize$d_3$};
+		\node[fill=white,draw=black,circle,inner sep=0.75mm] (d4) at (0,0) {\footnotesize$d_4$};
+	  \begin{scope}[on background layer]
+	  	\draw[fill=primary!60] (p2.center) to (d1.center) to (d4.center) to (d3.center) to cycle;
+	  	\draw[fill=secondary!60] (p1.center) to (d2.center) to (d4.center) to (d1.center) to cycle;
+	  	\draw[fill=tertiary!60] (p3.center) to (d3.center) to (d4.center) to (d2.center) to cycle;
+	  \end{scope}
+	\end{scope}
+\end{tikzpicture}
+```
+
+::: {.technical title="The Fano plane" latex="{The Fano plane}"}
+We say that the plaquette diagram in Figure \@ref(fig:hamming-code-diagrams) could also be called a *finite projective plane* diagram because of how it resembles the [**Fano plane**](https://en.wikipedia.org/wiki/Fano_plane), which is the [**projective space** of dimension $2$](https://en.wikipedia.org/wiki/Projective_plane) over the [**field with $2$ elements**](https://en.wikipedia.org/wiki/Finite_field).
+
+```{r,engine='tikz',fig.width=2.5}
+\usetikzlibrary{backgrounds}
+\begin{tikzpicture}[scale=0.7]
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (p1) at (0,3) {};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (p2) at (-2.6,-1.5) {};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (p3) at (2.6,-1.5) {};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d1) at (-1.2975,0.75) {};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d2) at (1.2975,0.75) {};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d3) at (0,-1.5) {};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d4) at (0,0) {};
+	%
+  \begin{scope}[on background layer]
+  	\draw (p1.center) to (p2.center) to (p3.center) to cycle;
+		\draw (p1.center) to (d3.center);
+		\draw (p2.center) to (d2.center);
+		\draw (p3.center) to (d1.center);
+		\draw (d4) circle (1.495cm);
+	\end{scope}
+\end{tikzpicture}
+```
+
+In fact, there is more than a mere visual similarity between these two diagrams: we will soon introduce the formal definition of a **linear code**, and there is a special family of these known as **projective codes**, which are those such that the columns of the generator matrix (another character who we shall soon meet) are all distinct and non-zero.
+
+Projective codes are particularly interesting because they allow us to apply geometric methods to study the properties of the code.
+For example, the columns of the parity check matrix of a projective code correspond to points in some projective space.
+Furthermore, since the geometry in question concerns *finite dimensional* spaces over *finite* fields, we end up coming across a lot of familiar (and useful) combinatorics.
+This is partially due to the fact that finite geometry can be understood as an example of an [**incidence structure**](https://en.wikipedia.org/wiki/Incidence_structure).
+:::
+
+Both diagrams in Figure \@ref(fig:hamming-code-diagrams) describe the same situation, but although the right-hand one is useful for understanding the geometry hidden in the construction and allowing us to generalise to create new codes, and is thus the one that we will tend to use, the Venn diagram on the left-hand side is maybe more suggestive of what's going on.
+
+The idea is that we have a four-bit string $d_1d_2d_3d_4$ consisting of the four **data bits**, and we encode into a seven-bit string^[Sometimes you will see the Hamming $[7,4,3]$ code referred to simply as the **seven-bit Hamming code**, the **$[7,4,3]$ code**, or even just **the** Hamming code.] $d_1d_2d_3d_4p_1p_2p_3$ by appending three **parity bits** $p_1$, $p_2$, and $p_3$, which are defined by
+$$
+	\begin{aligned}
+		p_1
+		&= d_1 + d_2 + d_4 \mod{2}
+	\\p_2
+		&= d_1 + d_3 + d_4 \mod{2}
+	\\p_3
+		&= d_2 + d_3 + d_4 \mod{2}.
+	\end{aligned}
+$$
+You can hopefully see how the triangular diagram in Figure \@ref(fig:hamming-code-diagrams) tells us which data bits are used in defining each parity bit: we take the sum of all data bits in the same **plaquette** (one of the three coloured quadrilaterals) as the parity bit.
+
+We can also express this encoding in matrix notation, defining the **data vector** $\mathbf{d}$ by
+$$
+	\mathbf{d}
+	= \begin{bmatrix}
+		d_1\\d_2\\d_3\\d_4
+	\end{bmatrix}
+$$
+and the **generator matrix**^[Many sources define $G$ to be the transpose of what we use here, but this is just a question of convention. Because of this, we'll be dealing with the *column* (not row) spaces of matrices, also known as the **range**.] $G$ by
+$$
+	G
+	= \begin{bmatrix}
+		\begin{array}{cccc}
+			1 & 0 & 0 & 0
+		\\0 & 1 & 0 & 0
+		\\0 & 0 & 1 & 0
+		\\0 & 0 & 0 & 1
+		\\\hline
+			1 & 1 & 0 & 1
+		\\1 & 0 & 1 & 1
+		\\0 & 1 & 1 & 1
+		\end{array}
+	\end{bmatrix}
+$$
+
+The vector space spanned by the columns of the generator matrix $G$ is known as the **codespace** of the code, and any vector in this space is known as a **codeword**.
+
+The encoding process is then given by the matrix $G$ acting on the vector $\mathbf{d}$.
+Indeed, since the top $(4\times4)$ part of $G$ is the identity, the first four rows of the output vector $G\mathbf{d}$ will simply be a copy of $\mathbf{d}$; the bottom $(3\times4)$ part of $G$ is chosen precisely so that the last three rows of $G\mathbf{d}$ will be exactly $p_1$, $p_2$, and $p_3$.
+In other words,
+$$
+	G\mathbf{d}
+	= \begin{bmatrix}
+		d_1\\d_2\\d_3\\d_4\\p_1\\p_2\\p_3
+	\end{bmatrix}
+	= \begin{bmatrix}
+		\mathbf{d}\\p_1\\p_2\\p_3
+	\end{bmatrix}.
+$$
+
+By construction, the sum of the four bits in any single plaquette of the code sum to zero.^[Since we are working with classical bits, all addition is taken $\mod{2}$, so sometimes we will neglect to say this explicitly.]
+For example, in the bottom-left (red) plaquette,
+$$
+	\begin{aligned}
+		p_2 + d_1 + d_3 + d_4
+		&= d_1 + d_3 + d_4 + d_1 + d_3 + d_4
+	\\&= 2(d_1 + d_3 + d_4)
+	\\&= 0
+	\end{aligned}
+$$
+and the same argument holds for the other two plaquettes.
+This incredibly simple fact is where the power of the Hamming code lies, since it tells the receiver of the encoded string a lot of information about potential errors.
+
+Let's consider a concrete example.
+Say that Alice encodes her data string $d_1d_2d_3d_4$ and sends the result $G\mathbf{d}$ to Bob, who takes this vector and looks at the sum of the bits in each plaquette, and obtains the following:^[We don't write the values of the bits, only the sums of the bits in each plaquette. This is because we don't need to know the value of the bits in order to know where the error is, only the three sums!]
+
+```{r,engine='tikz',fig.width=2.5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\definecolor{tertiary}{RGB}{175,195,62}
+\usetikzlibrary{backgrounds}
+\begin{tikzpicture}[xscale=0.65,yscale=0.6]
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (p1) at (0,3) {\footnotesize$p_1$};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (p2) at (-2.6,-1.5) {\footnotesize$p_2$};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (p3) at (2.6,-1.5) {\footnotesize$p_3$};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d1) at (-1.2975,0.75) {\footnotesize$d_1$};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d2) at (1.2975,0.75) {\footnotesize$d_2$};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d3) at (0,-1.5) {\footnotesize$d_3$};
+	\node[fill=white,draw=black,circle,inner sep=0.75mm] (d4) at (0,0) {\footnotesize$d_4$};
+  \begin{scope}[on background layer]
+  	\draw[fill=primary!60] (p2.center) to (d1.center) to (d4.center) to (d3.center) to cycle;
+  	\draw[fill=secondary!60] (p1.center) to (d2.center) to (d4.center) to (d1.center) to cycle;
+  	\draw[fill=tertiary!60] (p3.center) to (d3.center) to (d4.center) to (d2.center) to cycle;
+  \end{scope}
+  \node (l) at (-1.1,-0.65) {$0$};
+  \node (r) at (1.1,-0.65) {$1$};
+  \node (t) at (0,1.25) {$1$};
+\end{tikzpicture}
+```
+
+*If we make the assumption that at most one error occurs*^[This assumption is crucial here, and we investigate what happens if we drop it in Section \@ref(error-correcting-conditions).] then this result tells us exactly where the bit-flip happened: it is *not* in the bottom-left (red) plaquette, but it *is* in both the top (blue) and bottom-right (yellow) plaquettes.
+Looking at the diagram we see that it must be $d_2$ that was flipped, and so we can correct for this error by simply flipping it back before unencoding (where the unencoding process is given by simply forgetting the last three bits of the received string).
+
+We can describe the error location process in terms of matrices as well, using the **parity-check matrix**^[Here is yet another $H$, to go with the Hadamard and the Hamiltonian...] $H$, given by
+$$
+	H
+	= \begin{bmatrix}
+		\begin{array}{cccc|ccc}
+			1 & 1 & 0 & 1 & 1 & 0 & 0
+		\\1 & 0 & 1 & 1 & 0 & 1 & 0
+		\\0 & 1 & 1 & 1 & 0 & 0 & 1
+		\end{array}
+	\end{bmatrix}.
+$$
+Note that the rows of $H$ are exactly the coefficients of the parity-check equations for each plaquette, where we order them top--left--right (blue--red--yellow).
+For example, to get the sum corresponding to the bottom-left (red) plaquette, we need to sum the first, third, fourth, and sixth bits of the encoded string $d_1d_2d_3d_4p_1p_2p_3$, and these are exactly the non-zero entries of the second row of $H$.
+The columns of the parity-check matrix $H$ are known as the **error syndromes**, for reasons we will now explain
+
+The parity-check matrix $H$ is defined exactly so that^[Recall that codewords are exactly those vectors of the form $G\mathbf{d}$ for some data vector $\mathbf{d}$]
+$$
+	H\mathbf{c}
+	= 0
+	\iff
+	\mathbf{c}\text{ is a codeword}.
+$$
+Now we can see a bit more into how things work, since linearity of matrix multiplication tells us that, if a receiver receives $\mathbf{c}+\mathbf{e}$ where $\mathbf{e}$ is the error,
+$$
+	\begin{aligned}
+		H(\mathbf{c}+\mathbf{e})
+		&= H\mathbf{c}+H\mathbf{e}
+	\\&=H\mathbf{e}.
+	\end{aligned}
+$$
+Decoding the message then consists of finding the most probable error $\mathbf{e}$ that yields the output $H\mathbf{e}$.
+If $\mathbf{e}$ is a single bit-flip error, then $H\mathbf{e}$ is exactly a column of $H$, which justifies us describing the columns as error syndromes.
+We can construct a table describing all of the possible error syndromes, and which bit they indicate for us to correct:
+
+| **Syndrome** | $000$ | $110$ | $101$ | $011$ | $111$ | $100$ | $010$ | $001$ | 
+| :--- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| **Correction** | - | $d_1$ | $d_2$ | $d_3$ | $d_4$ | $p_1$ | $p_2$ | $p_3$ |
+
+The above construction of the Hamming $[7,4,3]$ code can be generalised to result in a Hamming $[2^r-1,2^r-r-1,3]$ code^[How do we know that the distance is always 3? Well, there are *triples* of columns in the parity-check matrix that, when added together, give all zeros. This means that there are sets of 3 errors such that, if they all occur together, the syndrome will be zero, and so the distance is no more than 3. Meanwhile, all the columns are distinct, so no *pair* of columns add together trivially, which means that the distance must be greater than 2.] for any $r\geq2$, where each column of the parity-check matrix is a different binary string, excluding the string of all $0$ bits.
+It's noteworthy that only a logarithmic number of parity checks are necessary to correct all single-bit errors.
+However, there are some downsides to Hamming codes.
+Although the rate $R=(2^r-r-1)/(2^r-1)$ approaches $1$ as $r\to\infty$, Hamming codes are impractical in highly noisy environments because they have a fixed distance of $3$.
+
+::: {.technical title="Double-bit errors in the Hamming code" latex="{Double-bit errors in the Hamming code}"}
+Although the Hamming $[7,4,3]$ code can only deal with single-bit errors, it can be extended to an $[8,4,4]$ code, at least *detecting* double-bit errors, by adding a single extra parity bit $p_4$, given by taking the sum of all the other seven bits:
+
+```{r,engine='tikz',fig.width=2.5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\definecolor{tertiary}{RGB}{175,195,62}
+\begin{tikzpicture}[scale=0.7]
+	\draw[fill=primary!60,opacity=0.5] (0,0) circle (2);
+	\draw[fill=secondary!60,opacity=0.5] (1,1.7) circle (2);
+	\draw[fill=tertiary!60,opacity=0.5] (2,0) circle (2);
+	\draw[dashed] (1,0.85) circle (3.75);
+	\node (p1) at (1,2.5) {\footnotesize$p_1$};
+	\node (p2) at (-0.8,-0.7) {\footnotesize$p_2$};
+	\node (p3) at (2.8,-0.7) {\footnotesize$p_3$};
+    \node (p4) at (1,4.1) {\footnotesize$p_4$};
+	\node (d1) at (-0.3,1.2) {\footnotesize$d_1$};
+	\node (d2) at (2.3,1.2) {\footnotesize$d_2$};
+	\node (d3) at (1,-0.7) {\footnotesize$d_3$};
+	\node (d4) at (1,0.5) {\footnotesize$d_4$};
+\end{tikzpicture}
+```
+
+How does this work?
+Well, let's assume that up to *two* bit-flip errors could occur.
+The decoding process then starts by looking at this new parity bit $p_4$ in the received string and seeing if it is indeed equal to the sum of all the other bits, saying that it is "correct" if so, and "incorrect" if not.
+If $p_4$ is *incorrect*, then there has been a *single-bit* error, and we can just look at the rest of the string $d_1d_2d_3d_4p_1p_2p_3$ and apply the previous Hamming $[7,4,3]$ code decoding process, with the caveat that if this tells us that no errors have occurred, then it must be the case that the single-bit error actually flipped the parity bit $p_4$ itself.
+If $p_4$ is *correct*, then there has either been no error or a double bit-flip error; to see which is the case we can measure the Hamming $[7,4,3]$ code error syndrome of $d_1d_2d_3d_4p_1p_2p_3$, and this will tell us the $\texttt{XOR}$ of the two bit-flip locations; if this is $0$ then either no error has occurred or two errors affected the same bit, cancelling each other out.
+:::
+
+Before moving on, it will be useful to introduce another common way of diagrammatically representing parity-check matrices called a **Tanner graph**.
+This is a bipartite graph^[A graph (which is a collection of **nodes** and **edges** between some of them) is **bipartite** if the nodes can be split into two sets such that all the edges go from one element of the first set to one element of the second.] consisting of two types of nodes: the **codeword** (or **data**) nodes (one for each bit of the codeword, drawn as circles), and the **syndrome** nodes (one for each bit of the syndrome, drawn as squares).
+The edges in the Tanner graph are such that the parity-check matrix $H$ is exactly the **adjacency matrix** of the graph, i.e. the matrix that has a $1$ in the $(i,j)$-th position if the $i$-th syndrome node is connected to the $j$-th codeword node, and a $0$ otherwise.
+
+(ref:hamming-code-tanner-graph-caption) The Tanner graph for the Hamming $[7,4,3]$ code. Comparing this to the plaquette diagram in Figure \@ref(fig:hamming-code-diagrams), we see that we simply replace plaquettes by syndrome nodes (hence our choice of colours). It is not immediately evident that this graph is bipartite, but try drawing it with all the syndrome nodes in one row and all the data nodes in another row below to see that it is.
+
+```{r hamming-code-tanner-graph,engine='tikz',fig.width=4,fig.cap='(ref:hamming-code-tanner-graph-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\definecolor{tertiary}{RGB}{175,195,62}
+\begin{tikzpicture}[yscale=0.9]
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (d4) at (0,0) {\footnotesize$d_4$};
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (d1) at (150:1.5) {\footnotesize$d_1$};
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (d2) at (30:1.5) {\footnotesize$d_2$};
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (d3) at (-90:1.5) {\footnotesize$d_3$};
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (p1) at (90:3) {\footnotesize$p_1$};
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (p2) at (210:3) {\footnotesize$p_2$};
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (p3) at (-30:3) {\footnotesize$p_3$};
+  %
+  \node[draw,fill=secondary!60,minimum size=5mm] (s1) at (90:1.5) {$s_1$};
+  \node[draw,fill=primary!60,minimum size=5mm] (s2) at (210:1.5) {$s_2$};
+  \node[draw,fill=tertiary!60,minimum size=5mm] (s3) at (-30:1.5) {$s_3$};
+  %
+	\draw (d1) to (s1);
+	\draw (d1) to (s2);
+	\draw (d2) to (s1);
+	\draw (d2) to (s3);
+	\draw (d3) to (s2);
+	\draw (d3) to (s3);
+	\draw (d4) to (s1);
+	\draw (d4) to (s2);
+	\draw (d4) to (s3);
+	\draw (p1) to (s1);
+	\draw (p2) to (s2);
+	\draw (p3) to (s3);
+\end{tikzpicture}
+```
+
+One particularly useful aspect of Tanner graphs is how simple it is to convert to and from the corresponding parity-check quantum circuits.
+There is a syndrome node for each ancilla qubit, and a data node for each data qubit; there are paths between syndrome and data nodes whenever there is a controlled-$\NOT$ between the corresponding qubits.
+We show a simple example in Figure \@ref(fig:quantum-circuit-to-tanner-graph).
+
+(ref:quantum-circuit-to-tanner-graph-caption) *Left:* The quantum circuit for a parity-check operation. *Right:* The corresponding Tanner graph.
+
+```{r quantum-circuit-to-tanner-graph,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=7,fig.cap='(ref:quantum-circuit-to-tanner-graph-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{quantikz}
+	\lstick{$\ket{0}$}
+	& \targ{}
+	& \targ{}
+	& \qw
+	& \qw
+	& \meterD{s_1}
+\\\lstick{$\ket{0}$}
+	& \qw
+	& \qw
+	& \targ{}
+	& \targ{}
+	& \meterD{s_2}
+\\\lstick[wires=3]{$\ket{\psi}$}
+	& \ctrl{-2}
+	& \qw
+	& \qw
+	& \qw
+	& \qw
+\\& \qw
+	& \ctrl{-3}
+	& \ctrl{-2}
+	& \qw
+	& \qw
+\\& \qw
+	& \qw
+	& \qw
+	& \ctrl{-3}
+	& \qw
+\end{quantikz}
+\quad
+\begin{tikzpicture}[baseline=0.36cm]
+	\draw[dashed,gray] (-1,1.85) to (5,1.85);
+	\draw[dashed,gray] (-1,0.8) to (5,0.8);
+	\draw[dashed,gray] (-1,0) to (5,0);
+	\draw[dashed,gray] (-1,-0.65) to (5,-0.65);
+	\draw[dashed,gray] (-1,-1.3) to (5,-1.3);
+	%
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d1) at (0,0) {$d_1$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d2) at (2,-0.65) {$d_2$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d3) at (4,-1.3) {$d_3$};
+	\node[draw,fill=secondary!60,minimum size=5mm] (s1) at (1,1.85) {$s_1$};
+	\node[draw,fill=secondary!60,minimum size=5mm] (s2) at (3,0.8) {$s_2$};
+	\draw (d1) to (s1) to (d2) to (s2) to (d3);
+\end{tikzpicture}
+```
+
+
+
+
+
+
+## Linear codes {#linear-codes}
+
+Hamming codes are special cases of a larger family of codes called **linear codes**: one in which the codewords form a vector space.
+These are constructed by judicious choices of the generators matrices or parity-check matrices (since one determines the other), and can offer different trade-offs between the code rates and distances.
+We have already seen the example of the Hamming $[7,4,3]$ code, but let's state the general framework a bit more abstractly.
+
+::: {.idea latex=""}
+An **$[n,k,d]$ linear code** $C$ is described by two matrices:
+
+- The **generator** matrix $G$, which is an $(n\times k)$ matrix
+	$$
+		G =
+		\begin{bmatrix}
+			\begin{array}{c}
+				\id_{k\times k}
+			\\P
+			\end{array}
+		\end{bmatrix}
+	$$
+	for some $((n-k)\times k)$ matrix $P$.
+	The columns of $G$ are **codewords**, and and form a basis for the **codespace** $\range(G)$.
+- The **parity-check** matrix $H$, which is an $((n-k)\times n)$ matrix
+	$$
+		H =
+		\begin{bmatrix}
+			\begin{array}{cc}
+				Q & \id_{(n-k)\times(n-k)}
+			\end{array}
+		\end{bmatrix}
+	$$
+	for some $((n-k)\times k)$ matrix $Q$.
+	The columns of $H$ are **error syndromes**.
+
+The matrices $G$ and $H$ have to satisfy one of the two equivalent conditions
+$$
+	\range(G)
+	= \ker(H)
+	\qquad\text{or}\qquad
+	\range(H^T)
+	= \ker(G^T).
+$$
+We can ensure this by taking $Q=-P$ (see Exercise \@ref(generator-and-parity-check-matrices)).
+:::
+
+One last piece of the puzzle that we need to understand is the notion of **dual codes**.
+We will write $\range(G)$ to mean the vector space spanned by the columns of the matrix $G$.
+Given a code^[Usually, for linear codes, people talk of the code $C$ as being equal to the codespace, i.e. the span of the columns of $G$. For now, however, it is notationally simpler to denote a code by these two key matrices.] $C=(G,H)$ expressed in terms of its generator matrix and parity-check matrix, we know that the columns of $G$ span the kernel of $H$, i.e. that $\range(G)=\ker(H)$.
+Why is this?
+Well, because this is equivalent to saying that a vector is in the span of the columns of $G$ exactly when it is of the form $G\mathbf{d}$ for some data vector $\mathbf{d}$, i.e. exactly when it is a codeword, and we have already shown this above.
+In particular then,
+$$
+	H\cdot G
+	= 0
+$$
+(which merely says that $\range(G)\subseteq\ker(H)$).
+
+But, taking the transpose of the above equality, we see that
+$$
+	G^T\cdot H^T
+	= 0
+$$
+and so^[This tells us that $\range(H^T)\subseteq\ker(G^T)$, but we can show that this is an equality using the fact that $\range(G)=\ker(H)$ is an equality.] we can define a code $C^\perp=(H^T,G^T)$, whose codewords are exactly the columns of $H^T$, i.e. the rows of $H$.
+This is known as the **dual code** of $C$.
+Since $G$ has $n$ rows and $k$ columns, and $H$ has $n-k$ rows and $n$ columns, we see that the dimension of the codespace of $C$ (i.e. the span of the columns of $G$) and the dimension of the codespace of $C^\perp$ (i.e. the span of the rows of $H$) must sum to $n$.
+In fact, if $C$ is an $[n,k,d]$ code, then $C^\perp$ is an $[n,n-k,d']$ code, where $d'$ is not usually related to $d$ in any obvious way.
+A nice example is the Hamming $[7,4,3]$ code, whose dual is a $[7,3,4]$ code known as the **shortened Hadamard code**.
+
+::: {.idea latex=""}
+Given a code $C=(G,H)$, its **dual code** is $C^\perp=(H^T,G^T)$.
+:::
+
+It is immediate that $(C^\perp)^\perp=C$, but it is interesting to ask about the relationship between $C$ and $C^\perp$.
+Then we say that a code is **weakly self-dual** (or **self-orthogonal**) if $\range(G)\subseteq\range(H^T)$, and **self-dual** if $\range(G)=\range(H^T)$.
+In other words, a code is weakly-self dual if its codespace is a subspace of the codespace of its dual, and self-dual if these two codespaces are actually equal.
+We said above that $\dim\range(G)+\dim\range(H^T)=n$, so we see that for a code to be self-dual it must be the case that $n$ is even, but this is only a necessary condition, not a sufficient one!
+
+
+
+
+
+## Quantum codes from classical {#quantum-codes-from-classical}
+
+We would like to use the insights gained from our study of classical codes to help us build quantum codes.
+Let's start with a classical $[n,k,d]$ code (such as the Hamming $[7,4,3]$), with parity-check matrix $H$ and generator $G$.
+Each row $r$ of $H$ is a binary string $x_r=x_{r,1}x_{r,2}\ldots x_{r,n}$, where $x_{i,j}$ is the $(i,j)$-th element of $H$.
+For $1\leq r\leq n$, we define a stabiliser generator
+$$
+	G_r
+	\coloneqq X_{x_r}
+	\coloneqq \otimes_{j=1}^n X^{x_{r,j}}.
+$$
+For example, in the case of the Hamming $[7,4,3]$ code, we have
+$$
+	H
+	= \begin{bmatrix}
+		\begin{array}{cccc|ccc}
+			1 & 1 & 0 & 1 & 1 & 0 & 0
+		\\1 & 0 & 1 & 1 & 0 & 1 & 0
+		\\0 & 1 & 1 & 1 & 0 & 0 & 1
+		\end{array}
+	\end{bmatrix}.
+$$
+so the three rows define three generators
+$$
+	\begin{aligned}
+		G_1
+		&= X_{1101100}
+		= XX\id XX\id\id
+	\\G_2
+		&= X_{1011010}
+		= X\id XX\id X\id
+	\\G_3
+		&= X_{0111001}
+		= \id XXX\id\id X.
+	\end{aligned}
+$$
+
+Now consider a state $\ket{\psi}$ that is stabilised by these generators, i.e. such that
+$$
+	G_r\ket{\psi}
+	= \ket{\psi}.
+$$
+What happens if a $Z$ error occurs on a particular qubit: what measurement results do we get when we measure the stabilisers?
+Well, writing $Z_j$ to mean a $Z$ error on the $j$-th qubit, as usual,
+$$
+	\begin{aligned}
+		G_r Z_j\ket{\psi}
+		&= (-1)^{x_{r,j}} G_r\ket{\psi}
+	\\&= (-1)^{x_{r,j}} \ket{\psi}.
+	\end{aligned}
+$$
+So the measurement outcome directly corresponds to the $(r,j)$-th entry $x_{r,j}$ of the parity check matrix.
+Generally, if this $Z_j$ error occurs, then measuring for all rows $r$ will give measurement outcomes that directly correspond to the $j$-th column of the parity check matrix.
+This is just the same lookup table as in the classical case: this codespace is a distance $d$ error correcting code for single $Z$ errors.
+Using the Hamming $[7,4,3]$ code as an example again, we get the following table of error syndromes, where we write $\pm$ to mean $\pm1$:
+
+| Error | $G_1$ outcome | $G_2$ outcome | $G_3$ outcome |
+| :-: | :-: | :-: | :-: |
+| none | $+$ | $+$ | $+$ |
+| $Z_1$ | $-$ | $-$ | $+$ |
+| $Z_2$ | $-$ | $+$ | $-$ |
+| $Z_3$ | $+$ | $-$ | $-$ |
+| $Z_4$ | $-$ | $-$ | $-$ |
+| $Z_5$ | $-$ | $+$ | $+$ |
+| $Z_6$ | $+$ | $-$ | $+$ |
+| $Z_7$ | $+$ | $+$ | $-$ |
+
+So if we measure the three stabilisers and get the measurement sequence $(-1,1,1)$ then the corresponding bit string $(1,0,0)$ in the Hamming $[7,4,3]$ code tells us that there was an error on $p_1$, i.e. a $Z_5$ error.
+
+We have used a classical code to help us correct for $Z$ errors in the quantum case.
+If we take a second classical code, with parameters $[n,k',d']$ and parity-check matrix $H'$, and use it to define $Z$-type stabilisers $G'_r=Z_{x_r}$ then we will have a distance $d'$ protection against $X$ errors.
+However, we cannot simply pick the two classical codes arbitrary: if the scheme is the work, then the $X$-type and $Z$-type stabilisers must actually *be* stabilisers, i.e. they must commute.
+
+::: {.idea latex=""}
+The challenge in creating quantum error-correction codes often lies in finding good commuting sets of stabilisers.
+:::
+
+How can we tell if this happens?
+Well, if $x$ is a row of $H$, and $z$ a row of $H'$, then the we need the number of positions $i\in\{1,\ldots,n\}$ such that $x_i=z_i=1$ to be even, as these are the ones that will give operators that individually anticommute ($XZ=-ZX$).
+In notation, this is the same as asking that
+$$
+	x\cdot z
+	\equiv 0\mod{2}.
+$$
+This is the same as saying that $z$, which is a row of $H'$, must be a codeword of the first code: by definition of the parity-check matrix $H$, we need that $Hz=0$.
+Applying this reasoning to all rows $z$, we see that we need
+$$
+	H\cdot {H'}^T
+	= 0
+$$
+or, in other words,
+$$
+	\range({H'}^T)
+	\subseteq\ker(H).
+$$
+But we know that $\range(G)=\ker(H)$, and so this is equivalent to asking for
+$$
+	\range({H'}^T)
+	\subseteq\range(G).
+$$
+
+We can figure out some key properties of combining an $[n,k,d]$ code $(G,H)$ for $X$-stabilisers and an $[n,k',d']$ code $(G',H')$ for $Z$-stabilisers without too much difficult.
+Since our first code encodes $k$ bits, the generator $G$ has $k$ rows, and the parity-check matrix $H$ has $n-k$ rows.
+Thus there are $n-k$ of the $X$-type generators, and $n-k'$ of the $Z$-type generators; in total there are $2n-(k+k')$ generators.
+Since each generator halves the dimension, the dimension of the Hilbert space defined by the stabilisers is
+$$
+	2^{n-2n+k+k'}
+	= 2^{k+k'-n}
+$$
+i.e. it encodes $k+k'-n$ qubits.
+The combined code has a distance $k$ against $Z$ errors, and $k'$ against $X$ errors; since the two types of errors are correctly independently, the total distance is simply $\min(d,d')$.
+In summary then, we have created an
+$$
+	[[n, k+k'-n, \min(d,d')]]
+$$
+quantum error-correction code, and its decoding is well understood based on the classical decoding methods applied independently for $X$ errors and $Z$ errors.
+This general construction of quantum error correcting codes is known as the **CSS construction**, for its originators [Robert Calderbank](https://en.wikipedia.org/wiki/Robert_Calderbank), [Peter Shor](https://en.wikipedia.org/wiki/Peter_Shor), and [Andrew Steane](https://en.wikipedia.org/wiki/Andrew_Steane).
+
+::: {.idea latex=""}
+Given an $[n,k_1,d_1]$ code $C_1=(G_1,H_1)$ and an $[n,k_2,d_2]$ code $C_2=(G_2,H_2)$ such that $\range(H_2^T)\subseteq\range(G_1)$, the **CSS code** $\operatorname{CSS}(C_1,C_2)$ constructed as above is an $[[n,k_1+k_2-n,\min(d_1,d_2)]]$ code.
+:::
+
+As always, one needs to be careful of conventions.
+Many sources define a code to be the codespace $\range{G}$ itself instead of the pair $(G,H)$, and usually also replace $C_2$ with ${C_2}^\perp$ in the statement of the CSS construction.^[In particular, what we have defined would often be called the CSS construction of $C_1$ over ${C_2}^\perp$ (instead of over $C_2$).]
+
+Before moving on, let's look at the remaining details of applying the CSS construction to the Hamming $[7,4,3]$ code.
+Let $C_1=C_2=(G,H)$ be the Hamming $[7,4,3]$ code with $G$ and $H$ as in Section \@ref(the-hamming-code).
+To apply the CSS construction, we need to check that $\range(H_2^T)\subseteq\range(G_1)$.
+Since $C_1=C_2$, this is simply asking that the Hamming $[7,4,3]$ code be weakly self-dual, i.e. that
+$$
+	\range(H^T)
+	\subseteq\range(G)
+$$
+which can be checked to be true by hand.
+This means that we can use the Hamming $[7,4,3]$ code to define both our $X$-type and $Z$-type generators: using the notation of Section \@ref(pauli-stabilisers), the group of generators is generated by
+$$
+  \begin{array}{c|ccccccc|}
+    + & X & X & \id & X & X & \id & \id
+  \\+ & X & \id & X & X & \id & X & \id
+  \\+ & \id & X & X & X & \id & \id & X
+  \\+ & Z & Z & \id & Z & Z & \id & \id
+  \\+ & Z & \id & Z & Z & \id & Z & \id
+  \\+ & \id & Z & Z & Z & \id & \id & Z
+  \end{array}
+$$
+The result is a $[[7,1,3]]$ code, generally attributed to  and thus known as the **Steane code**, or simply the **seven-qubit code**, that encodes one logical qubit across seven physical ones, and that is able to correct for any single-qubit Pauli error.
+We can visualise the Steane code using its Tanner graph, as in Figure \@ref(fig:tanner-graph-713), but we will return to a proper in-depth study of this code in Section \@ref(encoding-circuits).
+
+(ref:tanner-graph-713-caption) The Tanner graph of the Steane code. You can think of this graph as taking two copies of the Hamming $[7,4,3]$ code Tanner graph and gluing them together at all of the data nodes. For any CSS code there are two types of "parity checks": one for detecting $X$ errors (solid lines), and one for $Z$ errors (dashed lines).
+
+```{r tanner-graph-713,engine='tikz',fig.width=4,fig.cap='(ref:tanner-graph-713-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\definecolor{tertiary}{RGB}{175,195,62}
+\begin{tikzpicture}[xscale=1.3,yscale=1.2]
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (d4) at (0,0) {\footnotesize$d_4$};
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (d1) at (150:1.5) {\footnotesize$d_1$};
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (d2) at (30:1.5) {\footnotesize$d_2$};
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (d3) at (-90:1.5) {\footnotesize$d_3$};
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (p1) at (90:3) {\footnotesize$p_1$};
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (p2) at (210:3) {\footnotesize$p_2$};
+  \node[fill=gray!70,draw=black,circle,inner sep=0.8mm] (p3) at (-30:3) {\footnotesize$p_3$};
+  %
+  \node[draw,fill=secondary!60,minimum size=5mm] (s4) at (75:1.5) {$s_4$};
+  \node[draw,fill=primary!60,minimum size=5mm] (s5) at (195:1.5) {$s_5$};
+  \node[draw,fill=tertiary!60,minimum size=5mm] (s6) at (-45:1.5) {$s_6$};
+  %
+  \draw[dashed] (d1) to (s4);
+  \draw[dashed] (d1) to (s5);
+  \draw[dashed] (d2) to (s4);
+  \draw[dashed] (d2) to (s6);
+  \draw[dashed] (d3) to (s5);
+  \draw[dashed] (d3) to (s6);
+  \draw[dashed] (d4) to (s4);
+  \draw[dashed] (d4) to (s5);
+  \draw[dashed] (d4) to (s6);
+  \draw[dashed] (p1) to (s4);
+  \draw[dashed] (p2) to (s5);
+  \draw[dashed] (p3) to (s6);
+  %
+  \node[draw,fill=secondary!60,minimum size=5mm] (s1) at (105:1.5) {$s_1$};
+  \node[draw,fill=primary!60,minimum size=5mm] (s2) at (225:1.5) {$s_2$};
+  \node[draw,fill=tertiary!60,minimum size=5mm] (s3) at (-15:1.5) {$s_3$};
+  %
+  \draw (d1) to (s1);
+  \draw (d1) to (s2);
+  \draw (d2) to (s1);
+  \draw (d2) to (s3);
+  \draw (d3) to (s2);
+  \draw (d3) to (s3);
+  \draw (d4) to (s1);
+  \draw (d4) to (s2);
+  \draw (d4) to (s3);
+  \draw (p1) to (s1);
+  \draw (p2) to (s2);
+  \draw (p3) to (s3);
+\end{tikzpicture}
+```
+
+Not all quantum codes arise from combining classical ones like this^[For example, the **five-qubit code**, which is the smallest code that can correct for all possible single-qubit errors, is demonstrably *not* a CSS code, as can be shown by the non-existence of something called a **transversal** controlled-$\NOT$ gate (we discuss this in Section \@ref(transversal-gates)).], and even for those that do, working with the generator and parity-check matrices can often be cumbersome.
+Indeed, a truly *quantum* code will not have a single one of each, since this is not sufficient to deal with the purely quantum phenomena of superposition.
+For example, as the Tanner graph in Figure \@ref(fig:tanner-graph-713) shows, we have *two* parity check matrices in the case of CSS codes.
+When working with truly quantum codes, the stabiliser formalism really becomes much more useful --- our next aim is to justify this with some examples and explanation.
+
+
+
+
+
+## Logical operators ... {#logical-operators}
+
+<div class="video" title="Pauli operators in error correction" data-videoid="kd3ahY55DYA"></div>
+
+<div class="video" title="Stabilizer codes" data-videoid="jI8S-2oB7fg"></div>
+
+*Here we are going to use the abstract group theory that we developed back in Sections \@ref(normal-subgroups) and \@ref(pauli-normalisers), but there are other ways of explaining this material.*
+*In Section \@(logical-operators-differently) we tell the same story from a different point of view, so if you find this section confusing then don't worry --- you can always come back to it after reading the other one!*
+*It's always a good idea to have multiple viewpoints.*
+
+We have been slowly building up towards constructing quantum error-correction codes using the stabiliser formalism, but there is one major detail that we have yet to mention.
+You will perhaps have noticed that we haven't written out what the stabiliser states actually *are*, nor what the encoding circuits look like.
+There is a simple reason for this: at this point, we don't actually know!
+There's a little more work to be done --- the stabilisers have provided us with a two-dimensional space, but if we have $\ket{0}$ and $\ket{1}$ to encode, how are they mapped within the space?
+So far, it's undefined, and there is a lot of freedom to choose, but the structures provided by group theory are quite helpful here in providing some natural choices.
+Furthermore, better understanding these structures is the first step towards figuring out how to upgrade from simple error correction to fault-tolerant computation.
+We're going to turn back all the way to Sections \@ref(normal-subgroups) and \@ref(pauli-normalisers), where we discovered how to think about normalisers of stabiliser groups inside the Pauli group.
+Let's start with a brief recap.
+
+The $n$-qubit Pauli group $\mathcal{P}_n$ consists of all $n$-fold tensor products of Pauli matrices $\id$, $X$, $Y$, and $Z$, with possible global phase factors $\pm1$ and $\pm i$.
+Given an operator $s\in\mathcal{P}_n$, we say that it **stabilises** a (non-zero) $n$-qubit state $\ket{\psi}$ if $s\ket{\psi}=\ket{\psi}$, i.e. if it admits $\ket{\psi}$ as an eigenstate with eigenvalue $+1$.
+We showed that the set of all operators that stabilise every state in a given subspace $V$ form a group, called the **stabiliser group**; using a little bit of group theory, we characterised all possible stabiliser groups by showing that they are exactly the abelian subgroups of $\mathcal{P}_n$ that do not contain $-\id$.
+Then we looked at the group structure of the Pauli group, and how any stabiliser group $\mathcal{S}$ sits inside it.
+It turned out that the **normaliser**
+$$
+	N(\mathcal{S})
+	= \{g\in\mathcal{P}_n \mid gsg^{-1}\in\mathcal{S}\text{ for all }s\in\mathcal{S}\}
+$$
+of $\mathcal{S}$ in $\mathcal{P}_n$, and the **centraliser**
+$$
+	Z(\mathcal{S})
+	= \{g\in\mathcal{P}_n \mid gsg^{-1}=s\text{ for all }s\in\mathcal{S}\}
+$$
+of $\mathcal{S}$ in $\mathcal{P}_n$ actually agree, because of some elementary properties of the Pauli group.
+Furthermore, we showed that the normaliser (or centraliser) was itself normal inside the Pauli group, giving us a chain of normal subgroups
+$$
+	\mathcal{S}
+	\triangleleft N(\mathcal{S})
+	\triangleleft \mathcal{P}_n.
+$$
+This lets us arrange the elements of $\mathcal{P}_n$ into cosets by using the two quotient groups
+$$
+	N(\mathcal{S})/\mathcal{S}
+	\qquad\text{and}\qquad
+	\mathcal{P}_n/N(\mathcal{S}).
+$$
+How does this help us with our stabiliser error-correction codes?
+Let's look first at the former: cosets of $\mathcal{S}$ inside its normaliser $N(\mathcal{S})$.
+
+If $\ket{\psi}\in V_\mathcal{S}$ is a state in the stabilised subspace^[For us here, the stabilised subspace $V_\mathcal{S}$ is exactly the codespace, and the stabilisers generating $\mathcal{S}$ are exactly the elements $G_r\in\mathcal{P}_n$ constructed from the rows of $H$ as at the start of Section \@ref(quantum-codes-from-classical).], then any element $g\in\mathcal{S}$ always satisfies
+$$
+	g\ket{\psi}
+	= \ket{\psi}
+$$
+whereas any element $g\in N(\mathcal{S})\setminus\mathcal{S}$ merely satisfies
+$$
+	g\ket{\psi}
+	\in V_\mathcal{S}
+$$
+and, for any such $g$, there are always states in $V_\mathcal{S}$ that are not mapped to themselves.
+However, if we look at cosets of $\mathcal{S}$ inside $N(\mathcal{S})$ then we discover an incredibly useful fact: all elements of a given coset act on $\ket{\psi}$ in the same way.
+To see this, take two representatives for a coset, say $g\mathcal{S}=g'\mathcal{S}$ for $g,g'\in N(\mathcal{S})$.
+By the definition of cosets, this means that there exist $s,s'\in\mathcal{S}$ such that $gs=g's'$.
+In particular then,
+$$
+	gs\ket{\psi}
+	= g's'\ket{\psi}
+$$
+but since $s,s'\in\mathcal{S}$ and $\ket{\psi}\in V_\mathcal{S}$, this says that
+$$
+	g\ket{\psi}
+	= g'\ket{\psi}
+$$
+as claimed.
+
+Since the cosets of $\mathcal{S}$ inside $N(\mathcal{S})$ give well defined actions on stabiliser states, preserving the codespace, we can treat them as operators in their own right.
+
+::: {.idea latex=""}
+The cosets of $\mathcal{S}$ inside $N(\mathcal{S})$ are called **logical operators**, and any representative of a coset is an **implementation** for that logical operator.
+:::
+
+Let's try to understand this in the context of an example: the three-qubit code from Section \@ref(three-qubit-code).
+The diagram from Section \@ref(pauli-stabilisers) was useful in describing this example, so we repeat it as Figure \@ref(fig:stabiliser-bisection-again) below.
+
+(ref:stabiliser-bisection-again-caption) The stabiliser group $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$ bisects the Hilbert space of three qubits into four equal parts, and gives the stabilised subspace $V_\mathcal{S}$ which is spanned by $\ket{000}$ and $\ket{111}$.
+
+```{r stabiliser-bisection-again,engine='tikz',fig.cap='(ref:stabiliser-bisection-again-caption)',fig.width=3.5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\newcommand{\id}{\mathbf{1}}
+\newcommand{\ket}[1]{|#1\rangle}
+\begin{tikzpicture}
+  \draw (0,0) rectangle (4,4);
+  \node (c0) at (1,2.8) {$\mathcal{C}=\,${\color{primary}$+$}{\color{secondary}$+$}};
+  \node (c1) at (3,2.8) {$\mathcal{C}_1=\,${\color{primary}$-$}{\color{secondary}$+$}};
+  \node (c2) at (3,1.2) {$\mathcal{C}_2=\,${\color{primary}$-$}{\color{secondary}$-$}};
+  \node (c3) at (1,1.2) {$\mathcal{C}_3=\,${\color{primary}$+$}{\color{secondary}$-$}};
+  \node[above,secondary] (S1) at (2,4.5) {$ZZ\id$};
+  \node[right,primary] (S2) at (4.5,2) {$\id ZZ$};
+  \node[primary] (S1+) at (1,4.5) {$+1$};
+  \node[primary] (S1-) at (3,4.5) {$-1$};
+  \node[secondary] (S2+) at (4.5,3) {$+1$};
+  \node[secondary] (S2-) at (4.5,1) {$-1$};
+  \node[anchor=north west] (A) at (0,4) {$\substack{\ket{000}\\\ket{111}}$};
+  \node[anchor=north east] (B) at (4,4) {$\substack{\ket{100}\\\ket{011}}$};
+  \node[anchor=south east] (C) at (4,0) {$\substack{\ket{010}\\\ket{101}}$};
+  \node[anchor=south west] (D) at (0,0) {$\substack{\ket{001}\\\ket{110}}$};
+  \draw[->] (2,0) to (2,4.5);
+  \draw[->] (0,2) to (4.5,2);
+\end{tikzpicture}
+```
+
+To use the terminology of error-correction codes, we are taking our codespace to be^[We want to encode a single qubit, which lives in a two-dimensional space (spanned by $\ket{0}$ and $\ket{1}$), so it makes sense that we want our codespace to also be two-dimensional.]
+$$
+	\mathcal{C}
+	= \langle\ket{000},\ket{111}\rangle
+$$
+which is exactly the stabiliser space $V_\mathcal{S}$ of the stabiliser group
+$$
+	\mathcal{S}
+	= \langle ZZ\id,\id ZZ\rangle
+$$
+and the total eight-dimensional Hilbert space of three qubits is decomposed into four mutually orthogonal two-dimensional subspaces $\mathcal{C}\oplus\mathcal{C}_1\oplus\mathcal{C}_2\oplus\mathcal{C}_3$ as shown in Figure \@ref(fig:stabiliser-bisection-again).
+Since we have chosen a specific basis for each of these subspaces, we should give things a name.
+
+::: {.idea latex=""}
+The (orthogonal) basis vectors of the codespace $\mathcal{C}=V_\mathcal{S}$ are called **logical states**, and are usually taken to be the encodings of $\ket{0}$ and $\ket{1}$.
+:::
+
+In general^[Note that the logical states for the three-qubit code are actually *not* superpositions. This reflects the fact that this code is really just a classical repetition code --- it only protects against one type of error --- embedded into the quantum world.], the logical states will be *superpositions* of states, but we still sometimes refer to them as codewords.
+
+In our example of the three-qubit code, we have the two logical states **logical $0$** and **logical $1$**, which we denote by
+$$
+	\begin{aligned}
+		\ket{0}_L
+		&\coloneqq \ket{000}
+	\\\ket{1}_L
+		&\coloneqq \ket{111}.
+	\end{aligned}
+$$
+The justification for these names is twofold: firstly, $\ket{0}_L$ is exactly the encoding of $\ket{0}$, the "actual" zero state; and secondly, this state $\ket{0}_L$ will behave exactly as the zero state should when acted upon by the logical operators.
+For example, the operator $X$ sends $\ket{0}$ to $\ket{1}$, so the *logical* $X$ should send the *logical* $\ket{0}$ to the *logical* $\ket{1}$.
+Let's make this happen!
+
+The normaliser of $\mathcal{S}$ inside $\mathcal{P}_3$ is
+$$
+	N(\mathcal{S})
+	= \{\id,XXX,-YYY,ZZZ\} \times \mathcal{S}
+$$
+which we have written in such a way that we can just read off the cosets: there are four of them, and they are represented by $\id$, $XXX$, $-YYY$, and $ZZZ$.
+These four (implementations of) logical operators all get given the obvious names:
+$$
+	\begin{aligned}
+		\id_L
+		&\coloneqq \id
+	\\X_L
+		&\coloneqq XXX
+	\\Y_L
+		&\coloneqq -YYY
+	\\Z_L
+		&\coloneqq ZZZ
+	\end{aligned}
+$$
+But note that these are not necessarily the smallest weight implementations!
+For example, any single $Z_i$ (i.e. a $Z$ acting on the $i$-th qubit) will have the same logical effect as $ZZZ$, as we can see by looking at how it acts on the logical states:
+$$
+	\begin{aligned}
+		Z_1\ket{1}_L
+		&= Z\id\id\ket{111}
+	\\&= -\ket{111}
+	\\&= ZZZ\ket{111}
+	\\&= ZZZ\ket{1}_L.
+	\end{aligned}
+$$
+In contrast, $XXX$ *is* the smallest weight logical $X$ implementation.
+The natural question to ask is then how to find all the implementations, but this is answered by going back to the very definition of them as coset representatives: *if $P$ is some implementation of a logical operator, then so too is $SP$ for any $S\in\mathcal{S}$*.
+In the example above, we see that $Z_1=Z\id\id$ is exactly $\id ZZ\cdot ZZZ$.
+Because of this, we should really write something like $Z_L=ZZZ\mathcal{S}$, or $Z_L=[ZZZ]$, to make clear that $ZZZ$ is just one specific representation of $Z_L$, but you will find that people often conflate implementations with the logical operators themselves and simply write $Z_L=ZZZ$.
+
+Generally, for any CSS code encoding a single qubit into $n$-qubits, we define the logical $X$ and logical $Z$ operators to be the (equivalence classes of) the tensor products of all $X$ operators or all $Z$ operators (respectively), i.e.
+$$
+	\begin{aligned}
+		X_L
+		&\coloneqq X^{\otimes n}
+	\\Z_L
+		&\coloneqq Z^{\otimes n}.
+	\end{aligned}
+$$
+
+Even more generally, for any $[[n,k,d]]$ code constructed from a stabiliser $\mathcal{S}$, it will be the case that^[Proving this is a bit of a task!] $N(\mathcal{S})/S\cong\mathcal{P}_k$.
+
+Just a warning before moving on: this discussion might make logical states sound pointlessly simple --- logical $0$ is just given by three copies of $\ket{0}$, so what's the point?
+But this apparent simplicity is due to the fact that the three-qubit code is somehow not very quantum at all (these logical states are not superpositions), and in general things get a lot more complicated.
+For example, even with the three-qubit code, we shall see in Section \@ref(transversal-gates) that
+$$
+	\ket{+}_L
+	\neq \ket{{+}{+}{+}}
+$$
+where, as per usual, $\ket{+}=H\ket{0}=(\ket{0}+\ket{1})/2$.
+
+
+
+
+
+## ... and error families {#error-families}
+
+The quotient group^[Recall that the elements of the quotient group $G/H$ are exactly the cosets of $H\triangleleft G$.] $N(\mathcal{S})/\mathcal{S}$ gave us logical operators, so the next thing to ask is what we get from the quotient group $\mathcal{P}_n/N(\mathcal{S})$.
+
+::: {.idea latex=""}
+The cosets of $N(\mathcal{S})$ inside $\mathcal{P}_n$ are **error families** on the codespace $V_\mathcal{S}$.
+The individual elements of any error family (i.e. the elements of $\mathcal{P}_n$) are called **physical errors**.
+:::
+
+Again, we can write $\mathcal{P}_3$ in such a way that we can immediately read off the cosets:
+$$
+	\mathcal{P}_3
+	= \{\id, X\id\id, \id X\id, \id\id X\} \times N(\mathcal{S}) \times \{\pm1,\pm i\}.
+$$
+Ignoring the phases, the three (non-trivial) error families are single bit-flips:^[We sometimes denote the coset $P\cdot N(\mathcal{S})$ simply by $[P]$, just to save space.] $[X\id\id]$, $[\id X\id]$, and $[\id\id X]$; these error families $X_i$ map the codespace $\mathcal{C}$ to the subspace $\mathcal{C}_i$, as shown in Figure \@ref(fig:errors-mapping-c-to-ci).
+
+(ref:errors-mapping-c-to-ci-caption) The single bit-flip error family $X_i$ maps the codespace $\mathcal{C}$ to the subspace $\mathcal{C}_i$, e.g. $X_2\ket{000}=\ket{010}\in\mathcal{C}_2$.
+
+```{r errors-mapping-c-to-ci,engine='tikz',fig.cap='(ref:errors-mapping-c-to-ci-caption)',fig.width=2}
+\newcommand\id{\mathbf{1}}
+\begin{tikzpicture}
+	\node[draw,circle,minimum size=8mm] (C) at (0,3) {$\mathcal{C}$};
+	\node[draw,circle,minimum size=8mm] (C1) at (3,3) {$\mathcal{C}_1$};
+	\node[draw,circle,minimum size=8mm] (C3) at (0,0) {$\mathcal{C}_3$};
+	\node[draw,circle,minimum size=8mm] (C2) at (3,0) {$\mathcal{C}_2$};
+	%
+	\draw[<->,shorten >=1mm,shorten <=1mm] (C) to node[fill=white]{$X\id\id$} (C1);
+	\draw[<->,shorten >=1mm,shorten <=1mm] (C) to node[fill=white]{$\id X\id$} (C2);
+	\draw[<->,shorten >=1mm,shorten <=1mm] (C) to node[fill=white]{$\id\id X$} (C3);
+\end{tikzpicture}
+```
+
+These errors also let us understand how the structure of the codespace is mirrored across each of the cosets.
+In other words, we picked $\mathcal{C}$ to be our codespace, but what if we had instead picked $\mathcal{C}_1$?
+Well, we would get exactly the same code, just expressed in a different way, and this "different way" is described entirely by the error family $[X\id\id]$.
+What we mean by this is the following:^[Recall that conjugation expresses a change of basis: given an invertible $(n\times n)$ matrix $B$, we can turn a basis $\{v_1,\ldots,v_n\}$ into a new basis $\{Bv_1,\ldots,Bv_n\}$, and to write any operator $A$ in this new basis we simply calculate $BAB^{-1}$ ("undo the change of basis, apply $A$, then redo the change of basis").]
+
+- We can write $\mathcal{C}_1$ as the stabiliser space of $\mathcal{S}$ conjugated by $X\id\id$, i.e.
+	$$
+		\begin{aligned}
+			(X\id\id)\langle ZZ\id, \id ZZ \rangle(X\id\id)^{-1}
+			&= \langle (X\id\id)(ZZ\id)(X\id\id)^{-1}, (X\id\id)(\id ZZ)(X\id\id)^{-1} \rangle
+		\\&= \langle -ZZ\id, \id ZZ \rangle
+		\end{aligned}
+	$$
+	and, indeed, $\ket{100}$ and $\ket{011}$ are both stabilised by this group.
+- The logical states of $\mathcal{C}_1$ are, by definition as our chosen basis, the elements $\ket{100}$ and $\ket{011}$, but note that these are exactly the images of the logical states of $\mathcal{C}$ under the error $X\id\id$, i.e.
+	$$
+		\begin{aligned}
+			\ket{0}_{L,1}
+			&\coloneqq \ket{100}
+			= X\id\id\ket{000}
+		\\\ket{1}_{L,1}
+			&\coloneqq \ket{011}
+			= X\id\id\ket{111}
+		\end{aligned}
+	$$
+- The logical operators on $\mathcal{C}_1$ are the logical operators on $\mathcal{C}$ conjugated by $X\id\id$, i.e
+	$$
+		\begin{aligned}
+			X_{L,1}
+			&\coloneqq (X\id\id)(XXX)(X\id\id)^{-1}
+		\\&= XXX
+		\\Z_{L,1}
+			&\coloneqq (X\id\id)(ZZZ)(X\id\id)^{-1}
+		\\&= -ZZZ
+		\end{aligned}
+	$$
+	and, indeed, $X_{L,1}$ and $Z_{L,1}$ behave as expected on the new logical states, i.e.
+	$$
+		\begin{aligned}
+			X_{L,1}\colon
+			\ket{0}_{L,1}
+			&\longmapsto \ket{1}_{L,1}
+		\\\ket{1}_{L,1}
+			&\longmapsto \ket{0}_{L,1}
+		\\Z_{L,1}\colon
+			\ket{0}_{L,1}
+			&\longmapsto \ket{0}_{L,1}
+		\\\ket{1}_{L,1}
+			&\longmapsto -\ket{1}_{L,1}
+		\end{aligned}
+	$$
+	as you can check by hand.
+
+All in all, the chain of normal subgroups
+$$
+	\mathcal{S}
+	\triangleleft N(\mathcal{S})
+	\triangleleft \mathcal{P}_n
+$$
+really does describe the full structure of the code: logical states, logical operators, and error families.
+
+(ref:decomposition-of-pauli-on-codespaces-caption) A visualisation of how the stabilisers, normalisers, and arbitrary Pauli operators act on the codespace decomposition: stabilisers act as the identity, normalisers move each subspace around within itself, and Pauli operators swap subspaces around between one another.
+
+```{r decomposition-of-pauli-on-codespaces,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:decomposition-of-pauli-on-codespaces-caption)',fig.width=8}
+\newcommand{\id}{\mathbf{1}}
+\usetikzlibrary{decorations.markings,decorations.pathmorphing,decorations.pathreplacing}
+\begin{tikzpicture}[xscale=0.975,yscale=1.5]
+  \begin{scope}[shift={(-1,0)},transform shape,rotate=-15]
+    \node (C00) at (0,0) {};
+    \node (C10) at (2,0) {};
+    \node (C01) at (0,2) {};
+    \node (C11) at (2,2) {};
+    %
+    \draw (C00.center) to (C01.center) to (C11.center) to (C10.center) to (C00.center);
+    \draw (1,0) to (1,2);
+    \draw (0,1) to (2,1);
+    %
+    \node at (0.5,1.5) {$\mathcal{C}$};
+    \node at (1.5,1.5) {$\mathcal{C}_1$};
+    \node at (1.5,0.5) {$\mathcal{C}_2$};
+    \node at (0.5,0.5) {$\mathcal{C}_3$};
+  \end{scope}
+  \begin{scope}[shift={(2.75,0)},transform shape,rotate=-15]
+    \node (S00) at (0,0) {};
+    \node (S10) at (2,0) {};
+    \node (S01) at (0,2) {};
+    \node (S11) at (2,2) {};
+    %
+    \draw (S00.center) to (S01.center) to (S11.center) to (S10.center) to (S00.center);
+    \draw (1,0) to (1,2);
+    \draw (0,1) to (2,1);
+    %
+    \node at (0.5,1.5) {$\id$};
+    \node at (1.5,1.5) {$\id$};
+    \node at (1.5,0.5) {$\id$};
+    \node at (0.5,0.5) {$\id$};
+  \end{scope}
+  \begin{scope}[shift={(5.5,0)},transform shape,rotate=-15]
+    \node (N00) at (0,0) {};
+    \node (N10) at (2,0) {};
+    \node (N01) at (0,2) {};
+    \node (N11) at (2,2) {};
+    %
+    \draw (N00.center) to (N01.center) to (N11.center) to (N10.center) to (N00.center);
+    \draw (1,0) to (1,2);
+    \draw (0,1) to (2,1);
+    %
+    \node at (0.5,1.5) {$\circlearrowleft$};
+    \node at (1.5,1.5) {$\circlearrowleft$};
+    \node at (1.5,0.5) {$\circlearrowleft$};
+    \node at (0.5,0.5) {$\circlearrowleft$};
+  \end{scope}
+  \begin{scope}[shift={(8.25,0)},transform shape,rotate=-15]
+    \node (P00) at (0,0) {};
+    \node (P10) at (2,0) {};
+    \node (P01) at (0,2) {};
+    \node (P11) at (2,2) {};
+    %
+    \draw (P00.center) to (P01.center) to (P11.center) to (P10.center) to (P00.center);
+    \draw (1,0) to (1,2);
+    \draw (0,1) to (2,1);
+    %
+    \node (C) at (0.5,1.5) {};
+    \node (C1) at (1.5,1.5) {};
+    \node (C2) at (1.5,0.5) {};
+    \node (C3) at (0.5,0.5) {};
+    \draw[<->,shorten <=1mm] (C) to (C1.center);
+    \draw[<->,shorten <=1mm] (C) to (C2.center);
+    \draw[<->,shorten <=1mm] (C) to (C3.center);
+  \end{scope}
+  %
+  \draw[dashed] (2,-1.25) to (2,2.25);
+  %
+  \draw[dotted] (S01) to (P01.center);
+  \draw[dotted] (S10) to (P10.center);
+  \draw[dotted] (S11) to (P11.center);
+  \draw[dotted] (4.95,0) to (N00.center);
+  \draw[dotted] (7.65,0) to (P00.center);
+  %
+  \node at (0,-1) {codespaces};
+  \node (stab) at (3.75,-1) {stabilisers};
+  \node at (5.1,-1.025) {$\triangleleft$};
+  \node (norm) at (6.65,-1) {normalisers};
+  \node at (8.1,-1.025) {$\triangleleft$};
+  \node (paul) at (9.25,-1) {Paulis};
+  %
+  \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=7pt}] (stab.center) to node[yshift=-18pt]{\footnotesize logical operators} (norm.center);
+  \draw[decorate,decoration={brace,amplitude=5pt,mirror,raise=7pt}] (norm.center) to node[yshift=-18pt]{\footnotesize error families} (paul.center);
+\end{tikzpicture}
+```
+
+But this stabiliser formalism introduces some new ambiguity.
+In Section \@ref(quantum-codes-from-classical), we saw how measuring the three ancilla qubits in the Hamming $[7,4,3]$ code gave us an error syndrome that we could use to determine on which qubit a $Z$-error had occurred, and back in Section \@ref(correcting-bit-flips) we saw the analogous error-syndrome setup for the three-qubit code.
+However, the stabiliser formalism is much more general: it makes no assumptions that only single-qubit errors can occur.
+This means that error syndromes will now only tell us which error *family* has occurred, not which specific *physical* error like they did before.
+At first, this seems like a definite downgrade from our previous theory --- the actual errors that affect our circuits are still the *physical* errors, but now we have no way of knowing which one occurred, only which family it lives in!
+How are we to pick which coset representative to apply in order to correct the error?
+
+As you might expect, the story is not yet over.
+Depending on the specifics of the scenario, sometimes knowing the error family is enough to be able to correct not just one physical error, but *many*.
+In order to give a more precise explanation, we need to take a step back and look at the scenarios that we're actually trying to model --- we do this in Section \@ref(error-correcting-conditions).
+
+
+
+
+
+## Logical operators (a different approach) {#logical-operators-differently}
+
+We have said a few times now that the main challenge in finding good quantum error-correction codes often lies in finding "good commuting sets of stabilisers", so let's take this seriously and try to rediscover the definitions from Sections \@ref(logical-operators) and \@ref(error-families) by starting with just commutativity.
+
+Again, we already know that the Pauli matrices provide a useful basis with respect to which we can decompose the effects of any quantum channel^["Correct the Paulis and you correct them all."], so we should carefully understand how the Pauli operators $P\in\mathcal{P}_n$ interact with any error-correcting code.
+For this, we introduce the notation
+$$
+	c(P,\sigma)
+	\coloneqq
+	\begin{cases}
+		0
+		&P \text{ and } \sigma \text{ commute}
+	\\1
+		&P \text{ and } \sigma \text{ anticommute}
+	\end{cases}
+$$
+for any Pauli operator $P$ and any other operator $\sigma$.
+A particularly nice thing about this choice of definition (as opposed to taking $c(P,\sigma)\in\{\pm1\}$, say) is that we can write
+$$
+	P\sigma
+	= (-1)^{c(P,\sigma)} \sigma P.
+$$
+Furthermore, this function has a nice relation on products: writing $\oplus$ to mean addition $\mod{2}$, we can see that
+$$
+	c(P,\sigma\tau)
+	= c(P,\sigma) \oplus c(P,\tau)
+$$
+which reminds us of the fact that two anticommuting operators multiplied together produce a commuting operator.
+
+Now fix some stabiliser group^[We saw in Section \@ref(quantum-codes-from-classical) that an $[n,k,d]$ code had $n-k$ stabiliser generators, so we preemptively label our generators from $1$ to $n-k$.] $\mathcal{S}=\langle g_1,\ldots,g_{n-k}\rangle$.
+We define the **error syndrome** $\underline{e}_P$ of a Pauli operator $P$ to be the vector of all the values $c(P,g_i)$, i.e.
+$$
+	\underline{e}_P
+	= \big( c(P,g_1), \ldots, c(P,g_{n-k}) \big).
+$$
+It follows from the the above relation of how $c(P,-)$ turns products into sums that
+$$
+	\underline{e}_{P\sigma}
+	= \underline{e}_P\oplus\underline{e}_\sigma.
+$$
+
+The set of Pauli operators that have *zero* syndrome are special, and form a set known as the **normaliser**:
+$$
+	N(\mathcal{S})
+	\coloneqq \big\{ P\in\mathcal{P}_n \mid c(P,\sigma)=0\text{ for all }\sigma\in\mathcal{S} \big\}.
+$$
+Since all elements of the stabiliser $\mathcal{S}$ commute with one another, we know that $\mathcal{S}\subseteq N(\mathcal{S})$, but in general the normaliser is strictly larger.
+Now, by the definition of the normaliser and the multiplicative property of $c(P,-)$, if some Pauli operator $P$ has a particular error syndrome $\underline{e}_P$ then $P\sigma$ has the *same* error syndrome *for any* $\sigma\in N(\mathcal{S})$.
+This lets us gather together the Pauli operators into sets, which we call the **error cosets**, consisting of those Pauli operators which all have the same error syndrome.
+By the above, these can be described by some representative operator $P$, along with all other $P\sigma$ for $\sigma\in N(\mathcal{S})$, since the *only* way for $P$ and $Q$ to have the same error syndrome is for them to satisfy $Q=P\sigma$ for some $\sigma\in N(\mathcal{S})$.
+
+Now for some counting.
+Since an error syndrome is exactly an $n$-bit string, there are $2^{n-k}$ possible different error syndromes.
+Each error coset is, by construction, of size $|N(\mathcal{S})|$.
+All together, the error cosets contain every single Pauli operator, of which there are $4^n$.
+With this, we can calculate the size of the normaliser:
+$$
+	N(\mathcal{S})
+	= 4^n/2^{n-k}
+	= 2^{n+k}.
+$$
+
+So the Pauli group is subdivided into error cosets^[We called these error *families* in Section \@ref(error-families).] by the normaliser, and every Pauli in the same coset has the same error syndrome.
+If we perform a syndrome measurement after passing through some noisy channel and get the result $\underline{e}$, then the effect of the channel is collapsed to being a linear combination of the terms inside the error coset corresponding to the error syndrome $\underline{e}$.
+By applying *any* element of that error coset, we are mapped back to the normaliser.
+
+In fact, there is further substructure^[We will see that this structure is exactly that of a *subgroup*, and that it will be sufficient to just look at the values on the generators when defining the logical syndrome.] within the normaliser, and this is also reflected in each error family.
+Given a Pauli operator $P\in N(\mathcal{S})$ in the normaliser, we define its **logical syndrome** to be the vector $\underline{\ell}_P$ of all the values $c(P,\sigma)$, where $\sigma$ ranges over $N(\mathcal{S})$.
+Note that, for any $\tau\in\mathcal{S}$, we have $\underline{\ell}_P=\underline{\ell}_{P\tau}$.
+Again, this splits the normaliser Pauli operators into sets, which we call the **logical cosets**, each being defined by having the same logical syndrome.
+
+::: {.idea latex=""}
+The error cosets divide up the Pauli group, with the normaliser as one specific example; the logical cosets divide up the normaliser, with the stabiliser as one specific example --- see Figures \@ref(fig:slicing-pn-into-cosets) and \@ref(fig:decomposition-of-pauli-on-codespaces).
+:::
+
+Each operator that's in the normaliser but *not* in the stabiliser preserves the codespace (because it doesn't change the error syndrome), but it must do something non-trivial *inside* the codespace (because it's not in the stabiliser).
+It thus acts on the logical, encoded, qubits, and so we call it a **logical operator**.
+Moreover, these logical operators either commute or anticommute with one another.
+This should remind you of the Pauli operators themselves, and, indeed, we choose to associate these logical operators with **logical Pauli operators**.
+Which are which?
+Well, the choice is still arbitrary, as long as we get the relative commutation properties correct: it should be the case that $c(Z_L,X_L)=1$, for example.
+In the case of a CSS code, there are always $Z$-type representatives that we can choose to take as the logical $Z$, and $X$-type representatives for the logical $X$.
+
+Let's do some more counting.
+Since each logical coset is of size $|\mathcal{S}|=2^{n-k}$, there must be $|N(\mathcal{S})|/|\mathcal{S}|=4^k$ logical cosets, each corresponding to one of the $4^k$ logical Pauli operators on $k$ qubits, and each described uniquely by a logical syndrome vector $\underline{\ell}$, and in such a way that every possible value of $\underline{\ell}$ is accounted for.
+However, recall that $\underline{\ell}_P=\underline{\ell}_{P\tau}$ for any $\tau\in\mathcal{S}$.
+This means that we don't need to record *all* the commutation values, but only a set of $2k$ many values, so that $\ell\in\{0,1\}^{2k}$.
+All in all, we can choose any linearly independent set of values we want for the generators, as long as we recall that any operator will commute with itself, and we require the symmetry $c(\sigma,\tau)=c(\tau,\sigma)$.
+For example, we could take
+$$
+	\begin{bmatrix}
+		\underline{\ell}_1
+	\\\underline{\ell}_2
+	\\\vdots
+	\\\underline{\ell}_{2k}
+	\end{bmatrix}
+	= \begin{bmatrix}
+		0 & 1
+	\\1 & 0
+	\end{bmatrix}^{\oplus k}
+$$
+which would naturally select pairs $(\underline{\ell}_{2n-1},\underline{\ell}_{2n})$ as having the correct commutation relations necessary for them to act as logical $Z$ and logical $X$ for the $n$-th logical qubit.
+
+::: {.idea latex=""}
+Logical operators specify how to split the codespace, and are representatives of the logical cosets.
+In particular, the $\pm1$ eigenstates of $Z_L$ define the **logical codewords**.
+Generically, these codewords are superpositions of basis states.
+:::
+
+We emphasise out one final important point before returning to the example of the three-qubit repetition code.
+
+::: {.idea latex=""}
+While we *can* measure the *error* syndrome (all the stabilisers commute), we *cannot* measure the *logical* syndrome (not all the logical operators commute).
+Indeed, we must not even try --- measuring just one such value is equivalent to performing a measurement of the logical qubit, destroying the superposition of the very state with which we're trying to compute!
+:::
+
+So, back to the example of the three-qubit code from Section \@ref(three-qubit-code).^[Here we're going to repeat some things that we already said in Sections \@ref(logical-operators) and \@ref(error-families).]
+Recall that the stabilisers are generated by $ZZ\id$ and $\id ZZ$.
+The normaliser is the set of Pauli operators that commute with all these stabilisers, which we can succinctly write as
+$$
+	N(\mathcal{S})
+	= \langle ZZ\id,\id ZZ\rangle \times \{\id,XXX,YYY,ZZZ\}
+$$
+which already depicts the structure of the logical cosets: they are represented by $XXX$, $YYY$, and $ZZZ$.
+Using these representatives, we can evaluate the commutation properties:
+$$
+	\begin{array}{c|ccc}
+		c(-,-) & XXX & YYY & ZZZ
+	\\[0.25em]\hline
+	\\[-1em]XXX & 0 & 1 & 1
+	\\YYY & 1 & 0 & 1
+	\\ZZZ & 1 & 1 & 0
+	\end{array}
+$$
+From this we can see that *any* pair of these will work as the logical generators $Z_L$ and $X_L$, since they all satisfy the required property of $c(Z_L,X_L)=1$ and $c(Z_L,Z_L)=c(X_L,X_L)=0$.
+In other words, although it's "natural" to define $Z_L\coloneqq ZZZ$ and $X_L\coloneqq XXX$, we could just as well decide to set $Z_L\coloneqq XXX$ and $X_L=YYY$!
+
+
+
+
+
+## Error-correcting conditions {#error-correcting-conditions}
+
+We can summarise the notion of a stabiliser code that we have defined rather succinctly: everything is determined by picking a stabiliser group, i.e. an abelian subgroup $\mathcal{S}$ of the Pauli group $\mathcal{P}_n$ that does not contain $-\id$.
+From this, we define the codespace to be the stabiliser subspace $V_\mathcal{S}$, the codewords to be a choice of basis vectors, the logical operators to be the cosets of $\mathcal{S}\triangleleft N(\mathcal{S})$, and the error families to be the cosets of $N(\mathcal{S})\triangleleft\mathcal{P}_n$.
+
+By setting up some ancilla qubits and constructing appropriate quantum circuits^[We will see these circuits soon, starting in Section \@ref(encoding-circuits).], we can enact any logical operator in such a way that we also measure an error syndrome, which points at a specific error family.
+But unlike in our study of the Steane code in Section \@ref(quantum-codes-from-classical), we can no longer simply apply the corresponding operator to fix the error, because the error is a whole coset --- it contains many individual Pauli operators.
+
+To fix an example to keep in mind, we return yet again to the three-qubit code.
+In Figure \@ref(fig:all-cosets-three-qubit-code) we draw a diagram grouping together all the elements of $\mathcal{P}_3$ into the coset structure induced by $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$.
+This is analogous to the diagrams that we saw back in Exercise \@ref(pauli-group-three-qubits-worked-example), but with the simplification of ignoring phase.^[Formally, we can think of ignoring phase as looking at the quotient of $\mathcal{P}_3$ by the subgroup $\langle\pm\id,\pm i\rangle$, which results in an abelian group.]
+
+(ref:all-cosets-three-qubit-code-caption) The entire group $\mathcal{P}_3$ with the coset structure induced by the stabiliser group $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$. Note that we are ignoring global phase.
+
+```{r all-cosets-three-qubit-code,engine='tikz',fig.cap='(ref:all-cosets-three-qubit-code-caption)',fig.width=6}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\usetikzlibrary{decorations.markings,decorations.pathmorphing,decorations.pathreplacing}
+\newcommand{\id}{\mathbf{1}}
+\begin{tikzpicture}[scale=0.5]
+  \draw [fill=primary!60,thick] (0,0) rectangle (10,1);
+  \draw [fill=secondary!60,thick] (0,1) rectangle (10,4);
+  \draw [fill=primary!25,thick] (0,4) rectangle (10,5);
+  \draw [fill=secondary!25,thick] (0,5) rectangle (10,8);
+  \draw [fill=primary!25,thick] (0,8) rectangle (10,9);
+  \draw [fill=secondary!25,thick] (0,9) rectangle (10,12);
+  \draw [fill=primary!25,thick] (0,12) rectangle (10,13);
+  \draw [fill=secondary!25,thick] (0,13) rectangle (10,16);
+  \draw [dotted] (0,2) to (10,2);
+  \draw [dotted] (0,3) to (10,3);
+  \draw [dotted] (0,5) to (10,5);
+  \draw [dotted] (0,6) to (10,6);
+  \draw [dotted] (0,7) to (10,7);
+  \draw [thick] (0,8) to (10,8);
+  \draw [dotted] (0,9) to (10,9);
+  \draw [dotted] (0,10) to (10,10);
+  \draw [dotted] (0,11) to (10,11);
+  \draw [thick] (0,12) to (10,12);
+  \draw [dotted] (0,13) to (10,13);
+  \draw [dotted] (0,14) to (10,14);
+  \draw [dotted] (0,15) to (10,15);
+  %
+  \draw[decoration={brace,raise=5pt},decorate]
+  (0,0.2) to node[left=6pt] {$N(\mathcal{S})$} (0,3.8);
+  \draw[decoration={brace,raise=5pt},decorate]
+  (0,4.2) to node[left=6pt] {$(X\id\id)\cdot N(\mathcal{S})$ } (0,7.8);
+  \draw[decoration={brace,raise=5pt},decorate]
+  (0,8.2) to node[left=6pt] {$(\id X\id)\cdot N(\mathcal{S})$ } (0,11.8);
+  \draw[decoration={brace,raise=5pt},decorate]
+  (0,12.2) to node[left=6pt] {$(\id\id X)\cdot N(\mathcal{S})$ } (0,15.8);
+  %
+  \draw [<-] (10.2,0.5) to (11,0.5) node[right]{$\mathcal{S}$};
+  \draw [<-] (10.2,1.5) to (11,1.5) node[right]{$(XXX)\cdot\mathcal{S}$};
+  \draw [<-] (10.2,2.5) to (11,2.5) node[right]{$(YYY)\cdot\mathcal{S}$};
+  \draw [<-] (10.2,3.5) to (11,3.5) node[right]{$(ZZZ)\cdot\mathcal{S}$};
+  % ROW 1.1
+  \node at (1.25,0.5) {$\id$};
+  \draw[thick] (2.5,0) to (2.5,16);
+  \node at (3.75,0.5) {$ZZ\id$};
+  \draw[thick] (5,0) to (5,16);
+  \node at (6.25,0.5) {$\id ZZ$};
+  \draw[thick] (7.5,0) to (7.5,16);
+  \node at (8.75,0.5) {$Z\id Z$};
+  % ROW 1.2
+  \node at (1.25,1.5) {$XXX$};
+  \node at (3.75,1.5) {$YYX$};
+  \node at (6.25,1.5) {$XYY$};
+  \node at (8.75,1.5) {$YXY$};
+  % ROW 1.3
+  \node at (1.25,2.5) {$YYY$};
+  \node at (3.75,2.5) {$XXY$};
+  \node at (6.25,2.5) {$YXX$};
+  \node at (8.75,2.5) {$XYX$};
+  % ROW 1.4
+  \node at (1.25,3.5) {$ZZZ$};
+  \node at (3.75,3.5) {$\id\id Z$};
+  \node at (6.25,3.5) {$Z\id\id$};
+  \node at (8.75,3.5) {$\id Z\id$};
+  % ROW 2.1
+  \node at (1.25,4.5) {$X\id\id$};
+  \node at (3.75,4.5) {$YZ\id$};
+  \node at (6.25,4.5) {$XZZ$};
+  \node at (8.75,4.5) {$Y\id Z$};
+  % ROW 2.2
+  \node at (1.25,5.5) {$\id XX$};
+  \node at (3.75,5.5) {$ZYX$};
+  \node at (6.25,5.5) {$\id YY$};
+  \node at (8.75,5.5) {$ZXY$};
+  % ROW 2.3
+  \node at (1.25,6.5) {$ZYY$};
+  \node at (3.75,6.5) {$\id XY$};
+  \node at (6.25,6.5) {$ZXX$};
+  \node at (8.75,6.5) {$\id YX$};
+  % ROW 2.4
+  \node at (1.25,7.5) {$YZZ$};
+  \node at (3.75,7.5) {$X\id Z$};
+  \node at (6.25,7.5) {$Y\id\id$};
+  \node at (8.75,7.5) {$XZ\id$};
+  % ROW 3.1
+  \node at (1.25,8.5) {$\id X\id$};
+  \node at (3.75,8.5) {$ZY\id$};
+  \node at (6.25,8.5) {$\id YZ$};
+  \node at (8.75,8.5) {$ZXZ$};
+  % ROW 3.2
+  \node at (1.25,9.5) {$X\id X$};
+  \node at (3.75,9.5) {$YZX$};
+  \node at (6.25,9.5) {$XZY$};
+  \node at (8.75,9.5) {$Y\id Y$};
+  % ROW 3.3
+  \node at (1.25,10.5) {$YZY$};
+  \node at (3.75,10.5) {$X\id Y$};
+  \node at (6.25,10.5) {$Y\id X$};
+  \node at (8.75,10.5) {$XZX$};
+  % ROW 3.4
+  \node at (1.25,11.5) {$ZYZ$};
+  \node at (3.75,11.5) {$\id XZ$};
+  \node at (6.25,11.5) {$ZX\id$};
+  \node at (8.75,11.5) {$\id Y\id$};
+  % ROW 4.1
+  \node at (1.25,12.5) {$\id\id X$};
+  \node at (3.75,12.5) {$ZZX$};
+  \node at (6.25,12.5) {$\id ZY$};
+  \node at (8.75,12.5) {$Z\id Y$};
+  % ROW 4.2
+  \node at (1.25,13.5) {$XX\id$};
+  \node at (3.75,13.5) {$YY\id$};
+  \node at (6.25,13.5) {$XYZ$};
+  \node at (8.75,13.5) {$YXZ$};
+  % ROW 4.3
+  \node at (1.25,14.5) {$YYZ$};
+  \node at (3.75,14.5) {$XXZ$};
+  \node at (6.25,14.5) {$YXZ$};
+  \node at (8.75,14.5) {$XY\id$};
+  % ROW 4.4
+  \node at (1.25,15.5) {$ZZX$};
+  \node at (3.75,15.5) {$\id\id Y$};
+  \node at (6.25,15.5) {$Z\id X$};
+  \node at (8.75,15.5) {$\id ZX$};
+\end{tikzpicture}
+```
+
+As we can see by looking at Figure \@ref(fig:all-cosets-three-qubit-code), if we somehow measure an error syndrome pointing to the error family $[X\id\id]$, for example, then there are 16 possible errors that could have occurred!
+We said that the stabiliser formalism would be *better* than our previous approach, so why do things seem so much worse now?
+Well, we are forgetting one key assumption that we made before that we have yet to impose in the stabiliser formalism: *up until now, we have only studied single-qubit errors*.
+Thinking back to our introduction of the three-qubit code in Section \@ref(three-qubit-code), we were specifically trying to deal with single bit-flip errors, i.e. only $X\id\id$, $\id X\id$, and $\id\id X$ (as well as the trivial error $\id\id\id$, which we must not forget about, as we shall see).
+If we look back at Figure \@ref(fig:all-cosets-three-qubit-code) with this in mind, we notice something particularly nice: each of these single $X$-type errors lives in a different error family, and each error family contains exactly one of these errors.
+
+In other words, *if we assume that only single bit-flip errors can occur*, then the stabiliser formalism describes errors in exactly the same way as before, since the error families are in bijection with the physical errors.
+But here is where the power of the stabiliser formalism can really shine through, since it allows us to understand what type of error scenarios our code can actually deal with in full generality.
+That is, rather than thinking about a code as something being built to correct for a specific set of errors, the stabiliser formalism lets us say "here is a code", and *then* ask "for which sets of errors is this code actually useful?".
+The answer to this question lies in understanding how any set of physical errors is distributed across the error families, and we can draw even simpler versions of the diagram in Figure \@ref(fig:all-cosets-three-qubit-code) to figure this out.
+
+Returning to the scenario where we assume that only single bit-flip errors can occur, we can mark the corresponding physical errors in Figure \@ref(fig:all-cosets-three-qubit-code) --- namely $\id$, $X\id\id$, $\id X\id$, and $\id\id X$ --- with a dot.
+We do this in Figure \@ref(fig:weight-1-x-errors-three-qubit-code), which is the first of many more diagrams of this form, which we call **error-dot diagrams**.
+Although we are working with the specific example of the three-qubit code in mind, these diagrams are meant to be understood more generally as applying to any stabiliser code.
+As we shall soon see, we don't really need to worry about making sure that we have the right number of rows in each small rectangle (i.e. the right number of cosets of $\mathcal{S}$ inside $N(\mathcal{S})$), and in some sense we don't even really need to worry about what the physical errors *are*.
+
+(ref:weight-1-x-errors-three-qubit-code-caption) All specific $X$-type errors of weight at most $1$ from Figure \@ref(fig:all-cosets-three-qubit-code), each marked by a dot. The four cosets corresponding to $N(\mathcal{S})\triangleleft\mathcal{P}_n$ are the error families, and we informally refer to the (copy of the) four cosets corresponding to $\mathcal{S}\triangleleft N(\mathcal{S})$ as **rows**.
+
+```{r weight-1-x-errors-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:weight-1-x-errors-three-qubit-code-caption)',fig.width=2}
+\begin{tikzpicture}
+	\ErrorDotDiagram{(1,1),(1,5),(1,9),(1,13)}
+\end{tikzpicture}
+```
+
+As we said above, if each error family (i.e. coset) contains exactly one physical error (i.e. Pauli operator), then we already know how to apply corrections based on the error-syndrome measurements.
+In terms of the diagram in Figure \@ref(fig:weight-1-x-errors-three-qubit-code), this rule becomes rather simple: *if each error family contains exactly one dot, then we can error correct*.
+
+But can we say something more interesting than this?
+Well, let's consider what happens if we have a diagram that looks like this:
+
+```{r engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2}
+\begin{tikzpicture}
+	\ErrorDotDiagram{(1,1),(1,5),(2,5),(1,9),(1,13)}
+\end{tikzpicture}
+```
+
+That is, we're considering a scenario where there are *two* possible physical errors that can occur for a physical error syndrome.
+In the example of the three-qubit code, we're looking at the scenario where any single bit-flip error can occur, but *also* the operator $YZ\id$ might affect our computation, enacting a bit-phase-flip on the first qubit and a phase-flip on the second.
+What would then happen if we measured the error syndrome $\ket{01}$?
+We know (from Section \@ref(correcting-bit-flips)) that this corresponds to the error *family* $[X\id\id]$, but both $X\id\id$ *and* $YZ\id$ live in this coset, so we're back to the question posed at the end of Section \@ref(error-families): how do we pick which operator to use to correct the error?
+
+Here's the fantastic fact: in this case, *it doesn't matter*!
+Say we pick $X\id\id$, but the physical error that had actually affected our qubits, originally in some encoded state $\ket{\psi}$, was $YZ\id$.
+Then by applying the "correction" $X\id\id$ our qubits would be in the state
+$$
+	(X\id\id)(YZ\id)\ket{\psi}
+	= (ZZ\id)\ket{\psi}
+$$
+(where, once again, we ignore global phases).
+But $\ket{\psi}$ is, by construction, some codeword, which exactly means that it is stabilised by $ZZ\id$, and so
+$$
+	(X\id\id)(YZ\id)\ket{\psi}
+	= \ket{\psi}.
+$$
+We can fully generalise this to improve upon the previous rule: *if all the dots in any given error family are all in the same row, then we can perfectly error correct*.
+
+To prove this, we just return to the definition of cosets and the properties of the Pauli group.^[This is one of those arguments where it's easy to get lost in the notation. Try picking two physical errors $P_1$ and $P_2$ in the same row somewhere in Figure \@ref(fig:all-cosets-three-qubit-code) and following through the argument, figuring out what $E$, $P$, $P'_1$, and $P'_2$ are as you go.]
+If two physical errors $P_1$ and $P_2$ are in the same row inside some family $E\cdot N(\mathcal{S})$, then by definition they both come from the same coset $P\cdot\mathcal{S}$, i.e.
+$$
+	\begin{aligned}
+		P_1
+		&= EP'_1
+	\\P_2
+		&= EP'_2
+	\end{aligned}
+$$
+where $P'_1,P'_2\in P\cdot\mathcal{S}$.
+Then $EP$ corrects both $P_1$ and $P_2$, since (again, we ignore global phase, which means that Pauli operators commute)
+$$
+	\begin{aligned}
+		(EP)P_i
+		&= (EP)(EP'_i)
+	\\&= E^2 PP'_i
+	\\&= PP'_i
+		\in\mathcal{S}
+	\end{aligned}
+$$
+because Pauli operators square to $\id$, and $P'_i\in P\cdot\mathcal{S}$.
+
+We also get the converse statement from this argument: *if any family contains dots in different rows, then we cannot error correct*.
+This is because we need $EP$ to correct for some errors, and some different $EP'$ to correct for others, and we have no way of choosing which one to correct with when we measure the error syndrome for $E$ without already knowing which physical error took place.^[Just to be clear, if we knew which physical errors took place, then we wouldn't have to worry about error correction at all, because we'd always know how to perfectly recover the desired state. And remember that we can't measure to find out which physical error took place, since this would destroy the state that we're trying so hard to preserve!]
+
+So is this the whole story?
+Almost, but one detail is worth making explicit, concerning maybe the most innocuous looking error of all: the identity error family.
+Consider a scenario like the following:
+
+```{r engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2}
+\begin{tikzpicture}
+	\ErrorDotDiagram{(1,1),(2,4),(3,4),(4,4)}
+\end{tikzpicture}
+```
+
+In the case of the three-qubit code, this corresponds to the possible physical errors being single phase-flips $Z\id\id$, $\id Z\id$, and $\id\id Z$.
+But here we see how misleading it is to omit mention of the identity error $\id\id\id$, because the single phase-flips all live in the same $N(\mathcal{S})$ coset as $\id\id\id$, but different $\mathcal{S}$ cosets.
+That is, they are in the same error family, but a different row.
+By our above discussion, this means that we cannot correct for these errors --- indeed, if we measure the error syndrome corresponding to "no error", then we don't know whether there truly was no error or if one of these single phase-flips happened instead.
+To put it succinctly, we nearly *always* make the assumption that *no errors at all might occur*, which is exactly the same as saying that *the trivial error $\id$ might occur*.
+This means that we cannot correct for any errors that are found in the normaliser of $\mathcal{S}$ but not in $\mathcal{S}$ itself.
+Although this is technically a sub-rule of the previous rule, it's worth pointing out explicitly.
+
+::: {.idea latex=""}
+An error-dot diagram describes a perfectly correctable set of errors if and only if the following two rules are satisfied:
+
+1. In any given error family, all the dots are in the same row.
+2. Any dots in the bottom error family are in the bottom row.
+
+(The second rule follows from the first as long as the scenario in question allows the possibility for no errors to occur.)
+:::
+
+Of course, we can state these conditions without making reference to the dot-error diagrams, instead using the same mathematical objects that we've been using all along.
+Proving the following version of the statement is the content of Exercise \@ref(error-correcting-conditions-algebraically).
+
+::: {.idea latex=""}
+Let $\mathcal{E}\subseteq\mathcal{P}_n$ be a set of physical errors.
+Then the stabiliser code defined by $\mathcal{S}$ can perfectly correct for all errors in $\mathcal{E}$ if and only if
+$$
+	E_1^\dagger E_2
+	\in N(\mathcal{S})\setminus\mathcal{S}
+$$
+for all $E_1,E_2\in\mathcal{E}$.
+:::
+
+You might notice that we've been sometimes been saying "*perfectly* correctable" instead of just "correctable".
+This is because there might be scenarios where we are happy with being able to correct errors not perfectly, but instead merely with some high probability.
+
+These dot-error diagrams are also able to describe more probabilistic scenarios.
+We have been saying "single-qubit errors", but we could just have well have been saying "lowest-weight errors", and then the assumption that errors are independent of one another means that higher-weight errors happen with lower probability.
+But the stabiliser formalism (and thus the error-dot diagrams) don't care about this "independent errors" assumption!
+What this means is that we could refine our diagrams: instead of merely drawing dots to denote which errors can occur, we could also label them with specific probabilities.
+So we could describe a scenario where, for example, one specific high-weight error happens annoyingly often.
+
+One last point that is important for those who care about mathematical correctness concerns our treatment of global phases.^[We are being slightly informal with the way we draw these dot-error diagrams: cosets of $\mathcal{S}$ itself inside $\mathcal{P}_n$ don't make sense, as we've said, because $\mathcal{S}$ is generally not normal inside $\mathcal{P}_n$. Also, when we quotient by $\{\pm1,\pm i\}$ (by drawing just a single sheet, instead of four as in the diagrams in Exercise \@ref(pauli-group-three-qubits-worked-example)), we make $\mathcal{P}$ abelian, and this makes the normaliser no longer the actual normaliser.]
+We *do* need to care about global phases in order to perform error-syndrome measurements, but *once we have the error syndrome we can forget about them*.
+In other words, we need the global phase in order to pick the error family, but not to pick a representative within it.
+
+
+
+
+
+## Code distance and thresholds {#code-distance-and-thresholds}
+
+Given an error model in which, in principle, all Pauli errors are possible but low-weight^[Recall that the weight $|P|$ of a Pauli operator $P=P_1\otimes\ldots\otimes P_n$ is the number of non-identity $P_i$. For example, $\id\id\id$ has weight $0$, $Z\id\id$ and $\id X\id$ have weight $1$, and $XXX$ has weight $3$.] errors are more likely than the high-weight errors, it makes perfect sense to look for an error correcting a code which can perfectly correct errors with weight at most $t$ for some "good" value of $t$.
+Such a code will fail will with probability roughly equal to the total probability of any error of weight larger than $t$ occurring.
+This probability of failure is called the **logical error probability**.
+The goal of quantum error correction is to use all the tricks we have discussed so far (and many more) to realise *logical* qubits with logical error rates *below* the error rate of the constituent *physical* qubits.
+
+As in the case of classical codes, the **distance** of a quantum code is defined as the minimum weight error that can go undetected by the code.
+In other words, it is the minimum weight Pauli operator than can transform one codeword state into another.
+But as we've seen, all such operators are in $N(\mathcal{S})\setminus\mathcal{S}$, which means that
+$$
+	d
+	= \min_{P\in N(\mathcal{S})\setminus\mathcal{S}}|P|.
+$$
+Now our goal is less ambitious: we are not aiming to correct *all* possible Pauli errors, but only those of weight at most $t$, where $t$ satisfies $d=2t+1$.
+So how can a code with distance $d$ do this?
+
+Firstly, note that, if we take a product of two errors $E_i$ and $E_j$, each of weight at most $t$, then the resulting Pauli operator $E_iE_j$ will have weight at most $2t$, and by definition $2t<d$.
+Therefore the product of these errors can never be a logical operator, since the logical operators in $N(\mathcal{S})\setminus\mathcal{S}$ have weight at least $d$.
+Thus if one of these errors $E_i$ occurs and our decoding procedure picks another error $E_j$ that gives rise to the same syndrome (i.e. that belongs to the same error family) and applies the latter to the encoded qubits, then we know that $E_iE_j\not\in N(\mathcal{S})\setminus\mathcal{S}$, which means that $E_iE_j\in\mathcal{S}$ acts as the identity on the codespace.
+
+Needless to say, from the perspective of code distance alone, the larger the value of $d$ the better we can correct for more errors.
+For this, we need the logical errors (i.e. the logical operations on the codespace $L\in N(\mathcal{S})\setminus\mathcal{S}$) to have the largest possible weight --- by our assumptions about our error model, these occur with low probability, and thus keep the logical error probability low.
+
+The [**threshold theorem**](https://en.wikipedia.org/wiki/Threshold_theorem) for stabiliser codes asserts that if the physical error probability $p$ of individual qubits is below a certain threshold value $p_\mathrm{th}$ then increasing the distance of the code will decrease the logical error probability.
+This principle implies that quantum error-correction codes *could theoretically* suppress the logical error rate indefinitely.
+However, if the physical error rate $p$ is *greater than* the threshold value $p_\mathrm{th}$, then quantum encoding actually becomes counterproductive.
+So the threshold value serves as a critical experimental benchmark for quantum computing experiments, since achieving it is essential for the feasibility of quantum error correction.
+We will return to the threshold theorem in more detail in Chapter \@ref(fault-tolerance).
+
+As of 2024^[Giving precise numbers is precarious due to the rapid advancements in quantum error correction technology.], the upper bound for this threshold value is approximately $p_\mathrm{th}=0.1$.
+
+
+
+
+
+## Encoding circuits {#encoding-circuits}
+
+The previous sections have set up a lot of abstract theory about stabiliser codes, so now let's take some time to look at more concrete aspects, such as the quantum circuits that actually let us build these codes "in practice".
+
+At the end of Section \@ref(quantum-codes-from-classical) we showed that the CSS construction could be applied to the Hamming $[7,4,3]$ code over itself to obtain the so-called Steane $[[7,1,3]]$ code, which has generators $G_1,\ldots,G_6$ given by the rows in the matrix^[Note that this matrix is just like two copies of the generator matrix for the Hamming $[7,4,3]$ code stacked on top of one another: the first with $X$-type stabilisers, and the second with $Z$-type stabilisers.]
+$$
+  \begin{bmatrix}
+    X & X & \id & X & X & \id & \id
+  \\X & \id & X & X & \id & X & \id
+  \\\id & X & X & X & \id & \id & X
+  \\Z & Z & \id & Z & Z & \id & \id
+  \\Z & \id & Z & Z & \id & Z & \id
+  \\\id & Z & Z & Z & \id & \id & Z
+  \end{bmatrix}
+$$
+and codespace given by the corresponding stabiliser space $\mathcal{C}=V_\mathcal{S}$, where $\mathcal{S}=\langle G_1,\ldots,G_6\rangle$.
+
+Now, what are the logical states for this code?
+Well, by definition they should be basis states for the stabiliser space $V_{\langle G_1,\ldots,G_6\rangle}$, but the "real" motivation for them is that they should just be the encodings of $\ket{0}$ and $\ket{1}$ in the code.
+So the question becomes just *how do we actually encode states with a code described by the stabiliser formalism?*
+But it turns out that we have already secretly answered this question in Exercise \@ref(stabilisers-and-projectors): the projector onto the $\pm1$-eigenspace of any $G_i$ is given by $\frac{1}{2}(\id\pm G_i)$.
+
+::: {.idea latex=""}
+Given stabiliser generators $G_1,\ldots,G_s$, the projector onto the stabiliser space $V_{\langle G_1,\ldots,G_n\rangle}$ (i.e. the encoding for the corresponding stabiliser code) is given by
+$$
+	\prod_{i=1}^s \frac{1}{2}(\id+G_i).
+$$
+:::
+
+In other words, we want to define^[This state is not normalised, since it's given by a bunch of projections one after the other, but we won't worry about this until we first make some simplifications.]
+$$
+	\ket{0}_L
+	\coloneqq \frac{1}{2^6} \left(\prod_{i=1}^6 (\id+G_i)\right) \ket{0}^{\otimes7}
+$$
+since this will be in the $+1$-eigenspace of all of the $G_i$, which is exactly the stabiliser space $V_{\langle G_1,\ldots,G_6\rangle}$.
+Similarly, we set
+$$
+	\ket{1}_L
+	\coloneqq \frac{1}{2^6} \left(\prod_{i=1}^6 (\id+G_i)\right) \ket{1}^{\otimes7}.
+$$
+
+One thing to note is that the order of the product over the $G_i$ doesn't matter here: by design, every stabiliser generator commutes with every other^[We *need* all the generators to commute in order for the simultaneous $+1$-eigenspace to exist!], since they "overlap" (i.e. have non-identity terms) in an *even* number of positions, so any $-1$ signs arising from anticommutativity will cancel out with one another.
+So for $\ket{0}_L$, when we expand out the product $\prod_i(\id+G_i)$, we can simply move all the $Z$-type terms to the right and then forget them, since $Z$ acts trivially on $\ket{0}$.
+
+This means that we're left with only the $X$-type terms, and there are eight of these:^[If you look up the codewords for the Steane code elsewhere, you might find different expressions, but this is simply an artifact of expressing the parity check matrix of the Hamming code in a different basis. Note also that here we have normalised the state.]
+$$
+	\begin{aligned}
+		\ket{0}_L
+		\coloneqq \frac{1}{\sqrt{2^3}} \big(
+		& \id + G_1 + G_2 + G_3
+	\\+& G_1G_2 + G_1G_3 + G_2G_3 + G_1G_2G_3
+		\big) \ket{0000000}
+	\\= \frac{1}{\sqrt{8}} \big(
+		&\ket{0000000} + \ket{1101100} + \ket{1011010} + \ket{0111001}
+	\\+&\ket{0110110} + \ket{1010101} + \ket{1100011} + \ket{0001111}
+		\big).
+	\end{aligned}
+$$
+You can check by hand that this superposition is indeed invariant under each of the $G_i$.
+Now, we could perform a similar calculation for $\ket{1}_L$, but since we have a CSS code we already know that $X_L=X^{\otimes7}$ is an implementation for the logical $X$ operator, so we can simply use this:
+$$
+	\begin{aligned}
+		\ket{1}_L
+		&\coloneqq X_L\ket{0}_L
+	\\&= \frac{1}{\sqrt{8}} \big(
+		\ket{1111111} + \ket{0010011} + \ket{0100101} + \ket{1000110}
+	\\&\phantom{\frac{1}{\sqrt{8}}\big(}
+		+\ket{1001001} + \ket{0101010} + \ket{0011100} + \ket{1110000}
+		\big).
+	\end{aligned}
+$$
+
+We know what the logical states are, and by the previous discussions we also know what the logical operators are: cosets of $\langle G_1,\ldots,G_6\rangle$ within its stabiliser in $\mathcal{P}_7$.
+For example, not only is $X^{\otimes7}$ an implementation of $X_L$, but so too is^[You can check this by hand: see that $\id\id X\id\id XX$ sends $\ket{0}_L$ to $\ket{1}_L$.] $\id\id X\id\id XX$.
+
+So how can we actually access these logical states in order to do computation with them?
+In other words, we need to design an **encoding circuit** that allows us to prepare the states $\ket{0}_L$ and $\ket{1}_L$ so that we can then perform computation on them.
+As above, we will be able to neglect the $Z$-type stabilisers, because we're working in the computational basis.
+More specifically, since $\ket{0}$ and $\ket{1}$ live in the $\pm1$-eigenspace for $Z$, we don't need to further project them to the stabiliser spaces of the $Z$-type stabilisers; we start with a basis in the stabiliser space for $\pm Z$, and when we encode we obtain a basis in the stabiliser space for $\mathcal{S}$ and $\pm Z_L$.
+This sort of duality always happens for CSS codes, and note that the choice of $X$ versus $Z$ isn't "special" --- if we switch to the $\ket{\pm}$ basis then it would suffice to measure $Z$-type stabilisers, since we are already in the $\pm1$-eigenspace for $X$.
+If this seems confusing, then don't worry: look at the circuits below, follow the evolution of the input state through them, and then see what would happen if you did the same thing after adding the gates for the three missing $Z$-type stabilisers as well.
+You will see that (up to a possible global phase) nothing changes.
+
+Inspired by the classical Hamming $[7,4,3]$ code, we can think of the last three qubits in our seven-qubit encoding as the parity-check qubits, and read off the layout of the circuit from the parity-check matrix: the $(3\times3)$ identity submatrix corresponds to the controls.
+This gives us the encoding circuit in Figure \@ref(fig:unitary-steane-encoding).
+
+(ref:unitary-steane-encoding-caption) One possible encoding circuit for the Steane code, requiring no ancilla bits.
+
+```{r unitary-steane-encoding,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4.5,fig.cap='(ref:unitary-steane-encoding-caption)'}
+\begin{quantikz}
+	\lstick[wires=7]{$\ket{0}^{\otimes7}$}
+	& \qw
+	& \gate{X}
+	& \gate{X}
+	& \qw
+	& \qw \rstick[wires=7]{$\ket{0}_L$}
+\\& \qw
+	& \gate{X}
+	& \qw
+	& \gate{X}
+	& \qw
+\\& \qw
+	& \qw
+	& \gate{X}
+	& \gate{X}
+	& \qw
+\\& \qw
+	& \gate{X}
+	& \gate{X}
+	& \gate{X}
+	& \qw
+\\& \gate{H}
+	& \ctrl{-4}
+	& \qw
+	& \qw
+	& \qw
+\\& \gate{H}
+	& \qw
+	& \ctrl{-5}
+	& \qw
+	& \qw
+\\& \gate{H}
+	& \qw
+	& \qw
+	& \ctrl{-5}
+	& \qw
+\end{quantikz}
+```
+
+
+
+
+
+## Encoding arbitrary states {#encoding-arbitrary-states}
+
+The encoding circuit in Figure \@ref(fig:unitary-steane-encoding) describes a unitary operation (it has no measurements), and its particularly compact form makes it very useful for certain complexity-theoretic calculations, but it has one major drawback: it is not itself protected against errors!
+If we are trying to design things for the real world, where qubits can undergo decoherence, then we should compensate for this in *all* our quantum computation, *including* the circuits we use to prepare states.^[If you want people to be able to stay dry if it's raining, then you might build a tunnel from location A to location B so that they can use this for cover. But this isn't going to stop people from getting wet on their (necessary) journey from their home to location A!]
+We have already done the hard work for this though, in Section \@ref(measuring-pauli-stabilisers), when we constructed circuits to project onto Pauli stabiliser spaces.
+This gives us the encoding circuit in Figure \@ref(fig:projection-steane-encoding).
+
+(ref:projection-steane-encoding-caption) Another possible encoding circuit for the Steane code, which uses three ancilla bits for error correction when encoding arbitrary states, but is non-unitary (since it involves measurement). The measurements of the ancilla bits can be used to apply the necessary $Z$-type corrections.
+
+```{r projection-steane-encoding,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5,fig.cap='(ref:projection-steane-encoding-caption)'}
+\begin{quantikz}
+	\lstick[wires=3]{$\ket{0}^{\otimes3}$}
+	& \gate{H}
+	& \ctrl{7}
+	& \qw
+	& \qw
+	& \gate{H}
+	& \meter{} \vcw{1}
+\\& \gate{H}
+	& \qw
+	& \ctrl{7}
+	& \qw
+	& \gate{H}
+	& \meter{} \vcw{1}
+\\& \gate{H}
+	& \qw
+	& \qw
+	& \ctrl{7}
+	& \gate{H}
+	& \meter{} \vcw{7}
+\\\lstick[wires=7]{$\ket{0}^{\otimes7}$}
+	& \qw
+	& \gate{X}
+	& \gate{X}
+	& \qw
+	& \qw
+	& \gate{Z}
+	& \qw \rstick[wires=7]{$\ket{0}_L$}
+\\& \qw
+	& \gate{X}
+	& \qw
+	& \gate{X}
+	& \qw
+	& \gate{Z}
+	& \qw
+\\& \qw
+	& \qw
+	& \gate{X}
+	& \gate{X}
+	& \qw
+	& \gate{Z}
+	& \qw
+\\& \qw
+	& \gate{X}
+	& \gate{X}
+	& \gate{X}
+	& \qw
+	& \gate{Z}
+	& \qw
+\\& \qw
+	& \gate{X}
+	& \qw
+	& \qw
+	& \qw
+	& \gate{Z}
+	& \qw
+\\& \qw
+	& \qw
+	& \gate{X}
+	& \qw
+	& \qw
+	& \gate{Z}
+	& \qw
+\\& \qw
+	& \qw
+	& \qw
+	& \gate{X}
+	& \qw
+	& \gate{Z}
+	& \qw
+\end{quantikz}
+```
+
+The three measurements in the encoding circuit in Figure \@ref(fig:projection-steane-encoding) allow us to correct for any single-qubit error in the encoding process, just as we did in Section \@ref(measuring-pauli-stabilisers), using the lookup table from Section \@ref(quantum-codes-from-classical).
+If we measure $(+++)$, then no error has occurred, but if we measure, say, $(-++)$, then we know that the error $Z_5$ has affected our encoding, and so we must correct for this.
+Of course, as we now know from Section \@ref(error-correcting-conditions), what it means to correct for the $Z_5$ error depends on which errors can possibly occur.
+If we make the usual assumption that only errors of weight $1$ (i.e. single-qubit errors) can occur, then the $Z_5$ error is exactly that: a phase-flip on the fifth qubit.
+
+So now we have seen two circuits for encoding the logical $0$ state, but what about if we want to encode an arbitrary state?
+That is, we already have some qubit in an interesting state $\ket{\psi}$ and we want to use the Steane code^[What we say here can be applied to other stabiliser codes, but we stick with the Steane code to make it easier to look at specific examples.] to protect it against decoherence.
+
+Before we look at this question, it's important to mention something about practical use here.
+As is often the case, a chain is only as strong as its weakest link, and the process of encoding a single qubit into seven qubits is a particularly error-prone process.
+In practice, it is much more desirable to start with logical $0$ and *then* do all of our computation, knowing that we are already in the "protected" world of a stabiliser code.
+
+We know that all the $X$-type stabilisers for the Steane code have an even number of $X$ terms in them, and so will commute with any implementation of the logical $X$ operator $X_L$.
+Since the (bottom register of the) encoding circuit in Figure \@ref(fig:projection-steane-encoding) simply applies the $X$-type stabilisers to $\ket{0}^{\otimes7}$, we can use this commutativity.
+Indeed, by construction of the logical operators and the logical states, we know that encoding $\ket{0}^{\otimes7}$ to $\ket{0}_L$ and then applying $X_L$ gives us the state $\ket{1}_L$.
+But then the commutativity of $X_L$ with the $X$-type stabilisers tells us that we *also* obtain $\ket{1}_L$ if we first apply $X_L$ to $\ket{0}^{\otimes7}$ and then encode.
+Symbolically, writing $E$ to mean the operation of applying the encoding circuit,
+$$
+	\begin{aligned}
+		\ket{1}_L
+		&= X_L\ket{0}_L
+	\\&= X_LE\ket{0}^{\otimes7}
+	\\&= EX_L\ket{0}^{\otimes7}
+	\end{aligned}
+$$
+where we can pick any implementation of $X_L$ that we like, such as $X^{\otimes7}$ or $\id\id X\id\id XX$.
+This tells us that there are two ways of obtaining $\ket{1}_L$ from $\ket{0}_L$:
+
+1. apply $X_L$ and then encode
+2. encode and then apply $X_L$.
+
+Now let's generalise this, replacing the $X_L$ with a controlled version, controlled exactly by the state $\ket{\psi}$ that we wish to encode.
+If $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$, then we want to construct the logical state
+$$
+	\ket{\psi}_L
+	\coloneqq \alpha\ket{0}_L + \beta\ket{1}_L.
+$$
+Let's look at the first option from above: applying $X_L$ and then encoding.
+For a simpler circuit, we can use the low-weight implementation $\id\id X\id\id XX$ of $X_L$, so that we prepare the state
+$$
+	\alpha\ket{0}_L + \beta\ket{1}_L
+	= \alpha\ket{0000000} + \beta\ket{0010011}
+$$
+and then feed this into the encoding circuit from before.
+This gives us the circuit in Figure \@ref(fig:projection-arbitrary-steane-encoding).
+
+(ref:projection-arbitrary-steane-encoding-caption) Preparing the logical version $\ket{\psi}_L$ of an arbitrary state $\ket{\psi}$ in a way that allows us to correct for any single-qubit errors in the *encoding* process, but *not* the *preparation* process (highlighted in red).
+
+```{r projection-arbitrary-steane-encoding,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5,fig.cap='(ref:projection-arbitrary-steane-encoding-caption)'}
+\definecolor{primary}{RGB}{177,98,78}
+\begin{quantikz}
+	\lstick[wires=3]{$\ket{0}^{\otimes3}$}
+	& \gate{H}
+	& \ctrl{7}
+	& \qw
+	& \qw
+	& \gate{H}
+	& \meter{} \vcw{1}
+\\& \gate{H}
+	& \qw
+	& \ctrl{7}
+	& \qw
+	& \gate{H}
+	& \meter{} \vcw{1}
+\\& \gate{H}
+	& \qw
+	& \qw
+	& \ctrl{7}
+	& \gate{H}
+	& \meter{} \vcw{7}
+\\\lstick{$\ket{0}$}
+	& \qw
+	& \gate{X}
+	& \gate{X}
+	& \qw
+	& \qw
+	& \gate{Z}
+	& \qw \rstick[wires=7]{$\ket{\psi}_L$}
+\\\lstick{$\ket{0}$}
+	& \qw
+	& \gate{X}
+	& \qw
+	& \gate{X}
+	& \qw
+	& \gate{Z}
+	& \qw
+\\\lstick{$\ket{\psi}$}
+	& \ctrl{4} \gategroup[5,steps=1,style={dashed,rounded corners,fill=primary!60},background,label style={label position=below,anchor=north,yshift=-0.2cm}]{unprotected}
+	& \qw
+	& \gate{X}
+	& \gate{X}
+	& \qw
+	& \gate{Z}
+	& \qw
+\\\lstick{$\ket{0}$}
+	& \qw
+	& \gate{X}
+	& \gate{X}
+	& \gate{X}
+	& \qw
+	& \gate{Z}
+	& \qw
+\\\lstick{$\ket{0}$}
+	& \qw
+	& \gate{X}
+	& \qw
+	& \qw
+	& \qw
+	& \gate{Z}
+	& \qw
+\\\lstick{$\ket{0}$}
+	& \gate{X}
+	& \qw
+	& \gate{X}
+	& \qw
+	& \qw
+	& \gate{Z}
+	& \qw
+\\\lstick{$\ket{0}$}
+	& \gate{X}
+	& \qw
+	& \qw
+	& \gate{X}
+	& \qw
+	& \gate{Z}
+	& \qw
+\end{quantikz}
+```
+
+To repeat ourselves, the very first step of this circuit that enacts
+$$
+	\ket{0}\ket{0}\ket{\psi}\ket{0}\ket{0}\ket{0}\ket{0}
+	\longmapsto \alpha\ket{0000000} + \beta\ket{0010011}
+$$
+(where $\ket{\psi}=\alpha\ket{0} + \beta\ket{1}$) is *not* protected by any error correction scheme.
+If $\ket{\psi}$ is some easily reproducible state, like $\ket{0}$, then we don't really mind so much, since we could instead use a circuit where all seven qubits are initially in state $\ket{\psi}$, avoiding this problem altogether.^[Thanks to the no-cloning theorem (Section \@ref(no-cloning-and-no-go)), we know that there is no way of getting around this problem of only having one copy of the state $\ket{\psi}$ that will work for any possible input --- only if $\ket{\psi}$ is something already known. So the preparation part of the circuit doesn't clone the input state, but instead "smears it out" across three qubits instead of one, just like we mentioned in Section \@ref(correcting-bit-flips).]
+But if $\ket{\psi}$ is the outcome of some previous computation, or just a state that we don't have complete knowledge of, then we will always be faced with some uncertainty --- did this preparation part of the circuit undergo an error or not?
+These sorts of problems are avoided if we can design truly fault-tolerant computational systems, instead of relying on mere error correction.
+
+Now let's look at the second option from before: encoding and then applying $X_L$.
+Imagine that we were able to construct the following circuit:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=2.5}
+\begin{quantikz}
+	\lstick{$\ket{\psi}$}
+	& \ctrl{1}
+	& \targ{}
+  & \qw \rstick{$\ket{0}$}
+\\\lstick{$\ket{0}_L$}
+	& \gate{X_L} \qwbundle[alternate]{}
+  & \ctrlbundle{-1}
+  & \qwbundle[alternate]{} \rstick{$\ket{\psi}_L$}
+\end{quantikz}
+```
+
+This would transfer the state $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$ into a logical version $\ket{\psi}_L$, since it enacts the transformations
+$$
+	\begin{aligned}
+		(\alpha\ket{0} + \beta\ket{1})\ket{0}_L
+		&\longmapsto \alpha\ket{0}\ket{0}_L + \beta\ket{1}\ket{1}_L
+	\\&\longmapsto \ket{0}(\alpha\ket{0}_L + \beta\ket{1}_L).
+	\end{aligned}
+$$
+But what do we actually mean by this circuit?
+We haven't defined controlled-$X_L$, nor what it means for a c-$\NOT$ to be controlled by a logical state.
+
+The first is reasonably simple: if the control qubit is in state $\ket{1}$, then we want to apply $X_L$ to the target.
+Since $X_L$ can be^[If we want to keep the circuit as simple as possible, then we should choose the smallest weight representative of $X_L$, which might not be just a tensor product of all $X$ operators. For example, in the seven-qubit code there is an implementation of $X_L$ of weight $3$.] expressed as a tensor product of Pauli $X$ operators, this means that the controlled-$X_L$ is just a bunch of controlled-$\NOT$ gates, each controlled by the top qubit, and targeting each of the qubits of the encoded state.
+
+The second step is maybe not so obvious, but there's a trick that we can use here!
+We know that the top qubit should end in the $\ket{0}$ state, so we can do anything we want to it.
+For example, let's apply a Hadamard gate and then measure it --- why not?
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3}
+\begin{quantikz}
+	\lstick{$\ket{\psi}$}
+	& \ctrl{1}
+	& \targ{1}
+  & \gate{H}
+  & \meter{}
+\\\lstick{$\ket{0}_L$}
+	& \gate{X_L} \qwbundle[alternate]{}
+  & \ctrlbundle{-1}
+  & \qwbundle[alternate]{}
+  & \qwbundle[alternate]{} \rstick{$\ket{\psi}_L$}
+\end{quantikz}
+```
+
+But now we can recall how controlled-$\NOT$ (which is simply a controlled-$X$) interacts with the Hadamard: the circuit above is equivalent to the circuit below.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3.5}
+\begin{quantikz}
+	\lstick{$\ket{\psi}$}
+	& \ctrl{1}
+  & \gate{H}
+  & \ctrl{1}
+  & \meter{}
+\\\lstick{$\ket{0}_L$}
+	& \gate{X_L} \qwbundle[alternate]{}
+  & \qwbundle[alternate]{}
+  & \gate{Z_L} \qwbundle[alternate]{}
+  & \qwbundle[alternate]{} \rstick{$\ket{\psi}_L$}
+\end{quantikz}
+```
+
+This is a circuit that we could build, since we know all about the many implementations of $X_L$ and $Z_L$ thanks to the stabiliser formalism.
+If we really like, however, we could go one step further and replace the controlled-$Z_L$ with a $Z_L$ after the measurement:
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3.5}
+\begin{quantikz}
+	\lstick{$\ket{\psi}$}
+	& \ctrl{1}
+  & \gate{H}
+  & \meter{} \vcw{1}
+\\\lstick{$\ket{0}_L$}
+	& \gate{X_L} \qwbundle[alternate]{}
+  & \qwbundle[alternate]{}
+  & \gate{Z_L} \qwbundle[alternate]{}
+  & \qwbundle[alternate]{} \rstick{$\ket{\psi}_L$}
+\end{quantikz}
+```
+
+
+
+
+
+## *Remarks and exercises* {#remarks-and-exercises-error-correction}
+
+
+
+### Error correcting conditions for the three-qubit code
+
+When building the Shor $[[9,1,3]]$ code, we used the three-qubit code twice: once to correct for $X$-errors, and once for $Z$-errors.
+However, there is no reason why we couldn't instead have used one copy to correct for $Y$-errors instead of $X$-errors, and we can see this using the dot-error diagrams.
+
+Consider the stabiliser code given by $\mathcal{S}=\langle ZZ\id,\id ZZ\rangle$.
+In Figure \@ref(fig:all-weight-1-errors-three-qubit-code) we draw all the computational errors of weight at most $1$, and we see that this does *not* describe a correctable scenario.
+That is, as we already know, the three-qubit code cannot alone correct for all single-qubit errors.
+
+(ref:all-weight-1-errors-three-qubit-code-caption) All computational errors of weight at most $1$ for the three-qubit code given by $\langle ZZ\id,\id ZZ\rangle$. Note that this describes a *non*-correctable scenario. In fact, *both* of the two rules are broken.
+
+```{r all-weight-1-errors-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:all-weight-1-errors-three-qubit-code-caption)',fig.width=2.25}
+\begin{tikzpicture}
+	\ErrorDotDiagram{(1,1),(2,4),(3,4),(4,4),(1,5),(3,8),(1,9),(4,12),(1,13),(2,16)}
+\end{tikzpicture}
+```
+
+But now let's look at $X$-, $Y$-, and $Z$-errors all individually and see what happens.
+As Figure \@ref(fig:xyz-type-weight-1-errors-three-qubit-code) shows, the three-qubit code given by $\langle ZZ\id,\id ZZ\rangle$ can correct for all $X$-errors (as we already knew), but also for all $Y$-errors!
+
+(ref:xyz-type-weight-1-errors-three-qubit-code-caption) Different types of computational errors of weight at most $1$. *Left to right:* $X$-type errors (correctable); $Y$-type errors (correctable); $Z$-type errors (non-correctable).
+
+```{r xyz-type-weight-1-errors-three-qubit-code,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:xyz-type-weight-1-errors-three-qubit-code-caption)',fig.width=8}
+\begin{tikzpicture}
+	\begin{scope}
+		\ErrorDotDiagram{(1,1),(1,5),(1,9),(1,13)}
+  \end{scope}
+	\begin{scope}[shift={(4,0)}]
+		\ErrorDotDiagram{(1,1),(3,8),(4,12),(2,16)}
+  \end{scope}
+	\begin{scope}[shift={(8,0)}]
+		\ErrorDotDiagram{(1,1),(2,4),(3,4),(4,4)}
+  \end{scope}
+\end{tikzpicture}
+```
+
+
+
+### The smallest $d=3$ code, full stop
+
+We have already seen the Shor $[[9,1,3]]$ code, which can protect against any single-qubit error.
+Despite its simplicity, it is not the smallest code that can do this: that title belongs to the $[[5,1,3]]$ stabiliser code, given by
+$$
+	\mathcal{S}
+	= \langle XZZX\id, \id ZXXZ, X\id XZZ, ZX\id XZ\rangle
+$$
+shown as a Tanner graph in Figure \@ref(fig:five-qubit-code-tanner).
+Note that the stabiliser generators (i.e. parity checks) are related to each other by cyclic shifts: we just take different length-five chunks from the infinite string $XZZX\id XZZX\id XZZX\id\ldots$.
+This code is unusual compared to the ones we have seen before, since it's actually impossible to write its generators as operators that consist of either all $X$ or all $Z$.
+
+(ref:five-qubit-code-tanner-caption) The Tanner graph for the $[[5,1,3]]$ stabiliser code. Solid lines represent $X$-checks, and dashed ones $Z$-checks.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.cap='(ref:five-qubit-code-tanner-caption)',fig.width=3.5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d1) at (0,0) {$d_1$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d2) at (1,0) {$d_2$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d3) at (2,0) {$d_3$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d4) at (3,0) {$d_4$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d5) at (4,0) {$d_5$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s1) at (1,1.5) {$s_1$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s2) at (3,1.5) {$s_2$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s3) at (1,-1.5) {$s_3$};
+  \node[draw,fill=secondary!60,minimum size=5mm] (s4) at (3,-1.5) {$s_4$};
+  %
+  \draw (s1) to (d1);
+  \draw[dashed] (s1) to (d2);
+  \draw[dashed] (s1) to (d3);
+  \draw (s1) to (d4);
+  %
+  \draw (s2) to (d2);
+  \draw[dashed] (s2) to (d3);
+  \draw[dashed] (s2) to (d4);
+  \draw (s2) to (d5);
+  %
+  \draw (s3) to (d1);
+  \draw (s3) to (d3);
+  \draw[dashed] (s3) to (d4);
+  \draw[dashed] (s3) to (d5);
+  %
+  \draw[dashed] (s4) to (d1);
+  \draw (s4) to (d2);
+  \draw (s4) to (d4);
+  \draw[dashed] (s4) to (d5);
+\end{tikzpicture}
+```
+
+This $[[5,1,3]]$ code truly is optimal, in that it is the smallest possible^[Note that this code is *not* a CSS code! To prove this, we could use theorems about **transversal gates**. The smallest CSS code with $d=3$ is described in Exercise \@ref(smallest-d-3-css-code).] quantum error correcting code with $d=3$.
+Indeed, suppose that we have $n$ qubits representing one logical qubit, and each error $X$, $Y$, or $Z$ on any of these $n$ qubits maps the two-dimensional codespace to a different, mutually orthogonal subspace.^[Here we are tacitly assuming that the code is **non-degenerate** (see Exercise \@ref(non-degenerate-codes)).]
+This means that we have to fit the codespace, plus $3n$ two-dimensional subspaces, into the $2^n$-dimensional Hilbert space associated with the $n$ qubits.
+This implies that we need to satisfy
+$$
+  2(1+3n) \leq 2^n
+$$
+which tells us that we must have at least $n\geq5$.
+
+The counting argument above tells us that the smallest code must have *at least* five qubits, but doesn't tell us if we can actually make one with exactly five qubits!
+How do we actually go about finding optimal codes then?
+The answer is simply that we do not know --- there is no universal prescription for designing optimal quantum codes.
+But we do know quite a few things about designing *good* quantum codes.
+
+One last thing to mention is how this code displays that quantum codes can be used for more than just error correction.
+The $[[5,1,3]]$ code gives a way of designing a [**$((3,5))$ quantum secret sharing**](https://en.wikipedia.org/wiki/Quantum_secret_sharing) protocol.
+
+
+
+### Hamming code encodings and decodings
+
+1. How is the binary message $0101$ encoded in the Hamming $[7,4,3]$ code?
+2. If we receive the string $1011011$ from Alice, who encoded her message in the Hamming $[7,4,3]$ code, then what is the error syndrome? What correction should we make? What is the decoded message?
+
+
+
+### Generator and parity-check matrices {#generator-and-parity-check-matrices}
+
+Show that, if the $(n\times k)$ generator matrix for an $[n,k,d]$ linear code is written in the form
+$$
+	G
+	= \begin{bmatrix}
+		\id
+	\\P
+	\end{bmatrix}
+$$
+where $P$ is an $((n-k)\times k)$ binary matrix, then the parity-check matrix can be written as
+$$
+	H
+	= \begin{bmatrix}
+		P & \id
+	\end{bmatrix}.
+$$
+
+
+
+### A big parity check matrix
+
+Consider the following parity-check matrix of a classical $[n,k,7]$ code:
+$$
+	\left[
+		\begin{array}{cccccccccccccccccccccccc}
+			1&0&0&1&1&1&0&0&0&1&1&1&1&0&0&0&0&0&0&0&0&0&0
+		\\1&0&1&0&1&1&0&1&1&0&0&1&0&1&0&0&0&0&0&0&0&0&0
+		\\1&0&1&1&0&1&1&0&1&0&0&0&0&0&1&0&0&0&0&0&0&0&0
+		\\1&0&1&1&1&0&1&1&0&1&0&0&0&0&0&1&0&0&0&0&0&0&0
+		\\1&1&0&0&1&1&1&0&1&1&0&0&0&0&0&0&1&0&0&0&0&0&0
+		\\1&1&0&1&0&1&1&1&0&0&0&1&0&0&0&0&0&1&0&0&0&0&0
+		\\1&1&0&1&1&0&0&1&1&0&1&0&0&0&0&0&0&0&1&0&0&0&0
+		\\1&1&1&0&0&1&0&1&0&1&1&0&0&0&0&0&0&0&0&1&0&0&0
+		\\1&1&1&0&1&0&1&0&0&0&1&1&0&0&0&0&0&0&0&0&1&0&0
+		\\1&1&1&1&0&0&0&0&1&1&0&1&0&0&0&0&0&0&0&0&0&1&0
+		\\0&1&1&1&1&1&1&1&1&1&1&1&0&0&0&0&0&0&0&0&0&0&1
+		\end{array}
+	\right]
+$$
+
+1. What are the values of the parameters $n$ and $k$?
+
+2. If we receive the bit string
+	$$
+		x = 00101001011011000110101
+	$$
+	and assume that no more than three errors have occurred, what are the locations of the errors?
+
+3. Show that we could use two copies of this code to build a CSS code.
+
+4. If we build a CSS code using this classical code, what parameters does it have? That is, what is its specification as an $[[n,k,d]]$ code?
+
+5. Given a state $\ket{\psi}$ of 23 qubits, how would you measure the value of the first stabiliser
+	$$
+		X_1X_4X_5X_6X_{10}X_{11}X_{12}X_{13}?
+	$$
+
+6. If we were to write out $\ket{0}_L$ for the CSS code, how many different basis states would be in the superposition?
+
+
+
+### Using Tanner graphs
+
+Consider the Tanner graph below.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=3.5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{tikzpicture}
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d1) at (0,0) {$d_1$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d2) at (1,0) {$d_2$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d3) at (2,0) {$d_3$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d4) at (3,0) {$d_4$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d5) at (4,0) {$d_5$};
+	\node[draw,fill=secondary!60,minimum size=5mm] (s) at (1.5,1.5) {$s$};
+	\draw (s) to (d1);
+	\draw (s) to (d4);
+	\draw[dashed] (s) to (d2);
+	\draw[dashed] (s) to (d3);
+\end{tikzpicture}
+```
+
+Recall that we use solid lines to denote $X$-parity checks and dashed lines to denote $Z$-parity checks.
+
+1. What stabiliser does this Tanner graph define?
+2. Add to the Tanner graph the definition for a second stabiliser $g_2=\id XZZX$. How can we visually confirm that the two stabilisers commute?
+
+At the end of Section \@ref(the-hamming-code), in Figure \@ref(fig:quantum-circuit-to-tanner-graph), we claimed an equivalence between Tanner graphs (for detecting the parity of $X$ errors) and circuits.
+Consider the simpler example below.
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=5}
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\begin{quantikz}
+	\lstick{$\ket{0}$}
+	& \targ{}
+	& \targ{}
+	& \meterD{s}
+\\\lstick[wires=2]{$\ket{\psi}$}
+	& \ctrl{-1}
+	& \qw
+	& \qw
+\\& \qw
+	& \ctrl{-2}
+	& \qw
+\end{quantikz}
+\quad
+\begin{tikzpicture}[baseline=0.07cm]
+	\draw[dashed,gray] (-1,0.8) to (3,0.8);
+	\draw[dashed,gray] (-1,0) to (3,0);
+	\draw[dashed,gray] (-1,-0.65) to (3,-0.65);
+	%
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d1) at (0,0) {$d_1$};
+	\node[fill=primary!60,draw=black,circle,inner sep=0.8mm] (d2) at (2,-0.65) {$d_2$};
+	\node[draw,fill=secondary!60,minimum size=5mm] (s) at (1,0.8) {$s$};
+	\draw (d1) to (s) to (d2);
+\end{tikzpicture}
+```
+
+3. Prove that these two are equivalent.
+4. Draw the circuit for measuring the parity of $Z$ errors.
+5. Draw the Tanner graph for the Shor $[[9,1,3]]$ code.
+
+
+
+### Five-qubit repetition code
+
+Consider the five-qubit repetition code
+$$
+	\begin{aligned}
+		\ket{0}
+		&\mapsto \ket{+}^{\otimes5}
+	\\\ket{1}
+		&\mapsto \ket{-}^{\otimes5}.
+	\end{aligned}
+$$
+
+1. What are the stabilisers of this code?
+2. What is the normaliser of this code?
+3. Which of the following sets of errors satisfy the error correcting conditions for this code?
+		a. $X_1$, $Z_5$
+		b. $X_1$, $X_2$, $X_3$, $X_4$
+		c. $Z_1$, $Z_2$, $Z_3$, $Z_4$
+		d. $Z_1Z_2$, $Z_2Z_4$, $Z_1Z_4$
+
+
+
+### An error in the Steane $[[7,1,3]]$ code
+
+One logical qubit is encoded in seven physical qubits using the Steane $[[7,1,3]]$ code, which then experiences the error
+$$
+	E = X\id Y\id\id Z\id.
+$$
+
+1. What is the resulting error syndrome?
+2. What is the smallest-weight error with the same error syndrome as $E$?
+3. If we apply the smallest-weight error from above as our correction, then what is the net logical error on the encoded qubit?
+
+
+
+### Non-degenerate codes {#non-degenerate-codes}
+
+An $[n,k,d]$ code is said to be **non-degenerate** if every Pauli operator of weight $\leq\lfloor d/2\rfloor$ has a distinct error syndrome.
+
+Prove that all the stabilisers for a non-degenerate code have weight $\geq d$.
+
+
+
+### The smallest $d=3$ CSS code {#smallest-d-3-css-code}
+
+The $[[7,1,3]]$ code is the smallest possible CSS code with distance $d=3$.
+Let's prove that now, making the simplification that we will only consider *non-degenerate* codes.
+
+1. If we construct a CSS code using two parity-check matrices $H_1$ and $H_2$, with $m_1$ and $m_2$ rows (respectively), and we want our code to encode one logical qubit into $n$ physical qubits, then how are the numbers $m_1$, $m_2$, and $n$ related?
+
+2. Explain why the columns of a non-degenerate $d=3$ code must be distinct.
+	Hence conclude that $2^{m_i}\geq n+1$ for $i=1,2$.
+
+3. Conclude that the smallest possible non-degenerate CSS code with $d=3$ has $n=7$ qubits.
+
+
+
+### CSS codes from a single matrix
+
+Let $H$ be an $(n\times m)$ binary matrix, with $m>n$, whose rows are linearly independent.
+When taken as a parity-check matrix, it thus defines an $[m,m-n,d]$ code.
+Even though $H^T$ cannot be the parity-check matrix of a code (simply because $m>n$), it still has a well defined distance $d^T$.
+
+Show that
+$$
+	\begin{aligned}
+		H_X
+		&=
+		\begin{bmatrix}
+			\id_{m\times m}\otimes H
+			& H^T\otimes\id_{n\times n}
+		\end{bmatrix}
+	\\H_Z
+		&=
+		\begin{bmatrix}
+			H\otimes\id_{n\times n}
+			& \id_{m\times m}\otimes H^T
+		\end{bmatrix}
+	\end{aligned}
+$$
+defines a CSS code with specification $[[n^2+m^2,(n-m)^2,\min(d,d^t)]]$.
+
+
+
+### Error-correcting conditions, algebraically {#error-correcting-conditions-algebraically}
+
+Let $\mathcal{S}\leq\mathcal{P}_n$ be a stabiliser group, and let $\mathcal{E}\subseteq\mathcal{P}_n$ be a set of physical errors.
+Prove that the stabiliser code defined by $\mathcal{S}$ can perfectly correct for all errors in $\mathcal{E}$ if and only if
+$$
+	E_1^\dagger E_2
+	\in N(\mathcal{S})\setminus\mathcal{S}
+$$
+for all $E_1,E_2\in\mathcal{E}$.
+
+
+
+### Steane error correction: towards fault tolerance
+
+We have seen how we can measure the stabilisers of a stabiliser code by using a Hadamard test, resulting in $\pm1$ outcomes.
+From these, we can determine where the errors are likely to have occurred and then correct them.
+In Chapter \@ref(fault-tolerance), we will see that the scenario of fault-tolerant computation requires us to be very careful with how we construct our error-correcting circuits in order to minimise the propagation of faults that occur during the error-process itself.
+A particularly useful strategy is to not have multiple qubits interacting, but this contradicts the measurements of the stabilisers, since these, by definition, act on many qubits.
+There are a variety of ways to deal with this.
+In the case of CSS codes, Steane himself provided a particularly elegant method, which we will now explore.
+
+Note that, while we are *motivated* by the possibility of there being faults during the error correction, for now we will still assume that the error-correction process proceeds perfectly, and we are only trying to identify and fix errors on the incoming (logical) state $\ket{\psi}_L$.
+
+As we shall later see, CSS codes all have **transversal** $\cNOT$ gates: applying a $\cNOT$ to each physical qubit gives exactly the effect of a $\cNOT$ on the logical qubit.
+In other words, we can implement the logical operator $\cNOT_L$ by taking a tensor product of usual controlled-$\texttt{NOT}$ gates.
+What this means for us right now is that, at the logical level, we can consider circuits such as^[We are assuming the availability of the logical states $\ket{0}_L$ and $\ket{+}_L$, but **state preparation** is another challenge that we will eventually have to deal with!]
+
+```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex"),fig.width=4}
+\begin{quantikz}
+  \lstick{$\ket{\psi}_L$}
+  & \ctrl{1}
+  & \qw \rstick{$\ket{\psi}_L$}
+\\\lstick{$\ket{0}_L$}
+  & \targ \qw
+  & \qw \rstick{$\ket{0}_L$}
+\end{quantikz}
+\qquad
+\begin{quantikz}
+  \lstick{$\ket{\psi}_L$}
+  & \ctrl{1}
+  & \qw \rstick{$\ket{\psi}_L$}
+\\\lstick{$\ket{+}_L$}
+  & \targ \qw
+  & \qw \rstick{$\ket{+}_L$}
+\end{quantikz}
+```
+
+1. Verify that the above circuits do indeed have the claimed outputs.
+
+This means that, if the qubits are in the logical space (i.e. have undergone no errors), then the action of the circuit is trivial.
+So what happens if there's an error?
+Let's assume that we're working with an $[[n,1,d]]$ CSS code.
+
+2. If an $X$ or $Z$ error has already affected the input logical state $\ket{\psi}_L$ on a specific physical qubit (say, the $i$-th) in the circuit on the left above, what are the possible errors on the final state?
+3. If an $X$ or $Z$ error has already affected the input logical state $\ket{\psi}_L$ on a specific physical qubit (say, the $i$-th) in the circuit on the right above, what are the possible errors on the final state?
+
+In other words, we see that single errors cannot propagate to more than one error on each logical qubit.
+This will prove to be very useful when thinking about fault tolerance, as the same is also true if errors occur during the circuit.
+Now we should see how error correction works.
+Let's consider the circuit on the left above.
+
+4. The $X$ stabilisers are defined by the rows of a parity-check matrix $H$.
+	We measure each physical qubit of the second logical qubit, $\ket{0}_L$, in the $X$ basis at the end of the circuit.
+	In the absence of any errors, we get a measurement outcome $y\in\{0,1\}^n$.
+	What is the value of $H\cdot y$?
+5. If a weight-$w$ $Z$-error occurs on the state $\ket{\psi}_L$ *before* the (transversal) controlled-$\texttt{NOT}$, where $2w<d$, then what are the possible measurement outcomes?
+	How do we identify which corrections to make?
+
+So this circuit allows us to correct $Z$-errors on the input, but it does absolutely nothing to $X$-errors.
+
+6. Show that the circuit on the right above enables the correction of $X$-errors in a similar way, where the extra logical qubit is now measured by measuring each individual qubit in the $Z$ (i.e. computational) basis.
