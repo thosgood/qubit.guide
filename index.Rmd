@@ -1,9 +1,9 @@
 ---
 published: false
 title: "Introduction to Quantum Information Science"
-author: "[Artur Ekert](https://www.arturekert.org/), [Tim Hosgood](https://thosgood.com), [Alastair Kay](http://www.ma.rhul.ac.uk/akay/), [Chiara Macchiavello](https://fisica.unipv.it/personale/Persona.php?ID=55)"
-date: "Last updated: `r format(Sys.Date(), format='%d %B %Y')` [(see change history)](https://github.com/thosgood/qubit.guide/commits/main)"
-description: "An introductory series of lectures on quantum computing."
+author: "[Artur Ekert](https://www.arturekert.org/), [Timothy Hosgood](https://thosgood.com), [Alastair Kay](http://www.ma.rhul.ac.uk/akay/), [Chiara Macchiavello](https://fisica.unipv.it/personale/Persona.php?ID=55)"
+date: "Last updated: `r format(Sys.Date(), format='%d %B %Y')`"
+description: "An introductory textbook on quantum information science."
 favicon: "favicon.ico"
 ---
 
@@ -15,13 +15,18 @@ favicon: "favicon.ico"
 \providecommand{\av}[1]{\langle#1\rangle}
 \providecommand{\tr}{\operatorname{tr}}
 \providecommand{\id}{\mathbf{1}}
+\providecommand{\range}{\operatorname{range}}
 \providecommand{\gcd}{\operatorname{gcd}}
 \providecommand{\hcf}{\operatorname{hcf}}
 \providecommand{\divides}{\mathbin{\vert}}
+\providecommand{\NOT}{\texttt{NOT}}
+\providecommand{\cNOT}{\texttt{c-NOT}}
+
 \providecommand{\diag}[2]{\begin{bmatrix}#1&0\\0&#2\end{bmatrix}}
 \providecommand{\smalldiag}[2]{\left(\begin{smallmatrix}#1&0\\0&#2\end{smallmatrix}\right)}
 \providecommand{\mqty}[1]{\begin{matrix}#1\end{matrix}}
 \providecommand{\bmqty}[1]{\begin{bmatrix}#1\end{bmatrix}}
+
 \renewcommand{\leq}{\leqslant}
 \renewcommand{\geq}{\geqslant}
 \renewcommand{\mod}[1]{\ \mathrm{mod}\ #1}
@@ -50,12 +55,10 @@ favicon: "favicon.ico"
 ::: {.idea specific_to="html"}
 **Most recent changes:**
 
-- *[New content]* Sections \@ref(quantum-randomness) to \@ref(remarks-and-exercises-bell): quantum randomness, device independence, and Bell test loopholes; corresponding exercises
-- *[New content]* Sections \@ref(phase-estimation) to \@ref(shors-algorithm): phase estimation, (inverse) quantum Fourier transform, hidden order determination, and Shor's algorithm
-- *[New content]* Section \@ref(approximate-phase-estimation): approximate phase estimation
-- *[New content]* Section \@ref(correcting-quantum-channels): correctable channels, decoherence and interference, classical [3,1,3]-code, and Shor [[9,1,3]]-code; corresponding exercises
-- Reordered some chapters and parts
-- Improved PDF formatting
+- *[New content]* Chapter \@ref(decoherence-and-recoherence): correctable channels, decoherence and interference, classical [3,1,3] code, and Shor [[9,1,3]] code; corresponding exercises
+- *[New content]* Chapter \@ref(error-correction): Hamming codes, linear codes, CSS codes, logical states and operators, error-correcting conditions, error-protected encoding; corresponding exercises
+
+[Full change history](https://github.com/thosgood/qubit.guide/commits/main)
 :::
 
 
@@ -70,14 +73,13 @@ In practice, this means that we don't worry to much about high-level mathematics
 That is not to say that we do not use mathematics "properly" --- in these notes you'll find a perfectly formal treatment of e.g. quantum channels via completely positive trace-preserving maps in the language of linear algebra --- but rather than putting too many footnotes with technical caveats and explanations throughout the main text, we opt to collect them all together into one big "warning" here:
 
 ::: {.idea latex=""}
-The mathematics underlying quantum theory is a vast and in-depth subject, most of which we will never touch upon, some of which we will only allude to, and the rest of which we will cover only in the level of detail necessary to our overarching goal (give or take some interesting mathematical detours).
+The mathematics underlying quantum theory is a vast and in-depth subject, most of which we will never touch upon, some of which we will only allude to, and the rest of which we will cover only in the level of detail necessary for our overarching goal (give or take some interesting mathematical detours).
 :::
 
 But this then poses the question of what the overarching goal of this book actually is.
-Our answer is this:
 
 ::: {.idea latex=""}
-To help an eager reader understand what quantum information science is all about, and for them to realise which facets of it they would like to study in more detail.
+This book aims to help the eager reader understand what quantum information science is all about, and for them to realise which facets of it they would like to study in more detail.
 :::
 
 But this does not mean that our treatment is cursory!
@@ -88,7 +90,7 @@ The only real prerequisites are a working knowledge of complex numbers and vecto
 A basic knowledge of quantum mechanics (especially in the simple context of finite dimensional state spaces, e.g. state vectors, composite systems, unitary matrices, Born rule for quantum measurements) and some ideas from classical theoretical computer science (complexity theory, algorithms) would be helpful, but is *not at all* necessary.
 
 Of course, even if you aren't familiar with the formal mathematics of complex numbers and linear algebra, then that shouldn't stop you from reading this book if you want to.
-You might be surprised at how much you can [black box](https://en.wikipedia.org/wiki/Black_box) the bits that you don't understand!
+You might be surprised at how much you can [black box](https://en.wikipedia.org/wiki/Black_box) the bits that you don't understand.
 The caveat stands, however, that, to *really* get to grips with this subject, at least some knowledge of maths is necessary --- and this is not a bad thing!
 
 On that note, every chapter ends with a section called "*Remarks and exercises*".
@@ -97,6 +99,7 @@ For this book, it is doubly true that *you should at least read these sections*,
 
 Finally, throughout this text you will find some technical asides.
 These are *not at all* necessary reading, but are just there to provide the exceptionally eager reader (or perhaps those with a more formal mathematical background) with some extra context, as well as some pointers towards further reading.
+They are usually intentionally vague and scarce in detail.
 
 
 ```{r, child = if (knitr::is_html_output()) 'source/_web-instructions.Rmd'}
@@ -107,9 +110,43 @@ These are *not at all* necessary reading, but are just there to provide the exce
 
 
 
+## How to cite this book {-}
+
+BibLaTeX:
+
+```{r,comment=""}
+first <- '@online{qubitguide
+  author = {Ekert, A and Hosgood, T and Kay, A and Macchiavello, C}
+  title = {{Introduction to Quantum Information Science}}
+  url = {https://qubit.guide}
+  date = {'
+
+last <- '}
+}'
+
+cat(first, format(Sys.Date(), format='%Y-%m-%d'), last, sep="")
+```
+
+BibTeX:
+
+```{r,comment=""}
+first <- '@misc{qubitguide
+  author = {Ekert, A and Hosgood, T and Kay, A and Macchiavello, C}
+  title = {{Introduction to Quantum Information Science}}
+  howpublished = {\\url{https://qubit.guide}}
+  date = {'
+
+last <- '}
+}'
+
+cat(first, format(Sys.Date(), format='%Y-%m-%d'), last, sep="")
+```
+
+
+
 ## Acknowledgements {-}
 
-We thank the following for their helpful comments and corrections, as well as for catching typos: Zhenyu Cai, Jedrzej Burkat, Maryam Khaqan, Rolando Reiner, Jan Baltussen, Linus Kelsey, Edgardo Deza, Elizabeth Ealing, L.L. Salcedo, Giuseppe Bisicchia.
+We thank the following for their helpful comments and corrections, as well as for catching typos: Zhenyu Cai, Jedrzej Burkat, Maryam Khaqan, Rolando Reiner, Jan Baltussen, Linus Kelsey, Edgardo Deza, Elizabeth Ealing, L.L. Salcedo, Giuseppe Bisicchia, Tom Scruby.
 We also appreciate the work of Yihui Xie in developing the [Bookdown package](https://bookdown.org/yihui/bookdown/) with which this e-book was built.
 
 The creation and hosting of the online book was made possible by the [Centre for Quantum Technologies](https://cqt.quantumlah.org/), the [University of Oxford Mathematical Institute](https://www.maths.ox.ac.uk/), and the [Okinawa Institute of Science and Technology](https://www.oist.jp/).
@@ -617,6 +654,10 @@ Preserving the inner product implies preserving the norm induced by this product
 This whole package of stuff and properties and structure (i.e. finite dimensional Hilbert spaces with linear maps and the dagger) bundles up into an abstract framework called a [**dagger compact category**](https://en.wikipedia.org/wiki/Dagger_compact_category).
 We will not delve into the vast world of category theory in this book, and to reach an understanding of all the ingredients that go into the one single definition of dagger compact categories would take more than a single chapter.
 But it's a good idea to be aware that there are researchers in quantum information science who work *entirely* from this approach, known as [**categorical quantum mechanics**](https://en.wikipedia.org/wiki/Categorical_quantum_mechanics).
+
+One particular method within this approach is the use of [**string diagrams**](https://en.wikipedia.org/wiki/String_diagram), which allow for the use of so-called diagrammatic reasoning, with the [**ZX-calculus**](https://en.wikipedia.org/wiki/ZX-calculus) being a particularly successful example.
+For an introduction to string diagrams of this flavour, it's maybe a good idea to start with understanding how they can express the linear algebra that you already know.
+For example, Pawel Sobocinski's ["Graphical Linear Algebra"](https://graphicallinearalgebra.net) aims to teach linear algebra entirely through the introduction of string diagrams.
 :::
 
 
@@ -890,14 +931,16 @@ In the table above we can see that, for example, if we rolled a 1 on a six-sided
 Something else that arises in these examples the notion of **distinguishable outcomes**, when we look at how the sample space of flipping two coins depends on whether or not they are identical.
 That is, if we have a gold coin and a silver coin then it makes sense to say that $HT$ is different from $TH$, because the first means that the gold coin was the one that landed on heads, and the second means that it was instead the silver coin.
 But if we have two identical coins, then how can we distinguish between $HT$ and $TH$?
-We would have to be able to point to one of them, say, the one on the left, and say "that's the coin that's on the left", but if we can do this then by definition we can distinguish between them!^[Another possibility would be to distinguish the coins *in time* instead of space, i.e. to flip one coin first and then the other afterwards. A coin cannot remember what happened the last time it was flipped, so is there really a difference between flipping a single coin twice or two coins once? In the eyes of probability theory: no.]
+We would have to be able to point to one of them, say, the one on the left, and say "that's the coin that's on the left", but if we can do this then by definition we can distinguish between them!^[Another possibility would be to distinguish the coins *in time* instead of space, i.e. to flip one coin first and then the other afterwards. A coin cannot remember what happened the last time it was flipped, so is there really a difference between flipping a single coin twice or two coins once? In the eyes of probability theory, the answer is "no".]
 In general, the sample space consists only of distinguishable outcomes, but what counts as distinguishable really depends on the specifics of the experiment that we have set up.
 
-:::: {.technical title="Measure theory" latex="{Measure theory}"}
-::: {.todo latex=""}
-<!-- TO-DO: .technical about measure spaces -->
+::: {.technical title="Measure theory" latex="{Measure theory}"}
+This approach towards probability, where we think of a "scenario" as such a triple $(\Omega,\mathcal{F},P)$, places us firmly within the setting of [**measure theory**](https://en.wikipedia.org/wiki/Measure_(mathematics)).
+What we have described is a **probability measure**, and there are many more general types of measure that exist, but they all describe the same sort of idea: we have a set $\Omega$ that we think of as our "space", some particularly well-behaved collection $\mathcal{F}$ of subsets of $\Omega$, and a function $\mu\colon\mathcal{F}\to\mathbb{R}\sqcup\{\pm\infty\}$ known as the **measure**.
+We think of the measure $\mu$ as telling us how big any element of $\mathcal{F}$ is, be it interpreted as geometric size or, in the example of probability measures, the likelihood.
+This formalism becomes very useful when we want to do any analysis (which happens as soon as we want to deal with infinite-dimensional spaces, or even just "introduce some geometry"), such as in constructing the [**Lebesgue integral**](https://en.wikipedia.org/wiki/Lebesgue_integration).
+Thinking of probability spaces through measure theory allows us to make use of the many powerful tools of real analysis.
 :::
-::::
 
 Now we can define probability rather succinctly.
 
@@ -907,7 +950,6 @@ $$
   P(A)
   = \frac{\text{\# of elements of }A}{\text{\# of elements of }\Omega}.
 $$
-
 In particular, the probability will always be a number between $0$ and $1$.
 :::
 
@@ -919,11 +961,11 @@ Running through some of the above examples of events, we see that this definitio
 | Rolling a 6 with a single die | $1/6$ |
 | Rolling an odd number with a single die | $3/6=1/2$ |
 
-:::: {.technical title="Pascal's triangle" latex="{Pascal's triangle}"}
-::: {.todo latex=""}
-<!-- TO-DO: .technical about Pascal's triangle -->
+::: {.technical title="Pascal's triangle" latex="{Pascal's triangle}"}
+Flipping a fair coin (or actually, even an unfair one) is a common scenario in discussing probability, because it has just two outcomes --- the smallest amount you can have without things becoming purely deterministic.
+There are lots of numbers that you will see turn up time and time again in calculations of probability for binary outcome events, and most usually they are [**binomial coefficients**](https://en.wikipedia.org/wiki/Binomial_coefficient).
+These are numbers that can be read directly from the rows of [**Pascal's triangle**](https://en.wikipedia.org/wiki/Pascal%27s_triangle) (which, as is often the case in mathematics, is more deserving of being named after a different person: [Al-Karaji](https://en.wikipedia.org/wiki/Al-Karaji), or maybe [Omar Khayyam](https://en.wikipedia.org/wiki/Omar_Khayyam)), and they satisfy many interesting combinatorial patterns.
 :::
-::::
 
 Now let's look at what happens when we're interested in more than one event occurring.
 We might study the possibility of *either* event $A$ *or* event $B$ happening, where the "or" here can be **exclusive** (we want exactly one of them to happen, but *not* both) or **inclusive** (we want *at least* one of them to happen), or we could study the possibility of *both* event $A$ *and* event $B$ happening.
@@ -1027,8 +1069,8 @@ Finally, we give our two six-sided dice to a friend for them to roll in secret.
 
 6. If they tell us that they rolled two numbers that added up to 6, what is the probability that they rolled a 1?
 
-:::: {.technical title="Diagrammatic probability theory" latex="{Diagrammatic probability theory}"}
-::: {.todo latex=""}
-<!-- TO-DO: .technical about diagrammatic probability theory -->
+::: {.technical title="Diagrammatic probability theory" latex="{Diagrammatic probability theory}"}
+We mentioned in Section \@ref(operators) that a lot of the structure inherent in our formalism of quantum theory can be encapsulated by the notion of a dagger compact category, and can thus be investigated with a diagrammatic approach.
+It turns out that parts of probability theory --- specifically [**Markov processes**](https://en.wikipedia.org/wiki/Markov_chain), which describe scenarios where different events can happen with varying probabilities, but where nothing depends on the history of the scenario, only on the here-and-now --- are also amenable to such an approach.
+This leads to the definition of a **Markov category**.
 :::
-::::

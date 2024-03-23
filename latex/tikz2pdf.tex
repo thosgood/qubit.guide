@@ -1,14 +1,188 @@
 \documentclass{article}
 \usepackage[pdftex,active,tightpage]{preview}
-\usepackage{amsmath}
+\usepackage{amsmath,amssymb}
 \usepackage{tikz}
 \usetikzlibrary{quantikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.17}
-\usepackage{latex/tikz-3dplot-circleofsphere}
+\usepackage{latex/tikz-3dplot-circleofsphere} % Bloch sphere diagrams
 \usepackage{colortbl}
-%% INSERT YOUR OWN CODE HERE
+
+% General LaTeX
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\providecommand{\NOT}{\texttt{NOT}}
+\providecommand{\cNOT}{\texttt{c-NOT}}
+
+% Colours
+\definecolor{primary}{RGB}{177,98,78}
+\definecolor{secondary}{RGB}{91,132,177}
+\definecolor{tertiary}{RGB}{175,195,62}
+
+% Quantikz settings
 \tikzset{phase label/.append style={label position=above}}
+
+% Error dot diagrams
+\usetikzlibrary{calc}
+\newcommand{\ErrorDotDiagram}[1]{% a list of coordinates (from (1,1) to (4,16)) for dots
+\begin{scope}[scale=0.3]
+  \draw [fill=primary!60,thick] (0,0) rectangle (10,1);
+  \draw [fill=secondary!60,thick] (0,1) rectangle (10,4);
+  \draw [fill=primary!25,thick] (0,4) rectangle (10,5);
+  \draw [fill=secondary!25,thick] (0,5) rectangle (10,8);
+  \draw [fill=primary!25,thick] (0,8) rectangle (10,9);
+  \draw [fill=secondary!25,thick] (0,9) rectangle (10,12);
+  \draw [fill=primary!25,thick] (0,12) rectangle (10,13);
+  \draw [fill=secondary!25,thick] (0,13) rectangle (10,16);
+  \draw [dotted] (0,2) to (10,2);
+  \draw [dotted] (0,3) to (10,3);
+  \draw [dotted] (0,5) to (10,5);
+  \draw [dotted] (0,6) to (10,6);
+  \draw [dotted] (0,7) to (10,7);
+  \draw [thick] (0,8) to (10,8);
+  \draw [dotted] (0,9) to (10,9);
+  \draw [dotted] (0,10) to (10,10);
+  \draw [dotted] (0,11) to (10,11);
+  \draw [thick] (0,12) to (10,12);
+  \draw [dotted] (0,13) to (10,13);
+  \draw [dotted] (0,14) to (10,14);
+  \draw [dotted] (0,15) to (10,15);
+  %
+  \foreach \dot in {#1} % the list of grid coordinates for dots
+    \path let \p1 = \dot in node at ($(\x1*2.5,\y1)+(-1.25,-0.5)$) {$\bullet$};
+\end{scope}
+}
+
+% Surface code diagrams
+\tikzset{
+data/.style={circle,draw,fill=primary,minimum size=0.6cm},
+ancilla/.style={rectangle,draw,fill=gray!40,minimum size=0.6cm},
+zwire/.style={thick},
+xwire/.style={thick,dashed}
+}
+
+\newcommand{\plottoric}[1]{
+  \def\s{1.5cm}
+  %draw the vertices
+  \foreach \x in {0,...,#1} {
+    \foreach \y in {0,...,#1} {
+      \pgfmathtruncatemacro{\tot}{\x+\y};
+      \pgfmathtruncatemacro{\index}{\x+(#1+1)*\y};
+      \ifodd\index
+        \pgfmathtruncatemacro{\place}{(\index+1)/2};
+      \else
+        \pgfmathtruncatemacro{\place}{(\index+2)/2};
+      \fi
+      \ifodd\tot
+        \node [ancilla,alias=S\place] (a\x\y) at (\x*\s,-\y*\s) {};
+        \node [above right=0.01cm of a\x\y,inner sep=0] {$S_{\place}$};
+      \else 
+        \node [data,alias=D\place] (a\x\y) at (\x*\s,-\y*\s) {};
+        \node [above right=0.12cm of a\x\y,inner sep=0] {$D_{\place}$};
+      \fi
+    }
+  }
+  \begin{scope}[on background layer]
+    %draw horizontal/vertical lines
+    \foreach \x in {0,...,#1}{
+      %vertical
+      \ifodd\x
+        \draw [xwire] (a\x0)--(a\x#1);
+      \else
+        \draw [zwire] (a\x0)--(a\x#1);
+      \fi
+      %horizontal
+      \ifodd\x
+        \draw [zwire] (a0\x)--(a#1\x);
+      \else
+        \draw [xwire] (a0\x)--(a#1\x);
+      \fi
+    }
+  \end{scope}
+}
+
+\newcommand{\plottoricnoancilla}[1]{
+  %  \def\width{1} %there are \width+1 rows and columns
+  \def\s{1.5cm}
+  %draw the vertices
+  \foreach \x in {0,...,#1} {
+    \foreach \y in {0,...,#1} {
+      \pgfmathtruncatemacro{\tot}{\x+\y};
+      \pgfmathtruncatemacro{\index}{\x+(#1+1)*\y};
+      \ifodd\index
+        \pgfmathtruncatemacro{\place}{(\index+1)/2};
+      \else
+        \pgfmathtruncatemacro{\place}{(\index+2)/2};
+      \fi
+      \ifodd\tot
+        \coordinate [alias=S\place] (a\x\y) at (\x*\s,-\y*\s) {};
+        %\node [above right=0.01cm of a\x\y,inner sep=0] {$A_{\place}$};
+      \else 
+        \node [data,alias=D\place] (a\x\y) at (\x*\s,-\y*\s) {};
+      %\node [above right=0.12cm of a\x\y,inner sep=0] {$D_{\place}$};
+      \fi
+    }
+  }
+  \begin{scope}[on background layer]
+    %draw horizontal/vertical lines
+    \foreach \x in {0,...,#1}{
+      %vertical
+      \ifodd\x
+        \draw [xwire] (a\x0)--(a\x#1);
+      \else
+        \draw [zwire] (a\x0)--(a\x#1);
+      \fi
+      %horizontal
+      \ifodd\x
+        \draw [zwire] (a0\x)--(a#1\x);
+      \else
+        \draw [xwire] (a0\x)--(a#1\x);
+      \fi
+    }
+  \end{scope}
+}
+
+\newcommand{\plotprimal}[1]{
+  %  \def\width{1} %there are \width+1 rows and columns
+  \def\s{1.5cm}
+  %draw the vertices
+  \foreach \x in {0,...,#1} {
+    \foreach \y in {0,...,#1} {
+      \pgfmathtruncatemacro{\tot}{\x+\y};
+      \pgfmathtruncatemacro{\index}{\x+(#1+1)*\y};
+      \ifodd\index
+        \pgfmathtruncatemacro{\place}{(\index+1)/2};
+      \else
+        \pgfmathtruncatemacro{\place}{(\index+2)/2};
+      \fi
+      \ifodd\tot
+        \coordinate [alias=S\place] (a\x\y) at (\x*\s,-\y*\s) {};
+        %\node [above right=0.01cm of a\x\y,inner sep=0] {$A_{\place}$};
+      \else 
+        \node [data,alias=D\place] (a\x\y) at (\x*\s,-\y*\s) {};
+        %\node [above right=0.12cm of a\x\y,inner sep=0] {$D_{\place}$};
+      \fi
+    }
+  }
+  \begin{scope}[on background layer]
+    %draw horizontal/vertical lines
+    \foreach \x in {0,...,#1}{
+      %vertical
+      \ifodd\x
+        \draw [white] (a\x0)--(a\x#1);
+      \else
+        \draw [zwire] (a\x0)--(a\x#1);
+      \fi
+      %horizontal
+      \ifodd\x
+        \draw [zwire] (a0\x)--(a#1\x);
+      \else
+        \draw [white] (a0\x)--(a#1\x);
+      \fi
+    }
+  \end{scope}
+}
+
 \begin{document}
 \begin{preview}
 %% TIKZ_CODE %%

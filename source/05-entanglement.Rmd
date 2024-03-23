@@ -1,7 +1,7 @@
 # Entanglement {#entanglement}
 
 > About the fundamental tool of quantum computing: **entanglement**, via the formalism of **tensor products**, which was the missing ingredient from our previous formalism of quantum theory.
-> Also about various **controlled gates**, including the always useful **controlled-$\texttt{NOT}$**.
+> Also about various **controlled gates**, including the always useful **controlled-$\NOT$**.
 
 We now know everything we need to know^[For our purposes! Of course, there is a *lot* that we could still ask, but we leave these questions to quantum physicists, or scientists working in a lab.] about a single qubit and its quantum behaviour.
 But if we want to understand quantum computation --- a complicated quantum interference of many interacting qubits --- then we will need few more mathematical tools.
@@ -91,9 +91,12 @@ $$
   = \ket{\psi_1}\ket{\psi_2}
 $$
 and so we say that it is an **entangled** state.
-Informally, any bipartite state that cannot be viewed as a pair of two states pertaining to the constituent subsystems is said to be entangled.
 
-With this discussion in our minds, we can now give more formal account of the states of composite quantum systems.
+::: {.idea}
+Any bipartite state that cannot be viewed as a pair of two states pertaining to the constituent subsystems is said to be **entangled**.
+:::
+
+We'll give another, equivalent but more mathematical (and notational), definition of entanglement once we understand how tensor products work.
 
 
 
@@ -276,7 +279,7 @@ so that we are writing $\ket{7}$ to mean $\ket{111}$, and $\ket{3}$ to mean $\ke
 ## Separable or entangled? {#separable-or-entangled}
 
 ::: {.idea latex=""}
-"*Most*" vectors in $\mathcal{H}_a\otimes \mathcal{H}_b$ are entangled: they *cannot* be written as product states $\ket{a}\otimes\ket{b}$ with $\ket{a}\in\mathcal{H}_a$ and $\ket{b}\in\mathcal{H}_b$.
+"*Most*" vectors in $\mathcal{H}_a\otimes \mathcal{H}_b$ are **entangled**: they *cannot* be written as product states $\ket{a}\otimes\ket{b}$ with $\ket{a}\in\mathcal{H}_a$ and $\ket{b}\in\mathcal{H}_b$.
 :::
 
 In order to see this, let us write any joint state $\ket{\psi}$ of $\mathcal{A}$ and $\mathcal{B}$ in a product basis as
@@ -411,25 +414,25 @@ and so any collection of separable qubits remains separable.
 As soon as qubits start interacting with one another, however, they become entangled, and things start to get really interesting.
 We will describe interactions that cannot be written as tensor products of unitary operations on individual qubits.
 
-The most popular two-qubit entangling gate is the **controlled-$\texttt{NOT}$** (or $\texttt{c-NOT}$), also known as the **controlled-$X$** gate.^[Here, $X\equiv\sigma_x$ refers to the Pauli operator that implements the bit-flip.]
+The most popular two-qubit entangling gate is the **controlled-$\NOT$** (or $\cNOT$), also known as the **controlled-$X$** gate.^[Here, $X\equiv\sigma_x$ refers to the Pauli operator that implements the bit-flip.]
 The gate acts on two qubits: it flips the second qubit (referred to as the **target**) if the first qubit (referred to as the **control**) is $\ket{1}$, and does nothing if the control qubit is $\ket{0}$.
 In the standard basis $\{\ket{00},\ket{01},\ket{10},\ket{11}\}$, it is represented by the following unitary matrix:
 
 ::: {.idea specific_to="html"}
 |  |  |
 |:-|:-|
-| **Controlled-$\texttt{NOT}$** | $\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&\begin{matrix}0&1\\1&0\end{matrix}\end{array}\right]$ |
+| **Controlled-$\NOT$** | $\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&\begin{matrix}0&1\\1&0\end{matrix}\end{array}\right]$ |
 :::
 
 ::: {.idea specific_to="latex" latex=""}
 \centering
 \begin{tabular}{ll}
-  \textbf{Controlled-$\texttt{NOT}$:}
+  \textbf{Controlled-$\NOT$:}
   & $\left[\begin{array}{c|c}\begin{matrix}1&0\\0&1\end{matrix}&\begin{matrix}0&0\\0&0\end{matrix}\\\hline\begin{matrix}0&0\\0&0\end{matrix}&\begin{matrix}0&1\\1&0\end{matrix}\end{array}\right]$
 \end{tabular}
 :::
 
-We represent the $\texttt{c-NOT}$ gate in circuit notation as shown in Figure \@ref(fig:c-not-diagram).
+We represent the $\cNOT$ gate in circuit notation as shown in Figure \@ref(fig:c-not-diagram).
 
 (ref:c-not-diagram-caption) Where $x,y\in\{0,1\}$, and $\oplus$ denotes $\texttt{XOR}$, or addition modulo $2$.
 
@@ -446,14 +449,14 @@ We represent the $\texttt{c-NOT}$ gate in circuit notation as shown in Figure \@
 \end{equation*}
 ```
 
-Note that this gate does not admit any tensor product decomposition, but can be written as a sum of tensor products:^[Make sure that you understand how the Dirac notation is used here. More generally, think why $$\proj{0}\otimes A + \proj{1}\otimes B$$ means "_if the first qubit is in state $\ket{0}$ then apply $A$ to the second one, and if the first qubit is in state $\ket{1}$ then apply $B$ to the second one_". What happens if the first qubit is in a superposition of $\ket{0}$ and $\ket{1}$?]
+Note that this gate does not admit any tensor-product decomposition, but can be written as a sum of tensor products:^[Make sure that you understand how the Dirac notation is used here. More generally, think why $$\proj{0}\otimes A + \proj{1}\otimes B$$ means "_if the first qubit is in state $\ket{0}$ then apply $A$ to the second one, and if the first qubit is in state $\ket{1}$ then apply $B$ to the second one_". What happens if the first qubit is in a superposition of $\ket{0}$ and $\ket{1}$?]
 $$
-  \texttt{c-NOT}
+  \cNOT
   = \proj{0}\otimes\id + \proj{1}\otimes X
 $$
 (where $X$ is the Pauli bit-flip operation).
 
-The $\texttt{c-NOT}$ gate lets us do many interesting things, and can act in a rather deceptive way.
+The $\cNOT$ gate lets us do many interesting things, and can act in a rather deceptive way.
 Let us now study some of these things.
 
 
@@ -466,7 +469,7 @@ Let us now study some of these things.
 <div class="video" title="Bell states" data-videoid="jWzTMtFiG8k"></div>
 
 We start with the generation of entanglement.
-Here is a simple circuit that demonstrates the entangling power of $\texttt{c-NOT}$:^[John Stewart Bell (1928--1990) was a Northern Irish physicist.]
+Here is a simple circuit that demonstrates the entangling power of $\cNOT$:^[John Stewart Bell (1928--1990) was a Northern Irish physicist.]
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
@@ -495,7 +498,7 @@ $$
     \ket{0}\ket{0}
     \xmapsto{H}& \frac{1}{\sqrt{2}} (\ket{0} + \ket{1}) \ket{0}
   \\=& \frac{1}{\sqrt{2}}\ket{0}\ket{0} + \frac{1}{\sqrt{2}}\ket{1}\ket{0}
-  \\\xmapsto{\texttt{c-NOT}}& \frac{1}{\sqrt{2}}\ket{0}\ket{0} + \frac{1}{\sqrt{2}}\ket{1}\ket{1}
+  \\\xmapsto{\cNOT}& \frac{1}{\sqrt{2}}\ket{0}\ket{0} + \frac{1}{\sqrt{2}}\ket{1}\ket{1}
   \end{aligned}
 $$
 resulting in the entangled output $\frac{1}{\sqrt{2}}(\ket{00}+\ket{11})$.
@@ -667,7 +670,7 @@ This is not science fiction!
 But there is a fundamental question to ask: if the original state is destroyed, then how can we really verify that teleportation has taken place?
 We can't compare the purportedly teleported state to the original one!
 The answer to this involves certain [**no-go theorems**](https://en.wikipedia.org/wiki/No-go_theorem) and statistical methods, where we can show that classical physics gives some strict upper bound on a certain fidelity, but which is clearly surpassed by these physical experiments.
-We will better explain the ideas behind these sorts of arguments later on, in Section \@ref(bells-theorem), when we introduce **Bell's theorem**.
+We will better explain the ideas behind these sorts of arguments later on, in Chapter \@ref(bells-theorem), when we introduce **Bell's theorem**.
 :::
 
 
@@ -677,23 +680,23 @@ We will better explain the ideas behind these sorts of arguments later on, in Se
 
 <div class="video" title="Quantum cloning" data-videoid="sy3I932usMQ"></div>
 
-Let us now look at something that the controlled-$\texttt{NOT}$ *seems* to be doing but, in fact, *isn't*.
-It is easy to see that the $\texttt{c-NOT}$ can copy the bit value of the first qubit:
+Let us now look at something that the controlled-$\NOT$ *seems* to be doing but, in fact, *isn't*.
+It is easy to see that the $\cNOT$ can copy the bit value of the first qubit:
 $$
-  \ket{x}\ket{0} \xmapsto{\texttt{c-NOT}} \ket{x}\ket{x}
+  \ket{x}\ket{0} \xmapsto{\cNOT} \ket{x}\ket{x}
   \qquad\text{(for $x=0,1$)}
 $$
 so one might suppose that this gate could also be used to copy superpositions, such as $\ket{\psi} = \alpha\ket{0}+\beta\ket{1}$, so that
 $$
-  \ket{\psi}\ket{0} \xmapsto{\texttt{c-NOT}} \ket{\psi}\ket{\psi}
+  \ket{\psi}\ket{0} \xmapsto{\cNOT} \ket{\psi}\ket{\psi}
 $$
 for *any* $\ket{\psi}$.
 *But this is not true!*
 
-The unitarity of the $\texttt{c-NOT}$ means that it turns *superpositions* in the control qubit into *entanglement* of the control and the target: if the control qubit is in the superposition state $\ket{\psi} = \alpha\ket{0}+\beta\ket{1}$ (with $\alpha,\beta\neq0$), and the target is in $\ket{0}$, then the $\texttt{c-NOT}$ gate generates the entangled state
+The unitarity of the $\cNOT$ means that it turns *superpositions* in the control qubit into *entanglement* of the control and the target: if the control qubit is in the a superposition state $\ket{\psi} = \alpha\ket{0}+\beta\ket{1}$ (with $\alpha,\beta\neq0$), and the target is in $\ket{0}$, then the $\cNOT$ gate generates the entangled state
 $$
   \big( \alpha\ket{0}+\beta\ket{1} \big) \ket{0}
-  \xmapsto{\texttt{c-NOT}}
+  \xmapsto{\cNOT}
   \alpha\ket{00} + \beta\ket{11}.
 $$
 In fact, it is _impossible_ to clone an unknown quantum state, and we can prove this!
@@ -748,7 +751,7 @@ We won't look at all of them in depth, but it's worth mentioning them here and g
   *Given a single copy of a quantum state, it cannot be shared with two or more parties.*
 
   This is an even more direct consequence of no-cloning: if we can't copy a state, then we have no way of sharing it with multiple people.
-  However, the real technical statement of this theorem involves **non-pure states**, which require the language of **density operators** to talk about --- something that we will not see until Section \@ref(density-matrices).
+  However, the real technical statement of this theorem involves **non-pure states**, which require the language of **density operators** to talk about --- something that we will not see until Chapter \@ref(density-matrices).
 
   One particularly unexpected detail here is that the theorem is no longer true if we're provided with more than one copy of the state to start with.
   For example, in a process known as **superbroadcasting**^[This is shown in D'Ariano, Macchiavello, and Perinotti's "Superbroadcasting of mixed states", arXiv:[quant-ph/0506251](https://arxiv.org/abs/quant-ph/0506251).], given four copies of an input state we can actually broadcast six copies!
@@ -772,7 +775,7 @@ We won't look at all of them in depth, but it's worth mentioning them here and g
 - **No-communication.**
   *An entangled state cannot be used to transmit information by measurement of a subsystem.*
 
-  We talk about this theorem in the context of a worked example in Exercise \@ref(instantaneous-communication), and we delve into the details when we talk about **Bell tests** in Section \@ref(bells-theorem), but it is basically the answer to Einstein's worry about "spooky action at a distance" that we mentioned back in Section \@ref(a-very-brief-history): the seemingly infinitely fast sending of information between entangled qubits cannot actually send any meaningful information, but only purely random bits.
+  We talk about this theorem in the context of a worked example in Exercise \@ref(instantaneous-communication), and we delve into the details when we talk about **Bell tests** in Chapter \@ref(bells-theorem), but it is basically the answer to Einstein's worry about "spooky action at a distance" that we mentioned back in Section \@ref(a-very-brief-history): the seemingly infinitely fast sending of information between entangled qubits cannot actually send any meaningful information, but only purely random bits.
 
   This theorem is actually stronger than no-cloning, in that we can prove no-cloning from no-communication.
 
@@ -782,7 +785,7 @@ We won't look at all of them in depth, but it's worth mentioning them here and g
   *Quantum information cannot be lost, even through decoherence.*
 
   This theorem is related to no-deletion, in that it shows the robustness of quantum states.
-  In Section \@ref(correcting-quantum-channels) we will study the notion of **decoherence**, which is sort of like "quantum noise", and is one of the main problems faced when actually trying to design and build quantum computers in reality.
+  In Chapter \@ref(decoherence-and-recoherence) we will study the notion of **decoherence**, which is sort of like "quantum noise", and is one of the main problems faced when actually trying to design and build quantum computers in reality.
   The no-hiding theorem says that, when quantum information is "lost" through decoherence, it actually merely moves into the subspace corresponding to the environment --- *we* might have lost it, but nature hasn't.^[This theorem is of particular interest to physicists studying black holes, since it leads to the [**black hole information paradox**](https://en.wikipedia.org/wiki/Black_hole_information_paradox).]
 
 
@@ -791,7 +794,7 @@ We won't look at all of them in depth, but it's worth mentioning them here and g
 
 ## Controlled-phase and controlled-U
 
-Needless to say, not everything is about the controlled-$\texttt{NOT}$ gate.
+Needless to say, not everything is about the controlled-$\NOT$ gate.
 Another common two-qubit gate is the **controlled-phase** gate, denoted $\texttt{c-}P_\varphi$.
 
 ::: {.idea specific_to="html"}
@@ -886,7 +889,7 @@ and then the controlled-$Z$ operation flips the sign in front of $\ket{11}$
 
 which results in an entangled state.
 
-In fact, both $\texttt{c-NOT}$ and $\texttt{c-}P_\varphi$ are specific examples of the more general construction of a **controlled-$U$ gate**:
+In fact, both $\cNOT$ and $\texttt{c-}P_\varphi$ are specific examples of the more general construction of a **controlled-$U$ gate**:
 $$
   \texttt{c-}U
   = \proj{0}\otimes\id + \proj{1}\otimes U
@@ -946,13 +949,13 @@ We will come across few more gates in this course, but at this stage you already
 
 - the Hadamard gate,
 - all phase gates, and
-- the $\texttt{c-NOT}$
+- the $\cNOT$
 
 These gates form a **universal set of gates**: with $\mathcal{O}(4^{n}n)$ of these gates, we can construct any $n$-qubit unitary operation.^[Recall the big-$\mathcal{O}$ asymptotic notation introduced in Exercise \@ref(big-o): given a _positive_ function $f(n)$, we write $\mathcal{O}(f(n))$ to mean "bounded above by $c\,f(n)$ for some constant $c > 0$ (for sufficiently large $n$)". For example, $15n^2+4n+7$ is $\mathcal{O}(n^2)$.]
 We should mention that there are many different universal sets of gates.
 In fact, almost any gate that can entangle two qubits can be used as a universal gate.
 
-We are particularly interested in any *finite* universal set of gates (such as the one containing the Hadamard, $P_{\frac{\pi}{4}}$ (the $T$ gate), and the $\texttt{c-NOT}$) that can approximate any unitary operation on $n$ qubits with arbitrary precision.
+We are particularly interested in any *finite* universal set of gates^[One particular example that we will see again is the Hadamard, $\cNOT$, and $T=P_{\pi/4}$.] that can approximate any unitary operation on $n$ qubits with arbitrary precision.
 The price to pay is the number of gates --- better precision requires more gates.
 
 
@@ -1188,11 +1191,11 @@ Show that, for any states $\ket{\psi_1}$ and $\ket{\psi_2}$ of two qubits, the c
 
 ### Controlled-NOT circuit
 
-Show that the circuit below gives another implementation of the controlled-$\texttt{NOT}$ gate.
+Show that the circuit below gives another implementation of the controlled-$\NOT$ gate.
 
 :::: {.circuit latex=""}
 ::: {.circuit-title}
-*(Controlled-$\texttt{NOT}$, again).*
+*(Controlled-$\NOT$, again).*
 :::
 
 ```{r,engine='tikz',engine.opts=list(template="latex/tikz2pdf.tex")}
@@ -1208,7 +1211,7 @@ Show that the circuit below gives another implementation of the controlled-$\tex
 
 ### Measuring with controlled-NOT
 
-The controlled-$\texttt{NOT}$ gate can act as a measurement gate: if you prepare the target in state $\ket{0}$ then the gate acts as $\ket{x}\ket{0}\mapsto\ket{x}\ket{x}$, and so the target learns the bit value of the control qubit.
+The controlled-$\NOT$ gate can act as a measurement gate: if you prepare the target in state $\ket{0}$ then the gate acts as $\ket{x}\ket{0}\mapsto\ket{x}\ket{x}$, and so the target learns the bit value of the control qubit.
 If you wish, you can think about a subsequent measurement of the target qubit in the computational basis as an observer learning about the bit value of the control qubit.
 
 Take a look at the circuit below, where $M$ stands for measurement in the standard basis.
@@ -1258,7 +1261,7 @@ $$
 $$
 for some unitaries $A$ and $B$, where $X\equiv\sigma_x$ is the Pauli bit-flip operator.
 
-Suppose that you can implement any single-qubit gate, and that you have a bunch of controlled-$\texttt{NOT}$ gates at your disposal.
+Suppose that you can implement any single-qubit gate, and that you have a bunch of controlled-$\NOT$ gates at your disposal.
 How would you implement any controlled-$U$ operation on two qubits?
 
 
